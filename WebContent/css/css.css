@@ -1,0 +1,114 @@
+﻿.table1 {
+	margin-left: 43%;
+	margin-right: auto;
+}
+
+.table2 {
+	margin-left: 45%;
+	margin-right: auto;
+}
+
+.table3 {
+	margin-left: 46%;
+	margin-right: auto;
+}
+
+.error {
+	color: red;
+}
+
+body {
+	font-size: 14px;
+}
+
+input.text {
+	margin-bottom: 12px;
+	width: 95%;
+	padding: .4em;
+}
+
+fieldset {
+	padding: 0;
+	border: 0;
+	margin-top: 25px;
+}
+
+h1 {
+	font-size: 1.2em;
+	margin: .6em 0;
+}
+/* 處理搜尋新增樣式 */
+div#products-serah-create-contain {
+	width: 350px;
+	margin: 20px 0;
+}
+
+div#products-serah-create-contain table {
+	margin: 1em 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+div#products-serah-create-contain table td, div#products-serah-create-contain table th
+	{
+	border: 1px solid #eee;
+	padding: .6em 10px;
+	text-align: center;
+	vertical-align: middle
+}
+/* 表格樣式 */
+div#products-contain {
+	width: 800px;
+	margin: 20px 0;
+}
+
+div#products-contain table {
+	margin: 1em 0;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+div#products-contain table td, div#products-contain table th {
+	border: 1px solid #eee;
+	padding: .6em 10px;
+	text-align: center;
+	vertical-align: middle
+}
+/* ui */
+.ui-dialog .ui-state-error {
+	padding: .3em;
+}
+
+.ui-icon ui-icon-alert {
+	float: left;
+	margin: 0 7px 20px 0;
+}
+/* 預設驗證訊息樣式 */
+.error {
+	color: red;
+	font-size: 15px;
+	margin-top: 5px;
+}
+/* 自設驗證訊息樣式 */
+.validateTips {
+	color: #FF0000;
+	border: 1px solid transparent;
+	padding: 0.3em;
+}
+
+.datatables_filter {
+	float: left;
+	text-align: left;
+}
+
+	#code_err_mes, #user_err_mes, #purchase_date_err_mes,
+	#supply_name_err_mes, #purchase_detail_err_mes, #search_sale_err_mes,
+	#trans_list_date_err_mes, #trans_dis_date_err_mes, #return_date_err_mes,
+	#search_product_type_err_mes, #search_product_unit_err_mes,
+	#search_amount_date_err_mes, #search_receive_date_err_mes,
+	#receive_account_err_mes, #receive_cancel_account_err_mes,
+	#purchase_return_date_err_mes, #pay_err_mes, #search_amount_err_mes,#unicode_err_mes {
+	color: red;
+	font-size: 15px;
+	margin-top: 5px;
+}

@@ -1,0 +1,133 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="tw.com.aber.productunit.controller.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.sql.Connection"%>
+<%@ page import="java.sql.Statement"%>
+<%@ page import="java.sql.ResultSet"%>
+<jsp:directive.page import="java.sql.SQLException" />
+<%
+// 	session.setAttribute("group_id", "7373adf8-472e-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
+// 	session.setAttribute("user_id", "035946b1-4f0b-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>密碼修改</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="css/styles.css" />
+<link href="<c:url value="css/css.css" />" rel="stylesheet">
+<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/additional-methods.min.js"></script>
+<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
+<script>
+	$(function() {
+		var validator_update = $("#password-form-post").validate({
+			rules : {
+				password : {
+					required : true,
+					maxlength : 10
+				},
+		password2 : {
+			required : true,
+			maxlength : 10
+		}
+			},
+			messages : {
+				unit_name : {
+					maxlength : "長度不能超過10個字"
+				}
+			}
+			
+		});
+		$("input[name='password']").bind('focus', function(){ 
+			$("#errormesg").text(""); 
+			$("#ok").text(""); 
+		});
+		
+		//密碼修改
+		$("#password_btn").button().on("click",function(e) {
+			var pass1 = $("input[name='password']").val();
+			var pass2 = $("input[name='password2']").val();
+			if ( pass1 === pass2) {
+			} else {
+				$("#errormesg").text("密碼不相同請重新輸入"); 
+				$("input").attr("value","");
+				return false;
+			}
+							e.preventDefault();
+							$.ajax({
+									type : "POST",
+									url : "changepassword.do",
+									data : {
+										action : "update",
+										password : $("input[name='password'").val(),
+									},
+									success : function(result) {
+										if ($('#password-form-post').valid()) {
+											var json_obj = $.parseJSON(result);
+											//判斷查詢結果
+											var resultRunTime = 0;
+											$.each (json_obj, function (i) {
+												resultRunTime+=1;
+											});
+											if(resultRunTime!=0){
+												$("input").attr("value","");
+												$("#ok").text("密碼修改完成"); 										
+											}
+										}
+									}		
+								});
+							});
+						});
+</script>
+</head>
+<body>
+	<div class="panel-title">
+		<h2>密碼修改</h2>
+	</div>
+	<div class="panel-content">
+		<div class="datalistWrap">
+		
+			<!-- 第一列 -->
+			<div class="row" align="center">
+				<div id="products-serah-create-contain" class="ui-widget">
+				<form name="password-form-post" id="password-form-post">
+						<table  id="password" height="100">
+							
+							<tbody>
+								<tr>
+									<td style="font-size:15px;"><h2>新密碼:</h2></td>
+									<td><input type="password" name="password"  placeholder="輸入新密碼"/></td>
+									
+								</tr>
+								<tr>
+									<td style="font-size:15px;"><h2>新密碼確認:</h2></td>
+									<td><input type="password" name="password2"  placeholder="再輸入新密碼"/></td>
+								</tr>
+								<tr>
+									<td style="font-size:15px;" colspan="2">
+										<button id="password_btn">更改密碼</button>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"><font size="3" color="#FF0000"><p id="errormesg"></p> <p id="ok"></p></font></td>
+								
+									</tr>
+							</tbody>
+						</table>
+						</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
