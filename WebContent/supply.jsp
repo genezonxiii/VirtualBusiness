@@ -8,8 +8,8 @@
 <%@ page import="java.sql.ResultSet"%>
 <jsp:directive.page import="java.sql.SQLException" />
 <%
-	session.setAttribute("group_id","7dcc2045-472e-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
-	session.setAttribute("user_id", ""); //還沒拿到session，先自己假設
+//	session.setAttribute("group_id","7dcc2045-472e-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
+//	session.setAttribute("user_id", ""); //還沒拿到session，先自己假設
 %>
 <!DOCTYPE html>
 <html>
