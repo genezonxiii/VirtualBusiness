@@ -114,7 +114,8 @@ public class changepassword extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_update_password = "call sp_update_password (?,?)";
 
-		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL");
+		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 

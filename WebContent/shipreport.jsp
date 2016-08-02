@@ -28,6 +28,9 @@
 
 <script>
 function date_format(str) {
+	if(str==null){
+		return "";
+	}
 	var words=str.replace(","," ").split(" ");
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
@@ -43,6 +46,8 @@ function date_format(str) {
 				url : "shipreport.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
+					//console.log(result);
+					//alert(result);
 					if(result.indexOf("WebService")!=-1){
 						$(".validateTips").text("WebService Error: "+result);
 						return

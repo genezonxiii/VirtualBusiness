@@ -62,7 +62,7 @@ public class shipreport extends HttpServlet {
 		group_id=(group_id==null||group_id.length()<3)?"UNKNOWN":group_id;
 
 		String time1 = request.getParameter("time1").replaceAll("/", "-");
-		time1=(time1.length()<3)?"1999-12-31":time1;
+		time1=(time1.length()<3)?"2016-06-01":time1;
 		String time2 = request.getParameter("time2").replaceAll("/", "-");
 		time2=(time2.length()<3)?"2300-12-31":time2;
 		//System.out.println("from "+time1+" to "+time2+"of groupid= "+group_id);
@@ -74,7 +74,7 @@ public class shipreport extends HttpServlet {
 				+ new String(Base64.encodeBase64String(time1.getBytes()))
 				+ "&enddate="
 				+ new String(Base64.encodeBase64String(time2.getBytes()));
-		
+		//System.out.println("conString: "+conString);
 		if("today".equals(action)){
 			conString=getServletConfig().getServletContext().getInitParameter("pythonwebservice")
 					+ "/ship/groupid="
@@ -84,11 +84,10 @@ public class shipreport extends HttpServlet {
 					+ "&enddate="
 					+ new String(Base64.encodeBase64String((new SimpleDateFormat("yyyy-MM-dd").format(new Date())).getBytes()));
 		}
-		//System.out.println(conString);
 		HttpClient client = new HttpClient();
-		HttpMethod method=new GetMethod(conString);
-		
+		HttpMethod method;
 		try{
+			method=new GetMethod(conString);
 			client.executeMethod(method);
 		}catch(Exception e){
 			response.getWriter().write("WebService Error for:"+e);

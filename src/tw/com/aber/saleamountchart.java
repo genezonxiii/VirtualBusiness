@@ -129,7 +129,8 @@ public class saleamountchart extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_get_sale_price_statistics = "call sp_get_sale_price_statistics_byweek(?,?,?)";
 
-		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";;
+		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		

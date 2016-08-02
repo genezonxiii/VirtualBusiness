@@ -213,7 +213,8 @@ public class group extends HttpServlet {
 		private static final String sp_selectall_group = "call sp_selectall_group(?)";
 		private static final String sp_update_group = "call sp_update_group(?,?,?,?,?,?,?,?,?,?)";
 
-		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL");
+		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 

@@ -326,7 +326,7 @@
 		height : 200,
 		modal : true,
 		buttons : {
-			"確認退回" : function() {
+			"確認批次收帳" : function() {
 				$(".checkbox_receive").each(function(){
 					if($(this).prop("checked")){
 						$.ajax({
@@ -429,7 +429,7 @@
 				});
 				$(this).dialog("close");
 			},
-			"取消退回" : function() {
+			"取消" : function() {
 				$(this).dialog("close");
 			}
 		}
@@ -441,7 +441,7 @@
 		height : 200,
 		modal : true,
 		buttons : {
-			"確認取消" : function() {
+			"確認取消收帳" : function() {
 				$(".checkbox_receive_cancel").each(function(){
 					if($(this).prop("checked")){
 						$.ajax({
@@ -544,7 +544,7 @@
 				});
 				$(this).dialog("close");
 			},
-			"取消動作" : function() {
+			"取消" : function() {
 				$(this).dialog("close");
 			}
 		}

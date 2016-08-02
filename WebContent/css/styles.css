@@ -16,7 +16,7 @@ q:before, q:after { content: ''; content: none; }
 
 table { border-collapse: collapse; border-spacing: 0; }
 
-body { background: #7FDDED url("../images/bkg.jpg") no-repeat; background-size: cover; font-family: Arial, "儷黑 Pro", "LiHei Pro", "微軟正黑體", "Microsoft JhengHei", sans-serif; height: 100%; width: 100%; }
+body { background: #7FDDED url("../images/bg.jpg") no-repeat; background-size: cover; font-family: Arial, "儷黑 Pro", "LiHei Pro", "微軟正黑體", "Microsoft JhengHei", sans-serif; height: 100%; width: 100%; }
 
 *::selection { background: #080c3a; color: white; }
 

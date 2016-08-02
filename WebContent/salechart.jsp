@@ -38,7 +38,7 @@ function color(vender){
 	if(vender=="GoHappy"){return '#FF00FF';}
 	if(vender=="國泰Tree"){return '#00FFFF';}
 	if(vender=="17Life"){return '#BBBBBB';}
-	if(vender=="Yahoo"){return '#BBBB00';}
+	if(vender=="yahoo"){return '#BBBB00';}
 	if(vender=="UDN"){return '#BB00BB';}
 	if(vender=="樂天"){return '#00BBBB';}
 	if(vender=="愛買"){return '#BBBBFF';}

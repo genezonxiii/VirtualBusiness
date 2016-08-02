@@ -337,7 +337,8 @@ public class supply extends HttpServlet {
 		private static final String sp_del_supply = "call sp_del_supply (?,?)";
 		private static final String sp_update_supply = "call sp_update_supply (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL");
+		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 

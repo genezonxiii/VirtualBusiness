@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<link rel="stylesheet" href="css/styles.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title>線上學院</title>
 <style>
@@ -17,6 +18,7 @@
 </style>
 </head>
 <body>
+
 <h1>線上學院</h1>
 	<div class="row4mpeg">
 		<video width="400" height="300" src="./video/experience_share.mp4" controls="controls">

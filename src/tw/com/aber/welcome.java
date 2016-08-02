@@ -53,7 +53,8 @@ public class welcome extends HttpServlet {
 	//		time2=(time2.length()<3)?"2300/12/31":time2;
 	//		//System.out.println("from "+time1+" to "+time2);
 			//###########################################
-			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL");
+			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 			String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 			String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 			Connection con = null;
