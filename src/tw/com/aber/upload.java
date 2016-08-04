@@ -29,7 +29,7 @@ import java.util.UUID;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.*; 
 import org.apache.commons.codec.binary.Base64;
-
+import java.util.concurrent.TimeUnit;
 public class upload  extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
@@ -74,59 +74,67 @@ public class upload  extends HttpServlet {
 		   //System.out.println("隨便產生一個uuid: "+_uid+" \n group_id的base64: "+_group_id+"\n");
 		   
 		   //if(temp==0)return;
-		   
-		   request.setCharacterEncoding("UTF-8");
-		   String vender = request.getParameter("vender");
-		   String group_id = request.getSession().getAttribute("group_id").toString();
-		   String user_id = request.getSession().getAttribute("user_id").toString();
-		   user_id =(user_id==null||user_id.length()<3)?"UNKNOWN":user_id;
-		   group_id=(group_id==null)?"UNKNOWN":group_id;
-		   vender  =(vender==null)?"UNKNOWN":vender;
-		   //String upload_root=getServletConfig().getServletContext().getInitParameter("uploadpath");
-		   //############################################################
-		    String _uid= UUID.randomUUID().toString();
-			//_uid="454c9c52-cb76-46d3-bf4e-e3ae820c8064";
-			String no_way = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/"+group_id+"/"+_uid;
-			new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender).mkdir();
-			new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/"+group_id).mkdir();
-		   
-		   
-		   
-//		   String msg="Have Done:<br>";
-//		   new File(upload_root+"/"+vender).mkdir();
-//		   new File(upload_root+"/"+vender+"/"+group_id).mkdir();
-//		   String filePath =upload_root+"/"+vender+"/"+group_id+"/";
-//		   //if(bool)msg+="&nbsp&nbspmkdir "+upload_root+"/"+vender+"<br>";
-		   //if(bool2)msg+="&nbsp&nbspmkdir "+upload_root+"/"+vender+"/"+group_id+"<br>";
-		   //msg+=(bool0==true?"a":"X")+(bool00==true?"b":"X")+(bool000==true?"c":"X")+"@@@";
-		   int maxFileSize = 5000 * 1024;
-		   int maxMemSize = 5000 * 1024;
-		   String contentType = request.getContentType();
-		   //System.out.println("content: " + contentType+" "+bool+bool2);
-		   if (contentType!=null && (contentType.indexOf("multipart/form-data") >= 0)) {
+		String conString="",ret="";
+		conString=putFile(request, response);
+		try{
+			TimeUnit.SECONDS.sleep(2);
+		}catch(Exception e){
+			ret="Sleep error";
+		}
+		if(conString.charAt(0)!='E'){
+			ret=webService(request, response,conString);
+		}else{
+			ret=conString;
+		}
+
+		request.setAttribute("action",ret);
+		RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
+		successView.forward(request, response);
+		//############################################################
+		return ;
+	}
+	
+	protected String putFile(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		String conString="",ret="";
+		request.setCharacterEncoding("UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    String vender = request.getParameter("vender");
+	    String group_id = request.getSession().getAttribute("group_id").toString();
+	    String user_id = request.getSession().getAttribute("user_id").toString();
+	    user_id =(user_id==null||user_id.length()<3)?"UNKNOWN":user_id;
+	    group_id=(group_id==null)?"UNKNOWN":group_id;
+	    vender  =(vender==null)?"UNKNOWN":vender;
+	    String _uid= UUID.randomUUID().toString();
+		//_uid="454c9c52-cb76-46d3-bf4e-e3ae820c8064";
+		String no_way = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/"+group_id+"/"+_uid;
+		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender).mkdir();
+		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/"+group_id).mkdir();
+		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/fail").mkdir();
+		int maxFileSize = 5000 * 1024;
+		int maxMemSize = 5000 * 1024;
+		String contentType = request.getContentType();
+		if (contentType!=null && (contentType.indexOf("multipart/form-data") >= 0)) {
 		      DiskFileItemFactory factory = new DiskFileItemFactory();
 		      factory.setSizeThreshold(maxMemSize);
-		      factory.setRepository(new File("c:\\temp2"));
+		      String file_over=getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/fail";
+		      factory.setRepository(new File(file_over));
 		      ServletFileUpload upload = new ServletFileUpload(factory);
 		      upload.setSizeMax( maxFileSize );
 		      try{ 
 		         List fileItems = upload.parseRequest(request);
 		         Iterator i = fileItems.iterator();
-		         //out.println("<html><body>");
 		         while ( i.hasNext () ) 
 		         {
 		            FileItem fi = (FileItem)i.next();
 		            if ( !fi.isFormField () ) {
-		                String fieldName = fi.getFieldName();
 		                String fileName = fi.getName();
 		                String[] tmp = fileName.split("\\.");
 		                int j=0;
 		                while(j<tmp.length){j++;}
 		                j=j>0?j-1:j;
-		                boolean isInMemory = fi.isInMemory();
-		                long sizeInBytes = fi.getSize();
 		                String fullname= no_way+"."+tmp[j];
-						String conString=getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+		                //System.out.println("fullname: "+fullname);
+						conString=getServletConfig().getServletContext().getInitParameter("pythonwebservice")
 								+"/upload/urls="
 								+new String(Base64.encodeBase64String((fullname).getBytes()))
 								+"&usid="
@@ -134,42 +142,37 @@ public class upload  extends HttpServlet {
 		                File file ;
 		                file = new File(fullname) ;
 		                fi.write( file ) ;
-		                //out.println("Uploaded Filename: " + fileName +"<br>&nbsp--> "+filePath+tmp[j]+ "<br>");
-		                //msg+="&nbsp&nbspupload "+fileName+"<br>&nbsp -->&nbsp"+filePath+tmp[j];
-		                //System.out.println("upload: "+fileName+"\n    --> "+filePath+tmp[j]);
-		                HttpClient client = new HttpClient();
-						HttpMethod method=new GetMethod(conString); 
-						try{
-							client.executeMethod(method);
-						}catch(Exception e){
-							request.setAttribute("action","WebServiceError: "+e.toString());
-							RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-							successView.forward(request, response);
-							return;
-						}
-						if("success".compareTo(method.getResponseBodyAsString())!=0){
-							request.setAttribute("action","Connection error: "+conString);
-						}else{
-							request.setAttribute("action","success");
-						}
-						method.releaseConnection();
-		                RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-						successView.forward(request, response);
-						return;
+		                //System.out.println("success");
 		            }
 		         }
-		         //out.println("</body></html>");
 		      }catch(Exception ex) {
-		         //System.out.println(ex);
-		         request.setAttribute("action",ex.toString());
-		         RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-				successView.forward(request, response);
+		    	  //System.out.println("ERROR: "+ ex.toString());
+		          ret="E_write_File:"+ex.toString();
+		          return ret;
 		      }
 		   }else{
-			   request.setAttribute("action","No one found.");
-			   RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-			   successView.forward(request, response);
-		       //out.println("<html><body><p>No file uploaded</p></body></html>");
+			   ret="E_No one found.";
+			   return ret;
 		   }
+		if(ret.length()>3){return ret;}
+		return conString;
+	}
+	protected String webService(HttpServletRequest request,HttpServletResponse response,String conString) throws ServletException, IOException {
+		String ret="";
+		HttpClient client = new HttpClient();
+		HttpMethod method=new GetMethod(conString); 
+		try{
+			client.executeMethod(method);
+		}catch(Exception e){
+			ret=e.toString();
+			ret="Error of call webservice:"+ret; 
+		}
+		if("success".compareTo(method.getResponseBodyAsString())!=0){
+			ret="Error_Connection: "+conString;
+		}else{
+			ret="success";
+		}
+		method.releaseConnection();
+		return ret;
 	}
 }

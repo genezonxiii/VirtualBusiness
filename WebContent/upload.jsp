@@ -156,10 +156,11 @@ if(str!=null){
 	<input type="file" name="file" accept=".csv,.pdf,.xls,xlsx" style="opacity:0.7;position:absolute;margin:2px;"/>
 	<input type="text" id="upload_name" size="29" style="z-index:-1" />
 	<input type="submit" onclick="setV()" value="檔案上傳" /> 
-	<a href='./shipreport.jsp' style="float: right;margin-right:150px;">出貨報表</a>
-	<a href='./salereturnreport.jsp' style="float: right;margin-right:50px;">退貨報表</a>
-	<a href='./distributereport.jsp' style="float: right;margin-right:50px;">配送報表</a>
-	<a href='./salereport.jsp' style="float: right;margin-right:50px;">訂單報表</a>
+	<a href='./shipreport.jsp' style="float: right;margin-right:130px;font-size:25px;">出貨報表</a>
+	<a href='./salereport.jsp' style="float: right;margin-right:30px;font-size:25px;">訂單報表</a>
+	<br><br>
+	<a href='./salereturnreport.jsp' style="float: right;margin-right:130px;font-size:25px;">退貨報表</a>
+	<a href='./distributereport.jsp' style="float: right;margin-right:30px;font-size:25px;">配送報表</a>
 	<div id="msg" style="color:red;margin:5px;display:none;">請稍候片刻...</div>
 </form>
 <div style="text-align:center; margin:0px auto;font-size:35px;display:none;"><a href='//www.csie.ntu.edu.tw/~b98902023/ASAP4.xls'>範例檔下載</a></div>

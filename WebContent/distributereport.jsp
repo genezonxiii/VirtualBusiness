@@ -36,7 +36,7 @@ function date_format(str) {
 		return "";
 	}
 	var words=str.replace(","," ").split(" ");
-	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
+	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
 	$(function() {
 		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
@@ -79,7 +79,7 @@ function date_format(str) {
 													+ json_obj[i].price
 													+ "</td><td>"
 													+ date_format(json_obj[i].trans_list_date)
-													+ "</td><td style='color:red;'>"
+													+ "</td><td>"
 													+ date_format(json_obj[i].dis_date)
 													+ "</td><td>"
 													+ date_format(json_obj[i].sale_date)
@@ -98,7 +98,6 @@ function date_format(str) {
 													//+ json_obj[i].unit_id
 													//+ "'class='btn_delete'>刪除</button></td></tr>";
 											});
-											date_format(json_obj[0].dis_date);
 											//判斷查詢結果
  											var resultRunTime = 0;
  											$.each (json_obj, function (i) {

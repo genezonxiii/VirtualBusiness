@@ -94,22 +94,22 @@
 											$.each (json_obj, function (i) {
 												resultRunTime+=1;
 											});
-											$("#products").dataTable().fnDestroy();
+											$("#products2").dataTable().fnDestroy();
 											if(resultRunTime!=0){
-												$("#products_contain_row").show();
-												$("#products tbody").html(result_table);
-												$("#products").dataTable({
+												$("#products2_contain_row").show();
+												$("#products2 tbody").html(result_table);
+												$("#products2").dataTable({
 													  autoWidth: false,
 													  scrollX:  true,
 											          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-												$("#products").find("td").css("text-align","center");
+												$("#products2").find("td").css("text-align","center");
 												if($("#search_product_type_err_mes").length){
 					                				$("#search_product_type_err_mes").remove();
 					                			}
 											}else{
-												$("#products_contain_row").hide();
+												$("#products2_contain_row").hide();
 												if(!$("#search_product_type_err_mes").length){
-					                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products-serah-create").parent());
+					                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products2-serah-create").parent());
 					                			}else{
 					                				$("#search_product_type_err_mes").html("查無此結果");
 					                			}
@@ -174,22 +174,22 @@
 														$.each (json_obj, function (i) {
 															resultRunTime+=1;
 														});
-														$("#products").dataTable().fnDestroy();
+														$("#products2").dataTable().fnDestroy();
 														if(resultRunTime!=0){
-															$("#products_contain_row").show();
-															$("#products tbody").html(result_table);
-															$("#products").dataTable({
+															$("#products2_contain_row").show();
+															$("#products2 tbody").html(result_table);
+															$("#products2").dataTable({
 																  autoWidth: false,
 																  scrollX:  true,
 														          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-															$("#products").find("td").css("text-align","center");
+															$("#products2").find("td").css("text-align","center");
 															if($("#search_product_type_err_mes").length){
 								                				$("#search_product_type_err_mes").remove();
 								                			}
 														}else{
-															$("#products_contain_row").hide();
+															$("#products2_contain_row").hide();
 															if(!$("#search_product_type_err_mes").length){
-								                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products-serah-create").parent());
+								                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products2-serah-create").parent());
 								                			}else{
 								                				$("#search_product_type_err_mes").html("查無此結果");
 								                			}
@@ -255,22 +255,22 @@
 							$.each (json_obj, function (i) {
 								resultRunTime+=1;
 							});
-							$("#products").dataTable().fnDestroy();
+							$("#products2").dataTable().fnDestroy();
 							if(resultRunTime!=0){
-								$("#products_contain_row").show();
-								$("#products tbody").html(result_table);
-								$("#products").dataTable({
+								$("#products2_contain_row").show();
+								$("#products2 tbody").html(result_table);
+								$("#products2").dataTable({
 									  autoWidth: false,
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-								$("#products").find("td").css("text-align","center");
+								$("#products2").find("td").css("text-align","center");
 								if($("#search_product_type_err_mes").length){
 	                				$("#search_product_type_err_mes").remove();
 	                			}
 							}else{
-								$("#products_contain_row").hide();
+								$("#products2_contain_row").hide();
 								if(!$("#search_product_type_err_mes").length){
-	                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products-serah-create").parent());
+	                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products2-serah-create").parent());
 	                			}else{
 	                				$("#search_product_type_err_mes").html("查無此結果");
 	                			}
@@ -332,22 +332,22 @@
 								$.each (json_obj, function (i) {
 									resultRunTime+=1;
 								});
-								$("#products").dataTable().fnDestroy();
+								$("#products2").dataTable().fnDestroy();
 								if(resultRunTime!=0){
-									$("#products_contain_row").show();
-									$("#products tbody").html(result_table);
-									$("#products").dataTable({
+									$("#products2_contain_row").show();
+									$("#products2 tbody").html(result_table);
+									$("#products2").dataTable({
 										  autoWidth: false,
 										  scrollX:  true,
 								          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-									$("#products").find("td").css("text-align","center");
+									$("#products2").find("td").css("text-align","center");
 									if($("#search_product_type_err_mes").length){
 		                				$("#search_product_type_err_mes").remove();
 		                			}
 								}else{
-									$("#products_contain_row").hide();
+									$("#products2_contain_row").hide();
 									if(!$("#search_product_type_err_mes").length){
-		                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products-serah-create").parent());
+		                				$("<p id='search_product_type_err_mes'>查無此結果</p>").appendTo($("#products2-serah-create").parent());
 		                			}else{
 		                				$("#search_product_type_err_mes").html("查無此結果");
 		                			}
@@ -369,12 +369,12 @@
 			}
 		});		
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
+		$("#products2").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
 			confirm_dialog.dialog("open");
 		});
 		//修改事件聆聽
-		$("#products").delegate(".btn_update", "click", function() {
+		$("#products2").delegate(".btn_update", "click", function() {
 			uuid = $(this).val();
 			update_dialog.dialog("open");
 			var text = $(this).attr("name");
@@ -385,12 +385,12 @@
 			insert_dialog.dialog("open");
 		});
 		//預設表格隱藏
-		$("#products_contain_row").hide();
+		$("#products2_contain_row").hide();
 		//button css
 		$("#searh-producttype").css("width","80px");
 		$("#create-producttype").css("width","150px");
 		//hold header
-		$("#products").find("th").css("min-width","50px");
+		$("#products2").find("th").css("min-width","50px");
 	});
 </script>
 </head>
@@ -431,8 +431,8 @@
 			</div>
 			<!-- 第一列 -->
 			<div class="row" align="center">
-				<div id="products-serah-create-contain" class="ui-widget">
-					<table id="products-serah-create">
+				<div id="products2-serah-create-contain" class="ui-widget">
+					<table id="products2-serah-create">
 						<thead>
 							<tr>
 								<td><input type="text" name="searh_type_name" placeholder="請輸入查詢商品類別名稱"></td>
@@ -448,9 +448,9 @@
 				</div>
 			</div>
 			<!-- 第二列 -->
-			<div class="row" align="center" id="products_contain_row">
-				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content">
+			<div class="row" align="center" id="products2_contain_row" >
+				<div id="products2-contain" class="ui-widget">
+					<table id="products2" class="ui-widget ui-widget-content">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>產品類別</th>

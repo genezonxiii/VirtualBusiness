@@ -55,6 +55,10 @@ public class salereport extends HttpServlet {
 		time1=(time1.length()<3)?"1999/12/31":time1;
 		String time2 = request.getParameter("time2");
 		time2=(time2.length()<3)?"2300/12/31":time2;
+		if("today".equals(action)){
+			time1= new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+			time2= new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+		}
 		//System.out.println("from "+time1+" to "+time2);
 		//###########################################
 		try {

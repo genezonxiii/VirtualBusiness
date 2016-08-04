@@ -32,7 +32,7 @@ function date_format(str) {
 		return "";
 	}
 	var words=str.replace(","," ").split(" ");
-	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
+	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
 	$(function() {
 		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
@@ -48,7 +48,7 @@ function date_format(str) {
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
-						result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].seq_no + "</td><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].order_no + "</td><td style='width:200px; word-break: break-all;'>" + json_obj[i].product_name + "</td><td>"+ json_obj[i].c_product_id + "</td><td>"+ json_obj[i].quantity + "</td><td>"+ json_obj[i].price + "</td><td style='color:red;'>" + date_format(json_obj[i].trans_list_date) + "</td><td>"+ date_format(json_obj[i].dis_date) + "</td><td>"+ date_format(json_obj[i].sale_date) + "</td><td>"+ json_obj[i].order_source + "</td><td>"+ (json_obj[i].memo==null?"":json_obj[i].memo) + "</td></tr>";
+						result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].seq_no + "</td><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].order_no + "</td><td style='width:200px; word-break: break-all;'>" + json_obj[i].product_name + "</td><td>"+ json_obj[i].c_product_id + "</td><td>"+ json_obj[i].quantity + "</td><td>"+ json_obj[i].price + "</td><td>" + date_format(json_obj[i].trans_list_date) + "</td><td>"+ date_format(json_obj[i].dis_date) + "</td><td>"+ date_format(json_obj[i].sale_date) + "</td><td>"+ json_obj[i].order_source + "</td><td>"+ (json_obj[i].memo==null?"":json_obj[i].memo) + "</td></tr>";
 					});
 					$("#my").html("<tr class='noExl'><td></td></tr><tr><td>銷貨單號</td><td>訂單號</td><td>產品名稱</td><td>客戶自訂產品ID</td><td>銷貨數量</td><td>銷貨金額</td><td>轉單日</td><td>配送日</td><td>銷貨/出貨日期</td><td>銷售平台</td><td>備註</td></tr>"+result_table);
 					$("#products").dataTable().fnDestroy();
@@ -149,7 +149,31 @@ $(function() {
 	//alert($.url.param('action'));
 	if(value=="today"){
 		$.ajax({
-			
+			type : "POST",
+			url : "salereport.do",
+			data : {action :"today",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				var result_table = "";
+				$.each(json_obj,function(i, item) {
+					result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].seq_no + "</td><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].order_no + "</td><td style='width:200px; word-break: break-all;'>" + json_obj[i].product_name + "</td><td>"+ json_obj[i].c_product_id + "</td><td>"+ json_obj[i].quantity + "</td><td>"+ json_obj[i].price + "</td><td>" + date_format(json_obj[i].trans_list_date) + "</td><td>"+ date_format(json_obj[i].dis_date) + "</td><td>"+ date_format(json_obj[i].sale_date) + "</td><td>"+ json_obj[i].order_source + "</td><td>"+ (json_obj[i].memo==null?"":json_obj[i].memo) + "</td></tr>";
+				});
+				$("#my").html("<tr class='noExl'><td></td></tr><tr><td>銷貨單號</td><td>訂單號</td><td>產品名稱</td><td>客戶自訂產品ID</td><td>銷貨數量</td><td>銷貨金額</td><td>轉單日</td><td>配送日</td><td>銷貨/出貨日期</td><td>銷售平台</td><td>備註</td></tr>"+result_table);
+				$("#products").dataTable().fnDestroy();
+				if(json_obj.length!=0){
+					$("#products-contain").show();
+					$("#products tbody").html(result_table);
+					$("#products").dataTable({
+						"language": {"url": "js/dataTables_zh-tw.txt"}
+					});
+					$(".validateTips").text("");
+					$("#xls").show();
+				}else{
+					$("#products-contain").hide();
+					$(".validateTips").text("查無此結果");
+					$("#xls").hide();
+				}
+			}
 		});
 	}
 });

@@ -79,23 +79,23 @@
     	<li><a href="producttype.jsp" target="main_page">商品類型管理</a></li>
     	<li><a href="productunit.jsp" target="main_page">商品單位管理</a></li>
     	<li><a href="product.jsp" target="main_page">商品管理</a></li>
+    	<li><a href="tagprint.jsp" target="main_page">標籤列印</a></li>
     	<li><a href="supply.jsp" target="main_page">供應商管理</a></li>
-    	<li><a href="user.jsp" target="main_page">用戶管理</a></li>
-    	<li><a href="group.jsp" target="main_page">公司管理</a></li>
-    	<li><a href="customer.jsp" target="main_page">客戶管理</a></li>
     	<li><a href="accreceive.jsp" target="main_page">應收帳款管理</a></li>
     	<li><a href="accpay.jsp" target="main_page">應付帳款管理</a></li>
+    	<li><a href="customer.jsp" target="main_page">客戶管理</a></li>
+    	<li><a href="group.jsp" target="main_page">公司管理</a></li>
+    	<li><a href="user.jsp" target="main_page">用戶管理</a></li>
     	<li><a href="changepassword.jsp" target="main_page">用戶帳密管理</a></li>
-     	<li><a href="tagprint.jsp" target="main_page">標籤列印</a></li>
     </ul>
   </div>
   <h3>報表管理</h3>
   <div style="padding: 0px 0px 0px 10px;">
     <ul>
     	<li><a href="salereport.jsp" target="main_page">訂單報表</a></li>
+    	<li><a href="shipreport.jsp" target="main_page">出貨報表</a></li>
     	<li><a href="distributereport.jsp" target="main_page">配送報表</a></li>
     	<li><a href="salereturnreport.jsp" target="main_page">退貨報表</a></li>
-    	<li><a href="shipreport.jsp" target="main_page">出貨報表</a></li>
     	<li><a href="purchreport.jsp" target="main_page">進貨報表</a></li>
     	<li><a href="purchreturnreport.jsp" target="main_page">進貨退回報表</a></li>
 <!--     	<li><a href="stockreport.jsp" target="main_page">庫存管理報表</a></li> -->
