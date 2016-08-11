@@ -13,12 +13,18 @@
 <head>
 <title>客戶管理</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <%-- <link href="<c:url value="css/jquery-ui.min.css" />" rel="stylesheet"> --%>
 <!-- jquery-ui css要套這一版本，不然Dialog icon會有問題 -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+
 <!-- jquery-ui js要套用這一版，不然Dialog會偏移，且容易當掉 -->
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -73,16 +79,19 @@ window.onload = function (e){
 				    }
 					result_table 
 					+= "<tr>"
-					+ "<td style='width:8%' id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
-					+ "<td style='width:15%' id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
-					+ "<td style='width:14%' id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
-					+ "<td style='width:14%' id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
-					+ "<td style='width:18%' id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
-					+ "<td style='width:8%' id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
-					+ "<td style='width:8%' id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
-					+ "<td style='width:8%' id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-					+ "<td style='width:7%'><button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_update'>修改</button>"
-					+ "<button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_delete'>刪除</button></td></tr>";
+					+ "<td id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
+					+ "<td id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
+					+ "<td id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
+					+ "<td id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
+					+ "<td id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
+					+ "<td id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
+					+ "<td id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
+					+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+					+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+					+ "	<div class='table-function-list'>"
+					+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+					+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+					+ "	</div></div></td></tr>";
 				});
 			}
 			if(resultRunTime==0){
@@ -95,6 +104,8 @@ window.onload = function (e){
 				$("#customer tbody").html(result_table);
 				$("#customer").find("td").css("text-align", "center");
 				$("#customer").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+				$("#customer").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+				$("#customer").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 				$(".validateTips").text("");
 			}						
 		}
@@ -128,7 +139,7 @@ window.onload = function (e){
 		});	
 					
 		//新增事件聆聽
-		$("#create-customer").button().on("click", function(e) {
+		$("#create-customer").click(function(e) {
 			e.preventDefault();		
 			insert_dialog.dialog("open");
 		});
@@ -140,11 +151,11 @@ window.onload = function (e){
 			autoOpen : false,
 			show : {
 				effect : "blind",
-				duration : 1000
+				duration : 300
 			},
 			hide : {
-				effect : "explode",
-				duration : 1000
+				effect : "fade",
+				duration : 300
 			},
 			width : 'auto',
 			modal : true,
@@ -153,6 +164,7 @@ window.onload = function (e){
 				text : "新增",
 				click : function() {
 					if ($('#insert-dialog-form-post').valid()) {
+						//alert("進來喔");
 						$.ajax({
 							type : "POST",
 							url : "customer.do",
@@ -168,6 +180,7 @@ window.onload = function (e){
 								memo : $("#dialog-form-insert input[name='memo']").val()
 							},
 							success : function(result) {
+								//alert(result);
 								var json_obj = $.parseJSON(result);
 								var len=json_obj.length;
 								//判斷查詢結果
@@ -177,7 +190,7 @@ window.onload = function (e){
 								});
 								var result_table = "";
 								$.each(json_obj,function(i, item) {
-									if(i<len-1){
+									if(i<len){
 										if(json_obj[i].name==null||json_obj[i].name=='NULL'){
 									        json_obj[i].name ="";
 									    }
@@ -204,16 +217,19 @@ window.onload = function (e){
 									    }
 										result_table 
 										+= "<tr>"
-										+ "<td style='width:8%' id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
-										+ "<td style='width:15%' id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
-										+ "<td style='width:14%' id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
-										+ "<td style='width:14%' id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
-										+ "<td style='width:18%' id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
-										+ "<td style='width:8%' id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
-										+ "<td style='width:8%' id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
-										+ "<td style='width:8%' id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td style='width:7%'><button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_update'>修改</button>"
-										+ "<button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_delete'>刪除</button></td></tr>";
+										+ "<td id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
+										+ "<td id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
+										+ "<td id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
+										+ "<td id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
+										+ "<td id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
+										+ "<td id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
+										+ "<td id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
+										+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";
 									}
 								});
 								$("#customer").dataTable().fnDestroy();
@@ -222,6 +238,8 @@ window.onload = function (e){
 									$("#customer tbody").html(result_table);
 									$("#customer").find("td").css("text-align", "center");
 									$("#customer").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									$("#customer").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								    $("#customer").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 									$(".validateTips").text("");
 								}else{
 									$("#customer-contain").hide();
@@ -269,6 +287,8 @@ window.onload = function (e){
 			autoOpen : false,
 			width : 'auto',
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -290,6 +310,7 @@ window.onload = function (e){
 							},
 							success : function(result) {
 								var json_obj = $.parseJSON(result);
+								//alert(result);
 								//判斷查詢結果
 								var resultRunTime = 0;
 								$.each (json_obj, function (i) {
@@ -324,16 +345,19 @@ window.onload = function (e){
 									    }
 										result_table 
 										+= "<tr>"
-										+ "<td style='width:8%' id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
-										+ "<td style='width:15%' id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
-										+ "<td style='width:14%' id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
-										+ "<td style='width:14%' id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
-										+ "<td style='width:18%' id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
-										+ "<td style='width:8%' id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
-										+ "<td style='width:8%' id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
-										+ "<td style='width:8%' id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td style='width:7%'><button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_update'>修改</button>"
-										+ "<button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_delete'>刪除</button></td></tr>";
+										+ "<td id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
+										+ "<td id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
+										+ "<td id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
+										+ "<td id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
+										+ "<td id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
+										+ "<td id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
+										+ "<td id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
+										+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";
 									});
 								}
 								$("#customer").dataTable().fnDestroy();
@@ -342,6 +366,8 @@ window.onload = function (e){
 									$("#customer tbody").html(result_table);
 									$("#customer").find("td").css("text-align", "center");
 									$("#customer").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									$("#customer").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+									$("#customer").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 									$(".validateTips").text("");
 								}else{
 									$("#customer-contain").hide();
@@ -378,6 +404,8 @@ window.onload = function (e){
 			autoOpen : false,
 			height : 'auto',
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -423,16 +451,19 @@ window.onload = function (e){
 								    }
 									result_table 
 									+= "<tr>"
-									+ "<td style='width:8%' id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
-									+ "<td style='width:15%' id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
-									+ "<td style='width:14%' id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
-									+ "<td style='width:14%' id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
-									+ "<td style='width:18%' id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
-									+ "<td style='width:8%' id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
-									+ "<td style='width:8%' id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
-									+ "<td style='width:8%' id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td style='width:7%'><button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_update'>修改</button>"
-									+ "<button id="+i+" value='"+ json_obj[i].customer_id + "'class='btn_delete'>刪除</button></td></tr>";
+									+ "<td id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
+									+ "<td id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
+									+ "<td id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
+									+ "<td id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
+									+ "<td id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
+									+ "<td id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
+									+ "<td id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
+									+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+									+ "	</div></div></td></tr>";
 								});
 							}
 							$("#customer").dataTable().fnDestroy();
@@ -441,6 +472,8 @@ window.onload = function (e){
 								$("#customer tbody").html(result_table);
 								$("#customer").find("td").css("text-align", "center");
 								$("#customer").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+								$("#customer").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#customer").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 								$(".validateTips").text("");
 							}else{
 								$("#customer-contain").hide();
@@ -459,12 +492,7 @@ window.onload = function (e){
 		$("#customer-contain").hide();
 	})
 </script>
-</head>
-<body style="font-size: 15px;">
-<div style="margin:20px;">
-	<div class="panel-title">
-		<h2 style="font-size: 25px;">客戶管理</h2>
-	</div>
+
 	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
@@ -555,24 +583,32 @@ window.onload = function (e){
 				</form>
 			</div>	
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<button id="create-customer">新增</button>
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="btn-row">
+						<button class="btn btn-exec btn-wide" id="create-customer">新增客戶資料</button>
+					</div>
+				</div>
 			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<button id="create-customer">新增</button> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="center">
+
+			<div class="row search-result-wrap" align="center" id ="sales_contain_row">
 				<div id="customer-contain" class="ui-widget">
-					<table id="customer" class="ui-widget ui-widget-content">
+					<table id="customer" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th style='width:8%'>客戶姓名</th>
-								<th style='width:15%'>收貨地址</th>
-								<th style='width:14%'>電話</th>
-								<th style='width:14%'>手機</th>
-								<th style='width:18%'>Email</th>
-								<th style='width:8%'>郵政編號</th>
-								<th style='width:8%'>客戶等級</th>
-								<th style='width:8%'>備註</th>
-								<th style='width:7%'>功能</th>
+								<th>客戶姓名</th>
+								<th>收貨地址</th>
+								<th>電話</th>
+								<th>手機</th>
+								<th>Email</th>
+								<th>郵政編號</th>
+								<th>客戶等級</th>
+								<th>備註</th>
+								<th>功能</th>
 							</tr>	
 					</table>
 				</div>

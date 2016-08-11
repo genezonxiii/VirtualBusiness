@@ -12,10 +12,15 @@
 <head>
 <title>公司資料</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -86,8 +91,11 @@
 													+ "<tr><td>"+"<p>負責人Email</p>"+"</td><td>"+ json_obj[i].email+ "</td>"
 													+ "<tr><td>"+"<p>負責人連絡手機</p>"+"</td><td>"+ json_obj[i].mobile+"</td></tr>"
 													+ "<tr><td>"+ "<p>功能</p>"+"</td><td>"
-													+"<button value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name
-													+ "'class='btn_update'>修改</button></td></tr>";
+													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+													+ "	<div class='table-function-list'>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "	</div></div>"
+													+ "</td></tr>";
 											});
 											//判斷查詢結果
 											var resultRunTime = 0;
@@ -98,7 +106,7 @@
 											if(resultRunTime!=0){
 												$("#products-contain").show();
 												$("#products tbody").html(result_table);
-												$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "bSort": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+												//$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "bSort": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 												$(".validateTips").text("");
 											}else{
 												$("#products-contain").hide();
@@ -114,6 +122,8 @@
 			height : 500,
 			width : 500,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -147,8 +157,11 @@
 										+ "<tr><td>"+"<p>負責人Email</p>"+"</td><td>"+ json_obj[i].email+ "</td>"
 										+ "<tr><td>"+"<p>負責人連絡手機</p>"+"</td><td>"+ json_obj[i].mobile+"</td></tr>"
 										+ "<tr><td>"+ "<p>功能</p>"+"</td><td>"
-										+"<button value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name
-										+ "'class='btn_update'>修改</button></td></tr>";
+										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "	</div></div>"
+										+"</td></tr>";
 								});
 								//判斷查詢結果
 								var resultRunTime = 0;
@@ -159,7 +172,7 @@
 								if(resultRunTime!=0){
 									$("#products-contain").show();
 									$("#products tbody").html(result_table);
-									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "bSort": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+// 									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "bSort": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 									$(".validateTips").text("");
 								}else{
 									$("#products-contain").hide();
@@ -222,12 +235,6 @@
 		$("#products-contain").hide();
 	});	
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>公司資料</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-修改 -->
 				<div id="dialog-form-update" title="修改公司資料">
@@ -242,16 +249,16 @@
 							<tr><td><h6>公司傳真:</h6></td><td><input type="text" name="fax"placeholder="修改公司傳真"/></td></tr>
 							<tr><td><h6>負責人:</h6></td><td><input type="text" name="master"placeholder="修改公負責人"/></td></tr>
 							<tr><td><h6>負責人Email:</h6></td><td><input type="text" name="email"placeholder="修改負責人Email"/></td></tr>
-							<tr><td><h6>負責人連絡手機:&nbsp&nbsp&nbsp&nbsp</h6></td><td><input type="text" name="mobile"placeholder="修改負責人連絡手機"/></td></tr>
+							<tr><td><h6>負責人連絡手機:&nbsp;&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile"placeholder="修改負責人連絡手機"/></td></tr>
 							</tbody>
 							</table>	
 					</fieldset>
 				</form>
 			</div>			
 			<!-- 第二列 -->
-			<div class="row" align="center">
+			<div class="row search-result-wrap" align="center" style="width:600px;margin:0px auto;">
 				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content">
+					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>公司稱謂 </th>

@@ -1052,7 +1052,6 @@ public class sale extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
-
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);

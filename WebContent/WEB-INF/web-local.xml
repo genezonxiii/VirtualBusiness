@@ -97,7 +97,7 @@
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
-    <param-value>http://www.a-ber.com.tw:8090</param-value>
+    <param-value>http://192.168.112.164:8090</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -330,7 +330,6 @@
     <servlet-name>image</servlet-name>
     <url-pattern>/image.do</url-pattern>
   </servlet-mapping>
- <!--
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>tw.com.aber.loginFilter</filter-class>
@@ -339,5 +338,4 @@
     <filter-name>loginFilter</filter-name>
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
-  -->
 </web-app>

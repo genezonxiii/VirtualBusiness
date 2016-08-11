@@ -13,10 +13,15 @@
 <head>
 <title>用戶資料</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -103,11 +108,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 													"<tr><td>"+ json_obj[i].user_name+
 													"</td><td>"+json_obj[i].role+ 
 													"</td><td>"+json_obj[i].email+
-													"</td><td>"+"<button value='"
-													+ json_obj[i].user_id+   "'name='"
-													+ json_obj[i].user_name+ "'class='btn_update'>修改</button><button  id='"
-													+ json_obj[i].user_name+ "'value='"
-													+ json_obj[i].user_id+   "'class='btn_delete'>刪除</button></td></tr>";										
+													"</td><td>"
+													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+													+ "	<div class='table-function-list'>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+													+ "	</div></div></td></tr>";										
 											});
 											//判斷查詢結果
 											var resultRunTime = 0;
@@ -119,7 +125,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 												
 												$("#products-contain").show();
 												$("#products tbody").html(result_table);
-												$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+												$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 												$(".validateTips").text("");
 											}else{
 												$("#products-contain").hide();
@@ -135,11 +141,11 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							autoOpen : false,
 							show : {
 								effect : "blind",
-								duration : 1000
+								duration : 300
 							},
 							hide : {
-								effect : "explode",
-								duration : 1000
+								effect : "fade",
+								duration : 300
 							},
 							height : 480,
 							width : 450,
@@ -170,11 +176,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 																"<tr><td>"+ json_obj[i].user_name+
 																"</td><td>"+json_obj[i].role+ 
 																"</td><td>"+json_obj[i].email+
-																"</td><td>"+"<button value='"
-																+ json_obj[i].user_id+   "'name='"
-																+ json_obj[i].user_name+ "'class='btn_update'>修改</button><button  id='"
-																+ json_obj[i].user_name+ "'value='"
-																+ json_obj[i].user_id+   "'class='btn_delete'>刪除</button></td></tr>";										
+																"</td><td>"
+																+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+																+ "	<div class='table-function-list'>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+																+ "	</div></div></td></tr>";										
 														});
 														//判斷查詢結果
 														var resultRunTime = 0;
@@ -185,7 +192,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 														if(resultRunTime!=0){
 															$("#products-contain").show();
 															$("#products tbody").html(result_table);
-															$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+															$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 															$(".validateTips").text("");
 														}else{
 															$("#products-contain").hide();
@@ -215,6 +222,8 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			autoOpen : false,
 			height : 140,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -234,11 +243,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 									"<tr><td>"+ json_obj[i].user_name+
 									"</td><td>"+json_obj[i].role+ 
 									"</td><td>"+json_obj[i].email+
-									"</td><td>"+"<button value='"
-									+ json_obj[i].user_id+   "'name='"
-									+ json_obj[i].user_name+ "'class='btn_update'>修改</button><button  id='"
-									+ json_obj[i].user_name+ "'value='"
-									+ json_obj[i].user_id+   "'class='btn_delete'>刪除</button></td></tr>";										
+									"</td><td>"
+									+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+									+ "	</div></div></td></tr>";										
 							});
 							//判斷查詢結果
 							var resultRunTime = 0;
@@ -249,7 +259,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							if(resultRunTime!=0){
 								$("#products-contain").show();
 								$("#products tbody").html(result_table);
-								$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+								$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 								$(".validateTips").text("");
 							}else{
 								$("#products-contain").hide();
@@ -272,6 +282,8 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			height : 400,
 			width : 450,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -296,11 +308,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 										"<tr><td>"+ json_obj[i].user_name+
 										"</td><td>"+json_obj[i].role+ 
 										"</td><td>"+json_obj[i].email+
-										"</td><td>"+"<button value='"
-										+ json_obj[i].user_id+   "'name='"
-										+ json_obj[i].user_name+ "'class='btn_update'>修改</button><button  id='"
-										+ json_obj[i].user_name+ "'value='"
-										+ json_obj[i].user_id+   "'class='btn_delete'>刪除</button></td></tr>";										
+										"</td><td>"
+										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";										
 								});
 								//判斷查詢結果
 								var resultRunTime = 0;
@@ -311,7 +324,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 								if(resultRunTime!=0){
 									$("#products-contain").show();
 									$("#products tbody").html(result_table);
-									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 									$(".validateTips").text("");
 								}else{
 									$("#products-contain").hide();
@@ -373,7 +386,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			update_dialog.dialog("open");
 		});		
 		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
+		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
 		//預設表格隱藏
@@ -382,12 +395,6 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 		});
 	});
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>用戶資料</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認刪除資料嗎?">
@@ -433,21 +440,28 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 				</form>
 			</div>
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="products-serah-create-contain" class="ui-widget">
-					<button id="create-productunit">新增</button>
-				</div>
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="btn-row" >
+						<button class="btn btn-exec btn-wide" id="create-productunit">新增用戶</button>
+					</div>
+				</div><!-- /.form-wrap -->
 			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="products-serah-create-contain" class="ui-widget"> -->
+<!-- 					<button id="create-productunit">新增</button> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="center">
+			<div class="row search-result-wrap" align="center" style="width:600px;margin:0px auto;">
 				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content">
+					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th><p style="width:80px;">用戶名稱</p></th>
+								<th><p style="width:80px;">用戶111名稱</p></th>
 								<th><p style="width:80px;">用戶角色</p></th>
-								<th><p style="width:300px;">Email</p></th>
-								<th><p style="width:300px;">功能</p></th>
+								<th><p style="width:80px;">Email</p></th>
+								<th><p style="width:80px;">功能</p></th>
 							</tr>
 						</thead>
 						<tbody>

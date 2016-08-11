@@ -18,6 +18,8 @@
 }
 
 body {
+	//background: #3F7FAA;//Ben偷加的
+	overflow: hidden;//Ben偷加的
 	font-size: 14px;
 }
 
@@ -57,23 +59,23 @@ div#products-serah-create-contain table td, div#products-serah-create-contain ta
 	vertical-align: middle
 }
 /* 表格樣式 */
-div#products-contain {
-	width: 800px;
-	margin: 20px 0;
-}
+/* div#products-contain { */
+/* 	width: 800px; */
+/* 	margin: 20px 0; */
+/* } */
 
-div#products-contain table {
-	margin: 1em 0;
-	border-collapse: collapse;
-	width: 100%;
-}
+/* div#products-contain table { */
+/* 	margin: 1em 0; */
+/* 	border-collapse: collapse; */
+/* 	width: 100%; */
+/* } */
 
-div#products-contain table td, div#products-contain table th {
-	border: 1px solid #eee;
-	padding: .6em 10px;
-	text-align: center;
-	vertical-align: middle
-}
+/* div#products-contain table td, div#products-contain table th { */
+/* 	border: 1px solid #eee; */
+/* 	padding: .6em 10px; */
+/* 	text-align: center; */
+/* 	vertical-align: middle */
+/* } */
 /* ui */
 .ui-dialog .ui-state-error {
 	padding: .3em;

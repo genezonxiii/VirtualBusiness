@@ -11,13 +11,17 @@
 <head>
 <title>標籤列印</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <%-- <link href="<c:url value="css/jquery-ui.min.css" />" rel="stylesheet"> --%>
 <!-- jquery-ui css要套這一版本，不然Dialog icon會有問題 -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<!-- <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script> -->
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <!-- jquery-ui js要套用這一版，不然Dialog會偏移，且容易當掉 -->
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -28,7 +32,7 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
-
+	
 	var ua = window.navigator.userAgent;
 	var msie = ua.indexOf("MSIE ");
 	    
@@ -38,7 +42,8 @@
 			// 可在此增加需要的功能	
 	    }
 	    else { // If another browser, return 0
-	    	alert("本列印功能只支援IE瀏覽器");
+	    	$("#warning").dialog("open");
+	    	//alert("本列印功能只支援IE瀏覽器");
 	    }
 	}
 
@@ -178,6 +183,7 @@
 					}							
 					if(resultRunTime==0){
 						$("#sales-contain").hide();
+						$(".validateTips").show();
 						$(".validateTips").text("查無此結果");
 					}
 					$("#sales").dataTable().fnDestroy();
@@ -316,36 +322,67 @@
 			    alert("本列印功能只支援IE瀏覽器");
 			}	
 		});
+		$("#warning").html("貼心提醒您:<br>&nbsp;&nbsp;本列印功能只支援IE瀏覽器。");
+		$("#warning").dialog({
+			title: "警告",
+			draggable : false,//防止拖曳
+			resizable : false,//防止縮放
+			autoOpen : false,
+			height : "auto",
+			modal : true,
+			show : {effect : "bounce",duration : 1000},
+			hide : {effect : "fade",duration : 300},
+			buttons : {
+				"確認" : function() {$(this).dialog("close");}
+			}
+		});
 	});
 </script>
-</head>
-<body style="font-size: 15px;">
-<div style="margin:20px;">
-	<div class="panel-title">
-		<h2 style="font-size: 25px;">標籤列印</h2>
-	</div>
 	<div class="panel-content">
+	
+	
+	<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">查詢商品ID</span>
+						<input type="text" id="c_product_id" name="c_product_id">
+					</label>
+					&nbsp;
+					<label for="">
+						<span class="block-label">查詢商品名稱</span>
+						<input type="text" id="product_name" name="product_name">
+					</label>
+					<button class="btn btn-darkblue" id="search-taginfo">查詢</button>
+				</div>
+<!-- 				<div class="btn-row"> -->
+<!-- 					<a href="#" class="btn btn-exec btn-wide">新增銷售資料</a> -->
+<!-- 				</div> -->
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+		
+		
 		<div class="datalistWrap">
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div class="ui-widget" style="width: 600px;margin:0px auto;">
-					<table id="products-serah-create" style="margin: 0px auto;">
-						<thead>
-							<tr>
-								<th><input type="text" id="c_product_id" name="c_product_id" placeholder="請輸入查詢商品ID"></th>
-								<th><input type="text" id="product_name" name="product_name" placeholder="請輸入查詢商品名稱"></th>
-								<th>
-									<button id="search-taginfo" style="width:80px;">查詢</button>
-								</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget" style="width: 600px;margin:0px auto;"> -->
+<!-- 					<table id="products-serah-create" style="margin: 0px auto;"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<th><input type="text" id="c_product_id" name="c_product_id" placeholder="請輸入查詢商品ID"></th> -->
+<!-- 								<th><input type="text" id="product_name" name="product_name" placeholder="請輸入查詢商品名稱"></th> -->
+<!-- 								<th> -->
+<!-- 									<button id="search-taginfo" style="width:80px;">查詢</button> -->
+<!-- 								</th> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
 			<div class="row" align="center">
-				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content" style="width: 600px;margin:0px auto;">
+				<div id="products-contain" class="ui-widget result-table-wrap" style="width: 60%;">
+					<table id="products" class="ui-widget ui-widget-content result-table" style="margin:20px auto;">
 						<thead>
 							<tr class="ui-widget-header">
 								<th COLSPAN=2>標籤列印內容</th>
@@ -370,12 +407,12 @@
 						<font color="#FF0000">(自訂輸出內容) 字體為大時最多可輸出8字元，字體為小時最多可22字元</font>
 					</div>		
 				</div>
-				<span class="validateTips"> </span>
+				<span class="validateTips" style="display:none"> </span>
 			</div>
 			<!-- 第三列 -->
 			<div class="row" align="center">
 				<form name="tagprint-form" id="tagprint-form" >
-					<div id="products-serah-create-contain" class="ui-widget" style="width: 600px; margin:0px auto;">
+					<div id="products-serah-create-contain" class="ui-widget" style="width: 60%; margin:0px auto;">
 						<table id="products-serah-create" class="ui-widget ui-widget-content" style="margin: 0px auto;">
 							<thead class="ui-widget-header">
 								<tr>
@@ -390,7 +427,7 @@
 										&nbsp&nbsp(輸入範圍 1~99)
 									</th>
 									<th>
-										<button id="search-productunit" style="width:80px;">列印</button>
+										<button id="search-productunit" class="btn btn-exec btn-wide">列印</button>
 									</th>
 								</tr>
 							</thead>
@@ -401,6 +438,7 @@
 		</div>
 	</div>
 </div>
+<div id="warning"></div>
 <!-- ################################################### -->
 </body>
 </html>

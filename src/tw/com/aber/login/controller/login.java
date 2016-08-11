@@ -47,21 +47,44 @@ public class login extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LoginService loginserver=new LoginService();
+		if(loginserver.checkconnect()==false){
+			response.getWriter().write("{\"message\":\"connect_error\"}");
+			return;
+		}
+		
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-
 		String action = request.getParameter("action");
 		HttpSession session = request.getSession(true);
 		LoginVO message = null;
 		LoginService loginService = null;
 		Gson gson = null;
-
+		//System.out.println("action= "+action);
+		if ("check_unicode_exist".equals(action)){
+			String unicode = request.getParameter("unicode");
+			loginService = new LoginService();
+			//System.out.println(unicode +" return: "+loginService.checkunicode(unicode));
+			String uni_check="{\"message\":\""+loginService.checkunicode(unicode)+"\"}";
+			response.getWriter().write(uni_check);
+			return;
+		}
 		if ("login".equals(action)) {
 			String username = request.getParameter("userId");
 			String password = request.getParameter("pswd");
 			// 获取验证码
 			String validateCode = request.getParameter("validateCode").trim();
 			Object checkcode = session.getAttribute("checkcode");
+			
+			loginService = new LoginService();
+			if(!loginService.checkuser(username)){
+				message = new LoginVO();
+				message.setMessage("user_failure");
+				gson = new Gson();
+				String jsonStrList = gson.toJson(message);
+				response.getWriter().write(jsonStrList);
+				return;
+			}
 			if (!checkcode.equals(convertToCapitalString(validateCode))) {
 				message = new LoginVO();
 				message.setMessage("code_failure");
@@ -93,6 +116,7 @@ public class login extends HttpServlet {
 		if ("check_user_exist".equals(action)) {
 			String username = request.getParameter("userId");
 			loginService = new LoginService();
+			//System.out.println("aaa= "+loginService.checkuser(username));
 			if(!loginService.checkuser(username)){
 				message = new LoginVO();
 				message.setMessage("user_failure");
@@ -209,6 +233,10 @@ public class login extends HttpServlet {
 		public List<LoginVO> loginDB(String p_email, String p_password);
 
 		public Boolean checkuser(String p_email);
+		
+		public Boolean checkconnect();
+		
+		public Boolean checkunicode(String unicode);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -226,6 +254,13 @@ public class login extends HttpServlet {
 		public Boolean checkuser(String p_email) {
 			return dao.checkuser(p_email);
 		}
+		public Boolean checkconnect() {
+			return dao.checkconnect();
+		}
+		public Boolean checkunicode(String unicode) {
+			return dao.checkunicode(unicode);
+		}
+		
 	}
 
 	/*************************** 操作資料庫 ****************************************/
@@ -233,6 +268,7 @@ public class login extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_login = "call sp_login(?,?)";
 		private static final String sp_checkuser = "call sp_checkuser(?,?)";
+		private static final String sp_check_unicode  = "call sp_check_unicode (?,?)";
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -298,6 +334,55 @@ public class login extends HttpServlet {
 				cs = con.prepareCall(sp_checkuser);
 				cs.registerOutParameter(2, Types.BOOLEAN);
 				cs.setString(1, p_email);
+				cs.execute();
+				rs = cs.getBoolean(2);
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return rs;
+		}
+		public Boolean checkconnect() {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement("SELECT DISTINCT(fax) FROM tb_group");
+				rs = pstmt.executeQuery();
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		public Boolean checkunicode(String unicode) {
+			Connection con = null;
+			CallableStatement cs = null;
+			Boolean rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_check_unicode);
+				cs.registerOutParameter(2, Types.BOOLEAN);
+				cs.setString(1, unicode);
 				cs.execute();
 				rs = cs.getBoolean(2);
 			} catch (SQLException se) {

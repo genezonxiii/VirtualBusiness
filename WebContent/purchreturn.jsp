@@ -15,10 +15,17 @@
 </style>
 <title>進貨退回</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
+<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -27,12 +34,42 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <!-- data table buttons -->
-<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 $(function(){
+	
+// 	$("#button_1").click(
+// 		function(e){
+// 			e.preventDefault();
+// 			var count = 0;
+// 			var message = "";
+// 			$(".checkbox_return").each(function(){1234
+// 				if($(this).prop("checked")){
+// 					count+=1;
+// 				}
+// 			});
+// 			message = "確認要進貨退回嗎? 總共" + count + "筆";
+// 			$("#dialog_confirm p").text(message);
+// 			confirm_dialog.dialog("open");
+// 	    }
+// 	);
+// 	$("#button_2").click(
+// 		function(e){
+//        		e.preventDefault();
+//        		var count = 0;
+//        		var message = "";
+//        		$(".checkbox_return_cancel").each(function(){
+//        			if($(this).prop("checked")){
+//        				count+=1;
+//        			}
+//        		});
+//        		message = "確認要取消進貨退回嗎? 總共" + count + "筆";
+//        		$("#dialog_cancel_confirm p").text(message);
+//        		confirm_cancel_dialog.dialog("open");
+//        }
+// 	);
 	 $("#return_date_form").validate({
 			rules : {
 				return_staet_date : {
@@ -70,7 +107,9 @@ $(function(){
 			}
 		});
 	//退貨日查詢相關設定
-	$("#search_return_date").button().on("click",function(e) {
+	$("#search_return_date").click(function(e) {
+// 		$("#ian").hide();
+// 		$("#ian2").show();
 		e.preventDefault();
 		if($("#return_date_form").valid()){
 			$.ajax({
@@ -125,8 +164,8 @@ $(function(){
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
-									+ "'class='checkbox_return_cancel'></input></td></tr>"
+									+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
+									+ "'class='checkbox_return_cancel'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"
 								}
 							});
 						}
@@ -157,7 +196,7 @@ $(function(){
                 				$("#purchase_return_date_err_mes").html("起日不可大於訖日");
                 			}
 						}							
-						if(resultRunTime==0){
+						if(resultRunTime>2){
 							$("#purchasereturns_false_contain").hide();
 							$("#purchasereturns_true_contain").hide();
 							if(!$("#purchase_return_date_err_mes").length){
@@ -170,6 +209,8 @@ $(function(){
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#purchasereturns_true_contain").show();
 							$("#purchasereturns_true_table tbody").html(result_table);
+							$("#purchasereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#purchasereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("#purchasereturns_true_table").dataTable({
 								  autoWidth: false,
 								  scrollX:  true,
@@ -193,6 +234,7 @@ $(function(){
 						                }
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#purchase_return_date_err_mes").length){
                 				$("#purchase_return_date_err_mes").remove();
                 			}
@@ -202,7 +244,9 @@ $(function(){
 		}
 	});		
 	//進貨日查詢相關設定
-	$("#search_purchase_date").button().on("click",function(e) {
+	$("#search_purchase_date").click(function(e) {
+// 		$("#ian").show();
+// 		$("#ian2").hide();
 		e.preventDefault();
 		if($("#purchase_date_form").valid()){
 			$.ajax({
@@ -257,8 +301,8 @@ $(function(){
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
-									+ "'class='checkbox_return'></input></td></tr>"
+									+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
+									+ "'class='checkbox_return'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"
 								}
 							});
 						}
@@ -303,7 +347,10 @@ $(function(){
 							$("#purchasereturns_true_contain").hide();
 							$("#purchasereturns_false_contain").show();
 							$("#purchasereturns_false_table tbody").html(result_table);
-							$("#purchasereturns_false_table").find("td").css("text-align", "center");
+							//$("#purchasereturns_false_table").find("td").css("text-align", "center");
+							$("#purchasereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#purchasereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							$("#purchasereturns_false_table").dataTable({
 								  autoWidth: false,
 								  scrollX:  true,
@@ -372,7 +419,9 @@ $(function(){
      });
     $("#search_purchase_by_supply_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
 	//供應商ID查詢相關設定
-	$("#search_supply_name").button().on("click",function(e) {
+	$("#search_supply_name").click(function(e) {
+		$("#ian").show();
+		$("#ian2").hide();
 		e.preventDefault();
 		$.ajax({
 			type : "POST",
@@ -423,8 +472,8 @@ $(function(){
 								+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 								+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-								+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
-								+ "'class='checkbox_return'></input></td></tr>"
+								+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
+								+ "'class='checkbox_return'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"
 						});
 					}
 					if(resultRunTime==0){
@@ -442,7 +491,10 @@ $(function(){
 					if(resultRunTime!=0){
 						$("#purchasereturns_false_contain").show();
 						$("#purchasereturns_false_table tbody").html(result_table);
-						$("#purchasereturns_false_table").find("td").css("text-align", "center");
+						//$("#purchasereturns_false_table").find("td").css("text-align", "center");
+						$("#purchasereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+						$("#purchasereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+						$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 						$("#purchasereturns_false_table").dataTable({
 							  autoWidth: false,
 							  scrollX:  true,
@@ -466,6 +518,7 @@ $(function(){
 					                }
 					            }
 					          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
+						$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 						if($("#supply_name_err_mes").length){
             				$("#supply_name_err_mes").remove();
             			}
@@ -479,6 +532,8 @@ $(function(){
 		autoOpen : false,
 		height : 200,
 		modal : true,
+		show : {effect : "blind",duration : 300},
+		hide : {effect : "fade",duration : 300},
 		buttons : {
 			"確認退回" : function() {
 				$(".checkbox_return").each(function(){
@@ -541,19 +596,22 @@ $(function(){
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
-										+ "'class='checkbox_return_cancel'></input></td></tr>"	
+										+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
+										+ "'class='checkbox_return_cancel'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"	
 									});
 								}							
 								if(resultRunTime==0){
 									$("#purchasereturns_true_contain").hide();
 								}
 								if ($.fn.DataTable.isDataTable("#purchasereturns_true_table")) {
-									$("#purchasereturns_true_table").DataTable().fnDestroy();
+									$("#purchasereturns_true_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
 									$("#purchasereturns_true_contain").show();
 									$("#purchasereturns_true_table tbody").html(result_table);
+									$("#purchasereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#purchasereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 									$("#purchasereturns_true_table").dataTable({
 										  autoWidth: false,
 										  scrollX:  true,
@@ -598,6 +656,8 @@ $(function(){
 		autoOpen : false,
 		height : 200,
 		modal : true,
+		show : {effect : "blind",duration : 300},
+		hide : {effect : "fade",duration : 300},
 		buttons : {
 			"確認取消" : function() {
 				$(".checkbox_return_cancel").each(function(){
@@ -659,8 +719,8 @@ $(function(){
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
-										+ "'class='checkbox_return'></input></td></tr>"	
+										+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
+										+ "'class='checkbox_return'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"	
 									});
 								}							
 								if(resultRunTime==0){
@@ -695,7 +755,10 @@ $(function(){
 								                }
 								            }
 								          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
-									$("#purchasereturns_false_table").find("td").css("text-align","center");						
+									$("#purchasereturns_false_table").find("td").css("text-align","center");
+									$("#purchasereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#purchasereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								}
 							}
 						});
@@ -732,12 +795,6 @@ $(function(){
 	$("#purchasereturns_true_table").find("th").css("min-width","120px");	
 })
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>進貨退回</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog_confirm" title="確認銷貨退回嗎?">
@@ -748,41 +805,69 @@ $(function(){
 				<br><p></p>
 			</div>			
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="purchase_search_contain" class="ui-widget">
-					<table id="purchases_search_create">
-						<thead>
-							<tr>
-								<td><input type="text" id="search_purchase_by_supply_name" name="search_purchase_by_supply_name" placeholder="請輸入供應商名稱以供查詢" ></td>
-								<td>
-									&nbsp;&nbsp;<button id="search_supply_name">查詢</button>
-								</td>
-							</tr>
-						</thead>
-					</table>
+			<div class="input-field-wrap">
+			<div class="form-wrap" >
+				<div class="form-row" id="purchase_search_contain"> 
+					<label for="">
+						<span class="block-label">自訂產品 ID 查詢</span>
+						<input type="text" id="search_purchase_by_supply_name" name="search_purchase_by_supply_name">
+					</label>
+					<button id="search_supply_name" class="btn btn-darkblue">查詢</button>
 				</div>
-			</div>
-			<!-- 第二列 -->
-			<div class="row" align="center">
-				<div id="select_dates_contain" class="ui-widget">
+				<div class="form-row" id="select_dates_contain">
 					<form id="purchase_date_form" name="purchase_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="請輸入進貨日期起日"></td>
-									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th>
-									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="請輸入進貨日期迄日"></td>
-									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td>
-								</tr>
-							</thead>
-						</table>
+						<label for="">
+							<span class="block-label">進貨起日</span>
+							<input type="text" class="input-date" id="purchase_start_date" name="purchase_start_date">
+						</label>
+						<div class="forward-mark"></div>
+						<label for="">
+							<span class="block-label">進貨迄日</span>
+							<input type="text" class="input-date" id="purchase_end_date" name="purchase_end_date">
+						</label>
+						<button id="search_purchase_date" class="btn btn-darkblue">查詢</button>
 					</form>
 				</div>
-			</div>
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="purchase_search_contain" class="ui-widget"> -->
+<!-- 					<table id="purchases_search_create"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<td><input type="text" id="search_purchase_by_supply_name" name="search_purchase_by_supply_name" placeholder="請輸入供應商名稱以供查詢" ></td> -->
+<!-- 								<td> -->
+<!-- 									&nbsp;&nbsp;<button id="search_supply_name">查詢</button> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<!-- 第二列 -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="select_dates_contain" class="ui-widget"> -->
+<!-- 					<form id="purchase_date_form" name="purchase_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="請輸入進貨日期起日"></td> -->
+<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
+<!-- 									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="請輸入進貨日期迄日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第三列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="purchasereturns_false_contain" class="ui-widget">
-					<table id="purchasereturns_false_table" class="ui-widget ui-widget-content">
+			<div class="row search-result-wrap" id="ian" align="center"style="height:433px;">
+<!-- 				<div class="form-row"> -->
+<!-- 					<button id="button_1" align="center" class="btn btn-wide btn-darkblue">進貨退回</button> -->
+<!-- 				</div> -->
+				<div id="purchasereturns_false_contain" class="result-table-wrap">
+					<table id="purchasereturns_false_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>進貨單號</th>
@@ -800,33 +885,49 @@ $(function(){
 				</div>
 			</div>		
 		</div>
-	</div>
-	<div class="panel-title">
-		<h2>進貨取消退回</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
-			<!-- 第四列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
+		<div class="input-field-wrap">
+			<div class="form-wrap" >
+				<div class="form-row">
 					<form id="return_date_form" name="trans_dis_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td><input type="text" id="return_start_date" name="return_start_date" class="date" placeholder="請輸入退貨起日"></td>
-									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th>
-									<td><input type="text" id="return_end_date" name="return_end_date" class="date" placeholder="請輸入退貨迄日"></td>
-									<td>&nbsp;&nbsp;<button id="search_return_date">查詢</button></td>
-								</tr>
-							</thead>
-						</table>
+						<label for="">
+							<span class="block-label">退貨起日</span>
+							<input type="text" class="input-date" id="return_start_date" name="return_start_date">
+						</label>
+						<div class="forward-mark"></div>
+						<label for="">
+							<span class="block-label">退貨迄日</span>
+							<input type="text" class="input-date" id="return_end_date" name="return_end_date">
+						</label>
+						<button id="search_return_date" class="btn btn-darkblue">查詢</button>		
 					</form>
 				</div>
-			</div>		
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+			<!-- 第四列 -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="return_date_form" name="trans_dis_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td><input type="text" id="return_start_date" name="return_start_date" class="date" placeholder="請輸入退貨起日"></td> -->
+<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
+<!-- 									<td><input type="text" id="return_end_date" name="return_end_date" class="date" placeholder="請輸入退貨迄日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;<button id="search_return_date">查詢</button></td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div>		 -->
 			<!-- 第五列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="purchasereturns_true_contain" class="ui-widget">
-					<table id="purchasereturns_true_table" class="ui-widget ui-widget-content">
+			<div class="row search-result-wrap" id="ian2" align="center"style="height:433px;">
+<!-- 				<div class="form-row"> -->
+<!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消進貨退回</button> -->
+<!-- 				</div> -->
+				<div id="purchasereturns_true_contain" class="result-table-wrap">
+					<table id="purchasereturns_true_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>進貨單號</th>
@@ -842,7 +943,7 @@ $(function(){
 						</tbody>
 					</table>
 				</div>
-			</div>			
+			</div>		
 		</div>
 	</div>	
 </body>

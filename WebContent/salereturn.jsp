@@ -15,10 +15,17 @@
 </style>
 <title>銷貨退回</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
+<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -27,12 +34,40 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <!-- data table extensions -->
-<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function(){
+// 		$("#button_1").click(
+// 			function(e){
+//                	e.preventDefault();
+//        			var count = 0;
+//        			var message = "";
+//        			$(".checkbox_salereturn").each(function(){
+//        				if($(this).prop("checked")){
+//        					count+=1;
+//        				}
+//        			});
+//        			message = "確認要銷貨退回嗎? 總共" + count + "筆";
+//        			$("#dialog-confirm p").text(message);
+//        			confirm_dialog.dialog("open");
+//                }
+// 		);
+// 		$("#button_2").click(
+// 			function(e){
+//        			e.preventDefault();
+//        			var count = 0;
+//        			var message = "";
+//        			$(".checkbox_salereturn_cancel").each(function(){
+//        				if($(this).prop("checked")){
+//        					count+=1;
+//        				}
+//        			});
+//        			message = "確認要取消銷貨退回嗎? 總共" + count + "筆";
+//        			$("#dialog-cancel-confirm p").text(message);
+//        			confirm_cancel_dialog.dialog("open");
+//            }
+// 		);
 		 $("#return_date_form").validate({
 				rules : {
 					return_staet_date : {
@@ -89,7 +124,7 @@
 			});
 	var table;
 	//退貨日查詢相關設定
-	$("#searh_salereturn_date").button().on("click",function(e) {
+	$("#searh_salereturn_date").click(function(e) {
 		e.preventDefault();
 		if($("#return_date_form").valid()){
 			$.ajax({
@@ -166,8 +201,8 @@
 									+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-									+ "'class='checkbox_salereturn_cancel'></input></td></tr>";	
+									+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+									+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";	
 								}
 							});
 						}
@@ -234,6 +269,9 @@
 						                }
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									$("#salereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#salereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#return_date_err_mes").length){
                 				$("#return_date_err_mes").remove();
                 			}
@@ -243,7 +281,7 @@
 		}
 	});	
 		//轉單日查詢相關設定
-		$("#searh_trans_list_date").button().on("click",function(e) {
+		$("#searh_trans_list_date").click(function(e) {
 			e.preventDefault();
 			if($("#trans_list_date_form").valid()){
 				$.ajax({
@@ -320,8 +358,8 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='checkbox_salereturn'></input></td></tr>";
+										+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+										+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";
 									}
 								});
 							}
@@ -366,6 +404,9 @@
 								$("#salereturns_false_contain").show();
 								$("#salereturns_true_contain").hide();
 								$("#salereturns_false_table tbody").html(result_table);
+								$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								$("#salereturns_false_table").dataTable({
 									  autoWidth: false,
 									  scrollX:  true,
@@ -398,7 +439,7 @@
 			}
 		});
 		//配送日查詢相關設定
-		$("#searh_dis_date").button().on("click",function(e) {
+		$("#searh_dis_date").click(function(e) {
 			e.preventDefault();
 			if($("#trans_dis_date_form").valid()){
 				$.ajax({
@@ -475,8 +516,8 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='checkbox_salereturn'></input></td></tr>";
+										+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+										+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";
 									}
 								});
 							}
@@ -521,6 +562,9 @@
 								$("#salereturns_false_contain").show();
 								$("#salereturns_true_contain").hide();
 								$("#salereturns_false_table tbody").html(result_table);
+								$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								$("#salereturns_false_table").dataTable({
 									  autoWidth: false,
 									  scrollX:  true,
@@ -590,7 +634,7 @@
 	         });
 	       $("#searh_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入產品ID以供查詢"); } ); 
 		//自訂產品ID查詢相關設定
-		$("#searh_salereturn").button().on("click",function(e) {
+		$("#searh_salereturn").click(function(e) {
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
@@ -664,8 +708,8 @@
 								+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 								+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-								+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-								+ "'class='checkbox_salereturn'></input></td></tr>";		
+								+ "<td><input id='my-"+json_obj[i].sale_id+"'type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+								+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";		
 							});
 						}							
 						if(resultRunTime==0){
@@ -704,6 +748,9 @@
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 							$("#salereturns_false_table").find("td").css("text-align","center");
+							$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#search_sale_return_err_mes").length){
                 				$("#search_sale_return_err_mes").remove();
                 			}
@@ -717,6 +764,8 @@
 			autoOpen : false,
 			height : 200,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認退回" : function() {
 					$(".checkbox_salereturn").each(function(){
@@ -801,8 +850,8 @@
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-											+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-											+ "'class='checkbox_salereturn_cancel'></input></td></tr>";		
+											+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+											+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";		
 										});
 									}							
 									if(resultRunTime==0){
@@ -814,6 +863,9 @@
 									if(resultRunTime!=0){
 										$("#salereturns_true_contain").show();
 										$("#salereturns_true_table tbody").html(result_table);
+										$("#salereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										$("#salereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 										$("#salereturns_true_table").dataTable({
 											  autoWidth: false,
 											  scrollX:  true,
@@ -856,6 +908,8 @@
 			autoOpen : false,
 			height : 200,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認取消" : function() {
 					$(".checkbox_salereturn_cancel").each(function(){
@@ -939,8 +993,8 @@
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-											+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-											+ "'class='checkbox_salereturn'></input></td></tr>";	
+											+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+											+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";	
 										});
 									}							
 									if(resultRunTime==0){
@@ -952,6 +1006,9 @@
 									if(resultRunTime!=0){
 										$("#salereturns_false_contain").show();
 										$("#salereturns_false_table tbody").html(result_table);
+										$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 										$("#salereturns_false_table").dataTable({
 											  autoWidth: false,
 											  scrollX:  true,
@@ -1011,12 +1068,6 @@
 		$("#salereturns_true_table").find("th").css("min-width","120px");
 	})
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>銷貨退回</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認銷貨退回嗎?">
@@ -1027,76 +1078,119 @@
 				<br><p></p>
 			</div>					
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="salereturns_serah_create_contain" class="ui-widget">
-					<table id="salereturns_serah_create">
-						<thead>
-							<tr>
-								<td>
-									<input type="text" id="searh_c_product_id" name="searh_c_product_id" placeholder="請輸入自訂產品ID查詢">
-								</td>
-								<th>
-									&nbsp;&nbsp;<button id="searh_salereturn">查詢</button>
-								</th>
-							</tr>
-						</thead>
-					</table>
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">產品 ID 查詢</span>
+						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
+					</label>
+					<button class="btn btn-darkblue" id="searh_salereturn">查詢</button>
 				</div>
-			</div>
-			<!-- 第二列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
+	          	
+				<div class="form-row">
 					<form id="trans_list_date_form" name="trans_list_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td>
-										<input type="text" id="trans_list_start_date" name="trans_list_start_date" class="date" placeholder="請輸入轉單起日">
-									</td>
-									<td>
-										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-									</td>
-									<td>
-										<input type="text" id="trans_list_end_date" name="trans_list_end_date" class="date" placeholder="請輸入轉單迄日">
-									</td>
-									<td>
-										&nbsp;&nbsp;<button id="searh_trans_list_date">查詢</button>
-									</td>
-								</tr>
-							</thead>
-						</table>
+						<label for="">
+							<span class="block-label">轉單起日</span>
+							<input type="text" class="input-date" id="trans_list_start_date" name="trans_list_start_date">
+						</label>
+						<div class="forward-mark"></div>
+						<label for="">
+							<span class="block-label">轉單迄日</span>
+							<input type="text" class="input-date" id="trans_list_end_date" name="trans_list_end_date">
+						</label>
+						<button id="searh_trans_list_date" class="btn btn-darkblue">查詢</button>
 					</form>
 				</div>
-			</div>
-			<!-- 第三列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
+				<div class="form-row">
 					<form id="trans_dis_date_form" name="trans_dis_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td>
-										<input type="text" id="dis_start_date" name="dis_start_date" class="date" placeholder="請輸入配送起日">
-									</td>
-									<td>
-										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-									</td>
-									<td>
-										<input type="text" id="dis_end_date" name="dis_end_date" class="date" placeholder="請輸入配送迄日">
-									</td>
-									<td>
-										&nbsp;&nbsp;<button id="searh_dis_date">查詢</button>
-									</td>
-								</tr>
-							</thead>
-						</table>
+						<label for="">
+							<span class="block-label">配送起日</span>
+							<input type="text" class="input-date" id="dis_start_date" name="dis_start_date">
+						</label>
+						<div class="forward-mark"></div>
+						<label for="">
+							<span class="block-label">配送迄日</span>
+							<input type="text" class="input-date" id="dis_end_date" name="dis_end_date">
+						</label>
+						<button id="searh_dis_date" class="btn btn-darkblue">查詢</button>
 					</form>
 				</div>
-			</div>
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="salereturns_serah_create_contain" class="ui-widget"> -->
+<!-- 					<table id="salereturns_serah_create"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<td> -->
+<!-- 									<input type="text" id="searh_c_product_id" name="searh_c_product_id" placeholder="請輸入自訂產品ID查詢"> -->
+<!-- 								</td> -->
+<!-- 								<th> -->
+<!-- 									&nbsp;&nbsp;<button id="searh_salereturn">查詢</button> -->
+<!-- 								</th> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<!-- 第二列 -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="trans_list_date_form" name="trans_list_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="trans_list_start_date" name="trans_list_start_date" class="date" placeholder="請輸入轉單起日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="trans_list_end_date" name="trans_list_end_date" class="date" placeholder="請輸入轉單迄日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										&nbsp;&nbsp;<button id="searh_trans_list_date">查詢</button> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<!-- 第三列 -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="trans_dis_date_form" name="trans_dis_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="dis_start_date" name="dis_start_date" class="date" placeholder="請輸入配送起日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="dis_end_date" name="dis_end_date" class="date" placeholder="請輸入配送迄日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										&nbsp;&nbsp;<button id="searh_dis_date">查詢</button> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="salereturns_false_contain" class="ui-widget">
-					<table id="salereturns_false_table">
+			<div class="row search-result-wrap" id="ian" align="center"style="height:433px;">
+<!-- 				<div class="form-row"> -->
+<!-- 					<button id="button_1" align="center" class="btn btn-wide btn-darkblue">銷貨退回</button> -->
+<!-- 				</div> -->
+				<div id="salereturns_false_contain" class="result-table-wrap">
+					<table id="salereturns_false_table" class="result-table">
 						<thead>
 							<tr>
 								<th>銷貨單號</th>
@@ -1121,41 +1215,57 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="panel-title">
-		<h2>銷貨取消退回</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap" >
 			<!-- 第五列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<form id="return_date_form" name="trans_dis_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td>
-										<input type="text" id="return_start_date" name="return_start_date" class="date" placeholder="請輸入退貨起日">
-									</td>
-									<th>
-										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-									</th>
-									<td>
-										<input type="text" id="return_end_date" name="return_end_date" class="date" placeholder="請輸入退貨迄日">
-									</td>
-									<td>
-										&nbsp;&nbsp;<button id="searh_salereturn_date">查詢</button>
-									</td>
-								</tr>
-							</thead>
-						</table>
-					</form>
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="return_date_form" name="trans_dis_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="return_start_date" name="return_start_date" class="date" placeholder="請輸入退貨起日"> -->
+<!-- 									</td> -->
+<!-- 									<th> -->
+<!-- 										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p> -->
+<!-- 									</th> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="return_end_date" name="return_end_date" class="date" placeholder="請輸入退貨迄日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										&nbsp;&nbsp;<button id="searh_salereturn_date">查詢</button> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第六列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="salereturns_true_contain" class="ui-widget">
-					<table id="salereturns_true_table">
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="form-row">
+						<form id="return_date_form" name="trans_dis_date_form">
+							<label for="">
+								<span class="block-label">退貨起日</span>
+								<input type="text" class="input-date" id="return_start_date" name="return_start_date">
+							</label>
+							<div class="forward-mark"></div>
+							<label for="">
+								<span class="block-label">退貨迄日</span>
+								<input type="text" class="input-date" id="return_end_date" name="return_end_date">
+							</label>
+							<button id="searh_salereturn_date" class="btn btn-darkblue">查詢</button>
+						</form>
+					</div>
+				</div><!-- /.form-wrap -->
+			</div><!-- /.input-field-wrap -->
+			<div class="row search-result-wrap" id="ian2" align="center"style="height:433px;">
+<!-- 				<div class="form-row"> -->
+<!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消銷貨退回</button> -->
+<!-- 				</div> -->
+				<div id="salereturns_true_contain" class="result-table-wrap">
+					<table id="salereturns_true_table" class="result-table">
 						<thead>
 							<tr>
 								<th>銷貨單號</th>

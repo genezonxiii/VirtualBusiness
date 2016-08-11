@@ -15,10 +15,15 @@
 <head>
 <title>出貨量統計圖</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -78,7 +83,7 @@ function draw_chart(m_h,m_w,data){
             .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
             .attr("height", h)
         .append("svg:g")                //make a group to hold our pie chart
-            .attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+            .attr("transform", "translate(" + (r*4/3) + "," + (r*4/3) + ")")    //move the center of the pie chart from 0, 0 to radius, radius
 
     var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
         .outerRadius(r);
@@ -96,8 +101,8 @@ function draw_chart(m_h,m_w,data){
         arcs.append("svg:text")                                     //add a label to each slice
                 .attr("transform", function(d) {                    //set the label's origin to the center of the arc
                 //we have to make sure to set these before calling arc.centroid
-                d.innerRadius = 0;
-                d.outerRadius = r;
+                d.innerRadius = r*4/3;
+                d.outerRadius = 2*r;
                 return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
             })
             .attr("text-anchor", "middle")                          //center the text on it's origin
@@ -131,9 +136,9 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
 	$(function() {
-		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
-		$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
-		$("#searh-productunit").button().on("click",function(e) {
+		//$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
+		//$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
+		$("#searh-productunit").click(function(e) {
 			
 			e.preventDefault();
 			$.ajax({
@@ -152,7 +157,7 @@ function date_format(str) {
 						}
 					}
 					if(data.length!=0){
-						draw_chart(300,450,data);
+						draw_chart(450,550,data);
 					}else{
 						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
 					}
@@ -167,8 +172,8 @@ function date_format(str) {
 			autoOpen : false,
 			height : "auto",
 			modal : true,
-			show : {effect : "blind",duration : 1000},
- 			hide : {effect : "blind",duration : 1000},
+			show : {effect : "blind",duration : 300},
+ 			hide : {effect : "blind",duration : 300},
 			buttons : {
 				"確認刪除" : function() {alert("嘿嘿嘿~");$(this).dialog("close");},
 				"取消刪除" : function() {$(this).dialog("close");}
@@ -187,49 +192,46 @@ function date_format(str) {
 		$("#products-contain").hide();
 	});
 </script>
-<style>
-.row {
-    border-bottom: 0px;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-}
-::-webkit-input-placeholder {text-align: center;}
-:-moz-placeholder {text-align: center; } /* Firefox 18- */
-::-moz-placeholder { text-align: center; }/* Firefox 19+ */
-:-ms-input-placeholder { text-align: center; }
-</style>
-</head>
-<body style="font-size: 15px;">
 
-<script>
-</script>
-<div style="margin:20px;">
-	<div class="panel-title">
-		<h2 style="font-size: 25px;">銷售金額統計圖</h2>
-	</div>
 	<div class="panel-content">
 		<div class="datalistWrap" >
-
+			
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="form-row">
+						<label for="">
+							<span class="block-label">轉單起日</span>
+							<input type="text" class="input-date" id="datepicker1">
+						</label>
+						<div class="forward-mark"></div>
+						<label for="">
+							<span class="block-label" id="datepicker2">轉單迄日</span>
+							<input type="text" class="input-date">
+						</label>
+						<button id="searh-productunit" class="btn btn-darkblue">查詢</button>
+					</div>
+				</div><!-- /.form-wrap -->
+			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
-			<div class="row" >
-				<div id="products-serah-create-contain" style="width: 800px;margin:0px auto;" >
-					<table id="products-serah-create" class="ui-widget ui-widget-content">
-						<tr class="ui-widget-header">
-							<th >
-								<p style="width:120px;">轉單日</p>
-							</th><th>
-								<input type="text" id="datepicker1" placeholder="起">
-							</th><th>
-								~
-							</th><th>
-								<input type="text" id="datepicker2" placeholder="迄">
-							</th><th>
-								<button id="searh-productunit" onclick="" style="width:80px;">查詢</button>
-							</th>
-						</tr>
-					</table>
-				</div>
-			</div>
+<!-- 			<div class="row" > -->
+<!-- 				<div id="products-serah-create-contain" style="width: 800px;margin:0px auto;" > -->
+<!-- 					<table id="products-serah-create" class="ui-widget ui-widget-content"> -->
+<!-- 						<tr class="ui-widget-header"> -->
+<!-- 							<th > -->
+<!-- 								<p style="width:120px;">轉單日</p> -->
+<!-- 							</th><th> -->
+<!-- 								<input type="text" id="datepicker1" placeholder="起"> -->
+<!-- 							</th><th> -->
+<!-- 								~ -->
+<!-- 							</th><th> -->
+<!-- 								<input type="text" id="datepicker2" placeholder="迄"> -->
+<!-- 							</th><th> -->
+<!-- 								<button id="searh-productunit" onclick="" style="width:80px;">查詢</button> -->
+<!-- 							</th> -->
+<!-- 						</tr> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
 			<div class="row" align="left" >
 				<div id="products-contain" class="ui-widget">
@@ -253,7 +255,7 @@ function date_format(str) {
 						</tbody>
 					</table>
 				</div>
-				<span class="validateTips"> </span>
+				<div class="validateTips" align="center"> </div>
 				<div id="chart" align="center"></div>
 			</div>
 		</div>

@@ -28,6 +28,35 @@ public class accreceive extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		AccreceiveService accreceiveService = null;
 		String action = request.getParameter("action");
+		if("melvin".equals(action)){
+			String g_id=request.getSession().getAttribute("group_id").toString();
+			String seq=request.getParameter("seq_no");
+			String detail="";
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+						+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+			String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
+			String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement("call sp_get_orderno(?,?)");
+				pstmt.setString(1,g_id);
+				pstmt.setString(2,seq);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					detail+="　訂單號："+rs.getString("order_no")+"\n";
+					detail+="產品名稱："+rs.getString("product_name")+"\n";
+					detail+="　　價格："+rs.getString("price")+"\n";
+					detail+="　　平台："+rs.getString("order_source")+"\n";
+				}
+			} catch (Exception se) {System.out.println("ERROR WITH: "+se);}
+			System.out.println(detail);
+			response.getWriter().write(detail);
+			return;
+		}
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		if("searh_amount_date".equals(action)){

@@ -61,9 +61,9 @@ public class shipreport extends HttpServlet {
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		group_id=(group_id==null||group_id.length()<3)?"UNKNOWN":group_id;
 
-		String time1 = request.getParameter("time1").replaceAll("/", "-");
+		String time1 = (request.getParameter("time1")==null)?"":request.getParameter("time1").replaceAll("/", "-");
 		time1=(time1.length()<3)?"2016-06-01":time1;
-		String time2 = request.getParameter("time2").replaceAll("/", "-");
+		String time2 = (request.getParameter("time2")==null)?"":request.getParameter("time2").replaceAll("/", "-");
 		time2=(time2.length()<3)?"2300-12-31":time2;
 		//System.out.println("from "+time1+" to "+time2+"of groupid= "+group_id);
 		
@@ -84,6 +84,7 @@ public class shipreport extends HttpServlet {
 					+ "&enddate="
 					+ new String(Base64.encodeBase64String((new SimpleDateFormat("yyyy-MM-dd").format(new Date())).getBytes()));
 		}
+//		System.out.println("conString "+conString);
 		HttpClient client = new HttpClient();
 		HttpMethod method;
 		try{
@@ -93,7 +94,6 @@ public class shipreport extends HttpServlet {
 			response.getWriter().write("WebService Error for:"+e);
 			return;
 		}
-		
 		response.getWriter().write(method.getResponseBodyAsString());
 		//System.out.println(method.getResponseBodyAsString());
 		method.releaseConnection();

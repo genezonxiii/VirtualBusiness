@@ -16,10 +16,15 @@
 <head>
 <title>密碼修改</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -54,7 +59,7 @@
 		});
 		
 		//密碼修改
-		$("#password_btn").button().on("click",function(e) {
+		$("#password_btn").click(function(e) {
 			var pass1 = $("input[name='password']").val();
 			var pass2 = $("input[name='password2']").val();
 			if ( pass1 === pass2) {
@@ -89,44 +94,62 @@
 							});
 						});
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>密碼修改</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 		
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="products-serah-create-contain" class="ui-widget">
-				<form name="password-form-post" id="password-form-post">
-						<table  id="password" height="100">
-							
-							<tbody>
-								<tr>
-									<td style="font-size:15px;"><h2>新密碼:</h2></td>
-									<td><input type="password" name="password"  placeholder="輸入新密碼"/></td>
-									
-								</tr>
-								<tr>
-									<td style="font-size:15px;"><h2>新密碼確認:</h2></td>
-									<td><input type="password" name="password2"  placeholder="再輸入新密碼"/></td>
-								</tr>
-								<tr>
-									<td style="font-size:15px;" colspan="2">
-										<button id="password_btn">更改密碼</button>
-									</td>
-								</tr>
-								<tr>
-									<td colspan="2"><font size="3" color="#FF0000"><p id="errormesg"></p> <p id="ok"></p></font></td>
-								
-									</tr>
-							</tbody>
-						</table>
-						</form>
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+			<form name="password-form-post" id="password-form-post" class="result-table">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">新密碼</span>
+						<input type="password" name="password">
+					</label>
 				</div>
-			</div>
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">新密碼確認</span>
+						<input type="password" name="password2">
+					</label>
+				</div>
+				<div class="btn-row">
+					<button id="password_btn" class="btn btn-exec btn-wide">更改密碼</button>
+				</div>
+				<div id="errormesg"></div>
+			</form>
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+			
+			
+			
+<!-- 			<div class="row search-result-wrap" align="center"> -->
+<!-- 				<div id="products-serah-create-contain" class="ui-widget result-table-wrap"> -->
+<!-- 				<form name="password-form-post" id="password-form-post" class="result-table"> -->
+<!-- 						<table  id="password"> -->
+<!-- 							<tbody> -->
+<!-- 								<tr> -->
+<!-- 									<td><h2>新密碼:</h2></td> -->
+<!-- 									<td><input type="password" name="password"  placeholder="輸入新密碼"/></td> -->
+									
+<!-- 								</tr> -->
+<!-- 								<tr> -->
+<!-- 									<td><h2>新密碼確認:</h2></td> -->
+<!-- 									<td><input type="password" name="password2"  placeholder="再輸入新密碼"/></td> -->
+<!-- 								</tr> -->
+<!-- 								<tr> -->
+<!-- 									<td colspan="2"> -->
+<!-- 										<button id="password_btn" class="btn btn-darkblue">更改密碼</button> -->
+<!-- 									</td> -->
+<!-- 								</tr> -->
+<!-- 								<tr> -->
+<!-- 									<td colspan="2"><div id="errormesg"></div></td> -->
+								
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
+<!-- 						</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 		</div>
 	</div>
 </body>

@@ -36,6 +36,34 @@ public class product extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		//System.out.println("action: "+action);
+		if ("find_barcode".equals(action)) {
+			String barcode = request.getParameter("barcode");
+			productService = new ProductService();
+//			group_id="a604a6b1-4253-11e6-806e-000c29c1d067";
+//			barcode="9787111463115";
+			List<ProductBean> list = productService.getsearchBarcode(group_id,barcode);
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(list);
+			//System.out.println("jsonStrList: "+jsonStrList);
+			response.getWriter().write(jsonStrList);
+			return;
+		}
+//		if ("find_barcode2".equals(action)) {
+//			String barcode = request.getParameter("barcode");
+//			productService = new ProductService();
+//			group_id="a604a6b1-4253-11e6-806e-000c29c1d067";
+//			barcode="9787111463115";
+//			List<ProductBean> list0 = productService.getsearchBarcode(group_id,barcode);
+//			System.out.println("g: "+group_id+" c_p: "+list0.get(0).c_product_id);
+//			List<ProductBean> list = productService.getsearchSupplyname(group_id,list0.get(0).c_product_id);
+//			Gson gson = new Gson();
+//			String jsonStrList = gson.toJson(list);
+//			System.out.println("jsonStrList: "+jsonStrList);
+//			response.getWriter().write(jsonStrList);
+//			return;
+//			
+//		}
 		if ("search".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數-格式檢查 ****************************************/
@@ -75,10 +103,12 @@ public class product extends HttpServlet {
 			String term = request.getParameter("term");
 			String identity = request.getParameter("identity");
 			if ("ID".equals(identity)) {
+				//System.out.println("hihi");
 				productService = new ProductService();
 				List<Product_idBean> list = productService.getSearchUnit_byname(group_id, term);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
+				//System.out.println("json: "+jsonStrList);
 				response.getWriter().write(jsonStrList);
 				return;// 程式中斷
 			}
@@ -392,6 +422,7 @@ public class product extends HttpServlet {
 		
 		public List<ProductBean> getsearchSupplyname(String group_id,String supply_name);
 		
+		public List<ProductBean> getsearchBarcode(String group_id,String barcode);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -475,11 +506,16 @@ public class product extends HttpServlet {
 		public List<ProductBean> getsearchSupplyname(String group_id, String supply_name) {
 			return dao.getsearchSupplyname(group_id, supply_name);
 		}
+		public List<ProductBean> getsearchBarcode(String group_id,String barcode){
+			return dao.getsearchBarcode(group_id,barcode);
+		}
+		
 	}
 
 	/*************************** 操作資料庫 ****************************************/
 	class ProductDAO implements product_interface {
 		// 會使用到的Stored procedure
+		private static final String sp_get_product_bybarcode = "call sp_get_product_bybarcode(?,?)";
 		private static final String sp_selectall_product = "call sp_selectall_product (?)";
 		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 	?)";
 		private static final String sp_del_product = "call sp_del_product (?,?)";
@@ -899,6 +935,71 @@ public class product extends HttpServlet {
 				productBean.setPhoto1(rs.getString("photo1"));
 				productBean.setDescription(rs.getString("description"));
 				productBean.setBarcode(rs.getString("barcode"));
+				list.add(productBean);
+			}
+			// Handle any driver errors
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+			// Clean up JDBC resources
+		} catch (ClassNotFoundException cnfe) {
+			throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return list;
+		}
+	public List<ProductBean>  getsearchBarcode(String group_id,String barcode) {
+		List<ProductBean> list = new ArrayList<ProductBean>();
+		ProductBean productBean = null;
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+			pstmt = con.prepareStatement(sp_get_product_bybarcode);
+			pstmt.setString(1, group_id);
+			pstmt.setString(2, barcode);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				productBean = new ProductBean();
+				productBean.setProduct_id(rs.getString("product_id"));
+				//productBean.setGroup_id(rs.getString("group_id"));
+				productBean.setC_product_id(rs.getString("c_product_id"));
+				productBean.setProduct_name(rs.getString("product_name"));
+				//productBean.setSupply_id(rs.getString("supply_id"));
+				//productBean.setSupply_name(rs.getString("supply_name"));
+				//productBean.setType_id(rs.getString("type_id"));
+				//productBean.setUnit_id(rs.getString("unit_id"));
+				productBean.setCost(rs.getFloat("cost"));
+				//productBean.setPrice(rs.getFloat("price"));
+				productBean.setKeep_stock(rs.getInt("quantity"));
+				//productBean.setPhoto(rs.getString("photo"));
+				//productBean.setPhoto1(rs.getString("photo1"));
+				//productBean.setDescription(rs.getString("description"));
+				//productBean.setBarcode(rs.getString("barcode"));
 				list.add(productBean);
 			}
 			// Handle any driver errors

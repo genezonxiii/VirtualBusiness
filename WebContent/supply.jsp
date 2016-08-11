@@ -17,10 +17,15 @@
 <title>廠商資料</title>
 <title>sale</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -162,26 +167,29 @@
 													"</td><td>"+json_obj[i].mobile1+
 													"</td><td>"+json_obj[i].memo+
 													
-													"</td><td>"+"<button value='"
-													+ json_obj[i].supply_id+ "'name='"
-													+ json_obj[i].supply_name+ "'class='btn_update'>修改</button><button id='"+json_obj[i].supply_name+"' value='"
-													+ json_obj[i].supply_id+ "'class='btn_delete'>刪除</button></td></tr>";
+													 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+													+ "	<div class='table-function-list'>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+													+ "	</div></div></td></tr>";
 											});
 											//判斷查詢結果
 											var resultRunTime = 0;
 											$.each (json_obj, function (i) {
 												resultRunTime+=1;
 											});
-											$("#products").dataTable().fnDestroy();
+											$("#products2").dataTable().fnDestroy();
 											if(resultRunTime!=0){
 												
-												$("#products-contain").show();
-												$("#products tbody").html(result_table);
-// 												$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-												$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+												$("#products2-contain").show();
+												$("#products2 tbody").html(result_table);
+												$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 												$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+												$("#products2").find("th").css({"word-break":"break-all","max-width":"180px","text-align":"center" });
+												$("#products2").find("td").css({"word-break":"break-all","max-width":"180px","text-align":"center" });
 												$(".validateTips").text("");
 											}else{
-												$("#products-contain").hide();
+												$("#products2-contain").hide();
 												$(".validateTips").text("查無此結果");
 											}
 										}
@@ -194,11 +202,11 @@
 							autoOpen : false,
 							show : {
 								effect : "blind",
-								duration : 1000
+								duration : 300
 							},
 							hide : {
-								effect : "explode",
-								duration : 1000
+								effect : "fade",
+								duration : 300
 							},
 							width : 950,
 							modal : true,
@@ -243,25 +251,28 @@
 																"</td><td>"+json_obj[i].mobile1+
 																"</td><td>"+json_obj[i].memo+
 																
-																"</td><td>"+"<button value='"
-																+ json_obj[i].supply_id+ "'name='"
-																+ json_obj[i].supply_name+ "'class='btn_update'>修改</button><button id='"+json_obj[i].supply_name+"' value='"
-																+ json_obj[i].supply_id+ "'class='btn_delete'>刪除</button></td></tr>";
+																"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+																+ "	<div class='table-function-list'>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+																+ "	</div></div></td></tr>";
 														});
 														//判斷查詢結果
 														var resultRunTime = 0;
 														$.each (json_obj, function (i) {
 															resultRunTime+=1;
 														});
-														$("#products").dataTable().fnDestroy();
+														$("#products2").dataTable().fnDestroy();
 														if(resultRunTime!=0){
-															$("#products-contain").show();
-															$("#products tbody").html(result_table);
-// 															$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-															$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+															$("#products2-contain").show();
+															$("#products2 tbody").html(result_table);
+															$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 															$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+															$("products2").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+															$("products2").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 															$(".validateTips").text("");
 														}else{
-															$("#products-contain").hide();
+															$("#products2-contain").hide();
 														}
 													}
 												});
@@ -287,6 +298,8 @@
 			autoOpen : false,
 			height : 140,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -314,11 +327,12 @@
 									"</td><td>"+json_obj[i].mobile1+
 									"</td><td>"+json_obj[i].memo+
 									
-									"</td><td>"+"<button value='"
-									+ json_obj[i].supply_id+   "'name='"
-									+ json_obj[i].supply_name+ "'class='btn_update'>修改</button><button id='"
-									+ json_obj[i].supply_name+ "' value='"
-									+ json_obj[i].supply_id+   "'class='btn_delete'>刪除</button></td></tr>";	
+									"</td>"+
+									 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+									+ "	</div></div></td></tr>";
 							});
 							//判斷查詢結果
 							//alert(result_table);
@@ -326,15 +340,18 @@
 							$.each (json_obj, function (i) {
 								resultRunTime+=1;
 							});
-							$("#products").dataTable().fnDestroy();
+							$("#products2").dataTable().fnDestroy();
 							if(resultRunTime!=0){
-								$("#products-contain").show();
-								$("#products tbody").html(result_table);
-// 								$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-								$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+								$("#products2-contain").show();
+								$("#products2 tbody").html(result_table);
+								$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 								$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+								
+								$("products2").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("products2").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 								$(".validateTips").text("");
 							}else{
-								$("#products-contain").hide();
+								$("#products2-contain").hide();
 							}
 						}
 					});
@@ -353,6 +370,8 @@
 			autoOpen : false,
 			width : 950,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -395,26 +414,29 @@
 										"</td><td>"+json_obj[i].mobile1+
 										"</td><td>"+json_obj[i].memo+
 										
-										"</td><td>"+"<button value='"
-										+ json_obj[i].supply_id+   "'name='"
-										+ json_obj[i].supply_name+ "'class='btn_update'>修改</button><button id='"
-										+ json_obj[i].supply_name+ "' value='"
-										+ json_obj[i].supply_id+   "'class='btn_delete'>刪除</button></td></tr>";	
+										"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";
 								});
 								//判斷查詢結果
 								var resultRunTime = 0;
 								$.each (json_obj, function (i) {
 									resultRunTime+=1;
 								});
-								$("#products").dataTable().fnDestroy();
+								$("#products2").dataTable().fnDestroy();
 								if(resultRunTime!=0){
-									$("#products-contain").show();
-									$("#products tbody").html(result_table);
-// 									$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									$("#products2-contain").show();
+									$("#products2 tbody").html(result_table);
+									$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 									$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									
+									$("products2").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+									$("products2").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 									$(".validateTips").text("");
 								}else{
-									$("#products-contain").hide();
+									$("#products2-contain").hide();
 								}
 							}
 						});
@@ -433,13 +455,13 @@
 			}
 		});		
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
+		$("#products2").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
 			supply_name = $(this).attr("id");
 			confirm_dialog.dialog("open");
 		});
 		//修改事件聆聽
-		$("#products").delegate(".btn_update", "click", function(e) {
+		$("#products2").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
 			uuid = $(this).val();
 			$("input[name='search_supply_name'").val("");
@@ -485,19 +507,13 @@
 			update_dialog.dialog("open");
 		});		
 		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
+		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
 		//預設表格隱藏
-		$("#products-contain").hide();
+		$("#products2-contain").hide();
 	});
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>廠商資料</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認刪除資料嗎?">
@@ -590,30 +606,38 @@
 				</form>
 			</div>
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="products-serah-create-contain" class="ui-widget">
-					<button id="create-productunit">新增</button>
-				</div>
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="btn-row">
+						<button class="btn btn-exec btn-wide" id="create-productunit">新增供應商</button>
+					</div>
+				</div><!-- /.form-wrap -->
 			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="products2-serah-create-contain" class="ui-widget"> -->
+<!-- 					<button id="create-productunit">新增</button> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" >
-				<div id="products-contain" class="ui-widget" >
-					<table id="products" class="ui-widget ui-widget-content">
+		
+			<div class="row search-result-wrap" >
+				<div id="products2-contain" class="ui-widget" >
+					<table id="products2" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th><p style="width:80px;">廠商名稱</p></th>
-								<th><p style="width:80px;">廠商統編</p></th>
-								<th><p style="width:80px;">廠商地址</p></th>
-								<th><p style="width:80px;">連絡人</p></th>
-								<th><p style="width:150px;">連絡人電話</p></th>
-								<th><p style="width:150px;">連絡人分機</p></th>
-								<th><p style="width:150px;">連絡人手機</p></th>
-								<th><p style="width:80px;">第二連絡人</p></th>
-								<th><p style="width:150px;">第二連絡人電話</p></th>
-								<th><p style="width:150px;">第二連絡人分機</p></th>
-								<th><p style="width:150px;">第二連絡人手機</p></th>
-								<th><p style="width:80px;">備註說明</p> </th>
-								<th><p style="width:80px;">功能</p></th>
+								<th>廠商名稱</th>
+								<th>廠商統編</th>
+								<th>廠商地址</th>
+								<th>連絡人</th>
+								<th>連絡人電話</th>
+								<th>連絡人分機</th>
+								<th>連絡人手機</th>
+								<th>第二連絡人</th>
+								<th>第二連絡人電話</th>
+								<th>第二連絡人分機</th>
+								<th>第二連絡人手機</th>
+								<th>備註說明 </th>
+								<th>功能</th>
 							</tr>
 						</thead>
 						<tbody>

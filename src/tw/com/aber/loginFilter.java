@@ -39,7 +39,7 @@ public class loginFilter implements Filter {
 		// 从session裡取員工id信息
 		if(session.getAttribute("group_id")==null || session.getAttribute("user_id")==null){
             // 導到登入畫面
-            servletResponse.sendRedirect("/VirtualBusiness/login.jsp");
+            servletResponse.sendRedirect("./login.jsp");
         } else {
             // 已登入 繼續動作
             chain.doFilter(request, response);

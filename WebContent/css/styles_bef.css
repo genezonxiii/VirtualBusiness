@@ -1,0 +1,811 @@
+html, body, div, span, applet, object, iframe, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    /*vertical-align: baseline;*/
+}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+p {
+    margin: 0 0 10px;
+    line-height: 20px;
+}
+ul, li {
+    line-height: 20px;
+}
+b, strong {
+    font-weight: bold;
+}
+html, body {
+    font-family: Helvetica, Arial, '微軟正黑體', '新細明體', sans-serif;
+    font-size: 16px;
+    text-rendering: optimizeLegibility;
+    width: 100%;
+}
+h1 {
+    font-size: 40px;
+}
+h2 {
+    font-size: 30px;
+}
+h3 {
+    font-size: 24px;
+}
+h4 {
+    font-size: 20px;
+}
+h5 {
+    font-size: 16px;
+}
+h6 {
+    font-size: 13px;
+}
+/* Login Styles
+---------------------------------- */
+.bkg-upper {
+    position: absolute;
+    top: 0;
+    background: #e0f9fb;
+    width: 85%;
+    height: 50%;
+    transform: skewX(-30deg);
+}
+.bkg-lower {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #e0f9fb;
+    width: 75%;
+    height: 50%;
+    transform: skewX(30deg);
+}
+.login-wrapper {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    margin-top: -260px;
+}
+.login-wrapper h1 {
+    color: #62E0E9;
+    font-size: 72px;
+    font-weight: 100;
+    letter-spacing: 10px;
+    text-align: center;
+    margin: 6px 0;
+}
+.login-panel-wrap {
+    background: #62E0E9;
+    padding: 10px 0 40px;
+    margin-bottom: 15px;
+    position: relative;
+    zoom: 1;
+}
+.login-panel-wrap:before, .login-panel-wrap:after {
+    content: '';
+    display: table;
+}
+.login-panel-wrap:after {
+    clear: both;
+}
+.login-panel-wrap:before {
+    content: '';
+    background: #fff;
+    opacity: 0.5;
+    display: block;
+    width: 22%;
+    position: absolute;
+    top: 0;
+    bottom: 100px;
+    transform: skewX(30deg);
+}
+.login-panel {
+    margin: 0 auto;
+    width: 280px;
+}
+.login-panel h2 {
+    color: #194A6B;
+    font-weight: 100;
+    letter-spacing: 23px;
+    text-align: right;
+    margin-bottom: 30px;
+    position: relative;
+}
+.login-panel h2:after {
+    content: '';
+    background: #e0f9fb;
+    display: block;
+    height: 3px;
+    position: absolute;
+    bottom: -10px;
+    width: 100%;
+}
+.login-panel label {
+    color: #194A6B;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-right: 0;
+}
+.login-panel input[type=text], .login-panel input[type=password] {
+    box-sizing: border-box;
+    font-size: 24px;
+    padding: 5px 15px;
+    width: 100%;
+}
+.verify-wrap {
+    zoom: 1;
+}
+.verify-wrap label {
+    float: left;
+    width: 50%;
+}
+.verify-wrap .captcha-wrap {
+    float: right;
+    width: 50%;
+    padding-top: 24px;
+    text-align: center;
+}
+.verify-wrap:before, .verify-wrap:after {
+    content: '';
+    display: table;
+}
+.verify-wrap:after {
+    clear: both;
+}
+.login-button {
+    background: #3F7FAA;
+    border: 1px solid #3F7FAA;
+    box-sizing: border-box;
+    color: #fff;
+    display: block;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    padding: 15px 0;
+}
+.login-button:hover {
+    background: rgb(55, 111, 149);
+}
+.login-button:focus {
+    background: rgb(28, 56, 74);
+    border: 1px solid #194A6B;
+}
+.login-footer {
+    color: #555;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+}
+.login-footer span {
+    font-weight: 100;
+    margin-left: 1em;
+}
+/* Page Styles
+---------------------------------- */
+.page-wrapper {
+    background: #3F7FAA;
+    color: #333;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+/* header
+---------------------------------- */
+.header {
+    background-image: linear-gradient(#fff,#ddd);
+    height: 56px;
+    position: fixed;
+    width: 100%;
+}
+.header h1 {
+    font-size: 24px;
+    font-weight: 100;
+    float: left;
+    margin-left: 32px;
+    letter-spacing: 8px;
+    line-height: 1.3;
+}
+.header .userinfo {
+    float: right;
+}
+.header .userinfo p {
+    color: #777;
+    display: block;
+    font-size: 15px;
+    float: left;
+    font-weight: 100;
+    margin-right: 20px;
+    padding-top: 1.3em;
+}
+.header .userinfo p span {
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+    margin-left: 20px;
+}
+.header .btn-logout {
+    background: rgb(253, 104, 104);
+    color: #fff;
+    display: block;
+    float: left;
+    font-size: 18px;
+    text-align: center;
+    line-height: 56px;
+    height: 56px;
+    width: 90px;
+    text-decoration: none;
+}
+.header .btn-logout:hover {
+    background: #FC3E3E;
+}
+/* sidenav
+---------------------------------- */
+.sidenav {
+    position: fixed;
+    top: 56px;
+    z-index: 9999;
+}
+.sidenav ul {
+    width: 120px;
+}
+.sidenav ul li {
+    display: block;
+}
+.sidenav ul li ul {
+    background: #194A6B;
+    box-shadow: 2px 1px 3px #777;
+    min-width: 200px;
+    position: absolute;
+    left: 120px;
+    top: 0;
+    min-height: 100px;
+    /*--toggle--*/
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s linear;
+}
+.sidenav ul li ul li a {
+    box-sizing: border-box;
+    color: #fff;
+    display: block;
+    font-size: 16px;
+    font-weight: 100;
+    text-align: left;
+    text-decoration: none;
+    padding: 10px 20px;
+    width: 200px;
+}
+.sidenav ul li ul li a:hover {
+    background: #3F7FAA;
+}
+.sidenav > ul {}
+.sidenav > ul > li {
+    background: #f6f6f6;
+    color: #777;
+    font-size: 14px;
+    width: 120px;
+    height: 100px;
+    text-align: center;
+    position: relative;
+}
+.sidenav > ul > li img {
+    height: 48px;
+    display: block;
+    margin: 0 auto;
+    padding: 12px 0 12px;
+}
+.sidenav > ul > li.active {
+    background-image: linear-gradient(#ddd,#eee,#d6fafb);
+    color: #333;
+}
+.sidenav > ul > li:hover {
+    background: #194A6B;
+    color: #fff;
+    transition: all .3s linear;
+}
+.sidenav > ul > li:hover ul {
+    opacity: 1;
+    visibility: visible;
+}
+/* content-wrap
+---------------------------------- */
+h2.page-title {
+    /*background: var(--lightBlue);*/
+    background-image: linear-gradient(#eee,#62E0E9);
+    position: absolute;
+    top: 0;
+    left: 240px;
+    height: 56px;
+    letter-spacing: 5px;
+    line-height: 56px;
+    margin: 0;
+    padding: 0 2em;
+    position: fixed;
+}
+.content-wrap {
+    background: #fff;
+    float: left;
+    margin-left: 120px;
+    margin-top: 56px;
+    padding-bottom: 60px;
+    height: calc(100vh - 142px);
+    overflow: scroll;
+    width: calc(100% - 120px);
+}
+.input-field-wrap {
+    background: #62E0E9;
+    border-bottom: 3px solid #eee;
+    padding: 20px 30px;
+}
+.input-field-wrap .form-wrap {
+    text-align: center;
+    margin: 0 auto;
+}
+.input-field-wrap .form-row .btn {
+    vertical-align: bottom;
+}
+.input-field-wrap .btn-row {
+    text-align: center;
+    width: 100%;
+}
+.forward-mark {
+    background: url(../images/icon-forward.svg) no-repeat;
+    display: inline-block;
+    width: 20px;
+    height: 32px;
+    margin: 0 5px 0 0px;
+    vertical-align: bottom;
+}
+.search-result-wrap {
+    padding: 20px 30px;
+    margin-bottom: 60px;
+}
+.result-table-func-wrap {
+    zoom: 1;
+}
+.result-table-func-wrap:before, .result-table-func-wrap:after {
+    content: '';
+    display: table;
+}
+.result-table-func-wrap:after {
+    clear: both;
+}
+.table-row-func {
+    margin: 0 auto;
+}
+.table-row-func:hover .table-function-list {
+    visibility: visible;
+    opacity: 1;
+}
+.table-function-list {
+    position: absolute;
+    top: 0;
+    right: 36px;
+    width: 72px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .3s linear;
+}
+.table-function-list .btn-in-table {
+    float: right;
+}
+.result-item-display {
+    float: left;
+}
+.result-item-search {
+    float: right;
+}
+/* footer
+---------------------------------- */
+.footer {
+    background: #3F7FAA;
+    height: 28px;
+    text-align: right;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 2.5;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.footer span {
+    color: #eee;
+    font-weight: 100;
+    margin-left: 1em;
+    margin-right: 20px;
+}
+/* Forms */
+.form-wrap {}
+.form-row {
+    margin: 15px 0;
+    zoom: 1;
+}
+.form-row:before, .form-row:after {
+    content: '';
+    display: table;
+}
+.form-row:after {
+    clear: both;
+}
+.form-label {
+    display: inline-block;
+    font-size: 16px;
+    padding-right: 6px;
+    height: 100%;
+    line-height: 36px;
+}
+.block-label {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 3px;
+    text-align: left;
+}
+.block-label ~ input[type="text"] {
+    margin-bottom: 0;
+}
+label {
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+input[type="text"], input[type="password"], select, textarea {
+    background: #efefef;
+    border: 1px solid #999;
+    font-size: 16px;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+input[type="text"]:hover, input[type="password"]:hover, select:hover, textarea:hover {}
+input[type="text"]:focus, input[type="text"].focus, input[type="password"]:focus, input[type="password"].focus, select:focus, select.focus, textarea:focus, textarea.focus {
+    background-color: #fff;
+    border: 1px solid #3F7FAA;
+}
+input[type="text"]:disabled, input[type="text"].readonly, input[type="password"]:disabled, input[type="password"].readonly, select:disabled, select.readonly, textarea:disabled, textarea.readonly {}
+input[type="text"].error, input[type="password"].error, select.error, textarea.error {}
+select {
+    background: #eee url('../images/dropdown.svg') no-repeat 96% 2px;
+    border: 1px solid #999;
+    border-radius: 0;
+    font-size: 16px;
+    font-family: '微軟正黑體';
+    padding: 2px 50px 2px 5px;
+    height: 30px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+select::-ms-expand {
+    display: none;
+}
+/*Checkbox*/
+input[type=checkbox] {
+    position: absolute;
+    left: -9999px;
+    /*Disabled*/
+    /*Checked*/
+}
+input[type=checkbox] + label {
+    height: 32px;
+    margin: 0;
+    margin-right: 10px;
+    position: relative;
+    display: block;
+    float: left;
+    padding: 0px 0px 0px 28px;
+    cursor: pointer;
+    /*Checkbox setup*/
+}
+input[type=checkbox] + label:before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin: -12px 0 0;
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/checkbox.svg);
+    background-repeat: no-repeat;
+}
+input[type=checkbox]:disabled, input[type=checkbox].readonly {
+    /*Disabled checked*/
+}
+input[type=checkbox]:disabled + label, input[type=checkbox].readonly + label {
+    cursor: not-allowed;
+    color: #666;
+}
+input[type=checkbox]:disabled + label:before, input[type=checkbox].readonly + label:before {
+    background-position: -48px 0;
+}
+input[type=checkbox]:disabled:checked + label, input[type=checkbox].readonly:checked + label {}
+input[type=checkbox]:disabled:checked + label:before, input[type=checkbox].readonly:checked + label:before {
+    background-position: -72px 0;
+}
+input[type=checkbox]:checked + label {}
+input[type=checkbox]:checked + label:before {
+    background-position: -24px 0;
+}
+/*Radio Button*/
+input[type=radio] {
+    position: absolute;
+    left: -9999px;
+    /*Disabled*/
+    /*Checked*/
+}
+input[type=radio] + label {
+    box-sizing: border-box;
+    height: 32px;
+    margin: 0;
+    margin-right: 10px;
+    padding: 1px 0;
+    position: relative;
+    display: block;
+    float: left;
+    padding: 0px 0px 0px 28px;
+    cursor: pointer;
+}
+input[type=radio] + label:before {
+    display: block;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin: -12px 0 0;
+    width: 24px;
+    height: 24px;
+    background-image: url(../images/radiobutton.svg);
+    background-repeat: no-repeat;
+}
+input[type=radio]:focus {}
+input[type=radio]:focus:before {
+    background-position: -72px 0;
+}
+input[type=radio]:disabled, input[type=radio].readonly {
+    /*Disabled checked*/
+}
+input[type=radio]:disabled + label, input[type=radio].readonly + label {
+    cursor: not-allowed;
+    color: #666;
+}
+input[type=radio]:disabled + label:before, input[type=radio].readonly + label:before {
+    background-position: -48px 0;
+}
+input[type=radio]:disabled:checked + label, input[type=radio].readonly:checked + label {
+    border-bottom: none;
+}
+input[type=radio]:disabled:checked + label:before, input[type=radio].readonly:checked + label:before {
+    background-position: -72px 0;
+}
+input[type=radio]:checked + label {
+    /*border-bottom: 2px solid var(--midBlue);*/
+}
+input[type=radio]:checked + label:before {
+    background-position: -24px 0;
+}
+/*Datepicker*/
+.input-date {
+    background-image: url('../images/icon-datepicker.svg') !important;
+    background-repeat: no-repeat  !important;
+    background-position: right center  !important;
+}
+/* JQuery UI Calendar Customize */
+.ui-widget-content {
+    background: #fefefe;
+    border: 1px solid #ccc;
+}
+.ui-datepicker {
+    border-radius: 0;
+    box-shadow: 2px 2px 3px #777;
+    font-family: Arial, sans-serif;
+}
+.ui-datepicker table {
+    table-layout: fixed;
+}
+.ui-datepicker table th, .ui-datepicker table td {
+    width: calc(100%/7) !important;
+}
+.ui-datepicker .ui-datepicker-header {
+    background: none !important;
+    border: none !important;
+}
+.ui-datepicker .ui-datepicker-title {
+    line-height: auto;
+    line-height: 100% \9;
+}
+.ui-datepicker .ui-datepicker-title select {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    margin: 0 6px !important;
+    padding: 0 10px;
+    width: auto;
+}
+.ui-datepicker .ui-datepicker-title select:hover {
+    background: #eee;
+}
+.ui-datepicker .ui-datepicker-title select:first-child {
+    border-right: 1px solid #aaa;
+}
+.ui-datepicker-year {
+    color: #194A6B;
+    font-size: 24px;
+    font-weight: 100;
+}
+.ui-datepicker-year:after {
+    content: ' /';
+}
+.ui-datepicker-month {
+    color: #194A6B;
+    font-size: 23px;
+    font-weight: 100;
+}
+.ui-datepicker-month:before {
+    content: '/ ';
+}
+.ui-datepicker-prev, .ui-datepicker-next {
+    background: none !important;
+    border: none !important;
+    cursor: pointer;
+}
+.ui-datepicker-prev .ui-icon, .ui-datepicker-next .ui-icon {
+    background: none !important;
+}
+.ui-datepicker-prev:before, .ui-datepicker-next:before {
+    color: #62E0E9;
+    font-size: 24px;
+    font-weight: 100;
+    position: absolute;
+    top: 3px;
+}
+.ui-datepicker-prev {}
+.ui-datepicker-prev:before {
+    content: '<';
+    font-family: "Helvetica Neue";
+    font-weight: 200;
+    top: 0px;
+    left: 10px;
+}
+.ui-datepicker-next {}
+.ui-datepicker-next:before {
+    content: '>';
+    font-family: "Helvetica Neue";
+    font-weight: 200;
+    top: 0px;
+    right: 10px;
+}
+.ui-datepicker-prev-hover, .ui-datepicker-next-hover {
+    top: 2px !important;
+}
+/*周六周日變色*/
+.ui-datepicker-calendar thead th {
+    font-family: "微軟正黑體", sans-serif;
+}
+.ui-datepicker-calendar tr th a, .ui-datepicker-calendar tr th span, .ui-datepicker-calendar tr td a, .ui-datepicker-calendar tr td span {
+    color: #555 !important;
+}
+.ui-datepicker-calendar tr th:first-child a, .ui-datepicker-calendar tr th:first-child span, .ui-datepicker-calendar tr td:first-child a, .ui-datepicker-calendar tr td:first-child span {
+    color: #FF7979 !important;
+}
+.ui-datepicker-calendar tr th, .ui-datepicker-calendar tr td {}
+.ui-datepicker-calendar tr th:last-child a, .ui-datepicker-calendar tr th:last-child span, .ui-datepicker-calendar tr td:last-child a, .ui-datepicker-calendar tr td:last-child span {
+    color: #417505 !important;
+}
+.ui-state-default {
+    background: none !important;
+    border: none !important;
+    padding: 6px 0 !important;
+    text-align: center !important;
+}
+.ui-state-active {}
+.ui-datepicker-current-day, .ui-datepicker-today {}
+.ui-datepicker-current-day {
+    background: #62E0E9 !important;
+    box-sizing: border-box;
+}
+.ui-datepicker-today {
+    border: 1px solid #ccc !important;
+}
+/* Table */
+table.result-table {
+    border: 1px solid #ccc;
+    font-size: 13px;
+    width: 100%;
+}
+table.result-table tr {
+    background: #eee;
+}
+table.result-table tr:nth-child(2n+1) {
+    background: #fff;
+}
+table.result-table th {
+    background: #194A6B;
+    border-bottom: 2px solid #62E0E9;
+    color: #fff;
+}
+table.result-table th, table.result-table td {
+    /*border: 1px solid #aaa;*/
+    padding: 10px;
+}
+table.result-table td {
+    border: 1px solid #ddd;
+}
+/*Button*/
+.btn-row {
+    padding: 10px 0;
+}
+.btn {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    padding: 7px 20px;
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.3);
+}
+.btn:hover {
+    box-shadow: none;
+}
+/*- by Color -*/
+.btn-primary {
+    background: #16C1D5;
+    border: 1px solid #0499AA;
+}
+.btn-exec {
+    background: #D34200;
+    border: 1px solid #A63400;
+}
+.btn-alert {
+    background: #FC3E3E;
+    border: 1px solid #FC3E3E;
+}
+.btn-darkblue {
+    background: #256087;
+    border: 1px solid #0A4E7B;
+}
+.btn-darkblue:hover {
+    background: lighten(#256087,15%);
+}
+.btn-gray {
+    background: #aaa;
+    border: 1px solid #999;
+}
+.btn-gray:hover {}
+/*- by Size -*/
+.btn-wide {
+    padding: 10px 60px;
+}
+/*-by Function-*/
+.btn-in-table {
+    box-sizing: border-box;
+    color: #fff;
+    display: table;
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+    text-decoration: none;
+    width: 36px;
+    height: 36px;
+    position: relative;
+    cursor: pointer;
+}
+.btn-in-table i {
+    display: table-cell;
+    vertical-align: middle;
+}

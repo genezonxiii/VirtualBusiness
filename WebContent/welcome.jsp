@@ -6,8 +6,13 @@
 <head>
     <title>歡迎畫面</title>
 	<meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
-
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="background-image: url('./images/welcome.png');background-size: cover;">
+	<div style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -17,8 +22,7 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.table2excel.js"></script>
-</head>
-<body style="background-image: url('./images/welcome.png');background-size: cover;">
+
 <script>
 $(function() {
 	$.ajax({
@@ -44,6 +48,8 @@ $(function() {
 	<br>
 	<div id="sale"></div>
 </div>
+</div>  
+</div> 
 </div>  
 </body>
 </html>

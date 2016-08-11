@@ -14,12 +14,20 @@
 <meta charset="utf-8">
 
 <!-- 圖片的 -->
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
 <!-- Generic page styles -->
 <link rel="stylesheet" href="css/photo/style.css">	
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 <link rel="stylesheet" href="css/photo/jquery.fileupload.css">
-
+<link rel="stylesheet" href="css/styles.css" />
+<link href="<c:url value="css/css.css" />" rel="stylesheet">
+<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
+<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
@@ -46,11 +54,8 @@
 <script src="js/photo/jquery.fileupload-validate.js"></script>
 
 <!-- 新3修 -->
-<link rel="stylesheet" href="css/styles.css" />
-<link href="<c:url value="css/css.css" />" rel="stylesheet">
-<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
-<!-- <script type="text/javascript" src="js/jquery-1.10.2.js"></script> -->
+
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -58,8 +63,81 @@
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
-
+<script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script>
+	var new_or_edit=0;
+	var scan_exist=0;
+// 	$(document).scannerDetection({
+//     	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+//     	startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
+//     	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+//     	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+//     	onComplete: function(barcode, qty){}, // main callback function	
+//     	onKeyDetect:function(barcode,qty){$("input").blur();}
+//     });
+	jQuery(document).ready(function($) {
+	    $(window).scannerDetection();
+	    $(window).bind('scannerDetectionComplete',function(e,data){
+	    		if(data.string=="success"){return;}
+	    		if(new_or_edit==1){
+	    			//$("#new_barcode").focus();
+	    			$("#new_barcode").val(data.string);
+	    		}
+	    		if(new_or_edit==2){
+	    			//$("#edit_barcode").focus();
+	    			$("#edit_barcode").val(data.string);
+	    		}
+	    		if(new_or_edit==0){
+	    			new_or_edit=3;
+	    			$.ajax({url : "product.do", type : "POST", cache : false,
+			            data : {
+			            	action : "find_barcode",
+			            	barcode : data.string,
+			            },
+			            success: function(result) {
+			            	var json_obj = $.parseJSON(result);
+			            	var result_table = "";
+							$.each(json_obj,function(i, item) {
+								if(i<json_obj.length){
+									result_table 
+									+= "<tr>"
+									+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
+									+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
+									+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost + "</td>"
+									+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
+									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "' ><i class='fa fa-trash'></i></button>"
+									+ "	</div></div></td></tr>";
+								}
+								if(json_obj.length==0){
+									$("#sales-contain22").hide();
+									$(".validateTips").text("查無此結果");
+								}
+								if(json_obj.length>0){
+									$("#sales-contain22").show();
+									$("#sales22 tbody").html(result_table);
+									$("#sales22").find("td").css("text-align","center");
+									$("#sales22").find("th").css("text-align","center");
+									$(".validateTips").text("");
+								}
+								
+							});
+			            }
+		    		});
+	    		}
+	        })
+	        .bind('scannerDetectionError',function(e,data){
+	            console.log('detection error '+data.string);
+	        })
+	        .bind('scannerDetectionReceive',function(e,data){
+	            console.log(data);
+	        });
+	
+	    $(window).scannerDetection('success');
+	
+	});
 	$(function() {
 		var uuid = "";
 		var c_product_id="";
@@ -161,7 +239,7 @@
 		
 		
 		//自訂產品ID查詢相關設定
-		$("#searh-sale").button().on("click",function(e) {
+		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			$.ajax({
 					type : "POST",
@@ -181,6 +259,8 @@
 							if(json_obj[resultRunTime-1].message=="驗證通過"){
 								var result_table = "";
 								$.each(json_obj,function(i, item) {
+									
+									//herehere
 									if(i<len-1){
 										result_table 
 										+= "<tr>"
@@ -197,10 +277,11 @@
 // 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
 										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
 										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-										+ "<td><button id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-										+ "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-										+ "'class='btn_delete'>刪除</button></td></tr>";	
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";
 									}
 								});
 							}							
@@ -213,6 +294,8 @@
 								$("#sales-contain").show();
 								$("#sales tbody").html(result_table);
 								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+								$("#sales").find("td").css("text-align","center");
+								$("#sales").find("th").css("text-align","center");
 								$(".validateTips").text("");
 							}
 						}
@@ -224,13 +307,14 @@
 							draggable : false,//防止拖曳
 							resizable : false,//防止縮放
 							autoOpen : false,
+							open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
 							show : {
 								effect : "blind",
-								duration : 1000
+								duration : 300
 							},
 							hide : {
-								effect : "explode",
-								duration : 1000
+								effect : "fade",
+								duration : 300
 							},
 							width : 600,
 							modal : true,
@@ -285,10 +369,11 @@
 // 																	+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
 																	+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
 																	+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-																	+ "<td><button id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-																	+ "'class='btn_update'>修改</button>"
-																	+ "<button id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-																	+ "'class='btn_delete'>刪除</button></td></tr>";	
+																	+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+																	+ "	<div class='table-function-list'>"
+																	+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+																	+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+																	+ "	</div></div></td></tr>";
 															}
 														});
 														$("#sales").dataTable().fnDestroy();
@@ -296,6 +381,8 @@
 															$("#sales-contain").show();
 															$("#sales tbody").html(result_table);
 															$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+															$("#sales").find("td").css("text-align","center");
+															$("#sales").find("th").css("text-align","center");
 															$(".validateTips").text("");
 														}else{
 															$("#sales-contain").hide();
@@ -304,6 +391,7 @@
 												});
 												insert_dialog.dialog("close");
 											}
+											new_or_edit=0;
 										}
 									}, {
 										text : "取消",
@@ -311,6 +399,7 @@
 											$("#insert-dialog-form-post").trigger("reset");
 											validator_insert.resetForm();
 											insert_dialog.dialog("close");
+											new_or_edit=0;
 										}
 									} ],
 							close : function() {
@@ -324,8 +413,11 @@
 			draggable : false,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
-			height : 140,
+			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
+			height : "auto",
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -361,10 +453,11 @@
 // 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
 										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
 										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-										+ "<td><button id='"+json_obj[i].c_product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-										+ "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].c_product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-										+ "'class='btn_delete'>刪除</button></td></tr>";											
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";										
 								}
 							});
 							$("#sales").dataTable().fnDestroy();
@@ -372,6 +465,8 @@
 								$("#sales-contain").show();
 								$("#sales tbody").html(result_table);
 								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+								$("#sales").find("td").css("text-align","center");
+								$("#sales").find("th").css("text-align","center");
 								$(".validateTips").text("");
 							}else{
 								$("#sales-contain").hide();
@@ -391,7 +486,11 @@
 			resizable : false,//防止縮放
 			autoOpen : false,
 			width : 600,
+			height: "auto",
 			modal : true,
+			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -443,10 +542,11 @@
 // 												+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
 												+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
 												+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-												+ "<td><button id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-												+ "'class='btn_update'>修改</button>"
-												+ "<button id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name
-												+ "'class='btn_delete'>刪除</button></td></tr>";		
+												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+												+ "	<div class='table-function-list'>"
+												+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+												+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+												+ "	</div></div></td></tr>";	
 												
 										}
 									});
@@ -456,6 +556,8 @@
 									$("#sales-contain").show();
 									$("#sales tbody").html(result_table);
 									$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+									$("#sales").find("td").css("text-align","center");
+									$("#sales").find("th").css("text-align","center");
 									$(".validateTips").text("");
 								}else{
 									$("#sales-contain").hide();
@@ -464,6 +566,7 @@
 						});
 						update_dialog.dialog("close");
 					}
+					new_or_edit=0;
 				}
 			}, {
 				text : "取消",
@@ -471,6 +574,7 @@
 					validator_update.resetForm();
 					$("#update-dialog-form-post").trigger("reset");
 					update_dialog.dialog("close");
+					new_or_edit=0;
 				}
 			} ],
 			close : function() {
@@ -486,16 +590,20 @@
 			confirm_dialog.dialog("open");
 		});
 		//新增事件聆聽
-		$("#create-sale").button().on("click", function() {
+		$("#create-sale").click( function() {
+			new_or_edit=1;
 			insert_dialog.dialog("open");
+			$("#new_barcode").focus();
+			scan_exist=1;
+			if(!scan_exist){$("#warning").dialog("open");};
 		});
 		//修改事件聆聽
 		$("#sales").delegate(".btn_update", "click", function(e) {
+			new_or_edit=2;
 			e.preventDefault();
 			uuid = $(this).val();
 			product_id = $(this).attr("id");
 			$("input[name='search_product_name'").val("");
-		
 			$.ajax({
 				type : "POST",
 				url : "product.do",
@@ -1035,18 +1143,24 @@
 	    }).prop('disabled', !$.support.fileInput)
 	        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 	    //<!-- photo section jquery end by Melvin -->
-	
-	    
+	    $("#warning").dialog({
+			title: "警告",
+			draggable : false,//防止拖曳
+			resizable : false,//防止縮放
+			autoOpen : false,
+			height : "auto",
+			modal : true,
+			show : {effect : "bounce",duration : 1000},
+			hide : {effect : "fade",duration : 300},
+			buttons : {
+				"確認" : function() {$(this).dialog("close");}
+			}
+		});
 	    
 	    
 	});	
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>商品管理</h2>
-	</div>
-	<div class="panel-content">
+
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認刪除資料嗎?">
@@ -1057,39 +1171,14 @@
 			<div id="dialog-form-update" title="修改產品資料">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline"	>
 					<fieldset>
-						<table border="0" height="600">
+<!-- 						<table border="0" height="600"> -->
+				<table class="result-table">
 					<tbody>
-						<tr><td><h6>自訂產品ID:&nbsp;&nbsp;</h6></td><td><input type="text" name="c_product_id"  placeholder="輸入自訂產品ID"/></td></tr>
-<!-- 						<td> &nbsp;&nbsp;&nbsp;&nbsp; </td> -->
-<!-- 						<td rowspan=10 > -->
-<!-- 						</td> -->
-<!-- 						</tr> -->
-						<tr><td><h6>產品名稱:</h6></td><td><input type="text" name="product_name"  placeholder="輸入產品名稱"/></td><td><input type="hidden" id="photo-update" name="photo-update"  placeholder="輸入產品圖片名稱"/></td></tr>
-						<tr><td><h6>廠商名稱:</h6></td><td><input type="text" name="supply_name"  placeholder="輸入廠商名稱"/></td><td><input type="hidden"  id="photo1-update" name="photo1-update"  placeholder="輸入產品圖片名稱2"/></td></tr>
-						<tr><td><h6>產品類別:</h6></td>
-						<td>
-							<select id="select_update_type_id" name="select_update_type_id">
-							</select>
-						</td>
-<!-- 						<td> -->
-<!-- 						<input type="text" id="insert_type_id" name="type_id_unit_id"  placeholder="輸入產品類別"/> -->
-<!-- 						</td> -->
-						</tr>
-						<tr><td><h6>產品單位:</h6></td>
-						<td>
-							<select id="select_update_unit_id" name="select_update_unit_id">
-							</select>
-						</td>
-						</tr>	
-<!-- 						<td> -->
-<!-- 						<input type="text" id="insert_unit_id" name="unit_id"  placeholder="輸入產品單位"/></td></tr> -->
-						<tr><td><h6>成本:</h6></td><td><input type="text" name="cost"  placeholder="輸入成本"/></td></tr>
-						<tr><td><h6>售價:</h6></td><td><input type="text" name="price"  placeholder="輸入售價"/></td></tr>
-						<tr><td><h6>安全庫存:</h6></td><td><input type="text" name="keep_stock"  placeholder="輸入安全庫存"/></td></tr>
-						<tr><td><h6>產品說明:</h6></td><td><input type="text" name="description"  placeholder="輸入產品說明"/></td></tr>
-						<tr><td><h6>條碼:</h6></td><td><input type="text" name="barcode"  placeholder="輸入條碼"/></td></tr>
-<!-- 						<tr><td><h6>產品圖片名稱:</h6></td><td><input type="text" id="photo" name="photo"  placeholder="輸入產品圖片名稱"/></td></tr> -->
-<!-- 						<tr><td><h6>產品圖片名稱2:</h6></td><td><input type="text"  id="photo1" name="photo1"  placeholder="輸入產品圖片名稱2"/></td></tr> -->
+						<tr><td>自訂產品ID:</td><td><input type="text" name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
+<tr><td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td><td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td></tr>	
+<tr><td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td><td>產品說明:</td><td><input type="text" name="description"/></td></tr>
+<tr><td>成本:</td><td><input type="text" name="cost" /></td><td>售價:</td><td><input type="text" name="price" /></td></tr>
+<tr><td>安全庫存:</td><td><input type="text" name="keep_stock" /></td><td>條碼:</td><td><input type="text" id="edit_barcode" name="barcode"/></td></tr>
    		         	  </tbody>
    		         	  </table>		
 					</fieldset>
@@ -1102,8 +1191,8 @@
 							<h6>產品圖片名稱:&nbsp;&nbsp;</h6>
 						</td>
 						<td>
-							<span class="btn btn-success fileinput-button">
-							<i class="glyphicon glyphicon-plus"></i>
+							<span class="btn btn-success fileinput-button btn-primary">
+							<i class="glyphicon glyphicon-plus "></i>
 							<span>增加圖片1</span>
 							<input id="fileupload-update" type="file" name="files-update[]">
 						<br>
@@ -1116,7 +1205,7 @@
                				<h6>產品圖片名稱2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
-                             <span class="btn btn-success fileinput-button">
+                             <span class="btn btn-success fileinput-button btn-primary">
 					         <i class="glyphicon glyphicon-plus"></i>
 					         <span>增加圖片2</span>
 					         <input id="fileupload2-update" type="file" name="files2-update[]">
@@ -1136,37 +1225,13 @@
 			<div id="dialog-form-insert" title="新增產品資料">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
-					<table border="0" height="600">
+					<table class="result-table">
 					<tbody>
-						<tr><td><h6>自訂產品ID:&nbsp;&nbsp;</h6></td><td><input type="text" name="c_product_id"  placeholder="輸入自訂產品ID"/></td></tr>
-<!-- 						<td> &nbsp;&nbsp;&nbsp;&nbsp; </td> -->
-<!-- 						<td rowspan=10 > -->
-<!-- 						</td> -->
-<!-- 						</tr> -->
-						<tr><td><h6>產品名稱:</h6></td><td><input type="text" name="product_name"  placeholder="輸入產品名稱"/></td><td><input type="hidden" id="photo" name="photo"  placeholder="輸入產品圖片名稱"/></td></tr>
-						<tr><td><h6>廠商名稱:</h6></td><td><input type="text" name="supply_name"  placeholder="輸入廠商名稱"/></td><td><input type="hidden"  id="photo2" name="photo1"  placeholder="輸入產品圖片名稱2"/></td></tr>
-						<tr><td><h6>產品類別:</h6></td>
-						<td>
-							<select id="select_insert_type_id" name="select_insert_type_id">
-							</select>
-						</td>
-<!-- 						<td> -->
-<!-- 						<input type="text" id="insert_type_id" name="type_id_unit_id"  placeholder="輸入產品類別"/> -->
-<!-- 						</td> -->
-						</tr>
-						<tr><td><h6>產品單位:</h6></td>
-						<td>
-							<select id="select_insert_unit_id" name="select_insert_unit_id">
-							</select>
-						</td>
-						</tr>	
-<!-- 						<td> -->
-<!-- 						<input type="text" id="insert_unit_id" name="unit_id"  placeholder="輸入產品單位"/></td></tr> -->
-						<tr><td><h6>成本:</h6></td><td><input type="text" name="cost"  placeholder="輸入成本"/></td></tr>
-						<tr><td><h6>售價:</h6></td><td><input type="text" name="price"  placeholder="輸入售價"/></td></tr>
-						<tr><td><h6>安全庫存:</h6></td><td><input type="text" name="keep_stock"  placeholder="輸入安全庫存"/></td></tr>
-						<tr><td><h6>產品說明:</h6></td><td><input type="text" name="description"  placeholder="輸入產品說明"/></td></tr>
-						<tr><td><h6>條碼:</h6></td><td><input type="text" name="barcode"  placeholder="輸入條碼"/></td></tr>
+						<tr><td>自訂產品ID:</td><td><input type="text" name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
+<tr><td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td><td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td></tr>	
+<tr><td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td><td>產品說明:</td><td><input type="text" name="description"/></td></tr>
+<tr><td>成本:</td><td><input type="text" name="cost" /></td><td>售價:</td><td><input type="text" name="price" /></td></tr>
+<tr><td>安全庫存:</td><td><input type="text" name="keep_stock" /></td><td>條碼:</td><td><input type="text" id="new_barcode" name="barcode"/></td></tr>
    		         	  </tbody>
    		         	  </table>		
 					</fieldset>
@@ -1179,7 +1244,7 @@
 							<h6>產品圖片名稱:&nbsp;&nbsp;</h6>
 						</td>
 						<td>
-							<span class="btn btn-success fileinput-button">
+							<span class="btn btn-success fileinput-button btn-primary">
 							<i class="glyphicon glyphicon-plus"></i>
 							<span>增加圖片1</span>
 							<input id="fileupload" type="file" name="files[]">
@@ -1193,7 +1258,7 @@
                				<h6>產品圖片名稱2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
-                             <span class="btn btn-success fileinput-button">
+                             <span class="btn btn-success fileinput-button btn-primary">
 					         <i class="glyphicon glyphicon-plus"></i>
 					         <span>增加圖片2</span>
 					         <input id="fileupload2" type="file" name="files2[]">
@@ -1208,46 +1273,79 @@
 <!--                	<img src="/VirtualBusiness/image.do?picname=a0001.jpg" width="200" height="200"> -->
 <!--                	<img src="/VirtualBusiness/image.do?picname=a0002.jpg" width="200" height="200"> -->
 			</div>
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">廠商名稱查詢</span>
+						<input type="text" id="searh_product_name" name="searh_product_name"></input>
+					</label>
+					<button class="btn btn-darkblue" id="searh-sale">查詢</button>
+				</div>
+				<div class="btn-row">
+					<button class="btn btn-exec btn-wide" id="create-sale">新增商品資料</button>
+				</div>
+			</div><!-- /.form-wrap -->
+		</div>
+			
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="sales-serah-create-contain" class="ui-widget">
-					<table id="sales-serah-create">
-						<thead>
-							<tr>
-								<td><input type="text" id="searh_product_name" name="searh_product_name" placeholder="請輸入廠商名稱查詢"></td>
-								<th>
-									<button id="searh-sale">查詢</button>
-								</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>	
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="sales-serah-create-contain" class="ui-widget"> -->
+<!-- 					<table id="sales-serah-create"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<td><input type="text" id="searh_product_name" name="searh_product_name" placeholder="請輸入廠商名稱查詢"></td> -->
+<!-- 								<th> -->
+<!-- 									<button id="searh-sale">查詢</button> -->
+<!-- 								</th> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div>	 -->
 			<!-- 第二列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<button id="create-sale">新增產品資料</button>
-				</div>
-			</div>						
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<button id="create-sale">新增產品資料</button> -->
+<!-- 				</div> -->
+<!-- 			</div>						 -->
 			<!-- 第三列 -->
-			<div class="row" align="center">
+			<div class="row search-result-wrap" align="center">
 				<div id="sales-contain" class="ui-widget">
-					<table id="sales" class="ui-widget ui-widget-content">
+					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th><p style="width:80px;">自訂產品ID</p></th>
-								<th><p style="width:80px;">產品名稱</p></th>
-								<th><p style="width:80px;">廠商名稱</p></th>
-								<th><p style="width:80px;">產品類別</p></th>
-								<th><p style="width:80px;">產品單位</p></th>
-								<th><p style="width:80px;">成本</p></th>
-								<th><p style="width:80px;">售價</p></th>
-								<th><p style="width:80px;">安全庫存</p></th>
+								<th>自訂產品ID</th>
+								<th>產品名稱</th>
+								<th>廠商名稱</th>
+								<th>產品類別</th>
+								<th>產品單位</th>
+								<th>成本</th>
+								<th>售價</th>
+								<th>安全庫存</th>
 <!-- 								<th><p style="width:100px;">產品圖片名稱</p></th> -->
 <!-- 								<th><p style="width:120px;">產品圖片名稱2</p></th> -->
-								<th><p style="width:80px;">產品說明</p></th>
-								<th><p style="width:80px;">條碼</p></th>
-								<th><p style="width:80px;">功能</p></th>
+								<th>產品說明</th>
+								<th>條碼</th>
+								<th>功能</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+				<span class="validateTips"> </span>
+			</div>
+			<!-- 4th -->
+			<div class="row search-result-wrap" align="center">
+				<div id="sales-contain22" class="ui-widget" style="display:none">
+					<table id="sales22" class="result-table">
+						<thead>
+							<tr class="ui-widget-header">
+								<th>自訂產品ID</th>
+								<th>產品名稱</th>
+								<th>數量</th>
+								<th>售價</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -1258,6 +1356,7 @@
 			</div>
 		</div>
 	</div>
-
+<input type="text" id="bar_code_focus" style="display:none"/>
+<div id="warning"></div>
 </body>
 </html>

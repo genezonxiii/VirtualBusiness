@@ -11,27 +11,38 @@
 <html>
 <head>
 <style type="text/css">
-.dataTables_wrapper .dt-buttons {float:right;}
+/* .dataTables_wrapper .dt-buttons {float:right;} */
 </style>
 <title>進貨退回報表</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="js/jszip.min.js"></script>
+<script type="text/javascript" src="js/pdfmake.min.js"></script>
+<script type="text/javascript" src="js/vfs_fonts.js"></script>
+<script type="text/javascript" src="js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="js/buttons.print.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
-<!-- data table buttons -->
-<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+<script type="text/javascript" src="js/jquery.table2excel.js"></script>
+
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
-<script type="text/javascript" src="js/jquery.table2excel.js"></script>
 <script>
 $(function(){
 	 $("#return_date_form").validate({
@@ -71,7 +82,7 @@ $(function(){
 			}
 		});
 	//退貨日查詢相關設定
-	$("#search_return_date").button().on("click",function(e) {
+	$("#search_return_date").click(function(e) {
 		e.preventDefault();
 		if($("#return_date_form").valid()){
 			$.ajax({
@@ -204,16 +215,15 @@ $(function(){
 		}
 	});		
 	//進貨日查詢相關設定
-	$("#search_purchase_date").button().on("click",function(e) {
+	$("#search_purchase_date").click(function(e) {
 		e.preventDefault();
-		if($("#purchase_date_form").valid()){
 			$.ajax({
 				type : "POST",
 				url : "purchreturn.do",
 				data : {
 					action : "search_purchase_date",
-					purchase_start_date: $("#purchase_start_date").val(),
-					purchase_end_date: $("#purchase_end_date").val()
+					purchase_start_date: (($("#purchase_start_date").val().length<3)?"1999-01-01":$("#purchase_start_date").val()),
+					purchase_end_date: (($("#purchase_end_date").val().length<3)?"2200-01-01":$("#purchase_end_date").val())
 				},
 				success : function(result) {
 						var json_obj = $.parseJSON(result);
@@ -258,7 +268,7 @@ $(function(){
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
-									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>"
+									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>";
 									//+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
 									//+ "'class='checkbox_return'></input></td></tr>"
 								}
@@ -303,15 +313,25 @@ $(function(){
 						}
 						$("#purchasereturns_false_table").dataTable().fnDestroy();
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#xls").show();
+// 							$("#xls_btn").show();
 							$("#purchasereturns_true_contain").hide();
 							$("#purchasereturns_false_contain").show();
 							$("#purchasereturns_false_table tbody").html(result_table);
 							$("#purchasereturns_false_table").find("td").css("text-align", "center");
 							$("#purchasereturns_false_table").dataTable({
-								  autoWidth: false,
-								  scrollX:  true,
-						          scrollY:"300px",
+								dom: 'lfrB<t>ip',
+								buttons: [{
+									extend: 'excel',
+									text: '輸出為xlsx檔',
+									title: '進貨退回報表',
+									exportOptions: {modifier: {search: 'none'}}
+								  }],
+								"language": {"url": "js/dataTables_zh-tw.txt"}
+							});
+// 							$("#purchasereturns_false_table").dataTable({
+// 								  autoWidth: false,
+// 								  scrollX:  true,
+// 						          scrollY:"300px",
 //								  dom: 'Blfrtip',
 // 						          buttons: [{
 // 						                text: '進貨退回',
@@ -331,14 +351,13 @@ $(function(){
 // 						                }
 // 						            }
 // 						          ],
-						          "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
+// 						          "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
 							if($("#purchase_date_err_mes").length){
                 				$("#purchase_date_err_mes").remove();
                 			}
 						}
 					}
 				});
-		}
 	});		
     //這邊是用供應商名稱去自動查詢，然後得到ID
     $("#search_purchase_by_supply_name").autocomplete({
@@ -377,7 +396,7 @@ $(function(){
      });
     $("#search_purchase_by_supply_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
 	//供應商ID查詢相關設定
-	$("#search_supply_name").button().on("click",function(e) {
+	$("#search_supply_name").click(function(e) {
 		e.preventDefault();
 		$.ajax({
 			type : "POST",
@@ -735,25 +754,19 @@ $(function(){
 	//hold header
 	$("#purchasereturns_false_table").find("th").css("min-width","120px");
 	$("#purchasereturns_true_table").find("th").css("min-width","120px");
-	$("#xls_btn").button().on("click", function(e) {
-		$(".result").table2excel({
-				exclude: ".noExl",
-				name: "Excel Document Name",
-				filename: "進貨退回報表",
-				fileext: ".xls",
-				exclude_img: true,
-				exclude_links: true,
-				exclude_inputs: true
-		});
-	});
+// 	$("#xls_btn").click( function(e) {
+// 		$(".result").table2excel({
+// 				exclude: ".noExl",
+// 				name: "Excel Document Name",
+// 				filename: "進貨退回報表",
+// 				fileext: ".xls",
+// 				exclude_img: true,
+// 				exclude_links: true,
+// 				exclude_inputs: true
+// 		});
+// 	});
 })
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>進貨退回報表</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog_confirm" title="確認銷貨退回嗎?">
@@ -779,27 +792,45 @@ $(function(){
 				</div>
 			</div>
 			<!-- 第二列 -->
-			<div class="row" align="center">
-				<div id="select_dates_contain" class="ui-widget">
-					<form id="purchase_date_form" name="purchase_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="請輸入進貨日期起日"></td>
-									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th>
-									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="請輸入進貨日期迄日"></td>
-									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td>
-									<td id="xls" style="display:none">&nbsp;&nbsp;<button id="xls_btn">產生報表</button></td>
-								</tr>
-							</thead>
-						</table>
-					</form>
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row" id="select_dates_contain">
+					<label for="">
+						<span class="block-label">退貨起日</span>
+						<input type="text" class="input-date" id="purchase_start_date" name="purchase_start_date">
+					</label>
+					<div class="forward-mark"></div>
+					<label for="">
+						<span class="block-label">退貨迄日</span>
+						<input type="text" class="input-date" id="purchase_end_date" name="purchase_end_date">
+					</label>
+					<a class="btn btn-darkblue" id="search_purchase_date">查詢</a>
+<!-- 					<a class="btn btn btn-exec" id="xls_btn" style="display:none" >產生報表</a> -->
 				</div>
-			</div>
+			</div><!-- /.form-wrap -->
+		</div>
+			
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="select_dates_contain" class="ui-widget"> -->
+<!-- 					<form id="purchase_date_form" name="purchase_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="請輸入進貨日期起日"></td> -->
+<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
+<!-- 									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="請輸入進貨日期迄日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td> -->
+<!-- 									<td id="xls" style="display:none">&nbsp;&nbsp;<button id="xls_btn">產生報表</button></td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第三列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="purchasereturns_false_contain" class="ui-widget">
-					<table id="purchasereturns_false_table" class="ui-widget ui-widget-content">
+			<div class="search-result-wrap" align="center"style="height:433px;">
+				<div id="purchasereturns_false_contain" class="result-table-wrap">
+					<table id="purchasereturns_false_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>進貨單號</th>
@@ -834,6 +865,7 @@ $(function(){
 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th>
 									<td><input type="text" id="return_end_date" name="return_end_date" class="date" placeholder="請輸入退貨迄日"></td>
 									<td>&nbsp;&nbsp;<button id="search_return_date">查詢</button></td>
+									
 								</tr>
 							</thead>
 						</table>

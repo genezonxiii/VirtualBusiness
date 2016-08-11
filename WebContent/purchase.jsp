@@ -17,6 +17,10 @@
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -24,8 +28,60 @@
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
+<script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script>
+	var new_or_edit=0;
+	jQuery(document).ready(function($) {
+	    $(window).scannerDetection();
+	    $(window).bind('scannerDetectionComplete',function(e,data){
+	    		if(data.string=="success"){return;}
+	    		//alert(new_or_edit+"hello? " +data.string);
+	    		$.ajax({url : "product.do", type : "POST", cache : false,
+		            data : {
+		            	action : "find_barcode",
+		            	barcode : data.string,
+		            },
+		            success: function(result) {
+		            	var json_obj = $.parseJSON(result);
+						if(json_obj.length!=0){
+							if(new_or_edit==1){
+								new_or_edit=3;
+								$("#insert_detail_c_product_id").val(json_obj[0].c_product_id);
+								$("#insert_detail_product_name").val(json_obj[0].product_name);
+								$("#insert_detail_product_n").val(json_obj[0].keep_stock);
+								$("#insert_detail_product_cost").val(json_obj[0].cost);
+				    		}
+				    		if(new_or_edit==2){
+				    			new_or_edit=3;
+				    			$("#update_detail_c_product_id").val(json_obj[0].c_product_id);
+				    			$("#update_detail_product_name").val(json_obj[0].product_name);
+				    			$("#update_detail_product_n").val(json_obj[0].keep_stock);
+								$("#update_detail_product_cost").val(json_obj[0].cost);
+				    		}
+						}
+						if(json_obj.length==0){alert("查無此商品資料。");}
+		            }
+	    		});
+	        })
+	        .bind('scannerDetectionError',function(e,data){console.log('detection error '+data.string);})
+	        .bind('scannerDetectionReceive',function(e,data){console.log(data);});
+	
+	});
 	$(function() {
+// 		$("#purchase_detail_contain_row").dialog({
+// 			title: "明細",
+// 			draggable : true,//防止拖曳
+// 			resizable : false,//防止縮放
+// 			autoOpen : false,
+// 			height : "auto",
+// 			width : "auto",
+// 			modal : true,
+// 			show : {effect : "blind",duration : 300},
+// 			hide : {effect : "fade",duration : 300},
+// 			buttons : {
+// 				"確認" : function() {$(this).dialog("close");}
+// 			}
+// 		});
 		var uuid = "";
 		var seqNo = "";
 		var supply_id ="";
@@ -158,7 +214,7 @@
 			}
 		});		
 		//進貨日查詢相關設定
-		$("#search_purchase_date").button().on("click",function(e) {
+		$("#search_purchase_date").click(function(e) {
 			e.preventDefault();
 			$("#purchase_detail_contain_row").hide();
 			if($("#purchase_date_form").valid()){
@@ -214,10 +270,13 @@
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_delete'>刪除</button>"
-										+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_detail'>查看明細</button>"
-										+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_create'>新增明細</button></td></tr>";	
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+										+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+										+ "	</div></div></td></tr>";	
 									}
 								});
 							}
@@ -244,7 +303,8 @@
 	                			}else{
 	                				$("#purchase_date_err_mes").html("起日不可大於訖日");
 	                			}
-							}							
+							}	
+							if(resultRunTime==1){$("#supply_name_err_mes").html("查無此結果");}else{$("#supply_name_err_mes").html("");}
 							if(resultRunTime==0){
 								$("#purchases_contain_row").hide();
 								if(!$("#purchase_date_err_mes").length){
@@ -256,7 +316,7 @@
 							$("#purchases").dataTable().fnDestroy();
 							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 								if($("#purchase_date_err_mes").length){
-									$("#purchase_date_err_mes").remove();
+									$("#purchase_date_err_mes").html("");
 	                			}
 								$("#purchases_contain_row").show();
 								$("#purchases tbody").html(result_table);
@@ -271,7 +331,8 @@
 			}
 		});		
 		//供應商ID查詢相關設定
-		$("#searh_supply_name").button().on("click",function(e) {
+		$("#searh_supply_name").click(function(e) {
+			//alert("111");
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
@@ -281,6 +342,7 @@
 					supply_name : $("input[name='searh_purchase_by_supply_name'").val()
 				},
 				success : function(result) {
+					//alert(result);
 						var json_obj = $.parseJSON(result);
 						//判斷查詢結果
 						var resultRunTime = 0;
@@ -322,24 +384,24 @@
 								+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 								+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-								+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_update'>修改</button>"
-								+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_delete'>刪除</button>"
-								+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_detail'>查看明細</button>"
-								+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_create'>新增明細</button></td></tr>";	
+								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+								+ "	<div class='table-function-list'>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+								+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+								+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+								+ "	</div></div></td></tr>";
 							});
 						}
+						if(resultRunTime==1){$("#supply_name_err_mes").html("查無此結果");}else{$("#supply_name_err_mes").html("");}
 						if(resultRunTime==0){
 							$("#purchases_contain_row").hide();
-							if(!$("#supply_name_err_mes").length){
-                				$("<p id='supply_name_err_mes'>查無此結果</p>").appendTo($("#purchases-serah-create").parent());
-                			}else{
-                				$("#supply_name_err_mes").html("查無此結果");
-                			}
-						}
+							$("#supply_name_err_mes").html("查無此結果");
+						}else{$("#supply_name_err_mes").html("");}
 						$("#purchases").dataTable().fnDestroy();
 						if(resultRunTime!=0){
 							if($("#supply_name_err_mes").length){
-								$("#supply_name_err_mes").remove();
+								$("#supply_name_err_mes").html("");
                 			}
 							$("#purchases_contain_row").show();
 							$("#purchases tbody").html(result_table);
@@ -359,6 +421,8 @@
 			autoOpen : false,
 			height : 140,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -410,16 +474,20 @@
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_update'>修改</button>"
-									+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_delete'>刪除</button>"
-									+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_detail'>查看明細</button>"
-									+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_create'>新增明細</button></td></tr>";	
+									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+									+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+									+ "	</div></div></td></tr>";	
 								});
 							}
 							$("#purchases").dataTable().fnDestroy();
 							if(resultRunTime!=0){
 								$("#purchases_contain_row").show();
 								$("#purchases tbody").html(result_table);
+								$("#supply_name_err_mes").html("");
 								$("#purchases").dataTable({
 									  autoWidth: false,
 									  scrollX:  true,
@@ -445,11 +513,11 @@
 				autoOpen : false,
 				show : {
 					effect : "blind",
-					duration : 1000
+					duration : 300
 				},
 				hide : {
-					effect : "explode",
-					duration : 1000
+					effect : "fade",
+					duration : 300
 				},
 				width : 800,
 				modal : true,
@@ -512,13 +580,18 @@
 													+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 													+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 													+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-													+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_update'>修改</button>"
-													+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_delete'>刪除</button>"
-													+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_detail'>查看明細</button>"
-													+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_create'>新增明細</button></td></tr>";															
+													+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+													+ "	<div class='table-function-list'>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+													+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+													+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+													+ "	</div></div></td></tr>";															
 											});
+											
 											$("#purchases").dataTable().fnDestroy();
 											if(resultRunTime!=0){
+												$("#supply_name_err_mes").html("");
 												$("#purchases_contain_row").show();
 												$("#purchases tbody").html(result_table);
 												$("#purchases").dataTable({
@@ -595,6 +668,8 @@
 			autoOpen : false,
 			width : 700,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -656,14 +731,18 @@
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'class='btn_delete'>刪除</button>"
-										+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_detail'>查看明細</button>"
-										+ "<button value='"+ json_obj[i].purchase_id + "'class='btn_create'>新增明細</button></td></tr>";									
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+										+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+										+ "	</div></div></td></tr>";									
 									});
 								}
 								$("#purchases").dataTable().fnDestroy();
 								if(resultRunTime!=0){
+									$("#supply_name_err_mes").html("");
 									$("#purchases_contain_row").show();
 									$("#purchases tbody").html(result_table);
 									$("#purchases").dataTable({
@@ -853,16 +932,20 @@
 								+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
 								+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-								+ "<td><button name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_update'>修改</button>"
-								+ "<button id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_delete'>刪除</button></td></tr>";									
+								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+								+ "	<div class='table-function-list'>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+								+ "	</div></div></td></tr>";									
 						});
 					}
 					$("#purchase-detail-table").dataTable().fnDestroy();
 					if(resultRunTime!=0){
 						if($("#purchase_detail_err_mes").length){
-            				$("#purchase_detail_err_mes").remove();
+            				$("#purchase_detail_err_mes").html("");
             			}
 						$("#purchase_detail_contain_row").show();
+						$("#supply_name_err_mes").html("");
 						$("#purchase-detail-table tbody").html(result_table);
 						$("#purchase-detail-table").dataTable({
 							  autoWidth: false,
@@ -888,11 +971,11 @@
 			autoOpen : false,
 			show : {
 				effect : "blind",
-				duration : 1000
+				duration : 300
 			},
 			hide : {
-				effect : "explode",
-				duration : 1000
+				effect : "fade",
+				duration : 300
 			},
 			width : 800,
 			modal : true,
@@ -945,14 +1028,18 @@
 												+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
 												+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
 												+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-												+ "<td><button name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_update'>修改</button>"
-												+ "<button id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_delete'>刪除</button></td></tr>";										
+												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+												+ "	<div class='table-function-list'>"
+												+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+												+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+												+ "	</div></div></td></tr>";										
 											});
 										}
 										$("#purchase-detail-table").dataTable().fnDestroy();
 										if(resultRunTime!=0){
-											$("#purchase_detail_contain_row").show();
+											$("#purchase_detail_contain_row").dialog("open");
 											$("#purchase-detail-table tbody").html(result_table);
+											$("#supply_name_err_mes").html("");
 											$("#purchase-detail-table").dataTable({
 												  autoWidth: false,
 												  scrollX:  true,
@@ -984,6 +1071,7 @@
 		$("#purchases").delegate(".btn_create", "click", function() {
 			purchase_id = $(this).val();
 			detail_insert_dialog.dialog("open");
+			new_or_edit=1;
 		});		
 		///明細確認Dialog相關設定(刪除功能)
 		confirm_detail_dialog = $("#dialog-detail-confirm").dialog({
@@ -992,6 +1080,8 @@
 			autoOpen : false,
 			height : 140,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -1034,13 +1124,17 @@
 									+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
 									+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><button name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_update'>修改</button>"
-									+ "<button id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_delete'>刪除</button></td></tr>";												
+									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+									+ "	</div></div></td></tr>";												
 								});
 							}
 							$("#purchase-detail-table").dataTable().fnDestroy();
 							if(resultRunTime!=0){
-								$("#purchase_detail_contain_row").show();
+								$("#purchase_detail_contain_row").dialog("open");
+								$("#supply_name_err_mes").html("");
 								$("#purchase-detail-table tbody").html(result_table);
 								$("#purchase-detail-table").dataTable({
 									  autoWidth: false,
@@ -1060,6 +1154,7 @@
 			}
 		});		
 		//明細刪除事件聆聽 
+		
 		$("#purchase-detail-table").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
 			purchase_id= $(this).attr("id");
@@ -1068,6 +1163,7 @@
 		//明細修改事件聆聽
 		$("#purchase-detail-table").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
+			new_or_edit=2;
 			uuid = $(this).val();
 			purchase_id = $(this).attr("id");
 			product_id = $(this).attr("name");
@@ -1114,6 +1210,8 @@
 			autoOpen : false,
 			width : 700,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -1164,14 +1262,19 @@
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
 										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><button name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'class='btn_delete'>刪除</button></td></tr>";										
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";										
 									});
 								}
 								$("#purchase-detail-table").dataTable().fnDestroy();
 								if(resultRunTime!=0){
-									$("#purchase_detail_contain_row").show();
+									
+									$("#purchase_detail_contain_row").dialog("open");
 									$("#purchase-detail-table tbody").html(result_table);
+									$("#supply_name_err_mes").html("");
 									$("#purchase-detail-table").dataTable({
 										  autoWidth: false,
 										  scrollX:  true,
@@ -1381,9 +1484,10 @@
 	    	$("#insert_detail_c_product_id").val(ui.item.c_product_id);
 	    });
 		//新增事件聆聽
-		$("#create-supply").button().on("click", function(e) {
+		$("#create-supply").click( function(e) {
 			e.preventDefault();		
 			insert_dialog.dialog("open");
+			//@@@
 		});
 		//預設表格隱藏
 		$("#purchases_contain_row").hide();
@@ -1400,12 +1504,37 @@
 		$("#purchase-detail-table").find("th").css("min-width","120px");
 	})
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>進貨管理</h2>
-	</div>
-	<div class="panel-content">
+	<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">供應商名稱查詢</span>
+						<input type="text" id="searh_purchase_by_supply_name" name="searh_purchase_by_supply_name">
+					</label>
+					<button class="btn btn-darkblue" id="searh_supply_name">查詢</button>
+				</div>
+				<div class="form-row">
+				<form id="purchase_date_form" name="purchase_date_form">
+					<label for="">
+						<span class="block-label">進貨起日</span>
+						<input type="text" class="input-date" id="purchase_start_date" name="purchase_start_date">
+					</label>
+					<div class="forward-mark"></div>
+					<label for="">
+						<span class="block-label">進貨迄日</span>
+						<input type="text" class="input-date" id="purchase_end_date" name="purchase_end_date">
+					</label>
+					<button class="btn btn-darkblue" id="search_purchase_date">查詢</button>
+				</form>
+				</div>
+				<div class="btn-row">
+					<button class="btn btn-exec " id="create-supply">新增進貨資料</button>
+				</div>
+				<div id="supply_name_err_mes"></div>
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+		
+		
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認刪除資料嗎?">
@@ -1419,7 +1548,7 @@
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
-								<td><p>供應商名稱</p></td>
+								<td><p>名稱</p></td>
 								<td><input type="text" name="supply_id" id="update_supply_id" placeholder="輸入供應商名稱已供查詢"></td>
 								<td><p>進貨發票號碼</p></td>
 								<td><input type="text" name="invoice"  placeholder="輸入進貨發票號碼"></td>
@@ -1437,6 +1566,7 @@
 								<td><input type="text" name="memo" placeholder="輸入備註說明"></td>
 							</tr>
 						</table>
+						
 					</fieldset>
 				</form>
 			</div>
@@ -1453,9 +1583,9 @@
 							</tr>
 							<tr>
 								<td><p>進貨數量</p></td>
-								<td><input type="text" name="quantity"  placeholder="輸入進貨數量"></td>
+								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
 								<td><p>進貨價格</p></td>
-								<td><input type="text" name="cost"  placeholder="輸入進貨價格"></td>
+								<td><input type="text" id="update_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
 							</tr>
 							<tr>
 								<td><p>備註說明</p></td>
@@ -1509,9 +1639,9 @@
 							</tr>
 							<tr>
 								<td><p>進貨數量</p></td>
-								<td><input type="text" name="quantity"  placeholder="輸入進貨數量"></td>
+								<td><input type="text" id="insert_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
 								<td><p>進貨價格</p></td>
-								<td><input type="text" name="cost"  placeholder="輸入進貨價格"></td>
+								<td><input type="text" id="insert_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
 							</tr>
 							<tr>
 								<td><p>備註說明</p></td>
@@ -1522,47 +1652,47 @@
 				</form>
 			</div>			
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="purchase-serah-create-contain" class="ui-widget">
-					<table id="purchases-serah-create">
-						<thead>
-							<tr>
-								<td>
-									<input type="text" id="searh_purchase_by_supply_name" name="searh_purchase_by_supply_name" placeholder="輸入供應商名稱已供查詢">
-								</td>
-								<td>
-									&nbsp;&nbsp;<button id="searh_supply_name">查詢</button>
-								</td>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="purchase-serah-create-contain" class="ui-widget"> -->
+<!-- 					<table id="purchases-serah-create"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<td> -->
+<!-- 									<input type="text" id="searh_purchase_by_supply_name" name="searh_purchase_by_supply_name" placeholder="輸入供應商名稱已供查詢"> -->
+<!-- 								</td> -->
+<!-- 								<td> -->
+<!-- 									&nbsp;&nbsp;<button id="searh_supply_name">查詢</button> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="center">
-				<div id="select-dates-contain" class="ui-widget">
-					<form id="purchase_date_form" name="purchase_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="輸入進貨日期起日"></td>
-									<td>&nbsp;&nbsp;~&nbsp;&nbsp;</td>
-									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="輸入進貨日期迄日"></td>
-									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td>
-								</tr>
-							</thead>
-						</table>
-					</form>
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="select-dates-contain" class="ui-widget"> -->
+<!-- 					<form id="purchase_date_form" name="purchase_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="輸入進貨日期起日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;~&nbsp;&nbsp;</td> -->
+<!-- 									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="輸入進貨日期迄日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第三列 -->
-			<div class="row" align="center">
-				<button id="create-supply">新增進貨資料</button>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<button id="create-supply">新增進貨資料</button> -->
+<!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row" align="center" id ="purchases_contain_row">
-				<div id="purchases-contain" class="ui-widget">
-					<table id="purchases" class="ui-widget ui-widget-content">
+			<div class="row search-result-wrap" align="center" id ="purchases_contain_row">
+				<div id="purchases-contain" class="result-table-wrap">
+					<table id="purchases" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>進貨單號</th>
@@ -1581,8 +1711,8 @@
 			</div>
 			<!-- 第五列 -->
 			<div class="row" align="center" id="purchase_detail_contain_row">
-				<div id="purchase-detail-contain" class="ui-widget">
-					<table id="purchase-detail-table" class="ui-widget ui-widget-content">
+				<div id="purchase-detail-contain" class="ui-widget result-table-wrap">
+					<table id="purchase-detail-table" class="ui-widget ui-widget-content result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>自訂產品ID</th>

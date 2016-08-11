@@ -12,10 +12,15 @@
 <head>
 <title>出貨報表</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -38,7 +43,7 @@ function date_format(str) {
 		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
 		$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		//查詢相關設定
-		$("#searh-productunit").button().on("click",function(e) {
+		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
 			$(".validateTips").text("請稍候片刻");
 			$.ajax({
@@ -46,8 +51,6 @@ function date_format(str) {
 				url : "shipreport.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
-					//console.log(result);
-					//alert(result);
 					if(result.indexOf("WebService")!=-1){
 						$(".validateTips").text("WebService Error: "+result);
 						return
@@ -55,33 +58,41 @@ function date_format(str) {
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
-						result_table +="<tr><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].order_no 
-						+ "</td><td>" + ((json_obj[i].c_product_id==null)?"":json_obj[i].c_product_id.replace("NULL",""))
-						+ "</td><td>" + ((json_obj[i].sale_date==null)?"":json_obj[i].c_product_id.replace("T00:00:00Z",""))
-						+ "</td><td>" + ((json_obj[i].dis_date==null)?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
-
+						result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].order_no 
+						+ "</td><td>" + (json_obj[i].c_product_id==null?"":json_obj[i].c_product_id.replace("NULL",""))
+						+ "</td><td>" + (json_obj[i].sale_date==null?"":json_obj[i].sale_date.replace("T00:00:00Z",""))
+						+ "</td><td>" + (json_obj[i].dis_date==null?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
 						+ "</td><td>" + json_obj[i].price
 						+ "</td><td>" + ((json_obj[i].phone==null)?"":json_obj[i].phone)
 						+ "</td><td style='min-width:200px;word-break: break-all;'>" + json_obj[i].address
-						+ "</td><td>" + json_obj[i].post
+						+ "</td><td>" + ((json_obj[i].post==null)?"":json_obj[i].post.replace("NULL","").replace("null",""))
 						+ "</td><td style='min-width:80px;word-break:keep-all;'>" + json_obj[i].name
 						+ "</td><td>" + json_obj[i].mobile
 						+ "</td><td style='min-width:100px;word-break: break-all;'>" + json_obj[i].product_name
 						+ "</td><td  style='min-width:80px;word-break: break-all;'>" + json_obj[i].seq_no
 						+ "</td><td>" + json_obj[i].quantity
 						+ "</td><td>" + json_obj[i].order_source
-						+ "</td><td>" + ((json_obj[i].memo==null)?"":json_obj[i].memo)
+						+ "</td><td>" + ((json_obj[i].memo==null)?"":json_obj[i].memo.replace("NULL",""))
 						+"</td></tr>";
 					});
+// 					$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
 					$(".validateTips").text("");
-					$("#my").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
-					$("#products").dataTable().fnDestroy();
+					//$("#my").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
+// 					$("#products").dataTable().fnDestroy();
 					if(json_obj.length!=0){
 						$("#products-contain").show();
 						$("#products tbody").html(result_table);
 						$("#products").dataTable({
-
-							"language": {"url": "js/dataTables_zh-tw.txt"}});
+							dom: 'lfrB<t>ip',
+							buttons: [{
+								extend: 'excel',
+								text: '輸出為xlsx檔',
+								title: '出貨報表',
+								exportOptions: {modifier: {search: 'none'}}
+							  }],
+							"language": {"url": "js/dataTables_zh-tw.txt"}
+						});
+						$("#products").find("td").css({"word-break":"break-all","min-width":"68px","text-align":"center" });
 						$(".validateTips").text("");
 						$("#xls").show();
 					}else{
@@ -100,8 +111,8 @@ function date_format(str) {
 			autoOpen : false,
 			height : "auto",
 			modal : true,
-			show : {effect : "blind",duration : 1000},
- 			hide : {effect : "blind",duration : 1000},
+			show : {effect : "blind",duration : 300},
+ 			hide : {effect : "blind",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					alert("嘿嘿嘿~");
@@ -130,43 +141,21 @@ function date_format(str) {
 		});
 		//預設表格隱藏
 		$("#products-contain").hide();
+// 		$("#xls").click(function(){
+// 			$(".result").table2excel({
+// 				exclude: ".noExl",
+// 				name: "Excel Document Name",
+// 				filename: "出貨報表",
+// 				fileext: ".xls",
+// 				exclude_img: true,
+// 				exclude_links: true,
+// 				exclude_inputs: true
+// 			});
+// 		});
 	});
-	function export_xls(){
-		$(".result").table2excel({
-			exclude: ".noExl",
-			name: "Excel Document Name",
-			filename: "出貨報表",
-			fileext: ".xls",
-			exclude_img: true,
-			exclude_links: true,
-			exclude_inputs: true
-		});
-	}
+	
 </script>
-<style>
-.row {
-    border-bottom: 0px;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-}
-::-webkit-input-placeholder {
-   text-align: center;
-}
 
-:-moz-placeholder { /* Firefox 18- */
-   text-align: center;  
-}
-
-::-moz-placeholder {  /* Firefox 19+ */
-   text-align: center;  
-}
-
-:-ms-input-placeholder {  
-   text-align: center; 
-}
-</style>
-</head>
-<body style="font-size: 15px;">
 <script>
 $(function() {
 	var value='<%=request.getParameter("action")%>';
@@ -177,34 +166,54 @@ $(function() {
 			url : "shipreport.do",
 			data : {action :"today",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 			success : function(result) {
+				//console.log(result);
+				//alert(result);
+				if(result.indexOf("WebService")!=-1){
+					$(".validateTips").text("WebService Error: "+result);
+					return
+				};
 				var json_obj = $.parseJSON(result);
 				var result_table = "";
 				$.each(json_obj,function(i, item) {
 					result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"+ json_obj[i].order_no 
-					+ "</td><td>" + json_obj[i].c_product_id.replace("NULL","")
-					+ "</td><td>" + json_obj[i].sale_date.replace("T00:00:00Z","")
-					+ "</td><td>" + json_obj[i].dis_date.replace("T00:00:00Z","")
+					+ "</td><td>" + (json_obj[i].c_product_id==null?"":json_obj[i].c_product_id.replace("NULL",""))
+					+ "</td><td style='color:red;'>" + (json_obj[i].sale_date==null?"":json_obj[i].sale_date.replace("T00:00:00Z",""))
+					+ "</td><td>" + (json_obj[i].dis_date==null?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
 
 					+ "</td><td>" + json_obj[i].price
 					+ "</td><td>" + ((json_obj[i].phone==null)?"":json_obj[i].phone)
 					+ "</td><td style='min-width:200px;word-break: break-all;'>" + json_obj[i].address
-					+ "</td><td>" + json_obj[i].post
-					+ "</td><td style='min-width:200px;word-break:keep-all;'>" + json_obj[i].name
+					+ "</td><td>" + ((json_obj[i].post==null)?"":json_obj[i].post.replace("NULL",""))
+					+ "</td><td style='min-width:80px;word-break:keep-all;'>" + json_obj[i].name
 					+ "</td><td>" + json_obj[i].mobile
 					+ "</td><td style='min-width:100px;word-break: break-all;'>" + json_obj[i].product_name
 					+ "</td><td  style='min-width:80px;word-break: break-all;'>" + json_obj[i].seq_no
 					+ "</td><td>" + json_obj[i].quantity
 					+ "</td><td>" + json_obj[i].order_source
-					+ "</td><td>" + ((json_obj[i].memo==null)?"":json_obj[i].memo)
+					+ "</td><td>" + ((json_obj[i].memo==null)?"":json_obj[i].memo.replace("NULL",""))
 					+"</td></tr>";
 				});
+// 				$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
 				$(".validateTips").text("");
-				$("#my").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
-				$("#products").dataTable().fnDestroy();
+				//$("#my").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
+// 				$("#products").dataTable().fnDestroy();
 				if(json_obj.length!=0){
 					$("#products-contain").show();
 					$("#products tbody").html(result_table);
-					$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+					$("#products").dataTable({
+						dom: 'lfrB<t>ip',
+						buttons: [{
+							extend: 'excel',
+							text: '輸出為xlsx檔',
+							title: '趴趴趴',
+							exportOptions: {modifier: {search: 'none'}}
+						  }],
+						"language": {"url": "js/dataTables_zh-tw.txt"}
+					});
+//						$("#products").dataTable({
+
+//							"language": {"url": "js/dataTables_zh-tw.txt"}});
+					$("#products").find("td").css({"word-break":"break-all","min-width":"68px","text-align":"center" });
 					$(".validateTips").text("");
 					$("#xls").show();
 				}else{
@@ -218,46 +227,27 @@ $(function() {
 	}
 });
 </script>
-<!--% 
-	String str=(String)request.getParameter("action");
-	if(str!=null){
-		if("today".equals(str)){
-			out.println("<script>alert('顯示今天的資料')</script>");
-		}
-	}
-%-->
-<div style="margin:20px;">
-	<div class="panel-title">
-		<h2 style="font-size: 25px;">出貨報表</h2>
-	</div>
-	<div class="panel-content">
-		<div class="datalistWrap" >
-			<!-- 第一列 -->
-			<div class="row" >
-				<div id="products-serah-create-contain" style="width: 800px;margin:20px auto;" >
-					<table id="products-serah-create" class="ui-widget ui-widget-content">
-						<tr class="ui-widget-header">
-							<th >
-								<p style="width:120px;">出貨日</p>
-							</th><th>
-								<input type="text" id="datepicker1" placeholder="起">
-							</th><th>
-								~
-							</th><th>
-								<input type="text" id="datepicker2" placeholder="迄">
-							</th><th>
-								<button id="searh-productunit" onclick="" style="width:80px;">查詢</button>
-							</th><th id="xls" style="display:none">
-								<button onclick="export_xls()" style="width:100px;" >產生報表</button>
-							</th>
-						</tr>
-					</table>
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">出貨起日</span>
+						<input type="text" class="input-date" id="datepicker1">
+					</label>
+					<div class="forward-mark"></div>
+					<label for="">
+						<span class="block-label">出貨迄日</span>
+						<input type="text" class="input-date" id="datepicker2">
+					</label>
+					<a class="btn btn-darkblue" id="searh-productunit">查詢</a>
+					<a class="btn btn btn-exec" id="xls" style="display:none" >產生報表</a>
 				</div>
-			</div>
+			</div><!-- /.form-wrap -->
+		</div>
 			<!-- 第二列 -->
-			<div class="row" align="left" >
-				<div id="products-contain" class="ui-widget" style="width:auto;">
-					<table id="products" class="ui-widget ui-widget-content">
+			<div class="search-result-wrap" >
+				<div id="products-contain" class="result-table-wrap" >
+					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>出貨單號</th>
@@ -283,14 +273,7 @@ $(function() {
 				</div>
 				<div class="validateTips" align="center"> </div>
 			</div>
-		</div>
-	</div>
-<div id="dialog-confirm"></div>
-<div style="display:none">
-	<table id="my" class="result">
-	<tr><td></td></tr>
-	</table>
-</div>
+<table id="my123" class="result" style="display:none"><tr><td></td></tr></table>
 </div>
 </body>
 </html>

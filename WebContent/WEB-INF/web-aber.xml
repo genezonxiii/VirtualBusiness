@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <display-name>VirtualBusiness</display-name>
+  <display-name>_VirtualBusiness</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
@@ -19,37 +19,7 @@
     <param-name>jdbcDriver</param-name>
     <param-value>com.mysql.jdbc.Driver</param-value>
   </context-param>
-<!--########################以下平常#####################################-->
-<!--
-  <context-param>
-  <param-name>dbURL</param-name>
-  <param-value>jdbc:mysql://localhost/db_virtualbusiness</param-value>
-  </context-param>
-  <context-param>
-    <param-name>dbUserName</param-name>
-    <param-value>root</param-value>
-  </context-param>
-  <context-param>
-    <param-name>dbPassword</param-name>
-    <param-value>123456</param-value>
-  </context-param>
-  <context-param>
-    <param-name>uploadpath</param-name>
-    <param-value>C:/</param-value>
-  </context-param>
-  <context-param>
-    <param-name>pythonwebservice</param-name>
-    <param-value>http://192.168.112.164:8090</param-value>
-  </context-param>
-  <context-param>
-    <param-name>photopath</param-name>
-    <param-value>/data/productpic</param-value>
-  </context-param>
-  <servlet>
--->
- <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
-
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
@@ -74,39 +44,9 @@
     <param-name>photopath</param-name>
     <param-value>/data/productpic</param-value>
   </context-param>
-  <servlet>
 
 <!--########################以上server#####################################-->
-<!--########################以下164+175####################################-->
-<!-- 
-  <context-param>
-  	<param-name>dbURL</param-name>
-  	<param-value>jdbc:mysql://192.168.112.175/db_virutalbusiness</param-value>
-  </context-param>
-  <context-param>
-    <param-name>dbUserName</param-name>
-    <param-value>root</param-value>
-  </context-param>
-  <context-param>
-    <param-name>dbPassword</param-name>
-    <param-value>password</param-value>
-  </context-param>
-  <context-param>
-    <param-name>uploadpath</param-name>
-    <param-value>/data/vbupload</param-value>
-  </context-param>
-  <context-param>
-    <param-name>pythonwebservice</param-name>
-    <param-value>http://www.a-ber.com.tw:8090</param-value>
-  </context-param>
-  <context-param>
-    <param-name>photopath</param-name>
-    <param-value>/data/productpic</param-value>
-  </context-param>
   <servlet>
--->
- <!--########################以上164+175#####################################-->
-<!--切一個頭防呆-->
     <servlet-name>productunit</servlet-name>
     <servlet-class>tw.com.aber.productunit.controller.productunit</servlet-class>
   </servlet>
@@ -194,6 +134,7 @@
     <servlet-name>sale</servlet-name>
     <url-pattern>/sale.do</url-pattern>
   </servlet-mapping>
+  
   <servlet>
     <servlet-name>group</servlet-name>
     <servlet-class>tw.com.aber.group.controller.group</servlet-class>
@@ -267,12 +208,12 @@
     <url-pattern>/accreceive.do</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>HandleDrawValidateCode</servlet-name>
-    <servlet-class>tw.com.aber.login.controller.HandleDrawValidateCode</servlet-class>
+	<servlet-name>HandleDrawValidateCode</servlet-name>
+	<servlet-class>tw.com.aber.login.controller.HandleDrawValidateCode</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>HandleDrawValidateCode</servlet-name>
-    <url-pattern>/HandleDrawValidateCode.do</url-pattern>
+	<servlet-name>HandleDrawValidateCode</servlet-name>
+	<url-pattern>/HandleDrawValidateCode.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>welcome</servlet-name>
@@ -322,14 +263,8 @@
     <servlet-name>photo</servlet-name>
     <url-pattern>/photo.do</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>image</servlet-name>
-    <servlet-class>tw.com.aber.product.controller.image</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>image</servlet-name>
-    <url-pattern>/image.do</url-pattern>
-  </servlet-mapping>
+<!--####################new↓#####################-->
+<!--####################new↑#####################-->    
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>tw.com.aber.loginFilter</filter-class>

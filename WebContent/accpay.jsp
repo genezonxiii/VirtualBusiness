@@ -20,6 +20,12 @@
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
+<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -28,12 +34,36 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <!-- data table buttons -->
-<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function(){
+// 		$("#button_1").click(function(e){
+// 			e.preventDefault();
+// 			var count = 0;
+// 			var message = "";
+// 			$(".checkbox_pay").each(function(){
+// 				if($(this).prop("checked")){
+// 					count+=1;
+// 				}
+// 			});
+// 			message = "確認要付帳嗎? 總共" + count + "筆";
+// 			$("#dialog-confirm p").text(message);
+// 			confirm_dialog.dialog("open");
+// 	    });
+// 		$("#button_2").click(function(e){
+//         		e.preventDefault();
+//         		var count = 0;
+//         		var message = "";
+//         		$(".checkbox_pay_cancel").each(function(){
+//         			if($(this).prop("checked")){
+//         				count+=1;
+//         			}
+//         		});
+//         		message = "確認要取消付帳嗎? 總共" + count + "筆";
+//         		$("#dialog-cancel-confirm p").text(message);
+//         		confirm_cancel_dialog.dialog("open");
+// 		});
 		 $("#amount_date_form").validate({
 				rules : {
 					amount_start_date : {
@@ -72,7 +102,7 @@
 			});			
 	var table;
 	//應付帳款日查詢相關設定
-	$("#searh_amount_date").button().on("click",function(e) {
+	$("#searh_amount_date").click(function(e) {
 		e.preventDefault();
 		if($("#amount_date_form").valid()){
 			$.ajax({
@@ -117,8 +147,8 @@
 									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
-									+ "'class='checkbox_pay'></input></td></tr>";
+									+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
+									+ "'class='checkbox_pay'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";
 								}
 							});
 						}
@@ -188,6 +218,9 @@
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 							$("#account_amount_date_table").find("td").css("text-align","center");
+							$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#search_amount_err_mes").length){
                 				$("#search_amount_err_mes").remove();
                 			}
@@ -197,7 +230,7 @@
 		}
 	});	
 	//實付帳款日查詢相關設定
-	$("#searh_pay_date").button().on("click",function(e) {
+	$("#searh_pay_date").click(function(e) {
 		e.preventDefault();
 		if($("#pay_date_form").valid()){
 			$.ajax({
@@ -242,8 +275,8 @@
 									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
-									+ "'class='checkbox_pay_cancel'></input></td></tr>";
+									+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
+									+ "'class='checkbox_pay_cancel'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";
 								}
 							});
 						}
@@ -313,6 +346,9 @@
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 							$("#account_pay_date_table").find("td").css("text-align","center");
+							$("#account_pay_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#account_pay_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#pay_err_mes").length){
                 				$("#pay_err_mes").remove();
                 			}
@@ -325,8 +361,11 @@
 		draggable : false,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
-		height : 200,
+		height : "auto",
+		width : "auto",
 		modal : true,
+		show : {effect : "blind",duration : 300},
+		hide : {effect : "fade",duration : 300},
 		buttons : {
 			"確認批次收帳" : function() {
 				$(".checkbox_pay").each(function(){
@@ -378,8 +417,8 @@
 										+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 										+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
-										+ "'class='checkbox_pay_cancel'></input></td></tr>";	
+										+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
+										+ "'class='checkbox_pay_cancel'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";	
 									});
 								}							
 								if(resultRunTime==0){
@@ -399,7 +438,7 @@
 										  dom: 'Blfrtip',
 								          buttons: [{
 								                text: '取消批次付帳',
-								                className: 'btn_pay_cancel',
+								                className: 'btn_pay_cancel btn btn-wide btn-darkblue',
 								                action : function(e){
 								            		e.preventDefault();
 								            		var count = 0;
@@ -416,6 +455,9 @@
 								            }
 								          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 									$("#account_pay_date_table").find("td").css("text-align","center");
+									$("#account_pay_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#account_pay_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								}
 							}
 						});
@@ -432,8 +474,11 @@
 		draggable : false,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
-		height : 200,
+		height : "auto",
+		width : "auto",
 		modal : true,
+		show : {effect : "blind",duration : 300},
+		hide : {effect : "fade",duration : 300},
 		buttons : {
 			"確認取消批次收帳" : function() {
 				$(".checkbox_pay_cancel").each(function(){
@@ -450,6 +495,7 @@
 							success : function(result) {
 								$(".checkbox_pay_cancel").each(function(){
 									if($(this).prop("checked")){
+										//$("#account_pay_date_table").row($(this).parents('tr')).remove().draw();
 										var table = $("#account_pay_date_table").DataTable();
 										table.row($(this).parents('tr')).remove().draw();
 									}
@@ -485,8 +531,8 @@
 										+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 										+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
-										+ "'class='checkbox_pay'></input></td></tr>";	
+										+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
+										+ "'class='checkbox_pay'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";	
 									});
 								}
 								if(resultRunTime==0){
@@ -523,6 +569,9 @@
 								            }
 								          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 									$("#account_amount_date_table").find("td").css("text-align","center");
+									$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								}
 							}
 						});
@@ -554,16 +603,10 @@
 		changeYear:true
 	});	
 	//hold header
-	$("#account_amount_date_table").find("th").css("min-width","120px");
-	$("#account_pay_date_table").find("th").css("min-width","120px");	
+// 	$("#account_amount_date_table").find("th").css("min-width","120px");
+// 	$("#account_pay_date_table").find("th").css("min-width","120px");	
 })
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>應付帳款</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認批次付帳嗎?">
@@ -574,26 +617,48 @@
 				<br><p></p>
 			</div>			
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<form id="amount_date_form" name="trans_list_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td><input type="text" id="amount_start_date" name="amount_start_date" class="date" placeholder="請輸入應付帳款產生起日"></td>
-									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th>
-									<td><input type="text" id="amount_end_date" name="amount_end_date" class="date" placeholder="請輸入應付帳款產生迄日"></td>
-									<td>&nbsp;&nbsp;<button id="searh_amount_date">查詢</button></td>
-								</tr>
-							</thead>
-						</table>
-					</form>
-				</div>
-			</div>
+				<div class="input-field-wrap">
+					<div class="form-wrap">
+						<form id="amount_date_form" name="trans_list_date_form">
+							<div class="form-row">
+								<label for="">
+									<span class="block-label">應付起日</span>
+									<input type="text" class="input-date" id="amount_start_date" name="amount_start_date">
+								</label>
+								<div class="forward-mark"></div>
+								<label for="">
+									<span class="block-label">應付迄日</span>
+									<input type="text" class="input-date" id="amount_end_date" name="amount_end_date">
+								</label>
+								<button id="searh_amount_date" class="btn btn-darkblue">查詢</button>
+							</div>
+						</form>
+					</div><!-- /.form-wrap -->
+				</div><!-- /.input-field-wrap -->
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="amount_date_form" name="trans_list_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td><input type="text" id="amount_start_date" name="amount_start_date" class="date" placeholder="請輸入應付帳款產生起日"></td> -->
+<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
+<!-- 									<td><input type="text" id="amount_end_date" name="amount_end_date" class="date" placeholder="請輸入應付帳款產生迄日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;<button id="searh_amount_date">查詢</button></td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="account_amount_date_contain" class="ui-widget">
-					<table id="account_amount_date_table" class="ui-widget ui-widget-content">
+			
+			<div class="row search-result-wrap" id="ian" align="center"style="height:433px;">
+<!-- 			<div class="form-row"> -->
+<!-- 				<button id="button_1" align="center" class="btn btn-wide btn-darkblue">批次付帳</button> -->
+<!-- 			</div> -->
+				<div id="account_amount_date_contain" class="result-table-wrap">
+					<table id="account_amount_date_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>應付帳款金額</th>
@@ -610,33 +675,50 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="panel-title">
-		<h2>實付帳款</h2>
-	</div>
 	<div class="panel-content">
 		<div class="datalistWrap">
 			<!-- 第三列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<form id="pay_date_form" name="trans_list_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td><input type="text" id="pay_start_date" name="pay_start_date" class="date" placeholder="請輸入實付帳款產生起日"></td>
-									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th>
-									<td><input type="text" id="pay_end_date" name="pay_end_date" class="date" placeholder="請輸入實付帳款產生迄日"></td>
-									<td>&nbsp;&nbsp;<button id="searh_pay_date">查詢</button></td>
-								</tr>
-							</thead>
-						</table>
-					</form>
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="pay_date_form" name="trans_list_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td><input type="text" id="pay_start_date" name="pay_start_date" class="date" placeholder="請輸入實付帳款產生起日"></td> -->
+<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
+<!-- 									<td><input type="text" id="pay_end_date" name="pay_end_date" class="date" placeholder="請輸入實付帳款產生迄日"></td> -->
+<!-- 									<td>&nbsp;&nbsp;<button id="searh_pay_date">查詢</button></td> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row" align="center"style="height:433px;">
-				<div id="account_pay_date_contain" class="ui-widget">
-					<table id="account_pay_date_table" class="ui-widget ui-widget-content">
+			<div class="input-field-wrap">
+					<div class="form-wrap">
+						<form id="pay_date_form" name="trans_list_date_form">
+							<div class="form-row">
+								<label for="">
+									<span class="block-label">實付起日</span>
+									<input type="text" class="input-date" id="pay_start_date" name="pay_start_date">
+								</label>
+								<div class="forward-mark"></div>
+								<label for="">
+									<span class="block-label">實付迄日</span>
+									<input type="text" class="input-date" id="pay_end_date" name="pay_end_date">
+								</label>
+								<button id="searh_pay_date" class="btn btn-darkblue">查詢</button>				
+							</div>
+						</form>
+					</div><!-- /.form-wrap -->
+				</div><!-- /.input-field-wrap -->
+			<div class="row search-result-wrap" id="ian2" align="center"style="height:433px;">
+<!-- 				<div class="form-row"> -->
+<!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消批次付帳</button> -->
+<!-- 				</div> -->
+				<div id="account_pay_date_contain" class="result-table-wrap">
+					<table id="account_pay_date_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>應付帳款金額</th>
@@ -654,5 +736,6 @@
 			</div>
 		</div>
 	</div>	
+	</div>
 </body>
 </html>

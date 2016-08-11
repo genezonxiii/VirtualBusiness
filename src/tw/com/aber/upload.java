@@ -37,7 +37,7 @@ public class upload  extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
+		if(request.getSession().getAttribute("group_id")==null){request.setAttribute("action","no_session");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
 //		   int temp=0;
 //		   String _uid= UUID.randomUUID().toString();
 //		   String _group_id = new String(Base64.encodeBase64String("group_id".getBytes()));
@@ -74,10 +74,10 @@ public class upload  extends HttpServlet {
 		   //System.out.println("隨便產生一個uuid: "+_uid+" \n group_id的base64: "+_group_id+"\n");
 		   
 		   //if(temp==0)return;
-		String conString="",ret="";
+		String conString="",ret="E";
 		conString=putFile(request, response);
 		try{
-			TimeUnit.SECONDS.sleep(2);
+			TimeUnit.SECONDS.sleep(3);
 		}catch(Exception e){
 			ret="Sleep error";
 		}
@@ -86,7 +86,7 @@ public class upload  extends HttpServlet {
 		}else{
 			ret=conString;
 		}
-
+		ret=((ret==null)?"E":ret);
 		request.setAttribute("action",ret);
 		RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
 		successView.forward(request, response);

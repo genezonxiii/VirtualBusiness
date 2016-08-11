@@ -19,7 +19,7 @@
     <param-name>jdbcDriver</param-name>
     <param-value>com.mysql.jdbc.Driver</param-value>
   </context-param>
-<!--########################以下平常#####################################-->
+<!--########################以下自家#####################################-->
 <!--
   <context-param>
   <param-name>dbURL</param-name>
@@ -43,13 +43,13 @@
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
-    <param-value>/data/productpic</param-value>
+    <param-value>C:/Users/10506002/workspace/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <servlet>
 -->
  <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
-
+<!-- 
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
@@ -63,25 +63,29 @@
     <param-value>Admin@csi1008!</param-value>
   </context-param>
   <context-param>
-    <param-name>uploadpath</param-name>
-    <param-value>/data/vbupload</param-value>
-  </context-param>
-    <context-param>
     <param-name>pythonwebservice</param-name>
     <param-value>http://127.0.0.1:8090</param-value>
+  </context-param>
+  <context-param>
+    <param-name>uploadpath</param-name>
+    <param-value>/data/vbupload</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
     <param-value>/data/productpic</param-value>
   </context-param>
+  <context-param>
+    <param-name>videopath</param-name>
+    <param-value>/data/video</param-value>
+  </context-param>
   <servlet>
-
+-->
 <!--########################以上server#####################################-->
 <!--########################以下164+175####################################-->
-<!-- 
+
   <context-param>
   	<param-name>dbURL</param-name>
-  	<param-value>jdbc:mysql://192.168.112.175/db_virutalbusiness</param-value>
+  	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -89,22 +93,26 @@
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>password</param-value>
+    <param-value>admin123</param-value>
+  </context-param>
+  <context-param>
+    <param-name>pythonwebservice</param-name>
+    <param-value>http://192.168.112.164:8090</param-value>
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
     <param-value>/data/vbupload</param-value>
   </context-param>
   <context-param>
-    <param-name>pythonwebservice</param-name>
-    <param-value>http://www.a-ber.com.tw:8090</param-value>
-  </context-param>
-  <context-param>
     <param-name>photopath</param-name>
     <param-value>/data/productpic</param-value>
   </context-param>
+  <context-param>
+    <param-name>videopath</param-name>
+    <param-value>/data/video</param-value>
+  </context-param>
   <servlet>
--->
+
  <!--########################以上164+175#####################################-->
 <!--切一個頭防呆-->
     <servlet-name>productunit</servlet-name>

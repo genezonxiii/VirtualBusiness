@@ -41,6 +41,7 @@ public class customer extends HttpServlet {
 			try {
 				/*************************** 開始查詢資料 ****************************************/
 				customerService = new CustomerService();
+				//System.out.println(group_id);
 				List<CustomerVO> list = customerService.getAllCustomer(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
@@ -444,9 +445,12 @@ public class customer extends HttpServlet {
         	String gidInBase64 = new String(Base64.encodeBase64String(group_id.getBytes()));
         	
 			String url = wsPath + "/query/group=" + gidInBase64;
-        	
         	HttpGet httpRequest = new HttpGet(url);
         	HttpClient client = HttpClientBuilder.create().build();
+//        	System.out.println("gid: "+group_id);
+//        	System.out.println("wspath: "+wsPath);
+//        	System.out.println("url: "+url);
+        	
         	HttpResponse httpResponse;
         	try {
         		StringBuffer result = new StringBuffer();

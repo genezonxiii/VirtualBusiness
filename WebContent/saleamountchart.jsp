@@ -15,10 +15,15 @@
 <head>
 <title>出貨量統計圖</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -193,7 +198,6 @@ function draw_chart(m_h,m_w,data){
      vis.append('line') .attr('x1', padding*2-5    ).attr('y1', max_h-padding)
 		 				.attr('x2', max_w-padding-5).attr('y2', max_h-padding)
 		 				.style('stroke', 'black').style('stroke-width', 5);
-
  };
  
  
@@ -202,9 +206,9 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
 	$(function() {
-		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
-		$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
-		$("#searh-productunit").button().on("click",function(e) {
+		//$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
+		//$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
+		$("#searh-productunit").click(function(e) {
 			$("#chart").html("<h2 style='color:red;'>資料查詢中...</h2>");
 			e.preventDefault();
 			$.ajax({
@@ -240,8 +244,8 @@ function date_format(str) {
 			autoOpen : false,
 			height : "auto",
 			modal : true,
-			show : {effect : "blind",duration : 1000},
- 			hide : {effect : "blind",duration : 1000},
+			show : {effect : "blind",duration : 300},
+ 			hide : {effect : "blind",duration : 300},
 			buttons : {
 				"確認刪除" : function() {alert("嘿嘿嘿~");$(this).dialog("close");},
 				"取消刪除" : function() {$(this).dialog("close");}
@@ -260,49 +264,44 @@ function date_format(str) {
 		$("#products-contain").hide();
 	});
 </script>
-<style>
-.row {
-    border-bottom: 0px;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-}
-::-webkit-input-placeholder {text-align: center;}
-:-moz-placeholder {text-align: center; } /* Firefox 18- */
-::-moz-placeholder { text-align: center; }/* Firefox 19+ */
-:-ms-input-placeholder { text-align: center; }
-</style>
-</head>
-<body style="font-size: 15px;">
-
-<script>
-</script>
-<div style="margin:20px;">
-	<div class="panel-title">
-		<h2 style="font-size: 25px;">銷售金額統計圖</h2>
-	</div>
 	<div class="panel-content">
 		<div class="datalistWrap" >
-
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="form-row">
+						<label for="">
+							<span class="block-label">轉單起日</span>
+							<input type="text" class="input-date" id="datepicker1">
+						</label>
+						<div class="forward-mark"></div>
+						<label for="">
+							<span class="block-label" id="datepicker2">轉單迄日</span>
+							<input type="text" class="input-date">
+						</label>
+						<button id="searh-productunit" class="btn btn-darkblue">查詢</button>
+					</div>
+				</div><!-- /.form-wrap -->
+			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
-			<div class="row" >
-				<div id="products-serah-create-contain" style="width: 800px;margin:0px auto;" >
-					<table id="products-serah-create" class="ui-widget ui-widget-content">
-						<tr class="ui-widget-header">
-							<th >
-								<p style="width:120px;">轉單日</p>
-							</th><th>
-								<input type="text" id="datepicker1" placeholder="起">
-							</th><th>
-								~
-							</th><th>
-								<input type="text" id="datepicker2" placeholder="迄">
-							</th><th>
-								<button id="searh-productunit" onclick="" style="width:80px;">查詢</button>
-							</th>
-						</tr>
-					</table>
-				</div>
-			</div>
+<!-- 			<div class="row" > -->
+<!-- 				<div id="products-serah-create-contain" style="width: 800px;margin:0px auto;" > -->
+<!-- 					<table id="products-serah-create" class="ui-widget ui-widget-content"> -->
+<!-- 						<tr class="ui-widget-header"> -->
+<!-- 							<th > -->
+<!-- 								<p style="width:120px;">轉單日</p> -->
+<!-- 							</th><th> -->
+<!-- 								<input type="text" id="datepicker1" placeholder="起"> -->
+<!-- 							</th><th> -->
+<!-- 								~ -->
+<!-- 							</th><th> -->
+<!-- 								<input type="text" id="datepicker2" placeholder="迄"> -->
+<!-- 							</th><th> -->
+<!-- 								<button id="searh-productunit" onclick="" style="width:80px;">查詢</button> -->
+<!-- 							</th> -->
+<!-- 						</tr> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
 			<div class="row" align="left" >
 				<div id="products-contain" class="ui-widget">

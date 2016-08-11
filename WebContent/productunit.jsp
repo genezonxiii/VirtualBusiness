@@ -12,10 +12,15 @@
 <head>
 <title>商品單位</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -55,7 +60,7 @@
 	
 		var unit_name = $("#unit_name");
 		//查詢相關設定
-		$("#searh-productunit").button().on("click",function(e) {
+		$("#searh-productunit").click(function(e) {
 							e.preventDefault();
 							$.ajax({
 									type : "POST",
@@ -72,12 +77,11 @@
 											$.each(json_obj,function(i, item) {
 												var text = "";
 												if(json_obj[i].group_id!="common"){
-													text+="<button value='"
-													+ json_obj[i].unit_id
-													+ "'name='" + json_obj[i].unit_name
-													+ "'class='btn_update'>修改</button><button value='"
-													+ json_obj[i].unit_id
-													+ "'class='btn_delete'>刪除</button>";
+													text+= "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+														+ "	<div class='table-function-list'>"
+														+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+														+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+														+ "	</div></div>";	
 												}
 												if(json_obj[i].group_id=="common"){
 													text ="";
@@ -100,7 +104,7 @@
 												$("#products2").dataTable({
 													  autoWidth: false,
 													  scrollX:  true,
-											          scrollY:"300px",
+											          scrollY:"auto",
 											          "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 												$("#products2").find("td").css("text-align","center");
 												if($("#search_product_unit_err_mes").length){
@@ -125,11 +129,11 @@
 							autoOpen : false,
 							show : {
 								effect : "blind",
-								duration : 1000
+								duration : 300
 							},
 							hide : {
-								effect : "explode",
-								duration : 1000
+								effect : "fade",
+								duration : 300
 							},
 							height : 300,
 							width : 420,
@@ -152,12 +156,11 @@
 														$.each(json_obj,function(i,item) {
 															var text = "";
 															if(json_obj[i].group_id!="common"){
-																text+="<button value='"
-																+ json_obj[i].unit_id
-																+ "'name='" + json_obj[i].unit_name
-																+ "'class='btn_update'>修改</button><button value='"
-																+ json_obj[i].unit_id
-																+ "'class='btn_delete'>刪除</button>";
+																text+=  "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+																	+ "	<div class='table-function-list'>"
+																	+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+																	+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+																	+ "	</div></div>";	
 															}
 															if(json_obj[i].group_id=="common"){
 																text="";
@@ -180,7 +183,7 @@
 															$("#products2").dataTable({
 																  autoWidth: false,
 																  scrollX:  true,
-														          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
+														          scrollY:"auto","language": {"url": "js/dataTables_zh-tw.txt"}});
 															$("#products2").find("td").css("text-align","center");
 															if($("#search_product_unit_err_mes").length){
 								                				$("#search_product_unit_err_mes").remove();
@@ -217,6 +220,8 @@
 			autoOpen : false,
 			height : 140,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -232,12 +237,11 @@
 							$.each(json_obj,function(i,item) {
 								var text = "";
 								if(json_obj[i].group_id!="common"){
-									text+="<button value='"
-									+ json_obj[i].unit_id
-									+ "'name='" + json_obj[i].unit_name
-									+ "'class='btn_update'>修改</button><button value='"
-									+ json_obj[i].unit_id
-									+ "'class='btn_delete'>刪除</button>";
+									text+=  "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+										+ "	</div></div>";	
 								}
 								if(json_obj[i].group_id=="common"){
 									text="";
@@ -260,7 +264,7 @@
 								$("#products2").dataTable({
 									  autoWidth: false,
 									  scrollX:  true,
-							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
+							          scrollY:"auto","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#products2").find("td").css("text-align","center");
 								if($("#search_product_unit_err_mes").length){
 	                				$("#search_product_unit_err_mes").remove();
@@ -308,12 +312,11 @@
 								$.each(json_obj,function(i,item) {
 									var text = "";
 									if(json_obj[i].group_id!="common"){
-										text+="<button value='"
-										+ json_obj[i].unit_id
-										+ "'name='" + json_obj[i].unit_name
-										+ "'class='btn_update'>修改</button><button value='"
-										+ json_obj[i].unit_id
-										+ "'class='btn_delete'>刪除</button>";
+										text+= "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+											+ "	<div class='table-function-list'>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+											+ "	</div></div>";	
 									}
 									if(json_obj[i].group_id=="common"){
 										text="";
@@ -337,7 +340,7 @@
 									$("#products2").dataTable({
 										  autoWidth: false,
 										  scrollX:  true,
-								          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
+								          scrollY:"auto","language": {"url": "js/dataTables_zh-tw.txt"}});
 									$("#products2").find("td").css("text-align","center");
 									if($("#search_product_unit_err_mes").length){
 		                				$("#search_product_unit_err_mes").remove();
@@ -379,24 +382,18 @@
 			update_dialog.dialog("open");
 		});
 		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
+		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
 		//預設表格隱藏
 		$("#products2_contain_row").hide();
 		//button css
 		$("#searh-productunit").css("width","80px");
-		$("#create-productunit").css("width","150px");
+		//$("#create-productunit").css("width","150px");
 		//hold header
 		$("#products2").find("th").css("min-width","50px");
 	});
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>商品單位</h2>
-	</div>
-	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認刪除資料嗎?">
@@ -428,27 +425,41 @@
 				</form>
 			</div>
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="products2-serah-create-contain" class="ui-widget">
-					<table id="products2-serah-create">
-						<thead>
-							<tr>
-								<td><input type="text" name="searh_unit_name" placeholder="請輸入查詢商品單位名稱"></td>
-								<th>
-									&nbsp;&nbsp;<button id="searh-productunit">查詢</button>
-								</th>
-								<th>
-									&nbsp;&nbsp;<button id="create-productunit">新增商品單位</button>
-								</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
+			<div class="input-field-wrap">
+				<div class="form-wrap" id="products2-serah-create">
+					<div class="form-row">
+						<label for="">
+							<span class="block-label">商品單位名稱查詢</span>
+							<input type="text" name="searh_unit_name">
+						</label>
+						<button class="btn btn-darkblue" id="searh-productunit">查詢</button>
+					</div>
+					<div class="btn-row">
+						<button class="btn btn-exec btn-wide" id="create-productunit">新增商品類別</button>
+					</div>
+				</div><!-- /.form-wrap -->
 			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="products2-serah-create-contain" class="ui-widget"> -->
+<!-- 					<table id="products2-serah-create"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<td><input type="text" name="searh_unit_name" placeholder="請輸入查詢商品單位名稱"></td> -->
+<!-- 								<th> -->
+<!-- 									&nbsp;&nbsp;<button id="searh-productunit">查詢</button> -->
+<!-- 								</th> -->
+<!-- 								<th> -->
+<!-- 									&nbsp;&nbsp;<button id="create-productunit">新增商品單位</button> -->
+<!-- 								</th> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="center" id="products2_contain_row">
+			<div class="row search-result-wrap" align="center" id="products2_contain_row" style="width:600px;margin:0px auto;">
 				<div id="products2-contain" class="ui-widget">
-					<table id="products2" class="ui-widget ui-widget-content">
+					<table id="products2" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>產品單位</th>

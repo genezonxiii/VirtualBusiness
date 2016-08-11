@@ -47,16 +47,16 @@ public class saleamountchart extends HttpServlet {
 		user_id=(user_id==null||user_id.length()<3)?"KNOWN":user_id;
 		
 		String time1 = request.getParameter("time1");
-		time1=(time1==null || time1.length()<3)?"1999/12/31":time1;
+		time1=(time1==null || time1.length()<3)?"1999-12-31":time1;
 		String time2 = request.getParameter("time2");
-		time2=(time2==null || time2.length()<3)?"2300/12/31":time2;
+		time2=(time2==null || time2.length()<3)?"2300-12-31":time2;
 		//System.out.println("from "+time1+" to "+time2);
 		
 		//###########################################
 		try {
 			SalechartService salechartService = null;
-			java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy/MM/dd").parse(time1).getTime());
-			java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy/MM/dd").parse(time2).getTime());
+			java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
+			java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
 			salechartService = new SalechartService();
 			SalechartVO chart_data = salechartService.getSearhDB(group_id, from_date, till_date);
 			Gson gson = new Gson();

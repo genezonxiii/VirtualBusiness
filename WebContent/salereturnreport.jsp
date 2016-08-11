@@ -14,20 +14,34 @@
 <head>
 <title>退貨報表</title>
 <meta charset="utf-8">
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="js/jquery-1.11.4.js"></script>
+<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="js/jszip.min.js"></script>
+<script type="text/javascript" src="js/pdfmake.min.js"></script>
+<script type="text/javascript" src="js/vfs_fonts.js"></script>
+<script type="text/javascript" src="js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="js/buttons.print.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.table2excel.js"></script>
 
+<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 function date_format(str) {
 	if(str==null){
@@ -50,7 +64,7 @@ function date_format(str) {
 			messages : {unit_name : {maxlength : "長度不能超過10個字"}}});
 		var unit_name = $("#unit_name");
 		//查詢相關設定
-		$("#searh-productunit").button().on("click",function(e) {
+		$("#searh-productunit").click(function(e) {
 							
 							e.preventDefault();
 							$.ajax({
@@ -92,6 +106,7 @@ function date_format(str) {
 													+ "</td></tr>";
 											});
 											//判斷查詢結果
+											$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>退貨日期</td><td>銷貨單號</td><td>訂單號</td><td>產品名稱</td><td>客戶自訂產品ID</td><td>銷貨數量</td><td>貨金額</td><td>轉單日</td><td>配送日</td><td>銷貨/出貨日期</td><td>銷售平台</td><td>備註</td></tr>"+result_table);
  											var resultRunTime = 0;
  											$.each (json_obj, function (i) {
  												resultRunTime+=1;
@@ -101,14 +116,20 @@ function date_format(str) {
  												$("#products-contain").show();
  												$("#products tbody").html(result_table);
  												$("#products").dataTable({
-
- 													"language": {"url": "js/dataTables_zh-tw.txt"}});
+ 													dom: 'lfrB<t>ip',
+ 													buttons: [{
+ 														extend: 'excel',
+ 														text: '輸出為xlsx檔',
+ 														title: '退貨報表',
+ 														exportOptions: {modifier: {search: 'none'}}
+ 													  }],
+ 													"language": {"url": "js/dataTables_zh-tw.txt"}
+ 												});
+//  												$("#products").find("td").css({"word-break":"break-all","min-width":"90px","text-align":"center" });
  												$(".validateTips").text("");
- 												$("#xls").show();
  											}else{
  												$("#products-contain").hide();
  												$(".validateTips").text("查無此結果");
- 												$("#xls").hide();
  											}
 										}
 									});
@@ -122,11 +143,11 @@ function date_format(str) {
 							autoOpen : false,
 							show : {
 								effect : "blind",
-								duration : 1000
+								duration : 300
 							},
 							hide : {
-								effect : "explode",
-								duration : 1000
+								effect : "fade",
+								duration : 300
 							},
 							height : 300,
 							width : 350,
@@ -167,7 +188,16 @@ function date_format(str) {
 														if(resultRunTime!=0){
 															$("#products-contain").show();
 															$("#products tbody").html(result_table);
-															$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+															$("#products").dataTable({
+																dom: 'lfrB<t>ip',
+																buttons: [{
+																	extend: 'excel',
+																	text: '輸出為xlsx檔',
+																	title: '退貨報表',
+																	exportOptions: {modifier: {search: 'none'}}
+																  }],
+																"language": {"url": "js/dataTables_zh-tw.txt"}
+															});
 															$(".validateTips").text("");
 														}else{
 															$("#products-contain").hide();
@@ -234,7 +264,16 @@ function date_format(str) {
 							if(resultRunTime!=0){
 								$("#products-contain").show();
 								$("#products tbody").html(result_table);
-								$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+								$("#products").dataTable({
+									dom: 'lfrB<t>ip',
+									buttons: [{
+										extend: 'excel',
+										text: '輸出為xlsx檔',
+										title: '退貨報表',
+										exportOptions: {modifier: {search: 'none'}}
+									  }],
+									"language": {"url": "js/dataTables_zh-tw.txt"}
+								});
 							}else{
 								$("#products-contain").hide();
 							}
@@ -291,7 +330,16 @@ function date_format(str) {
 								if(resultRunTime!=0){
 									$("#products-contain").show();
 									$("#products tbody").html(result_table);
-									$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+									$("#products").dataTable({
+										dom: 'lfrB<t>ip',
+										buttons: [{
+											extend: 'excel',
+											text: '輸出為xlsx檔',
+											title: '退貨報表',
+											exportOptions: {modifier: {search: 'none'}}
+										  }],
+										"language": {"url": "js/dataTables_zh-tw.txt"}
+									});
 								}else{
 									$("#products-contain").hide();
 								}
@@ -329,128 +377,54 @@ function date_format(str) {
 		});
 		//預設表格隱藏
 		$("#products-contain").hide();
+// 		$("#xls").click(function(){
+// 			$(".result").table2excel({
+// 				exclude: ".noExl",
+// 				name: "Excel Document Name",
+// 				filename: "退貨資料",
+// 				fileext: ".xls",
+// 				exclude_img: true,
+// 				exclude_links: true,
+// 				exclude_inputs: true
+// 			});
+// 		});
 	});
-	function export_xls(){
-		$(".result").table2excel({
-			exclude: ".noExl",
-			name: "Excel Document Name",
-			filename: "退貨資料",
-			fileext: ".xls",
-			exclude_img: true,
-			exclude_links: true,
-			exclude_inputs: true
-		});
-	}
+	
 </script>
-<style>
-.row {
-    border-bottom: 0px;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-}
-::-webkit-input-placeholder {
-   text-align: center;
-}
-:-moz-placeholder { /* Firefox 18- */
-   text-align: center;  
-}
-::-moz-placeholder {  /* Firefox 19+ */
-   text-align: center;  
-}
-:-ms-input-placeholder {  
-   text-align: center; 
-}
-</style>
-</head>
-<body style="font-size: 15px;">
-<%if(request.getSession().getAttribute("user_name")==null){%>
-	<script>alert("請重新登入!");top.location.href="login.jsp";</script>
-<%}%>
-<div style="margin:20px;">
-	<div class="panel-title">
-		<h2 style="font-size: 25px;">退貨報表</h2>
-	</div>
-	<div class="panel-content">
-		<div class="datalistWrap">
-			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
-				<p>是否確認刪除該筆資料</p>
-			</div>
-			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="Update product unit">
-				<h1>修改產品單位</h1>
-				<form name="update-dialog-form-post" id="update-dialog-form-post">
-					<fieldset>
-						<h2>原先產品單位</h2>
-						<br>
-						<input type="text" name="original_unit_name" disabled="disabled"> 
-						<br>
-						<h2>修改產品單位</h2>
-						<br>
-						<input type="text" name="unit_name" placeholder="修改商品單位名稱"> 
-					</fieldset>
-				</form>
-			</div>			
-			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="Create new product unit">
-				<h1>新增產品單位</h1>
-				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
-					<fieldset>
-						<h2>產品單位</h2>
-						<br>
-						<input type="text" name="unit_name"  placeholder="輸入商品單位名稱">
-					</fieldset>
-				</form>
-			</div>
-			<!-- 第一列 -->
-			<div class="row">
-				<div id="products-serah-create-contain" style="width: 800px;margin:20px auto;" >
-					<table id="products-serah-create" class="ui-widget ui-widget-content" >
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">退貨起日</span>
+						<input type="text" class="input-date" id="datepicker1">
+					</label>
+					<div class="forward-mark"></div>
+					<label for="">
+						<span class="block-label">退貨迄日</span>
+						<input type="text" class="input-date" id="datepicker2">
+					</label>
+					<a class="btn btn-darkblue" id="searh-productunit">查詢</a>
+<!-- 					<a class="btn btn btn-exec" id="xls" style="display:none" >產生報表</a> -->
+				</div>
+			</div><!-- /.form-wrap -->
+		</div>
+			<!-- 第二列 -->
+			<div class="search-result-wrap" >
+				<div id="products-contain" class="result-table-wrap">
+					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th >
-									<p style="width:120px;">退貨日</p>
-								</th>
-								<th>
-									<input type="text" id="datepicker1" placeholder="起">
-									<!--<input type="text" name="searh_unit_name" placeholder="請輸入查詢商品單位名稱">-->
-								</th>
-								<th>
-									~
-								</th>
-								<th>
-									<input type="text" id="datepicker2" placeholder="迄">
-									<!--<input type="text" name="searh_unit_name" placeholder="請輸入查詢商品單位名稱">-->
-								</th>
-								<th>
-									<button id="searh-productunit" style="width:80px;">查詢</button>
-									<!--<button id="create-productunit">新增</button>-->
-								</th>
-								<th id="xls" style="display:none">
-									<button onclick="export_xls()" style="width:100px;">產生報表</button>
-								</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
-			<!-- 第二列 -->
-			<div class="row" align="left" >
-				<div id="products-contain" class="ui-widget" style="width:auto;">
-					<table id="products" class="ui-widget ui-widget-content result">
-						<thead>
-							<tr class="ui-widget-header noExl">
-								<th><p style="width:120px;">退貨日期</p></th>
+								<th>退貨日期</th>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th><p style="width:320px;">產品名稱</p></th>
+								<th><p style="width:90px;">產品名稱</p></th>
 								<th>客戶自訂產品ID</th>
-								<th><p style="width:80px;">銷貨數量</p></th>
-								<th><p style="width:80px;">銷貨金額</p></th>
-								<th><p style="width:100px;">轉單日</p></th>
-								<th><p style="width:100px;">配送日</p></th>
-								<th><p style="width:120px;">銷貨/出貨日期</p></th>
-								<th><p style="width:100px;">銷售平台</p></th>
+								<th>銷貨數量</th>
+								<th>銷貨金額</th>
+								<th>轉單日</th>
+								<th>配送日</th>
+								<th>銷貨/出貨日期</th>
+								<th>銷售平台</th>
 								<th>備註</th>								
 							</tr>
 						</thead>
@@ -461,7 +435,6 @@ function date_format(str) {
 				<div class="validateTips" align="center"> </div>
 			</div>
 		</div>
-	</div>
-</div>
+<table id="my123" class="result" style="display:none"><tr><td></td></tr></table>
 </body>
 </html>

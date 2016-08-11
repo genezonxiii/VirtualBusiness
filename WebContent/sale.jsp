@@ -8,14 +8,24 @@
 <%@ page import="java.sql.ResultSet"%>
 <jsp:directive.page import="java.sql.SQLException" />
 <!DOCTYPE html>
+<%
+// 	session.setAttribute("group_id", "a604a6b1-4253-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
+// 	session.setAttribute("user_id", ""); //還沒拿到session，先自己假設
+%>
 <html>
 <head>
 <title>銷貨管理</title>
 <meta charset="utf-8">
-<link rel="stylesheet" href="css/styles.css" />
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+	<jsp:include page="template.jsp" flush="true"/>
+	<div class="content-wrap">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -23,9 +33,53 @@
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
-
+<script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script>
+// 	$(document).scannerDetection({
+// 		timeBeforeScanTest: 200, // wait for the next character for upto 200ms
+// 		startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
+// 		endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
+// 		avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
+// 		onComplete: function(barcode, qty){}, // main callback function	
+// 		onKeyDetect:function(barcode,qty){$("input").blur();}
+// 	});
+	var scan_exist=0;
+	jQuery(document).ready(function($) {
+	    $(window).scannerDetection();
+	    $(window).bind('scannerDetectionComplete',function(e,data){
+	    		if(data.string=="success"){return;}
+	    		$.ajax({url : "product.do", type : "POST", cache : false,
+		            data : {
+		            	action : "find_barcode",
+		            	barcode : data.string,
+		            },
+		            success: function(result) {
+		            	var json_obj = $.parseJSON(result);
+		            	var result_table = "";
+						$.each(json_obj,function(i, item) {
+							var json_obj = $.parseJSON(result);
+							$("#insert_product_name").val(json_obj[i].product_name);
+							$("#insert_c_product_id").val(json_obj[i].c_product_id);
+							$("#quantity").val(json_obj[i].keep_stock);
+							$("#price").val(json_obj[i].cost);
+						});
+						if(json_obj.length==0){
+							$("#warning").html("<h3>該條碼無產品存在<h3><br>請至'商品管理'介面&nbsp;定義該條碼。");
+							$("#warning").dialog("open");
+						}
+		            }
+	    		});
+	        })
+	        .bind('scannerDetectionError',function(e,data){
+	            console.log('detection error '+data.string);
+	        })
+	        .bind('scannerDetectionReceive',function(e,data){
+	            console.log(data);
+	        });
+	    $(window).scannerDetection('success');
+	});
 	$(function() {
+		
 		var uuid = "";
 		var c_product_id="";
 		var product_id="";
@@ -180,7 +234,7 @@
 			}
 		});		
 		//自訂產品ID查詢相關設定
-		$("#searh-sale").button().on("click",function(e) {
+		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			$.ajax({
 					type : "POST",
@@ -257,10 +311,12 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='btn_delete'>刪除</button></td></tr>";		
+										+"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+"	<div class='table-function-list'>"
+										+"		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil' ></i></button>"
+										+"		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+										+"	</div>"
+										+"</div></td></tr>";
 									}
 								});
 							}							
@@ -279,8 +335,12 @@
 								$("#sales").dataTable({
 									  autoWidth: false,
 									  scrollX:  true,
-							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
+							         scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
+								$("#sales").addClass("result-table");
 								$("#sales").find("td").css("text-align", "center");
+								$("#sales").find("td").css("max-width", "80px");
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 								if($("#search_sale_err_mes").length){
 	                				$("#search_sale_err_mes").remove();
 	                			}
@@ -289,7 +349,7 @@
 					});
 		});
 		//轉單日查詢相關設定
-		$("#searh-trans-list-date").button().on("click",function(e) {
+		$("#searh-trans-list-date").click(function(e) {
 			e.preventDefault();
 			if($("#trans_list_date_form").valid()){
 				$.ajax({
@@ -366,10 +426,12 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='btn_delete'>刪除</button></td></tr>";	
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+										+ "	</div>"
+										+ "</div></td></tr>";
 									}
 								});
 							}
@@ -414,6 +476,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 								if($("#trans_list_date_err_mes").length){
 	                				$("#trans_list_date_err_mes").remove();
 	                			}
@@ -423,7 +487,7 @@
 			}
 		});
 		//配送日查詢相關設定
-		$("#searh-dis-date").button().on("click",function(e) {
+		$("#searh-dis-date").click(function(e) {
 			e.preventDefault();
 			if($("#trans_dis_date_form").valid()){
 				$.ajax({
@@ -500,10 +564,11 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='btn_update'>修改</button>"
-										+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='btn_delete'>刪除</button></td></tr>";
+										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "	<div class='table-function-list'>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+										+ "	</div></div></td></tr>";
 									}
 								});
 							}
@@ -548,6 +613,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 								if($("#trans_dis_date_err_mes").length){
 	                				$("#trans_dis_date_err_mes").remove();
 	                			}
@@ -564,11 +631,11 @@
 							autoOpen : false,
 							show : {
 								effect : "blind",
-								duration : 1000
+								duration : 300
 							},
 							hide : {
-								effect : "explode",
-								duration : 1000
+								effect : "fade",
+								duration : 300
 							},
 							width : 750,
 							modal : true,
@@ -662,10 +729,11 @@
 																+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 																+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 																+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-																+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-																+ "'class='btn_update'>修改</button>"
-																+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-																+ "'class='btn_delete'>刪除</button></td></tr>";																		
+																+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+																+ "	<div class='table-function-list'>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+																+ "	</div></div></td></tr>";																
 															}
 														});
 														$("#sales").dataTable().fnDestroy();
@@ -677,6 +745,8 @@
 																  scrollX:  true,
 														          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 															$("#sales").find("td").css("text-align", "center");
+															$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+															$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 														}else{
 															$("#sales_contain_row").hide();
 														}
@@ -705,6 +775,8 @@
 			autoOpen : false,
 			height : 140,
 			modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
 					$.ajax({
@@ -780,10 +852,11 @@
 									+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-									+ "'class='btn_update'>修改</button>"
-									+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-									+ "'class='btn_delete'>刪除</button></td></tr>";												
+									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+									+ "	</div></div></td></tr>";											
 								}
 							});
 							$("#sales").dataTable().fnDestroy();
@@ -795,6 +868,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 							}else{
 								$("#sales_contain_row").hide();
 							}
@@ -906,9 +981,11 @@
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-											+ "<td><button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+ "'class='btn_update'>修改</button>"
-											+ "<button id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id
-											+ "'class='btn_delete'>刪除</button></td></tr>";										
+											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+											+ "	<div class='table-function-list'>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+											+ "	</div></div></td></tr>";								
 										}
 									});
 								}	
@@ -921,6 +998,8 @@
 										  scrollX:  true,
 								          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 									$("#sales").find("td").css("text-align", "center");
+									$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+									$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 								}else{
 									$("#sales_contain_row").hide();
 								}
@@ -949,12 +1028,20 @@
 			confirm_dialog.dialog("open");
 		});
 		//新增事件聆聽
-		$("#create-sale").button().on("click", function() {
+		$("#create-sale").click(function() {
+			
 			insert_dialog.dialog("open");
+			$("#insert_product_name").focus();
+			scan_exist=1;
+			if(!scan_exist){
+				$("#warning").html("貼心提醒您:<br>&nbsp;&nbsp;掃描器尚未配置妥善。");
+				$("#warning").dialog("open");
+			}
 		});
 		//修改事件聆聽
 		$("#sales").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
+			
 			uuid = $(this).val();
 			seqNo = $(this).attr("id");
 			$("input[name='searh_c_product_id'").val("");
@@ -983,6 +1070,7 @@
 								if(i<len-1){
 									if(json_obj[i].sale_id==uuid){
 										$("#dialog-form-update input[name='order_no']").val(json_obj[i].order_no);
+										alert
 										$("#dialog-form-update input[name='product_name']").val(json_obj[i].product_name);
 										$("#dialog-form-update input[name='c_product_id']").val(json_obj[i].c_product_id);
 										$("#dialog-form-update input[name='name']").val(json_obj[i].name);
@@ -1279,13 +1367,32 @@
 		});	
 		//hold header
 		$("#sales").find("th").css("min-width","120px");
+		
+		$("#warning").dialog({
+			title: "警告",
+			draggable : false,//防止拖曳
+			resizable : false,//防止縮放
+			autoOpen : false,
+			height : "auto",
+			modal : true,
+			show : {effect : "bounce",duration : 1000},
+			hide : {effect : "fade",duration : 300},
+			buttons : {
+				"確認" : function() {$(this).dialog("close");}
+			}
+		});
+	    $('#sales').DataTable( {
+	        dom: 'Bfrtip',
+	        buttons: [
+	            'copy', 'csv', 'excel', 'pdf', 'print'
+	        ]
+	    } );
 	});
 </script>
-</head>
-<body>
-	<div class="panel-title">
-		<h2>銷貨管理</h2>
-	</div>
+
+<!-- 	<div class="panel-title"> -->
+<!-- 		<h2>銷貨管理</h2> -->
+<!-- 	</div> -->
 	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
@@ -1310,9 +1417,9 @@
 							</tr>
 							<tr>
 								<td><p>銷貨數量</p></td>
-								<td><input type="text" name="quantity"  placeholder="輸入銷貨數量"></td>
+								<td><input type="text" id="quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
 								<td><p>銷貨金額</p></td>
-								<td><input type="text" name="price"  placeholder="輸入銷貨金額"></td>
+								<td><input type="text" id="price" name="price"  placeholder="輸入銷貨金額"></td>
 							</tr>
 							<tr>
 								<td><p>發票號碼</p></td>
@@ -1361,11 +1468,11 @@
 								<td><p>客戶加密名字</p></td>
 								<td><input type="text" name="name"  placeholder="輸入客戶加密名字"></td>
 								<td><p>銷貨數量</p></td>
-								<td><input type="text" name="quantity"  placeholder="輸入銷貨數量"></td>
+								<td><input type="text" id="quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
 							</tr>
 							<tr>
 								<td><p>銷貨金額</p></td>
-								<td><input type="text" name="price"  placeholder="輸入銷貨金額"></td>
+								<td><input type="text" id="price" name="price"  placeholder="輸入銷貨金額"></td>
 								<td><p>發票號碼</p></td>
 								<td><input type="text" name="invoice"  placeholder="輸入發票號碼"></td>
 							</tr>
@@ -1391,83 +1498,135 @@
 					</fieldset>
 				</form>
 			</div>
+			
+		<div class="input-field-wrap">
+			<div class="form-wrap">
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">自訂產品 ID 查詢</span>
+						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
+					</label>
+					<button class="btn btn-darkblue" id="searh-sale">查詢</button>
+				</div>
+				<div class="form-row">
+				<form id="trans_list_date_form" name="trans_list_date_form">
+					<label for="">
+						<span class="block-label">轉單起日</span>
+						<input type="text" class="input-date" id="trans_list_start_date" name="trans_list_start_date">
+					</label>
+					<div class="forward-mark"></div>
+					<label for="">
+						<span class="block-label">轉單迄日</span>
+						<input type="text" class="input-date" id="trans_list_end_date" name="trans_list_end_date">
+					</label>
+					<button class="btn btn-darkblue" id="searh-trans-list-date">查詢</button>
+				</form>
+				</div>
+				<div class="form-row">
+				<form id="trans_dis_date_form" name="trans_dis_date_form">
+					<label for="">
+						<span class="block-label">配送起日</span>
+						<input type="text" class="input-date" id="dis_start_date" name="dis_start_date">
+					</label>
+					<div class="forward-mark"></div>
+					<label for="">
+						<span class="block-label">配送迄日</span>
+						<input type="text" class="input-date" id="dis_end_date" name="dis_end_date">
+					</label>
+					<button class="btn btn-darkblue" id="searh-dis-date">查詢</button>
+				</form>		
+				</div>
+				<div class="btn-row">
+					<button class="btn btn-exec btn-wide" id="create-sale">新增銷售資料</button>
+				</div>
+			</div><!-- /.form-wrap -->
+		</div>
+			
+			
+			
+			
+			
+			
+			
+			
 			<!-- 第一列 -->
-			<div class="row" align="center">
-				<div id="sales-serah-create-contain" class="ui-widget">
-					<table id="sales-serah-create">
-						<thead>
-							<tr>
-								<td>
-									<input type="text" id="searh_c_product_id" name="searh_c_product_id" placeholder="請輸入自訂產品ID查詢">
-								</td>
-								<td>
-									&nbsp;&nbsp;<button id="searh-sale">查詢</button>
-								</td>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>		
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div id="sales-serah-create-contain" class="ui-widget"> -->
+<!-- 					<table id="sales-serah-create"> -->
+<!-- 						<thead> -->
+<!-- 							<tr> -->
+<!-- 								<td> -->
+<!-- 									<input type="text" id="searh_c_product_id" name="searh_c_product_id" placeholder="請輸入自訂產品ID查詢"> -->
+<!-- 								</td> -->
+<!-- 								<td> -->
+<!-- 									&nbsp;&nbsp;<button id="searh-sale">查詢</button> -->
+<!-- 								</td> -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div>		 -->
 			<!-- 第二列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<form id="trans_list_date_form" name="trans_list_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td>
-										<input type="text" id="trans_list_start_date" name="trans_list_start_date" class="date" placeholder="請輸入轉單起日">
-									</td>
-									<td>
-										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-									</td>
-									<td>
-										<input type="text" id="trans_list_end_date" name="trans_list_end_date" class="date" placeholder="請輸入轉單迄日">
-									</td>
-									<td>
-										&nbsp;&nbsp;<button id="searh-trans-list-date">查詢</button>
-									</td>
-								</tr>												
-							</thead>
-						</table>
-					</form>	
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="trans_list_date_form" name="trans_list_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="trans_list_start_date" name="trans_list_start_date" class="date" placeholder="請輸入轉單起日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="trans_list_end_date" name="trans_list_end_date" class="date" placeholder="請輸入轉單迄日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										&nbsp;&nbsp;<button id="searh-trans-list-date">查詢</button> -->
+<!-- 									</td> -->
+<!-- 								</tr>												 -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form>	 -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第三列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<form id="trans_dis_date_form" name="trans_dis_date_form">
-						<table>
-							<thead>
-								<tr>
-									<td>
-										<input type="text" id="dis_start_date" name="dis_start_date" class="date" placeholder="請輸入配送起日">
-									</td>
-									<td>
-										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p>
-									</td>
-									<td>
-										<input type="text" id="dis_end_date" name="dis_end_date" class="date" placeholder="請輸入配送迄日">
-									</td>
-									<td>
-										&nbsp;&nbsp;<button id="searh-dis-date">查詢</button>
-									</td>
-								</tr>													
-							</thead>
-						</table>
-					</form>
-				</div>
-			</div>
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<form id="trans_dis_date_form" name="trans_dis_date_form"> -->
+<!-- 						<table> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="dis_start_date" name="dis_start_date" class="date" placeholder="請輸入配送起日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<p>&nbsp;&nbsp;~&nbsp;&nbsp;</p> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										<input type="text" id="dis_end_date" name="dis_end_date" class="date" placeholder="請輸入配送迄日"> -->
+<!-- 									</td> -->
+<!-- 									<td> -->
+<!-- 										&nbsp;&nbsp;<button id="searh-dis-date">查詢</button> -->
+<!-- 									</td> -->
+<!-- 								</tr>													 -->
+<!-- 							</thead> -->
+<!-- 						</table> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row" align="center">
-				<div class="ui-widget">
-					<button id="create-sale">新增銷貨資料</button>
-				</div>
-			</div>						
+<!-- 			<div class="row" align="center"> -->
+<!-- 				<div class="ui-widget"> -->
+<!-- 					<button id="create-sale">新增銷貨資料</button> -->
+<!-- 				</div> -->
+<!-- 			</div>						 -->
 			<!-- 第五列 -->
-			<div class="row" align="center" id ="sales_contain_row">
+			
+			<div class="row search-result-wrap" align="center" id ="sales_contain_row">
 				<div id="sales-contain" class="ui-widget">
-					<table id="sales" class="ui-widget ui-widget-content">
+					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>銷貨單號</th>
@@ -1490,8 +1649,11 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="validateTips" id="err_msg" align="center"> </div>
 			</div>
 		</div>
 	</div>
+	</div>
+<div id="warning"></div>
 </body>
 </html>
