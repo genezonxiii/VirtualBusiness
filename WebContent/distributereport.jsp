@@ -55,6 +55,7 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
 	$(function() {
+		table_before("products");
 		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
 		$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		//使用jquery.validate來做驗證  注意事項: 1.不能用選擇器方式批次設定，它只取最後一個參數 2.要調用resetForm()而不是reset()
@@ -122,7 +123,7 @@ function date_format(str) {
  											$.each (json_obj, function (i) {
  												resultRunTime+=1;
  											});
- 											//$("#products").dataTable().fnDestroy();
+ 											$("#products").dataTable().fnDestroy();
  											if(resultRunTime!=0){
  												$("#products-contain").show();
  												$("#products tbody").html(result_table);
@@ -130,7 +131,7 @@ function date_format(str) {
  													dom: 'lfrB<t>ip',
  													buttons: [{
  														extend: 'excel',
- 														text: '輸出為xlsx檔',
+ 														text: '輸出為execl報表',
  														title: '配送報表',
  														exportOptions: {modifier: {search: 'none'}}
  													  }],
@@ -202,7 +203,7 @@ function date_format(str) {
 																dom: 'lfrB<t>ip',
 																buttons: [{
 																	extend: 'excel',
-																	text: '輸出為xlsx檔',
+																	text: '輸出為execl報表',
 																	title: '配送報表',
 																	exportOptions: {modifier: {search: 'none'}}
 																  }],
@@ -344,7 +345,7 @@ function date_format(str) {
 										dom: 'lfrB<t>ip',
 										buttons: [{
 											extend: 'excel',
-											text: '輸出為xlsx檔',
+											text: '輸出為execl報表',
 											title: '配送報表',
 											exportOptions: {modifier: {search: 'none'}}
 										  }],

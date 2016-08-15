@@ -42,6 +42,7 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function() {
+		table_before("purchases");
 		$("#purchases_contain_row").hide();
 		//進貨日查詢相關設定
 		$("#search_purchase_date").click(function(e) {

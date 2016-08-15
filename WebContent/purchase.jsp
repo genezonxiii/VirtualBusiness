@@ -35,7 +35,6 @@
 	    $(window).scannerDetection();
 	    $(window).bind('scannerDetectionComplete',function(e,data){
 	    		if(data.string=="success"){return;}
-	    		//alert(new_or_edit+"hello? " +data.string);
 	    		$.ajax({url : "product.do", type : "POST", cache : false,
 		            data : {
 		            	action : "find_barcode",
@@ -68,6 +67,7 @@
 	
 	});
 	$(function() {
+		
 // 		$("#purchase_detail_contain_row").dialog({
 // 			title: "明細",
 // 			draggable : true,//防止拖曳
@@ -277,6 +277,9 @@
 										+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 										+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 										+ "	</div></div></td></tr>";	
+// 										$('#searh_supply_name').prop('title', '刪除');
+										
+
 									}
 								});
 							}
@@ -623,7 +626,7 @@
 			
 		    //這邊是用供應商名稱去自動查詢，然後得到ID
 	        $("#searh_purchase_by_supply_name").autocomplete({
-	            minLength: 2,
+	            minLength: 1,
 	            source: function (request, response) {
 	                $.ajax({
 	                    url : "purchase.do",
@@ -807,7 +810,7 @@
 		});
 		//新增  廠商欄位autocomplete
         $("#insert_supply_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -847,7 +850,7 @@
 	    }); 		
 		//修改  autocomplete
         $("#update_supply_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",

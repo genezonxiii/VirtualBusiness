@@ -7,98 +7,155 @@
 	<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 	<link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
 	<link rel="stylesheet" href="vendor/css/jquery-ui.min.css">
-	<link rel="stylesheet" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
 	<link rel="stylesheet" href="vendor/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/styles.css">
 	
 	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script>
+function table_before(str){
+	var i;
+	var table_name=str;
+	var selector="#"+table_name+" th";
+	var leng =  $(selector).length;
+	var tmp="";
+	for(i=1;i<leng+1;i++){
+		selector="#"+table_name+" th:nth-child("+i+")";
+		tmp+="<input class='tog_col' checked id='col-"+i+"' type='checkbox' value='"+i+"'onclick='$(\"#"+table_name+"\").DataTable().column("+(i-1)+").visible(!$(\"#"+table_name+"\").DataTable().column("+(i-1)+").visible());'><label class='tog_col' for='col-"+i+"'><span class='form-label'>"+$(selector).text()+"</span></label>"
+	}
+	selector="#"+table_name;
+	$(selector).before(tmp);
+}
+
+function draw_table(table_name,title){
+	var selector="#"+table_name;
+	$(".tog_col").remove();
+	$(selector).dataTable().fnDestroy();
+	table_before(table_name);
+	$(selector).dataTable({
+		dom: 'lfrB<t>ip',
+		buttons: [{
+		    extend: 'excel',
+		    text: '輸出為execl報表',
+		    title: title,
+		    exportOptions: {modifier: { page: 'current'}}
+		  }],
+		"language": {"url": "js/dataTables_zh-tw.txt"}
+	});
+}
+
 function who(){
 	switch(location.pathname.split("/")[2]){
 //####交易處理############################
 	case "upload.jsp":
+		$(".sidenav > ul > li:nth-child(1)").addClass("active");
 		return "訂單拋轉作業";
 		break;
 //####後臺支援系統############################
 	case "purchase.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "進貨管理";
 		break;
 	case "purchreturn.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "進貨退回管理";
 		break;
 	case "sale.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "銷貨管理";
 		break;
 	case "salereturn.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "銷貨退回管理";
 		break;
 	case "stock.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "庫存管理";
 		break;
 	case "producttype.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "商品類型管理";
 		break;
 	case "productunit.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "商品單位管理";
 		break;
 	case "product.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "商品管理";
 		break;
 	case "supply.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "供應商管理";
 		break;
 	case "user.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "用戶管理";
 		break;
 	case "group.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "公司管理";
 		break;
 	case "customer.jsp":
 		return "客戶管理";
 		break;
 	case "accreceive.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "應收帳款管理";
 		break;
 	case "accpay.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "應付帳款管理";
 		break;
 	case "changepassword.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "密碼修改";
 		break;
 	case "tagprint.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "標籤列印";
 		break;
 //####報表管理############################
 	case "salereport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "訂單報表";
 		break;
 	case "distributereport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "配送報表";
 		break;
 	case "salereturnreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "退貨報表";
 		break;
 	case "shipreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "出貨報表";
 		break;
 	case "purchreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "進貨報表";
 		break;
 	case "purchreturnreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "進貨退回報表";
 		break;
 //######分析圖表##########################
 	case "salechart.jsp":
+		$(".sidenav > ul > li:nth-child(4)").addClass("active");
 		return "出貨量統計圖";
 		break;
 	case "saleamountchart.jsp":
+		$(".sidenav > ul > li:nth-child(4)").addClass("active");
 		return "銷售金額統計圖";
 		break;
 	case "saleamountstaticchart.jsp":
+		$(".sidenav > ul > li:nth-child(4)").addClass("active");
 		return "銷售金額比例統計圖";
 		break;
 //######線上學院##########################
 	case "onlinecourse.jsp":
+		$(".sidenav > ul > li:nth-child(5)").addClass("active");
 		return "線上學院";
 		break;
 	case "template.jsp":
@@ -109,7 +166,7 @@ function who(){
 		break;
 	default:
 		if(location.pathname.split("/")[2].indexOf("upload")!=-1){return "訂單拋轉作業";}
-		alert("default_page; "+location.pathname.split("/")[2]);
+		//alert("default_page; "+location.pathname.split("/")[2]);
 		//return "something_wrong?";
 		return "";
 		break;
@@ -151,7 +208,7 @@ $(function() {
 					<li><a href="upload.jsp">訂單拋轉作業</a></li>
 				</ul>
 			</li>
-			<li class="active"><img src="images/sidenav-support.svg" alt="">後臺支援系統
+			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
 				<ul style="top: -156px;">
 					<li><a href="purchase.jsp">進貨管理</a></li>
 					<li><a href="purchreturn.jsp">進貨退回管理</a></li>
@@ -199,284 +256,17 @@ $(function() {
  		<%= (("welcome.jsp".equals(request.getRequestURI().split("/")[2]))?("歡迎"+request.getSession().getAttribute("user_name")+"使用本系統"):("")) %>
  	</h2> 
 <!-- 	<div class="content-wrap" style="display:none"> -->
-<!-- 	<div> -->
  <!--################正文開始###############--> 
-<!-- 		<div class="input-field-wrap"> -->
-<!-- 			<div class="form-wrap"> -->
-<!-- 				<div class="form-row"> -->
-<!-- 					<label for=""> -->
-<!-- 						<span class="block-label">自訂產品 ID 查詢</span> -->
-<!-- 						<input type="text"> -->
-<!-- 					</label> -->
-<!-- 					<a href="" class="btn btn-darkblue">查詢</a> -->
-<!-- 				</div> -->
-<!-- 				<div class="form-row"> -->
-<!-- 					<label for=""> -->
-<!-- 						<span class="block-label">轉單起日</span> -->
-<!-- 						<input type="text" class="input-date"> -->
-<!-- 					</label> -->
-<!-- 					<div class="forward-mark"></div> -->
-<!-- 					<label for=""> -->
-<!-- 						<span class="block-label">轉單迄日</span> -->
-<!-- 						<input type="text" class="input-date"> -->
-<!-- 					</label> -->
-<!-- 					<a href="" class="btn btn-darkblue">查詢</a> -->
-<!-- 				</div> -->
-<!-- 				<div class="form-row"> -->
-<!-- 					<label for=""> -->
-<!-- 						<span class="block-label">配送起日</span> -->
-<!-- 						<input type="text" class="input-date"> -->
-<!-- 					</label> -->
-<!-- 					<div class="forward-mark"></div> -->
-<!-- 					<label for=""> -->
-<!-- 						<span class="block-label">配送迄日</span> -->
-<!-- 						<input type="text" class="input-date"> -->
-<!-- 					</label> -->
-<!-- 					<a href="" class="btn btn-darkblue">查詢</a>				 -->
-<!-- 				</div> -->
-<!-- 				<div class="btn-row"> -->
-<!-- 					<a href="#" class="btn btn-exec btn-wide">新增銷售資料</a> -->
-<!-- 				</div> -->
-<!-- 			</div>/.form-wrap -->
-<!-- 		</div>/.input-field-wrap -->
-
-<!-- 		<div class="search-result-wrap"> -->
-			
-<!-- 			<div class="result-table-func-wrap"> -->
-<!-- 				<div class="result-item-display"> -->
-<!-- 					顯示 -->
-<!-- 					<select name="" id=""> -->
-<!-- 						<option value="">10</option> -->
-<!-- 						<option value="">50</option> -->
-<!-- 						<option value="">100</option> -->
-<!-- 					</select> 項結果 -->
-<!-- 				</div>/.result-item-display -->
-<!-- 				<div class="result-item-search"> -->
-<!-- 					<input type="text" placeholder="Search"> -->
-<!-- 				</div>/.result-item-search -->
-<!-- 			</div>/.result-table-func-wrap -->
-
-<!-- 			<div class="result-table-wrap"> -->
-<!-- 				<table class="result-table"> -->
-<!-- 					<thead> -->
-<!-- 						<tr> -->
-<!-- 							<th>銷貨單號</th> -->
-<!-- 							<th>訂單號</th> -->
-<!-- 							<th>產品名稱</th> -->
-<!-- 							<th>自訂產品 ID</th> -->
-<!-- 							<th>銷貨數量</th> -->
-<!-- 							<th>銷貨金額</th> -->
-<!-- 							<th>發票號碼</th> -->
-<!-- 							<th>發票日期</th> -->
-<!-- 							<th>轉單日</th> -->
-<!-- 							<th>配送日</th> -->
-<!-- 							<th>備註說明</th> -->
-<!-- 							<th>銷貨/出貨日期</th> -->
-<!-- 							<th>銷售平台</th> -->
-<!-- 							<th>操作</th> -->
-<!-- 						</tr> -->
-<!-- 					</thead> -->
-<!-- 					<tbody> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a id="my" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 						<tr> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>2016060137878</td> -->
-<!-- 							<td>名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱名稱</td> -->
-<!-- 							<td>1234567890</td> -->
-<!-- 							<td>1</td> -->
-<!-- 							<td>1680</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>NULL</td> -->
-<!-- 							<td>2016-06-01</td> -->
-<!-- 							<td>payeasy</td> -->
-<!-- 							<td> -->
-<!-- 								<div href="#" class="table-row-func btn-in-table btn-gray"><i class="fa fa-ellipsis-h"></i> -->
-<!-- 									<div class="table-function-list"> -->
-<!-- 										<a href="#" class="btn-in-table btn-darkblue"><i class="fa fa-pencil"></i></a> -->
-<!-- 										<a href="#" class="btn-in-table btn-alert"><i class="fa fa-trash"></i></a> -->
-<!-- 									</div> -->
-<!-- 								</div> -->
-<!-- 							</td> -->
-<!-- 						</tr> -->
-<!-- 					</tbody> -->
-<!-- 				</table> -->
-<!-- 			</div>/.result-table-wrap -->
-<!-- 		</div>/.search-result-wrap -->
-<!-- 	</div> -->
+ <!--################正文結束###############-->
 <!-- 	</div>/.content-wrap -->
-<!--################結束###############-->
+
 	<footer class="footer" style="z-index:1;">
 		北祥股份有限公司 <span>服務電話：+886-2-2658-1910  |  傳真：+886-2-2658-1920</span>
 	</footer><!-- / .footer -->
 </div><!-- /.page-wrapper -->
-
 <script src="vendor/js/jquery-1.12.4.min.js"></script>
 <script src="vendor/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-
+<script src="js/jquery.dataTables.min.js"></script>
 <script src="js/scripts.js"></script>
 
 </body>

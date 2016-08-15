@@ -146,6 +146,7 @@
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
+									+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
 									+ "'class='checkbox_pay'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";
@@ -274,6 +275,7 @@
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
+									+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
 									+ "'class='checkbox_pay_cancel'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";
@@ -416,6 +418,7 @@
 										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 										+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 										+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
+										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
 										+ "'class='checkbox_pay_cancel'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";	
@@ -530,6 +533,7 @@
 										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 										+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
 										+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
+										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].pay_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].pay_id
 										+ "'class='checkbox_pay'></input><label for='my-"+ json_obj[i].pay_id+ "'></label></td></tr>";	
@@ -653,7 +657,7 @@
 <!-- 			</div> -->
 			<!-- 第二列 -->
 			
-			<div class="row search-result-wrap" id="ian" align="center"style="height:433px;">
+			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 			<div class="form-row"> -->
 <!-- 				<button id="button_1" align="center" class="btn btn-wide btn-darkblue">批次付帳</button> -->
 <!-- 			</div> -->
@@ -665,6 +669,7 @@
 								<th>應付帳款產生日期</th>
 								<th>實付帳款金額</th>
 								<th>實付帳款產生日期</th>
+								<th>供應商名稱</th>
 								<th>備註</th>
 								<th>勾選</th>
 							</tr>
@@ -713,7 +718,7 @@
 						</form>
 					</div><!-- /.form-wrap -->
 				</div><!-- /.input-field-wrap -->
-			<div class="row search-result-wrap" id="ian2" align="center"style="height:433px;">
+			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消批次付帳</button> -->
 <!-- 				</div> -->
@@ -725,6 +730,7 @@
 								<th>應付帳款產生日期</th>
 								<th>實付帳款金額</th>
 								<th>實付帳款產生日期</th>
+								<th>供應商名稱</th>
 								<th>備註</th>
 								<th>勾選</th>
 							</tr>

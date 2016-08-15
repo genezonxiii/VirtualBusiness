@@ -21,18 +21,27 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
-	<div class="row4mpeg">
-		<video width="400" height="300" src="./video/experience_share.mp4" controls="controls">
-			your browser does not support the video tag
-		</video>
-		<div>跨境電商實戰經驗分享</div>	
+<script>
+$(function(){
+	$.ajax({
+		type : "POST",
+		url : "onlinecourse.do",
+		data : {action :"get_video_dir"},
+		success : function(result) {
+			var json_obj = $.parseJSON(result);
+			//alert(json_obj.name.length==0);
+			if(null==json_obj.name){$("#movie").html("<h1 align='center'> <font color='red'>影片目錄不存在</font></h1>");return;}
+			if(json_obj.name.length==0){$("#movie").html("<h1 align='center'> <font color='red'>無檔案</font></h1>");return;}
+			var mov_array="";
+			$.each(json_obj.name,function(i, item) {
+				mov_array+="<div class='row4mpeg'><video width='400' height='300' src='"+json_obj.path[i]+"' controls='controls'>Sorry for your browser doesn`t support the video tag.</video><div>"+json_obj.name[i]+"</div></div>";
+			});
+			$("#movie").html(mov_array);
+		}
+	});
+});
+</script>
+		<div id="movie"></div>
 	</div>
-	<div class="row4mpeg">
-		<video width="400" height="300" src="./video/experience_share.mp4" controls="controls">
-			your browser does not support the video tag
-		</video>
-	<div>電子商務帶您前進千億商機</div>			
-</div>
-</div>
 </body>
 </html>

@@ -107,7 +107,7 @@ h6 {
 .login-panel-wrap:after {
     clear: both;
 }
-.login-panel-wrap:before {
+.login-panel-wrap:after {
     content: '';
     background: #fff;
     opacity: 0.5;
@@ -125,18 +125,22 @@ h6 {
 .login-panel h2 {
     color: #194A6B;
     font-weight: 100;
-    letter-spacing: 23px;
-    text-align: right;
-    margin-bottom: 30px;
+    /*letter-spacing: 23px;*/
+    text-align: justify;
+    margin-bottom: 0px;
     position: relative;
 }
-.login-panel h2:after {
-    content: '';
-    background: #e0f9fb;
-    display: block;
-    height: 3px;
+.login-panel h2:before {
+    content: "";
+    border-bottom: 3px solid #fff;
     position: absolute;
-    bottom: -10px;
+    width: 100%;
+    bottom: 15px;
+    opacity: .5;
+}
+.login-panel h2:after {
+    content: "";
+    display: inline-block;
     width: 100%;
 }
 .login-panel label {
@@ -150,7 +154,7 @@ h6 {
 .login-panel input[type=text], .login-panel input[type=password] {
     box-sizing: border-box;
     font-size: 24px;
-    padding: 5px 15px;
+    padding: 5px 12px;
     width: 100%;
 }
 .login-panel input[type=text].error, .login-panel input[type=password].error {
@@ -320,7 +324,7 @@ h6 {
     position: absolute;
     left: 120px;
     top: 0;
-    /*--min-height: 100px; --*/
+    min-height: 100px;
     /*--toggle--*/
     opacity: 0;
     visibility: hidden;
@@ -390,6 +394,7 @@ h2.page-title {
     margin-left: 120px;
     margin-top: 56px;
     padding-bottom: 60px;
+/*     height: calc(100vh - 142px); Ben又偷改*/
     height: calc(100vh - 144px);
     overflow: scroll;
     width: calc(100% - 120px);
@@ -443,14 +448,19 @@ h2.page-title {
     position: absolute;
     top: 0;
     right: 36px;
-    width: 72px;
     visibility: hidden;
     opacity: 0;
-    transition: all .3s linear;
+    transition: all .5s linear;
+    /*width: calc(36px * 4);*/
+    display: flex;
 }
 .table-function-list .btn-in-table {
     float: right;
 }
+/*.table-function-list.hover {
+	visibility: visible;
+	opacity: 1;
+}*/
 .result-item-display {
     float: left;
 }
@@ -819,28 +829,53 @@ button.btn {
 /*- by Color -*/
 .btn-primary {
     background: #16C1D5;
-    border: 1px solid #0499AA;
+    border: 1px solid rgb(23, 163, 179);
+}
+.btn-primary:hover {
+    background: rgb(47, 215, 233);
 }
 .btn-exec {
     background: #D34200;
-    border: 1px solid #A63400;
+    border: 1px solid rgb(179, 57, 0);
+}
+.btn-exec:hover {
+    background: rgb(230, 73, 0);
 }
 .btn-alert {
     background: #FC3E3E;
-    border: 1px solid #FC3E3E;
+    border: 1px solid rgb(204, 61, 61);
+}
+.btn-alert:hover {
+    background: rgb(252, 79, 79);
 }
 .btn-darkblue {
-    background: #256087;
-    border: 1px solid #0A4E7B;
+    background: #194A6B;
+    border: 1px solid rgb(26, 102, 153);
 }
 .btn-darkblue:hover {
-    background: lighten(#256087,15%);
+    background: rgb(39, 115, 165);
+}
+.btn-green {
+    background: #00ba95;
+    border: 1px solid rgb(0, 153, 122);
+}
+.btn-green:hover {
+    background: rgb(0, 204, 163);
+}
+.btn-orange {
+    background: #faaa00;
+    border: 1px solid rgb(204, 139, 0);
+}
+.btn-orange:hover {
+    background: rgb(255, 190, 51);
 }
 .btn-gray {
-    background: #aaa;
-    border: 1px solid #999;
+    background: #999;
+    border: 1px solid #888;
 }
-.btn-gray:hover {}
+.btn-gray:hover {
+    background: #aaa;
+}
 /*- by Size -*/
 .btn-wide {
     padding: 10px 60px;

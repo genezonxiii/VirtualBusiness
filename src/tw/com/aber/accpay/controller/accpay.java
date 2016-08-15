@@ -290,6 +290,7 @@ public class accpay extends HttpServlet {
 		private java.sql.Date pay_date;
 		private String user_id;
 		private String memo;
+		private String supply_name;
 		private String message;
 		
 
@@ -363,6 +364,14 @@ public class accpay extends HttpServlet {
 
 		public void setMemo(String memo) {
 			this.memo = memo;
+		}
+		
+		public String getSupply_name() {
+			return supply_name;
+		}
+
+		public void setSupply_name(String supply_name) {
+			this.supply_name = supply_name;
 		}
 
 		public String getMessage() {
@@ -539,6 +548,7 @@ public class accpay extends HttpServlet {
 					accpayVO.setPay_date(rs.getDate("pay_date"));
 					accpayVO.setUser_id(rs.getString("user_id"));
 					accpayVO.setMemo(rs.getString("memo"));
+					accpayVO.setSupply_name(rs.getString("supply_name"));
 					list.add(accpayVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -599,6 +609,7 @@ public class accpay extends HttpServlet {
 					accpayVO.setPay_date(rs.getDate("pay_date"));
 					accpayVO.setUser_id(rs.getString("user_id"));
 					accpayVO.setMemo(rs.getString("memo"));
+					accpayVO.setSupply_name(rs.getString("supply_name"));
 					list.add(accpayVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -659,6 +670,7 @@ public class accpay extends HttpServlet {
 					accpayVO.setPay_date(rs.getDate("pay_date"));
 					accpayVO.setUser_id(rs.getString("user_id"));
 					accpayVO.setMemo(rs.getString("memo"));
+					accpayVO.setSupply_name(rs.getString("supply_name"));
 					list.add(accpayVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -721,6 +733,7 @@ public class accpay extends HttpServlet {
 					accpayVO.setPay_date(rs.getDate("pay_date"));
 					accpayVO.setUser_id(rs.getString("user_id"));
 					accpayVO.setMemo(rs.getString("memo"));
+					accpayVO.setSupply_name(rs.getString("supply_name"));
 					list.add(accpayVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -783,6 +796,7 @@ public class accpay extends HttpServlet {
 					accpayVO.setPay_date(rs.getDate("pay_date"));
 					accpayVO.setUser_id(rs.getString("user_id"));
 					accpayVO.setMemo(rs.getString("memo"));
+					accpayVO.setSupply_name(rs.getString("supply_name"));
 					list.add(accpayVO); // Store the row in the list
 				}
 				// Handle any driver errors

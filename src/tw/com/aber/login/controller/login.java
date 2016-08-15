@@ -72,6 +72,7 @@ public class login extends HttpServlet {
 		if ("login".equals(action)) {
 			String username = request.getParameter("userId");
 			String password = request.getParameter("pswd");
+			String unicode = request.getParameter("unicode");
 			// 获取验证码
 			String validateCode = request.getParameter("validateCode").trim();
 			Object checkcode = session.getAttribute("checkcode");
@@ -95,7 +96,7 @@ public class login extends HttpServlet {
 			}
 			if (checkcode.equals(convertToCapitalString(validateCode))) {
 				loginService = new LoginService();
-				List<LoginVO> list = loginService.selectlogin(username, password);
+				List<LoginVO> list = loginService.selectlogin(username, password,unicode);
 				if (list.size() != 0) {
 					// HttpSession session = request.getSession();
 					session.setAttribute("sessionID", session.getId());
@@ -230,7 +231,7 @@ public class login extends HttpServlet {
 
 	interface login_interface {
 
-		public List<LoginVO> loginDB(String p_email, String p_password);
+		public List<LoginVO> loginDB(String p_email, String p_password, String p_unicode);
 
 		public Boolean checkuser(String p_email);
 		
@@ -247,8 +248,8 @@ public class login extends HttpServlet {
 			dao = new loginDAO();
 		}
 
-		public List<LoginVO> selectlogin(String p_email, String p_password) {
-			return dao.loginDB(p_email, p_password);
+		public List<LoginVO> selectlogin(String p_email, String p_password,String p_unicode) {
+			return dao.loginDB(p_email, p_password,p_unicode);
 		}
 
 		public Boolean checkuser(String p_email) {
@@ -266,7 +267,7 @@ public class login extends HttpServlet {
 	/*************************** 操作資料庫 ****************************************/
 	class loginDAO implements login_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_login = "call sp_login(?,?)";
+		private static final String sp_login = "call sp_login(?,?,?)";
 		private static final String sp_checkuser = "call sp_checkuser(?,?)";
 		private static final String sp_check_unicode  = "call sp_check_unicode (?,?)";
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
@@ -275,7 +276,7 @@ public class login extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		@Override
-		public List<LoginVO> loginDB(String p_email, String p_password) {
+		public List<LoginVO> loginDB(String p_email, String p_password, String p_unicode) {
 			List<LoginVO> list = new ArrayList<LoginVO>();
 			LoginVO LoginVO = null;
 
@@ -289,6 +290,7 @@ public class login extends HttpServlet {
 				pstmt = con.prepareStatement(sp_login);
 				pstmt.setString(1, p_email);
 				pstmt.setString(2, p_password);
+				pstmt.setString(3, p_unicode);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					LoginVO = new LoginVO();

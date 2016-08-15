@@ -45,6 +45,7 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 $(function(){
+	table_before("purchasereturns_false_table");
 	 $("#return_date_form").validate({
 			rules : {
 				return_staet_date : {

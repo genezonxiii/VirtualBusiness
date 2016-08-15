@@ -108,8 +108,6 @@ $(function(){
 		});
 	//退貨日查詢相關設定
 	$("#search_return_date").click(function(e) {
-// 		$("#ian").hide();
-// 		$("#ian2").show();
 		e.preventDefault();
 		if($("#return_date_form").valid()){
 			$.ajax({
@@ -245,8 +243,6 @@ $(function(){
 	});		
 	//進貨日查詢相關設定
 	$("#search_purchase_date").click(function(e) {
-// 		$("#ian").show();
-// 		$("#ian2").hide();
 		e.preventDefault();
 		if($("#purchase_date_form").valid()){
 			$.ajax({
@@ -420,8 +416,6 @@ $(function(){
     $("#search_purchase_by_supply_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
 	//供應商ID查詢相關設定
 	$("#search_supply_name").click(function(e) {
-		$("#ian").show();
-		$("#ian2").hide();
 		e.preventDefault();
 		$.ajax({
 			type : "POST",
@@ -862,7 +856,7 @@ $(function(){
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第三列 -->
-			<div class="row search-result-wrap" id="ian" align="center"style="height:433px;">
+			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_1" align="center" class="btn btn-wide btn-darkblue">進貨退回</button> -->
 <!-- 				</div> -->
@@ -922,7 +916,7 @@ $(function(){
 <!-- 				</div> -->
 <!-- 			</div>		 -->
 			<!-- 第五列 -->
-			<div class="row search-result-wrap" id="ian2" align="center"style="height:433px;">
+			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消進貨退回</button> -->
 <!-- 				</div> -->

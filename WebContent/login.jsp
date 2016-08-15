@@ -16,7 +16,7 @@
 function chimg(){
 	document.getElementById("validateCodeImg").src="HandleDrawValidateCode.do?t=" + Math.random();
 }
-function unicheck(){//ian根本就沒做這功能 =_=
+function unicheck(){
 	if($("#uninumber").val()<1)return;
 	$.ajax({
         url : "login.do",
@@ -62,6 +62,7 @@ $(function() {
 			$.ajax({url : "login.do", type : "POST", cache : false,
 	            data : {
 	            	action : "login",
+	            	unicode : $("#uninumber").val(),
 	            	userId : $("#username").val(),
 	            	pswd : $("#password").val(),
 	            	validateCode : $("#verify").val()
@@ -76,7 +77,7 @@ $(function() {
 	            	if (json_obj.message=="failure"){
 	            		$("#verify").val("");
 	            		$("#password").val("");
-	            		$("#my_msg").html("請確認密碼是否正確");
+	            		$("#my_msg").html("請確認密碼與統編是否正確");
 	            		$("#my_msg").dialog("open");
 	            		chimg();
 	            	}

@@ -51,6 +51,7 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
 	$(function() {
+		table_before("products");
 		$( "#datepicker1" ).datepicker({
 			 dateFormat: 'yy/mm/dd'
 		});
@@ -106,7 +107,7 @@ function date_format(str) {
 													+ "</td></tr>";
 											});
 											//判斷查詢結果
-											$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>退貨日期</td><td>銷貨單號</td><td>訂單號</td><td>產品名稱</td><td>客戶自訂產品ID</td><td>銷貨數量</td><td>貨金額</td><td>轉單日</td><td>配送日</td><td>銷貨/出貨日期</td><td>銷售平台</td><td>備註</td></tr>"+result_table);
+// 											$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>退貨日期</td><td>銷貨單號</td><td>訂單號</td><td>產品名稱</td><td>客戶自訂產品ID</td><td>銷貨數量</td><td>貨金額</td><td>轉單日</td><td>配送日</td><td>銷貨/出貨日期</td><td>銷售平台</td><td>備註</td></tr>"+result_table);
  											var resultRunTime = 0;
  											$.each (json_obj, function (i) {
  												resultRunTime+=1;
@@ -119,7 +120,7 @@ function date_format(str) {
  													dom: 'lfrB<t>ip',
  													buttons: [{
  														extend: 'excel',
- 														text: '輸出為xlsx檔',
+ 														text: '輸出為execl報表',
  														title: '退貨報表',
  														exportOptions: {modifier: {search: 'none'}}
  													  }],
@@ -192,7 +193,7 @@ function date_format(str) {
 																dom: 'lfrB<t>ip',
 																buttons: [{
 																	extend: 'excel',
-																	text: '輸出為xlsx檔',
+																	text: '輸出為execl報表',
 																	title: '退貨報表',
 																	exportOptions: {modifier: {search: 'none'}}
 																  }],
@@ -268,7 +269,7 @@ function date_format(str) {
 									dom: 'lfrB<t>ip',
 									buttons: [{
 										extend: 'excel',
-										text: '輸出為xlsx檔',
+										text: '輸出為execl報表',
 										title: '退貨報表',
 										exportOptions: {modifier: {search: 'none'}}
 									  }],
@@ -334,7 +335,7 @@ function date_format(str) {
 										dom: 'lfrB<t>ip',
 										buttons: [{
 											extend: 'excel',
-											text: '輸出為xlsx檔',
+											text: '輸出為execl報表',
 											title: '退貨報表',
 											exportOptions: {modifier: {search: 'none'}}
 										  }],

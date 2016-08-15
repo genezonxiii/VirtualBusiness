@@ -61,8 +61,12 @@ var opt = {
 $(function(){
 //	var my_name = location.pathname.split("/")[2];
 //	var my_name_CHT=f_report_name();
-  $( ".input-date" ).datepicker(opt);
-  //對result-table做修改
+	$( ".input-date" ).datepicker(opt);
+//  $('.table-row-func').hover(function(){
+//	    var tfl = $(this).find('.table-function-list');
+//	    var tfl_w = $(this).find('a').length * 36; // 算出寬度
+//	    tfl.toggleClass('hover').css('width',tfl_w);
+//	  });
 //  $( ".input-date" ).after("<h1>"+my_name_CHT+"</h1>"+location.pathname.split("/")[2]);
   //$(".report").before($(".report").html().replace(/<th>/g,""));
 //  $(".reportXX").dataTable({

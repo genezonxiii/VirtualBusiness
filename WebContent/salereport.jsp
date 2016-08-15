@@ -46,7 +46,6 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 
 <script>
-var my_name='訂單報表';
 function date_format(str) {
 	if(str==null){
 		return "";
@@ -54,9 +53,9 @@ function date_format(str) {
 	var words=str.replace(","," ").split(" ");
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
+
 var parameter="searh";
 function sea() {
-	//e.preventDefault();
 	$.ajax({
 		type : "POST",
 		url : "salereport.do",
@@ -67,20 +66,10 @@ function sea() {
 			$.each(json_obj,function(i, item) {
 				result_table += "<tr><td>"+ json_obj[i].seq_no + "</td><td >"+ json_obj[i].order_no + "</td><td>" + json_obj[i].product_name + "</td><td>"+ json_obj[i].c_product_id + "</td><td>"+ json_obj[i].quantity + "</td><td>"+ json_obj[i].price + "</td><td>" + date_format(json_obj[i].trans_list_date) + "</td><td>"+ date_format(json_obj[i].dis_date) + "</td><td>"+ date_format(json_obj[i].sale_date) + "</td><td>"+ json_obj[i].order_source + "</td><td>"+ (json_obj[i].memo==null?"":json_obj[i].memo.replace("NULL","")) + "</td></tr>";
 			});
-			
 			if(json_obj.length!=0){
 				$("#products-contain").show();
 				$("#products tbody").html(result_table);
-				$("#products").dataTable({
-						dom: 'lfrB<t>ip',
-						buttons: [{
-						    extend: 'excel',
-						    text: '輸出為xlsx檔',
-						    title: '訂單報表',
-						    exportOptions: {modifier: {search: 'none'}}
-						  }],
-						"language": {"url": "js/dataTables_zh-tw.txt"}
-					});
+				draw_table("products",'訂單報表');
 				$(".validateTips").text("");
 			}else{
 				$("#products-contain").hide();
@@ -101,22 +90,6 @@ function sea() {
 			parameter="searh";
 			sea();
 		});
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
-			uuid = $(this).val();
-			confirm_dialog.dialog("open");
-		});
-		//修改事件聆聽
-		$("#products").delegate(".btn_update", "click", function() {
-			uuid = $(this).val();
-			update_dialog.dialog("open");
-			var text = $(this).attr("name");
-			$("input[name='original_unit_name']").val(text);
-		});
-		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
-			insert_dialog.dialog("open");
-		});
 		//預設表格隱藏
 		$("#products-contain").hide();
 	});
@@ -135,34 +108,33 @@ function sea() {
 						<input type="text" class="input-date" id="datepicker2">
 					</label>
 					<a class="btn btn-darkblue" id="searh-productunit">查詢</a>
-<!-- 					<a class="btn btn btn-exec" id="xls" style="display:none" >產生報表</a> -->
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
-			<div class="search-result-wrap" >
-				<div id="products-contain" class="result-table-wrap" style="width:100%;">
-					<table id="products" class="result-table">
-						<thead>
-							<tr>
-								<th>銷貨單號</th>
-								<th>訂單號</th>
-								<th style="width:100px;">產品名稱</th>
-								<th>客戶自訂產品ID</th>
-								<th>銷貨數量</th>
-								<th>銷貨金額</th>
-								<th>轉單日</th>
-								<th>配送日</th>
-								<th>銷貨/出貨日期</th>
-								<th>銷售平台</th>
-								<th>備註</th>								
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<div class="validateTips" align="center"> </div>
+		<div class="search-result-wrap" >
+			<div id="products-contain" class="result-table-wrap" style="width:100%;">
+				<table id="products" class="result-table">
+					<thead>
+						<tr>
+							<th>銷貨單號</th>
+							<th>訂單號</th>
+							<th style="width:100px;">產品名稱</th>
+							<th>客戶自訂產品ID</th>
+							<th>銷貨數量</th>
+							<th>銷貨金額</th>
+							<th>轉單日</th>
+							<th>配送日</th>
+							<th>銷貨/出貨日期</th>
+							<th>銷售平台</th>
+							<th>備註</th>								
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
 			</div>
-</div>
+			<div class="validateTips" align="center"> </div>
+		</div>
+	</div>
 </body>
 </html>

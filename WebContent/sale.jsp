@@ -8,10 +8,6 @@
 <%@ page import="java.sql.ResultSet"%>
 <jsp:directive.page import="java.sql.SQLException" />
 <!DOCTYPE html>
-<%
-// 	session.setAttribute("group_id", "a604a6b1-4253-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
-// 	session.setAttribute("user_id", ""); //還沒拿到session，先自己假設
-%>
 <html>
 <head>
 <title>銷貨管理</title>
@@ -35,14 +31,6 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script>
-// 	$(document).scannerDetection({
-// 		timeBeforeScanTest: 200, // wait for the next character for upto 200ms
-// 		startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
-// 		endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
-// 		avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
-// 		onComplete: function(barcode, qty){}, // main callback function	
-// 		onKeyDetect:function(barcode,qty){$("input").blur();}
-// 	});
 	var scan_exist=0;
 	jQuery(document).ready(function($) {
 	    $(window).scannerDetection();
@@ -70,12 +58,8 @@
 		            }
 	    		});
 	        })
-	        .bind('scannerDetectionError',function(e,data){
-	            console.log('detection error '+data.string);
-	        })
-	        .bind('scannerDetectionReceive',function(e,data){
-	            console.log(data);
-	        });
+	        .bind('scannerDetectionError',function(e,data){console.log('detection error '+data.string);})
+	        .bind('scannerDetectionReceive',function(e,data){console.log(data);});
 	    $(window).scannerDetection('success');
 	});
 	$(function() {
@@ -1412,8 +1396,8 @@
 							<tr>
 								<td><p>客戶自訂產品ID</p></td>
 								<td><input type="text" id="update_c_product_id" name="c_product_id"  placeholder="輸入客戶自訂產品ID"></td>
-								<td><p>客戶加密名字</p></td>
-								<td><input type="text" name="name"  placeholder="輸入客戶加密名字"></td>
+								<td><p>客戶名字</p></td>
+								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
 							</tr>
 							<tr>
 								<td><p>銷貨數量</p></td>
@@ -1465,8 +1449,8 @@
 								<td><input type="text" id="insert_c_product_id" name="c_product_id"  placeholder="輸入客戶自訂產品ID"></td>
 							</tr>
 							<tr>
-								<td><p>客戶加密名字</p></td>
-								<td><input type="text" name="name"  placeholder="輸入客戶加密名字"></td>
+								<td><p>客戶名字</p></td>
+								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
 								<td><p>銷貨數量</p></td>
 								<td><input type="text" id="quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
 							</tr>

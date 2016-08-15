@@ -40,6 +40,7 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
 	$(function() {
+		table_before("products");
 		$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
 		$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		//查詢相關設定
@@ -78,7 +79,7 @@ function date_format(str) {
 // 					$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
 					$(".validateTips").text("");
 					//$("#my").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
-// 					$("#products").dataTable().fnDestroy();
+					$("#products").dataTable().fnDestroy();
 					if(json_obj.length!=0){
 						$("#products-contain").show();
 						$("#products tbody").html(result_table);
@@ -94,11 +95,11 @@ function date_format(str) {
 						});
 						$("#products").find("td").css({"word-break":"break-all","min-width":"68px","text-align":"center" });
 						$(".validateTips").text("");
-						$("#xls").show();
+// 						$("#xls").show();
 					}else{
 						$("#products-contain").hide();
 						$(".validateTips").text("查無此結果");
-						$("#xls").hide();
+// 						$("#xls").hide();
 					}
 				}
 			});
@@ -196,7 +197,7 @@ $(function() {
 // 				$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
 				$(".validateTips").text("");
 				//$("#my").html("<tr class='noExl'><td></td></tr><tr><td>出貨單號</td><td>自訂產品ID</td><td>出貨日期</td><td>配送日期</td><td>價格</td><td>電話</td><td>地址</td><td>郵編</td><td>顧客姓名</td><td>手機</td><td>產品名稱</td><td>銷貨單號</td><td>數量</td><td>銷貨平台</td><td>訂單備註</td></tr>"+result_table);
-// 				$("#products").dataTable().fnDestroy();
+				$("#products").dataTable().fnDestroy();
 				if(json_obj.length!=0){
 					$("#products-contain").show();
 					$("#products tbody").html(result_table);
@@ -215,11 +216,11 @@ $(function() {
 //							"language": {"url": "js/dataTables_zh-tw.txt"}});
 					$("#products").find("td").css({"word-break":"break-all","min-width":"68px","text-align":"center" });
 					$(".validateTips").text("");
-					$("#xls").show();
+// 					$("#xls").show();
 				}else{
 					$("#products-contain").hide();
 					$(".validateTips").text("查無此結果");
-					$("#xls").hide();
+// 					$("#xls").hide();
 				}
 			}
 		});

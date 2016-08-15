@@ -45,6 +45,14 @@
     <param-name>photopath</param-name>
     <param-value>C:/Users/10506002/workspace/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
+  <context-param>
+    <param-name>videopath</param-name>
+    <param-value>/data/video</param-value>
+  </context-param>
+  <context-param>
+    <param-name>videourl</param-name>
+    <param-value>http://192.168.112.164/video</param-value>
+  </context-param>
   <servlet>
 -->
  <!--########################以上平常#####################################-->
@@ -78,6 +86,10 @@
     <param-name>videopath</param-name>
     <param-value>/data/video</param-value>
   </context-param>
+  <context-param>
+    <param-name>videourl</param-name>
+    <param-value>http://192.168.112.164/video</param-value>
+  </context-param>
   <servlet>
 -->
 <!--########################以上server#####################################-->
@@ -110,6 +122,10 @@
   <context-param>
     <param-name>videopath</param-name>
     <param-value>/data/video</param-value>
+  </context-param>
+  <context-param>
+    <param-name>videourl</param-name>
+    <param-value>http://192.168.112.164/video</param-value>
   </context-param>
   <servlet>
 
@@ -338,6 +354,16 @@
     <servlet-name>image</servlet-name>
     <url-pattern>/image.do</url-pattern>
   </servlet-mapping>
+  <!-- ############新的############ -->
+  <servlet>
+    <servlet-name>onlinecourse</servlet-name>
+    <servlet-class>tw.com.aber.onlinecourse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>onlinecourse</servlet-name>
+    <url-pattern>/onlinecourse.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>tw.com.aber.loginFilter</filter-class>

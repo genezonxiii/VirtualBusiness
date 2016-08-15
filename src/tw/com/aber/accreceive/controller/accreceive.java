@@ -53,7 +53,7 @@ public class accreceive extends HttpServlet {
 					detail+="　　平台："+rs.getString("order_source")+"\n";
 				}
 			} catch (Exception se) {System.out.println("ERROR WITH: "+se);}
-			System.out.println(detail);
+			//System.out.println(detail);
 			response.getWriter().write(detail);
 			return;
 		}
@@ -320,8 +320,10 @@ public class accreceive extends HttpServlet {
 		private java.sql.Date receive_date;
 		private String user_id;
 		private String memo;
+		private String order_source;
+		private String order_no;
 		private String message;
-
+		
 		public String getReceivable_id() {
 			return receivable_id;
 		}
@@ -401,6 +403,23 @@ public class accreceive extends HttpServlet {
 		public void setMessage(String message) {
 			this.message = message;
 		}
+
+		public String getOrder_source() {
+			return order_source;
+		}
+
+		public void setOrder_source(String order_source) {
+			this.order_source = order_source;
+		}
+
+		public String getOrder_no() {
+			return order_no;
+		}
+
+		public void setOrder_no(String order_no) {
+			this.order_no = order_no;
+		}
+		
 	}
 
 	interface accreceive_interface {
@@ -572,6 +591,8 @@ public class accreceive extends HttpServlet {
 					accreceiveVO.setReceive_date(rs.getDate("receive_date"));
 					accreceiveVO.setUser_id(rs.getString("user_id"));
 					accreceiveVO.setMemo(rs.getString("memo"));
+					accreceiveVO.setOrder_source(rs.getString("order_source"));
+					accreceiveVO.setOrder_no(rs.getString("order_no"));
 					list.add(accreceiveVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -632,6 +653,8 @@ public class accreceive extends HttpServlet {
 					accreceiveVO.setReceive_date(rs.getDate("receive_date"));
 					accreceiveVO.setUser_id(rs.getString("user_id"));
 					accreceiveVO.setMemo(rs.getString("memo"));
+					accreceiveVO.setOrder_source(rs.getString("order_source"));
+					accreceiveVO.setOrder_no(rs.getString("order_no"));
 					list.add(accreceiveVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -692,6 +715,8 @@ public class accreceive extends HttpServlet {
 					accreceiveVO.setReceive_date(rs.getDate("receive_date"));
 					accreceiveVO.setUser_id(rs.getString("user_id"));
 					accreceiveVO.setMemo(rs.getString("memo"));
+					accreceiveVO.setOrder_source(rs.getString("order_source"));
+					accreceiveVO.setOrder_no(rs.getString("order_no"));
 					list.add(accreceiveVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -754,6 +779,8 @@ public class accreceive extends HttpServlet {
 					accreceiveVO.setReceive_date(rs.getDate("receive_date"));
 					accreceiveVO.setUser_id(rs.getString("user_id"));
 					accreceiveVO.setMemo(rs.getString("memo"));
+					accreceiveVO.setOrder_source(rs.getString("order_source"));
+					accreceiveVO.setOrder_no(rs.getString("order_no"));
 					list.add(accreceiveVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -816,6 +843,8 @@ public class accreceive extends HttpServlet {
 					accreceiveVO.setReceive_date(rs.getDate("receive_date"));
 					accreceiveVO.setUser_id(rs.getString("user_id"));
 					accreceiveVO.setMemo(rs.getString("memo"));
+					accreceiveVO.setOrder_source(rs.getString("order_source"));
+					accreceiveVO.setOrder_no(rs.getString("order_no"));
 					list.add(accreceiveVO); // Store the row in the list
 				}
 				// Handle any driver errors

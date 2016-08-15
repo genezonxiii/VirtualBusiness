@@ -15,7 +15,6 @@
 <html>
 <head>
 <title>廠商資料</title>
-<title>sale</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
@@ -30,7 +29,7 @@
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
@@ -150,6 +149,7 @@
 										
 									},
 									success : function(result) {
+											alert(result);
 											var json_obj = $.parseJSON(result);
 											var result_table = "";
 											$.each(json_obj,function(i, item) {

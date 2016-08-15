@@ -136,6 +136,7 @@
 					return_end_date: $("#return_end_date").val()
 				},
 				success : function(result) {
+					//alert(result);
 						var json_obj = $.parseJSON(result);
 						var len=json_obj.length;
 						//判斷查詢結果
@@ -1185,7 +1186,7 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row search-result-wrap" id="ian" align="center"style="height:433px;">
+			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_1" align="center" class="btn btn-wide btn-darkblue">銷貨退回</button> -->
 <!-- 				</div> -->
@@ -1260,7 +1261,7 @@
 					</div>
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
-			<div class="row search-result-wrap" id="ian2" align="center"style="height:433px;">
+			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消銷貨退回</button> -->
 <!-- 				</div> -->

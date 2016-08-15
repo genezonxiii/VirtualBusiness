@@ -13,31 +13,34 @@
 <title>商品管理</title>
 <meta charset="utf-8">
 
+<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <!-- 圖片的 -->
+
 <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
 <!-- Generic page styles -->
 <link rel="stylesheet" href="css/photo/style.css">	
-<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 <link rel="stylesheet" href="css/photo/jquery.fileupload.css">
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<!-- <script type="text/javascript" src="js/jquery-1.10.2.js"></script> -->
+
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="js/photo/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 <script src="js/photo/vendor/jquery.ui.widget.js"></script>
 <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<script src="js/photo/load-image.all.min.js"></script>
 <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<script src="js/photo/canvas-to-blob.min.js"></script>
 <!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="js/photo/bootstrap.min.js"></script>
 <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
 <script src="js/photo/jquery.iframe-transport.js"></script>
 <!-- The basic File Upload plugin -->
@@ -55,15 +58,15 @@
 
 <!-- 新3修 -->
 
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="js/photo/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
+
 <script>
 	var new_or_edit=0;
 	var scan_exist=0;
@@ -822,7 +825,7 @@
 	        dataType: 'json',
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-	        maxFileSize: 999000,
+	        maxFileSize: 600000,
 	        // Enable image resizing, except for Android and Opera,
 	        // which actually support image resizing, but fail to
 	        // send Blob objects via XHR requests:
@@ -871,7 +874,6 @@
 	        );
 	    }).on('fileuploaddone', function (e, data) {
 	    	console.log(data.result.files);
-	    	
 	    	console.log("fileuploaddone");
 	        $.each(data.result.files, function (index, file) {
 	        	$("#photo").val(file.name);
@@ -903,7 +905,7 @@
 	        dataType: 'json',
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-	        maxFileSize: 999000,
+	        maxFileSize: 600000,
 	        // Enable image resizing, except for Android and Opera,
 	        // which actually support image resizing, but fail to
 	        // send Blob objects via XHR requests:
@@ -985,7 +987,7 @@
 	        dataType: 'json',
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-	        maxFileSize: 999000,
+	        maxFileSize: 600000,
 	        // Enable image resizing, except for Android and Opera,
 	        // which actually support image resizing, but fail to
 	        // send Blob objects via XHR requests:
@@ -1066,7 +1068,7 @@
 	        dataType: 'json',
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-	        maxFileSize: 999000,
+	        maxFileSize: 600000,
 	        // Enable image resizing, except for Android and Opera,
 	        // which actually support image resizing, but fail to
 	        // send Blob objects via XHR requests:
@@ -1188,12 +1190,11 @@
 					<tbody>
 					<tr>
 						<td>
-							<h6>產品圖片名稱:&nbsp;&nbsp;</h6>
+							<h6>產品圖片名稱:</h6>
 						</td>
 						<td>
-							<span class="btn btn-success fileinput-button btn-primary">
-							<i class="glyphicon glyphicon-plus "></i>
-							<span>增加圖片1</span>
+							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
+							<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
 							<input id="fileupload-update" type="file" name="files-update[]">
 						<br>
 							</span>
@@ -1205,9 +1206,8 @@
                				<h6>產品圖片名稱2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
-                             <span class="btn btn-success fileinput-button btn-primary">
-					         <i class="glyphicon glyphicon-plus"></i>
-					         <span>增加圖片2</span>
+                             <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
+					         <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
 					         <input id="fileupload2-update" type="file" name="files2-update[]">
 					     <br>
 					         </span>
@@ -1241,12 +1241,11 @@
 					<tbody>
 					<tr>
 						<td>
-							<h6>產品圖片名稱:&nbsp;&nbsp;</h6>
+							<h6>產品圖片名稱:</h6>
 						</td>
 						<td>
-							<span class="btn btn-success fileinput-button btn-primary">
-							<i class="glyphicon glyphicon-plus"></i>
-							<span>增加圖片1</span>
+							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
+							<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
 							<input id="fileupload" type="file" name="files[]">
 						<br>
 							</span>
@@ -1258,9 +1257,8 @@
                				<h6>產品圖片名稱2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
-                             <span class="btn btn-success fileinput-button btn-primary">
-					         <i class="glyphicon glyphicon-plus"></i>
-					         <span>增加圖片2</span>
+                             <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
+					         <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
 					         <input id="fileupload2" type="file" name="files2[]">
 					     <br>
 					         </span>
@@ -1346,6 +1344,7 @@
 								<th>產品名稱</th>
 								<th>數量</th>
 								<th>售價</th>
+								<th>功能</th>
 							</tr>
 						</thead>
 						<tbody>

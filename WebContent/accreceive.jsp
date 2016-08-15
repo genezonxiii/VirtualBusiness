@@ -52,39 +52,6 @@
 		});
 	}
 	$(function(){
-// 		$("#button_1").click(
-// 			function(e){
-//         		e.preventDefault();
-//         		var count = 0;
-//         		var message = "";
-//         		$(".checkbox_receive").each(function(){
-//         			if($(this).prop("checked")){
-//         				count+=1;
-//         			}
-//         		});
-//         		message = "確認要收帳嗎? 總共" + count + "筆";
-//         		$("#dialog-confirm p").text(message);
-//         		confirm_dialog.dialog("open");
-//             }
-// 		);
-// 		$("#button_2").click(
-// 			function(e){
-//         		e.preventDefault();
-//         		var count = 0;
-//         		var message = "";
-//         		$(".checkbox_receive_cancel").each(function(){
-//         			if($(this).prop("checked")){
-//         				count+=1;
-//         			}
-//         		});
-//         		message = "確認要取消收帳嗎? 總共" + count + "筆";
-//         		$("#dialog-cancel-confirm p").text(message);
-//         		confirm_cancel_dialog.dialog("open");
-//             }
-// 		);
-// 		$("tr").dblclick(function(){
-// 			alert($(this).html());
-// 		});
 		 $("#amount_date_form").validate({
 				rules : {
 					amount_start_date : {
@@ -159,6 +126,8 @@
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
+									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
+									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
 									+ "'class='checkbox_receive'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";
@@ -245,7 +214,6 @@
 	});	
 	//實收帳款日查詢相關設定
 	$("#searh_receive_date").click(function(e) {
-		$("#ian2").show();
 		e.preventDefault();
 		if($("#receive_date_form").valid()){
 			$.ajax({
@@ -289,6 +257,8 @@
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
+									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
+									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
 									+ "'class='checkbox_receive_cancel'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";
@@ -431,6 +401,8 @@
 										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
+										+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
 										+ "'class='checkbox_receive_cancel'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";	
 									});
@@ -550,6 +522,8 @@
 										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
+										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
+										+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
 										+ "'class='checkbox_receive'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";	
@@ -680,7 +654,7 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class=" search-result-wrap" align="center" id="ian" style="height:433px;">
+			<div class=" search-result-wrap" align="center" style="height:433px;">
 <!-- 			<div class="form-row"> -->
 <!-- 				<button id="button_1" align="center" class="btn btn-wide btn-darkblue">批次收帳</button> -->
 <!-- 			</div> -->
@@ -692,6 +666,8 @@
 								<th>應收帳款產生日期</th>
 								<th>實收帳款金額</th>
 								<th>實收帳款產生日期</th>
+								<th>交易平台</th>
+								<th>訂單號</th>
 								<th>備註</th>
 								<th>勾選</th>
 							</tr>
@@ -740,7 +716,7 @@
 					</form>
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
-			<div class="row search-result-wrap" align="center" id="ian2" style="height:433px;">
+			<div class="row search-result-wrap" align="center" style="height:433px;">
 <!-- 			<div class="form-row"> -->
 <!-- 				<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消批次收帳</button> -->
 <!-- 			</div> -->
@@ -752,6 +728,8 @@
 								<th>應收帳款產生日期</th>
 								<th>實收帳款金額</th>
 								<th>實收帳款產生日期</th>
+								<th>交易平台</th>
+								<th>訂單號</th>
 								<th>備註</th>
 								<th>勾選</th>
 							</tr>
