@@ -16,12 +16,13 @@
 <title>進貨退回</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-<link rel="stylesheet" href="css/styles.css" />
+
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -216,7 +217,7 @@ $(function(){
 								  dom: 'Blfrtip',
 						          buttons: [{
 						                text: '取消進貨退回',
-						                className: 'btn_purchase_return_cancel',
+						                className: 'btn_purchase_return_cancel btn btn-primary',
 						                action : function(e){
 						            		e.preventDefault();
 						            		var count = 0;
@@ -803,7 +804,7 @@ $(function(){
 			<div class="form-wrap" >
 				<div class="form-row" id="purchase_search_contain"> 
 					<label for="">
-						<span class="block-label">自訂產品 ID 查詢</span>
+						<span class="block-label">供應商名稱查詢</span>
 						<input type="text" id="search_purchase_by_supply_name" name="search_purchase_by_supply_name">
 					</label>
 					<button id="search_supply_name" class="btn btn-darkblue">查詢</button>

@@ -93,7 +93,7 @@
 													+ "<tr><td>"+ "<p>功能</p>"+"</td><td>"
 													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
 													+ "	</div></div>"
 													+ "</td></tr>";
 											});
@@ -159,7 +159,7 @@
 										+ "<tr><td>"+ "<p>功能</p>"+"</td><td>"
 										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
 										+ "	</div></div>"
 										+"</td></tr>";
 								});

@@ -42,7 +42,6 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function() {
-		table_before("purchases");
 		$("#purchases_contain_row").hide();
 		//進貨日查詢相關設定
 		$("#search_purchase_date").click(function(e) {
@@ -110,32 +109,12 @@
 	                			}
 								$("#purchases_contain_row").show();
 								$("#purchases tbody").html(result_table);
-								$("#purchases").dataTable({
-									dom: 'lfrB<t>ip',
-									buttons: [{
-										extend: 'excel',
-										text: '輸出為xlsx檔',
-										title: '進貨報表',
-										exportOptions: {modifier: {search: 'none'}}
-									  }],
-									"language": {"url": "js/dataTables_zh-tw.txt"}
-								});								
+								draw_table("purchases",'進貨報表');
 								$("#purchases").find("td").css("text-align", "center");
 							}
 						}
 				});		
 		});
-// 		$("#xls").click( function(e) {
-// 			$(".result").table2excel({
-// 					exclude: ".noExl",
-// 					name: "Excel Document Name",
-// 					filename: "進貨報表",
-// 					fileext: ".xls",
-// 					exclude_img: true,
-// 					exclude_links: true,
-// 					exclude_inputs: true
-// 			});
-// 		});
 	})
 </script>
 		<div class="input-field-wrap">
@@ -151,7 +130,6 @@
 						<input type="text" class="input-date" id="purchase_end_date" name="purchase_end_date">
 					</label>
 					<a class="btn btn-darkblue" id="search_purchase_date">查詢</a>
-<!-- 					<a class="btn btn btn-exec" id="xls" style="display:none" >產生報表</a> -->
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
@@ -173,7 +151,6 @@
 					</table>
 				</div>
 			</div>			
-</div>
-<!-- <div style="display:none"><table id="my123" class="result"></table></div> -->
+		</div>
 </body>
 </html>

@@ -38,36 +38,6 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function(){
-// 		$("#button_1").click(
-// 			function(e){
-//                	e.preventDefault();
-//        			var count = 0;
-//        			var message = "";
-//        			$(".checkbox_salereturn").each(function(){
-//        				if($(this).prop("checked")){
-//        					count+=1;
-//        				}
-//        			});
-//        			message = "確認要銷貨退回嗎? 總共" + count + "筆";
-//        			$("#dialog-confirm p").text(message);
-//        			confirm_dialog.dialog("open");
-//                }
-// 		);
-// 		$("#button_2").click(
-// 			function(e){
-//        			e.preventDefault();
-//        			var count = 0;
-//        			var message = "";
-//        			$(".checkbox_salereturn_cancel").each(function(){
-//        				if($(this).prop("checked")){
-//        					count+=1;
-//        				}
-//        			});
-//        			message = "確認要取消銷貨退回嗎? 總共" + count + "筆";
-//        			$("#dialog-cancel-confirm p").text(message);
-//        			confirm_cancel_dialog.dialog("open");
-//            }
-// 		);
 		 $("#return_date_form").validate({
 				rules : {
 					return_staet_date : {
@@ -202,8 +172,8 @@
 									+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-									+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";	
+									+ "<td><input id='my-"+json_obj[i].seq_no+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+									+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";	
 								}
 							});
 						}
@@ -359,8 +329,8 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";
+										+ "<td><input id='my-"+json_obj[i].seq_no+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+										+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";
 									}
 								});
 							}
@@ -517,8 +487,8 @@
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-										+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";
+										+ "<td><input id='my-"+json_obj[i].seq_no+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+										+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";
 									}
 								});
 							}
@@ -709,8 +679,8 @@
 								+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 								+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-								+ "<td><input id='my-"+json_obj[i].sale_id+"'type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-								+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";		
+								+ "<td><input id='my-"+json_obj[i].seq_no+"'type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+								+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";		
 							});
 						}							
 						if(resultRunTime==0){
@@ -794,6 +764,7 @@
 									$.each (json_obj, function (i) {
 										resultRunTime+=1;
 									});
+									alert(resultRunTime);
 									var result_table = "";
 									if(resultRunTime!=0){
 										$.each(json_obj,function(i, item) {
@@ -851,8 +822,8 @@
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-											+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-											+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";		
+											+ "<td><input id='my-"+json_obj[i].seq_no+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+											+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";		
 										});
 									}							
 									if(resultRunTime==0){
@@ -994,8 +965,8 @@
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-											+ "<td><input id='my-"+json_obj[i].sale_id+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
-											+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].sale_id+"'></label></td></tr>";	
+											+ "<td><input id='my-"+json_obj[i].seq_no+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
+											+ "'class='checkbox_salereturn'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";	
 										});
 									}							
 									if(resultRunTime==0){

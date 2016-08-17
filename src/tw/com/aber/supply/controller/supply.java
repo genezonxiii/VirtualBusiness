@@ -41,6 +41,7 @@ public class supply extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		
 		if ("search".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數 ****************************************/
@@ -75,13 +76,15 @@ public class supply extends HttpServlet {
 				String contact1 = request.getParameter("contact1");
 				String phone1 = request.getParameter("phone1");
 				String ext1 = request.getParameter("ext1");
+				String email = request.getParameter("email");
+				String email1 = request.getParameter("email1");
 				String mobile1 = request.getParameter("mobile1");
 				String memo = request.getParameter("memo");
 				
 				/*************************** 2.開始新增資料 ***************************************/
 				supplyBeanService = new SupplyBeanService();
 				supplyBeanService.addSupply(group_id, supply_name, supply_unicode, address, contact,phone, ext, mobile,
-						contact1, phone1, ext1,  mobile1, memo, user_id);
+						contact1, phone1, ext1,  mobile1,email,email1, memo, user_id);
 				/*************************** 3.新增完成,準備轉交(Send the Success view) ***********/
 				supplyBeanService = new SupplyBeanService();
 				List<SupplyBean> list = supplyBeanService.getSearchAllDB(group_id);
@@ -108,11 +111,13 @@ public class supply extends HttpServlet {
 				String phone1 = request.getParameter("phone1");
 				String ext1 = request.getParameter("ext1");
 				String mobile1 = request.getParameter("mobile1");
+				String email = request.getParameter("email");
+				String email1 = request.getParameter("email1");
 				String memo = request.getParameter("memo");
 				/*************************** 2.開始修改資料 ***************************************/
 				supplyBeanService = new SupplyBeanService();
 				supplyBeanService.updateSupply(supply_id, group_id, supply_name, supply_unicode, address, contact, phone,
-						ext, mobile, contact1, phone1, ext1, mobile1, memo, user_id);
+						ext, mobile, contact1, phone1, ext1, mobile1,email,email1, memo, user_id);
 				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
 				supplyBeanService = new SupplyBeanService();
 				List<SupplyBean> list = supplyBeanService.getSearchAllDB(group_id);
@@ -155,10 +160,12 @@ public class supply extends HttpServlet {
 		private String  phone;
 		private String  ext;
 		private String  mobile;
+		private String  email;
 		private String  contact1;
 		private String  phone1;
 		private String  ext1;
 		private String  mobile1;
+		private String  email1;
 		private String  memo;
 		private String  user_id;
 		public String getSupply_id() {
@@ -215,6 +222,12 @@ public class supply extends HttpServlet {
 		public void setMobile(String mobile) {
 			this.mobile = mobile;
 		}
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
 		public String getContact1() {
 			return contact1;
 		}
@@ -238,6 +251,12 @@ public class supply extends HttpServlet {
 		}
 		public void setMobile1(String mobile1) {
 			this.mobile1 = mobile1;
+		}
+		public String getEmail1() {
+			return email1;
+		}
+		public void setEmail1(String email1) {
+			this.email1 = email1;
 		}
 		public String getMemo() {
 			return memo;
@@ -266,6 +285,7 @@ public class supply extends HttpServlet {
 		public void deleteDB(String supply_id,String user_id);
 
 		public List<SupplyBean> searchAllDB(String group_id);
+		
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -277,7 +297,7 @@ public class supply extends HttpServlet {
 		}
 
 		public SupplyBean addSupply(String group_id, String supply_name,String supply_unicode,String address,String contact,String phone,
-				String ext,String mobile,String contact1,String phone1,String ext1,String mobile1,String memo,String user_id) {
+				String ext,String mobile,String contact1,String phone1,String ext1,String mobile1,String email,String email1,String memo,String user_id) {
 			SupplyBean supplybean = new SupplyBean();
 			supplybean.setGroup_id(group_id);
 			supplybean.setSupply_name(supply_name);
@@ -291,6 +311,8 @@ public class supply extends HttpServlet {
 			supplybean.setPhone1(phone1);
 			supplybean.setExt1(ext1);
 			supplybean.setMobile1(mobile1);
+			supplybean.setEmail(email);
+			supplybean.setEmail1(email1);
 			supplybean.setMemo(memo);
 			supplybean.setUser_id(user_id);
 			
@@ -299,7 +321,7 @@ public class supply extends HttpServlet {
 		}
 
 		public SupplyBean updateSupply(String supply_id,String group_id, String supply_name,String supply_unicode,String address,String contact,String phone,
-				String ext,String mobile,String contact1,String phone1,String ext1,String mobile1,String memo,String user_id) {
+				String ext,String mobile,String contact1,String phone1,String ext1,String mobile1,String email,String email1,String memo,String user_id) {
 			SupplyBean supplybean = new SupplyBean();
 			supplybean.setSupply_id(supply_id);
 			supplybean.setGroup_id(group_id);
@@ -314,6 +336,9 @@ public class supply extends HttpServlet {
 			supplybean.setPhone1(phone1);
 			supplybean.setExt1(ext1);
 			supplybean.setMobile1(mobile1);
+			supplybean.setEmail(email);
+			supplybean.setEmail1(email1);
+			
 			supplybean.setMemo(memo);
 			supplybean.setUser_id(user_id);
 			
@@ -327,16 +352,17 @@ public class supply extends HttpServlet {
 		public List<SupplyBean> getSearchAllDB(String group_id) {
 			return dao.searchAllDB(group_id);
 		}
+		
 	}
 
 	/*************************** 操作資料庫 ****************************************/
 	class SupplyDAO implements SupplyBean_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_insert_supply = "call sp_insert_supply(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_insert_supply = "call sp_insert_supply(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_selectall_supply = "call sp_selectall_supply (?)";
 		private static final String sp_del_supply = "call sp_del_supply (?,?)";
-		private static final String sp_update_supply = "call sp_update_supply (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
+		private static final String sp_update_supply = "call sp_update_supply (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -364,8 +390,10 @@ public class supply extends HttpServlet {
 				pstmt.setString(10, supplyBean.getPhone1());
 				pstmt.setString(11, supplyBean.getExt1());
 				pstmt.setString(12, supplyBean.getMobile1());
-				pstmt.setString(13, supplyBean.getMemo());
-				pstmt.setString(14, supplyBean.getUser_id());
+				pstmt.setString(13, supplyBean.getEmail());
+				pstmt.setString(14, supplyBean.getEmail1());
+				pstmt.setString(15, supplyBean.getMemo());
+				pstmt.setString(16, supplyBean.getUser_id());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -415,8 +443,10 @@ public class supply extends HttpServlet {
 				pstmt.setString(11, supplyBean.getPhone1());
 				pstmt.setString(12, supplyBean.getExt1());
 				pstmt.setString(13, supplyBean.getMobile1());
-				pstmt.setString(14, supplyBean.getMemo());
-				pstmt.setString(15, supplyBean.getUser_id());
+				pstmt.setString(14, supplyBean.getEmail());
+				pstmt.setString(15, supplyBean.getEmail1());
+				pstmt.setString(16, supplyBean.getMemo());
+				pstmt.setString(17, supplyBean.getUser_id());
 
 				pstmt.executeUpdate();
 
@@ -508,10 +538,12 @@ public class supply extends HttpServlet {
 					supplyBean.setPhone(rs.getString("phone"));
 					supplyBean.setExt(rs.getString("ext"));
 					supplyBean.setMobile(rs.getString("mobile"));
+					supplyBean.setEmail(rs.getString("email"));
 					supplyBean.setContact1(rs.getString("contact1"));
 					supplyBean.setPhone1(rs.getString("phone1"));
 					supplyBean.setExt1(rs.getString("ext1"));
 					supplyBean.setMobile1(rs.getString("mobile1"));
+					supplyBean.setEmail1(rs.getString("email1"));
 					supplyBean.setMemo(rs.getString("memo"));
 					
 					list.add(supplyBean); // Store the row in the list
@@ -548,7 +580,7 @@ public class supply extends HttpServlet {
 			}
 			return list;
 		}
-
+		
 	}
 
 }

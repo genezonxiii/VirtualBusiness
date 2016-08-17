@@ -7,10 +7,6 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.ResultSet"%>
 <jsp:directive.page import="java.sql.SQLException" />
-<%
-//	session.setAttribute("group_id","7dcc2045-472e-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
-//	session.setAttribute("user_id", ""); //還沒拿到session，先自己假設
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -149,7 +145,6 @@
 										
 									},
 									success : function(result) {
-											alert(result);
 											var json_obj = $.parseJSON(result);
 											var result_table = "";
 											$.each(json_obj,function(i, item) {
@@ -161,16 +156,17 @@
 													"</td><td>"+json_obj[i].phone+
 													"</td><td>"+json_obj[i].ext+
 													"</td><td>"+json_obj[i].mobile+
+													"</td><td>"+json_obj[i].email+
 													"</td><td>"+json_obj[i].contact1+
 													"</td><td>"+json_obj[i].phone1+
 													"</td><td>"+json_obj[i].ext1+
 													"</td><td>"+json_obj[i].mobile1+
+													"</td><td>"+json_obj[i].email1+
 													"</td><td>"+json_obj[i].memo+
-													
 													 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-													+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 													+ "	</div></div></td></tr>";
 											});
 											//判斷查詢結果
@@ -185,8 +181,8 @@
 												$("#products2 tbody").html(result_table);
 												$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
 // 												$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-												$("#products2").find("th").css({"word-break":"break-all","max-width":"180px","text-align":"center" });
-												$("#products2").find("td").css({"word-break":"break-all","max-width":"180px","text-align":"center" });
+												$("#products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
+												$("#products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
 												$(".validateTips").text("");
 											}else{
 												$("#products2-contain").hide();
@@ -230,6 +226,8 @@
 														contact1 : $("#dialog-form-insert input[name='contact1']").val(),
 														phone1 : $("#dialog-form-insert input[name='phone1']").val(),
 														ext1 : $("#dialog-form-insert input[name='ext1']").val(),
+														email : $("#dialog-form-insert input[name='email']").val(),
+														email1 : $("#dialog-form-insert input[name='email1']").val(),
 														mobile1 : $("#dialog-form-insert input[name='mobile1']").val(),
 														memo : $("#dialog-form-insert textarea[name='memo']").val(),
 													},
@@ -245,16 +243,18 @@
 																"</td><td>"+json_obj[i].phone+
 																"</td><td>"+json_obj[i].ext+
 																"</td><td>"+json_obj[i].mobile+
+																"</td><td>"+json_obj[i].email+
 																"</td><td>"+json_obj[i].contact1+
 																"</td><td>"+json_obj[i].phone1+
 																"</td><td>"+json_obj[i].ext1+
 																"</td><td>"+json_obj[i].mobile1+
+																"</td><td>"+json_obj[i].email1+
 																"</td><td>"+json_obj[i].memo+
 																
 																"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-																+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 																+ "	</div></div></td></tr>";
 														});
 														//判斷查詢結果
@@ -268,8 +268,8 @@
 															$("#products2 tbody").html(result_table);
 															$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
 // 															$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-															$("products2").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-															$("products2").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+															$("products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
+															$("products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
 															$(".validateTips").text("");
 														}else{
 															$("#products2-contain").hide();
@@ -321,17 +321,19 @@
 									"</td><td>"+json_obj[i].phone+
 									"</td><td>"+json_obj[i].ext+
 									"</td><td>"+json_obj[i].mobile+
+									"</td><td>"+json_obj[i].email+
 									"</td><td>"+json_obj[i].contact1+
 									"</td><td>"+json_obj[i].phone1+
 									"</td><td>"+json_obj[i].ext1+
 									"</td><td>"+json_obj[i].mobile1+
+									"</td><td>"+json_obj[i].email1+
 									"</td><td>"+json_obj[i].memo+
 									
 									"</td>"+
 									 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";
 							});
 							//判斷查詢結果
@@ -347,8 +349,8 @@
 								$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
 // 								$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 								
-								$("products2").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-								$("products2").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
+								$("products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
 								$(".validateTips").text("");
 							}else{
 								$("#products2-contain").hide();
@@ -394,6 +396,8 @@
 								phone1 : $("#dialog-form-update input[name='phone1']").val(),
 								ext1 : $("#dialog-form-update input[name='ext1']").val(),
 								mobile1 : $("#dialog-form-update input[name='mobile1']").val(),
+								email : $("#dialog-form-update input[name='email']").val(),
+								email1 : $("#dialog-form-update input[name='email1']").val(),
 								memo : $("#dialog-form-update textarea[name='memo']").val(),
 							},				
 							success : function(result) {
@@ -408,16 +412,18 @@
 										"</td><td>"+json_obj[i].phone+
 										"</td><td>"+json_obj[i].ext+
 										"</td><td>"+json_obj[i].mobile+
+										"</td><td>"+json_obj[i].email+
 										"</td><td>"+json_obj[i].contact1+
 										"</td><td>"+json_obj[i].phone1+
 										"</td><td>"+json_obj[i].ext1+
 										"</td><td>"+json_obj[i].mobile1+
+										"</td><td>"+json_obj[i].email1+
 										"</td><td>"+json_obj[i].memo+
 										
 										"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 								});
 								//判斷查詢結果
@@ -432,8 +438,8 @@
 									$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
 // 									$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 									
-									$("products2").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-									$("products2").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+									$("products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
+									$("products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
 									$(".validateTips").text("");
 								}else{
 									$("#products2-contain").hide();
@@ -497,6 +503,8 @@
 										$("#dialog-form-update input[name='phone1']").val(json_obj[i].phone1);
 										$("#dialog-form-update input[name='ext1']").val(json_obj[i].ext1);
 										$("#dialog-form-update input[name='mobile1']").val(json_obj[i].mobile1);
+										$("#dialog-form-update input[name='email']").val(json_obj[i].email);
+										$("#dialog-form-update input[name='email1']").val(json_obj[i].email1);
 										$("#dialog-form-update textarea[name='memo']").val(json_obj[i].memo);
 									}
 								
@@ -540,6 +548,7 @@
 								<td><h6>連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone" placeholder="輸入連絡人電話"/></td>
 							    <td><h6>&nbsp;&nbsp;&nbsp;連絡人分機:</h6></td><td><input type="text" name="ext" placeholder="輸入連絡人分機"/></td>
 							</tr>
+							<tr><td><h6>連絡人email:</h6></td><td><input type="text" name="email" placeholder="輸入連絡人email"/></td></tr>
 							<tr>
 							    <td><h6>第二連絡人:</h6></td><td><input type="text" name="contact1" placeholder="輸入第二連絡人"/></td>
 								 <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人手機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile1"placeholder="輸入第二連絡人手機"/></td>		  
@@ -548,6 +557,7 @@
 							  <td><h6>第二連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone1"placeholder="輸入第二連絡人電話"/></td>
 							  <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人分機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="ext1"placeholder="輸入第二連絡人電話分機"/></td>
 							</tr>
+							<tr><td><h6>第二連絡人email:</h6></td><td><input type="text" name="email1" placeholder="輸入第二連絡人email"/></td></tr>
 							<tr>
 								<td valign="top">備註說明:</td>
 							</tr>
@@ -583,6 +593,7 @@
 								<td><h6>連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone" placeholder="輸入連絡人電話"/></td>
 							    <td><h6>&nbsp;&nbsp;&nbsp;連絡人分機:</h6></td><td><input type="text" name="ext" placeholder="輸入連絡人分機"/></td>
 							</tr>
+							<tr><td><h6>連絡人email:</h6></td><td><input type="text" name="email" placeholder="輸入連絡人email"/></td></tr>
 							<tr>
 							    <td><h6>第二連絡人:</h6></td><td><input type="text" name="contact1" placeholder="輸入第二連絡人"/></td>
 								 <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人手機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile1"placeholder="輸入第二連絡人手機"/></td>		  
@@ -591,6 +602,7 @@
 							  <td><h6>第二連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone1"placeholder="輸入第二連絡人電話"/></td>
 							  <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人分機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="ext1"placeholder="輸入第二連絡人電話分機"/></td>
 							</tr>
+							<tr><td><h6>第二連絡人email:</h6></td><td><input type="text" name="email1" placeholder="輸入第二連絡人email"/></td></tr>
 							<tr>
 								<td valign="top">備註說明:</td>
 							</tr>
@@ -632,10 +644,12 @@
 								<th>連絡人電話</th>
 								<th>連絡人分機</th>
 								<th>連絡人手機</th>
+								<th>連絡人email</th>
 								<th>第二連絡人</th>
 								<th>第二連絡人電話</th>
 								<th>第二連絡人分機</th>
 								<th>第二連絡人手機</th>
+								<th>第二連絡人email</th>
 								<th>備註說明 </th>
 								<th>功能</th>
 							</tr>

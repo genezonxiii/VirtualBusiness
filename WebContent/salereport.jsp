@@ -14,9 +14,9 @@
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 
-<link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link rel="stylesheet" href="css/jquery.dataTables.min.css" />
 <link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+<link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css" />

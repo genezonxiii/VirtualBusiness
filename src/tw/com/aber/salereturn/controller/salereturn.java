@@ -86,10 +86,11 @@ public class salereturn extends HttpServlet {
 				/*************************** 1.接收請求參數 ***************************************/
 				String sale_id = request.getParameter("sale_id");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+				
 				java.sql.Date return_date = null;
 				try {
 					String return_date_str = request.getParameter("return_date");
+					
 					java.util.Date invoice_date_util = sdf.parse(return_date_str);
 					return_date = new java.sql.Date(invoice_date_util.getTime());
 				} catch (ParseException e) {
@@ -102,6 +103,8 @@ public class salereturn extends HttpServlet {
 				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
 				saleReturnService = new SaleReturnService();
 				List<SaleReturnVO> list = saleReturnService.getSearchReturnDateDB(group_id, return_date, return_date);
+				System.out.println("group_id: "+ group_id );
+				System.out.println("return_date_str: "+ return_date );
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);

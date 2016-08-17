@@ -16,7 +16,6 @@
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <!-- 圖片的 -->
 
-<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
 <!-- Generic page styles -->
 <link rel="stylesheet" href="css/photo/style.css">	
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
@@ -110,8 +109,8 @@
 									+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "' ><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "' ><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";
 								}
 								if(json_obj.length==0){
@@ -139,7 +138,6 @@
 	        });
 	
 	    $(window).scannerDetection('success');
-	
 	});
 	$(function() {
 		var uuid = "";
@@ -282,8 +280,8 @@
 										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 									}
 								});
@@ -374,8 +372,8 @@
 																	+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
 																	+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																	+ "	<div class='table-function-list'>"
-																	+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-																	+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+																	+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+																	+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
 																	+ "	</div></div></td></tr>";
 															}
 														});
@@ -458,8 +456,8 @@
 										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";										
 								}
 							});
@@ -547,8 +545,8 @@
 												+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
 												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 												+ "	<div class='table-function-list'>"
-												+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-												+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+												+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+												+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
 												+ "	</div></div></td></tr>";	
 												
 										}

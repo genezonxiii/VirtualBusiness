@@ -89,8 +89,8 @@ window.onload = function (e){
 					+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 					+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 					+ "	<div class='table-function-list'>"
-					+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
-					+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+					+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+					+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
 					+ "	</div></div></td></tr>";
 				});
 			}
@@ -227,8 +227,8 @@ window.onload = function (e){
 										+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 									}
 								});
@@ -355,8 +355,8 @@ window.onload = function (e){
 										+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 									});
 								}
@@ -461,8 +461,8 @@ window.onload = function (e){
 									+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";
 								});
 							}

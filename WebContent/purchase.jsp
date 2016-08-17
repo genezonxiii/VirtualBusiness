@@ -272,10 +272,10 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
-										+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
-										+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+										+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 										+ "	</div></div></td></tr>";	
 // 										$('#searh_supply_name').prop('title', '刪除');
 										
@@ -335,7 +335,6 @@
 		});		
 		//供應商ID查詢相關設定
 		$("#searh_supply_name").click(function(e) {
-			//alert("111");
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
@@ -345,7 +344,6 @@
 					supply_name : $("input[name='searh_purchase_by_supply_name'").val()
 				},
 				success : function(result) {
-					//alert(result);
 						var json_obj = $.parseJSON(result);
 						//判斷查詢結果
 						var resultRunTime = 0;
@@ -389,10 +387,10 @@
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
-								+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-								+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
-								+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
-								+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+								+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+								+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 								+ "	</div></div></td></tr>";
 							});
 						}
@@ -479,10 +477,10 @@
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
-									+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
-									+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+									+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 									+ "	</div></div></td></tr>";	
 								});
 							}
@@ -585,10 +583,10 @@
 													+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 													+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-													+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
-													+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
-													+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+													+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+													+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 													+ "	</div></div></td></tr>";															
 											});
 											
@@ -736,10 +734,10 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
-										+ "		<button class='btn-in-table btn-primary btn_detail' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
-										+ "		<button class='btn-in-table btn-gray btn_create' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
+										+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 										+ "	</div></div></td></tr>";									
 									});
 								}
@@ -937,8 +935,8 @@
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
-								+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
-								+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 								+ "	</div></div></td></tr>";									
 						});
 					}
@@ -947,7 +945,7 @@
 						if($("#purchase_detail_err_mes").length){
             				$("#purchase_detail_err_mes").html("");
             			}
-						$("#purchase_detail_contain_row").show();
+						
 						$("#supply_name_err_mes").html("");
 						$("#purchase-detail-table tbody").html(result_table);
 						$("#purchase-detail-table").dataTable({
@@ -955,6 +953,17 @@
 							  scrollX:  true,
 					          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 						$("#purchase-detail-table").find("td").css("text-align", "center");
+						$("#purchase_detail_contain_row").show();
+						
+// 						$("#fake").show();
+// 						$("#fake").animate({
+// 							top: '+=600px',
+// 							left: '-=1200px',
+// 							width: '100%',
+// 						    opacity: '1',
+// 						},"slow");
+// 						$("#fake").fadeOut(2000);
+// 						$("#fake").css({"top":"10%","left":"80%","width":"1px","opacity":"0"});
 					}else{
 						if(!$("#purchase_detail_err_mes").length){
             				$("<p id='purchase_detail_err_mes'>查無明細</p>").appendTo($("#purchases-contain").parent());
@@ -1033,14 +1042,14 @@
 												+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 												+ "	<div class='table-function-list'>"
-												+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
-												+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+												+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+												+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 												+ "	</div></div></td></tr>";										
 											});
 										}
 										$("#purchase-detail-table").dataTable().fnDestroy();
 										if(resultRunTime!=0){
-											$("#purchase_detail_contain_row").dialog("open");
+											//$("#purchase_detail_contain_row").dialog("open");
 											$("#purchase-detail-table tbody").html(result_table);
 											$("#supply_name_err_mes").html("");
 											$("#purchase-detail-table").dataTable({
@@ -1129,14 +1138,14 @@
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";												
 								});
 							}
 							$("#purchase-detail-table").dataTable().fnDestroy();
 							if(resultRunTime!=0){
-								$("#purchase_detail_contain_row").dialog("open");
+								$("#purchase_detail_contain_row").show();
 								$("#supply_name_err_mes").html("");
 								$("#purchase-detail-table tbody").html(result_table);
 								$("#purchase-detail-table").dataTable({
@@ -1267,15 +1276,14 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";										
 									});
 								}
 								$("#purchase-detail-table").dataTable().fnDestroy();
 								if(resultRunTime!=0){
-									
-									$("#purchase_detail_contain_row").dialog("open");
+									$("#purchase_detail_contain_row").show();
 									$("#purchase-detail-table tbody").html(result_table);
 									$("#supply_name_err_mes").html("");
 									$("#purchase-detail-table").dataTable({
@@ -1693,7 +1701,7 @@
 <!-- 				<button id="create-supply">新增進貨資料</button> -->
 <!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row search-result-wrap" align="center" id ="purchases_contain_row">
+			<div class="row search-result-wrap" align="center" id ="purchases_contain_row" style="margin-bottom:0px;">
 				<div id="purchases-contain" class="result-table-wrap">
 					<table id="purchases" class="result-table">
 						<thead>
@@ -1713,7 +1721,7 @@
 				</div>
 			</div>
 			<!-- 第五列 -->
-			<div class="row" align="center" id="purchase_detail_contain_row">
+			<div class="row search-result-wrap" align="center" id="purchase_detail_contain_row" >
 				<div id="purchase-detail-contain" class="ui-widget result-table-wrap">
 					<table id="purchase-detail-table" class="ui-widget ui-widget-content result-table">
 						<thead>
@@ -1730,7 +1738,20 @@
 						</tbody>
 					</table>
 				</div>
-			</div>			
+			</div>
+<!-- 			<table id="fake" class="result-table" style="position:absolute;top:10%;left:80%;width:1px;opacity:0;display:none;"> -->
+<!-- 				<thead> -->
+<!-- 					<tr> -->
+<!-- 						<th>自訂產品ID</th><th>產品名稱</th><th>進貨數量</th><th>進貨價格</th><th>備註說明 </th><th>功能</th> -->
+<!-- 					</tr> -->
+<!-- 				</thead> -->
+<!-- 				<tbody> -->
+<!-- 					<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr> -->
+<!-- 					<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr> -->
+<!-- 					<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr> -->
+<!-- 					<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr> -->
+<!-- 				</tbody> -->
+<!-- 			</table>			 -->
 		</div>
 	</div>
 </body>

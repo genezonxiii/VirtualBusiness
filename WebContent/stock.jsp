@@ -7,10 +7,6 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.ResultSet"%>
 <jsp:directive.page import="java.sql.SQLException" />
-<%
-// 	session.setAttribute("group_id", "493cdecf-472e-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
-// 	session.setAttribute("user_id", ""); //還沒拿到session，先自己假設
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,7 +29,55 @@
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
+<script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script>
+	jQuery(document).ready(function($) {
+	    $(window).scannerDetection();
+	    $(window).bind('scannerDetectionComplete',function(e,data){
+		    	$.ajax({
+					type : "POST",
+					url : "stock.do",
+					data : {
+						action : "bar_code_search",
+						barcode : data.string
+					},
+					success : function(result) {
+		 				var json_obj = $.parseJSON(result);
+						var result_table = "";
+						$.each(json_obj,function(i, item) {
+							result_table += 
+									"<tr><td>"+json_obj[i].product_name+"</td><td>" 
+									+json_obj[i].quantity+"</td>"
+									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "	<div class='table-function-list'>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+data.string+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+									+ "	</div></div></td></tr>";	
+						});
+						
+						//判斷查詢結果
+						var resultRunTime = 0;
+						$.each (json_obj, function (i) {
+							resultRunTime+=1;
+						});
+						$("#products").dataTable().fnDestroy();
+						if(resultRunTime!=0){
+							$("#products-contain").show();
+							$("#products tbody").html(result_table);
+// 							draw_table("products","庫存報表");
+							$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+							$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+							$(".validateTips").text("");
+						}else{
+							$("#products-contain").hide();
+							$(".validateTips").text("查無此條碼庫存");
+						}
+					}
+				});
+        })
+        .bind('scannerDetectionError',function(e,data){console.log('detection error '+data.string);})
+        .bind('scannerDetectionReceive',function(e,data){console.log(data);});
+	});
+var bar_search=0;
 	$(function() {
 		var validator_update = $("#update-dialog-form-post").validate({
 			rules : {
@@ -49,47 +93,46 @@
 			}
 		});
 		var group_name = $("#group_name");
-		//查詢相關設定
-
-							//e.preventDefault();
-							$.ajax({
-									type : "POST",
-									url : "stock.do",
-									data : {
-										action : "searh",
-										product_id : $("#dialog-form-searh input[name='search_product_id']" ).val(),
-									},
-									success : function(result) {
-											var json_obj = $.parseJSON(result);
-											var result_table = "";
-											$.each(json_obj,function(i, item) {
-												result_table += 
- 													"<tr><td>"+json_obj[i].product_name+"</td><td>" 
- 													+json_obj[i].quantity+"</td>"
- 													+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
- 													+ "	<div class='table-function-list'>"
- 													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
- 													+ "	</div></div></td></tr>";	
-											});
-											
-											$("#group_button").show();
-											//判斷查詢結果
-											var resultRunTime = 0;
-											$.each (json_obj, function (i) {
-												resultRunTime+=1;
-											});
-											$("#products").dataTable().fnDestroy();
-											if(resultRunTime!=0){
-												$("#products-contain").show();
-												$("#products tbody").html(result_table);
-												//$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-												$(".validateTips").text("");
-											}else{
-												$("#products-contain").hide();
-												$(".validateTips").text("查無此結果");
-											}
-										}
-									});
+		$("#searh_stock").click(function(){
+			$.ajax({
+				type : "POST",
+				url : "stock.do",
+				data : {
+					action : "searh",
+					product_name : $("#searh_stock_name" ).val(),
+				},
+				success : function(result) {
+					var json_obj = $.parseJSON(result);
+					var result_table = "";
+					$.each(json_obj,function(i, item) {
+						result_table += 
+								"<tr><td>"+json_obj[i].product_name+"</td><td>" 
+								+ json_obj[i].quantity+"</td>"
+								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+								+ "	<div class='table-function-list'>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+								+ "	</div></div></td></tr>";	
+					});
+					
+					//判斷查詢結果
+					var resultRunTime = 0;
+					$.each (json_obj, function (i) {
+						resultRunTime+=1;
+					});
+					$("#products").dataTable().fnDestroy();
+					if(resultRunTime!=0){
+						$("#products-contain").show();
+						$("#products tbody").html(result_table);
+						$("#products").dataTable({ "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+						//$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+						$(".validateTips").text("");
+					}else{
+						$("#products-contain").hide();
+						$(".validateTips").text("查無此結果");
+					}
+				}
+			});
+		});
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
 			draggable : false,//防止拖曳
@@ -103,7 +146,7 @@
 			buttons : [{
 				text : "修改",
 				click : function() {
-					if ($('#update-dialog-form-post').valid()) {
+ 					if ($('#update-dialog-form-post').valid()) {
 						$.ajax({
 							type : "POST",
 							url : "stock.do",
@@ -119,12 +162,13 @@
 								var json_obj = $.parseJSON(result);
 								var result_table = "";
 								$.each(json_obj,function(i, item) {
+									if(bar_search==null||uuid==json_obj[i].product_id)
 									result_table += 
 										"<tr><td>"+json_obj[i].product_name+"</td><td>" 
 											+json_obj[i].quantity+"</td>"
 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
-											+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
 											+ "	</div></div></td></tr>";	
 								});
 								//判斷查詢結果
@@ -136,8 +180,8 @@
 								if(resultRunTime!=0){
 									$("#products-contain").show();
 									$("#products tbody").html(result_table);
-// 									$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+									$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 									$(".validateTips").text("");
 								}else{
 									$("#products-contain").hide();
@@ -145,7 +189,46 @@
 							}
 						});
 						update_dialog.dialog("close");
-					}
+// 	 					if(bar_search!=null){
+// 	 						$.ajax({
+// 	 							type : "POST",
+// 	 							url : "stock.do",
+// 	 							data : {
+// 	 								action : "bar_code_search",
+// 	 								barcode : bar_search
+// 	 							},
+// 	 							success : function(result) {
+// 	 				 				var json_obj = $.parseJSON(result);
+// 	 								var result_table = "";
+// 	 								$.each(json_obj,function(i, item) {
+// 	 									result_table += 
+// 	 											"<tr><td>"+json_obj[i].product_name+"</td><td>" 
+// 	 											+json_obj[i].quantity+"</td>"
+// 	 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+// 	 											+ "	<div class='table-function-list'>"
+// 	 											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+bar_search+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+// 	 											+ "	</div></div></td></tr>";	
+// 	 								});
+	 								
+// 	 								//判斷查詢結果
+// 	 								var resultRunTime = 0;
+// 	 								$.each (json_obj, function (i) {
+// 	 									resultRunTime+=1;
+// 	 								});
+// 	 								$("#products").dataTable().fnDestroy();
+// 	 								if(resultRunTime!=0){
+// 	 									$("#products-contain").show();
+// 	 									$("#products tbody").html(result_table);
+// 	 									$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+// 	 									$(".validateTips").text("");
+// 	 								}else{
+// 	 									$("#products-contain").hide();
+// 	 									$(".validateTips").text("查無此條碼庫存");
+// 	 								}
+// 	 							}
+// 	 						});
+// 	 					}
+ 					}
 				}
 			}, {
 				text : "取消",
@@ -161,6 +244,11 @@
 		//修改事件聆聽		
 		$("#products").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
+			if($(this).attr("id")!=null){
+				bar_search=$(this).attr("id");
+			}else{
+				bar_search=null;
+			}
 			uuid = $(this).val();
 			$("input[name='search_product_id'").val("");
 			$.ajax({
@@ -201,13 +289,26 @@
 </script>
 
 		<div class="datalistWrap">
-			<!--對話窗樣式-修改 -->
-				<div id="dialog-form-update" title="修改庫存資料">
+			<div class="input-field-wrap">
+				<div class="form-wrap">
+					<div class="form-row">
+						<label for="">
+							<span class="block-label">商品名稱查詢<font color=red>&nbsp;或讀取條碼</font></span>
+							<input type="text" id="searh_stock_name"></input>
+						</label>
+						<button class="btn btn-darkblue" id="searh_stock">查詢</button>
+					</div>
+				</div><!-- /.form-wrap -->
+			</div>
+			<div id="dialog-form-update" title="修改庫存資料">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 							<table border="0" height="120">
 							<tbody>
-							<tr><td><h6>庫存數量:</h6></td><td><input type="text" name="quantity"placeholder="修改庫存數量"/></td></tr>
+							<tr><td><h6>庫存數量:</h6></td><td><input type="text" id="quant" name="quantity"placeholder="修改庫存數量"/></td>
+							<td>
+								&nbsp;<a class='btn-gray' onclick="$('#quant').val(parseInt($('#quant').val())+1);">&nbsp;+&nbsp;</a>&nbsp;<a class='btn-gray' onclick="$('#quant').val(parseInt($('#quant').val())-1);">&nbsp;-&nbsp;</a>
+							</td></tr>
 							<tr><td><h6>備註說明:</h6></td><td><input type="text" name="memo"placeholder="修改備註說明"/></td></tr>
 							<tr><td><input type="hidden" name="stock_id" disabled="disabled"> 
 							<input type="hidden" name="product_id" disabled="disabled"></td> </tr>

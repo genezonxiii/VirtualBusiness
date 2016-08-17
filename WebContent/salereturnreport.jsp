@@ -51,22 +51,9 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
 }
 	$(function() {
-		table_before("products");
-		$( "#datepicker1" ).datepicker({
-			 dateFormat: 'yy/mm/dd'
-		});
-		$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		//使用jquery.validate來做驗證  注意事項: 1.不能用選擇器方式批次設定，它只取最後一個參數 2.要調用resetForm()而不是reset()
-		var validator_insert = $("#insert-dialog-form-post").validate({
-			rules : {unit_name : {required : true,maxlength : 10}},
-			messages : {unit_name : {maxlength : "長度不能超過10個字"}}});
-		var validator_update = $("#update-dialog-form-post").validate({
-			rules : {unit_name : {required : true,maxlength : 10}},
-			messages : {unit_name : {maxlength : "長度不能超過10個字"}}});
-		var unit_name = $("#unit_name");
 		//查詢相關設定
 		$("#searh-productunit").click(function(e) {
-							
 							e.preventDefault();
 							$.ajax({
 									type : "POST",
@@ -107,7 +94,6 @@ function date_format(str) {
 													+ "</td></tr>";
 											});
 											//判斷查詢結果
-// 											$("#my123").html("<tr class='noExl'><td></td></tr><tr><td>退貨日期</td><td>銷貨單號</td><td>訂單號</td><td>產品名稱</td><td>客戶自訂產品ID</td><td>銷貨數量</td><td>貨金額</td><td>轉單日</td><td>配送日</td><td>銷貨/出貨日期</td><td>銷售平台</td><td>備註</td></tr>"+result_table);
  											var resultRunTime = 0;
  											$.each (json_obj, function (i) {
  												resultRunTime+=1;
@@ -116,17 +102,7 @@ function date_format(str) {
  											if(resultRunTime!=0){
  												$("#products-contain").show();
  												$("#products tbody").html(result_table);
- 												$("#products").dataTable({
- 													dom: 'lfrB<t>ip',
- 													buttons: [{
- 														extend: 'excel',
- 														text: '輸出為execl報表',
- 														title: '退貨報表',
- 														exportOptions: {modifier: {search: 'none'}}
- 													  }],
- 													"language": {"url": "js/dataTables_zh-tw.txt"}
- 												});
-//  												$("#products").find("td").css({"word-break":"break-all","min-width":"90px","text-align":"center" });
+ 												draw_table("products",'退貨報表');
  												$(".validateTips").text("");
  											}else{
  												$("#products-contain").hide();
@@ -137,258 +113,8 @@ function date_format(str) {
 							
 						});
 		//新增Dialog相關設定
-		insert_dialog = $("#dialog-form-insert").dialog(
-						{
-							draggable : false,//防止拖曳
-							resizable : false,//防止縮放
-							autoOpen : false,
-							show : {
-								effect : "blind",
-								duration : 300
-							},
-							hide : {
-								effect : "fade",
-								duration : 300
-							},
-							height : 300,
-							width : 350,
-							modal : true,
-							buttons : [{
-										id : "insert",
-										text : "新增",
-										click : function() {
-											if ($('#insert-dialog-form-post').valid()) {
-												$.ajax({
-													type : "POST",
-													url : "salereport.do",
-													data : {
-														action : "insert",
-														unit_name : $("#dialog-form-insert input[name='unit_name']").val()
-													},
-													success : function(result) {
-														var json_obj = $.parseJSON(result);
-														var result_table = "";
-														$.each(json_obj,function(i,item) {
-																result_table += "<tr><td>"
-																	+ json_obj[i].unit_name
-																	+ "</td><td>"
-																	+ "<button value='"
-																	+ json_obj[i].unit_id
-																	+ "'name='"
-																	+ json_obj[i].unit_name
-																	+ "'class='btn_update'>修改</button><button value='"
-																	+ json_obj[i].unit_id
-																	+ "'class='btn_delete'>刪除</button></td></tr>";
-														});
-														//判斷查詢結果
-														var resultRunTime = 0;
-														$.each (json_obj, function (i) {
-															resultRunTime+=1;
-														});
-														$("#products").dataTable().fnDestroy();
-														if(resultRunTime!=0){
-															$("#products-contain").show();
-															$("#products tbody").html(result_table);
-															$("#products").dataTable({
-																dom: 'lfrB<t>ip',
-																buttons: [{
-																	extend: 'excel',
-																	text: '輸出為execl報表',
-																	title: '退貨報表',
-																	exportOptions: {modifier: {search: 'none'}}
-																  }],
-																"language": {"url": "js/dataTables_zh-tw.txt"}
-															});
-															$(".validateTips").text("");
-														}else{
-															$("#products-contain").hide();
-														}
-													}
-												});
-												insert_dialog.dialog("close");
-											}
-										}
-									}, {
-										text : "取消",
-										click : function() {
-											validator_insert.resetForm();
-											insert_dialog.dialog("close");
-										}
-									} ],
-							close : function() {
-								validator_insert.resetForm();
-							}
-						});
-
-		insert_dialog_form = insert_dialog.find("form").on("submit",
-				function(event) {
-					event.preventDefault();
-				});
-		var uuid = "";
-		//確認Dialog相關設定(刪除功能)
-		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			height : 140,
-			modal : true,
-			buttons : {
-				"確認刪除" : function() {
-					$.ajax({
-						type : "POST",
-						url : "salereport.do",
-						data : {
-							action : "delete",
-							unit_id : uuid
-						},
-						success : function(result) {
-							var json_obj = $.parseJSON(result);
-							var result_table = "";
-							$.each(json_obj,function(i,item) {
-										result_table += "<tr><td>"
-											+ json_obj[i].unit_name
-											+ "</td><td>"
-											+ "<button value='"
-											+ json_obj[i].unit_id
-											+ "'name='"
-											+ json_obj[i].unit_name
-											+ "'class='btn_update'>修改</button><button value='"
-											+ json_obj[i].unit_id
-											+ "'class='btn_delete'>刪除</button></td></tr>";
-							});
-							//判斷查詢結果
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							$("#products").dataTable().fnDestroy();
-							if(resultRunTime!=0){
-								$("#products-contain").show();
-								$("#products tbody").html(result_table);
-								$("#products").dataTable({
-									dom: 'lfrB<t>ip',
-									buttons: [{
-										extend: 'excel',
-										text: '輸出為execl報表',
-										title: '退貨報表',
-										exportOptions: {modifier: {search: 'none'}}
-									  }],
-									"language": {"url": "js/dataTables_zh-tw.txt"}
-								});
-							}else{
-								$("#products-contain").hide();
-							}
-						}
-					});
-					$(this).dialog("close");
-				},
-				"取消刪除" : function() {
-					$(this).dialog("close");
-				}
-			}
-		});
-		//修改Dialog相關設定
-		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			height : 300,
-			width : 350,
-			modal : true,
-			buttons : [{
-				text : "修改",
-				click : function() {
-					if ($('#update-dialog-form-post').valid()) {
-						$.ajax({
-							type : "POST",
-							url : "salereport.do",
-							data : {
-	 							action : "update",
-	 							unit_id : uuid,
-	 							unit_name : $("#dialog-form-update input[name='unit_name']").val()
-							},
-							success : function(result) {
-								var json_obj = $.parseJSON(result);
-								var result_table = "";
-								$.each(json_obj,function(i,item) {
-										result_table += "<tr><td>"
-											+ json_obj[i].unit_name
-											+ "</td><td>"
-											+ "<button value='"
-											+ json_obj[i].unit_id
-											+ "'name='"
-											+ json_obj[i].unit_name
-											+ "'class='btn_update'>修改</button><button value='"
-											+ json_obj[i].unit_id
-											+ "'class='btn_delete'>刪除</button></td></tr>";
-								});
-								//判斷查詢結果
-								var resultRunTime = 0;
-								$.each (json_obj, function (i) {
-									resultRunTime+=1;
-								});
-								$("#products").dataTable().fnDestroy();
-								if(resultRunTime!=0){
-									$("#products-contain").show();
-									$("#products tbody").html(result_table);
-									$("#products").dataTable({
-										dom: 'lfrB<t>ip',
-										buttons: [{
-											extend: 'excel',
-											text: '輸出為execl報表',
-											title: '退貨報表',
-											exportOptions: {modifier: {search: 'none'}}
-										  }],
-										"language": {"url": "js/dataTables_zh-tw.txt"}
-									});
-								}else{
-									$("#products-contain").hide();
-								}
-							}
-						});
-						update_dialog.dialog("close");
-					}
-				}
-			}, {
-				text : "取消",
-				click : function() {
-					validator_update.resetForm();
-					update_dialog.dialog("close");
-				}
-			} ],
-			close : function() {
-				validator_update.resetForm();
-			}
-		});		
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
-			uuid = $(this).val();
-			confirm_dialog.dialog("open");
-		});
-		//修改事件聆聽
-		$("#products").delegate(".btn_update", "click", function() {
-			uuid = $(this).val();
-			update_dialog.dialog("open");
-			var text = $(this).attr("name");
-			$("input[name='original_unit_name']").val(text);
-		});
-		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
-			insert_dialog.dialog("open");
-		});
 		//預設表格隱藏
 		$("#products-contain").hide();
-// 		$("#xls").click(function(){
-// 			$(".result").table2excel({
-// 				exclude: ".noExl",
-// 				name: "Excel Document Name",
-// 				filename: "退貨資料",
-// 				fileext: ".xls",
-// 				exclude_img: true,
-// 				exclude_links: true,
-// 				exclude_inputs: true
-// 			});
-// 		});
 	});
 	
 </script>
@@ -436,6 +162,5 @@ function date_format(str) {
 				<div class="validateTips" align="center"> </div>
 			</div>
 		</div>
-<table id="my123" class="result" style="display:none"><tr><td></td></tr></table>
 </body>
 </html>

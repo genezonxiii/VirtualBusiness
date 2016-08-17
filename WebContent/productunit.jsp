@@ -79,8 +79,8 @@
 												if(json_obj[i].group_id!="common"){
 													text+= "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 														+ "	<div class='table-function-list'>"
-														+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
-														+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+														+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+														+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
 														+ "	</div></div>";	
 												}
 												if(json_obj[i].group_id=="common"){
@@ -102,9 +102,9 @@
 												$("#products2_contain_row").show();
 												$("#products2 tbody").html(result_table);
 												$("#products2").dataTable({
-													  autoWidth: false,
-													  scrollX:  true,
-											          scrollY:"auto",
+// 													  autoWidth: false,
+// 													  scrollX:  true,
+// 											          scrollY:"auto",
 											          "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 												$("#products2").find("td").css("text-align","center");
 												if($("#search_product_unit_err_mes").length){
@@ -158,8 +158,8 @@
 															if(json_obj[i].group_id!="common"){
 																text+=  "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																	+ "	<div class='table-function-list'>"
-																	+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
-																	+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+																	+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+																	+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
 																	+ "	</div></div>";	
 															}
 															if(json_obj[i].group_id=="common"){
@@ -181,9 +181,10 @@
 															$("#products2_contain_row").show();
 															$("#products2 tbody").html(result_table);
 															$("#products2").dataTable({
-																  autoWidth: false,
-																  scrollX:  true,
-														          scrollY:"auto","language": {"url": "js/dataTables_zh-tw.txt"}});
+// 																  autoWidth: false,
+// 																  scrollX:  true,
+// 														          scrollY:"auto",
+														          "language": {"url": "js/dataTables_zh-tw.txt"}});
 															$("#products2").find("td").css("text-align","center");
 															if($("#search_product_unit_err_mes").length){
 								                				$("#search_product_unit_err_mes").remove();
@@ -239,8 +240,8 @@
 								if(json_obj[i].group_id!="common"){
 									text+=  "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div>";	
 								}
 								if(json_obj[i].group_id=="common"){
@@ -262,9 +263,10 @@
 								$("#products2_contain_row").show();
 								$("#products2 tbody").html(result_table);
 								$("#products2").dataTable({
-									  autoWidth: false,
-									  scrollX:  true,
-							          scrollY:"auto","language": {"url": "js/dataTables_zh-tw.txt"}});
+// 									  autoWidth: false,
+// 									  scrollX:  true,
+// 							          scrollY:"auto",
+							          "language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#products2").find("td").css("text-align","center");
 								if($("#search_product_unit_err_mes").length){
 	                				$("#search_product_unit_err_mes").remove();
@@ -314,8 +316,8 @@
 									if(json_obj[i].group_id!="common"){
 										text+= "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
-											+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
-											+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
 											+ "	</div></div>";	
 									}
 									if(json_obj[i].group_id=="common"){
@@ -338,9 +340,10 @@
 									$("#products2_contain_row").show();
 									$("#products2 tbody").html(result_table);
 									$("#products2").dataTable({
-										  autoWidth: false,
-										  scrollX:  true,
-								          scrollY:"auto","language": {"url": "js/dataTables_zh-tw.txt"}});
+// 										  autoWidth: false,
+// 										  scrollX:  true,
+// 								          scrollY:"auto",
+								          "language": {"url": "js/dataTables_zh-tw.txt"}});
 									$("#products2").find("td").css("text-align","center");
 									if($("#search_product_unit_err_mes").length){
 		                				$("#search_product_unit_err_mes").remove();

@@ -297,8 +297,8 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+"	<div class='table-function-list'>"
-										+"		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil' ></i></button>"
-										+"		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+										+"		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil' ></i></button>"
+										+"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 										+"	</div>"
 										+"</div></td></tr>";
 									}
@@ -322,9 +322,9 @@
 							         scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").addClass("result-table");
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("td").css("max-width", "80px");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								//$("#sales").find("td").css("max-width", "80px");
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								if($("#search_sale_err_mes").length){
 	                				$("#search_sale_err_mes").remove();
 	                			}
@@ -412,8 +412,8 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div>"
 										+ "</div></td></tr>";
 									}
@@ -460,8 +460,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								if($("#trans_list_date_err_mes").length){
 	                				$("#trans_list_date_err_mes").remove();
 	                			}
@@ -550,8 +550,8 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 									}
 								});
@@ -597,8 +597,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								if($("#trans_dis_date_err_mes").length){
 	                				$("#trans_dis_date_err_mes").remove();
 	                			}
@@ -715,8 +715,8 @@
 																+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 																+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
-																+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 																+ "	</div></div></td></tr>";																
 															}
 														});
@@ -729,8 +729,8 @@
 																  scrollX:  true,
 														          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 															$("#sales").find("td").css("text-align", "center");
-															$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-															$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+															$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+															$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 														}else{
 															$("#sales_contain_row").hide();
 														}
@@ -838,8 +838,8 @@
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";											
 								}
 							});
@@ -852,8 +852,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 							}else{
 								$("#sales_contain_row").hide();
 							}
@@ -967,8 +967,8 @@
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
-											+ "		<button class='btn-in-table btn-darkblue btn_update' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
-											+ "		<button class='btn-in-table btn-alert btn_delete'id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 											+ "	</div></div></td></tr>";								
 										}
 									});
@@ -982,8 +982,8 @@
 										  scrollX:  true,
 								          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 									$("#sales").find("td").css("text-align", "center");
-									$("#sales").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-									$("#sales").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+									$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+									$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								}else{
 									$("#sales_contain_row").hide();
 								}
@@ -1350,7 +1350,7 @@
 			changeYear:true
 		});	
 		//hold header
-		$("#sales").find("th").css("min-width","120px");
+// 		$("#sales").find("th").css("min-width","120px");
 		
 		$("#warning").dialog({
 			title: "警告",
@@ -1615,7 +1615,7 @@
 							<tr class="ui-widget-header">
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th>產品名稱</th>
+								<th><p style="width:120px">產品名稱</p></th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
 								<th>銷貨金額</th>

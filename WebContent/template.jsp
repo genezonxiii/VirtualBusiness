@@ -18,11 +18,17 @@ function table_before(str){
 	var table_name=str;
 	var selector="#"+table_name+" th";
 	var leng =  $(selector).length;
-	var tmp="";
+	var tmp="<table><tr>";
 	for(i=1;i<leng+1;i++){
 		selector="#"+table_name+" th:nth-child("+i+")";
-		tmp+="<input class='tog_col' checked id='col-"+i+"' type='checkbox' value='"+i+"'onclick='$(\"#"+table_name+"\").DataTable().column("+(i-1)+").visible(!$(\"#"+table_name+"\").DataTable().column("+(i-1)+").visible());'><label class='tog_col' for='col-"+i+"'><span class='form-label'>"+$(selector).text()+"</span></label>"
+		tmp+="<td><input class='tog_col' checked id='col-"+i+"' type='checkbox' value='"+i+"'onclick='$(\"#"+table_name+"\").DataTable().column("+(i-1)+").visible(!$(\"#"+table_name+"\").DataTable().column("+(i-1)+").visible());'><label class='tog_col' for='col-"+i+"'><span class='form-label'>"+$(selector).text()+"</span></label></td>";
+		if(i%5==0){tmp+="</tr><tr>";}
 	}
+// 	tmp+="<td><input class='tog_col' checked id='col-100' type='checkbox' value='1'onclick='"
+// 		+"for(var i=0;i<20;i++)$(\"#"+table_name+"\").DataTable().column(i).visible(!$(this).val());$(\"#col-100\").val(0);"
+// 		+"'><label class='tog_col' for='col-100'><span class='form-label'>全選</span></label></td>";
+	tmp+="</tr></table>";
+	
 	selector="#"+table_name;
 	$(selector).before(tmp);
 }
@@ -37,14 +43,17 @@ function draw_table(table_name,title){
 		buttons: [{
 		    extend: 'excel',
 		    text: '輸出為execl報表',
-		    title: title,
-		    exportOptions: {modifier: { page: 'current'}}
+		    title: title ,
+		    exportOptions: {
+		    	columns: ':visible'
+			}
 		  }],
 		"language": {"url": "js/dataTables_zh-tw.txt"}
 	});
 }
 
 function who(){
+	//console.log("跨殺小 (／‵Д′)／~ ╧╧");
 	switch(location.pathname.split("/")[2]){
 //####交易處理############################
 	case "upload.jsp":
@@ -140,6 +149,30 @@ function who(){
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
 		return "進貨退回報表";
 		break;
+	case "stockreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
+		return "商品庫存報表";
+		break;
+	case "supplyreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
+		return "供應商報表";
+		break;
+	case "productreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
+		return "商品管理報表";
+		break;
+	case "customerreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
+		return "客戶報表";
+		break;
+	case "accreceivereport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
+		return "應收帳款報表";
+		break;
+	case "accpayreport.jsp":
+		$(".sidenav > ul > li:nth-child(3)").addClass("active");
+		return "應付帳款報表";
+		break;
 //######分析圖表##########################
 	case "salechart.jsp":
 		$(".sidenav > ul > li:nth-child(4)").addClass("active");
@@ -162,7 +195,7 @@ function who(){
 		return "暫時的";
 		break;
 	case "welcome.jsp":
-		return "";
+		return "首頁";
 		break;
 	default:
 		if(location.pathname.split("/")[2].indexOf("upload")!=-1){return "訂單拋轉作業";}
@@ -177,7 +210,7 @@ function who(){
 <body>
 <script>
 $(function() {
-	$("#title").append(who());
+	$("#title").html(who());
 	$("#logout").click(function(e) {
 		$.ajax({
 			type : "POST",
@@ -193,6 +226,7 @@ $(function() {
 });
 </script>
 <div class="page-wrapper" >
+
 	<div class="header" style="z-index:1;">
 		<h1>智慧電商平台</h1>
 		<div class="userinfo">
@@ -229,13 +263,19 @@ $(function() {
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
-				<ul>
+				<ul style="top: -100px;">
 					<li><a href="salereport.jsp">訂單報表</a></li>
 					<li><a href="shipreport.jsp">出貨報表</a></li>
 					<li><a href="distributereport.jsp">配送報表</a></li>
 					<li><a href="salereturnreport.jsp">退貨報表</a></li>
 					<li><a href="purchreport.jsp">進貨報表</a></li>
 					<li><a href="purchreturnreport.jsp">進貨退回報表</a></li>
+			    	<li><a href="stockreport.jsp">庫存管理報表</a></li>
+			    	<li><a href="supplyreport.jsp">供應商報表</a></li>
+			    	<li><a href="productreport.jsp">商品管理報表</a></li>
+			    	<li><a href="customerreport.jsp">客戶報表</a></li>
+<!-- 			    	<li><a href="accreceivereport.jsp">應收帳款報表</a></li> -->
+<!-- 			    	<li><a href="accpayreport.jsp">應付帳款報表</a></li> -->
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
@@ -253,7 +293,7 @@ $(function() {
 		</ul>
 	</div><!-- /.sidenav -->
  	<h2 id="title" class="page-title" style="z-index:1">
- 		<%= (("welcome.jsp".equals(request.getRequestURI().split("/")[2]))?("歡迎"+request.getSession().getAttribute("user_name")+"使用本系統"):("")) %>
+<%--  		<%= (("welcome.jsp".equals(request.getRequestURI().split("/")[2]))?("歡迎"+request.getSession().getAttribute("user_name")+"使用本系統"):("")) %> --%>
  	</h2> 
 <!-- 	<div class="content-wrap" style="display:none"> -->
  <!--################正文開始###############--> 

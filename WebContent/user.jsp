@@ -111,8 +111,8 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 													"</td><td>"
 													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
-													+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 													+ "	</div></div></td></tr>";										
 											});
 											//判斷查詢結果
@@ -179,8 +179,8 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 																"</td><td>"
 																+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
-																+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 																+ "	</div></div></td></tr>";										
 														});
 														//判斷查詢結果
@@ -246,8 +246,8 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 									"</td><td>"
 									+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";										
 							});
 							//判斷查詢結果
@@ -311,8 +311,8 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 										"</td><td>"
 										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";										
 								});
 								//判斷查詢結果
@@ -458,7 +458,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th><p style="width:80px;">用戶111名稱</p></th>
+								<th><p style="width:80px;">用戶名稱</p></th>
 								<th><p style="width:80px;">用戶角色</p></th>
 								<th><p style="width:80px;">Email</p></th>
 								<th><p style="width:80px;">功能</p></th>

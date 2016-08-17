@@ -44,17 +44,17 @@ public class salereturnreport extends HttpServlet {
 		SalereportService salereportService = null;
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
-		group_id=(group_id==null||group_id.length()<3)?"a604a6b1-4253-11e6-806e-000c29c1d067":group_id;
+		group_id=(group_id==null||group_id.length()<3)?"UNKNOWN":group_id;
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		String time1 = request.getParameter("time1");
-		time1=(time1.length()<3)?"1999/12/31":time1;
+		time1=(time1.length()<3)?"1999-12-31":time1;
 		String time2 = request.getParameter("time2");
-		time2=(time2.length()<3)?"2300/12/31":time2;
+		time2=(time2.length()<3)?"2300-12-31":time2;
 		//System.out.println("from "+time1+" to "+time2);
 		//###########################################
 		try {
-			java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy/MM/dd").parse(time1).getTime());
-			java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy/MM/dd").parse(time2).getTime());
+			java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
+			java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
 			salereportService = new SalereportService();
 			List<SalereportVO> list = salereportService.getSearhDB(group_id, from_date, till_date);
 
