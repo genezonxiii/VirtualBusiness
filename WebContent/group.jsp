@@ -231,13 +231,11 @@
 				});			
 			update_dialog.dialog("open");
 		});		
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});	
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-修改 -->
-				<div id="dialog-form-update" title="修改公司資料">
+				<div id="dialog-form-update" title="修改公司資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 							<table border="0" height="500">
@@ -257,7 +255,7 @@
 			</div>			
 			<!-- 第二列 -->
 			<div class="row search-result-wrap" align="center" style="width:600px;margin:0px auto;">
-				<div id="products-contain" class="ui-widget">
+				<div id="products-contain" class="ui-widget" style="display:none">
 					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

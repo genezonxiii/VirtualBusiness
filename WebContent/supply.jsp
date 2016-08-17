@@ -290,6 +290,7 @@
 								validator_insert.resetForm();
 							}
 						});
+		$("#dialog-form-insert").show();
 		var uuid = "";
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
@@ -364,6 +365,7 @@
 				}
 			}
 		});
+		$("#dialog-confirm").show();
 		var supply_name = "";
 		//修改Dialog相關設定
 			update_dialog = $("#dialog-form-update").dialog({
@@ -459,7 +461,8 @@
 			close : function() {
 				validator_update.resetForm();
 			}
-		});		
+		});
+		$("#dialog-form-update").show();
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#products2").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
@@ -518,17 +521,15 @@
 		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
-		//預設表格隱藏
-		$("#products2-contain").hide();
 	});
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改用戶資料">
+			<div id="dialog-form-update" title="修改資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 					<table border="0" height="500">
@@ -573,7 +574,7 @@
 				</form>
 			</div>			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增廠商資料">
+			<div id="dialog-form-insert" title="新增廠商資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post"style="display:inline">
 					<fieldset>
 							<table border="0" height="500">
@@ -633,7 +634,7 @@
 			<!-- 第二列 -->
 		
 			<div class="row search-result-wrap" >
-				<div id="products2-contain" class="ui-widget" >
+				<div id="products2-contain" class="ui-widget" style="display:none;">
 					<table id="products2" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

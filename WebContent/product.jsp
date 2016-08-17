@@ -409,6 +409,7 @@
 							}
 		})
 		.css("width", "10%");
+		$("#dialog-form-insert").show();
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
 			draggable : false,//防止拖曳
@@ -481,6 +482,7 @@
 				}
 			}
 		});
+		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
 			draggable : false,//防止拖曳
@@ -582,7 +584,8 @@
 				$("#update-dialog-form-post").trigger("reset");
 				validator_update.resetForm();
 			}
-		})
+		});
+		$("#dialog-form-update").show();
 // 		.css("font-size", "25px");;			
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#sales").delegate(".btn_delete", "click", function() {
@@ -790,8 +793,6 @@
 	                        alert(textStatus);
 	                    }
 	                });
-		//預設表格隱藏
-		$("#sales-contain").hide();
 		
 		//<!-- photo section jquery begin by Melvin -->
 		////////////圖片的/////////////////////////
@@ -1156,6 +1157,7 @@
 				"確認" : function() {$(this).dialog("close");}
 			}
 		});
+	    $("#warning").show();
 	    
 	    
 	});	
@@ -1163,12 +1165,12 @@
 
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
 <!-- 			<img alt="" src="123.jpg"> -->
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改產品資料">
+			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline"	>
 					<fieldset>
 <!-- 						<table border="0" height="600"> -->
@@ -1220,7 +1222,7 @@
  
 			</div>
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品資料">
+			<div id="dialog-form-insert" title="新增產品資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
 					<table class="result-table">
@@ -1307,7 +1309,7 @@
 <!-- 			</div>						 -->
 			<!-- 第三列 -->
 			<div class="row search-result-wrap" align="center">
-				<div id="sales-contain" class="ui-widget">
+				<div id="sales-contain" class="ui-widget" style="display:none">
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
@@ -1354,6 +1356,6 @@
 		</div>
 	</div>
 <input type="text" id="bar_code_focus" style="display:none"/>
-<div id="warning"></div>
+<div id="warning" style="display:none;"></div>
 </body>
 </html>

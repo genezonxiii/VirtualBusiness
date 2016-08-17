@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>商品庫存報表</title>
+<title>庫存管理報表</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/jquery.dataTables.min.css" />
@@ -77,9 +77,6 @@
 					}
 				}
 		});
-
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});	
 </script>
 

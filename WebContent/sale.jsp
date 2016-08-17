@@ -752,6 +752,7 @@
 								$("#insert-dialog-form-post").trigger("reset");
 							}
 		});
+		$("#dialog-form-insert").show();
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
 			draggable : false,//防止拖曳
@@ -866,6 +867,7 @@
 				}
 			}
 		});
+		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
 			draggable : false,//防止拖曳
@@ -1004,7 +1006,8 @@
 				$("#update-dialog-form-post").trigger("reset");
 				validator_update.resetForm();
 			}
-		});			
+		});
+		$("#dialog-form-update").show();
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#sales").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
@@ -1312,8 +1315,6 @@
        		$("#update_product_name").val(ui.item.product_name);
        		product_id = ui.item.product_id;
        });       
-		//預設表格隱藏
-		$("#sales_contain_row").hide();
 		//日期設定
 		$(".date").datepicker({
 			dayNamesMin:["日","一","二","三","四","五","六"],
@@ -1365,12 +1366,13 @@
 				"確認" : function() {$(this).dialog("close");}
 			}
 		});
-	    $('#sales').DataTable( {
-	        dom: 'Bfrtip',
-	        buttons: [
-	            'copy', 'csv', 'excel', 'pdf', 'print'
-	        ]
-	    } );
+		$("#warning").show();
+// 	    $('#sales').DataTable( {
+// 	        dom: 'Bfrtip',
+// 	        buttons: [
+// 	            'copy', 'csv', 'excel', 'pdf', 'print'
+// 	        ]
+// 	    } );
 	});
 </script>
 
@@ -1380,10 +1382,10 @@
 	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改銷貨資料">
+			<div id="dialog-form-update" title="修改銷貨資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -1432,7 +1434,7 @@
 				</form>
 			</div>
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增銷貨資料">
+			<div id="dialog-form-insert" title="新增銷貨資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post"style="display:inline">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -1608,7 +1610,7 @@
 <!-- 			</div>						 -->
 			<!-- 第五列 -->
 			
-			<div class="row search-result-wrap" align="center" id ="sales_contain_row">
+			<div class="row search-result-wrap" align="center" id ="sales_contain_row"  style="display:none;">
 				<div id="sales-contain" class="ui-widget">
 					<table id="sales" class="result-table">
 						<thead>
@@ -1638,6 +1640,6 @@
 		</div>
 	</div>
 	</div>
-<div id="warning"></div>
+<div id="warning"  style="display:none;"></div>
 </body>
 </html>

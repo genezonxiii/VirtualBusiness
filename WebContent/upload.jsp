@@ -59,31 +59,31 @@ if(str!=null){
 		</tr>
 	</thead>
 	<tr>
-		<td>
+		<td style="min-width:200px;">
 			<input id="radio-1" type="radio" name="vender" value="asap" checked>
 				<label for="radio-1"><span class="form-label" >
 				<img src="./images/store/ASAP.jpg"/>&nbsp;ASAP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			</span></label>
 		</td>
-		<td>
+		<td style="min-width:200px;">
 			<input id="radio-2" type="radio" name="vender" value="gohappy" >
 				<label for="radio-2"><span class="form-label" >
 				<img src="./images/store/GoHappy.jpg"/>&nbsp;GoHappy  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			</span></label>
 		</td>
-		<td>
+		<td style="min-width:200px;">
 			<input id="radio-3" type="radio" name="vender" value="ibon" >
 				<label for="radio-3"><span class="form-label" >
 				<img src="./images/store/ibon.jpg"/>&nbsp;ibon  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			</span></label>
 		</td>
-		<td>
+		<td style="min-width:200px;">
 			<input id="radio-4" type="radio" name="vender" value="17life" >
 				<label for="radio-4"><span class="form-label" >
 				<img src="./images/store/Life.png"/>&nbsp;17Life  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			</span></label>
 		</td>
-		<td>
+		<td style="min-width:200px;">
 			<input id="radio-5" type="radio" name="vender" value="linemart" >
 				<label for="radio-5"><span class="form-label" >
 				<img src="./images/store/Line_Mart.png"/>&nbsp;Line Mart  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -156,15 +156,15 @@ if(str!=null){
 	</tr>
 	<tr>
 		<td>
-			<input id="radio-16" type="radio" name="vender" value="umall" >
-				<label for="radio-16"><span class="form-label" >
-			<img src="./images/store/Umall.jpg"/>&nbsp;森森
-		</span></label>
-		</td>
-		<td>
 			<input id="radio-17" type="radio" name="vender" value="yahoomall" >
 				<label for="radio-17"><span class="form-label" >
 			<img src="./images/store/supermall.jpg"/>&nbsp;Yahoo超級商城
+		</span></label>
+		</td>
+		<td>
+			<input id="radio-16" type="radio" name="vender" value="umall" >
+				<label for="radio-16"><span class="form-label" >
+			<img src="./images/store/Umall.jpg"/>&nbsp;森森
 		</span></label>
 		</td>
 		<td>

@@ -213,6 +213,7 @@
 								validator_insert.resetForm();
 							}
 						});
+		$("#dialog-form-insert").show();
 		var uuid = "";
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
@@ -288,6 +289,7 @@
 				}
 			}
 		});
+		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
 			draggable : false,//防止拖曳
@@ -371,7 +373,8 @@
 			close : function() {
 				validator_update.resetForm();
 			}
-		});		
+		});
+		$("#dialog-form-update").show();
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#products2").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
@@ -388,8 +391,6 @@
 		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
-		//預設表格隱藏
-		$("#products2_contain_row").hide();
 		//button css
 		$("#searh-productunit").css("width","80px");
 		//$("#create-productunit").css("width","150px");
@@ -399,10 +400,10 @@
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改產品單位">
+			<div id="dialog-form-update" title="修改產品單位" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -415,7 +416,7 @@
 				</form>
 			</div>			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品單位">
+			<div id="dialog-form-insert" title="新增產品單位" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -460,7 +461,7 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row search-result-wrap" align="center" id="products2_contain_row" style="width:600px;margin:0px auto;">
+			<div class="row search-result-wrap" align="center" id="products2_contain_row" style="width:600px;margin:0px auto;display:none;">
 				<div id="products2-contain" class="ui-widget">
 					<table id="products2" class="result-table">
 						<thead>

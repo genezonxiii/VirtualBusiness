@@ -505,7 +505,8 @@
 					$(this).dialog("close");
 				}
 			}
-		});		
+		});
+		$("#dialog-confirm").show();
 		//新增Dialog相關設定
 			insert_dialog = $("#dialog-form-insert").dialog(
 			{
@@ -621,7 +622,7 @@
 					$("#insert-dialog-form-post").trigger("reset");
 				}
 			});
-			
+			$("#dialog-form-insert").show();
 		    //這邊是用供應商名稱去自動查詢，然後得到ID
 	        $("#searh_purchase_by_supply_name").autocomplete({
 	            minLength: 1,
@@ -772,6 +773,7 @@
 				validator_update.resetForm();
 			}
 		});
+		$("#dialog-form-update").show();
 		//修改事件聆聽
 		$("#purchases").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
@@ -1078,7 +1080,7 @@
 				$("#detail-insert-dialog-form-post").trigger("reset");
 			}
 		});
-		
+		$("#detail-dialog-form-insert").show();
 		//明細新增事件聆聽 
 		$("#purchases").delegate(".btn_create", "click", function() {
 			purchase_id = $(this).val();
@@ -1164,7 +1166,8 @@
 					$(this).dialog("close");
 				}
 			}
-		});		
+		});
+		$("#dialog-detail-confirm").show();
 		//明細刪除事件聆聽 
 		
 		$("#purchase-detail-table").delegate(".btn_delete", "click", function() {
@@ -1312,7 +1315,7 @@
 				validator_detail_update.resetForm();
 			}
 		});
-		
+		$("#detail_dialog_form_update").show();
 		//detail update autocomplete
         $("#update_detail_c_product_id").autocomplete({
             minLength: 2,
@@ -1500,9 +1503,6 @@
 			insert_dialog.dialog("open");
 			//@@@
 		});
-		//預設表格隱藏
-		$("#purchases_contain_row").hide();
-		$("#purchase_detail_contain_row").hide();
 		//日期設定
 		$(".date").datepicker({
 			dayNamesMin:["日","一","二","三","四","五","六"],
@@ -1548,13 +1548,13 @@
 		
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 			</div>
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-detail-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-detail-confirm" title="確認刪除資料嗎?" style="display:none;">
 			</div>		
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改進貨資料">
+			<div id="dialog-form-update" title="修改進貨資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -1582,7 +1582,7 @@
 				</form>
 			</div>
 			<!--對話窗樣式-detail-修改 -->
-			<div id="detail_dialog_form_update" title="修改進貨資料">
+			<div id="detail_dialog_form_update" title="修改進貨資料" style="display:none;">
 				<form name="detail-update-dialog-form-post" id="detail-update-dialog-form-post">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -1607,7 +1607,7 @@
 				</form>
 			</div>						
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增進貨資料">
+			<div id="dialog-form-insert" title="新增進貨資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -1638,7 +1638,7 @@
 				</form>
 			</div>
 			<!--對話窗樣式-明細新增 -->
-			<div id="detail-dialog-form-insert" title="新增明細資料">
+			<div id="detail-dialog-form-insert" title="新增明細資料" style="display:none;">
 				<form name="detail-insert-dialog-form-post" id="detail-insert-dialog-form-post"style="display:inline">
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
@@ -1701,7 +1701,7 @@
 <!-- 				<button id="create-supply">新增進貨資料</button> -->
 <!-- 			</div> -->
 			<!-- 第四列 -->
-			<div class="row search-result-wrap" align="center" id ="purchases_contain_row" style="margin-bottom:0px;">
+			<div class="row search-result-wrap" align="center" id ="purchases_contain_row" style="margin-bottom:0px;display:none;">
 				<div id="purchases-contain" class="result-table-wrap">
 					<table id="purchases" class="result-table">
 						<thead>
@@ -1721,7 +1721,7 @@
 				</div>
 			</div>
 			<!-- 第五列 -->
-			<div class="row search-result-wrap" align="center" id="purchase_detail_contain_row" >
+			<div class="row search-result-wrap" align="center" id="purchase_detail_contain_row" style="display:none;">
 				<div id="purchase-detail-contain" class="ui-widget result-table-wrap">
 					<table id="purchase-detail-table" class="ui-widget ui-widget-content result-table">
 						<thead>

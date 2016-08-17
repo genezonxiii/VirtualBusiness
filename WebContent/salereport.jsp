@@ -78,10 +78,6 @@ function sea() {
 		}
 	});
 }
-
-
-
-
 	$(function() {
 		var value='<%=request.getParameter("action")%>';
 		if(value=="today"){parameter="today";sea();}
@@ -90,10 +86,7 @@ function sea() {
 			parameter="searh";
 			sea();
 		});
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});
-	
 </script>
 		<div class="input-field-wrap">
 			<div class="form-wrap">
@@ -112,7 +105,7 @@ function sea() {
 			</div><!-- /.form-wrap -->
 		</div>
 		<div class="search-result-wrap" >
-			<div id="products-contain" class="result-table-wrap" style="width:100%;">
+			<div id="products-contain" class="result-table-wrap" style="width:100%;display:none;">
 				<table id="products" class="result-table">
 					<thead>
 						<tr>

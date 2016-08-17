@@ -7,7 +7,7 @@
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.ResultSet"%>
-<%@ page import="java.util.Date"%> 
+<%@ page import="java.util.Date"%>
 <%@ page import="java.text.SimpleDateFormat"%>
 <jsp:directive.page import="java.sql.SQLException" />
 
@@ -59,70 +59,62 @@ function date_format(str) {
 		//查詢相關設定
 		$("#searh-productunit").click(function(e) {
 							
-							e.preventDefault();
-							$.ajax({
-									type : "POST",
-									url : "distributereport.do",
-									data : {
-										action :"searh",
-										time1 : $('#datepicker1').val(),
-										time2 : $('#datepicker2').val()
-									},
-									success : function(result) {
-											var json_obj = $.parseJSON(result);
-											var result_table = "";
-											$.each(json_obj,function(i, item) {
-												result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"
-													+ json_obj[i].seq_no
-													+ "</td><td style='min-width:80px;word-break: break-all;'>"
-													+ json_obj[i].order_no
-													+ "</td><td>"
-													+ json_obj[i].product_name
-													+ "</td><td>"
-													+ json_obj[i].c_product_id
-													+ "</td><td>"
-													+ json_obj[i].quantity
-													+ "</td><td>"
-													+ json_obj[i].price
-													+ "</td><td>"
-													+ date_format(json_obj[i].trans_list_date)
-													+ "</td><td>"
-													+ date_format(json_obj[i].dis_date)
-													+ "</td><td>"
-													+ date_format(json_obj[i].sale_date)
-													+ "</td><td>"
-													+ json_obj[i].order_source
-													+ "</td><td>"
-													+ (json_obj[i].memo==null?"":json_obj[i].memo)
-													+ "</td></tr>";
-											});
-											//判斷查詢結果
- 											var resultRunTime = 0;
- 											$.each (json_obj, function (i) {
- 												resultRunTime+=1;
- 											});
- 											$("#products").dataTable().fnDestroy();
- 											if(resultRunTime!=0){
- 												$("#products-contain").show();
- 												$("#products tbody").html(result_table);
- 												draw_table("products",'配送報表');
- 												$(".validateTips").text("");
- 											}else{
- 												$("#products-contain").hide();
- 												$(".validateTips").text("查無此結果");
- 											}
-										}
-									});
-							
-						});
-		//新增Dialog相關設定
-		//確認Dialog相關設定(刪除功能)
-		//修改Dialog相關設定
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		//修改事件聆聽
-		//新增事件聆聽
-		//預設表格隱藏
-		$("#products-contain").hide();
+			e.preventDefault();
+			$.ajax({
+					type : "POST",
+					url : "distributereport.do",
+					data : {
+						action :"searh",
+						time1 : $('#datepicker1').val(),
+						time2 : $('#datepicker2').val()
+					},
+					success : function(result) {
+							var json_obj = $.parseJSON(result);
+							var result_table = "";
+							$.each(json_obj,function(i, item) {
+								result_table += "<tr><td style='min-width:80px;word-break: break-all;'>"
+									+ json_obj[i].seq_no
+									+ "</td><td style='min-width:80px;word-break: break-all;'>"
+									+ json_obj[i].order_no
+									+ "</td><td>"
+									+ json_obj[i].product_name
+									+ "</td><td>"
+									+ json_obj[i].c_product_id
+									+ "</td><td>"
+									+ json_obj[i].quantity
+									+ "</td><td>"
+									+ json_obj[i].price
+									+ "</td><td>"
+									+ date_format(json_obj[i].trans_list_date)
+									+ "</td><td>"
+									+ date_format(json_obj[i].dis_date)
+									+ "</td><td>"
+									+ date_format(json_obj[i].sale_date)
+									+ "</td><td>"
+									+ json_obj[i].order_source
+									+ "</td><td>"
+									+ (json_obj[i].memo==null?"":json_obj[i].memo)
+									+ "</td></tr>";
+							});
+							//判斷查詢結果
+								var resultRunTime = 0;
+								$.each (json_obj, function (i) {
+									resultRunTime+=1;
+								});
+								$("#products").dataTable().fnDestroy();
+								if(resultRunTime!=0){
+									$("#products-contain").show();
+									$("#products tbody").html(result_table);
+									draw_table("products",'配送報表');
+									$(".validateTips").text("");
+								}else{
+									$("#products-contain").hide();
+									$(".validateTips").text("查無此結果");
+								}
+						}
+					});
+			
+		});
 	});
 	
 </script>
@@ -148,7 +140,7 @@ function date_format(str) {
 		</div>
 			<!-- 第二列 -->
 			<div class="search-result-wrap" >
-				<div id="products-contain" class="result-table-wrap">
+				<div id="products-contain" class="result-table-wrap" style="display:none">
 					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

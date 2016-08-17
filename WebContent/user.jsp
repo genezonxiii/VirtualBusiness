@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>用戶資料</title>
+<title>使用者資料</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
@@ -31,7 +31,6 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
 $(function() {
-	$('.btn_update').prop('title', '刪除');
 	//=============自定義validator=============
 	//字符最大長度驗證（一個中文字符長度為2）
 	jQuery.validator.addMethod("stringMaxLength", function(value, element, param) { 
@@ -213,6 +212,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 								validator_insert.resetForm();
 							}
 						});
+		$("#dialog-form-insert").show();
 		var uuid = "";
 		var uuid2= ""
 		//確認Dialog相關設定(刪除功能)
@@ -273,6 +273,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 				}
 			}
 		});
+		$("#dialog-confirm").show();
 		var user_name = "";
 		//修改Dialog相關設定
 			update_dialog = $("#dialog-form-update").dialog({
@@ -345,6 +346,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 				validator_update.resetForm();
 			}
 		});	
+		$("#dialog-form-update").show();
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#products").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
@@ -389,25 +391,21 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
-		//預設表格隱藏
-		$("#products-contain").hide();
-		$("select").change(function(){	
-		});
 	});
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改用戶資料">
+			<div id="dialog-form-update" title="修改使用者資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 							<table border="0" height="200">
 							<tbody>
-							<tr><td><h6>用戶名稱:</h6></td><td><input type="text" name="user_name"  placeholder="輸入用戶名稱"/></td></tr>
-							<tr><td><h6>用戶角色:</h6></td><td>	
+							<tr><td><h6>使用者名稱:</h6></td><td><input type="text" name="user_name"  placeholder="輸入使用者名稱"/></td></tr>
+							<tr><td><h6>使用者角色:</h6></td><td>	
 							<select id="selectok" name="selectupdate"  >
 							<option value="管理者">管理者</option>
 　							<option value="使用者">使用者</option>
@@ -420,14 +418,14 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 				</form>
 			</div>			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增使用者">
+			<div id="dialog-form-insert" title="新增使用者" style="display:none;">
 				
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 							<table border="0" height="300">
 	 							<tbody>
-							<tr><td><h6>用戶名稱:</h6></td><td><input type="text" name="user_name" placeholder="輸入用戶名稱"/></td></tr>
-							<tr><td><h6>用戶角色:</h6></td><td>	
+							<tr><td><h6>使用者名稱:</h6></td><td><input type="text" name="user_name" placeholder="輸入使用者名稱"/></td></tr>
+							<tr><td><h6>使用者角色:</h6></td><td>	
 							<select id="selectok" name="selectinsert"  >
 							<option value="管理者">管理者</option>
 　							<option value="使用者">使用者</option>
@@ -443,7 +441,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="btn-row" >
-						<button class="btn btn-exec btn-wide" id="create-productunit">新增用戶</button>
+						<button class="btn btn-exec btn-wide" id="create-productunit">新增使用者</button>
 					</div>
 				</div><!-- /.form-wrap -->
 			</div>
@@ -454,12 +452,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 <!-- 			</div> -->
 			<!-- 第二列 -->
 			<div class="row search-result-wrap" align="center" style="width:600px;margin:0px auto;">
-				<div id="products-contain" class="ui-widget">
+				<div id="products-contain" class="ui-widget" style="display:none">
 					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th><p style="width:80px;">用戶名稱</p></th>
-								<th><p style="width:80px;">用戶角色</p></th>
+								<th><p style="width:80px;">使用者名稱</p></th>
+								<th><p style="width:80px;">使用者角色</p></th>
 								<th><p style="width:80px;">Email</p></th>
 								<th><p style="width:80px;">功能</p></th>
 							</tr>

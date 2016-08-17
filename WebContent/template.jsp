@@ -99,7 +99,7 @@ function who(){
 		break;
 	case "user.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
-		return "用戶管理";
+		return "使用者管理";
 		break;
 	case "group.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
@@ -151,7 +151,7 @@ function who(){
 		break;
 	case "stockreport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
-		return "商品庫存報表";
+		return "庫存管理報表";
 		break;
 	case "supplyreport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
@@ -253,12 +253,12 @@ $(function() {
 					<li><a href="productunit.jsp">商品單位管理</a></li>
 					<li><a href="product.jsp">商品管理</a></li>
 					<li><a href="supply.jsp">供應商管理</a></li>
-					<li><a href="user.jsp">用戶管理</a></li>
+					<li><a href="user.jsp">使用者管理</a></li>
 					<li><a href="group.jsp">公司管理</a></li>
 					<li><a href="customer.jsp">客戶管理</a></li>
 					<li><a href="accreceive.jsp">應收帳款管理</a></li>
 					<li><a href="accpay.jsp">應付帳款管理</a></li>
-					<li><a href="changepassword.jsp">用戶帳密管理</a></li>
+					<li><a href="changepassword.jsp">使用者帳密管理</a></li>
 					<li><a href="tagprint.jsp">標籤列印</a></li>
 				</ul>
 			</li>

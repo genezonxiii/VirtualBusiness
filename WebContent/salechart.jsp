@@ -177,8 +177,6 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
 	$(function() {
-		//$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
-		//$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -191,17 +189,10 @@ function date_format(str) {
 					var result_table = "";
 					var data=[];
 					var i=0,tmp_month=json_obj.month[0];
-					//alert(json_obj.length);
-					//$.each(json_obj,function(i, item) {}
-					//alert(result);
-					//alert("夢幻第七人: "+json_obj.month[7]);
-					//draw_chart(400,200,json_obj);
-					//$(".validateTips").text("長條圖維護中，請洽管理員");
 					for(i=0,j=0;i<json_obj.entrance.length;i++,j++){
 						if(json_obj.entrance[i]!=0){
 							if(i==0||json_obj.month[i]!=tmp_month){
 								tmp_month=json_obj.month[i];
-								//alert("進來的i: "+i);
 								if(i!=0){data[j]={x:j,month:"",y:"",vender:""};j++;}
 								data[j]={x:j,month:"  "+json_obj.month[i]+"月",y:json_obj.answer[i],vender:json_obj.entrance[i]};
 							}else{
@@ -232,34 +223,10 @@ function date_format(str) {
 				"取消刪除" : function() {$(this).dialog("close");}
 			}
 		});
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
-			uuid = $(this).val();
-			confirm_dialog.dialog("open");
-		});
-		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
-			insert_dialog.dialog("open");
-		});
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});
-	function export_xls(){
-		$(".result").table2excel({
-			exclude: ".noExl",
-			name: "Excel Document Name",
-			filename: "訂單資料",
-			fileext: ".xls",
-			exclude_img: true,
-			exclude_links: true,
-			exclude_inputs: true
-		});
-	}
 </script>
-
 	<div class="panel-content">
 		<div class="datalistWrap" >
-			
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
@@ -297,33 +264,35 @@ function date_format(str) {
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="left" >
-				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content">
-						<thead>
-							<tr class="ui-widget-header">
-								<th>銷貨單號</th>
-								<th>訂單號</th>
-								<th><p style="width:320px;">產品名稱</p></th>
-								<th>客戶自訂產品ID</th>
-								<th><p style="width:80px;">銷貨數量</p></th>
-								<th><p style="width:80px;">銷貨金額</p></th>
-								<th><p style="width:120px;">轉單日</p></th>
-								<th><p style="width:120px;">配送日</p></th>
-								<th><p style="width:120px;">銷貨/出貨日期</p></th>
-								<th><p style="width:100px;">銷售平台</p></th>
-								<th>備註</th>								
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<div class="validateTips" align="center"> </div>
-				<div id="chart" align="center"></div>
-			</div>
+<!-- 			<div class="row" align="left" > -->
+<!-- 				<div id="products-contain" class="ui-widget"> -->
+<!-- 					<table id="products" class="ui-widget ui-widget-content"> -->
+<!-- 						<thead> -->
+<!-- 							<tr class="ui-widget-header"> -->
+<!-- 								<th>銷貨單號</th> -->
+<!-- 								<th>訂單號</th> -->
+<!-- 								<th><p style="width:320px;">產品名稱</p></th> -->
+<!-- 								<th>客戶自訂產品ID</th> -->
+<!-- 								<th><p style="width:80px;">銷貨數量</p></th> -->
+<!-- 								<th><p style="width:80px;">銷貨金額</p></th> -->
+<!-- 								<th><p style="width:120px;">轉單日</p></th> -->
+<!-- 								<th><p style="width:120px;">配送日</p></th> -->
+<!-- 								<th><p style="width:120px;">銷貨/出貨日期</p></th> -->
+<!-- 								<th><p style="width:100px;">銷售平台</p></th> -->
+<!-- 								<th>備註</th>								 -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 						<tbody> -->
+<!-- 						</tbody> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 				<div class="validateTips" align="center"> </div> -->
+<!-- 				<div id="chart" align="center"></div> -->
+<!-- 			</div> -->
 		</div>
 	</div>
+<div id="chart" align="center"></div>
+<div class="validateTips" align="center"> </div>
 <div id="dialog-confirm"></div>
 
 </div>

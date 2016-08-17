@@ -151,8 +151,6 @@ $(function(){
 					}
 				});
 	});		
-	//hide table 
-	$("#purchasereturns_false_contain").hide();
 	//hold header
 	$("#purchasereturns_false_table").find("th").css("min-width","120px");
 })
@@ -175,7 +173,7 @@ $(function(){
 				</div><!-- /.form-wrap -->
 			</div>
 			<div class="search-result-wrap" style="height:433px;">
-				<div id="purchasereturns_false_contain" class="result-table-wrap">
+				<div id="purchasereturns_false_contain" class="result-table-wrap" style="display:none;">
 					<table id="purchasereturns_false_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

@@ -37,7 +37,6 @@
 
 
 <script>
-//alert(data.length);
 function getYearWeek(a, b, c) { 
 /* date1是当前日期 date2是当年第一天 d是当前日期是今年第多少天 \用d + 当前年的第一天的周差距的和在除以7就是本年第几周 */ 
 	var date1 = new Date(a, parseInt(b) - 1, c), date2 = new Date(a, 0, 1), 
@@ -94,9 +93,6 @@ function draw_chart(m_h,m_w,data){
 			}
 		}
 	}
-	//alert("22週:"+real_date[0]);
-	//alert("max="+max_month);
-	//alert("min="+min_month);
 	var data2 = [ {"sale": "20020","year": "6"}, {"sale": "82004","year":"7" }];
 	//alert(max_data+","+min_data+" "+max_month+","+min_month);
  	//var data=[];
@@ -112,11 +108,6 @@ function draw_chart(m_h,m_w,data){
      var xAxis = d3.svg.axis().scale(xScale).ticks(max_month-min_month+2);
      var yAxis = d3.svg.axis().scale(yScale).orient("left").ticks(6);
 
-//       vis.append("svg:g")
-//       	 .attr("class", "y axis")
-//           .attr("transform", "translate(-6," + (HEIGHT - MARGINS.bottom) + ")")
-//           .call(xAxis).style({'font-size':'28px'});;
-	
      vis.append("svg:g")
          .attr("class", "y axis")
          .attr("transform", "translate(" + (MARGINS.left) + ",0)")
@@ -167,11 +158,6 @@ function draw_chart(m_h,m_w,data){
 		 }
 		 
      }
-//      vis.append('svg:path')
-// 	     .attr('d', lineGen(data2))
-// 	     .attr('stroke', '#111111')
-// 	     .attr('stroke-width', 2)
-// 	     .attr('fill', 'none');
 //   //##############單位######################  
 	vis.append('g').selectAll('text')
 	  .data(data).enter().append('text')
@@ -191,10 +177,6 @@ function draw_chart(m_h,m_w,data){
 	    }).text(function(d){return d.date;})
 	    .style({'font-size':'28px'})
 	    .style('fill', function(d){return ((d.x%2==0)?'#000000':'#555555')});
-// 	 alert(max_w);
-// 	 alert(padding);
-// 	 alert(max_month-min_month);
-     //alert("寬度: "+(max_w-padding*3) /(max_month-min_month));
      vis.append('line') .attr('x1', padding*2-5    ).attr('y1', max_h-padding)
 		 				.attr('x2', max_w-padding-5).attr('y2', max_h-padding)
 		 				.style('stroke', 'black').style('stroke-width', 5);
@@ -206,8 +188,6 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
 	$(function() {
-		//$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
-		//$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		$("#searh-productunit").click(function(e) {
 			$("#chart").html("<h2 style='color:red;'>資料查詢中...</h2>");
 			e.preventDefault();
@@ -251,17 +231,6 @@ function date_format(str) {
 				"取消刪除" : function() {$(this).dialog("close");}
 			}
 		});	
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
-			uuid = $(this).val();
-			confirm_dialog.dialog("open");
-		});
-		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
-			insert_dialog.dialog("open");
-		});
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});
 </script>
 	<div class="panel-content">
@@ -303,33 +272,33 @@ function date_format(str) {
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="left" >
-				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content">
-						<thead>
-							<tr class="ui-widget-header">
-								<th>銷貨單號</th>
-								<th>訂單號</th>
-								<th><p style="width:320px;">產品名稱</p></th>
-								<th>客戶自訂產品ID</th>
-								<th><p style="width:80px;">銷貨數量</p></th>
-								<th><p style="width:80px;">銷貨金額</p></th>
-								<th><p style="width:120px;">轉單日</p></th>
-								<th><p style="width:120px;">配送日</p></th>
-								<th><p style="width:120px;">銷貨/出貨日期</p></th>
-								<th><p style="width:100px;">銷售平台</p></th>
-								<th>備註</th>								
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<span class="validateTips"> </span>
-				<div id="chart" align="center"></div>
-			</div>
+<!-- 			<div class="row" align="left" > -->
+<!-- 				<div id="products-contain" class="ui-widget"> -->
+<!-- 					<table id="products" class="ui-widget ui-widget-content"> -->
+<!-- 						<thead> -->
+<!-- 							<tr class="ui-widget-header"> -->
+<!-- 								<th>銷貨單號</th> -->
+<!-- 								<th>訂單號</th> -->
+<!-- 								<th><p style="width:320px;">產品名稱</p></th> -->
+<!-- 								<th>客戶自訂產品ID</th> -->
+<!-- 								<th><p style="width:80px;">銷貨數量</p></th> -->
+<!-- 								<th><p style="width:80px;">銷貨金額</p></th> -->
+<!-- 								<th><p style="width:120px;">轉單日</p></th> -->
+<!-- 								<th><p style="width:120px;">配送日</p></th> -->
+<!-- 								<th><p style="width:120px;">銷貨/出貨日期</p></th> -->
+<!-- 								<th><p style="width:100px;">銷售平台</p></th> -->
+<!-- 								<th>備註</th>								 -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 						<tbody> -->
+<!-- 						</tbody> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 		</div>
 	</div>
+	<div class="validateTips" align="center"> </div>
+	<div id="chart" align="center"></div>
 	<div id="dialog-confirm"></div>
 </div>
 </body>

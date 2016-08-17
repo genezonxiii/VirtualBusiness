@@ -85,8 +85,8 @@
     	<li><a href="accpay.jsp" target="main_page">應付帳款管理</a></li>
     	<li><a href="customer.jsp" target="main_page">客戶管理</a></li>
     	<li><a href="group.jsp" target="main_page">公司管理</a></li>
-    	<li><a href="user.jsp" target="main_page">用戶管理</a></li>
-    	<li><a href="changepassword.jsp" target="main_page">用戶帳密管理</a></li>
+    	<li><a href="user.jsp" target="main_page">使用者管理</a></li>
+    	<li><a href="changepassword.jsp" target="main_page">使用者帳密管理</a></li>
     </ul>
   </div>
   <h3>報表管理</h3>

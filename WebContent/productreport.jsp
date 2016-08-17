@@ -304,9 +304,6 @@
 	                        alert(textStatus);
 	                    }
 	                });
-		//預設表格隱藏
-		$("#sales-contain").hide();
-		
 	});	
 </script>
 
@@ -325,7 +322,7 @@
 			
 			<!-- 第一列 -->
 			<div class="row search-result-wrap">
-				<div id="sales-contain" class="ui-widget">
+				<div id="sales-contain" class="ui-widget" style="display:none;">
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

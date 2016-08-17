@@ -464,6 +464,8 @@
 			}
 		}
 	});
+	 $("#dialog-confirm").show();
+	
 	confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
 		draggable : false,//防止拖曳
 		resizable : false,//防止縮放
@@ -586,9 +588,7 @@
 			}
 		}
 	});	
-	//hide table
-	$("#account_amount_date_contain").hide();
-	$("#account_receive_date_contain").hide();
+	$("#dialog-cancel-confirm").show();
 	//get today yyyy-mm-dd
 	function getCurrentDate(){
 		var fullDate = new Date();
@@ -611,11 +611,11 @@
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認批次收帳嗎?">
+			<div id="dialog-confirm" title="確認批次收帳嗎?" style="display:none;">
 				<br><p></p>
 			</div>
 			<!--對話窗樣式-確認-取消 -->
-			<div id="dialog-cancel-confirm" title="確認取消批次收帳嗎?">
+			<div id="dialog-cancel-confirm" title="確認取消批次收帳嗎?" style="display:none;">
 				<br><p></p>
 			</div>			
 			<!-- 第一列 -->
@@ -658,7 +658,7 @@
 <!-- 			<div class="form-row"> -->
 <!-- 				<button id="button_1" align="center" class="btn btn-wide btn-darkblue">批次收帳</button> -->
 <!-- 			</div> -->
-				<div id="account_amount_date_contain" class="result-table-wrap">
+				<div id="account_amount_date_contain" class="result-table-wrap" style="display:none;">
 					<table id="account_amount_date_table" class="result-table">
 						<thead>
 							<tr class="">
@@ -720,7 +720,7 @@
 <!-- 			<div class="form-row"> -->
 <!-- 				<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消批次收帳</button> -->
 <!-- 			</div> -->
-				<div id="account_receive_date_contain" class="result-table-wrap">
+				<div id="account_receive_date_contain" class="result-table-wrap" style="display:none;">
 					<table id="account_receive_date_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

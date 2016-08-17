@@ -262,7 +262,7 @@ window.onload = function (e){
 				$("#insert-dialog-form-post").trigger("reset");
 			}
 		}).css("font-size", "order_source25px");
-		
+		$("#dialog-form-insert").show();
 		//修改事件聆聽
 		$("#customer").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
@@ -390,6 +390,7 @@ window.onload = function (e){
 				validator_update.resetForm();
 			}
 		});
+		$("#dialog-form-update").show();
 		
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#customer").delegate(".btn_delete", "click", function() {
@@ -487,20 +488,19 @@ window.onload = function (e){
 				}
 			}
 		});	
+		 $("#dialog-confirm").show();
 		
-		//預設表格隱藏
-		$("#customer-contain").hide();
-	})
+	});
 </script>
 
 	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?">
+			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>		
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改客戶資料">
+			<div id="dialog-form-update" title="修改客戶資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table>
@@ -542,7 +542,7 @@ window.onload = function (e){
 				</form>
 			</div>					
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增客戶資料">
+			<div id="dialog-form-insert" title="新增客戶資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
 						<table>
@@ -596,7 +596,7 @@ window.onload = function (e){
 			<!-- 第二列 -->
 
 			<div class="row search-result-wrap" align="center" id ="sales_contain_row">
-				<div id="customer-contain" class="ui-widget">
+				<div id="customer-contain" class="ui-widget" style="display:none">
 					<table id="customer" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

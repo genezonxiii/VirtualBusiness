@@ -874,6 +874,7 @@
 				}
 			}
 		});
+		$("#dialog-confirm").show();
 		confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
 			draggable : false,//防止拖曳
 			resizable : false,//防止縮放
@@ -1017,9 +1018,7 @@
 				}
 			}
 		});
-		//hide contain
-		$("#salereturns_false_contain").hide();
-		$("#salereturns_true_contain").hide();
+		$("#dialog-cancel-confirm").show();
 		//get today yyyy-mm-dd
 		function getCurrentDate(){
 			var fullDate = new Date();
@@ -1042,11 +1041,11 @@
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認銷貨退回嗎?">
+			<div id="dialog-confirm" title="確認銷貨退回嗎?" style="display:none;" >
 				<br><p></p>
 			</div>
 			<!--對話窗樣式-確認-取消 -->
-			<div id="dialog-cancel-confirm" title="確認取消銷貨退回嗎?">
+			<div id="dialog-cancel-confirm" title="確認取消銷貨退回嗎?" style="display:none;">
 				<br><p></p>
 			</div>					
 			<!-- 第一列 -->
@@ -1161,7 +1160,7 @@
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_1" align="center" class="btn btn-wide btn-darkblue">銷貨退回</button> -->
 <!-- 				</div> -->
-				<div id="salereturns_false_contain" class="result-table-wrap">
+				<div id="salereturns_false_contain" class="result-table-wrap" style="display:none;">
 					<table id="salereturns_false_table" class="result-table">
 						<thead>
 							<tr>
@@ -1236,7 +1235,7 @@
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消銷貨退回</button> -->
 <!-- 				</div> -->
-				<div id="salereturns_true_contain" class="result-table-wrap">
+				<div id="salereturns_true_contain" class="result-table-wrap" style="display:none;">
 					<table id="salereturns_true_table" class="result-table">
 						<thead>
 							<tr>

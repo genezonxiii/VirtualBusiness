@@ -118,16 +118,6 @@ function draw_chart(m_h,m_w,data){
     		  .style('fill',vender_color(vender_exist[i]))
     		  .style({'font-size':'18px'});
       	}
- 		
- 		
-//  		var vender_n=0;
-//         vis.append('line').attr('x1', m_w-100).attr('y1', -100)
-// 		  .attr('x2', m_w).attr('y2',-100)
-// 		  .style('stroke',color).style('stroke-width', 3);
-// 		vis.append('g').selectAll('text')
-// 			.data(data).enter().append('text')
-// 			.attr({'x':m_w ,'y':105+30*vender_n ,}).text(data[i].vender)
-// 			.style('stroke',color).style({'font-size':'18px'});
  };
  
  
@@ -136,10 +126,7 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
 	$(function() {
-		//$( "#datepicker1" ).datepicker({dateFormat: 'yy/mm/dd'});
-		//$( "#datepicker2" ).datepicker({dateFormat: 'yy/mm/dd'});
 		$("#searh-productunit").click(function(e) {
-			
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
@@ -179,23 +166,10 @@ function date_format(str) {
 				"取消刪除" : function() {$(this).dialog("close");}
 			}
 		});
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#products").delegate(".btn_delete", "click", function() {
-			uuid = $(this).val();
-			confirm_dialog.dialog("open");
-		});
-		//新增事件聆聽
-		$("#create-productunit").button().on("click", function() {
-			insert_dialog.dialog("open");
-		});
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});
 </script>
-
 	<div class="panel-content">
 		<div class="datalistWrap" >
-			
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
@@ -233,38 +207,34 @@ function date_format(str) {
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第二列 -->
-			<div class="row" align="left" >
-				<div id="products-contain" class="ui-widget">
-					<table id="products" class="ui-widget ui-widget-content">
-						<thead>
-							<tr class="ui-widget-header">
-								<th>銷貨單號</th>
-								<th>訂單號</th>
-								<th><p style="width:320px;">產品名稱</p></th>
-								<th>客戶自訂產品ID</th>
-								<th><p style="width:80px;">銷貨數量</p></th>
-								<th><p style="width:80px;">銷貨金額</p></th>
-								<th><p style="width:120px;">轉單日</p></th>
-								<th><p style="width:120px;">配送日</p></th>
-								<th><p style="width:120px;">銷貨/出貨日期</p></th>
-								<th><p style="width:100px;">銷售平台</p></th>
-								<th>備註</th>			
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<div class="validateTips" align="center"> </div>
-				<div id="chart" align="center"></div>
-			</div>
+<!-- 			<div class="row" align="left" > -->
+<!-- 				<div id="products-contain" class="ui-widget"> -->
+<!-- 					<table id="products" class="ui-widget ui-widget-content"> -->
+<!-- 						<thead> -->
+<!-- 							<tr class="ui-widget-header"> -->
+<!-- 								<th>銷貨單號</th> -->
+<!-- 								<th>訂單號</th> -->
+<!-- 								<th><p style="width:320px;">產品名稱</p></th> -->
+<!-- 								<th>客戶自訂產品ID</th> -->
+<!-- 								<th><p style="width:80px;">銷貨數量</p></th> -->
+<!-- 								<th><p style="width:80px;">銷貨金額</p></th> -->
+<!-- 								<th><p style="width:120px;">轉單日</p></th> -->
+<!-- 								<th><p style="width:120px;">配送日</p></th> -->
+<!-- 								<th><p style="width:120px;">銷貨/出貨日期</p></th> -->
+<!-- 								<th><p style="width:100px;">銷售平台</p></th> -->
+<!-- 								<th>備註</th>			 -->
+<!-- 							</tr> -->
+<!-- 						</thead> -->
+<!-- 						<tbody> -->
+<!-- 						</tbody> -->
+<!-- 					</table> -->
+<!-- 				</div> -->
+				
+<!-- 			</div> -->
 		</div>
 	</div>
-<script>	
-
-//for(i=0;i<10;i++){data[i]={x:i, y:Math.floor(Math.random()*300)};}
-</script>
-
+<div class="validateTips" align="center"> </div>
+<div id="chart" align="center"></div>
 <div id="dialog-confirm"></div>
 </div>
 </body>

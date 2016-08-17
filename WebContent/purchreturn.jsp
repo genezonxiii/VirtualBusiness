@@ -645,6 +645,7 @@ $(function(){
 			}
 		}
 	});
+	$("#dialog_confirm").show();
 	confirm_cancel_dialog = $("#dialog_cancel_confirm").dialog({
 		draggable : false,//防止拖曳
 		resizable : false,//防止縮放
@@ -767,9 +768,7 @@ $(function(){
 			}
 		}
 	});
-	//hide table 
-	$("#purchasereturns_false_contain").hide();
-	$("#purchasereturns_true_contain").hide();
+	$("#dialog_cancel_confirm").show();
 	//get today yyyy-mm-dd
 	function getCurrentDate(){
 		var fullDate = new Date();
@@ -792,11 +791,11 @@ $(function(){
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog_confirm" title="確認銷貨退回嗎?">
+			<div id="dialog_confirm" title="確認銷貨退回嗎?" style="display:none;">
 				<br><p></p>
 			</div>
 			<!--對話窗樣式-確認-取消 -->
-			<div id="dialog_cancel_confirm" title="確認取消銷貨退回嗎?">
+			<div id="dialog_cancel_confirm" title="確認取消銷貨退回嗎?" style="display:none;">
 				<br><p></p>
 			</div>			
 			<!-- 第一列 -->
@@ -861,7 +860,7 @@ $(function(){
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_1" align="center" class="btn btn-wide btn-darkblue">進貨退回</button> -->
 <!-- 				</div> -->
-				<div id="purchasereturns_false_contain" class="result-table-wrap">
+				<div id="purchasereturns_false_contain" class="result-table-wrap" style="display:none;">
 					<table id="purchasereturns_false_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
@@ -921,7 +920,7 @@ $(function(){
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消進貨退回</button> -->
 <!-- 				</div> -->
-				<div id="purchasereturns_true_contain" class="result-table-wrap">
+				<div id="purchasereturns_true_contain" class="result-table-wrap" style="display:none;">
 					<table id="purchasereturns_true_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">

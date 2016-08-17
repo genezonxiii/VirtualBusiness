@@ -42,7 +42,6 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function() {
-		$("#purchases_contain_row").hide();
 		//進貨日查詢相關設定
 		$("#search_purchase_date").click(function(e) {
 			e.preventDefault();
@@ -133,7 +132,7 @@
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
-			<div id ="purchases_contain_row" class="search-result-wrap" >
+			<div id ="purchases_contain_row" class="search-result-wrap" style="display:none;">
 				<div id="purchases-contain" class="result-table-wrap">
 					<table id="purchases" class="result-table ">
 						<thead>

@@ -240,7 +240,8 @@ var bar_search=0;
 			close : function() {
 				validator_update.resetForm();
 			}
-		});		
+		});
+		$("#dialog-form-update").show();
 		//修改事件聆聽		
 		$("#products").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
@@ -283,8 +284,6 @@ var bar_search=0;
 			update_dialog.dialog("open");
 		});		
 
-		//預設表格隱藏
-		$("#products-contain").hide();
 	});	
 </script>
 
@@ -300,7 +299,7 @@ var bar_search=0;
 					</div>
 				</div><!-- /.form-wrap -->
 			</div>
-			<div id="dialog-form-update" title="修改庫存資料">
+			<div id="dialog-form-update" title="修改庫存資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 							<table border="0" height="120">
@@ -319,7 +318,7 @@ var bar_search=0;
 			</div>			
 			<!-- 第二列 -->
 			<div class="row search-result-wrap" align="center" style="width:600px;margin:0px auto;">
-				<div id="products-contain" class=" result-table-wrap" >
+				<div id="products-contain" class=" result-table-wrap" style="display:none;">
 					<table id="products" class="ui-widget ui-widget-content result-table">
 						<thead>
 							<tr class="ui-widget-header">
