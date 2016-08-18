@@ -145,7 +145,7 @@ public class product extends HttpServlet {
 				String photo1 = request.getParameter("photo1");
 				String description = request.getParameter("description");
 				String barcode = request.getParameter("barcode");
-				System.out.println(supply_name);
+				//System.out.println(supply_name);
 				/*************************** 2.開始新增資料 ***************************************/
 				productService = new ProductService();
 				productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id, unit_id,

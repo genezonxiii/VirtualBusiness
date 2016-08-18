@@ -1,8 +1,10 @@
 package tw.com.aber.product.controller;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +30,14 @@ public class photo extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+		String my_msg = "I'm photo.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
+		String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+		
+		FileWriter fw = new FileWriter(record_log,true);
+		fw.write(my_msg);
+		fw.close();
+		
 		File file;
 		request.setCharacterEncoding("UTF-8");
 

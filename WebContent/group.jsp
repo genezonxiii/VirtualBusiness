@@ -68,6 +68,24 @@
 				maxlength : 10
 			},
 		});
+		//melvin begin
+		$("[name^=group_unicode]").rules("add", {
+			required: true,
+			number: true,
+			customUnicode: true
+		});
+		
+		$.validator.addMethod('customUnicode',function(value, element, param) {
+			
+			if(checkunicode(value)){
+				return true;
+			} else {
+				return false;
+			}
+
+           	return isValid; // return bool here if valid or not.
+       	}, '統編輸入錯誤');
+		//melvin end
 		var group_name = $("#group_name");
 		//查詢相關設定
 							$.ajax({
@@ -93,7 +111,7 @@
 													+ "<tr><td>"+ "<p>功能</p>"+"</td><td>"
 													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
 													+ "	</div></div>"
 													+ "</td></tr>";
 											});
@@ -159,7 +177,7 @@
 										+ "<tr><td>"+ "<p>功能</p>"+"</td><td>"
 										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].group_id+ "'name='"+ json_obj[i].group_name+"' ><i class='fa fa-pencil'></i></button>"
 										+ "	</div></div>"
 										+"</td></tr>";
 								});
@@ -230,7 +248,42 @@
 
 				});			
 			update_dialog.dialog("open");
-		});		
+		});	
+		//melvin begin
+		function checkunicode(uniString){       
+			var res = uniString.split("");
+			var sum = 0 ;
+			var para=[1,2,1,2,1,2,4,1] ;
+			
+			for (i = 0; i <= 7; i++) {
+				var inttemp = parseInt(res[i]) * para[i];   
+				
+				if(inttemp >= 9){   
+				  var s = inttemp + "";
+				  
+				  n1 = s.substring(0,1) * 1;
+				  n2 = s.substring(1,2) * 1;
+				  inttemp = n1 + n2;           
+				}
+				sum += inttemp; 
+			}
+		 
+			if( sum % 10 == 0 ){ 
+				return true;
+			} else {
+				if(res[6] == 7){
+					sum += 1 ;
+					if( sum % 10 == 0 ){
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				} 
+			}
+		}
+		//melvin end
 	});	
 </script>
 		<div class="datalistWrap">

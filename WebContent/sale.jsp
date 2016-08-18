@@ -297,7 +297,7 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+"	<div class='table-function-list'>"
-										+"		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil' ></i></button>"
+										+"		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil' ></i></button>"
 										+"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 										+"	</div>"
 										+"</div></td></tr>";
@@ -412,7 +412,7 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div>"
 										+ "</div></td></tr>";
@@ -550,7 +550,7 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 									}
@@ -715,7 +715,7 @@
 																+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 																+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 																+ "	</div></div></td></tr>";																
 															}
@@ -839,7 +839,7 @@
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";											
 								}
@@ -969,7 +969,7 @@
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
-											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 											+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"'><i class='fa fa-trash'></i></button>"
 											+ "	</div></div></td></tr>";								
 										}
@@ -1316,40 +1316,40 @@
        		product_id = ui.item.product_id;
        });       
 		//日期設定
-		$(".date").datepicker({
-			dayNamesMin:["日","一","二","三","四","五","六"],
-			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-			dateFormat:"yy-mm-dd",
-			changeYear:true
-		});
-		//日期設定
-		$("input[name='invoice_date'").datepicker({
-			dayNamesMin:["日","一","二","三","四","五","六"],
-			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-			dateFormat:"yy-mm-dd",
-			changeYear:true
-		});	
-		//日期設定
-		$("input[name='trans_list_date'").datepicker({
-			dayNamesMin:["日","一","二","三","四","五","六"],
-			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-			dateFormat:"yy-mm-dd",
-			changeYear:true
-		});	
-		//日期設定
-		$("input[name='dis_date'").datepicker({
-			dayNamesMin:["日","一","二","三","四","五","六"],
-			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-			dateFormat:"yy-mm-dd",
-			changeYear:true
-		});	
-		//日期設定
-		$("input[name='sale_date'").datepicker({
-			dayNamesMin:["日","一","二","三","四","五","六"],
-			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-			dateFormat:"yy-mm-dd",
-			changeYear:true
-		});	
+// 		$(".date").datepicker({
+// 			dayNamesMin:["日","一","二","三","四","五","六"],
+// 			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+// 			dateFormat:"yy-mm-dd",
+// 			changeYear:true
+// 		});
+// 		//日期設定
+// 		$("input[name='invoice_date'").datepicker({
+// 			dayNamesMin:["日","一","二","三","四","五","六"],
+// 			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+// 			dateFormat:"yy-mm-dd",
+// 			changeYear:true
+// 		});	
+// 		//日期設定
+// 		$("input[name='trans_list_date'").datepicker({
+// 			dayNamesMin:["日","一","二","三","四","五","六"],
+// 			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+// 			dateFormat:"yy-mm-dd",
+// 			changeYear:true
+// 		});	
+// 		//日期設定
+// 		$("input[name='dis_date'").datepicker({
+// 			dayNamesMin:["日","一","二","三","四","五","六"],
+// 			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+// 			dateFormat:"yy-mm-dd",
+// 			changeYear:true
+// 		});	
+// 		//日期設定
+// 		$("input[name='sale_date'").datepicker({
+// 			dayNamesMin:["日","一","二","三","四","五","六"],
+// 			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+// 			dateFormat:"yy-mm-dd",
+// 			changeYear:true
+// 		});	
 		//hold header
 // 		$("#sales").find("th").css("min-width","120px");
 		
@@ -1411,17 +1411,17 @@
 								<td><p>發票號碼</p></td>
 								<td><input type="text" name="invoice"  placeholder="輸入發票號碼"></td>
 								<td><p>發票日期</p></td>
-								<td><input type="text" name="invoice_date"  placeholder="輸入發票日期"></td>
+								<td><input type="text" name="invoice_date"  placeholder="輸入發票日期" class="input-date"></td>
 							</tr>
 							<tr>
 								<td><p>轉單日</p></td>
-								<td><input type="text" name="trans_list_date"  placeholder="輸入轉單日"></td>
+								<td><input type="text" name="trans_list_date"  placeholder="輸入轉單日" class="input-date"></td>
 								<td><p>配送日</p></td>
-								<td><input type="text" name="dis_date"  placeholder="輸入配送日"></td>
+								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date"></td>
 							</tr>
 							<tr>
 								<td><p>銷貨/出貨日期</p></td>
-								<td><input type="text" name="sale_date"  placeholder="輸入銷貨/出貨日期"></td>
+								<td><input type="text" name="sale_date"  placeholder="輸入銷貨/出貨日期" class="input-date"></td>
 								<td><p>銷售平台</p></td>
 								<td><input type="text" name="order_source"  placeholder="輸入銷售平台"></td>
 							</tr>
@@ -1464,15 +1464,15 @@
 							</tr>
 							<tr>
 								<td><p>發票日期</p></td>
-								<td><input type="text" name="invoice_date"  placeholder="輸入發票日期"></td>
+								<td><input type="text" name="invoice_date"  placeholder="輸入發票日期" class="input-date"></td>
 								<td><p>轉單日</p></td>
-								<td><input type="text" name="trans_list_date"  placeholder="輸入轉單日"></td>
+								<td><input type="text" name="trans_list_date"  placeholder="輸入轉單日" class="input-date"></td>
 							</tr>
 							<tr>
 								<td><p>配送日</p></td>
-								<td><input type="text" name="dis_date"  placeholder="輸入配送日"></td>
+								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date"></td>
 								<td><p>銷貨/出貨日期</p></td>
-								<td><input type="text" name="sale_date"  placeholder="輸入銷貨/出貨日期"></td>
+								<td><input type="text" name="sale_date"  placeholder="輸入銷貨/出貨日期" class="input-date"></td>
 							</tr>
 							<tr>
 								<td><p>銷售平台</p></td>

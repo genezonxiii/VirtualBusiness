@@ -44,7 +44,7 @@ if(str!=null){
 	if("success".equals(str)){
 		out.println("<script>alert('傳輸成功');window.location.href = './upload.jsp';</script>");
 	}else{
-		//out.println("<script>alert('傳輸失敗 ');window.location.href = './upload.jsp';</script>");
+		out.println("<script>alert('傳輸失敗 ');window.location.href = './upload.jsp';</script>");
 	}
 }
 %>

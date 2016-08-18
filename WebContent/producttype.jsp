@@ -79,7 +79,7 @@
 												if(json_obj[i].group_id!="common"){
 													text+="<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 														+ "	<div class='table-function-list'>"
-														+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].type_id+ "'name='"+ json_obj[i].type_name+"' ><i class='fa fa-pencil'></i></button>"
+														+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].type_id+ "'name='"+ json_obj[i].type_name+"' ><i class='fa fa-pencil'></i></button>"
 														+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].type_id+"'><i class='fa fa-trash'></i></button>"
 														+ "	</div></div>";
 												}
@@ -157,7 +157,7 @@
 															if(json_obj[i].group_id!="common"){
 																text+="<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																	+ "	<div class='table-function-list'>"
-																	+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].type_id+ "'name='"+ json_obj[i].type_name+"' ><i class='fa fa-pencil'></i></button>"
+																	+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].type_id+ "'name='"+ json_obj[i].type_name+"' ><i class='fa fa-pencil'></i></button>"
 																	+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].type_id+"'><i class='fa fa-trash'></i></button>"
 																	+ "	</div></div>";
 															}
@@ -240,7 +240,7 @@
 										+ json_obj[i].type_id
 										+ "'name='"
 										+ json_obj[i].type_name
-										+ "'class='btn_update btn btn-wide btn-darkblue' title='新增' >修改</button> &nbsp; <button value='"
+										+ "'class='btn_update btn btn-wide btn-darkblue' title='修改' >修改</button> &nbsp; <button value='"
 										+ json_obj[i].type_id
 										+ "'class='btn_delete btn btn-exec btn-wide' title='刪除' >刪除</button>";
 								}
@@ -315,7 +315,7 @@
 									if(json_obj[i].group_id!="common"){
 										text+="<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
-											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].type_id+ "'name='"+ json_obj[i].type_name+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].type_id+ "'name='"+ json_obj[i].type_name+"' ><i class='fa fa-pencil'></i></button>"
 											+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].type_id+"'><i class='fa fa-trash'></i></button>"
 											+ "	</div></div>";
 									}

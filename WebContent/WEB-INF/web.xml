@@ -43,7 +43,7 @@
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
-    <param-value>C:/Users/10506002/workspace/VirtualBusiness/WebContent/upload</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>videopath</param-name>
@@ -354,7 +354,6 @@
     <servlet-name>image</servlet-name>
     <url-pattern>/image.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
   <servlet>
     <servlet-name>onlinecourse</servlet-name>
     <servlet-class>tw.com.aber.onlinecourse</servlet-class>
@@ -363,6 +362,8 @@
     <servlet-name>onlinecourse</servlet-name>
     <url-pattern>/onlinecourse.do</url-pattern>
   </servlet-mapping>
+  <!-- ############新的############ -->
+
   <!-- ############新的############ -->
   <filter>
     <filter-name>loginFilter</filter-name>

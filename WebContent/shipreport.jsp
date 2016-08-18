@@ -54,6 +54,10 @@ function ship_data(){
 				$(".validateTips").text("WebService Error: "+result);
 				return;
 			};
+			if(result.indexOf("not found")!=-1){
+				$(".validateTips").text("查無資料:請確認客戶資料及銷貨資料");
+				return;
+			}
 			var json_obj = $.parseJSON(result);
 			var result_table = "";
 			$.each(json_obj,function(i, item) {

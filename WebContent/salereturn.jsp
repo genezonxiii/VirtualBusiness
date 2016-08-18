@@ -739,8 +739,9 @@
 			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認退回" : function() {
-					$(".checkbox_salereturn").each(function(){
+					$(".checkbox_salereturn").each(function(i){
 						if($(this).prop("checked")){
+							//未解決
 							$.ajax({
 								type : "POST",
 								url : "salereturn.do",
@@ -764,7 +765,7 @@
 									$.each (json_obj, function (i) {
 										resultRunTime+=1;
 									});
-									alert(resultRunTime);
+									//未解決alert(resultRunTime);
 									var result_table = "";
 									if(resultRunTime!=0){
 										$.each(json_obj,function(i, item) {
@@ -825,7 +826,7 @@
 											+ "<td><input id='my-"+json_obj[i].seq_no+"' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].sale_id+ "'name='"+ json_obj[i].c_product_id
 											+ "'class='checkbox_salereturn_cancel'></input><label for='my-"+json_obj[i].seq_no+"'></label></td></tr>";		
 										});
-									}							
+									}			
 									if(resultRunTime==0){
 										$("#salereturns_true_contain").hide();
 									}

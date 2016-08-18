@@ -110,7 +110,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 													"</td><td>"
 													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
 													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 													+ "	</div></div></td></tr>";										
 											});
@@ -178,7 +178,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 																"</td><td>"
 																+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
 																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 																+ "	</div></div></td></tr>";										
 														});
@@ -246,7 +246,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 									"</td><td>"
 									+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";										
 							});
@@ -312,7 +312,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 										"</td><td>"
 										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";										
 								});

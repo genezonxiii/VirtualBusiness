@@ -34,7 +34,9 @@ $(function(){
 			if(json_obj.name.length==0){$("#movie").html("<h1 align='center'> <font color='red'>無檔案</font></h1>");return;}
 			var mov_array="";
 			$.each(json_obj.name,function(i, item) {
-				mov_array+="<div class='row4mpeg'><video width='400' height='300' src='"+json_obj.path[i]+"' controls='controls'>Sorry for your browser doesn`t support the video tag.</video><div>"+json_obj.name[i]+"</div></div>";
+				if(json_obj.path[i]!="dir"){
+					mov_array+="<div class='row4mpeg'><video width='400' height='300' src='"+json_obj.path[i]+"' controls='controls'>Sorry for your browser doesn`t support the video tag.</video><div>"+json_obj.name[i]+"</div></div>";
+				}
 			});
 			$("#movie").html(mov_array);
 		}

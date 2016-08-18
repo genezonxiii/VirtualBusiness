@@ -165,7 +165,7 @@
 													"</td><td>"+json_obj[i].memo+
 													 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
 													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 													+ "	</div></div></td></tr>";
 											});
@@ -253,7 +253,7 @@
 																
 																"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+																+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
 																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 																+ "	</div></div></td></tr>";
 														});
@@ -333,7 +333,7 @@
 									"</td>"+
 									 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";
 							});
@@ -424,7 +424,7 @@
 										
 										"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";
 								});

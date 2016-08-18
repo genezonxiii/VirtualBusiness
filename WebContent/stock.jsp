@@ -50,7 +50,7 @@
 									+json_obj[i].quantity+"</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+data.string+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+data.string+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
 									+ "	</div></div></td></tr>";	
 						});
 						
@@ -110,7 +110,7 @@ var bar_search=0;
 								+ json_obj[i].quantity+"</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
-								+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
 								+ "	</div></div></td></tr>";	
 					});
 					
@@ -168,7 +168,7 @@ var bar_search=0;
 											+json_obj[i].quantity+"</td>"
 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
-											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+											+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
 											+ "	</div></div></td></tr>";	
 								});
 								//判斷查詢結果
@@ -206,7 +206,7 @@ var bar_search=0;
 // 	 											+json_obj[i].quantity+"</td>"
 // 	 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 // 	 											+ "	<div class='table-function-list'>"
-// 	 											+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+bar_search+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
+// 	 											+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+bar_search+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
 // 	 											+ "	</div></div></td></tr>";	
 // 	 								});
 	 								

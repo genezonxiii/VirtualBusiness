@@ -44,13 +44,20 @@ public class onlinecourse extends HttpServlet {
 		File fp=new File(path);
 		Video video= new Video();
 		
-		String[] strs=fp.list();
-		String[] strs2=fp.list();
+		String[] strs=fp.list(),strs2=fp.list();
 		for(int i=0;strs!=null&&i<strs.length;i++){
-			strs[i]=pathurl+"/"+strs[i];
+			if(!(new File(fp+"/"+strs[i]).isDirectory())){
+				strs[i]=pathurl+"/"+strs[i];
+			}else{
+				strs[i]="dir";
+			}
 		}
 		for(int i=0;strs2!=null&&i<strs2.length;i++){
-			strs2[i]=strs2[i].replaceAll(".mov","");
+			if(!(new File(fp+"/"+strs2[i]).isDirectory())){
+				strs2[i]=strs2[i].replaceAll(".mov","");
+			}else{
+				strs2[i]="dir";
+			}
 		}
 		video.path=strs;
 		video.name=strs2;

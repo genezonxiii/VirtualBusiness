@@ -272,7 +272,7 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 										+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 										+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
@@ -344,6 +344,7 @@
 					supply_name : $("input[name='searh_purchase_by_supply_name'").val()
 				},
 				success : function(result) {
+					console.log(result);
 						var json_obj = $.parseJSON(result);
 						//判斷查詢結果
 						var resultRunTime = 0;
@@ -387,7 +388,7 @@
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
-								+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 								+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 								+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 								+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
@@ -477,7 +478,7 @@
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 									+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 									+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
@@ -584,7 +585,7 @@
 													+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 													+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 													+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 													+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
@@ -735,7 +736,7 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 										+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 										+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
@@ -787,6 +788,8 @@
 					supply_name : ""
 				},
 				success : function(result) {
+					console.log(result);
+						//TODOTODOTODO
 						var json_obj = $.parseJSON(result);
 						//判斷查詢結果
 						var resultRunTime = 0;
@@ -797,6 +800,7 @@
 						if(resultRunTime!=0){
 							$.each(json_obj,function(i, item) {
 								if(json_obj[i].purchase_id==uuid){
+									$("#update_select_invoice_type").val(json_obj[i].invoice_type);
 									$("#dialog-form-update input[name='memo']").val(json_obj[i].memo);
 									$("#dialog-form-update input[name='invoice']").val(json_obj[i].invoice);
 									$("#dialog-form-update input[name='amount']").val(json_obj[i].amount);
@@ -937,7 +941,7 @@
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
-								+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
 								+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 								+ "	</div></div></td></tr>";									
 						});
@@ -1044,7 +1048,7 @@
 												+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 												+ "	<div class='table-function-list'>"
-												+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+												+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
 												+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 												+ "	</div></div></td></tr>";										
 											});
@@ -1140,7 +1144,7 @@
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 									+ "	</div></div></td></tr>";												
 								});
@@ -1279,7 +1283,7 @@
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='新增' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
+										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' name='"+json_obj[i].product_id+"'id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].purchase_id+"'value='"+ json_obj[i].purchaseDetail_id + "'><i class='fa fa-trash'></i></button>"
 										+ "	</div></div></td></tr>";										
 									});
@@ -1504,12 +1508,12 @@
 			//@@@
 		});
 		//日期設定
-		$(".date").datepicker({
-			dayNamesMin:["日","一","二","三","四","五","六"],
-			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-			dateFormat:"yy-mm-dd",
-			changeYear:true
-		});
+// 		$(".date").datepicker({
+// 			dayNamesMin:["日","一","二","三","四","五","六"],
+// 			monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
+// 			dateFormat:"yy-mm-dd",
+// 			changeYear:true
+// 		});
 		//hold header
 		$("#purchases").find("th").css("min-width","120px");
 		$("#purchase-detail-table").find("th").css("min-width","120px");
@@ -1559,22 +1563,24 @@
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
-								<td><p>名稱</p></td>
-								<td><input type="text" name="supply_id" id="update_supply_id" placeholder="輸入供應商名稱已供查詢"></td>
+<!-- 								<td><p>名稱</p></td> -->
+<!-- 								<td><input type="text" name="supply_id" id="update_supply_id" placeholder="輸入供應商名稱已供查詢"></td> -->
 								<td><p>進貨發票號碼</p></td>
 								<td><input type="text" name="invoice"  placeholder="輸入進貨發票號碼"></td>
-							</tr>
-							<tr>
 								<td><p>發票金額</p></td>
 								<td><input type="text" name="amount"  placeholder="輸入發票金額"></td>
-								<td><p>進貨日期</p></td>
-								<td><input type="text" name="purchase_date"  placeholder="輸入進貨日期" class="date"></td>
 							</tr>
 							<tr>
+								<td><p>進貨日期</p></td>
+								<td><input type="text" name="purchase_date"  placeholder="輸入進貨日期" class="input-date"></td>
 								<td><p>發票樣式</p></td>
 								<td><select name="invoice_type" id="update_select_invoice_type"><option value="0">選擇</option><option value="1">二聯式發票</option><option value="2">三聯式發票</option></select></td>
+							</tr>
+							<tr>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo" placeholder="輸入備註說明"></td>
+								<td></td>
+								<td></td>
 							</tr>
 						</table>
 						
@@ -1625,7 +1631,7 @@
 							</tr>
 							<tr>
 								<td><p>進貨日期</p></td>
-								<td><input type="text" name="purchase_date" placeholder="輸入進貨日期" class="date"></td>
+								<td><input type="text" name="purchase_date" placeholder="輸入進貨日期" class="input-date"></td>
 								<td><p>發票樣式</p></td>
 								<td><select name="invoice_type" id="insert_select_invoice_type"><option value="0">選擇</option><option value="1">二聯式發票</option><option value="2">三聯式發票</option></select></td>
 							</tr>
@@ -1686,9 +1692,9 @@
 <!-- 						<table> -->
 <!-- 							<thead> -->
 <!-- 								<tr> -->
-<!-- 									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="date" placeholder="輸入進貨日期起日"></td> -->
+<!-- 									<td><input type="text" id="purchase_start_date" name="purchase_start_date" class="input-date" placeholder="輸入進貨日期起日"></td> -->
 <!-- 									<td>&nbsp;&nbsp;~&nbsp;&nbsp;</td> -->
-<!-- 									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="date" placeholder="輸入進貨日期迄日"></td> -->
+<!-- 									<td><input type="text" id="purchase_end_date" name="purchase_end_date"class="input-date" placeholder="輸入進貨日期迄日"></td> -->
 <!-- 									<td>&nbsp;&nbsp;<button id="search_purchase_date">查詢</button></td> -->
 <!-- 								</tr> -->
 <!-- 							</thead> -->

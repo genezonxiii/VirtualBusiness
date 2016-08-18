@@ -103,8 +103,8 @@ public class salereturn extends HttpServlet {
 				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
 				saleReturnService = new SaleReturnService();
 				List<SaleReturnVO> list = saleReturnService.getSearchReturnDateDB(group_id, return_date, return_date);
-				System.out.println("group_id: "+ group_id );
-				System.out.println("return_date_str: "+ return_date );
+				//System.out.println("group_id: "+ group_id );
+				//未解決System.out.println("return_date_str: "+ return_date );
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);

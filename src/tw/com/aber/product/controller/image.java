@@ -2,8 +2,10 @@ package tw.com.aber.product.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -27,6 +29,14 @@ public class image extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+		String my_msg = "I'm image.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
+		String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+		
+		FileWriter fw = new FileWriter(record_log,true);
+		fw.write(my_msg);
+		fw.close();
+		
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		response.setContentType("image/jpeg");
 
