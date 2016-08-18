@@ -15,7 +15,7 @@
 
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <!-- 圖片的 -->
-
+<!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
 <!-- Generic page styles -->
 <link rel="stylesheet" href="css/photo/style.css">	
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
@@ -1268,8 +1268,8 @@
                	  		</tbody>
                	  </table>		
                	<!-- photo section end by Melvin -->
-<!--                	<img src="/VirtualBusiness/image.do?picname=a0001.jpg" width="200" height="200"> -->
-<!--                	<img src="/VirtualBusiness/image.do?picname=a0002.jpg" width="200" height="200"> -->
+               	<img src="/VirtualBusiness/image.do?picname=a0001.jpg" width="200" height="200">
+               	<img src="/VirtualBusiness/image.do?picname=a0002.jpg" width="200" height="200">
 			</div>
 		<div class="input-field-wrap">
 			<div class="form-wrap">

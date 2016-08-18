@@ -90,7 +90,7 @@ public class photo extends HttpServlet {
 //						fi.write(file);
 						
 						UUID uuid  =  UUID.randomUUID(); 
-						file = new File(filePath + "\\" + uuid + "." + fileExt);
+						file = new File(filePath + "/" + uuid + "." + fileExt);
 						fi.write(file);
 
 						msg += "&nbsp&nbsp upload " + fileName + "<br>&nbsp --> &nbsp" + filePath + "/" + tmp[j];
