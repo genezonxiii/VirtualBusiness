@@ -94,7 +94,7 @@
 
 <!--########################以上server#####################################-->
 <!--########################以下164+175####################################-->
-<!-- 
+ <!--
   <context-param>
   	<param-name>dbURL</param-name>
   	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
@@ -361,6 +361,14 @@
   <servlet-mapping>
     <servlet-name>onlinecourse</servlet-name>
     <url-pattern>/onlinecourse.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>changepassword</servlet-name>
+    <servlet-class>tw.com.aber.changepassword.controller.changepassword</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>changepassword</servlet-name>
+    <url-pattern>/changepassword.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
 

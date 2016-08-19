@@ -29,14 +29,15 @@ public class image extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-		String my_msg = "I'm image.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
-		String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-		
-		FileWriter fw = new FileWriter(record_log,true);
-		fw.write(my_msg);
-		fw.close();
-		
+		try{
+			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+			String my_msg = "I'm image.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
+			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+			
+			FileWriter fw = new FileWriter(record_log,true);
+			fw.write(my_msg);
+			fw.close();
+		}catch(Exception e){System.out.println("Error: "+e.toString());}
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		response.setContentType("image/jpeg");
 

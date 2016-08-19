@@ -294,7 +294,7 @@
 							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 								$("#sales-contain").show();
 								$("#sales tbody").html(result_table);
-								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
 								$("#sales").find("td").css("text-align","center");
 								$("#sales").find("th").css("text-align","center");
 								$(".validateTips").text("");
@@ -381,7 +381,7 @@
 														if(resultRunTime!=0){
 															$("#sales-contain").show();
 															$("#sales tbody").html(result_table);
-															$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+															$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
 															$("#sales").find("td").css("text-align","center");
 															$("#sales").find("th").css("text-align","center");
 															$(".validateTips").text("");
@@ -466,7 +466,7 @@
 							if(resultRunTime!=0){
 								$("#sales-contain").show();
 								$("#sales tbody").html(result_table);
-								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
 								$("#sales").find("td").css("text-align","center");
 								$("#sales").find("th").css("text-align","center");
 								$(".validateTips").text("");
@@ -558,7 +558,7 @@
 								if(resultRunTime!=0){
 									$("#sales-contain").show();
 									$("#sales tbody").html(result_table);
-									$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+									$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
 									$("#sales").find("td").css("text-align","center");
 									$("#sales").find("th").css("text-align","center");
 									$(".validateTips").text("");
@@ -1176,7 +1176,7 @@
 <!-- 						<table border="0" height="600"> -->
 				<table class="result-table">
 					<tbody>
-						<tr><td>自訂產品ID:</td><td><input type="text" name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
+						<tr><td>自訂產品ID:</td><td><input id="same2" type="checkbox" onclick="$('#c_p_id2').val($('#edit_barcode').val())"><label for="same2"><span class="form-label">同條碼</span></label><input type="text" id="c_p_id2" name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
 <tr><td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td><td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td></tr>	
 <tr><td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td><td>產品說明:</td><td><input type="text" name="description"/></td></tr>
 <tr><td>成本:</td><td><input type="text" name="cost" /></td><td>售價:</td><td><input type="text" name="price" /></td></tr>
@@ -1227,7 +1227,7 @@
 					<fieldset>
 					<table class="result-table">
 					<tbody>
-						<tr><td>自訂產品ID:</td><td><input type="text" name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
+						<tr><td>自訂產品ID:</td><td><input id="same" type="checkbox" onclick="$('#c_p_id').val($('#new_barcode').val())"><label for="same"><span class="form-label">同條碼</span></label><input type="text" id="c_p_id"name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
 <tr><td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td><td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td></tr>	
 <tr><td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td><td>產品說明:</td><td><input type="text" name="description"/></td></tr>
 <tr><td>成本:</td><td><input type="text" name="cost" /></td><td>售價:</td><td><input type="text" name="price" /></td></tr>

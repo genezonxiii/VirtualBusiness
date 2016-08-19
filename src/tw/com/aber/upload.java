@@ -38,14 +38,15 @@ public class upload  extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		if(request.getSession().getAttribute("group_id")==null){request.setAttribute("action","no_session");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
-		
-		String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-		String my_msg = "I'm upload.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
-		String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-		
-		FileWriter fw = new FileWriter(record_log,true);
-		fw.write(my_msg);
-		fw.close();
+		try{
+			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+			String my_msg = "I'm upload.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
+			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+			
+			FileWriter fw = new FileWriter(record_log,true);
+			fw.write(my_msg);
+			fw.close();
+		}catch(Exception e){System.out.println("Error: "+e.toString());}
 //		   int temp=0;
 //		   String _uid= UUID.randomUUID().toString();
 //		   String _group_id = new String(Base64.encodeBase64String("group_id".getBytes()));
@@ -89,6 +90,7 @@ public class upload  extends HttpServlet {
 		}catch(Exception e){
 			ret="Sleep error";
 		}
+		System.out.println(conString);
 		if(conString.charAt(0)!='E'){
 			ret=webService(request, response,conString);
 		}else{
@@ -180,6 +182,7 @@ public class upload  extends HttpServlet {
 		}else{
 			ret="success";
 		}
+		
 		method.releaseConnection();
 		return ret;
 	}

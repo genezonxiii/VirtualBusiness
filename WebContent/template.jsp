@@ -192,7 +192,7 @@ function who(){
 		return "線上學院";
 		break;
 	case "template.jsp":
-		return "暫時的";
+		return "　　　　　　　　";
 		break;
 	case "welcome.jsp":
 		return "首頁";
@@ -230,7 +230,7 @@ $(function() {
 	<div class="header" style="z-index:1;">
 		<h1>智慧電商平台</h1>
 		<div class="userinfo">
-			<p>使用者<span><%= (request.getSession().getAttribute("user_name")==null)?"@_@?":request.getSession().getAttribute("user_name").toString() %></span></p>
+			<p>使用者<span><%= (request.getSession().getAttribute("user_name")==null)?"尚未登入?":request.getSession().getAttribute("user_name").toString() %></span></p>
 			<a id="logout" class="btn-logout" >登出</a>
 		</div>
 	</div><!-- /.header -->
@@ -287,7 +287,7 @@ $(function() {
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
 				<ul>
-					<li><a href="onlinecourse.jsp">線上學院</a></li>
+					<li><a href="#">Coming Soon</a></li>
 				</ul>
 			</li>
 		</ul>

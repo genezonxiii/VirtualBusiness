@@ -19,8 +19,8 @@
     <param-name>jdbcDriver</param-name>
     <param-value>com.mysql.jdbc.Driver</param-value>
   </context-param>
-<!--########################以下自家#####################################-->
-<!--
+<!--########################以下平常#####################################-->
+
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://localhost/db_virtualbusiness</param-value>
@@ -35,7 +35,7 @@
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>C:/</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
@@ -43,21 +43,21 @@
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
-    <param-value>C:/Users/10506002/workspace/VirtualBusiness/WebContent/upload</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>videopath</param-name>
-    <param-value>/data/video</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/video</param-value>
   </context-param>
   <context-param>
     <param-name>videourl</param-name>
-    <param-value>http://192.168.112.164/video</param-value>
+    <param-value>http://localhost:8081/VirtualBusiness/video</param-value>
   </context-param>
   <servlet>
--->
+
  <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
-
+<!--
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
@@ -91,10 +91,10 @@
     <param-value>http://www.a-ber.com.tw/video</param-value>
   </context-param>
   <servlet>
-
+-->
 <!--########################以上server#####################################-->
 <!--########################以下164+175####################################-->
-<!-- 
+ <!--
   <context-param>
   	<param-name>dbURL</param-name>
   	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
@@ -361,6 +361,14 @@
   <servlet-mapping>
     <servlet-name>onlinecourse</servlet-name>
     <url-pattern>/onlinecourse.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>changepassword</servlet-name>
+    <servlet-class>tw.com.aber.changepassword.controller.changepassword</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>changepassword</servlet-name>
+    <url-pattern>/changepassword.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
 

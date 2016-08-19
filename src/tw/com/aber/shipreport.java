@@ -84,7 +84,7 @@ public class shipreport extends HttpServlet {
 					+ "&enddate="
 					+ new String(Base64.encodeBase64String((new SimpleDateFormat("yyyy-MM-dd").format(new Date())).getBytes()));
 		}
-		System.out.println("conString "+conString);
+		//System.out.println("conString "+conString);
 		HttpClient client = new HttpClient();
 		HttpMethod method;
 		try{
