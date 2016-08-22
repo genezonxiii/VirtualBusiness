@@ -664,6 +664,7 @@ public class sale extends HttpServlet {
 		private String product_id;
 		private String product_name;
 		private String c_product_id;
+		private int price=299;
 
 		public String getProduct_id() {
 			return product_id;
@@ -688,6 +689,15 @@ public class sale extends HttpServlet {
 		public void setC_product_id(String c_product_id) {
 			this.c_product_id = c_product_id;
 		}
+
+		public int getPrice() {
+			return price;
+		}
+
+		public void setPrice(int price) {
+			this.price = price;
+		}
+		
 	}
 
 	/*************************** 制定規章方法 ****************************************/

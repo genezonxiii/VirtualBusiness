@@ -60,6 +60,10 @@ function who(){
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
 		return "訂單拋轉作業";
 		break;
+	case "upload.do":
+		$(".sidenav > ul > li:nth-child(1)").addClass("active");
+		return "訂單拋轉作業";
+		break;
 //####後臺支援系統############################
 	case "purchase.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
@@ -192,15 +196,15 @@ function who(){
 		return "線上學院";
 		break;
 	case "template.jsp":
-		return "　　　　　　　　";
+		window.location.href = './welcome.jsp';
+		return "　　";
 		break;
 	case "welcome.jsp":
 		return "首頁";
 		break;
+		
 	default:
-		if(location.pathname.split("/")[2].indexOf("upload")!=-1){return "訂單拋轉作業";}
-		//alert("default_page; "+location.pathname.split("/")[2]);
-		//return "something_wrong?";
+		window.location.href = './404.jsp';
 		return "";
 		break;
 	}
@@ -266,7 +270,7 @@ $(function() {
 				<ul style="top: -100px;">
 					<li><a href="salereport.jsp">訂單報表</a></li>
 					<li><a href="shipreport.jsp">出貨報表</a></li>
-					<li><a href="distributereport.jsp">配送報表</a></li>
+<!-- 					<li><a href="distributereport.jsp">配送報表</a></li> -->
 					<li><a href="salereturnreport.jsp">退貨報表</a></li>
 					<li><a href="purchreport.jsp">進貨報表</a></li>
 					<li><a href="purchreturnreport.jsp">進貨退回報表</a></li>

@@ -94,7 +94,7 @@ public class shipreport extends HttpServlet {
 			response.getWriter().write("WebService Error for:"+e);
 			return;
 		}
-		response.getWriter().write(method.getResponseBodyAsString());
+		response.getWriter().write(method.getResponseBodyAsString().replaceAll("null", "\"\""));
 		//System.out.println(method.getResponseBodyAsString());
 		method.releaseConnection();
 		return;

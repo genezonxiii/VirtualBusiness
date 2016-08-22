@@ -102,6 +102,7 @@ var bar_search=0;
 					product_name : $("#searh_stock_name" ).val(),
 				},
 				success : function(result) {
+					//console.log(result);
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					$.each(json_obj,function(i, item) {

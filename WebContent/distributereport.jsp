@@ -15,7 +15,7 @@
 <html>
 <head>
 <title>配送報表</title>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">

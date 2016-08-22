@@ -451,6 +451,7 @@ public class customer extends HttpServlet {
 //        	System.out.println("wspath: "+wsPath);
 //        	System.out.println("url: "+url);
         	
+        	System.out.println(url);
         	HttpResponse httpResponse;
         	try {
         		StringBuffer result = new StringBuffer();

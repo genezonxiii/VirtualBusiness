@@ -64,7 +64,18 @@ function sea() {
 			var json_obj = $.parseJSON(result);
 			var result_table = "";
 			$.each(json_obj,function(i, item) {
-				result_table += "<tr><td>"+ json_obj[i].seq_no + "</td><td >"+ json_obj[i].order_no + "</td><td>" + json_obj[i].product_name + "</td><td>"+ json_obj[i].c_product_id + "</td><td>"+ json_obj[i].quantity + "</td><td>"+ json_obj[i].price + "</td><td>" + date_format(json_obj[i].trans_list_date) + "</td><td>"+ date_format(json_obj[i].dis_date) + "</td><td>"+ date_format(json_obj[i].sale_date) + "</td><td>"+ json_obj[i].order_source + "</td><td>"+ (json_obj[i].memo==null?"":json_obj[i].memo.replace("NULL","")) + "</td></tr>";
+				result_table += "<tr><td>"+ json_obj[i].seq_no + 
+				"</td><td >"+ json_obj[i].order_no + 
+				"</td><td>" + json_obj[i].product_name + 
+				"</td><td>"+ json_obj[i].c_product_id + 
+				"</td><td>"+ json_obj[i].quantity + 
+				"</td><td>"+ json_obj[i].price + 
+				"</td><td>" + date_format(json_obj[i].trans_list_date) + 
+// 				"</td><td>"+ date_format(json_obj[i].dis_date) + 
+				"</td><td>"+ date_format(json_obj[i].sale_date) + 
+				"</td><td>"+ json_obj[i].order_source + 
+				"</td><td>"+ (json_obj[i].memo==null?"":json_obj[i].memo.replace("NULL","")) + 
+				"</td></tr>";
 			});
 			if(json_obj.length!=0){
 				$("#products-contain").show();
@@ -80,7 +91,11 @@ function sea() {
 }
 	$(function() {
 		var value='<%=request.getParameter("action")%>';
-		if(value=="today"){parameter="today";sea();}
+		if(value=="today"){
+			$('#datepicker1').datepicker('setDate',new Date());
+			$('#datepicker2').datepicker('setDate',new Date());
+			parameter="today";sea();
+		}
 		//查詢相關設定
 		$("#searh-productunit").click(function(){
 			parameter="searh";
@@ -116,7 +131,7 @@ function sea() {
 							<th>銷貨數量</th>
 							<th>銷貨金額</th>
 							<th>轉單日</th>
-							<th>配送日</th>
+<!-- 							<th>配送日</th> -->
 							<th>銷貨/出貨日期</th>
 							<th>銷售平台</th>
 							<th>備註</th>								

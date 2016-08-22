@@ -84,8 +84,8 @@ function date_format(str) {
 									+ "</td><td>"
 									+ date_format(json_obj[i].trans_list_date)
 									+ "</td><td>"
-									+ date_format(json_obj[i].dis_date)
-									+ "</td><td>"
+// 									+ date_format(json_obj[i].dis_date)
+// 									+ "</td><td>"
 									+ date_format(json_obj[i].sale_date)
 									+ "</td><td>"
 									+ json_obj[i].order_source
@@ -146,7 +146,7 @@ function date_format(str) {
 								<th>銷貨數量</th>
 								<th>銷貨金額</th>
 								<th>轉單日</th>
-								<th>配送日</th>
+<!-- 								<th>配送日</th> -->
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
 								<th>備註</th>								

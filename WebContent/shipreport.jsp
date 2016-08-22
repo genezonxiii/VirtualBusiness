@@ -55,7 +55,8 @@ function ship_data(){
 				return;
 			};
 			if(result.indexOf("not found")!=-1){
-				$(".validateTips").text("查無資料:請確認客戶資料及銷貨資料");
+				$(".validateTips").text("網路不穩定，請稍候再試。");
+				//$(".validateTips").text("查無資料:請確認客戶資料及銷貨資料");
 				return;
 			}
 			var json_obj = $.parseJSON(result);
@@ -64,7 +65,7 @@ function ship_data(){
 				result_table += "<tr><td>"+ json_obj[i].order_no 
 				+ "</td><td>" + (json_obj[i].c_product_id==null?"":json_obj[i].c_product_id.replace("NULL",""))
 				+ "</td><td>" + (json_obj[i].sale_date==null?"":json_obj[i].sale_date.replace("T00:00:00Z",""))
-				+ "</td><td>" + (json_obj[i].dis_date==null?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
+// 				+ "</td><td>" + (json_obj[i].dis_date==null?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
 				+ "</td><td>" + json_obj[i].price
 				+ "</td><td>" + ((json_obj[i].phone==null)?"":json_obj[i].phone)
 				+ "</td><td>" + json_obj[i].address
@@ -75,7 +76,7 @@ function ship_data(){
 				+ "</td><td>" + json_obj[i].seq_no
 				+ "</td><td>" + json_obj[i].quantity
 				+ "</td><td>" + json_obj[i].order_source
-				+ "</td><td>" + ((json_obj[i].memo==null)?"":json_obj[i].memo.replace("NULL",""))
+				+ "</td><td>" + json_obj[i].memo//((json_obj[i].memo==null)?"":json_obj[i].memo.replace("NULL",""))
 				+"</td></tr>";
 			});
 			$("#products").dataTable().fnDestroy();
@@ -101,6 +102,8 @@ function date_format(str) {
 		var value='<%=request.getParameter("action")%>';
 		if(value=="today"){
 			do_what="today";
+			$('#datepicker1').datepicker('setDate',new Date());
+			$('#datepicker2').datepicker('setDate',new Date());
 			ship_data();
 		}
 		//查詢相關設定
@@ -125,7 +128,6 @@ function date_format(str) {
 						<input type="text" class="input-date" id="datepicker2">
 					</label>
 					<a class="btn btn-darkblue" id="searh-productunit">查詢</a>
-					<a class="btn btn btn-exec" id="xls" style="display:none" >產生報表</a>
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
@@ -138,7 +140,7 @@ function date_format(str) {
 								<th>出貨單號</th>
 								<th>自訂產品ID</th>
 								<th>出貨日期</th>
-								<th>配送日期</th>
+<!-- 								<th>配送日期</th> -->
 								<th>價格</th>
 								<th>電話</th>
 								<th>地址</th>

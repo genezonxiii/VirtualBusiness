@@ -203,6 +203,7 @@ public class product extends HttpServlet {
 				int  keep_stock = Integer.valueOf(request.getParameter("keep_stock"));
 				String photo = request.getParameter("photo");
 				String photo1 = request.getParameter("photo1");
+				//System.out.println("photo: " + photo);
 				String description = request.getParameter("description");
 				String barcode = request.getParameter("barcode");
 				/*************************** 2.開始修改資料 ***************************************/
@@ -604,6 +605,7 @@ public class product extends HttpServlet {
 				pstmt.setFloat(9, productBean.getCost());
 				pstmt.setFloat(10, productBean.getPrice());
 				pstmt.setInt(11, productBean.getKeep_stock());
+				//System.out.println("have throw: "+productBean.getPhoto());
 				pstmt.setString(12, productBean.getPhoto());
 				pstmt.setString(13, productBean.getPhoto1());
 				pstmt.setString(14, productBean.getDescription());

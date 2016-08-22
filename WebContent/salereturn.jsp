@@ -168,7 +168,7 @@
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 									+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-									+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 									+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 									+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -325,7 +325,7 @@
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -483,7 +483,7 @@
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -675,7 +675,7 @@
 								+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 								+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-								+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 								+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 								+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 								+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -819,7 +819,7 @@
 											+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 											+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-											+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 											+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -963,7 +963,7 @@
 											+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 											+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-											+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 											+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -1074,20 +1074,20 @@
 						<button id="searh_trans_list_date" class="btn btn-darkblue">查詢</button>
 					</form>
 				</div>
-				<div class="form-row">
-					<form id="trans_dis_date_form" name="trans_dis_date_form">
-						<label for="">
-							<span class="block-label">配送起日</span>
-							<input type="text" class="input-date" id="dis_start_date" name="dis_start_date">
-						</label>
-						<div class="forward-mark"></div>
-						<label for="">
-							<span class="block-label">配送迄日</span>
-							<input type="text" class="input-date" id="dis_end_date" name="dis_end_date">
-						</label>
-						<button id="searh_dis_date" class="btn btn-darkblue">查詢</button>
-					</form>
-				</div>
+<!-- 				<div class="form-row"> -->
+<!-- 					<form id="trans_dis_date_form" name="trans_dis_date_form"> -->
+<!-- 						<label for=""> -->
+<!-- 							<span class="block-label">配送起日</span> -->
+<!-- 							<input type="text" class="input-date" id="dis_start_date" name="dis_start_date"> -->
+<!-- 						</label> -->
+<!-- 						<div class="forward-mark"></div> -->
+<!-- 						<label for=""> -->
+<!-- 							<span class="block-label">配送迄日</span> -->
+<!-- 							<input type="text" class="input-date" id="dis_end_date" name="dis_end_date"> -->
+<!-- 						</label> -->
+<!-- 						<button id="searh_dis_date" class="btn btn-darkblue">查詢</button> -->
+<!-- 					</form> -->
+<!-- 				</div> -->
 			</div><!-- /.form-wrap -->
 		</div><!-- /.input-field-wrap -->
 <!-- 			<div class="row" align="center"> -->
@@ -1174,7 +1174,7 @@
 								<th>發票號碼</th>
 								<th>發票日期</th>
 								<th>轉單日</th>
-								<th>配送日</th>
+<!-- 								<th>配送日</th> -->
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
 								<th>備註說明</th>
@@ -1249,7 +1249,7 @@
 								<th>發票號碼</th>
 								<th>發票日期</th>
 								<th>轉單日</th>
-								<th>配送日</th>
+<!-- 								<th>配送日</th> -->
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
 								<th>備註說明</th>

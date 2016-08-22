@@ -20,7 +20,7 @@
     <param-value>com.mysql.jdbc.Driver</param-value>
   </context-param>
 <!--########################以下平常#####################################-->
-
+<!--
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://localhost/db_virtualbusiness</param-value>
@@ -54,7 +54,7 @@
     <param-value>http://localhost:8081/VirtualBusiness/video</param-value>
   </context-param>
   <servlet>
-
+-->
  <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
 <!--
@@ -94,7 +94,7 @@
 -->
 <!--########################以上server#####################################-->
 <!--########################以下164+175####################################-->
- <!--
+
   <context-param>
   	<param-name>dbURL</param-name>
   	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
@@ -114,10 +114,12 @@
   <context-param>
     <param-name>uploadpath</param-name>
     <param-value>/data/vbupload</param-value>
+    <!--  <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>  -->
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
     <param-value>/data/productpic</param-value>
+    <!--  <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>  -->
   </context-param>
   <context-param>
     <param-name>videopath</param-name>
@@ -128,7 +130,7 @@
     <param-value>http://192.168.112.164/video</param-value>
   </context-param>
   <servlet>
--->
+
  <!--########################以上164+175#####################################-->
 <!--切一個頭防呆-->
     <servlet-name>productunit</servlet-name>

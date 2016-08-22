@@ -61,15 +61,17 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             success: function(data) {
             	var json_obj = $.parseJSON(data);
             	if (json_obj.message=="connect_error"){
-            		$("#my_msg").html("訊號不穩定，<br>&nbsp;請檢查網路連線，或稍後再嘗試。<br>");
-            		$("#my_msg").dialog("open");
+            		$("#uninumber").after("<span class='error-msg'>訊號不穩定，請稍後再試!</span>");
+            		//$("#my_msg").html("訊號不穩定，<br>&nbsp;請檢查網路連線，或稍後再嘗試。<br>");
+            		//$("#my_msg").dialog("open");
             	}
             	if (json_obj.message=="success"){window.location.href = "./welcome.jsp";}
             	if (json_obj.message=="failure"){
             		$("#verify").val("");
             		$("#password").val("");
-            		$("#my_msg").html("請確認密碼與統編是否正確");
-            		$("#my_msg").dialog("open");
+            		$("#password").after("<span class='error-msg'>密碼錯誤!</span>");
+            		//$("#my_msg").html("請確認密碼與統編是否正確");
+            		//$("#my_msg").dialog("open");
             		chimg();
             	}
             	if (json_obj.message=="code_failure") {
@@ -162,8 +164,9 @@ $(function() {
 						<span class="block-label">認證碼</span>
 						<input type="text" id="verify">
 					</label>
-					<div class="captcha-wrap">
-						<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg">
+					<div style="text-align:center;font-size:14px;padding-top:10px">
+<!-- 					<div class="captcha-wrap"> -->
+						<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg" style="width:140px;">點擊圖片可換一張
 					</div>
 				</div><!-- /.verify-wrap -->
 				<div class="login-btn-wrap">

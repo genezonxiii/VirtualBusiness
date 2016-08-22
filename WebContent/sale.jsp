@@ -291,7 +291,7 @@
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -406,7 +406,7 @@
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -544,7 +544,7 @@
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 										+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 										+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -709,7 +709,7 @@
 																+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 																+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 																+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-																+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 																+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 																+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 																+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 																+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -833,7 +833,7 @@
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 									+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-									+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 									+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 									+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -963,7 +963,7 @@
 											+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 											+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
-											+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
+// 											+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
 											+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 											+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 											+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
@@ -1416,18 +1416,18 @@
 							<tr>
 								<td><p>轉單日</p></td>
 								<td><input type="text" name="trans_list_date"  placeholder="輸入轉單日" class="input-date"></td>
-								<td><p>配送日</p></td>
-								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date"></td>
-							</tr>
-							<tr>
 								<td><p>銷貨/出貨日期</p></td>
 								<td><input type="text" name="sale_date"  placeholder="輸入銷貨/出貨日期" class="input-date"></td>
-								<td><p>銷售平台</p></td>
-								<td><input type="text" name="order_source"  placeholder="輸入銷售平台"></td>
 							</tr>
 							<tr>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
+								<td><p>銷售平台</p></td>
+								<td><input type="text" name="order_source"  placeholder="輸入銷售平台"></td>
+							</tr>
+							<tr>
+								<td><p style="display:none">配送日</p></td>
+								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date" value="2000-01-01" style="display:none"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -1469,16 +1469,16 @@
 								<td><input type="text" name="trans_list_date"  placeholder="輸入轉單日" class="input-date"></td>
 							</tr>
 							<tr>
-								<td><p>配送日</p></td>
-								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date"></td>
 								<td><p>銷貨/出貨日期</p></td>
 								<td><input type="text" name="sale_date"  placeholder="輸入銷貨/出貨日期" class="input-date"></td>
-							</tr>
-							<tr>
 								<td><p>銷售平台</p></td>
 								<td><input type="text" name="order_source"  placeholder="輸入銷售平台"></td>
+							</tr>
+							<tr>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
+								<p style="display:none">配送日</p></td>
+								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date" value="2000-01-01"style="display:none"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -1508,20 +1508,20 @@
 					<button class="btn btn-darkblue" id="searh-trans-list-date">查詢</button>
 				</form>
 				</div>
-				<div class="form-row">
-				<form id="trans_dis_date_form" name="trans_dis_date_form">
-					<label for="">
-						<span class="block-label">配送起日</span>
-						<input type="text" class="input-date" id="dis_start_date" name="dis_start_date">
-					</label>
-					<div class="forward-mark"></div>
-					<label for="">
-						<span class="block-label">配送迄日</span>
-						<input type="text" class="input-date" id="dis_end_date" name="dis_end_date">
-					</label>
-					<button class="btn btn-darkblue" id="searh-dis-date">查詢</button>
-				</form>		
-				</div>
+<!-- 				<div class="form-row"> -->
+<!-- 				<form id="trans_dis_date_form" name="trans_dis_date_form"> -->
+<!-- 					<label for=""> -->
+<!-- 						<span class="block-label">配送起日</span> -->
+<!-- 						<input type="text" class="input-date" id="dis_start_date" name="dis_start_date"> -->
+<!-- 					</label> -->
+<!-- 					<div class="forward-mark"></div> -->
+<!-- 					<label for=""> -->
+<!-- 						<span class="block-label">配送迄日</span> -->
+<!-- 						<input type="text" class="input-date" id="dis_end_date" name="dis_end_date"> -->
+<!-- 					</label> -->
+<!-- 					<button class="btn btn-darkblue" id="searh-dis-date">查詢</button> -->
+<!-- 				</form>		 -->
+<!-- 				</div> -->
 				<div class="btn-row">
 					<button class="btn btn-exec btn-wide" id="create-sale">新增銷售資料</button>
 				</div>
@@ -1624,7 +1624,7 @@
 								<th>發票號碼</th>
 								<th>發票日期</th>
 								<th>轉單日</th>
-								<th>配送日</th>
+<!-- 								<th>配送日</th> -->
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
 								<th>備註說明</th>

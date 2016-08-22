@@ -1322,7 +1322,7 @@
 		$("#detail_dialog_form_update").show();
 		//detail update autocomplete
         $("#update_detail_c_product_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -1342,13 +1342,15 @@
 	                             value: item.c_product_id,
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
-	                             c_product_id: item.c_product_id
+	                             c_product_id: item.c_product_id,
+	                             price: item.price
                             }
                           }))
                     }
                 });
             },
             change: function(event, ui) {
+            	//alert($(this).val());
     	        var source = $(this).val();
     	            var temp = $(".ui-autocomplete li").map(function () { return $(this).text()}).get();
     	        var found = $.inArray(source, temp);
@@ -1364,9 +1366,12 @@
 	    	product_name = ui.item.product_name;
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#update_detail_product_name").val(ui.item.product_name);
+	    	$("#update_detail_product_n").val("1");
+	    	$("#update_detail_product_price").val(ui.item.price);
+	    	$("#update_detail_product_cost").val(ui.item.price);
 	    });
         $("#update_detail_product_name").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -1386,7 +1391,8 @@
 	                             value: item.product_name,
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
-	                             c_product_id: item.c_product_id
+	                             c_product_id: item.c_product_id,
+	                             price: item.price
                             }
                           }))
                     }
@@ -1409,10 +1415,13 @@
 	    	product_name = ui.item.product_name;
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#update_detail_c_product_id").val(ui.item.c_product_id);
+	    	$("#update_detail_product_n").val("1");
+	    	$("#update_detail_product_price").val(ui.item.price);
+	    	$("#update_detail_product_cost").val(ui.item.price);
 	    });
 		//detail insert autocomplete
         $("#insert_detail_c_product_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -1425,6 +1434,7 @@
                         identity : "ID"
                     },
                     success: function(data) {
+                    	console.log(data);
                     	var json_obj = $.parseJSON(data);
                     	response($.map(json_obj, function (item) {
                             return {
@@ -1432,7 +1442,8 @@
 	                             value: item.c_product_id,
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
-	                             c_product_id: item.c_product_id
+	                             c_product_id: item.c_product_id,
+	                             price: item.price
                             }
                           }))
                     }
@@ -1455,9 +1466,12 @@
 	    	product_name = ui.item.product_name;
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#insert_detail_product_name").val(ui.item.product_name);
+	    	$("#insert_detail_product_n").val("1");
+	    	$("#insert_detail_product_price").val(ui.item.price);
+	    	$("#insert_detail_product_cost").val(ui.item.price);
 	    });
         $("#insert_detail_product_name").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -1477,7 +1491,8 @@
 	                             value: item.product_name,
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
-	                             c_product_id: item.c_product_id
+	                             c_product_id: item.c_product_id,
+	                             price: item.price
                             }
                           }))
                     }
@@ -1492,7 +1507,7 @@
     	            $(this).val('');
     	            $(this).attr("placeholder","輸入正確的產品名稱!");
     	        }
-    	    }     
+    	    }
          });
   		$("#insert_detail_product_name").bind('focus', function(){ $(this).attr("placeholder","輸入產品名稱以供查詢"); } );
 	    $('#insert_detail_product_name').bind('autocompleteselect', function (e, ui) {
@@ -1500,12 +1515,22 @@
 	    	product_name = ui.item.product_name;
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#insert_detail_c_product_id").val(ui.item.c_product_id);
+	    	$("#insert_detail_product_n").val("1");
+	    	$("#insert_detail_product_price").val(ui.item.price);
+	    	$("#insert_detail_product_cost").val(ui.item.price);
 	    });
 		//新增事件聆聽
 		$("#create-supply").click( function(e) {
 			e.preventDefault();		
 			insert_dialog.dialog("open");
 			//@@@
+		});
+		
+		$("#insert_detail_product_n").change(function(e){
+			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
+		});
+		$("#update_detail_product_n").change(function(e){
+			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
 		});
 		//日期設定
 // 		$(".date").datepicker({
@@ -1515,8 +1540,8 @@
 // 			changeYear:true
 // 		});
 		//hold header
-		$("#purchases").find("th").css("min-width","120px");
-		$("#purchase-detail-table").find("th").css("min-width","120px");
+// 		$("#purchases").find("th").css("min-width","120px");
+// 		$("#purchase-detail-table").find("th").css("min-width","120px");
 	})
 </script>
 	<div class="input-field-wrap">
@@ -1601,10 +1626,12 @@
 							<tr>
 								<td><p>進貨數量</p></td>
 								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
-								<td><p>進貨價格</p></td>
-								<td><input type="text" id="update_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
+								<td><p>單價</p></td>
+								<td><input type="text" id="update_detail_product_price" disabled></td>
 							</tr>
 							<tr>
+								<td><p>總價格</p></td>
+								<td><input type="text" id="update_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
 							</tr>
@@ -1657,10 +1684,12 @@
 							<tr>
 								<td><p>進貨數量</p></td>
 								<td><input type="text" id="insert_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
-								<td><p>進貨價格</p></td>
-								<td><input type="text" id="insert_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
+								<td><p>單價</p></td>
+								<td><input type="text" id="insert_detail_product_price" disabled></td>
 							</tr>
 							<tr>
+								<td><p>總價格</p></td>
+								<td><input type="text" id="insert_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
 							</tr>

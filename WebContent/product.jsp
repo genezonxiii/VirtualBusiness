@@ -317,7 +317,7 @@
 								effect : "fade",
 								duration : 300
 							},
-							width : 600,
+							width : 800,
 							modal : true,
 							buttons : [{
 										id : "insert",
@@ -339,6 +339,8 @@
 														cost : $("#dialog-form-insert input[name='cost']").val(),
 														price : $("#dialog-form-insert input[name='price']").val(),
 														keep_stock : $("#dialog-form-insert input[name='keep_stock']").val(),
+														photo : $("#photo").val(),
+														photo1 : $("#photo1").val(),
 // 														photo : $("#dialog-form-insert input[name='photo']").val(),
 // 														photo1 : $("#dialog-form-insert input[name='photo1']").val(),
 														description : $("#dialog-form-insert input[name='description']").val(),
@@ -488,7 +490,7 @@
 			draggable : false,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
-			width : 600,
+			width : 800,
 			height: "auto",
 			modal : true,
 			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
@@ -513,12 +515,15 @@
 								cost : $("#dialog-form-update input[name='cost']").val(),
 								price : $("#dialog-form-update input[name='price']").val(),
 								keep_stock : $("#dialog-form-update input[name='keep_stock']").val(),
-								photo : $("#dialog-form-update input[name='photo-update']").val(),
-								photo1 : $("#dialog-form-update input[name='photo1-update']").val(),
+								photo : $("#photo-update").val(),//$("#dialog-form-update input[name='photo-update']").val(),
+								photo1 : $("#photo1-update").val(),//$("#dialog-form-update input[name='photo1-update']").val(),
 								description : $("#dialog-form-update input[name='description']").val(),
 								barcode : $("#dialog-form-update input[name='barcode']").val()
 							},
 							success : function(result) {
+								//alert($("#photo-update").val());
+								//alert($("#dialog-form-update input[name='fileupload-update']").val());
+								//alert($("#fileupload-update").attr());
 								var json_obj = $.parseJSON(result);
 								var len=json_obj.length;
 								//判斷查詢結果
@@ -633,8 +638,8 @@
 										$("#dialog-form-update input[name='product_name']").val(json_obj[i].product_name);
 										$("#dialog-form-update input[name='supply_id']").val(json_obj[i].supply_id);
 										$("#dialog-form-update input[name='supply_name']").val(json_obj[i].supply_name);
-										$("#dialog-form-update input[name='type_id']").val(json_obj[i].type_id);
-										$("#dialog-form-update input[name='unit_id']").val(json_obj[i].unit_id);
+										$("#dialog-form-update select[name='select_update_type_id']").val(json_obj[i].type_id);
+										$("#dialog-form-update select[name='select_update_unit_id']").val(json_obj[i].unit_id);
 										$("#dialog-form-update input[name='cost']").val(json_obj[i].cost);
 										$("#dialog-form-update input[name='price']").val(json_obj[i].price);
 										$("#dialog-form-update input[name='keep_stock']").val(json_obj[i].keep_stock);
@@ -644,12 +649,23 @@
 										$("#dialog-form-update input[name='barcode']").val(json_obj[i].barcode);
 										
 										if (json_obj[i].photo != '') {
-											$("#product-photo").attr("src", "/VirtualBusiness/image.do?picname=" + json_obj[i].photo);
+											$("#product-photo").attr("src", "./image.do?picname=" + json_obj[i].photo);
+											$("#product-photo").attr("width","150");
+											$("#product-photo").attr("alt",json_obj[i].photo);
+										}else{
+											$("#product-photo").attr("src","");
+											$("#product-photo").attr("width","100");
+											$("#product-photo").attr("alt","無圖片");
 										}
 										if (json_obj[i].photo1 != '') {
-											$("#product-photo1").attr("src", "/VirtualBusiness/image.do?picname=" + json_obj[i].photo1);
+											$("#product-photo1").attr("src", "./image.do?picname=" + json_obj[i].photo1);
+											$("#product-photo1").attr("width","150");
+											$("#product-photo1").attr("alt",json_obj[i].photo1);
+										}else{
+											$("#product-photo1").attr("src","");
+											$("#product-photo1").attr("width","100");
+											$("#product-photo1").attr("alt"," 囗無圖片");
 										}
-// 										alert($("#product-photo").attr("src"));
 									}
 								}
 							});
@@ -1034,9 +1050,6 @@
 	            progress + '%'
 	        );
 	    }).on('fileuploaddone', function (e, data) {
-	    	console.log(data.result.files);
-	    	console.log("fileuploaddone");
-	    	
 	    	console.log("fileuploaddone");
 	        $.each(data.result.files, function (index, file) {
 	        	$("#photo-update").val(file.name);
@@ -1168,19 +1181,29 @@
 			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
-<!-- 			<img alt="" src="123.jpg"> -->
 			<!--對話窗樣式-修改 -->
 			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline"	>
 					<fieldset>
-<!-- 						<table border="0" height="600"> -->
 				<table class="result-table">
 					<tbody>
-						<tr><td>自訂產品ID:</td><td><input id="same2" type="checkbox" onclick="$('#c_p_id2').val($('#edit_barcode').val())"><label for="same2"><span class="form-label">同條碼</span></label><input type="text" id="c_p_id2" name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
-<tr><td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td><td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td></tr>	
-<tr><td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td><td>產品說明:</td><td><input type="text" name="description"/></td></tr>
-<tr><td>成本:</td><td><input type="text" name="cost" /></td><td>售價:</td><td><input type="text" name="price" /></td></tr>
-<tr><td>安全庫存:</td><td><input type="text" name="keep_stock" /></td><td>條碼:</td><td><input type="text" id="edit_barcode" name="barcode"/></td></tr>
+						<tr>
+							<td>自訂產品ID:</td><td><input type="text" id="c_p_id2" name="c_product_id"/></td>
+							<td>廠商名稱:</td><td><input type="text" name="supply_name"/></td>
+						</tr><tr>
+							<td>產品類別:</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
+							<td>產品單位:</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
+						</tr><tr>
+							<td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td>
+							<td>產品說明:</td><td><input type="text" name="description"/></td>
+						</tr><tr>
+							<td>成本:</td><td><input type="text" name="cost" /></td>
+							<td>售價:</td><td><input type="text" name="price" /></td>
+						</tr><tr>
+							<td>安全庫存:</td><td><input type="text" name="keep_stock" /></td>
+							<td>條碼:<br><br><input id="same2" type="checkbox" style="position:static;" 
+							onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#new_barcode').val('');}">同自定ID</td><td><input type="text" id="edit_barcode" name="barcode"/></td>
+						</tr>
    		         	  </tbody>
    		         	  </table>		
 					</fieldset>
@@ -1190,7 +1213,7 @@
 					<tbody>
 					<tr>
 						<td>
-							<h6>產品圖片名稱:</h6>
+							<h6>產品圖片:</h6>
 						</td>
 						<td>
 							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1203,7 +1226,7 @@
                		 	</tr>	
                		<tr>
               			 <td>	
-               				<h6>產品圖片名稱2:&nbsp;&nbsp;</h6>
+               				<h6>產品圖片2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
                              <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1217,8 +1240,8 @@
                	  		</tbody>
                	  </table>		
                	<!-- photo section end by Melvin -->
-               	<img id="product-photo" name="product-photo" src="" width="200" height="200">
-               	<img id="product-photo1" src="" width="200" height="200">
+               	<img id="product-photo" src="">
+               	<img id="product-photo1" src="">
  
 			</div>
 			<!--對話窗樣式-新增 -->
@@ -1227,11 +1250,23 @@
 					<fieldset>
 					<table class="result-table">
 					<tbody>
-						<tr><td>自訂產品ID:</td><td><input id="same" type="checkbox" onclick="$('#c_p_id').val($('#new_barcode').val())"><label for="same"><span class="form-label">同條碼</span></label><input type="text" id="c_p_id"name="c_product_id"/></td><td>廠商名稱:</td><td><input type="text" name="supply_name"/></td></tr>
-<tr><td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td><td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td></tr>	
-<tr><td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td><td>產品說明:</td><td><input type="text" name="description"/></td></tr>
-<tr><td>成本:</td><td><input type="text" name="cost" /></td><td>售價:</td><td><input type="text" name="price" /></td></tr>
-<tr><td>安全庫存:</td><td><input type="text" name="keep_stock" /></td><td>條碼:</td><td><input type="text" id="new_barcode" name="barcode"/></td></tr>
+						<tr>
+							<td>自訂產品ID:</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
+							<td>廠商名稱:</td><td><input type="text" name="supply_name"/></td>
+						</tr><tr>
+							<td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
+							<td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
+						</tr><tr>
+							<td>&nbsp;產品名稱:</td><td><input type="text" name="product_name"  ></td>
+							<td>產品說明:</td><td><input type="text" name="description"/></td>
+						</tr><tr>
+							<td>成本:</td><td><input type="text" name="cost" /></td>
+							<td>售價:</td><td><input type="text" name="price" /></td>
+						</tr><tr>
+							<td>安全庫存:</td><td><input type="text" name="keep_stock" /></td>
+							<td>條碼:<br><br><input id="same" type="checkbox" style="position:static;" 
+							onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID</td><td><input type="text" id="new_barcode" name="barcode"/></td>
+						</tr>
    		         	  </tbody>
    		         	  </table>		
 					</fieldset>
@@ -1241,7 +1276,7 @@
 					<tbody>
 					<tr>
 						<td>
-							<h6>產品圖片名稱:</h6>
+							<h6>產品圖片:</h6>
 						</td>
 						<td>
 							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1254,7 +1289,7 @@
                		 	</tr>	
                		<tr>
               			 <td>	
-               				<h6>產品圖片名稱2:&nbsp;&nbsp;</h6>
+               				<h6>產品圖片2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
                              <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1268,8 +1303,8 @@
                	  		</tbody>
                	  </table>		
                	<!-- photo section end by Melvin -->
-               	<img src="/VirtualBusiness/image.do?picname=a0001.jpg" width="200" height="200">
-               	<img src="/VirtualBusiness/image.do?picname=a0002.jpg" width="200" height="200">
+<!--                	<img src="/VirtualBusiness/image.do?picname=a0001.jpg" width="200" height="200"> -->
+<!--                	<img src="/VirtualBusiness/image.do?picname=a0002.jpg" width="200" height="200"> -->
 			</div>
 		<div class="input-field-wrap">
 			<div class="form-wrap">
@@ -1355,6 +1390,10 @@
 			</div>
 		</div>
 	</div>
+<input type="text" id="photo" style="display:none"/>
+<input type="text" id="photo1" style="display:none"/>
+<input type="text" id="photo-update" style="display:none"/>
+<input type="text" id="photo1-update" style="display:none"/>
 <input type="text" id="bar_code_focus" style="display:none"/>
 <div id="warning" style="display:none;"></div>
 </body>

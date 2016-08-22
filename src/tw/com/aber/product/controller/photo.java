@@ -1,8 +1,10 @@
 package tw.com.aber.product.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -31,14 +33,19 @@ public class photo extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try{
-			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			String my_msg = "I'm photo.java.\n\tThis is "+(new Date()).toString()+".\n\tMy PID is "+ Long.parseLong(processName.split("@")[0])+" .\n";
 			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-			
-			FileWriter fw = new FileWriter(record_log,true);
+			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E)").format(new Date()))+":\r\n  I'm photo-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
+			FileWriter fw;
+			try{
+				fw = new FileWriter(record_log,true);
+			}catch(FileNotFoundException e){
+				fw = new FileWriter(record_log,false);
+			}
 			fw.write(my_msg);
 			fw.close();
 		}catch(Exception e){System.out.println("Error: "+e.toString());}
+		
 		File file;
 		request.setCharacterEncoding("UTF-8");
 

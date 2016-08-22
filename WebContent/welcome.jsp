@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>歡迎畫面</title>
-	<meta charset="utf-8">
+	<meta charset="UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
 </head>

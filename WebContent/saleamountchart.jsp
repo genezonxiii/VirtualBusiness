@@ -252,49 +252,6 @@ function date_format(str) {
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
-<!-- 			<div class="row" > -->
-<!-- 				<div id="products-serah-create-contain" style="width: 800px;margin:0px auto;" > -->
-<!-- 					<table id="products-serah-create" class="ui-widget ui-widget-content"> -->
-<!-- 						<tr class="ui-widget-header"> -->
-<!-- 							<th > -->
-<!-- 								<p style="width:120px;">轉單日</p> -->
-<!-- 							</th><th> -->
-<!-- 								<input type="text" id="datepicker1" placeholder="起"> -->
-<!-- 							</th><th> -->
-<!-- 								~ -->
-<!-- 							</th><th> -->
-<!-- 								<input type="text" id="datepicker2" placeholder="迄"> -->
-<!-- 							</th><th> -->
-<!-- 								<button id="searh-productunit" onclick="" style="width:80px;">查詢</button> -->
-<!-- 							</th> -->
-<!-- 						</tr> -->
-<!-- 					</table> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-			<!-- 第二列 -->
-<!-- 			<div class="row" align="left" > -->
-<!-- 				<div id="products-contain" class="ui-widget"> -->
-<!-- 					<table id="products" class="ui-widget ui-widget-content"> -->
-<!-- 						<thead> -->
-<!-- 							<tr class="ui-widget-header"> -->
-<!-- 								<th>銷貨單號</th> -->
-<!-- 								<th>訂單號</th> -->
-<!-- 								<th><p style="width:320px;">產品名稱</p></th> -->
-<!-- 								<th>客戶自訂產品ID</th> -->
-<!-- 								<th><p style="width:80px;">銷貨數量</p></th> -->
-<!-- 								<th><p style="width:80px;">銷貨金額</p></th> -->
-<!-- 								<th><p style="width:120px;">轉單日</p></th> -->
-<!-- 								<th><p style="width:120px;">配送日</p></th> -->
-<!-- 								<th><p style="width:120px;">銷貨/出貨日期</p></th> -->
-<!-- 								<th><p style="width:100px;">銷售平台</p></th> -->
-<!-- 								<th>備註</th>								 -->
-<!-- 							</tr> -->
-<!-- 						</thead> -->
-<!-- 						<tbody> -->
-<!-- 						</tbody> -->
-<!-- 					</table> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 		</div>
 	</div>
 	<div class="validateTips" align="center"> </div>
