@@ -110,6 +110,7 @@ function who(){
 		return "公司管理";
 		break;
 	case "customer.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "客戶管理";
 		break;
 	case "accreceive.jsp":
