@@ -56,7 +56,7 @@
 <script src="js/photo/jquery.fileupload-validate.js"></script>
 
 <!-- 新3修 -->
-
+   
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
