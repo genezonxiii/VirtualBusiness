@@ -63,7 +63,7 @@ function who(){
 	case "upload.do":
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
 		return "訂單拋轉作業";
-		break;
+		break;  
 //####後臺支援系統############################
 	case "purchase.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
