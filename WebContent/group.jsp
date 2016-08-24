@@ -134,11 +134,11 @@
 									});
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
-			height : 500,
-			width : 500,
+			height : "auto",
+			width : "auto",
 			modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -291,16 +291,21 @@
 				<div id="dialog-form-update" title="修改公司資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
-							<table border="0" height="500">
+							<table class="result-table">
 							<tbody>
-							<tr><td><h6 >公司名稱:</h6></td><td ><input type="text"  style="background-color:lightgray;" name="group_name"disabled="disabled"  /></td></tr>
-							<tr><td><h6>公司統一編號:</h6></td><td><input type="text"  style="background-color:lightgray;" name="group_unicode"disabled="disabled"/></td></tr>
-							<tr><td><h6>公司地址:</h6></td><td><input type="text" name="address" placeholder="修改公司地址"/></td></tr>
-							<tr><td><h6>公司電話:</h6></td><td><input type="text" name="phone"placeholder="修改公司電話"/></td></tr>
-							<tr><td><h6>公司傳真:</h6></td><td><input type="text" name="fax"placeholder="修改公司傳真"/></td></tr>
-							<tr><td><h6>負責人:</h6></td><td><input type="text" name="master"placeholder="修改公負責人"/></td></tr>
-							<tr><td><h6>負責人Email:</h6></td><td><input type="text" name="email"placeholder="修改負責人Email"/></td></tr>
-							<tr><td><h6>負責人連絡手機:&nbsp;&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile"placeholder="修改負責人連絡手機"/></td></tr>
+							<tr>
+								<td>公司名稱:</td><td ><input type="text"  style="background-color:lightgray;" name="group_name"disabled="disabled"  /></td>
+								<td>公司統一編號:</td><td><input type="text"  style="background-color:lightgray;" name="group_unicode"disabled="disabled"/></td>
+							</tr><tr>
+								<td>公司地址:</td><td><input type="text" name="address" placeholder="修改公司地址"/></td>
+								<td>公司電話:</td><td><input type="text" name="phone"placeholder="修改公司電話"/></td>
+							</tr><tr>
+								<td>公司傳真:</td><td><input type="text" name="fax"placeholder="修改公司傳真"/></td>
+								<td>負責人:</td><td><input type="text" name="master"placeholder="修改公負責人"/></td>
+							</tr><tr>
+								<td>負責人Email:</td><td><input type="text" name="email"placeholder="修改負責人Email"/></td>
+								<td>負責人連絡手機:</td><td><input type="text" name="mobile"placeholder="修改負責人連絡手機"/></td>
+							</tr>
 							</tbody>
 							</table>	
 					</fieldset>

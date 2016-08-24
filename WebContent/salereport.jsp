@@ -18,14 +18,13 @@
 <link rel="stylesheet" href="css/buttons.dataTables.min.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<link href="<c:url value="css/1.12.0/jquery-ui.css" />" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
-
-
+	
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
@@ -65,7 +64,7 @@ function sea() {
 			var result_table = "";
 			$.each(json_obj,function(i, item) {
 				result_table += "<tr><td>"+ json_obj[i].seq_no + 
-				"</td><td >"+ json_obj[i].order_no + 
+				"</td><td>"+ json_obj[i].order_no + 
 				"</td><td>" + json_obj[i].product_name + 
 				"</td><td>"+ json_obj[i].c_product_id + 
 				"</td><td>"+ json_obj[i].quantity + 
@@ -80,6 +79,10 @@ function sea() {
 			if(json_obj.length!=0){
 				$("#products-contain").show();
 				$("#products tbody").html(result_table);
+				//alert("111");
+// 				$("#products td").each(function(index) {
+// 					  $( this ).text($( this ).text()+"1111") ;
+// 				});
 				draw_table("products",'訂單報表');
 				$(".validateTips").text("");
 			}else{
@@ -95,6 +98,10 @@ function sea() {
 			$('#datepicker1').datepicker('setDate',new Date());
 			$('#datepicker2').datepicker('setDate',new Date());
 			parameter="today";sea();
+		}
+		if(value=="upload"){
+			$('#datepicker1').datepicker('setDate',new Date());
+			$('#datepicker2').datepicker('setDate',new Date());
 		}
 		//查詢相關設定
 		$("#searh-productunit").click(function(){

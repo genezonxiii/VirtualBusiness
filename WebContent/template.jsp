@@ -36,6 +36,9 @@ function table_before(str){
 function draw_table(table_name,title){
 	var selector="#"+table_name;
 	$(".tog_col").remove();
+	$(selector+" td").each(function(index){
+		$( this ).html($( this ).html()+"&nbsp;") ;
+	});
 	$(selector).dataTable().fnDestroy();
 	table_before(table_name);
 	$(selector).dataTable({
@@ -53,8 +56,8 @@ function draw_table(table_name,title){
 }
 
 function who(){
-	//console.log("跨殺小 (／‵Д′)／~ ╧╧");
-	switch(location.pathname.split("/")[2]){
+	var page=location.pathname.split("/")[2];
+	switch(page){
 //####交易處理############################
 	case "upload.jsp":
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
@@ -63,7 +66,7 @@ function who(){
 	case "upload.do":
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
 		return "訂單拋轉作業";
-		break;  
+		break;
 //####後臺支援系統############################
 	case "purchase.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
@@ -156,7 +159,7 @@ function who(){
 		break;
 	case "stockreport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
-		return "庫存管理報表";
+		return "庫存報表";
 		break;
 	case "supplyreport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
@@ -164,7 +167,7 @@ function who(){
 		break;
 	case "productreport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
-		return "商品管理報表";
+		return "商品報表";
 		break;
 	case "customerreport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
@@ -205,7 +208,7 @@ function who(){
 		break;
 		
 	default:
-		window.location.href = './404.jsp';
+		//window.location.href = './404.jsp';
 		return "";
 		break;
 	}
@@ -275,12 +278,12 @@ $(function() {
 					<li><a href="salereturnreport.jsp">退貨報表</a></li>
 					<li><a href="purchreport.jsp">進貨報表</a></li>
 					<li><a href="purchreturnreport.jsp">進貨退回報表</a></li>
-			    	<li><a href="stockreport.jsp">庫存管理報表</a></li>
+			    	<li><a href="stockreport.jsp">庫存報表</a></li>
 			    	<li><a href="supplyreport.jsp">供應商報表</a></li>
-			    	<li><a href="productreport.jsp">商品管理報表</a></li>
+			    	<li><a href="productreport.jsp">商品報表</a></li>
 			    	<li><a href="customerreport.jsp">客戶報表</a></li>
-<!-- 			    	<li><a href="accreceivereport.jsp">應收帳款報表</a></li> -->
-<!-- 			    	<li><a href="accpayreport.jsp">應付帳款報表</a></li> -->
+			    	<li><a href="accreceivereport.jsp">應收帳款報表</a></li>
+			    	<li><a href="accpayreport.jsp">應付帳款報表</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
@@ -301,7 +304,7 @@ $(function() {
 <%--  		<%= (("welcome.jsp".equals(request.getRequestURI().split("/")[2]))?("歡迎"+request.getSession().getAttribute("user_name")+"使用本系統"):("")) %> --%>
  	</h2> 
 <!-- 	<div class="content-wrap" style="display:none"> -->
- <!--################正文開始###############--> 
+ <!--################正文開始###############-->
  <!--################正文結束###############-->
 <!-- 	</div>/.content-wrap -->
 

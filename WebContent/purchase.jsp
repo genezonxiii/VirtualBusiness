@@ -44,21 +44,26 @@
 		            	var json_obj = $.parseJSON(result);
 						if(json_obj.length!=0){
 							if(new_or_edit==1){
-								new_or_edit=3;
+								//new_or_edit=3;
 								$("#insert_detail_c_product_id").val(json_obj[0].c_product_id);
 								$("#insert_detail_product_name").val(json_obj[0].product_name);
 								$("#insert_detail_product_n").val(json_obj[0].keep_stock);
 								$("#insert_detail_product_cost").val(json_obj[0].cost);
+								$("#insert_detail_product_price").val(json_obj[0].cost);
 				    		}
 				    		if(new_or_edit==2){
-				    			new_or_edit=3;
+				    			//new_or_edit=3;
 				    			$("#update_detail_c_product_id").val(json_obj[0].c_product_id);
 				    			$("#update_detail_product_name").val(json_obj[0].product_name);
 				    			$("#update_detail_product_n").val(json_obj[0].keep_stock);
 								$("#update_detail_product_cost").val(json_obj[0].cost);
+								$("#update_detail_product_price").val(json_obj[0].cost);
 				    		}
 						}
-						if(json_obj.length==0){alert("查無此商品資料。");}
+						if(json_obj.length==0){
+							$("#warning").html("<h3>該條碼無產品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
+							$("#warning").dialog("open");
+						}
 		            }
 	    		});
 	        })
@@ -143,7 +148,8 @@
 				},
 				amount : {
 					required : true,
-					digits :true
+					digits :true,
+					min : 1
 				},
 				return_date : {
 					dateISO : true
@@ -168,7 +174,8 @@
 				},
 				amount : {
 					required : true,
-					digits :true
+					digits :true,
+					min : 1
 				},
 				return_date : {
 					dateISO : true
@@ -608,6 +615,7 @@
 										}
 									});
 									insert_dialog.dialog("close");
+									$("#insert-dialog-form-post").trigger("reset");
 								}
 							}
 						}, {
@@ -663,7 +671,7 @@
       	$("#searh_purchase_by_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
       	$('#searh_purchase_by_supply_name').bind('autocompleteselect', function (e, ui) {
         	supply_id = ui.item.supply_id;
-        });       
+        });
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
 			draggable : false,//防止拖曳
@@ -758,6 +766,7 @@
 								}
 							}
 						});
+						$("#update-dialog-form-post").trigger("reset");
 						update_dialog.dialog("close");
 					}
 				}
@@ -1069,6 +1078,7 @@
 									}
 								});
 								detail_insert_dialog.dialog("close");
+								$("#detail-insert-dialog-form-post").trigger("reset");
 							}
 						}
 					}, {
@@ -1304,6 +1314,7 @@
 							}
 						});
 						detail_update_dialog.dialog("close");
+						$("#detail-update-dialog-form-post").trigger("reset");
 					}
 				}
 			}, {
@@ -1532,6 +1543,19 @@
 		$("#update_detail_product_n").change(function(e){
 			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
 		});
+		$("#warning").dialog({
+			title: "警告",
+			draggable : false,//防止拖曳
+			resizable : false,//防止縮放
+			autoOpen : false,
+			height : "auto",
+			modal : true,
+			show : {effect : "bounce",duration : 1000},
+			hide : {effect : "fade",duration : 300},
+			buttons : {
+				"確認" : function() {$(this).dialog("close");}
+			}
+		});
 		//日期設定
 // 		$(".date").datepicker({
 // 			dayNamesMin:["日","一","二","三","四","五","六"],
@@ -1542,7 +1566,7 @@
 		//hold header
 // 		$("#purchases").find("th").css("min-width","120px");
 // 		$("#purchase-detail-table").find("th").css("min-width","120px");
-	})
+	});
 </script>
 	<div class="input-field-wrap">
 			<div class="form-wrap">
@@ -1613,8 +1637,9 @@
 				</form>
 			</div>
 			<!--對話窗樣式-detail-修改 -->
-			<div id="detail_dialog_form_update" title="修改進貨資料" style="display:none;">
+			<div id="detail_dialog_form_update" title="修改明細資料" style="display:none;">
 				<form name="detail-update-dialog-form-post" id="detail-update-dialog-form-post">
+					<font color=red style="padding-left:26px">掃條碼亦可取得商品資料</font>
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
@@ -1674,6 +1699,7 @@
 			<div id="detail-dialog-form-insert" title="新增明細資料" style="display:none;">
 				<form name="detail-insert-dialog-form-post" id="detail-insert-dialog-form-post"style="display:inline">
 					<fieldset>
+						<font color=red style="padding-left:26px">掃條碼亦可取得商品資料</font>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
 								<td><p>自訂產品ID名稱</p></td>
@@ -1789,5 +1815,6 @@
 <!-- 			</table>			 -->
 		</div>
 	</div>
+<div id="warning"></div>
 </body>
 </html>

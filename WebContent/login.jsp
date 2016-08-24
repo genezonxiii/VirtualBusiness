@@ -69,7 +69,7 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             	if (json_obj.message=="failure"){
             		$("#verify").val("");
             		$("#password").val("");
-            		$("#password").after("<span class='error-msg'>密碼錯誤!</span>");
+            		$("#password").after("<span class='error-msg'>請確認密碼與統編是否正確!</span>");
             		//$("#my_msg").html("請確認密碼與統編是否正確");
             		//$("#my_msg").dialog("open");
             		chimg();

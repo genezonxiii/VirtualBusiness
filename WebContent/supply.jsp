@@ -56,11 +56,9 @@
 						required : true
 					},
 					supply_unicode:{
-						required : true,
 						maxlength : 10,
 					},
 					address: {
-						required : true,
 						stringMaxLength : 100
 					},
 					contact: {
@@ -99,11 +97,9 @@
 					required : true
 				},
 				supply_unicode:{
-					required : true,
 					maxlength : 10,
 				},
 				address: {
-					required : true,
 					stringMaxLength : 100
 				},
 				contact: {
@@ -277,6 +273,7 @@
 													}
 												});
 												insert_dialog.dialog("close");
+												$("#insert-dialog-form-post").trigger("reset");
 											}
 										}
 									}, {
@@ -284,10 +281,12 @@
 										click : function() {
 											validator_insert.resetForm();
 											insert_dialog.dialog("close");
+											$("#insert-dialog-form-post").trigger("reset");
 										}
 									} ],
 							close : function() {
 								validator_insert.resetForm();
+								$("#insert-dialog-form-post").trigger("reset");
 							}
 						});
 		$("#dialog-form-insert").show();
@@ -449,6 +448,7 @@
 							}
 						});
 						update_dialog.dialog("close");
+						$("#update-dialog-form-post").trigger("reset");
 					}
 				}
 			}, {
@@ -456,10 +456,12 @@
 				click : function() {
 					validator_update.resetForm();
 					update_dialog.dialog("close");
+					$("#update-dialog-form-post").trigger("reset");
 				}
 			} ],
 			close : function() {
 				validator_update.resetForm();
+				$("#update-dialog-form-post").trigger("reset");
 			}
 		});
 		$("#dialog-form-update").show();

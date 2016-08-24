@@ -10,14 +10,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>進貨退回報表</title>
+<title>進貨退回</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-<link rel="stylesheet" href="css/styles.css" />
+
+<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
+<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
-<link rel="stylesheet" href="css/buttons.dataTables.min.css" />
+<link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -42,26 +44,45 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 $(function(){
-	//進貨日查詢相關設定
-	$("#search_purchase_date").click(function(e) {
+	 $("#return_date_form").validate({
+			rules : {
+				return_staet_date : {
+					dateISO : true
+				},
+				return_end_date:{
+					dateISO : true
+				}
+			},
+			messages:{
+				return_staet_date : {
+					dateISO : "日期格式錯誤"
+				},
+				return_end_date : {
+					dateISO : "日期格式錯誤"
+				}
+			}
+		});		
+	//退貨日查詢相關設定
+	$("#search_return_date").click(function(e) {
 		e.preventDefault();
+		if($("#return_date_form").valid()){
 			$.ajax({
 				type : "POST",
 				url : "purchreturn.do",
 				data : {
-					action : "search_purchase_date",
-					purchase_start_date: (($("#purchase_start_date").val().length<3)?"1999-01-01":$("#purchase_start_date").val()),
-					purchase_end_date: (($("#purchase_end_date").val().length<3)?"2200-01-01":$("#purchase_end_date").val())
+					action : "search_return_date",
+					return_start_date: $("#return_start_date").val(),
+					return_end_date: $("#return_end_date").val()
 				},
 				success : function(result) {
 						var json_obj = $.parseJSON(result);
-						var len=json_obj.length;
 						//判斷查詢結果
 						var resultRunTime = 0;
 						$.each (json_obj, function (i) {
 							resultRunTime+=1;
 						});
 						if(json_obj[resultRunTime-1].message=="驗證通過"){
+							var len=json_obj.length;
 							var result_table = "";
 							$.each(json_obj,function(i, item) {
 								if(i<len-1){
@@ -96,85 +117,97 @@ $(function(){
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
-									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>";
+									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>"
 								}
 							});
 						}
 						if(json_obj[resultRunTime-1].message=="如要以日期查詢，請完整填寫起日欄位"){
-							$("#purchasereturns_true_contain").hide();
 							$("#purchasereturns_false_contain").hide();
-							if(!$("#purchase_date_err_mes").length){
-                				$("<p id='purchase_date_err_mes'>如要以日期查詢，請完整填寫起日欄位</p>").appendTo($("#purchase_date_form").parent());
+							$("#purchasereturns_true_contain").hide();
+							if(!$("#purchase_return_date_err_mes").length){
+                				$("<p id='purchase_return_date_err_mes'>如要以日期查詢，完整填寫起日欄位</p>").appendTo($("#return_date_form").parent());
                 			}else{
-                				$("#purchase_date_err_mes").html("如要以日期查詢，請完整填寫起日欄位");
+                				$("#purchase_return_date_err_mes").html("如要以日期查詢，完整填寫起日欄位");
                 			}
 						}
 						if(json_obj[resultRunTime-1].message=="如要以日期查詢，請完整填寫訖日欄位"){
-							$("#purchasereturns_true_contain").hide();
 							$("#purchasereturns_false_contain").hide();
-							if(!$("#purchase_date_err_mes").length){
-                				$("<p id='purchase_date_err_mes'>如要以日期查詢，請完整填寫訖日欄位</p>").appendTo($("#purchase_date_form").parent());
+							$("#purchasereturns_true_contain").hide();
+							if(!$("#purchase_return_date_err_mes").length){
+                				$("<p id='purchase_return_date_err_mes'>如要以日期查詢，請完整填寫訖日欄位</p>").appendTo($("#return_date_form").parent());
                 			}else{
-                				$("#purchase_date_err_mes").html("如要以日期查詢，請完整填寫訖日欄位");
+                				$("#purchase_return_date_err_mes").html("如要以日期查詢，請完整填寫訖日欄位");
                 			}
-						}
+						}						
 						if(json_obj[resultRunTime-1].message=="起日不可大於訖日"){
-							$("#purchasereturns_true_contain").hide();
 							$("#purchasereturns_false_contain").hide();
-							if(!$("#purchase_date_err_mes").length){
-                				$("<p id='purchase_date_err_mes'>起日不可大於訖日</p>").appendTo($("#purchase_date_form").parent());
+							$("#purchasereturns_true_contain").hide();
+							if(!$("#purchase_return_date_err_mes").length){
+                				$("<p id='purchase_return_date_err_mes'>起日不可大於訖日</p>").appendTo($("#return_date_form").parent());
                 			}else{
-                				$("#purchase_date_err_mes").html("起日不可大於訖日");
+                				$("#purchase_return_date_err_mes").html("起日不可大於訖日");
                 			}
 						}							
-						if(resultRunTime==0){
-							$("#purchasereturns_true_contain").hide();
+						if(resultRunTime>2){
 							$("#purchasereturns_false_contain").hide();
-							if(!$("#purchase_date_err_mes").length){
-                				$("<p id='purchase_date_err_mes'>查無此結果</p>").appendTo($("#purchase_date_form").parent());
+							$("#purchasereturns_true_contain").hide();
+							if(!$("#purchase_return_date_err_mes").length){
+                				$("<p id='purchase_return_date_err_mes'>查無此結果</p>").appendTo($("#return_date_form").parent());
                 			}else{
-                				$("#purchase_date_err_mes").html("查無此結果");
+                				$("#purchase_return_date_err_mes").html("查無此結果");
                 			}
 						}
-						$("#purchasereturns_false_table").dataTable().fnDestroy();
+						$("#purchasereturns_true_table").dataTable().fnDestroy();
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-// 							$("#xls_btn").show();
-							$("#purchasereturns_true_contain").hide();
-							$("#purchasereturns_false_contain").show();
-							$("#purchasereturns_false_table tbody").html(result_table);
-							$("#purchasereturns_false_table").find("td").css("text-align", "center");
-							draw_table("purchasereturns_false_table",'進貨退回報表');
-							if($("#purchase_date_err_mes").length){
-                				$("#purchase_date_err_mes").remove();
+							$("#purchasereturns_true_contain").show();
+							$("#purchasereturns_true_table tbody").html(result_table);
+							$("#purchasereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#purchasereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							draw_table("purchasereturns_true_table","進貨退回報表");
+									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+							if($("#purchase_return_date_err_mes").length){
+                				$("#purchase_return_date_err_mes").remove();
                 			}
 						}
 					}
 				});
+		}
 	});		
+	//get today yyyy-mm-dd
+	function getCurrentDate(){
+		var fullDate = new Date();
+		var twoDigitMonth = fullDate.getMonth()+1;	if(twoDigitMonth.length==1)	twoDigitMonth="0" +twoDigitMonth;
+		var twoDigitDate = fullDate.getDate()+"";	if(twoDigitDate.length==1)	twoDigitDate="0" +twoDigitDate;
+		var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitDate;
+		return currentDate;
+	}
+	//日期設定
 	//hold header
-	$("#purchasereturns_false_table").find("th").css("min-width","120px");
+	$("#purchasereturns_true_table").find("th").css("min-width","120px");	
 })
 </script>
 		<div class="datalistWrap">
-			<div class="input-field-wrap">
-				<div class="form-wrap">
-					<div class="form-row" id="select_dates_contain">
+		<div class="input-field-wrap">
+			<div class="form-wrap" >
+				<div class="form-row">
+					<form id="return_date_form" name="trans_dis_date_form">
 						<label for="">
 							<span class="block-label">退貨起日</span>
-							<input type="text" class="input-date" id="purchase_start_date" name="purchase_start_date">
+							<input type="text" class="input-date" id="return_start_date" name="return_start_date">
 						</label>
 						<div class="forward-mark"></div>
 						<label for="">
 							<span class="block-label">退貨迄日</span>
-							<input type="text" class="input-date" id="purchase_end_date" name="purchase_end_date">
+							<input type="text" class="input-date" id="return_end_date" name="return_end_date">
 						</label>
-						<a class="btn btn-darkblue" id="search_purchase_date">查詢</a>
-					</div>
-				</div><!-- /.form-wrap -->
-			</div>
-			<div class="search-result-wrap" style="height:433px;">
-				<div id="purchasereturns_false_contain" class="result-table-wrap" style="display:none;">
-					<table id="purchasereturns_false_table" class="result-table">
+						<button id="search_return_date" class="btn btn-darkblue">查詢</button>		
+					</form>
+				</div>
+			</div><!-- /.form-wrap -->
+		</div><!-- /.input-field-wrap -->
+			<div class="row search-result-wrap" style="height:433px;">
+				<div id="purchasereturns_true_contain" class="result-table-wrap" style="display:none;">
+					<table id="purchasereturns_true_table" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>進貨單號</th>
@@ -183,7 +216,6 @@ $(function(){
 								<th>發票樣式</th>
 								<th>進貨發票金額</th>
 								<th>備註說明</th>
-								<!--th>勾選</th-->
 							</tr>
 						</thead>
 						<tbody>
@@ -192,6 +224,6 @@ $(function(){
 				</div>
 			</div>		
 		</div>
-	</div>
+	</div>	
 </body>
 </html>

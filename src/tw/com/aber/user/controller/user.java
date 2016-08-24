@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,26 @@ public class user extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		
+		if ("check_email".equals(action)) {
+			try {
+				/*************************** 1.接收請求參數 ****************************************/
+				//String user_name = request.getParameter("user_name");
+				String email=request.getParameter("email");
+				/*************************** 2.開始查詢資料 ****************************************/
+				// 假如無查詢條件，則是查詢全部
+					System.out.println(userService.checkemail(group_id,email));
+
+					//Gson gson = new Gson();
+					//String jsonStrList = gson.toJson(list);
+					//response.getWriter().write(jsonStrList);
+					return;// 程式中斷
+				/*************************** 其他可能的錯誤處理 **********************************/
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if ("searh".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數 ****************************************/
@@ -192,6 +213,8 @@ public class user extends HttpServlet {
 		public void deleteDB(String user_id,String operation);
 
 		public List<UserBean> searchAllDB(String group_id);
+		
+		public Boolean checkemail(String group_id, String email);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -231,6 +254,9 @@ public class user extends HttpServlet {
 		public List<UserBean> getSearchAllDB(String group_id) {
 			return dao.searchAllDB(group_id);
 		}
+		public Boolean checkemail(String group_id,String email){
+			return dao.checkemail(group_id,email);
+		}
 	}
 
 	/*************************** 操作資料庫 ****************************************/
@@ -240,6 +266,8 @@ public class user extends HttpServlet {
 		private static final String sp_selectall_user = "call sp_selectall_user(?)";
 		private static final String sp_del_user = "call sp_del_user(?,?)";
 		private static final String sp_update_user = "call sp_update_user(?,?,?,?,?)";
+		private static final String sp_check_email = "call sp_check_email(?,?,?)";
+		 
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -422,6 +450,43 @@ public class user extends HttpServlet {
 				}
 			}
 			return list;
+		}
+		
+		public Boolean checkemail(String group_id,String email) {
+			Connection con = null;
+			CallableStatement cs = null;
+			Boolean rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_check_email);
+				cs.registerOutParameter(3, Types.BOOLEAN);
+				cs.setString(1, group_id);
+				cs.setString(2, email);
+				cs.execute();
+				rs = cs.getBoolean(3);
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return rs;
 		}
 	}
 }

@@ -196,13 +196,13 @@ if(str!=null){
 	<br><br><br>
 	<table width=100% >
 	<tr><td style="text-align:center">
-			<a href='./salereport.jsp' style="font-size:25px;">訂單報表</a>
+			<a href='./salereport.jsp?action=upload' style="font-size:25px;">訂單報表</a>
 		</td><td style="text-align:center">
-			<a href='./shipreport.jsp' style="font-size:25px;">出貨報表</a>
+			<a href='./shipreport.jsp?action=upload' style="font-size:25px;">出貨報表</a>
 <!-- 		</td><td style="text-align:center"> -->
 <!-- 			<a href='./distributereport.jsp' style="font-size:25px;">配送報表</a> -->
 		</td><td style="text-align:center">
-			<a href='./salereturnreport.jsp' style="font-size:25px;" >退貨報表</a>
+			<a href='./salereturnreport.jsp?action=upload' style="font-size:25px;" >退貨報表</a>
 		</td><tr>
 	</table>
 	<div id="msg" style="color:red;margin:5px;display:none;">請稍候片刻...</div>

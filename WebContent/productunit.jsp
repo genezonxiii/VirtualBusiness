@@ -200,6 +200,7 @@
 													}
 												});
 												insert_dialog.dialog("close");
+												$("#dialog-form-insert input[name='unit_name']").val('');
 											}
 										}
 									}, {
@@ -207,10 +208,12 @@
 										click : function() {
 											validator_insert.resetForm();
 											insert_dialog.dialog("close");
+											$("#dialog-form-insert input[name='unit_name']").val('');
 										}
 									} ],
 							close : function() {
 								validator_insert.resetForm();
+								$("#dialog-form-insert input[name='unit_name']").val('');
 							}
 						});
 		$("#dialog-form-insert").show();

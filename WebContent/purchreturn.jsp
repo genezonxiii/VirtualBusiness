@@ -217,7 +217,7 @@ $(function(){
 								  dom: 'Blfrtip',
 						          buttons: [{
 						                text: '取消進貨退回',
-						                className: 'btn_purchase_return_cancel btn btn-primary',
+						                className: 'btn_purchase_return_cancel',
 						                action : function(e){
 						            		e.preventDefault();
 						            		var count = 0;

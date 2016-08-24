@@ -246,6 +246,7 @@ window.onload = function (e){
 								}
 							}
 						});
+						$("#insert-dialog-form-post").trigger("reset");
 						insert_dialog.dialog("close");
 					}
 				}
@@ -375,6 +376,7 @@ window.onload = function (e){
 							}
 						});
 						update_dialog.dialog("close");
+						$("#update-dialog-form-post").trigger("reset");
 					}
 				}
 			}, {
@@ -545,7 +547,7 @@ window.onload = function (e){
 			<div id="dialog-form-insert" title="新增客戶資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
-						<table>
+						<table class="result-table">
 							<tbody>
 								<tr>
 									<td style="text-align:right" >客戶姓名:&nbsp&nbsp</td>

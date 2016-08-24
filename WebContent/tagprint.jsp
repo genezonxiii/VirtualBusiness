@@ -329,7 +329,7 @@
 			autoOpen : false,
 			height : "auto",
 			modal : true,
-			show : {effect : "bounce",duration : 1000},
+			show : {effect : "bounce",duration : 1500},
 			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認" : function() {$(this).dialog("close");}

@@ -47,7 +47,7 @@
 						$.each(json_obj,function(i, item) {
 							result_table += 
 									"<tr><td>"+json_obj[i].product_name+"</td><td>" 
-									+json_obj[i].quantity+"</td>"
+									+json_obj[i].quantity+"</td><td>"+json_obj[i].keep_stock+"</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
 									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+data.string+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
@@ -65,7 +65,7 @@
 							$("#products tbody").html(result_table);
 // 							draw_table("products","庫存報表");
 							$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-							$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+// 							$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 							$(".validateTips").text("");
 						}else{
 							$("#products-contain").hide();
@@ -102,13 +102,15 @@ var bar_search=0;
 					product_name : $("#searh_stock_name" ).val(),
 				},
 				success : function(result) {
+					//alert(result);
 					//console.log(result);
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
 						result_table += 
-								"<tr><td>"+json_obj[i].product_name+"</td><td>" 
-								+ json_obj[i].quantity+"</td>"
+								  "<tr><td>"+json_obj[i].product_name
+								+ "</td><td>" + json_obj[i].quantity
+								+ "</td><td>"+json_obj[i].keep_stock+"</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
 								+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
@@ -165,8 +167,9 @@ var bar_search=0;
 								$.each(json_obj,function(i, item) {
 									if(bar_search==null||uuid==json_obj[i].product_id)
 									result_table += 
-										"<tr><td>"+json_obj[i].product_name+"</td><td>" 
-											+json_obj[i].quantity+"</td>"
+										"<tr><td>"+json_obj[i].product_name
+											+"</td><td>"+json_obj[i].quantity
+											+"</td><td>"+json_obj[i].keep_stock+"</td>"
 											+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 											+ "	<div class='table-function-list'>"
 											+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
@@ -210,7 +213,6 @@ var bar_search=0;
 // 	 											+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+bar_search+"' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' ><i class='fa fa-pencil'></i></button>"
 // 	 											+ "	</div></div></td></tr>";	
 // 	 								});
-	 								
 // 	 								//判斷查詢結果
 // 	 								var resultRunTime = 0;
 // 	 								$.each (json_obj, function (i) {
@@ -297,6 +299,8 @@ var bar_search=0;
 							<input type="text" id="searh_stock_name"></input>
 						</label>
 						<button class="btn btn-darkblue" id="searh_stock">查詢</button>
+						<br><br>
+						<font color=red >掃條碼亦可取得商品資料</font>
 					</div>
 				</div><!-- /.form-wrap -->
 			</div>
@@ -325,10 +329,11 @@ var bar_search=0;
 							<tr class="ui-widget-header">
 								<th style="min-width:150px;">產品名稱 </th>
 								<th style="min-width:150px;">庫存數量</th>
+								<th style="min-width:150px;">安全庫存</th>
 								<th>功能</th>
 							</tr>
 						</thead>
-						<tbody id="tbdy">
+						<tbody id="tbdy" style="text-align:center">
 						</tbody>
 					</table>
 				</div>

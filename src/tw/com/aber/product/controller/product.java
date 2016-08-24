@@ -45,7 +45,7 @@ public class product extends HttpServlet {
 			List<ProductBean> list = productService.getsearchBarcode(group_id,barcode);
 			Gson gson = new Gson();
 			String jsonStrList = gson.toJson(list);
-			//System.out.println("jsonStrList: "+jsonStrList);
+			System.out.println("jsonStrList: "+jsonStrList);
 			response.getWriter().write(jsonStrList);
 			return;
 		}
@@ -64,6 +64,41 @@ public class product extends HttpServlet {
 //			return;
 //			
 //		}
+		if ("search_name".equals(action)) {
+			try {
+				/*************************** 1.接收請求參數-格式檢查 ****************************************/
+				String product_name = request.getParameter("product_name");
+				/*************************** 2.開始查詢資料 ****************************************/
+				// 假如無查詢條件，則是查詢全部
+				if (product_name == null || (product_name.trim()).length() == 0) {
+					productService = new ProductService();
+					List<ProductBean> list = productService.SearchAllDB(group_id);
+					ProductBean productBean = new ProductBean();
+					productBean.setMessage("驗證通過");
+					list.add(productBean);
+					Gson gson = new Gson();
+					String jsonStrList = gson.toJson(list);
+					response.getWriter().write(jsonStrList);
+					return;// 程式中斷	
+				}
+				// 查詢指定Name  假如廠商名稱輸入不適空白  或是有東西 進入下面
+				if (product_name != null || (product_name.trim()).length() > 0) {
+					productService = new ProductService();
+					List<ProductBean> list = productService.getsearch_byname(group_id,product_name);
+					ProductBean productBean = new ProductBean();
+					productBean.setMessage("驗證通過");
+					list.add(productBean);
+					Gson gson = new Gson();
+					String jsonStrList = gson.toJson(list);
+					//System.out.println(jsonStrList);
+					response.getWriter().write(jsonStrList);
+					return;// 程式中斷
+				}
+				/*************************** 其他可能的錯誤處理 **********************************/
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if ("search".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數-格式檢查 ****************************************/
@@ -140,6 +175,7 @@ public class product extends HttpServlet {
 				String unit_id = request.getParameter("unit_id");
 				float cost = Float.valueOf(request.getParameter("cost"));
 				float price = Float.valueOf(request.getParameter("price"));
+				int  current_stock = Integer.valueOf(request.getParameter("current_stock"));
 				int  keep_stock = Integer.valueOf(request.getParameter("keep_stock"));
 				String photo = request.getParameter("photo");
 				String photo1 = request.getParameter("photo1");
@@ -149,7 +185,7 @@ public class product extends HttpServlet {
 				/*************************** 2.開始新增資料 ***************************************/
 				productService = new ProductService();
 				productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id, unit_id,
-						cost, price, keep_stock, photo, photo1, description,barcode, user_id);
+						cost, price, current_stock, keep_stock, photo, photo1, description,barcode, user_id);
 				/***************************
 				 * 3.新增完成,準備轉交(Send the Success view)
 				 ***********/
@@ -241,6 +277,7 @@ public class product extends HttpServlet {
 		private String unit_id;
 		private float cost;
 		private float price;
+		private int current_stock;
 		private int keep_stock;
 		private String photo;
 		private String photo1;
@@ -248,6 +285,7 @@ public class product extends HttpServlet {
 		private String barcode;
 		private String user_id;
 		private String message;
+		
 		
 		public String getProduct_id() {
 			return product_id;
@@ -314,6 +352,12 @@ public class product extends HttpServlet {
 		}
 		public void setKeep_stock(int keep_stock) {
 			this.keep_stock = keep_stock;
+		}
+		public int getCurrent_stock() {
+			return current_stock;
+		}
+		public void setCurrent_stock(int current_stock) {
+			this.current_stock = current_stock;
 		}
 		public String getPhoto() {
 			return photo;
@@ -423,6 +467,8 @@ public class product extends HttpServlet {
 		
 		public List<ProductBean> getsearchSupplyname(String group_id,String supply_name);
 		
+		public List<ProductBean> getsearch_byname(String group_id,String product_name);
+		
 		public List<ProductBean> getsearchBarcode(String group_id,String barcode);
 	}
 
@@ -435,7 +481,7 @@ public class product extends HttpServlet {
 		}
 
 		public ProductBean addProduct( String group_id, String c_product_id, String product_name, String supply_id, String supply_name,
-				String type_id, String unit_id, Float cost, Float price, int keep_stock, String photo, String photo1,
+				String type_id, String unit_id, Float cost, Float price,int current_stock, int keep_stock, String photo, String photo1,
 				String description, String barcode, String user_id) {
 			ProductBean productBean = new ProductBean();
 
@@ -448,6 +494,7 @@ public class product extends HttpServlet {
 			productBean.setUnit_id(unit_id);
 			productBean.setCost(cost);;
 			productBean.setPrice(price);
+			productBean.setCurrent_stock(current_stock);
 			productBean.setKeep_stock(keep_stock);
 			productBean.setPhoto(photo);
 			productBean.setPhoto1(photo1);
@@ -507,6 +554,9 @@ public class product extends HttpServlet {
 		public List<ProductBean> getsearchSupplyname(String group_id, String supply_name) {
 			return dao.getsearchSupplyname(group_id, supply_name);
 		}
+		public List<ProductBean> getsearch_byname(String group_id,String product_name){
+			return dao.getsearch_byname(group_id, product_name);
+		}
 		public List<ProductBean> getsearchBarcode(String group_id,String barcode){
 			return dao.getsearchBarcode(group_id,barcode);
 		}
@@ -518,11 +568,11 @@ public class product extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_get_product_bybarcode = "call sp_get_product_bybarcode(?,?)";
 		private static final String sp_selectall_product = "call sp_selectall_product (?)";
-		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 	?)";
+		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 		private static final String sp_del_product = "call sp_del_product (?,?)";
 		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 		private static final String sp_get_product_bysupplyname = "call sp_get_product_bysupplyname (?,?)";
-		
+		private static final String sp_get_product_byproductname = "call sp_get_product_byproductname (?,?)";
 		private static final String sp_get_supplyname = "call sp_get_supplyname (?,?)";
 		private static final String	sp_get_type_byname =  "call sp_select_type_byname (?,?)";
 		private static final String sp_get_unit_byname =  "call sp_select_unit_byname (?,?)";
@@ -557,6 +607,7 @@ public class product extends HttpServlet {
 				pstmt.setString(13, productBean.getDescription());
 				pstmt.setString(14, productBean.getBarcode());
 				pstmt.setString(15, productBean.getUser_id());
+				pstmt.setInt(16, productBean.getCurrent_stock());
 
 				pstmt.executeUpdate();
 
@@ -969,7 +1020,73 @@ public class product extends HttpServlet {
 			}
 		}
 		return list;
+	}
+	public List<ProductBean>  getsearch_byname(String group_id, String product_name) {
+		// TODO Auto-generated method stub
+		List<ProductBean> list = new ArrayList<ProductBean>();
+		ProductBean productBean = null;
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+			pstmt = con.prepareStatement(sp_get_product_byproductname);
+			pstmt.setString(1, group_id);
+			pstmt.setString(2,product_name);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				productBean = new ProductBean();
+				productBean.setProduct_id(rs.getString("product_id"));
+				productBean.setGroup_id(rs.getString("group_id"));
+				productBean.setC_product_id(rs.getString("c_product_id"));
+				productBean.setProduct_name(rs.getString("product_name"));
+				productBean.setSupply_id(rs.getString("supply_id"));
+				productBean.setSupply_name(rs.getString("supply_name"));
+				productBean.setType_id(rs.getString("type_id"));
+				productBean.setUnit_id(rs.getString("unit_id"));
+				productBean.setCost(rs.getFloat("cost"));
+				productBean.setPrice(rs.getFloat("price"));
+				productBean.setKeep_stock(rs.getInt("keep_stock"));
+				productBean.setPhoto(rs.getString("photo"));
+				productBean.setPhoto1(rs.getString("photo1"));
+				productBean.setDescription(rs.getString("description"));
+				productBean.setBarcode(rs.getString("barcode"));
+				list.add(productBean);
+			}
+			// Handle any driver errors
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+			// Clean up JDBC resources
+		} catch (ClassNotFoundException cnfe) {
+			throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
 		}
+		return list;
+	}
 	public List<ProductBean>  getsearchBarcode(String group_id,String barcode) {
 		List<ProductBean> list = new ArrayList<ProductBean>();
 		ProductBean productBean = null;

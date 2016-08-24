@@ -113,6 +113,8 @@ public class stock extends HttpServlet {
 		private int quantity;
 		private String memo;
 		private String product_name;
+		private String keep_stock;
+		
 		public String getStock_id() {
 			return stock_id;
 		}
@@ -154,6 +156,12 @@ public class stock extends HttpServlet {
 		}
 		public void setProduct_name(String product_name) {
 			this.product_name = product_name;
+		}
+		public String getKeep_stock() {
+			return keep_stock;
+		}
+		public void setKeep_stock(String keep_stock) {
+			this.keep_stock = keep_stock;
 		}
 		
 		
@@ -282,6 +290,8 @@ public class stock extends HttpServlet {
 					stockBean.setQuantity(rs.getInt("quantity"));
 					stockBean.setMemo(rs.getString("memo"));
 					stockBean.setProduct_name(rs.getString("product_name"));
+					stockBean.setKeep_stock(rs.getString("keep_stock"));
+					
 					list.add(stockBean); // Store the row in the list
 				}
 				
@@ -342,6 +352,7 @@ public class stock extends HttpServlet {
 					stockBean.setQuantity(rs.getInt("quantity"));
 					stockBean.setMemo(rs.getString("memo"));
 					stockBean.setProduct_name(rs.getString("product_name"));
+					stockBean.setKeep_stock(rs.getString("keep_stock"));
 					list.add(stockBean); // Store the row in the list
 				}
 				
@@ -388,8 +399,10 @@ public class stock extends HttpServlet {
 		}
 		
 		public String barcode_search(String group_id,String bar_code) {
-			List<Barcode_supply> list = new ArrayList<Barcode_supply>();
-			Barcode_supply barcode_supply = null;
+			//List<Barcode_supply> list = new ArrayList<Barcode_supply>();
+			//Barcode_supply barcode_supply = null;
+			List<StockBean> list = new ArrayList<StockBean>();
+			StockBean stockBean = null;
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -401,15 +414,17 @@ public class stock extends HttpServlet {
 				pstmt.setString(2, bar_code);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					barcode_supply= new Barcode_supply();
-					barcode_supply.stock_id=rs.getString("stock_id");
-					barcode_supply.group_id=rs.getString("group_id");
-					barcode_supply.user_id=rs.getString("user_id");
-					barcode_supply.product_id=rs.getString("product_id");
-					barcode_supply.quantity=rs.getString("quantity");
-					barcode_supply.memo=rs.getString("memo");
-					barcode_supply.product_name=rs.getString("product_name");
-					list.add(barcode_supply);
+					stockBean  = new StockBean();
+					stockBean.setStock_id(rs.getString("stock_id"));
+					stockBean.setGroup_id(rs.getString("group_id"));
+					stockBean.setUser_id(rs.getString("user_id"));
+					stockBean.setProduct_id(rs.getString("product_id"));
+					stockBean.setQuantity(rs.getInt("quantity"));
+					stockBean.setMemo(rs.getString("memo"));
+					stockBean.setProduct_name(rs.getString("product_name"));
+					stockBean.setKeep_stock(rs.getString("keep_stock"));
+					
+					list.add(stockBean);
 				}
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);

@@ -664,7 +664,7 @@ public class sale extends HttpServlet {
 		private String product_id;
 		private String product_name;
 		private String c_product_id;
-		private int price=299;
+		private String price="0";
 
 		public String getProduct_id() {
 			return product_id;
@@ -690,11 +690,11 @@ public class sale extends HttpServlet {
 			this.c_product_id = c_product_id;
 		}
 
-		public int getPrice() {
+		public String getPrice() {
 			return price;
 		}
 
-		public void setPrice(int price) {
+		public void setPrice(String price) {
 			this.price = price;
 		}
 		
@@ -1327,6 +1327,7 @@ public class sale extends HttpServlet {
 					productVO.setProduct_id(rs.getString("product_id"));
 					productVO.setC_product_id(rs.getString("c_product_id"));
 					productVO.setProduct_name(rs.getString("product_name"));
+					productVO.setPrice(rs.getString("price"));
 					list.add(productVO);
 				}
 				// Handle any driver errors
@@ -1383,6 +1384,7 @@ public class sale extends HttpServlet {
 					productVO.setProduct_id(rs.getString("product_id"));
 					productVO.setC_product_id(rs.getString("c_product_id"));
 					productVO.setProduct_name(rs.getString("product_name"));
+					productVO.setPrice(rs.getString("price"));
 					list.add(productVO);
 				}
 				// Handle any driver errors

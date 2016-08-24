@@ -114,6 +114,7 @@
 					end_date: $("#amount_end_date").val()
 				},
 				success : function(result) {
+						//alert(result);
 						var json_obj = $.parseJSON(result);
 						var len=json_obj.length;
 						//判斷查詢結果
@@ -372,6 +373,7 @@
 			"確認批次收帳" : function() {
 				$(".checkbox_pay").each(function(){
 					if($(this).prop("checked")){
+						alert($(this).attr("value"));
 						$.ajax({
 							type : "POST",
 							url : "accpay.do",
@@ -441,7 +443,7 @@
 										  dom: 'Blfrtip',
 								          buttons: [{
 								                text: '取消批次付帳',
-								                className: 'btn_pay_cancel btn btn-wide btn-darkblue',
+								                className: 'btn_pay_cancel',
 								                action : function(e){
 								            		e.preventDefault();
 								            		var count = 0;
@@ -599,12 +601,6 @@
 		return currentDate;
 	}
 	//日期設定
-	$(".date").datepicker({
-		dayNamesMin:["日","一","二","三","四","五","六"],
-		monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-		dateFormat:"yy-mm-dd",
-		changeYear:true
-	});	
 	//hold header
 // 	$("#account_amount_date_table").find("th").css("min-width","120px");
 // 	$("#account_pay_date_table").find("th").css("min-width","120px");	

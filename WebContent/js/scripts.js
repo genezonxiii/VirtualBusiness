@@ -12,7 +12,7 @@ var opt = {
    showMonthAfterYear:true,
    dateFormat:"yy-mm-dd",
    changeYear: true,
-   changeMonth: true,
+   changeMonth: true
    //"setDate" :new Date(),
    };
 //function f_report_name(){

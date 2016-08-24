@@ -31,7 +31,7 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script>
-	var scan_exist=0;
+	var scan_exist=0,new_or_edit=0;
 	jQuery(document).ready(function($) {
 	    $(window).scannerDetection();
 	    $(window).bind('scannerDetectionComplete',function(e,data){
@@ -45,14 +45,25 @@
 		            	var json_obj = $.parseJSON(result);
 		            	var result_table = "";
 						$.each(json_obj,function(i, item) {
-							var json_obj = $.parseJSON(result);
-							$("#insert_product_name").val(json_obj[i].product_name);
-							$("#insert_c_product_id").val(json_obj[i].c_product_id);
-							$("#quantity").val(json_obj[i].keep_stock);
-							$("#price").val(json_obj[i].cost);
+							if(new_or_edit==1){
+								//new_or_edit=3;
+								$("#insert_product_name").val(json_obj[i].product_name);
+								$("#insert_c_product_id").val(json_obj[i].c_product_id);
+								$("#insert_quantity").val(json_obj[i].keep_stock);
+								$("#insert_price").val(json_obj[i].cost);
+								$("#insert_product_price").val(json_obj[i].cost);
+							}
+							if(new_or_edit==2){
+								//new_or_edit=3;
+								$("#update_product_name").val(json_obj[i].product_name);
+								$("#update_c_product_id").val(json_obj[i].c_product_id);
+								$("#update_quantity").val(json_obj[i].keep_stock);
+								$("#update_price").val(json_obj[i].cost);
+								$("#update_product_price").val(json_obj[i].cost);
+							}
 						});
 						if(json_obj.length==0){
-							$("#warning").html("<h3>該條碼無產品存在<h3><br>請至'商品管理'介面&nbsp;定義該條碼。");
+							$("#warning").html("<h3>該條碼無產品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
 							$("#warning").dialog("open");
 						}
 		            }
@@ -142,7 +153,8 @@
 				},
 				price : {
 					required : true,
-					number :true
+					number :true,
+					min: 1
 				},
 				invoice : {
 					stringMaxLength : 12,
@@ -190,7 +202,8 @@
 				},
 				price : {
 					required : true,
-					number :true
+					number :true,
+					min: 1
 				},
 				invoice : {
 					stringMaxLength : 12,
@@ -737,6 +750,7 @@
 													}
 												});
 												insert_dialog.dialog("close");
+												$("#insert-dialog-form-post").trigger("reset");
 											}
 										}
 									}, {
@@ -992,6 +1006,7 @@
 							}
 						});
 						update_dialog.dialog("close");
+						$("#update-dialog-form-post").trigger("reset");
 					}
 				}
 			}, {
@@ -1016,9 +1031,9 @@
 		});
 		//新增事件聆聽
 		$("#create-sale").click(function() {
-			
+			new_or_edit=1;
 			insert_dialog.dialog("open");
-			$("#insert_product_name").focus();
+			$("#insert_c_product_id").focus();
 			scan_exist=1;
 			if(!scan_exist){
 				$("#warning").html("貼心提醒您:<br>&nbsp;&nbsp;掃描器尚未配置妥善。");
@@ -1028,7 +1043,7 @@
 		//修改事件聆聽
 		$("#sales").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
-			
+			new_or_edit=2;
 			uuid = $(this).val();
 			seqNo = $(this).attr("id");
 			$("input[name='searh_c_product_id'").val("");
@@ -1077,6 +1092,7 @@
 					}
 				});			
 			update_dialog.dialog("open");
+			$("#update_c_product_id").focus();
 		});
 		//處理初始的查詢autocomplete
        $("#searh_c_product_id").autocomplete({
@@ -1137,7 +1153,8 @@
                               value: item.product_name,
                               product_id: item.product_id,
                               product_name: item.product_name,
-                              c_product_id: item.c_product_id
+                              c_product_id: item.c_product_id,
+                              price: item.price
                             }
                           }));
                     }
@@ -1157,6 +1174,7 @@
        $("#insert_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入產品名稱以供查詢"); } );
        $('#insert_product_name').bind('autocompleteselect', function (e, ui) {
        		$("#insert_c_product_id").val(ui.item.c_product_id);
+       		$("#insert_product_price").val(ui.item.price);
        		product_id = ui.item.product_id;
        });   
 		//處理新增的自訂ID autocomplete
@@ -1181,7 +1199,8 @@
                               value: item.c_product_id,
                               product_id: item.product_id,
                               product_name: item.product_name,
-                              c_product_id: item.c_product_id
+                              c_product_id: item.c_product_id,
+                              price: item.price
                             }
                           }));
                     }
@@ -1225,6 +1244,7 @@
         });
        $('#insert_c_product_id').bind('autocompleteselect', function (e, ui) {
        		$("#insert_product_name").val(ui.item.product_name);
+       		$("#insert_product_price").val(ui.item.price);
        		product_id = ui.item.product_id;
        });
 		//處理修改的名稱autocomplete
@@ -1249,7 +1269,8 @@
                               value: item.product_name,
                               product_id: item.product__id,
                               product_name: item.product_name,
-                              c_product_id: item.c_product_id
+                              c_product_id: item.c_product_id,
+                              price: item.price
                             }
                           }));
                     }
@@ -1269,6 +1290,7 @@
        $("#update_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入產品名稱以供查詢"); } );
        $('#update_product_name').bind('autocompleteselect', function (e, ui) {
        		$("#update_c_product_id").val(ui.item.c_product_id);
+       		$("#update_product_price").val(ui.item.price);
        		product_id = ui.item.product_id;
        });   
 		//處理修改的自訂ID autocomplete
@@ -1293,7 +1315,8 @@
                               value: item.c_product_id,
                               product_id: item.product_id,
                               product_name: item.product_name,
-                              c_product_id: item.c_product_id
+                              c_product_id: item.c_product_id,
+                              price: item.price
                             }
                           }));
                     }
@@ -1313,6 +1336,7 @@
        $("#update_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入ID名稱以供查詢"); } );
        $('#update_c_product_id').bind('autocompleteselect', function (e, ui) {
        		$("#update_product_name").val(ui.item.product_name);
+       		$("#update_product_price").val(ui.item.price);
        		product_id = ui.item.product_id;
        });       
 		//日期設定
@@ -1352,7 +1376,12 @@
 // 		});	
 		//hold header
 // 		$("#sales").find("th").css("min-width","120px");
-		
+		$("#update_quantity").change(function(){
+			$("#update_price").val($("#update_quantity").val()*$("#update_product_price").val());
+		});
+		$("#insert_quantity").change(function(){
+			$("#insert_price").val($("#insert_quantity").val()*$("#insert_product_price").val());
+		});
 		$("#warning").dialog({
 			title: "警告",
 			draggable : false,//防止拖曳
@@ -1387,25 +1416,30 @@
 			<!--對話窗樣式-修改 -->
 			<div id="dialog-form-update" title="修改銷貨資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
+				<font color=red style="padding-left:26px">掃條碼亦可取得商品資料</font>
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
 								<td><p>訂單號</p></td>
 								<td><input type="text" name="order_no"  placeholder="輸入訂單號"></td>
-								<td><p>產品名稱</p></td>
-								<td><input type="text" id="update_product_name" name="product_name"  placeholder="輸入產品名稱"></td>
-							</tr>
-							<tr>
-								<td><p>客戶自訂產品ID</p></td>
-								<td><input type="text" id="update_c_product_id" name="c_product_id"  placeholder="輸入客戶自訂產品ID"></td>
 								<td><p>客戶名字</p></td>
 								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
 							</tr>
 							<tr>
+								<td><p>客戶自訂產品ID</p></td>
+								<td><input type="text" id="update_c_product_id" name="c_product_id"  placeholder="輸入客戶自訂產品ID"></td>
+								<td><p>產品名稱</p></td>
+								<td><input type="text" id="update_product_name" name="product_name"  placeholder="輸入產品名稱"></td>
+							</tr>
+							<tr>
 								<td><p>銷貨數量</p></td>
-								<td><input type="text" id="quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
-								<td><p>銷貨金額</p></td>
-								<td><input type="text" id="price" name="price"  placeholder="輸入銷貨金額"></td>
+								<td><input type="text" id="update_quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
+								<td><p>單價</p></td>
+								<td><input type="text" id="update_product_price" name="update_product_price" disabled></td>
+							</tr>
+							<tr>
+								<td><p>總金額</p></td>
+								<td><input type="text" id="update_price" name="price"  placeholder="輸入銷貨金額"></td>
 							</tr>
 							<tr>
 								<td><p>發票號碼</p></td>
@@ -1436,6 +1470,7 @@
 			<!--對話窗樣式-新增 -->
 			<div id="dialog-form-insert" title="新增銷貨資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post"style="display:inline">
+					<font color=red style="padding-left:26px">掃條碼亦可取得商品資料</font>
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
@@ -1445,20 +1480,24 @@
 								<td><input type="text" name="order_no"  placeholder="輸入訂單號"></td>
 							</tr>
 							<tr>
-								<td><p>產品名稱</p></td>
-								<td><input type="text" id="insert_product_name" name="product_name"  placeholder="輸入產品名稱"></td>
-								<td><p>客戶自訂產品ID</p></td>
-								<td><input type="text" id="insert_c_product_id" name="c_product_id"  placeholder="輸入客戶自訂產品ID"></td>
-							</tr>
-							<tr>
 								<td><p>客戶名字</p></td>
 								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
-								<td><p>銷貨數量</p></td>
-								<td><input type="text" id="quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
 							</tr>
 							<tr>
-								<td><p>銷貨金額</p></td>
-								<td><input type="text" id="price" name="price"  placeholder="輸入銷貨金額"></td>
+								<td><p>客戶自訂產品ID</p></td>
+								<td><input type="text" id="insert_c_product_id" name="c_product_id"  placeholder="輸入客戶自訂產品ID"></td>
+								<td><p>產品名稱</p></td>
+								<td><input type="text" id="insert_product_name" name="product_name"  placeholder="輸入產品名稱"></td>
+							</tr>
+							<tr>
+								<td><p>銷貨數量</p></td>
+								<td><input type="text" id="insert_quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
+								<td><p>單價</p></td>
+								<td><input type="text" id="insert_product_price" name="insert_product_price" disabled></td>
+							</tr>
+							<tr>
+								<td><p>總金額</p></td>
+								<td><input type="text" id="insert_price" name="price"  placeholder="輸入銷貨金額"></td>
 								<td><p>發票號碼</p></td>
 								<td><input type="text" name="invoice"  placeholder="輸入發票號碼"></td>
 							</tr>

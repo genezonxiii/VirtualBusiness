@@ -454,7 +454,7 @@ public class accpay extends HttpServlet {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_pay_account);
-
+				//System.out.println("pay_id: "+pay_id+" user_id: "+user_id);
 				pstmt.setString(1, pay_id);
 				pstmt.setString(2, user_id);
 

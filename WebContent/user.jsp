@@ -30,6 +30,12 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
+function character(value){
+	if(value==1){return "管理者";}
+	if(value==2){return "使用者";}
+	return "";
+}
+
 $(function() {
 	//=============自定義validator=============
 	//字符最大長度驗證（一個中文字符長度為2）
@@ -99,13 +105,14 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 										user_name : $("#dialog-form-searh input[name='search_user_name']" ).val()
 									},
 									success : function(result) {
+											//alert(result);
 											var json_obj = $.parseJSON(result);
 											var result_table = "";
-					
+											
 											$.each(json_obj,function(i, item) { 											
 													result_table+=
 													"<tr><td>"+ json_obj[i].user_name+
-													"</td><td>"+json_obj[i].role+ 
+													"</td><td>"+character(json_obj[i].role)+ 
 													"</td><td>"+json_obj[i].email+
 													"</td><td>"
 													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
@@ -173,7 +180,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 														$.each(json_obj,function(i, item) { 											
 																result_table+=
 																"<tr><td>"+ json_obj[i].user_name+
-																"</td><td>"+json_obj[i].role+ 
+																"</td><td>"+character(json_obj[i].role)+ 
 																"</td><td>"+json_obj[i].email+
 																"</td><td>"
 																+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
@@ -199,6 +206,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 													}
 												});
 												insert_dialog.dialog("close");
+												$("#insert-dialog-form-post").trigger("reset");
 											}
 										}
 									}, {
@@ -206,10 +214,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 										click : function() {
 											validator_insert.resetForm();
 											insert_dialog.dialog("close");
+											$("#insert-dialog-form-post").trigger("reset");
 										}
 									} ],
 							close : function() {
 								validator_insert.resetForm();
+								$("#insert-dialog-form-post").trigger("reset");
 							}
 						});
 		$("#dialog-form-insert").show();
@@ -238,10 +248,10 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							var json_obj = $.parseJSON(result);
 							var result_table = "";
 	
-							$.each(json_obj,function(i, item) { 											
+							$.each(json_obj,function(i, item) {
 									result_table+=
 									"<tr><td>"+ json_obj[i].user_name+
-									"</td><td>"+json_obj[i].role+ 
+									"</td><td>"+character(json_obj[i].role)+ 
 									"</td><td>"+json_obj[i].email+
 									"</td><td>"
 									+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
@@ -307,7 +317,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 								$.each(json_obj,function(i, item) { 											
 										result_table+=
 										"<tr><td>"+ json_obj[i].user_name+
-										"</td><td>"+json_obj[i].role+ 
+										"</td><td>"+character(json_obj[i].role)+ 
 										"</td><td>"+json_obj[i].email+
 										"</td><td>"
 										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
@@ -333,6 +343,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							}
 						});
 						update_dialog.dialog("close");
+						$("#update-dialog-form-post").trigger("reset");
 					}
 				}
 			}, {
@@ -340,10 +351,12 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 				click : function() {
 					validator_update.resetForm();
 					update_dialog.dialog("close");
+					$("#update-dialog-form-post").trigger("reset");
 				}
 			} ],
 			close : function() {
 				validator_update.resetForm();
+				$("#update-dialog-form-post").trigger("reset");
 			}
 		});	
 		$("#dialog-form-update").show();
@@ -379,7 +392,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							if(json_obj[i].user_id==uuid){
 								$("#dialog-form-update input[name='user_id']").val(json_obj[i].user_id);
 								$("#dialog-form-update input[name='user_name']").val(json_obj[i].user_name);
-								$("#dialog-form-update input[name='role']").val(json_obj[i].role);
+								$("#dialog-form-update select[name='selectupdate']").val(json_obj[i].role);
 								$("#dialog-form-update input[name='email']").val(json_obj[i].email);
 							}
 						});
@@ -390,6 +403,22 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 		//新增事件聆聽
 		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
+		});
+		$("#insert_email").blur(function(){
+// 			alert("111");
+// 			$.ajax({
+// 				type : "POST",
+// 				url : "user.do",
+// 				data : {
+// 					action : "check_email",
+// 					email : "sett@archworld.com"
+// 				},
+// 				success : function(result) {
+// 				}
+// 			});
+		});
+		$("#update_email").blur(function(){
+			alert("222");
 		});
 	});
 </script>
@@ -404,13 +433,13 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 					<fieldset>
 							<table border="0" height="200">
 							<tbody>
-							<tr><td><h6>使用者名稱:</h6></td><td><input type="text" name="user_name"  placeholder="輸入使用者名稱"/></td></tr>
+							<tr><td><h6>使用者名稱:</h6></td><td><input type="text" name="user_name" placeholder="輸入使用者名稱"/></td></tr>
 							<tr><td><h6>使用者角色:</h6></td><td>	
 							<select id="selectok" name="selectupdate"  >
-							<option value="管理者">管理者</option>
-　							<option value="使用者">使用者</option>
+							<option value="1">管理者</option>
+　							<option value="2">使用者</option>
 							</select></td></tr>
-							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email"  placeholder="輸入Email"/></td></tr>
+							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="update_email" placeholder="輸入Email"/></td></tr>
 							<tr><td><input type="hidden" name="user_id"  disabled="disabled"/></td></tr>
 							</tbody>
 							</table>	
@@ -426,11 +455,11 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 	 							<tbody>
 							<tr><td><h6>使用者名稱:</h6></td><td><input type="text" name="user_name" placeholder="輸入使用者名稱"/></td></tr>
 							<tr><td><h6>使用者角色:</h6></td><td>	
-							<select id="selectok" name="selectinsert"  >
-							<option value="管理者">管理者</option>
-　							<option value="使用者">使用者</option>
+							<select id="selectok" name="selectinsert">
+							<option value="1">管理者</option>
+　							<option value="2">使用者</option>
 							</select></td></tr>
-							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email"  placeholder="輸入Email"/></td></tr>
+							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="insert_email" placeholder="輸入Email"/></td></tr>
 							<tr><td><h6>密碼:</h6></td><td><input type="text" name="password" placeholder="輸入密碼"/></td></tr>
 							</tbody>
 							</table>	

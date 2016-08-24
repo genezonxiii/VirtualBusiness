@@ -106,6 +106,10 @@ function date_format(str) {
 			$('#datepicker2').datepicker('setDate',new Date());
 			ship_data();
 		}
+		if(value=="upload"){
+			$('#datepicker1').datepicker('setDate',new Date());
+			$('#datepicker2').datepicker('setDate',new Date());
+		}
 		//查詢相關設定
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
@@ -143,7 +147,7 @@ function date_format(str) {
 <!-- 								<th>配送日期</th> -->
 								<th>價格</th>
 								<th>電話</th>
-								<th>地址</th>
+								<th><p style="width:120px">地址</p></th>
 								<th>郵編</th>
 								<th>顧客姓名</th>
 								<th>手機</th>
