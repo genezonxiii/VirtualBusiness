@@ -20,7 +20,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 <script>
 
 function setV(){

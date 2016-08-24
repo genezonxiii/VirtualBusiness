@@ -12,7 +12,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="background-image: url('./images/welcome.png');background-size: cover;">
-	<div style="margin:56px 0px 28px 120px;">
+	<div >
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>

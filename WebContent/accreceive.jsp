@@ -25,7 +25,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -178,7 +178,7 @@
 							$("#account_amount_date_table tbody").html(result_table);
 							$("#account_amount_date_table").dataTable({
 								  autoWidth: false,
-								  "scrollY": "200px",
+								  "scrollY": "300px",
 								  "scrollX": false,
 								  dom: 'Blfrtip',
 						          buttons: [{
@@ -609,7 +609,7 @@
 // 	$("#account_receive_date_table").find("th").css("min-width","120px");
 })
 </script>
-		<div class="datalistWrap">
+		<div class="datalistWrap" >
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="確認批次收帳嗎?" style="display:none;">
 				<br><p></p>

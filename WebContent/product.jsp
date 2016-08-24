@@ -29,7 +29,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 
 <script src="js/photo/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
@@ -1030,9 +1030,7 @@
 	                });
 		
 		//<!-- photo section jquery begin by Melvin -->
-		////////////圖片的/////////////////////////
 		'use strict';
-	    // Change this to the location of your server-side upload handler:
 	    var url = window.location.hostname === 'blueimp.github.io' ?
 	                '//jquery-file-upload.appspot.com/' : '/VirtualBusiness/photo.do',
 	        uploadButton = $('<button/>')
@@ -1060,9 +1058,6 @@
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 	        maxFileSize: 600000,
-	        // Enable image resizing, except for Android and Opera,
-	        // which actually support image resizing, but fail to
-	        // send Blob objects via XHR requests:
 	        disableImageResize: /Android(?!.*Chrome)|Opera/
 	            .test(window.navigator.userAgent),
 	        previewMaxWidth: 200,
@@ -1140,9 +1135,6 @@
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 	        maxFileSize: 600000,
-	        // Enable image resizing, except for Android and Opera,
-	        // which actually support image resizing, but fail to
-	        // send Blob objects via XHR requests:
 	        disableImageResize: /Android(?!.*Chrome)|Opera/
 	            .test(window.navigator.userAgent),
 	        previewMaxWidth: 200,
@@ -1159,7 +1151,6 @@
 	                    .append(uploadButton.clone(true).data(data));
 	            }
 	            node.appendTo(data.context);
-// 	            alert('test');
 	            $("#photo2").val(file.name);
   	        });
 	    }).on('fileuploadprocessalways', function (e, data) {
@@ -1222,9 +1213,6 @@
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 	        maxFileSize: 600000,
-	        // Enable image resizing, except for Android and Opera,
-	        // which actually support image resizing, but fail to
-	        // send Blob objects via XHR requests:
 	        disableImageResize: /Android(?!.*Chrome)|Opera/
 	            .test(window.navigator.userAgent),
 	        previewMaxWidth: 200,
@@ -1300,9 +1288,6 @@
 	        autoUpload: false,
 	        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 	        maxFileSize: 600000,
-	        // Enable image resizing, except for Android and Opera,
-	        // which actually support image resizing, but fail to
-	        // send Blob objects via XHR requests:
 	        disableImageResize: /Android(?!.*Chrome)|Opera/
 	            .test(window.navigator.userAgent),
 	        previewMaxWidth: 200,
@@ -1319,7 +1304,6 @@
 	                    .append(uploadButton.clone(true).data(data));
 	            }
 	            node.appendTo(data.context);
-// 	            alert('test');
 	            $("#photo1-update").val(file.name);
 	        });
 	    }).on('fileuploadprocessalways', function (e, data) {

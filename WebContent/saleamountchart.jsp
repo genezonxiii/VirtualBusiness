@@ -23,7 +23,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -93,7 +93,7 @@ function draw_chart(m_h,m_w,data){
 			}
 		}
 	}
-	var data2 = [ {"sale": "20020","year": "6"}, {"sale": "82004","year":"7" }];
+	//var data2 = [ {"sale": "20020","year": "6"}, {"sale": "82004","year":"7" }];
 	//alert(max_data+","+min_data+" "+max_month+","+min_month);
  	//var data=[];
 	$('#chart').html("");
@@ -196,8 +196,6 @@ function date_format(str) {
 				url : "saleamountchart.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
-					//alert(result);
-					
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					var data=[];
@@ -206,6 +204,8 @@ function date_format(str) {
 						if(json_obj.entrance[i]!=0){
 							data[i]={"sale":json_obj.answer[i],"year":json_obj.entrance[i],"vender":json_obj.vender[i] };
 						}
+						//alert(json_obj.entrance[i]);
+						//data[i+1]={"sale":json_obj.answer[i],"year":41,"vender":json_obj.vender[i] };
 					}
 					if(data.length!=0){
 						draw_chart(400,200,data);
@@ -233,8 +233,6 @@ function date_format(str) {
 		});	
 	});
 </script>
-	<div class="panel-content">
-		<div class="datalistWrap" >
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
@@ -252,8 +250,6 @@ function date_format(str) {
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
-		</div>
-	</div>
 	<div class="validateTips" align="center"> </div>
 	<div id="chart" align="center"></div>
 	<div id="dialog-confirm"></div>

@@ -20,7 +20,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -33,10 +33,12 @@
 function character(value){
 	if(value==1){return "管理者";}
 	if(value==2){return "使用者";}
-	return "";
+	return "資料格式錯誤";
 }
 
 $(function() {
+	var this_email="";
+	var reg=0;
 	//=============自定義validator=============
 	//字符最大長度驗證（一個中文字符長度為2）
 	jQuery.validator.addMethod("stringMaxLength", function(value, element, param) { 
@@ -55,7 +57,7 @@ $(function() {
 	//=========================================
 	//驗證
 	//使用jquery.validate來做驗證  注意事項: 1.不能用選擇器方式批次設定，它只取最後一個參數 2.要調用resetForm()而不是reset()
-var validator_insert = $("#insert-dialog-form-post").validate({
+	var validator_insert = $("#insert-dialog-form-post").validate({
 			rules : {
 				user_name:{
 					maxlength : 10,
@@ -67,6 +69,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 				},
 				email: {
 					required : true,
+					email : true,
 					maxlength : 30
 				},
 				password: {
@@ -87,6 +90,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			},
 			email: {
 				required : true,
+				email : true,
 				maxlength : 30
 			},
 			password: {
@@ -97,48 +101,48 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 	});
 	var user_name = $("#user_name");
 		//查詢相關設定
-							$.ajax({
-									type : "POST",
-									url : "user.do",
-									data : {
-										action : "searh",
-										user_name : $("#dialog-form-searh input[name='search_user_name']" ).val()
-									},
-									success : function(result) {
-											//alert(result);
-											var json_obj = $.parseJSON(result);
-											var result_table = "";
-											
-											$.each(json_obj,function(i, item) { 											
-													result_table+=
-													"<tr><td>"+ json_obj[i].user_name+
-													"</td><td>"+character(json_obj[i].role)+ 
-													"</td><td>"+json_obj[i].email+
-													"</td><td>"
-													+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
-													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
-													+ "	</div></div></td></tr>";										
-											});
-											//判斷查詢結果
-											var resultRunTime = 0;
-											$.each (json_obj, function (i) {
-												resultRunTime+=1;
-											});
-											$("#products").dataTable().fnDestroy();
-											if(resultRunTime!=0){
-												
-												$("#products-contain").show();
-												$("#products tbody").html(result_table);
-												$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-												$(".validateTips").text("");
-											}else{
-												$("#products-contain").hide();
-												$(".validateTips").text("查無此結果");
-											}
-										}
-									});
+	$.ajax({
+			type : "POST",
+			url : "user.do",
+			data : {
+				action : "searh",
+				user_name : $("#dialog-form-searh input[name='search_user_name']" ).val()
+			},
+			success : function(result) {
+					//alert(result);
+					var json_obj = $.parseJSON(result);
+					var result_table = "";
+					
+					$.each(json_obj,function(i, item) { 											
+							result_table+=
+							"<tr><td>"+ json_obj[i].user_name+
+							"</td><td>"+character(json_obj[i].role)+ 
+							"</td><td>"+json_obj[i].email+
+							"</td><td>"
+							+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+							+ "	<div class='table-function-list'>"
+							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"' ><i class='fa fa-pencil'></i></button>"
+							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].user_id+   "'name='"+ json_obj[i].user_name+"'><i class='fa fa-trash'></i></button>"
+							+ "	</div></div></td></tr>";										
+					});
+					//判斷查詢結果
+					var resultRunTime = 0;
+					$.each (json_obj, function (i) {
+						resultRunTime+=1;
+					});
+					$("#products").dataTable().fnDestroy();
+					if(resultRunTime!=0){
+						
+						$("#products-contain").show();
+						$("#products tbody").html(result_table);
+						$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+						$(".validateTips").text("");
+					}else{
+						$("#products-contain").hide();
+						$(".validateTips").text("查無此結果");
+					}
+				}
+			});
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog(
 						{
@@ -161,7 +165,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 										text : "新增",
 										click : function() {
 // 											alert($("#dialog-form-insert select[name='selectinsert']").val());
-											if ($('#insert-dialog-form-post').valid()) {
+											if ($('#insert-dialog-form-post').valid()&&reg==0) {
 												$.ajax({
 													type : "POST",
 													url : "user.do",
@@ -298,7 +302,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			buttons : [{
 				text : "修改",
 				click : function() {
-					if ($('#update-dialog-form-post').valid()) {
+					if ($('#update-dialog-form-post').valid()&&reg==0) {
 						$.ajax({
 							type : "POST",
 							url : "user.do",
@@ -394,6 +398,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 								$("#dialog-form-update input[name='user_name']").val(json_obj[i].user_name);
 								$("#dialog-form-update select[name='selectupdate']").val(json_obj[i].role);
 								$("#dialog-form-update input[name='email']").val(json_obj[i].email);
+								this_email=json_obj[i].email;
 							}
 						});
 						} 
@@ -405,20 +410,45 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 			insert_dialog.dialog("open");
 		});
 		$("#insert_email").blur(function(){
-// 			alert("111");
-// 			$.ajax({
-// 				type : "POST",
-// 				url : "user.do",
-// 				data : {
-// 					action : "check_email",
-// 					email : "sett@archworld.com"
-// 				},
-// 				success : function(result) {
-// 				}
-// 			});
+			$.ajax({
+				type : "POST",
+				url : "user.do",
+				data : {
+					action : "check_email",
+					email : $(this).val()
+				},
+				success : function(result) {
+					if("true"==result){
+						$("#insert_regmsg").html("<font color=red>&nbsp;此信箱已有人註冊!</font>");
+						reg=1;
+					}else{
+						$("#insert_regmsg").html("");
+						reg=0;
+					}
+				}
+			});
 		});
 		$("#update_email").blur(function(){
-			alert("222");
+			alert(this_email);
+			if(this_email!=$(this).val()){
+				$.ajax({
+					type : "POST",
+					url : "user.do",
+					data : {
+						action : "check_email",
+						email : $(this).val()
+					},
+					success : function(result) {
+						if("true"==result){
+							$("#update_regmsg").html("<font color=red>&nbsp;此信箱已有人註冊!</font>");
+							reg=1;
+						}else{
+							$("#update_regmsg").html("");
+							reg=0;
+						}
+					}
+				});
+			}
 		});
 	});
 </script>
@@ -439,7 +469,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							<option value="1">管理者</option>
 　							<option value="2">使用者</option>
 							</select></td></tr>
-							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="update_email" placeholder="輸入Email"/></td></tr>
+							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="update_email" placeholder="輸入Email"/><a id="update_regmsg"></a></td></tr>
 							<tr><td><input type="hidden" name="user_id"  disabled="disabled"/></td></tr>
 							</tbody>
 							</table>	
@@ -459,7 +489,7 @@ var validator_insert = $("#insert-dialog-form-post").validate({
 							<option value="1">管理者</option>
 　							<option value="2">使用者</option>
 							</select></td></tr>
-							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="insert_email" placeholder="輸入Email"/></td></tr>
+							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="insert_email" placeholder="輸入Email"/><a id="insert_regmsg"></a></td></tr>
 							<tr><td><h6>密碼:</h6></td><td><input type="text" name="password" placeholder="輸入密碼"/></td></tr>
 							</tbody>
 							</table>	

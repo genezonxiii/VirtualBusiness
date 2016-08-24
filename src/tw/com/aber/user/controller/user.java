@@ -51,12 +51,14 @@ public class user extends HttpServlet {
 				String email=request.getParameter("email");
 				/*************************** 2.開始查詢資料 ****************************************/
 				// 假如無查詢條件，則是查詢全部
-					System.out.println(userService.checkemail(group_id,email));
-
-					//Gson gson = new Gson();
-					//String jsonStrList = gson.toJson(list);
-					//response.getWriter().write(jsonStrList);
-					return;// 程式中斷
+				userService = new UserService();
+//				System.out.println(userService.checkemail(group_id,email));
+				String which=userService.checkemail(group_id,email)+"";
+				response.getWriter().write(which);
+				//Gson gson = new Gson();
+				//String jsonStrList = gson.toJson(list);
+				//response.getWriter().write(jsonStrList);
+				return;// 程式中斷
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();

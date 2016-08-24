@@ -23,7 +23,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -82,7 +82,7 @@ function draw_chart(m_h,m_w,data){
 	
 	//alert(max_data);
 	//##############表格大小， 輸入資料， 位置######################
-	var s = d3.select('#chart').append('svg').attr({'width':max_w+200, 'height':max_h+100});
+	var s = d3.select('#chart').append('svg').attr({'width':max_w+4*padding, 'height':max_h+padding*2});
     s.selectAll('rect').data(data).enter().append('rect')
      .attr({
       'fill':function(d){
@@ -93,7 +93,7 @@ function draw_chart(m_h,m_w,data){
     	  //alert("d.y= "+d.y+" max_h= "+max_h+" max_data= "+max_data);
       	  return (d.y * max_h * 7 / 11 ) / max_data;
       },
-      'x':function(d){return ((d.x) *(max_w / (data.length+1)))+padding;},
+      'x':function(d){return ((d.x) *(max_w / (data.length+1)))+padding*3 / 2;},
       'y':function(d){return max_h - ((d.y*max_h *7 / 11 ) / max_data)- padding;}
      });
   //#############數量文字和vender######################
@@ -101,7 +101,7 @@ function draw_chart(m_h,m_w,data){
     .data(data).enter().append('text')
     .attr({
       'fill':'#000',
-      'x':function(d){return ((d.x) *(max_w/(data.length+1)))+padding;},
+      'x':function(d){return ((d.x) *(max_w/(data.length+1)))+padding*3 / 2;},
       'y':function(d){return max_h - ((d.y*max_h *7 / 11) / max_data)- padding/2 - 25;}
     }).text(function(d){return d.y;})
     .style({'font-size':'20px'});
@@ -119,7 +119,7 @@ function draw_chart(m_h,m_w,data){
     .data(data).enter().append('text')
     .attr({
       'fill':'#000',
-      'x':function(d){return ((d.x) * (max_w / (data.length+1))+(padding))+10;},
+      'x':function(d){return ((d.x) * (max_w / (data.length+1))+(padding*3/2))+10;},
       'y':function(d){return max_h-padding/2;}
     }).text(function(d){return d.month;})
     .style({'font-size':'28px'});
@@ -130,7 +130,7 @@ function draw_chart(m_h,m_w,data){
 	  .style({'font-size':'28px'});
 	s.append('g').selectAll('text')
 	  .data(data).enter().append('text')
-	  .attr({'x':max_w+padding ,'y':max_h-padding*4/5 }).text("月份")
+	  .attr({'x':max_w+padding* 3 / 2 ,'y':max_h-padding*4/5 }).text("月份")
 	  .style({'font-size':'28px'});
 	
 
@@ -138,36 +138,38 @@ function draw_chart(m_h,m_w,data){
     var tmp=[];
     for(var i=0;i*50<max_data;i++){tmp[i]=i*50;}
     var xScale = d3.scale.linear().range([padding,max_h-padding]).domain([max_data, 0]);;  
-    var xAxis = d3.svg.axis().scale(xScale).orient("left").tickValues(tmp);
+    //var xAxis = d3.svg.axis().scale(xScale).orient("left").tickValues(tmp);
+
+    var xAxis = d3.svg.axis().scale(xScale).orient("left").ticks(8);
     s.append('g').call(xAxis).attr({
         'fill':'none',
         'stroke':'#000',
-        'transform':'translate('+ padding*2/3 +',0)' 
+        'transform':'translate('+ padding +',0)' 
        }).selectAll('text')
        .attr({
         'fill':'#000',
         'stroke':'none',
        }).style({
-        'font-size':'22px'
+        'font-size':'18px'
        });
   //#######################以下畫哪家vender的說明#############################
   	for(i=0;i<vender_exist.length;i++){
-		s.append('line').attr('x1', max_w+60).attr('y1', 100+30*i)
-				 			  .attr('x2', max_w+40).attr('y2',100+30*i)
-				 			  .style('stroke',color(vender_exist[i])).style('stroke-width',15);
+		s.append('line').attr('x1', max_w+padding+60).attr('y1', 100+30*i)
+				 		.attr('x2', max_w+padding+40).attr('y2',100+30*i)
+				 		.style('stroke',color(vender_exist[i])).style('stroke-width',15);
 		s.append('g').selectAll('text')
 		  .data(vender_exist).enter().append('text')
-		  .attr({'x':max_w+70 ,'y':105+30*i ,}).text(vender_exist[i])
+		  .attr({'x':max_w+padding+70 ,'y':105+30*i ,}).text(vender_exist[i])
 		  .style('fill',color(vender_exist[i]))
 		  .style({'font-size':'18px'});
   	}
     //########### 直接畫x,y軸 ########################
-     s.append('line').attr('x1', padding*2/3).attr('y1', max_h-padding)
-     	 			 .attr('x2', max_w+50).attr('y2', max_h-padding)
+     s.append('line').attr('x1', padding).attr('y1', max_h-padding)
+     	 			 .attr('x2', max_w+padding*4 / 3).attr('y2', max_h-padding)
      	 			 .style('stroke', 'black').style('stroke-width', 2);
      
-     s.append('line').attr('x1', padding*2/3).attr('y1',padding)
-		 			 .attr('x2', padding*2/3).attr('y2', max_h-padding)
+     s.append('line').attr('x1', padding).attr('y1',padding)
+		 			 .attr('x2', padding).attr('y2', max_h-padding)
 					 .style('stroke', 'black').style('stroke-width', 3);
  };
  
@@ -184,7 +186,7 @@ function date_format(str) {
 				url : "salechart.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
-					console.log(result);
+					//console.log(result);
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					var data=[];
@@ -207,21 +209,6 @@ function date_format(str) {
 					}
 				}
 			});
-		});
-		$("#dialog-confirm").html("<p>是否確認刪....</p>");
-		$("#dialog-confirm").dialog({
-			title: "你妳你妳你",
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			height : "auto",
-			modal : true,
-			show : {effect : "blind",duration : 300},
- 			hide : {effect : "blind",duration : 300},
-			buttons : {
-				"確認刪除" : function() {alert("嘿嘿嘿~");$(this).dialog("close");},
-				"取消刪除" : function() {$(this).dialog("close");}
-			}
 		});
 	});
 </script>
@@ -248,7 +235,6 @@ function date_format(str) {
 	</div>
 <div id="chart" align="center"></div>
 <div class="validateTips" align="center"> </div>
-<div id="dialog-confirm"></div>
 
 </div>
 </body>

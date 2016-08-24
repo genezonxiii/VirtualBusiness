@@ -37,11 +37,13 @@ function draw_table(table_name,title){
 	var selector="#"+table_name;
 	$(".tog_col").remove();
 	$(selector+" td").each(function(index){
+		if($( this ).text().length>10)
 		$( this ).html($( this ).html()+"&nbsp;") ;
 	});
 	$(selector).dataTable().fnDestroy();
 	table_before(table_name);
 	$(selector).dataTable({
+		"lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "全"] ],
 		dom: 'lfrB<t>ip',
 		buttons: [{
 		    extend: 'excel',
@@ -208,7 +210,7 @@ function who(){
 		break;
 		
 	default:
-		//window.location.href = './404.jsp';
+		window.location.href = './404.jsp';
 		return "";
 		break;
 	}
@@ -218,7 +220,14 @@ function who(){
 <body>
 <script>
 $(function() {
-	$("#title").html(who());
+	//history.back();
+	//document.execCommand('Refresh');
+	//location.reload();
+	//window.location.replace(location.href);
+	//window.location.assign(window.location.href);
+	//window.history.go(1);
+	//$("#title").html(who());
+	//alert("111");
 	$("#logout").click(function(e) {
 		$.ajax({
 			type : "POST",
@@ -231,10 +240,16 @@ $(function() {
 			}
 		});
 	});
+// 	$("#my").click(function(){
+// 		window.history.forward();
+// 		alert("111");
+// 	});
+
+	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","8px 20px");
 });
 </script>
+<!-- <button id="my">#####</button> -->
 <div class="page-wrapper" >
-
 	<div class="header" style="z-index:1;">
 		<h1>智慧電商平台</h1>
 		<div class="userinfo">
@@ -247,50 +262,50 @@ $(function() {
 		<ul>
 			<li><img src="images/sidenav-transaction.svg" alt="">交易處理
 				<ul>
-					<li><a href="upload.jsp">訂單拋轉作業</a></li>
+					<li><a href="javascript:location.replace('upload.jsp')">訂單拋轉作業</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
 				<ul style="top: -156px;">
-					<li><a href="purchase.jsp">進貨管理</a></li>
-					<li><a href="purchreturn.jsp">進貨退回管理</a></li>
-					<li><a href="sale.jsp">銷貨管理</a></li>
-					<li><a href="salereturn.jsp">銷貨退回管理</a></li>
-					<li><a href="stock.jsp">庫存管理</a></li>
-					<li><a href="producttype.jsp">商品類型管理</a></li>
-					<li><a href="productunit.jsp">商品單位管理</a></li>
-					<li><a href="product.jsp">商品管理</a></li>
-					<li><a href="supply.jsp">供應商管理</a></li>
-					<li><a href="user.jsp">使用者管理</a></li>
-					<li><a href="group.jsp">公司管理</a></li>
-					<li><a href="customer.jsp">客戶管理</a></li>
-					<li><a href="accreceive.jsp">應收帳款管理</a></li>
-					<li><a href="accpay.jsp">應付帳款管理</a></li>
-					<li><a href="changepassword.jsp">使用者帳密管理</a></li>
-					<li><a href="tagprint.jsp">標籤列印</a></li>
+					<li><a href="javascript:location.replace('purchase.jsp')">進貨管理</a></li>
+					<li><a href="javascript:location.replace('purchreturn.jsp')">進貨退回管理</a></li>
+					<li><a href="javascript:location.replace('sale.jsp')">銷貨管理</a></li>
+					<li><a href="javascript:location.replace('salereturn.jsp')">銷貨退回管理</a></li>
+					<li><a href="javascript:location.replace('stock.jsp')">庫存管理</a></li>
+					<li><a href="javascript:location.replace('producttype.jsp')">商品類型管理</a></li>
+					<li><a href="javascript:location.replace('productunit.jsp')">商品單位管理</a></li>
+					<li><a href="javascript:location.replace('product.jsp')">商品管理</a></li>
+					<li><a href="javascript:location.replace('supply.jsp')">供應商管理</a></li>
+					<li><a href="javascript:location.replace('user.jsp')">使用者管理</a></li>
+					<li><a href="javascript:location.replace('group.jsp')">公司管理</a></li>
+					<li><a href="javascript:location.replace('customer.jsp')">客戶管理</a></li>
+					<li><a href="javascript:location.replace('accreceive.jsp')">應收帳款管理</a></li>
+					<li><a href="javascript:location.replace('accpay.jsp')">應付帳款管理</a></li>
+					<li><a href="javascript:location.replace('changepassword.jsp')">使用者帳密管理</a></li>
+					<li><a href="javascript:location.replace('tagprint.jsp')">標籤列印</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
 				<ul style="top: -100px;">
-					<li><a href="salereport.jsp">訂單報表</a></li>
-					<li><a href="shipreport.jsp">出貨報表</a></li>
-<!-- 					<li><a href="distributereport.jsp">配送報表</a></li> -->
-					<li><a href="salereturnreport.jsp">退貨報表</a></li>
-					<li><a href="purchreport.jsp">進貨報表</a></li>
-					<li><a href="purchreturnreport.jsp">進貨退回報表</a></li>
-			    	<li><a href="stockreport.jsp">庫存報表</a></li>
-			    	<li><a href="supplyreport.jsp">供應商報表</a></li>
-			    	<li><a href="productreport.jsp">商品報表</a></li>
-			    	<li><a href="customerreport.jsp">客戶報表</a></li>
-			    	<li><a href="accreceivereport.jsp">應收帳款報表</a></li>
-			    	<li><a href="accpayreport.jsp">應付帳款報表</a></li>
+					<li><a href="javascript:location.replace('salereport.jsp')">訂單報表</a></li>
+					<li><a href="javascript:location.replace('shipreport.jsp')">出貨報表</a></li>
+<!-- 					<li><a href="javascript:location.replace('distributereport.jsp')">配送報表</a></li> -->
+					<li><a href="javascript:location.replace('salereturnreport.jsp')">退貨報表</a></li>
+					<li><a href="javascript:location.replace('purchreport.jsp')">進貨報表</a></li>
+					<li><a href="javascript:location.replace('purchreturnreport.jsp')">進貨退回報表</a></li>
+			    	<li><a href="javascript:location.replace('stockreport.jsp')">庫存報表</a></li>
+			    	<li><a href="javascript:location.replace('supplyreport.jsp')">供應商報表</a></li>
+			    	<li><a href="javascript:location.replace('productreport.jsp')">商品報表</a></li>
+			    	<li><a href="javascript:location.replace('customerreport.jsp')">客戶報表</a></li>
+			    	<li><a href="javascript:location.replace('accreceivereport.jsp')">應收帳款報表</a></li>
+			    	<li><a href="javascript:location.replace('accpayreport.jsp')">應付帳款報表</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
 				<ul>
-					<li><a href="salechart.jsp">出貨量統計圖</a></li>
-					<li><a href="saleamountchart.jsp">銷售金額統計圖</a></li>
-					<li><a href="saleamountstaticchart.jsp">銷售金額比例統計圖</a></li>
+					<li><a href="javascript:location.replace('salechart.jsp')">出貨量統計圖</a></li>
+					<li><a href="javascript:location.replace('saleamountchart.jsp')">銷售金額統計圖</a></li>
+					<li><a href="javascript:location.replace('saleamountstaticchart.jsp')">銷售金額比例統計圖</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
@@ -301,6 +316,7 @@ $(function() {
 		</ul>
 	</div><!-- /.sidenav -->
  	<h2 id="title" class="page-title" style="z-index:1">
+ 	<script>document.write(who())</script>
 <%--  		<%= (("welcome.jsp".equals(request.getRequestURI().split("/")[2]))?("歡迎"+request.getSession().getAttribute("user_name")+"使用本系統"):("")) %> --%>
  	</h2> 
 <!-- 	<div class="content-wrap" style="display:none"> -->
@@ -316,6 +332,5 @@ $(function() {
 <script src="vendor/js/jquery-ui.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="js/scripts.js"></script>
-
 </body>
 </html>

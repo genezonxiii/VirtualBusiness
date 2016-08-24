@@ -23,7 +23,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap" >
 
 <!-- jquery-ui js要套用這一版，不然Dialog會偏移，且容易當掉 -->
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>

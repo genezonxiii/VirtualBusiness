@@ -20,7 +20,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="margin:56px 0px 28px 120px;">
+	<div class="content-wrap">
 <!-- jquery-ui js要套用這一版，不然Dialog會偏移，且容易當掉 -->
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -354,9 +354,6 @@
 					</label>
 					<button class="btn btn-darkblue" id="search-taginfo">查詢</button>
 				</div>
-<!-- 				<div class="btn-row"> -->
-<!-- 					<a href="#" class="btn btn-exec btn-wide">新增銷售資料</a> -->
-<!-- 				</div> -->
 			</div><!-- /.form-wrap -->
 		</div><!-- /.input-field-wrap -->
 		

@@ -65,7 +65,7 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             		//$("#my_msg").html("訊號不穩定，<br>&nbsp;請檢查網路連線，或稍後再嘗試。<br>");
             		//$("#my_msg").dialog("open");
             	}
-            	if (json_obj.message=="success"){window.location.href = "./welcome.jsp";}
+            	if (json_obj.message=="success"){location.replace("./welcome.jsp");}
             	if (json_obj.message=="failure"){
             		$("#verify").val("");
             		$("#password").val("");
