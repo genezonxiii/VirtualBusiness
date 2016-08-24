@@ -236,7 +236,8 @@ $(function() {
 				action : "logout"
 			},
 			success : function(result) {
-				top.location.href = "login.jsp";
+				//top.location.href = "login.jsp";
+				location.replace('login.jsp');
 			}
 		});
 	});
@@ -244,11 +245,9 @@ $(function() {
 // 		window.history.forward();
 // 		alert("111");
 // 	});
-
 	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","8px 20px");
 });
 </script>
-<!-- <button id="my">#####</button> -->
 <div class="page-wrapper" >
 	<div class="header" style="z-index:1;">
 		<h1>智慧電商平台</h1>
