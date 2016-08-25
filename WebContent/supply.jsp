@@ -30,7 +30,59 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
+function draw_supply(info){
+	$.ajax({
+		type : "POST",
+		url : "supply.do",
+		data : info,
+		success : function(result) {
+				var json_obj = $.parseJSON(result);
+				var result_table = "";
+				$.each(json_obj,function(i, item) {
+					result_table += 
+						"<tr><td>"+ json_obj[i].supply_name+
+						"</td><td>"+json_obj[i].supply_unicode+ 
+						"</td><td>"+json_obj[i].address+
+						"</td><td>"+json_obj[i].contact+
+						"</td><td>"+json_obj[i].phone+
+						"</td><td>"+json_obj[i].ext+
+						"</td><td>"+json_obj[i].mobile+
+						"</td><td>"+json_obj[i].email+
+						"</td><td>"+json_obj[i].contact1+
+						"</td><td>"+json_obj[i].phone1+
+						"</td><td>"+json_obj[i].ext1+
+						"</td><td>"+json_obj[i].mobile1+
+						"</td><td>"+json_obj[i].email1+
+						"</td><td>"+json_obj[i].memo+
+						 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+						+ "	<div class='table-function-list'>"
+						+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
+						+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
+						+ "	</div></div></td></tr>";
+				});
+				//判斷查詢結果
+				var resultRunTime = 0;
+				$.each (json_obj, function (i) {
+					resultRunTime+=1;
+				});
+				$("#products2").dataTable().fnDestroy();
+				if(resultRunTime!=0){
+					$("#products2-contain").show();
+					$("#products2 tbody").html(result_table);
+					$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+					$(".validateTips").text("");
+				}else{
+					$("#products2-contain").hide();
+					$(".validateTips").text("查無此結果");
+				}
+			}
+		});
+}
 	$(function() {
+		var information={
+				action : "search",
+				supply_name : $("input[name='searh_supply_name'").val(),
+		};
 		//=============自定義validator=============
 		//字符最大長度驗證（一個中文字符長度為2）
 		jQuery.validator.addMethod("stringMaxLength", function(value, element, param) { 
@@ -92,100 +144,22 @@
 		});
 		var validator_update = $("#update-dialog-form-post").validate({
 			rules : {
-				supply_name:{
-					maxlength : 40,
-					required : true
-				},
-				supply_unicode:{
-					maxlength : 10,
-				},
-				address: {
-					stringMaxLength : 100
-				},
-				contact: {
-					stringMaxLength : 10
-				},
-				phone: {
-					stringMaxLength : 12
-				},
-				ext: {
-					stringMaxLength : 6
-				},
-				mobile: {
-					stringMaxLength : 15
-				},
-				contact1: {
-					stringMaxLength : 10
-				},
-				phone1: {
-					stringMaxLength : 12
-				},
-				ext1: {
-					stringMaxLength : 6
-				},
-				mobile1: {
-					stringMaxLength : 15
-				},
-				memo: {
-					stringMaxLength : 200
-				}
+				supply_name:{maxlength : 40,required : true},
+				supply_unicode:{maxlength : 10,},
+				address: {stringMaxLength : 100},
+				contact: {stringMaxLength : 10},
+				phone: {stringMaxLength : 12},
+				ext: {stringMaxLength : 6},
+				mobile: {stringMaxLength : 15},
+				contact1: {stringMaxLength : 10},
+				phone1: {stringMaxLength : 12},
+				ext1: {stringMaxLength : 6},
+				mobile1: {stringMaxLength : 15},
+				memo: {stringMaxLength : 200}
 			}
 		});
 		//查詢相關設定
-							$.ajax({
-									type : "POST",
-									url : "supply.do",
-									data : {
-										action : "search",
-										supply_name : $("input[name='searh_supply_name'").val(),
-										
-									},
-									success : function(result) {
-											var json_obj = $.parseJSON(result);
-											var result_table = "";
-											$.each(json_obj,function(i, item) {
-												result_table += 
-													"<tr><td>"+ json_obj[i].supply_name+
-													"</td><td>"+json_obj[i].supply_unicode+ 
-													"</td><td>"+json_obj[i].address+
-													"</td><td>"+json_obj[i].contact+
-													"</td><td>"+json_obj[i].phone+
-													"</td><td>"+json_obj[i].ext+
-													"</td><td>"+json_obj[i].mobile+
-													"</td><td>"+json_obj[i].email+
-													"</td><td>"+json_obj[i].contact1+
-													"</td><td>"+json_obj[i].phone1+
-													"</td><td>"+json_obj[i].ext1+
-													"</td><td>"+json_obj[i].mobile1+
-													"</td><td>"+json_obj[i].email1+
-													"</td><td>"+json_obj[i].memo+
-													 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-													+ "	<div class='table-function-list'>"
-													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
-													+ "	</div></div></td></tr>";
-											});
-											//判斷查詢結果
-											var resultRunTime = 0;
-											$.each (json_obj, function (i) {
-												resultRunTime+=1;
-											});
-											$("#products2").dataTable().fnDestroy();
-											if(resultRunTime!=0){
-												
-												$("#products2-contain").show();
-												$("#products2 tbody").html(result_table);
-												$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-// 												$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-												$("#products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-												$("#products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-												$(".validateTips").text("");
-											}else{
-												$("#products2-contain").hide();
-												$(".validateTips").text("查無此結果");
-											}
-										}
-									});
+		draw_supply(information);
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog(
 						{
@@ -207,75 +181,28 @@
 										text : "新增",
 										click : function() {
 											if ($('#insert-dialog-form-post').valid()) {
-												$.ajax({
-													type : "POST",
-													url : "supply.do",
-													data : {
-														action : "insert",
-														supply_name : $("#dialog-form-insert input[name='supply_name']").val(),
-														supply_unicode : $("#dialog-form-insert input[name='supply_unicode']").val(),
-														address : $("#dialog-form-insert input[name='address']").val(),
-														contact : $("#dialog-form-insert input[name='contact']").val(),
-														phone : $("#dialog-form-insert input[name='phone']").val(),
-														ext : $("#dialog-form-insert input[name='ext']").val(),
-														mobile : $("#dialog-form-insert input[name='mobile']").val(),
-														contact1 : $("#dialog-form-insert input[name='contact1']").val(),
-														phone1 : $("#dialog-form-insert input[name='phone1']").val(),
-														ext1 : $("#dialog-form-insert input[name='ext1']").val(),
-														email : $("#dialog-form-insert input[name='email']").val(),
-														email1 : $("#dialog-form-insert input[name='email1']").val(),
-														mobile1 : $("#dialog-form-insert input[name='mobile1']").val(),
-														memo : $("#dialog-form-insert textarea[name='memo']").val(),
-													},
-													success : function(result) {
-														var json_obj = $.parseJSON(result);
-														var result_table = "";
-														$.each(json_obj,function(i,item) {
-															result_table += 
-																"<tr><td>"+ json_obj[i].supply_name+
-																"</td><td>"+json_obj[i].supply_unicode+ 
-																"</td><td>"+json_obj[i].address+
-																"</td><td>"+json_obj[i].contact+
-																"</td><td>"+json_obj[i].phone+
-																"</td><td>"+json_obj[i].ext+
-																"</td><td>"+json_obj[i].mobile+
-																"</td><td>"+json_obj[i].email+
-																"</td><td>"+json_obj[i].contact1+
-																"</td><td>"+json_obj[i].phone1+
-																"</td><td>"+json_obj[i].ext1+
-																"</td><td>"+json_obj[i].mobile1+
-																"</td><td>"+json_obj[i].email1+
-																"</td><td>"+json_obj[i].memo+
-																
-																"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-																+ "	<div class='table-function-list'>"
-																+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-																+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
-																+ "	</div></div></td></tr>";
-														});
-														//判斷查詢結果
-														var resultRunTime = 0;
-														$.each (json_obj, function (i) {
-															resultRunTime+=1;
-														});
-														$("#products2").dataTable().fnDestroy();
-														if(resultRunTime!=0){
-															$("#products2-contain").show();
-															$("#products2 tbody").html(result_table);
-															$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-// 															$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-															$("products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-															$("products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-															$(".validateTips").text("");
-														}else{
-															$("#products2-contain").hide();
-														}
-													}
-												});
+												information= {
+													action : "insert",
+													supply_name : $("#dialog-form-insert input[name='supply_name']").val(),
+													supply_unicode : $("#dialog-form-insert input[name='supply_unicode']").val(),
+													address : $("#dialog-form-insert input[name='address']").val(),
+													contact : $("#dialog-form-insert input[name='contact']").val(),
+													phone : $("#dialog-form-insert input[name='phone']").val(),
+													ext : $("#dialog-form-insert input[name='ext']").val(),
+													mobile : $("#dialog-form-insert input[name='mobile']").val(),
+													contact1 : $("#dialog-form-insert input[name='contact1']").val(),
+													phone1 : $("#dialog-form-insert input[name='phone1']").val(),
+													ext1 : $("#dialog-form-insert input[name='ext1']").val(),
+													email : $("#dialog-form-insert input[name='email']").val(),
+													email1 : $("#dialog-form-insert input[name='email1']").val(),
+													mobile1 : $("#dialog-form-insert input[name='mobile1']").val(),
+													memo : $("#dialog-form-insert textarea[name='memo']").val(),
+												};
+												draw_supply(information);
 												insert_dialog.dialog("close");
 												$("#insert-dialog-form-post").trigger("reset");
 											}
-										}
+										}	
 									}, {
 										text : "取消",
 										click : function() {
@@ -283,7 +210,7 @@
 											insert_dialog.dialog("close");
 											$("#insert-dialog-form-post").trigger("reset");
 										}
-									} ],
+									}],
 							close : function() {
 								validator_insert.resetForm();
 								$("#insert-dialog-form-post").trigger("reset");
@@ -302,61 +229,11 @@
 			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
-					$.ajax({
-						type : "POST",
-						url : "supply.do",
-						data : {
+					information={
 							action : "delete",
 							supply_id : uuid
-						},
-						success : function(result) {
-							var json_obj = $.parseJSON(result);
-							var result_table = "";
-							$.each(json_obj,function(i,item) {
-								result_table += 
-									"<tr><td>"+ json_obj[i].supply_name+
-									"</td><td>"+json_obj[i].supply_unicode+ 
-									"</td><td>"+json_obj[i].address+
-									"</td><td>"+json_obj[i].contact+
-									"</td><td>"+json_obj[i].phone+
-									"</td><td>"+json_obj[i].ext+
-									"</td><td>"+json_obj[i].mobile+
-									"</td><td>"+json_obj[i].email+
-									"</td><td>"+json_obj[i].contact1+
-									"</td><td>"+json_obj[i].phone1+
-									"</td><td>"+json_obj[i].ext1+
-									"</td><td>"+json_obj[i].mobile1+
-									"</td><td>"+json_obj[i].email1+
-									"</td><td>"+json_obj[i].memo+
-									
-									"</td>"+
-									 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-									+ "	<div class='table-function-list'>"
-									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
-									+ "	</div></div></td></tr>";
-							});
-							//判斷查詢結果
-							//alert(result_table);
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							$("#products2").dataTable().fnDestroy();
-							if(resultRunTime!=0){
-								$("#products2-contain").show();
-								$("#products2 tbody").html(result_table);
-								$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-// 								$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-								
-								$("products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-								$("products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-								$(".validateTips").text("");
-							}else{
-								$("#products2-contain").hide();
-							}
-						}
-					});
+						};
+					draw_supply(information);
 					$(this).dialog("close");
 				},
 				"取消刪除" : function() {
@@ -379,10 +256,7 @@
 				text : "修改",
 				click : function() {
 					if ($('#update-dialog-form-post').valid()) {
-						$.ajax({
-							type : "POST",
-							url : "supply.do",
-							data : {
+						information={
 	 							action : "update",
 // 	 							unit_id : uuid,
 	 							supply_id : $("#dialog-form-update input[name='supply_id']").val(),
@@ -400,53 +274,8 @@
 								email : $("#dialog-form-update input[name='email']").val(),
 								email1 : $("#dialog-form-update input[name='email1']").val(),
 								memo : $("#dialog-form-update textarea[name='memo']").val(),
-							},				
-							success : function(result) {
-								var json_obj = $.parseJSON(result);
-								var result_table = "";
-								$.each(json_obj,function(i, item) {
-									result_table += 
-										"<tr><td>"+ json_obj[i].supply_name+
-										"</td><td>"+json_obj[i].supply_unicode+ 
-										"</td><td>"+json_obj[i].address+
-										"</td><td>"+json_obj[i].contact+
-										"</td><td>"+json_obj[i].phone+
-										"</td><td>"+json_obj[i].ext+
-										"</td><td>"+json_obj[i].mobile+
-										"</td><td>"+json_obj[i].email+
-										"</td><td>"+json_obj[i].contact1+
-										"</td><td>"+json_obj[i].phone1+
-										"</td><td>"+json_obj[i].ext1+
-										"</td><td>"+json_obj[i].mobile1+
-										"</td><td>"+json_obj[i].email1+
-										"</td><td>"+json_obj[i].memo+
-										
-										"</td><td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].supply_id+ "'name='"+ json_obj[i].supply_name+"' ><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].supply_name+"' value='"+ json_obj[i].supply_id+"' ><i class='fa fa-trash'></i></button>"
-										+ "	</div></div></td></tr>";
-								});
-								//判斷查詢結果
-								var resultRunTime = 0;
-								$.each (json_obj, function (i) {
-									resultRunTime+=1;
-								});
-								$("#products2").dataTable().fnDestroy();
-								if(resultRunTime!=0){
-									$("#products2-contain").show();
-									$("#products2 tbody").html(result_table);
-									$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
-// 									$("#products2").dataTable({"bFilter": false, "bInfo": false, "paging": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-									
-									$("products2").find("th").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-									$("products2").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });
-									$(".validateTips").text("");
-								}else{
-									$("#products2-contain").hide();
-								}
-							}
-						});
+							};
+						draw_supply(information);
 						update_dialog.dialog("close");
 						$("#update-dialog-form-post").trigger("reset");
 					}
@@ -494,7 +323,6 @@
 						});
 							var result_table = "";
 							$.each(json_obj,function(i, item) {
-							
 								if(json_obj[i].supply_id==uuid){
 										$("#dialog-form-update input[name='supply_id']").val(json_obj[i].supply_id);
 										$("#dialog-form-update input[name='supply_name']").val(json_obj[i].supply_name);
@@ -537,30 +365,30 @@
 					<table border="0" height="500">
 							<tbody>
 							<tr>
-							    <td><h6>廠商名稱:</h6></td><td><input type="text" name="supply_name"  placeholder="輸入廠商名稱"/></td>	
+							    <td>廠商名稱:</td><td><input type="text" name="supply_name"  placeholder="輸入廠商名稱"/>*</td>	
 							</tr>
 							<tr>
-							    <td><h6>廠商統一編號:</h6></td><td><input type="text" name="supply_unicode" placeholder="輸入廠商統編"/></td>
-							    <td><h6>&nbsp;&nbsp;&nbsp;廠商地址:</h6></td><td><input type="text" name="address" placeholder="輸入廠商地址"/></td>
+							    <td>廠商統一編號:</td><td><input type="text" name="supply_unicode" placeholder="輸入廠商統編"/></td>
+							    <td>廠商地址:</td><td><input type="text" name="address" placeholder="輸入廠商地址"/></td>
 							</tr>
 							<tr>
-								<td><h6>連絡人:</h6></td><td><input type="text" name="contact" placeholder="輸入連絡人"/></td>
-							    <td><h6>&nbsp;&nbsp;&nbsp;連絡人手機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile"placeholder="輸入連絡人手機"/></td>
+								<td>連絡人:</td><td><input type="text" name="contact" placeholder="輸入連絡人"/></td>
+							    <td>連絡人手機:</td><td><input type="text" name="mobile"placeholder="輸入連絡人手機"/></td>
 							</tr>
 							<tr>
-								<td><h6>連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone" placeholder="輸入連絡人電話"/></td>
-							    <td><h6>&nbsp;&nbsp;&nbsp;連絡人分機:</h6></td><td><input type="text" name="ext" placeholder="輸入連絡人分機"/></td>
+								<td>連絡人電話:</td><td><input type="text" name="phone" placeholder="輸入連絡人電話"/></td>
+							    <td>連絡人分機:</td><td><input type="text" name="ext" placeholder="輸入連絡人分機"/></td>
 							</tr>
-							<tr><td><h6>連絡人email:</h6></td><td><input type="text" name="email" placeholder="輸入連絡人email"/></td></tr>
+							<tr><td>連絡人email:</td><td><input type="text" name="email" placeholder="輸入連絡人email"/></td></tr>
 							<tr>
-							    <td><h6>第二連絡人:</h6></td><td><input type="text" name="contact1" placeholder="輸入第二連絡人"/></td>
-								 <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人手機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile1"placeholder="輸入第二連絡人手機"/></td>		  
+							    <td>第二連絡人:</td><td><input type="text" name="contact1" placeholder="輸入第二連絡人"/></td>
+								 <td>第二連絡人手機:</td><td><input type="text" name="mobile1"placeholder="輸入第二連絡人手機"/></td>		  
 							</tr>
 							<tr>
-							  <td><h6>第二連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone1"placeholder="輸入第二連絡人電話"/></td>
-							  <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人分機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="ext1"placeholder="輸入第二連絡人電話分機"/></td>
+							  <td>第二連絡人電話:</td><td><input type="text" name="phone1"placeholder="輸入第二連絡人電話"/></td>
+							  <td>第二連絡人分機:</td><td><input type="text" name="ext1"placeholder="輸入第二連絡人電話分機"/></td>
 							</tr>
-							<tr><td><h6>第二連絡人email:</h6></td><td><input type="text" name="email1" placeholder="輸入第二連絡人email"/></td></tr>
+							<tr><td>第二連絡人email:</td><td><input type="text" name="email1" placeholder="輸入第二連絡人email"/></td></tr>
 							<tr>
 								<td valign="top">備註說明:</td>
 							</tr>
@@ -582,30 +410,30 @@
 							<table border="0" height="500">
 							<tbody>
 							<tr>
-							    <td><h6>廠商名稱:</h6></td><td><input type="text" name="supply_name"  placeholder="輸入廠商名稱"/></td>	
+							    <td>廠商名稱:</td><td><input type="text" name="supply_name"  placeholder="輸入廠商名稱"/>*</td>	
 							</tr>
 							<tr>
-							    <td><h6>廠商統一編號:</h6></td><td><input type="text" name="supply_unicode" placeholder="輸入廠商統編"/></td>
-							    <td><h6>&nbsp;&nbsp;&nbsp;廠商地址:</h6></td><td><input type="text" name="address" placeholder="輸入廠商地址"/></td>
+							    <td>廠商統一編號:</td><td><input type="text" name="supply_unicode" placeholder="輸入廠商統編"/></td>
+							    <td>廠商地址:</td><td><input type="text" name="address" placeholder="輸入廠商地址"/></td>
 							</tr>
 							<tr>
-								<td><h6>連絡人:</h6></td><td><input type="text" name="contact" placeholder="輸入連絡人"/></td>
-							    <td><h6>&nbsp;&nbsp;&nbsp;連絡人手機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile"placeholder="輸入連絡人手機"/></td>
+								<td>連絡人:</td><td><input type="text" name="contact" placeholder="輸入連絡人"/></td>
+							    <td>連絡人手機:</td><td><input type="text" name="mobile"placeholder="輸入連絡人手機"/></td>
 							</tr>
 							<tr>
-								<td><h6>連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone" placeholder="輸入連絡人電話"/></td>
-							    <td><h6>&nbsp;&nbsp;&nbsp;連絡人分機:</h6></td><td><input type="text" name="ext" placeholder="輸入連絡人分機"/></td>
+								<td>連絡人電話:</td><td><input type="text" name="phone" placeholder="輸入連絡人電話"/></td>
+							    <td>連絡人分機:</td><td><input type="text" name="ext" placeholder="輸入連絡人分機"/></td>
 							</tr>
-							<tr><td><h6>連絡人email:</h6></td><td><input type="text" name="email" placeholder="輸入連絡人email"/></td></tr>
+							<tr><td>連絡人email:</td><td><input type="text" name="email" placeholder="輸入連絡人email"/></td></tr>
 							<tr>
-							    <td><h6>第二連絡人:</h6></td><td><input type="text" name="contact1" placeholder="輸入第二連絡人"/></td>
-								 <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人手機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="mobile1"placeholder="輸入第二連絡人手機"/></td>		  
+							    <td>第二連絡人:</td><td><input type="text" name="contact1" placeholder="輸入第二連絡人"/></td>
+								 <td>第二連絡人手機:</td><td><input type="text" name="mobile1"placeholder="輸入第二連絡人手機"/></td>		  
 							</tr>
 							<tr>
-							  <td><h6>第二連絡人電話:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="phone1"placeholder="輸入第二連絡人電話"/></td>
-							  <td><h6>&nbsp;&nbsp;&nbsp;第二連絡人分機:&nbsp;&nbsp;&nbsp;</h6></td><td><input type="text" name="ext1"placeholder="輸入第二連絡人電話分機"/></td>
+							  <td>第二連絡人電話:</td><td><input type="text" name="phone1"placeholder="輸入第二連絡人電話"/></td>
+							  <td>第二連絡人分機:</td><td><input type="text" name="ext1"placeholder="輸入第二連絡人電話分機"/></td>
 							</tr>
-							<tr><td><h6>第二連絡人email:</h6></td><td><input type="text" name="email1" placeholder="輸入第二連絡人email"/></td></tr>
+							<tr><td>第二連絡人email:</td><td><input type="text" name="email1" placeholder="輸入第二連絡人email"/></td></tr>
 							<tr>
 								<td valign="top">備註說明:</td>
 							</tr>
@@ -628,11 +456,6 @@
 					</div>
 				</div><!-- /.form-wrap -->
 			</div>
-<!-- 			<div class="row" align="center"> -->
-<!-- 				<div id="products2-serah-create-contain" class="ui-widget"> -->
-<!-- 					<button id="create-productunit">新增</button> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 			<!-- 第二列 -->
 		
 			<div class="row search-result-wrap" >
@@ -642,7 +465,7 @@
 							<tr class="ui-widget-header">
 								<th>廠商名稱</th>
 								<th>廠商統編</th>
-								<th>廠商地址</th>
+								<th style="min-width:120px">廠商地址</th>
 								<th>連絡人</th>
 								<th>連絡人電話</th>
 								<th>連絡人分機</th>

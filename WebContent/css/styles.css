@@ -815,7 +815,9 @@ table.result-table td {
 a.btn, button.btn {
     display: inline-block;
     color: #fff;
-    font-size: 14px;
+/*     font-size: 14px; Ben偷改的 字體也偷加*/
+    font-size: 16px;
+    font-family: "微軟正黑體";
     text-decoration: none;
     box-shadow: 0px 3px 5px rgba(0,0,0,0.3);
 }

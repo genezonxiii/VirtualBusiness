@@ -32,7 +32,29 @@ function table_before(str){
 	selector="#"+table_name;
 	$(selector).before(tmp);
 }
-
+function vender_color(vender){
+	if(vender=="ibon"){return '#FF0000';}
+	if(vender=="九易"){return '#EEEE00';}
+	if(vender=="Pchome"){return '#0000FF';}
+	if(vender=="ASAP"){return '#FF6666';}
+	if(vender=="GoHappy"){return '#FF00FF';}
+	if(vender=="國泰Tree"){return '#00FFFF';}
+	if(vender=="17Life"){return '#BBBBBB';}
+	if(vender=="yahoo"){return '#BBBB00';}
+	if(vender=="UDN"){return '#BB00BB';}
+	if(vender=="樂天"){return '#00BBBB';}
+	if(vender=="愛買"){return '#BBBBFF';}
+	if(vender=="夠麻吉"){return '#BBFFBB';}
+	if(vender=="通用"){return '#FFBBBB';}
+	if(vender=="超級商城"){return '#6666FF';}
+	if(vender=="博客來"){return '#66FF66';}
+	if(vender=="momo"){return '#00FF00';}
+	if(vender=="payeasy"){return '#006666';}
+	if(vender=="myfone"){return '#660066';}
+	if(vender=="森森購物"){return '#666600';}
+	if(vender=="Line Mart"){return '#333333';}
+	return '#553388';
+}
 function draw_table(table_name,title){
 	var selector="#"+table_name;
 	$(".tog_col").remove();
@@ -220,14 +242,6 @@ function who(){
 <body>
 <script>
 $(function() {
-	//history.back();
-	//document.execCommand('Refresh');
-	//location.reload();
-	//window.location.replace(location.href);
-	//window.location.assign(window.location.href);
-	//window.history.go(1);
-	//$("#title").html(who());
-	//alert("111");
 	$("#logout").click(function(e) {
 		$.ajax({
 			type : "POST",
@@ -241,10 +255,6 @@ $(function() {
 			}
 		});
 	});
-// 	$("#my").click(function(){
-// 		window.history.forward();
-// 		alert("111");
-// 	});
 	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","8px 20px");
 });
 </script>
@@ -265,23 +275,24 @@ $(function() {
 				</ul>
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
-				<ul style="top: -156px;">
+				<ul style="top: -146px;">
 					<li><a href="javascript:location.replace('purchase.jsp')">進貨管理</a></li>
 					<li><a href="javascript:location.replace('purchreturn.jsp')">進貨退回管理</a></li>
 					<li><a href="javascript:location.replace('sale.jsp')">銷貨管理</a></li>
 					<li><a href="javascript:location.replace('salereturn.jsp')">銷貨退回管理</a></li>
 					<li><a href="javascript:location.replace('stock.jsp')">庫存管理</a></li>
+					<li><a href="javascript:location.replace('supply.jsp')">供應商管理</a></li>
+					<li><a href="javascript:location.replace('product.jsp')">商品管理</a></li>
+					<li><a href="javascript:location.replace('tagprint.jsp')">標籤列印</a></li>
+					<li><a href="javascript:location.replace('customer.jsp')">客戶管理</a></li>
 					<li><a href="javascript:location.replace('producttype.jsp')">商品類型管理</a></li>
 					<li><a href="javascript:location.replace('productunit.jsp')">商品單位管理</a></li>
-					<li><a href="javascript:location.replace('product.jsp')">商品管理</a></li>
-					<li><a href="javascript:location.replace('supply.jsp')">供應商管理</a></li>
-					<li><a href="javascript:location.replace('user.jsp')">使用者管理</a></li>
 					<li><a href="javascript:location.replace('group.jsp')">公司管理</a></li>
-					<li><a href="javascript:location.replace('customer.jsp')">客戶管理</a></li>
+					<li><a href="javascript:location.replace('user.jsp')">使用者管理</a></li>
 					<li><a href="javascript:location.replace('accreceive.jsp')">應收帳款管理</a></li>
 					<li><a href="javascript:location.replace('accpay.jsp')">應付帳款管理</a></li>
 					<li><a href="javascript:location.replace('changepassword.jsp')">使用者帳密管理</a></li>
-					<li><a href="javascript:location.replace('tagprint.jsp')">標籤列印</a></li>
+					
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理

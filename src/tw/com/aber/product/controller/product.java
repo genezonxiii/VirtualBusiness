@@ -45,7 +45,7 @@ public class product extends HttpServlet {
 			List<ProductBean> list = productService.getsearchBarcode(group_id,barcode);
 			Gson gson = new Gson();
 			String jsonStrList = gson.toJson(list);
-			System.out.println("jsonStrList: "+jsonStrList);
+			//System.out.println("jsonStrList: "+jsonStrList);
 			response.getWriter().write(jsonStrList);
 			return;
 		}
@@ -184,6 +184,7 @@ public class product extends HttpServlet {
 				//System.out.println(supply_name);
 				/*************************** 2.開始新增資料 ***************************************/
 				productService = new ProductService();
+				//System.out.println(photo+" @@ "+photo1);
 				productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id, unit_id,
 						cost, price, current_stock, keep_stock, photo, photo1, description,barcode, user_id);
 				/***************************
@@ -591,7 +592,7 @@ public class product extends HttpServlet {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_insert_product);
-
+				
 				pstmt.setString(1, productBean.getGroup_id());
 				pstmt.setString(2, productBean.getC_product_id());
 				pstmt.setString(3, productBean.getProduct_name());
@@ -608,6 +609,8 @@ public class product extends HttpServlet {
 				pstmt.setString(14, productBean.getBarcode());
 				pstmt.setString(15, productBean.getUser_id());
 				pstmt.setInt(16, productBean.getCurrent_stock());
+				//System.out.println("in"+productBean.getPhoto()+"in"+productBean.getPhoto1());
+				
 
 				pstmt.executeUpdate();
 

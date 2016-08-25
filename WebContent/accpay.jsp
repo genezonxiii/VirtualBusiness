@@ -373,7 +373,7 @@
 			"確認批次收帳" : function() {
 				$(".checkbox_pay").each(function(){
 					if($(this).prop("checked")){
-						alert($(this).attr("value"));
+						//alert($(this).attr("value"));
 						$.ajax({
 							type : "POST",
 							url : "accpay.do",

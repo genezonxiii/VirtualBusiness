@@ -113,13 +113,13 @@
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>/data/vbupload</param-value>
-    <!--  <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>  -->
+    <!--  <param-value>/data/vbupload</param-value>  -->
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
-    <param-value>/data/productpic</param-value>
-    <!--  <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>  -->
+    <!--  <param-value>/data/productpic</param-value>  -->
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>videopath</param-name>

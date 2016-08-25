@@ -35,29 +35,6 @@
 <script src="js/d3.v3.min.js"></script>
 
 <script>
-function color(vender){
-	if(vender=="ibon"){return '#FF0000';}
-	if(vender=="九易"){return '#EEEE00';}
-	if(vender=="Pchome"){return '#0000FF';}
-	if(vender=="ASAP"){return '#FF6666';}
-	if(vender=="GoHappy"){return '#FF00FF';}
-	if(vender=="國泰Tree"){return '#00FFFF';}
-	if(vender=="17Life"){return '#BBBBBB';}
-	if(vender=="yahoo"){return '#BBBB00';}
-	if(vender=="UDN"){return '#BB00BB';}
-	if(vender=="樂天"){return '#00BBBB';}
-	if(vender=="愛買"){return '#BBBBFF';}
-	if(vender=="夠麻吉"){return '#BBFFBB';}
-	if(vender=="通用"){return '#FFBBBB';}
-	if(vender=="超級商城"){return '#6666FF';}
-	if(vender=="博客來"){return '#66FF66';}
-	if(vender=="momo"){return '#00FF00';}
-	if(vender=="payeasy"){return '#006666';}
-	if(vender=="myfone"){return '#660066';}
-	if(vender=="森森購物"){return '#666600';}
-	if(vender=="Line Mart"){return '#333333';}
-	return '#000000';
-}
 
 function draw_chart(m_h,m_w,data){
 	//alert(data.length);
@@ -86,7 +63,7 @@ function draw_chart(m_h,m_w,data){
     s.selectAll('rect').data(data).enter().append('rect')
      .attr({
       'fill':function(d){
-    	  return color(d.vender);
+    	  return vender_color(d.vender);
       },
       'width':(max_w/(data.length+1))-0,
       'height':function(d){
@@ -156,11 +133,11 @@ function draw_chart(m_h,m_w,data){
   	for(i=0;i<vender_exist.length;i++){
 		s.append('line').attr('x1', max_w+padding+60).attr('y1', 100+30*i)
 				 		.attr('x2', max_w+padding+40).attr('y2',100+30*i)
-				 		.style('stroke',color(vender_exist[i])).style('stroke-width',15);
+				 		.style('stroke',vender_color(vender_exist[i])).style('stroke-width',15);
 		s.append('g').selectAll('text')
 		  .data(vender_exist).enter().append('text')
 		  .attr({'x':max_w+padding+70 ,'y':105+30*i ,}).text(vender_exist[i])
-		  .style('fill',color(vender_exist[i]))
+		  .style('fill',vender_color(vender_exist[i]))
 		  .style({'font-size':'18px'});
   	}
     //########### 直接畫x,y軸 ########################

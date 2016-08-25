@@ -683,7 +683,9 @@ public class purchase extends HttpServlet {
 		private String product_id;
 		private String product_name;
 		private String c_product_id;
-		private String price="0";
+		private String price;
+		private String cost;
+		
 
 		public String getProduct_id() {
 			return product_id;
@@ -717,6 +719,14 @@ public class purchase extends HttpServlet {
 			this.price = price;
 		}
 
+		public String getCost() {
+			return cost;
+		}
+
+		public void setCost(String cost) {
+			this.cost = cost;
+		}
+		
 	}
 
 	interface Purchase_interface {
@@ -1449,6 +1459,7 @@ public class purchase extends HttpServlet {
 					productVO.setC_product_id(rs.getString("c_product_id"));
 					productVO.setProduct_name(rs.getString("product_name"));
 					productVO.setPrice(rs.getString("price"));
+					productVO.setCost(rs.getString("cost"));
 					list.add(productVO);
 				}
 				// Handle any driver errors
@@ -1506,6 +1517,7 @@ public class purchase extends HttpServlet {
 					productVO.setC_product_id(rs.getString("c_product_id"));
 					productVO.setProduct_name(rs.getString("product_name"));
 					productVO.setPrice(rs.getString("price"));
+					productVO.setCost(rs.getString("cost"));
 					list.add(productVO);
 				}
 				// Handle any driver errors

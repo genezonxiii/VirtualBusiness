@@ -35,29 +35,6 @@
 <script type="text/javascript" src="js/d3.v3.min.js"></script>
 
 <script>
-function vender_color(vender){
-	if(vender=="ibon"){return '#FF0000';}
-	if(vender=="九易"){return '#EEEE00';}
-	if(vender=="Pchome"){return '#0000FF';}
-	if(vender=="ASAP"){return '#FF6666';}
-	if(vender=="GoHappy"){return '#FF00FF';}
-	if(vender=="國泰Tree"){return '#00FFFF';}
-	if(vender=="17Life"){return '#BBBBBB';}
-	if(vender=="yahoo"){return '#BBBB00';}
-	if(vender=="UDN"){return '#BB00BB';}
-	if(vender=="樂天"){return '#00BBBB';}
-	if(vender=="愛買"){return '#BBBBFF';}
-	if(vender=="夠麻吉"){return '#BBFFBB';}
-	if(vender=="通用"){return '#FFBBBB';}
-	if(vender=="超級商城"){return '#6666FF';}
-	if(vender=="博客來"){return '#66FF66';}
-	if(vender=="momo"){return '#00FF00';}
-	if(vender=="payeasy"){return '#006666';}
-	if(vender=="myfone"){return '#660066';}
-	if(vender=="森森購物"){return '#666600';}
-	if(vender=="Line Mart"){return '#333333';}
-	return '#000000';
-}
 
 function draw_chart(m_h,m_w,data){
 	var i,j;
@@ -65,7 +42,6 @@ function draw_chart(m_h,m_w,data){
 	
 	for(i=0,j=0;i<data.length;i++){
 		for(j=0;j<vender_exist.length;j++){
-			//alert("第二層: i="+i+" j="+j);
 			if(vender_exist[j]==data[i].vender||data[i].vender.length==0){break;}
 		}
 		if(j==vender_exist.length){
@@ -76,7 +52,7 @@ function draw_chart(m_h,m_w,data){
     h = m_h,                            //height
     r = 150,                            //radius
     color = d3.scale.category20c();     //builtin range of colors
-    $('#chart').html("");
+    
     var vis = d3.select("#chart")
         .append("svg:svg")              //create the SVG element inside the <body>
         .data([data])                   //associate our data with the document
@@ -119,52 +95,33 @@ function draw_chart(m_h,m_w,data){
     		  .style({'font-size':'18px'});
       	}
  };
- 
- 
-function date_format(str) {
-	var words=str.replace(","," ").split(" ");
-	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
-}
 	$(function() {
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
 				url : "saleamountstaticchart.do",
-				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
+				data : {action :"searh", time1 : $('#datepicker1').val(), time2 : $('#datepicker2').val()},
 				success : function(result) {
-					//alert(result);
+					//alert($('#datepicker2').val());
 					var json_obj = $.parseJSON(result);
+					if(json_obj.entrance.length==0){$("#chart").html("<h2 style='color:red;'>查無資料</h2>");return;}
 					var result_table = "";
 					var data=[];
-					var i=0;
-					for(i=0;i<json_obj.entrance.length;i++){
-						if(json_obj.entrance[i]!=0){
-							data[i]={"label":json_obj.entrance[i]+"月:"+json_obj.answer[i]+"%", "value":json_obj.answer[i],"vender":json_obj.vender[i]};
+					var i=0,j=0,last_month=0;
+					$('#chart').html("");
+					if(json_obj.entrance.length>0){last_month=json_obj.entrance[0];}
+					for(i=0,j=0;i<=json_obj.entrance.length;i++,j++){
+						if(json_obj.entrance[i]!=last_month){
+							draw_chart(450,550,data);
+							last_month=json_obj.entrance[i];
+							data=[];
+							j=0;
 						}
-					}
-					if(data.length!=0){
-						draw_chart(450,550,data);
-					}else{
-						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						data[j]={"label":json_obj.entrance[i]+"月:"+json_obj.answer[i]+"%", "value":json_obj.answer[i],"vender":json_obj.vender[i]};
 					}
 				}
 			});
-		});
-		$("#dialog-confirm").html("<p>是否確認刪....</p>");
-		$("#dialog-confirm").dialog({
-			title: "你妳你妳你",
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			height : "auto",
-			modal : true,
-			show : {effect : "blind",duration : 300},
- 			hide : {effect : "blind",duration : 300},
-			buttons : {
-				"確認刪除" : function() {alert("嘿嘿嘿~");$(this).dialog("close");},
-				"取消刪除" : function() {$(this).dialog("close");}
-			}
 		});
 	});
 </script>
@@ -179,8 +136,8 @@ function date_format(str) {
 						</label>
 						<div class="forward-mark"></div>
 						<label for="">
-							<span class="block-label" id="datepicker2">轉單迄日</span>
-							<input type="text" class="input-date">
+							<span class="block-label" >轉單迄日</span>
+							<input type="text" class="input-date" id="datepicker2">
 						</label>
 						<button id="searh-productunit" class="btn btn-darkblue">查詢</button>
 					</div>
@@ -191,7 +148,6 @@ function date_format(str) {
 	</div>
 <div class="validateTips" align="center"> </div>
 <div id="chart" align="center"></div>
-<div id="dialog-confirm"></div>
 </div>
 </body>
 </html>

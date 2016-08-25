@@ -47,6 +47,7 @@ public class saleamountstaticchart extends HttpServlet {
 		user_id=(user_id==null||user_id.length()<3)?"KNOWN":user_id;
 		
 		String time1 = request.getParameter("time1");
+		
 		time1=(time1==null || time1.length()<3)?"1999-12-31":time1;
 		String time2 = request.getParameter("time2");
 		time2=(time2==null || time2.length()<3)?"2300-12-31":time2;
@@ -135,7 +136,7 @@ public class saleamountstaticchart extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_sale_price_percent );
+				pstmt = con.prepareStatement(sp_get_sale_price_percent);
 				pstmt.setString(1,group_id);
 				pstmt.setDate(2,from_date);
 				pstmt.setDate(3,till_date);

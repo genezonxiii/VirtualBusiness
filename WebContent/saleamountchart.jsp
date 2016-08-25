@@ -44,30 +44,8 @@ function getYearWeek(a, b, c) {
 	return Math.ceil((d + ((date2.getDay() + 1) - 1)) / 7 ); 
 }; 
 
-function vender_color(vender){
-	if(vender=="ibon"){return '#FF0000';}
-	if(vender=="九易"){return '#EEEE00';}
-	if(vender=="Pchome"){return '#0000FF';}
-	if(vender=="ASAP"){return '#FF6666';}
-	if(vender=="GoHappy"){return '#FF00FF';}
-	if(vender=="國泰Tree"){return '#00FFFF';}
-	if(vender=="17Life"){return '#BBBBBB';}
-	if(vender=="yahoo"){return '#BBBB00';}
-	if(vender=="UDN"){return '#BB00BB';}
-	if(vender=="樂天"){return '#00BBBB';}
-	if(vender=="愛買"){return '#BBBBFF';}
-	if(vender=="夠麻吉"){return '#BBFFBB';}
-	if(vender=="通用"){return '#FFBBBB';}
-	if(vender=="超級商城"){return '#6666FF';}
-	if(vender=="博客來"){return '#66FF66';}
-	if(vender=="momo"){return '#00FF00';}
-	if(vender=="payeasy"){return '#006666';}
-	if(vender=="myfone"){return '#660066';}
-	if(vender=="森森購物"){return '#666600';}
-	if(vender=="Line Mart"){return '#333333';}
-	return '#000000';
-}
 function draw_chart(m_h,m_w,data){
+	var iii;
 	//alert(getYearWeek(2016,1,4));
 	var max_h = m_h, max_w = data.length*200,padding=70;
 	var xtag=[],ytag=[];
@@ -80,7 +58,7 @@ function draw_chart(m_h,m_w,data){
 	for(i=min_month;i<max_month+1;i++){
 		xtag[j]=i;j++;
 	}
-	max_w = (max_month-min_month+2)*100;
+	max_w = (max_month-min_month+2)*100>1000?1000:(max_month-min_month+2)*100;
 	var real_date=[],k=min_month,get_day=0;//k紀錄目前周指標
 	for(i=1;i<13&&k<max_month+1;i++){
 		for(j=1;j<32&&k<max_month+1;j++){
@@ -138,7 +116,6 @@ function draw_chart(m_h,m_w,data){
 			var color=vender_color(tmp_vender);
 				//color="#"+('00000'+(0|Math.random()*(1<<24)).toString(16)).slice(-6);
 			if(i+1!=data.length)tmp_vender=data[i+1].vender;
-			
 			vis.append('svg:path').attr('d', lineGen(tmp)).attr('stroke', color)
 		       .attr('stroke-width',2).attr('fill', 'none');
 			
@@ -172,21 +149,16 @@ function draw_chart(m_h,m_w,data){
 	    .data(real_date).enter().append('text')
 	    .attr({
 	      'fill':'#000',
-	      'x':function(d){return ((padding*5)/2)+(d.x*((max_w-padding*3) /(max_month-min_month+2)));},
+	      'x':function(d){return ((padding*9)/5)+((d.x+1)*((max_w-padding*3) /(max_month-min_month+2)));},
 	      'y':function(d){return max_h-padding/2;}
 	    }).text(function(d){return d.date;})
-	    .style({'font-size':'28px'})
+	    .style({'font-size':'12px'})
 	    .style('fill', function(d){return ((d.x%2==0)?'#000000':'#555555')});
+     
      vis.append('line') .attr('x1', padding*2-5    ).attr('y1', max_h-padding)
 		 				.attr('x2', max_w-padding-5).attr('y2', max_h-padding)
 		 				.style('stroke', 'black').style('stroke-width', 5);
  };
- 
- 
-function date_format(str) {
-	var words=str.replace(","," ").split(" ");
-	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
-}
 	$(function() {
 		$("#searh-productunit").click(function(e) {
 			$("#chart").html("<h2 style='color:red;'>資料查詢中...</h2>");
@@ -196,6 +168,7 @@ function date_format(str) {
 				url : "saleamountchart.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
+					//alert(result);
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					var data=[];
@@ -214,23 +187,7 @@ function date_format(str) {
 					}
 				}
 			});
-			//$("#xls").show();
 		});
-		$("#dialog-confirm").html("<p>是否確認刪....</p>");
-		$("#dialog-confirm").dialog({
-			title: "你妳你妳你",
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			height : "auto",
-			modal : true,
-			show : {effect : "blind",duration : 300},
- 			hide : {effect : "blind",duration : 300},
-			buttons : {
-				"確認刪除" : function() {alert("嘿嘿嘿~");$(this).dialog("close");},
-				"取消刪除" : function() {$(this).dialog("close");}
-			}
-		});	
 	});
 </script>
 			<div class="input-field-wrap">
@@ -252,7 +209,6 @@ function date_format(str) {
 			<!-- 第一列 -->
 	<div class="validateTips" align="center"> </div>
 	<div id="chart" align="center"></div>
-	<div id="dialog-confirm"></div>
 </div>
 </body>
 </html>

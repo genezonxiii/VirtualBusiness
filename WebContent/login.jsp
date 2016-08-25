@@ -125,7 +125,7 @@ $(function() {
 		height : "auto",
 		modal : true,
 		open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
-		show : {effect : "bounce",duration : 800},
+		show : {effect : "bounce",duration : 1200},
 		hide : {effect : "fade",duration : 300},
 		buttons : {
 			"確認" : function() {$(this).dialog("close");},
@@ -164,14 +164,14 @@ $(function() {
 						<span class="block-label">認證碼</span>
 						<input type="text" id="verify">
 					</label>
-					<div style="text-align:center;font-size:14px;padding-top:10px">
+					<label style="text-align:center;font-size:14px;padding-top:10px">
 <!-- 					<div class="captcha-wrap"> -->
-						<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg" style="width:140px;">點擊圖片可換一張
-					</div>
+						<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg" style="width:100%;">點擊圖片可換一張
+					</label>
 				</div><!-- /.verify-wrap -->
 				<div class="login-btn-wrap">
 					<a class="login-button" id="login_btn">登入</a>
-					<a class="login-reset-button" id="reset_btn">清除重填</a>					
+					<a class="login-reset-button" id="reset_btn">清除重填</a>
 				</div><!-- /.login-btn-wrap -->
 			</form>
 		</div><!-- /.login-panel -->

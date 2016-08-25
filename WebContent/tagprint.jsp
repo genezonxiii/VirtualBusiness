@@ -31,7 +31,10 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
-	
+	function alert_dialog(str){
+		$("#warning").html(str);
+		$("#warning").dialog("open");
+	}
 	var ua = window.navigator.userAgent;
 	var msie = ua.indexOf("MSIE ");
 	    
@@ -91,7 +94,7 @@
 		             	}));
 		             },
 		             error: function(XMLHttpRequest, textStatus, errorThrown) {
-		                 alert(textStatus);
+		                 alert_dialog(textStatus);
 		             }
 		         });
 		     },
@@ -132,7 +135,7 @@
 		             	}));
 		             },
 		             error: function(XMLHttpRequest, textStatus, errorThrown) {
-		                 alert(textStatus);
+		                 alert_dialog(textStatus);
 		             }
 		         });
 		     },
@@ -209,7 +212,7 @@
 				
 				// 判斷條碼欄位
 				if (barcode == ""){
-					alert("條碼不可為空白，請重新查詢商品");
+					alert_dialog("條碼不可為空白，請重新查詢商品");
 					return;
 				}
 				
@@ -217,13 +220,13 @@
 				if(size == 36) {
 					// 判斷自訂輸出內容欄位 (不可超過8個字)
 					if(description.length > 8){
-						alert("字體為大時，自訂輸出內容最多8字元，請重新輸入");
+						alert_dialog("字體為大時，自訂輸出內容最多8字元，請重新輸入");
 						return;
 					} else {
 						// 判斷商品名稱欄位長度
 						// 長度不可超過兩行，16個字元 (單行8個字)
 						if(product_name.length > 16){
-							alert("字體為大時，商品名稱最多16字元，請重新輸入");
+							alert_dialog("字體為大時，商品名稱最多16字元，請重新輸入");
 							return;
 						}
 						// 判斷商品名稱是否超過8字元，做斷行處理
@@ -240,13 +243,13 @@
 				if(size == 24){
 					// 判斷自訂輸出內容欄位 (不可超過22個字)
 					if(description.length > 22){
-						alert("字體為小時，自訂輸出內容最多22字元，請重新輸入");
+						alert_dialog("字體為小時，自訂輸出內容最多22字元，請重新輸入");
 						return;
 					} else {
 						// 判斷商品名稱欄位長度
 						// 長度不可超過兩行，22個字元 (單行11個字)
 						if(product_name.length > 22) {
-							alert("字體為小時，商品名稱最多22字元，請重新輸入");
+							alert_dialog("字體為小時，商品名稱最多22字元，請重新輸入");
 							return;
 						}
 						// 判斷商品名稱是否超過11字元，做斷行處理
@@ -318,7 +321,7 @@
 				TSCObj.ActiveXcloseport();
 				
 			} else { // If another browser, return 0
-			    alert("本列印功能只支援IE瀏覽器");
+			    alert_dialog("本列印功能只支援IE瀏覽器");
 			}	
 		});
 		$("#warning").html("貼心提醒您:<br>&nbsp;&nbsp;本列印功能只支援IE瀏覽器。");

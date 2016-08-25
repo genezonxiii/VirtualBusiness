@@ -277,7 +277,7 @@
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "<td ><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
 										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
@@ -393,7 +393,7 @@
 								+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 								+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+								+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
 								+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 								+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
@@ -483,7 +483,7 @@
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+									+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
 									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
@@ -590,7 +590,7 @@
 													+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 													+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 													+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-													+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+													+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
 													+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 													+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
@@ -742,7 +742,7 @@
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+										+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
 										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
@@ -1219,6 +1219,8 @@
 									$("#detail_dialog_form_update input[name='update_detail_product_name']").val(json_obj[i].product_name);
 									$("#detail_dialog_form_update input[name='quantity']").val(json_obj[i].quantity);
 									$("#detail_dialog_form_update input[name='cost']").val(json_obj[i].cost);
+									$("#detail_dialog_form_update input[name='total']").val($("#detail_dialog_form_update input[name='cost']").val()*$("#detail_dialog_form_update input[name='quantity']").val());
+									//???
 									$("#detail_dialog_form_update input[name='memo']").val(json_obj[i].memo);
 									$("#update_detail_c_product_id").autocomplete('search');
 					                if(ui.items.length==1) {
@@ -1354,7 +1356,8 @@
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
 	                             c_product_id: item.c_product_id,
-	                             price: item.price
+	                             price: item.price,
+	                             cost: item.cost
                             }
                           }))
                     }
@@ -1378,8 +1381,8 @@
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#update_detail_product_name").val(ui.item.product_name);
 	    	$("#update_detail_product_n").val("1");
-	    	$("#update_detail_product_price").val(ui.item.price);
-	    	$("#update_detail_product_cost").val(ui.item.price);
+	    	$("#update_detail_product_price").val(ui.item.cost);
+	    	$("#update_detail_product_cost").val(ui.item.cost);
 	    });
         $("#update_detail_product_name").autocomplete({
             minLength: 1,
@@ -1403,7 +1406,8 @@
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
 	                             c_product_id: item.c_product_id,
-	                             price: item.price
+	                             price: item.price,
+	                             cost: item.cost
                             }
                           }))
                     }
@@ -1427,8 +1431,8 @@
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#update_detail_c_product_id").val(ui.item.c_product_id);
 	    	$("#update_detail_product_n").val("1");
-	    	$("#update_detail_product_price").val(ui.item.price);
-	    	$("#update_detail_product_cost").val(ui.item.price);
+	    	$("#update_detail_product_price").val(ui.item.cost);
+	    	$("#update_detail_product_cost").val(ui.item.cost);
 	    });
 		//detail insert autocomplete
         $("#insert_detail_c_product_id").autocomplete({
@@ -1454,7 +1458,8 @@
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
 	                             c_product_id: item.c_product_id,
-	                             price: item.price
+	                             price: item.price,
+	                             cost: item.cost
                             }
                           }))
                     }
@@ -1478,8 +1483,8 @@
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#insert_detail_product_name").val(ui.item.product_name);
 	    	$("#insert_detail_product_n").val("1");
-	    	$("#insert_detail_product_price").val(ui.item.price);
-	    	$("#insert_detail_product_cost").val(ui.item.price);
+	    	$("#insert_detail_product_price").val(ui.item.cost);
+	    	$("#insert_detail_product_cost").val(ui.item.cost);
 	    });
         $("#insert_detail_product_name").autocomplete({
             minLength: 1,
@@ -1503,7 +1508,8 @@
 	                             product_id: item.product_id,
 	                             product_name: item.product_name,
 	                             c_product_id: item.c_product_id,
-	                             price: item.price
+	                             price: item.price,
+	                             cost: item.cost
                             }
                           }))
                     }
@@ -1527,8 +1533,8 @@
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#insert_detail_c_product_id").val(ui.item.c_product_id);
 	    	$("#insert_detail_product_n").val("1");
-	    	$("#insert_detail_product_price").val(ui.item.price);
-	    	$("#insert_detail_product_cost").val(ui.item.price);
+	    	$("#insert_detail_product_price").val(ui.item.cost);
+	    	$("#insert_detail_product_cost").val(ui.item.cost);
 	    });
 		//新增事件聆聽
 		$("#create-supply").click( function(e) {
@@ -1540,9 +1546,19 @@
 		$("#insert_detail_product_n").change(function(e){
 			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
 		});
+		
 		$("#update_detail_product_n").change(function(e){
 			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
 		});
+		
+		$("#insert_detail_product_price").change(function(e){
+			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
+		});
+		
+		$("#update_detail_product_price").change(function(e){
+			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
+		});
+
 		$("#warning").dialog({
 			title: "警告",
 			draggable : false,//防止拖曳
@@ -1652,11 +1668,11 @@
 								<td><p>進貨數量</p></td>
 								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
 								<td><p>單價</p></td>
-								<td><input type="text" id="update_detail_product_price" disabled></td>
+								<td><input type="text" id="update_detail_product_price" name="cost" placeholder="輸入單價"></td>
 							</tr>
 							<tr>
 								<td><p>總價格</p></td>
-								<td><input type="text" id="update_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
+								<td><input type="text" id="update_detail_product_cost" name="total" disabled></td>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
 							</tr>
@@ -1709,13 +1725,13 @@
 							</tr>
 							<tr>
 								<td><p>進貨數量</p></td>
-								<td><input type="text" id="insert_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
+								<td><input type="text" id="insert_detail_product_n" name="quantity" placeholder="輸入進貨數量"></td>
 								<td><p>單價</p></td>
-								<td><input type="text" id="insert_detail_product_price" disabled></td>
+								<td><input type="text" id="insert_detail_product_price" name="cost"placeholder="輸入單價"></td>
 							</tr>
 							<tr>
 								<td><p>總價格</p></td>
-								<td><input type="text" id="insert_detail_product_cost" name="cost"  placeholder="輸入進貨價格"></td>
+								<td><input type="text" id="insert_detail_product_cost" name="total" disabled></td>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
 							</tr>
@@ -1773,7 +1789,7 @@
 								<th>發票樣式</th>
 								<th>進貨發票金額</th>
 								<th>備註說明</th>
-								<th>功能</th>
+								<th style="min-width:75px;">功能</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -1072,19 +1072,20 @@
 								if(i<len-1){
 									if(json_obj[i].sale_id==uuid){
 										$("#dialog-form-update input[name='order_no']").val(json_obj[i].order_no);
-										alert
 										$("#dialog-form-update input[name='product_name']").val(json_obj[i].product_name);
 										$("#dialog-form-update input[name='c_product_id']").val(json_obj[i].c_product_id);
 										$("#dialog-form-update input[name='name']").val(json_obj[i].name);
 										$("#dialog-form-update input[name='quantity']").val(json_obj[i].quantity);
 										$("#dialog-form-update input[name='price']").val(json_obj[i].price);
+										$("#dialog-form-update input[name='update_product_price']").val(json_obj[i].price*json_obj[i].quantity);
 										$("#dialog-form-update input[name='invoice']").val(json_obj[i].invoice);
 										$("#dialog-form-update input[name='invoice_date']").val(json_obj[i].invoice_date);
 										$("#dialog-form-update input[name='trans_list_date']").val(json_obj[i].trans_list_date);
 										$("#dialog-form-update input[name='dis_date']").val(json_obj[i].dis_date);
 										$("#dialog-form-update input[name='memo']").val(json_obj[i].memo);
 										$("#dialog-form-update input[name='sale_date']").val(json_obj[i].sale_date);
-										$("#dialog-form-update input[name='order_source']").val(json_obj[i].order_source);									
+										$("#dialog-form-update input[name='order_source']").val(json_obj[i].order_source);
+										
 									}
 								}
 							});
@@ -1154,7 +1155,8 @@
                               product_id: item.product_id,
                               product_name: item.product_name,
                               c_product_id: item.c_product_id,
-                              price: item.price
+                              price: item.price,
+                              cost: item.cost
                             }
                           }));
                     }
@@ -1174,7 +1176,9 @@
        $("#insert_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入產品名稱以供查詢"); } );
        $('#insert_product_name').bind('autocompleteselect', function (e, ui) {
        		$("#insert_c_product_id").val(ui.item.c_product_id);
-       		$("#insert_product_price").val(ui.item.price);
+       		$("#insert_price").val(ui.item.price);
+       		$("#insert_quantity").val('1');
+       		$("#insert_product_price").val($("#insert_quantity").val()*$("#insert_price").val());
        		product_id = ui.item.product_id;
        });   
 		//處理新增的自訂ID autocomplete
@@ -1200,7 +1204,8 @@
                               product_id: item.product_id,
                               product_name: item.product_name,
                               c_product_id: item.c_product_id,
-                              price: item.price
+                              price: item.price,
+                              cost: item.cost
                             }
                           }));
                     }
@@ -1244,7 +1249,9 @@
         });
        $('#insert_c_product_id').bind('autocompleteselect', function (e, ui) {
        		$("#insert_product_name").val(ui.item.product_name);
-       		$("#insert_product_price").val(ui.item.price);
+       		$("#insert_price").val(ui.item.price);
+       		$("#insert_quantity").val('1');
+       		$("#insert_product_price").val($("#insert_quantity").val()*$("#insert_price").val());
        		product_id = ui.item.product_id;
        });
 		//處理修改的名稱autocomplete
@@ -1270,7 +1277,8 @@
                               product_id: item.product__id,
                               product_name: item.product_name,
                               c_product_id: item.c_product_id,
-                              price: item.price
+                              price: item.price,
+                              cost: item.cost
                             }
                           }));
                     }
@@ -1290,7 +1298,9 @@
        $("#update_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入產品名稱以供查詢"); } );
        $('#update_product_name').bind('autocompleteselect', function (e, ui) {
        		$("#update_c_product_id").val(ui.item.c_product_id);
-       		$("#update_product_price").val(ui.item.price);
+       		$("#update_price").val(ui.item.price);
+       		$("#update_quantity").val('1');
+       		$("#update_product_price").val($("#update_quantity").val()*$("#update_price").val());
        		product_id = ui.item.product_id;
        });   
 		//處理修改的自訂ID autocomplete
@@ -1316,7 +1326,8 @@
                               product_id: item.product_id,
                               product_name: item.product_name,
                               c_product_id: item.c_product_id,
-                              price: item.price
+                              price: item.price,
+                              cost: item.cost
                             }
                           }));
                     }
@@ -1336,7 +1347,9 @@
        $("#update_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入ID名稱以供查詢"); } );
        $('#update_c_product_id').bind('autocompleteselect', function (e, ui) {
        		$("#update_product_name").val(ui.item.product_name);
-       		$("#update_product_price").val(ui.item.price);
+       		$("#update_price").val(ui.item.price);
+       		$("#update_quantity").val('1');
+       		$("#update_product_price").val($("#update_quantity").val()*$("#update_price").val());
        		product_id = ui.item.product_id;
        });       
 		//日期設定
@@ -1377,10 +1390,16 @@
 		//hold header
 // 		$("#sales").find("th").css("min-width","120px");
 		$("#update_quantity").change(function(){
-			$("#update_price").val($("#update_quantity").val()*$("#update_product_price").val());
+			$("#update_product_price").val($("#update_quantity").val()*$("#update_price").val());
+		});
+		$("#update_price").change(function(){
+			$("#update_product_price").val($("#update_quantity").val()*$("#update_price").val());
 		});
 		$("#insert_quantity").change(function(){
-			$("#insert_price").val($("#insert_quantity").val()*$("#insert_product_price").val());
+			$("#insert_product_price").val($("#insert_quantity").val()*$("#insert_price").val());
+		});
+		$("#insert_price").change(function(){
+			$("#insert_product_price").val($("#insert_quantity").val()*$("#insert_price").val());
 		});
 		$("#warning").dialog({
 			title: "警告",
@@ -1435,11 +1454,11 @@
 								<td><p>銷貨數量</p></td>
 								<td><input type="text" id="update_quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
 								<td><p>單價</p></td>
-								<td><input type="text" id="update_product_price" name="update_product_price" disabled></td>
+								<td><input type="text" id="update_price" name="price" placeholder="輸入單價"></td>
 							</tr>
 							<tr>
 								<td><p>總金額</p></td>
-								<td><input type="text" id="update_price" name="price"  placeholder="輸入銷貨金額"></td>
+								<td><input type="text" id="update_product_price" name="update_product_price" disabled></td>
 							</tr>
 							<tr>
 								<td><p>發票號碼</p></td>
@@ -1493,11 +1512,11 @@
 								<td><p>銷貨數量</p></td>
 								<td><input type="text" id="insert_quantity" name="quantity"  placeholder="輸入銷貨數量"></td>
 								<td><p>單價</p></td>
-								<td><input type="text" id="insert_product_price" name="insert_product_price" disabled></td>
+								<td><input type="text" id="insert_price" name="price" placeholder="輸入單價"></td>
 							</tr>
 							<tr>
 								<td><p>總金額</p></td>
-								<td><input type="text" id="insert_price" name="price"  placeholder="輸入銷貨金額"></td>
+								<td><input type="text" id="insert_product_price" name="insert_product_price" disabled></td>
 								<td><p>發票號碼</p></td>
 								<td><input type="text" name="invoice"  placeholder="輸入發票號碼"></td>
 							</tr>

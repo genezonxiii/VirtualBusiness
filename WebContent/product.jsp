@@ -69,6 +69,71 @@
 <script>
 	var new_or_edit=0;
 	var scan_exist=0;
+	var information;
+	function draw_product(info){
+		$.ajax({
+			type : "POST",
+			url : "product.do",
+			data : info,
+			success : function(result) {
+				console.log(result);
+					var json_obj = $.parseJSON(result);
+					var len=json_obj.length;
+					//判斷查詢結果
+					var resultRunTime = 0;
+					$.each (json_obj, function (i) {
+						resultRunTime+=1;
+					});
+					if(json_obj[resultRunTime-1].message=="驗證通過"){
+						var result_table = "";
+						$.each(json_obj,function(i, item) {
+							if(i<len-1){
+								//alert(json_obj[i].photo);
+								var tmp=(json_obj[i].photo.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo+" style='max-width:100px;max-height:100px'>";
+								var tmp1=(json_obj[i].photo1.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo1+" style='max-width:100px;max-height:100px'>";
+								result_table 
+								+= "<tr>"
+								+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
+								+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
+//									+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
+								+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
+								+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
+								+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
+								+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
+								+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+								+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
+								+ "<td name='"+ json_obj[i].photo+"'>"+tmp+"</td>"
+								+ "<td name='"+ json_obj[i].photo1 +"'>"+tmp1+"</td>"
+								+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
+								+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
+								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+								+ "	<div class='table-function-list'>"
+								+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
+								+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
+								+ "	</div></div></td></tr>";
+							}//"src", "./image.do?picname=" + json_obj[i].photo
+						});
+					}
+					if(resultRunTime==0){
+						$("#sales-contain").hide();
+						$(".validateTips").text("查無此結果");
+					}
+					$("#sales").dataTable().fnDestroy();
+					if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
+						$("#sales-contain").show();
+						$("#sales tbody").html(result_table);
+						$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
+						$("#sales").find("td").css("text-align","center");
+						$("#sales").find("th").css("text-align","center");
+						$(".validateTips").text("");
+					}
+				}
+			});
+		
+	}
+	
+	
+	
 // 	$(document).scannerDetection({
 //     	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
 //     	startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
@@ -90,7 +155,6 @@
 	    			$("#edit_barcode").val(data.string);
 	    		}
 	    		if(new_or_edit==0){
-	    			new_or_edit=3;
 	    			$.ajax({url : "product.do", type : "POST", cache : false,
 			            data : {
 			            	action : "find_barcode",
@@ -99,97 +163,16 @@
 			            success: function(result) {
 			            	var json_obj2 = $.parseJSON(result);
 			            	if(json_obj2.length>0){
-				            	$.ajax({
-									type : "POST",
-									url : "product.do",
-									data : {
+			            		information={
 										action : "search_name",
 										product_name : json_obj2[0].product_name,
-									},
-									success : function(result) {
-											//alert($("#searh_name").val());
-											//alert(result);
-											var json_obj = $.parseJSON(result);
-											var len=json_obj.length;
-											//判斷查詢結果
-											var resultRunTime = 0;
-											$.each (json_obj, function (i) {
-												resultRunTime+=1;
-											});
-											if(json_obj[resultRunTime-1].message=="驗證通過"){
-												var result_table = "";
-												$.each(json_obj,function(i, item) {
-													
-													//herehere
-													if(i<len-1){
-														result_table 
-														+= "<tr>"
-														+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-														+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-	//			 										+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-														+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-														+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-														+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-														+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-														+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-														+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-	//			 										+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-	//			 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-														+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-														+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-														+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-														+ "	<div class='table-function-list'>"
-														+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-														+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
-														+ "	</div></div></td></tr>";
-													}
-												});
-											}							
-											if(resultRunTime==0){
-												$("#sales-contain").hide();
-												$(".validateTips").text("查無此結果");
-											}
-											$("#sales").dataTable().fnDestroy();
-											if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-												$("#sales-contain").show();
-												$("#sales tbody").html(result_table);
-												$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-												$("#sales").find("td").css("text-align","center");
-												$("#sales").find("th").css("text-align","center");
-												$(".validateTips").text("");
-											}
-										}
-									});
-			            		}
-// 			            	var json_obj = $.parseJSON(result);
-// 			            	var result_table = "";
-// 							$.each(json_obj,function(i, item) {
-// 								if(i<json_obj.length){
-// 									result_table 
-// 									+= "<tr>"
-// 									+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-// 									+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 									+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost + "</td>"
-// 									+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-// 									+ "	<div class='table-function-list'>"
-// 									+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'><i class='fa fa-pencil'></i></button>"
-// 									+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "' ><i class='fa fa-trash'></i></button>"
-// 									+ "	</div></div></td></tr>";
-// 								}
-// 								if(json_obj.length==0){
-// 									$("#sales-contain22").hide();
-// 									$(".validateTips").text("查無此結果");
-// 								}
-// 								if(json_obj.length>0){
-// 									$("#sales-contain22").show();
-// 									$("#sales22 tbody").html(result_table);
-// 									$("#sales22").find("td").css("text-align","center");
-// 									$("#sales22").find("th").css("text-align","center");
-// 									$(".validateTips").text("");
-// 								}
-								
-// 							});
+									};
+			            		
+			            		draw_product(information);
+			            	}else{
+			            		$("#sales-contain").hide();
+								$(".validateTips").text("查無此結果");
+			            	}
 			            }
 		    		});
 	    		}
@@ -200,7 +183,6 @@
 	        .bind('scannerDetectionReceive',function(e,data){
 	            console.log(data);
 	        });
-	
 	    $(window).scannerDetection('success');
 	});
 	$(function() {
@@ -303,132 +285,22 @@
 		});		
 		$("#searh-name").click(function(e) {
 			e.preventDefault();
-			$.ajax({
-					type : "POST",
-					url : "product.do",
-					data : {
-						action : "search_name",
-						product_name : $("#searh_name").val(),
-					},
-					success : function(result) {
-							//alert($("#searh_name").val());
-							//alert(result);
-							var json_obj = $.parseJSON(result);
-							var len=json_obj.length;
-							//判斷查詢結果
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							if(json_obj[resultRunTime-1].message=="驗證通過"){
-								var result_table = "";
-								$.each(json_obj,function(i, item) {
-									
-									//herehere
-									if(i<len-1){
-										result_table 
-										+= "<tr>"
-										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 										+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-										+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-										+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-										+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
-										+ "	</div></div></td></tr>";
-									}
-								});
-							}							
-							if(resultRunTime==0){
-								$("#sales-contain").hide();
-								$(".validateTips").text("查無此結果");
-							}
-							$("#sales").dataTable().fnDestroy();
-							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-								$("#sales-contain").show();
-								$("#sales tbody").html(result_table);
-								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-								$("#sales").find("td").css("text-align","center");
-								$("#sales").find("th").css("text-align","center");
-								$(".validateTips").text("");
-							}
-						}
-					});
+			information={
+					action : "search_name",
+					product_name : $("#searh_name").val(),
+				};
+			draw_product(information);
 		});
 		
 		//自訂產品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
-			$.ajax({
-					type : "POST",
-					url : "product.do",
-					data : {
-						action : "search",
-						supply_name : $("input[name='searh_product_name'").val(),
-					},
-					success : function(result) {
-							var json_obj = $.parseJSON(result);
-							var len=json_obj.length;
-							//判斷查詢結果
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							if(json_obj[resultRunTime-1].message=="驗證通過"){
-								var result_table = "";
-								$.each(json_obj,function(i, item) {
-									
-									//herehere
-									if(i<len-1){
-										result_table 
-										+= "<tr>"
-										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 										+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-										+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-										+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-										+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
-										+ "	</div></div></td></tr>";
-									}
-								});
-							}							
-							if(resultRunTime==0){
-								$("#sales-contain").hide();
-								$(".validateTips").text("查無此結果");
-							}
-							$("#sales").dataTable().fnDestroy();
-							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-								$("#sales-contain").show();
-								$("#sales tbody").html(result_table);
-								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-								$("#sales").find("td").css("text-align","center");
-								$("#sales").find("th").css("text-align","center");
-								$(".validateTips").text("");
-							}
-						}
-					});
-		})
+			information={
+					action : "search",
+					supply_name : $("input[name='searh_product_name'").val(),
+				};
+			draw_product(information);
+		});
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog(
 						{
@@ -451,10 +323,7 @@
 										text : "新增",
 										click : function() {
 											if ($('#insert-dialog-form-post').valid()) {
-												$.ajax({
-													type : "POST",
-													url : "product.do",
-													data : {
+												information={
 														action : "insert",
 														c_product_id : $("#dialog-form-insert input[name='c_product_id']").val(),
 														product_name : $("#dialog-form-insert input[name='product_name']").val(),
@@ -467,59 +336,15 @@
 														price : $("#dialog-form-insert input[name='price']").val(),
 														current_stock : $("#dialog-form-insert input[name='current_stock']").val(),
 														keep_stock : $("#dialog-form-insert input[name='keep_stock']").val(),
-														photo : $("#photo").val(),
+														photo : $("#photo0").val(),
 														photo1 : $("#photo1").val(),
 // 														photo : $("#dialog-form-insert input[name='photo']").val(),
 // 														photo1 : $("#dialog-form-insert input[name='photo1']").val(),
 														description : $("#dialog-form-insert input[name='description']").val(),
 														barcode : $("#dialog-form-insert input[name='barcode']").val()
-													},
-													success : function(result) {
-														var json_obj = $.parseJSON(result);
-														var len=json_obj.length;
-														//判斷查詢結果
-														var resultRunTime = 0;
-														$.each (json_obj, function (i) {
-															resultRunTime+=1;
-														});
-														var result_table = "";
-														$.each(json_obj,function(i, item) {
-															if(i<len-1){
-																result_table 
-																+= "<tr>"
-																	+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-																	+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 																	+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-																	+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-																	+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-																	+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-																	+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-																	+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-																	+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 																	+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 																	+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-																	+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-																	+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-																	+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-																	+ "	<div class='table-function-list'>"
-																	+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-																	+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
-																	+ "	</div></div></td></tr>";
-															}
-														});
-														$("#sales").dataTable().fnDestroy();
-														if(resultRunTime!=0){
-															$("#sales-contain").show();
-															$("#sales tbody").html(result_table);
-															$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-															$("#sales").find("td").css("text-align","center");
-															$("#sales").find("th").css("text-align","center");
-															$(".validateTips").text("");
-														}else{
-															$("#sales-contain").hide();
-														}
-													}
-												});
+													};
+												draw_product(information);
+												
 												insert_dialog.dialog("close");
 												$("#insert-dialog-form-post").trigger("reset");
 											}
@@ -553,59 +378,11 @@
 			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認刪除" : function() {
-					$.ajax({
-						type : "POST",
-						url : "product.do",
-						data : {
+					information={
 							action : "delete",
-							product_id : uuid//c_product_id是為了刪除後，回傳指定的結果，所需參數
-						},
-						success : function(result) {
-							var json_obj = $.parseJSON(result);
-							var len=json_obj.length;
-							//判斷查詢結果
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							var result_table = "";
-							$.each(json_obj,function(i, item) {
-								if(i<len-1){
-									result_table 
-									+= "<tr>"
-										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 										+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-										+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-										+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-										+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-										+ "	<div class='table-function-list'>"
-										+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-										+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
-										+ "	</div></div></td></tr>";										
-								}
-							});
-							$("#sales").dataTable().fnDestroy();
-							if(resultRunTime!=0){
-								$("#sales-contain").show();
-								$("#sales tbody").html(result_table);
-								$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-								$("#sales").find("td").css("text-align","center");
-								$("#sales").find("th").css("text-align","center");
-								$(".validateTips").text("");
-							}else{
-								$("#sales-contain").hide();
-							}
-						}
-					});
+							product_id : uuid
+						};
+					draw_product(information);
 					$(this).dialog("close");
 				},
 				"取消刪除" : function() {
@@ -629,10 +406,7 @@
 				text : "修改",
 				click : function() {
 					if ($('#update-dialog-form-post').valid()) {
-						$.ajax({
-							type : "POST",
-							url : "product.do",
-							data : {
+						information={
 	 							action : "update",
 								product_id : product_id,
 	 							c_product_id : $("#dialog-form-update input[name='c_product_id']").val(),
@@ -644,63 +418,13 @@
 								cost : $("#dialog-form-update input[name='cost']").val(),
 								price : $("#dialog-form-update input[name='price']").val(),
 								keep_stock : $("#dialog-form-update input[name='keep_stock']").val(),
-								photo : $("#photo-update").val(),//$("#dialog-form-update input[name='photo-update']").val(),
+								photo : $("#photo0-update").val(),//$("#dialog-form-update input[name='photo-update']").val(),
 								photo1 : $("#photo1-update").val(),//$("#dialog-form-update input[name='photo1-update']").val(),
 								description : $("#dialog-form-update input[name='description']").val(),
 								barcode : $("#dialog-form-update input[name='barcode']").val()
-							},
-							success : function(result) {
-								//alert($("#photo-update").val());
-								//alert($("#dialog-form-update input[name='fileupload-update']").val());
-								//alert($("#fileupload-update").attr());
-								var json_obj = $.parseJSON(result);
-								var len=json_obj.length;
-								//判斷查詢結果
-								var resultRunTime = 0;
-								$.each (json_obj, function (i) {
-									resultRunTime+=1;	
-								});
-								var result_table = "";
-								if(resultRunTime!=0){
-									$.each(json_obj,function(i, item) {									
-										if(i<len-1){
-											result_table 
-											+= "<tr>"
-												+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-												+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 												+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-												+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-												+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-												+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-												+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-												+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-												+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 												+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 												+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-												+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-												+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
-												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-												+ "	<div class='table-function-list'>"
-												+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"'><i class='fa fa-pencil'></i></button>"
-												+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].product_id+"'value='"+ json_obj[i].product_id+ "'name='"+ json_obj[i].product_name+"' ><i class='fa fa-trash'></i></button>"
-												+ "	</div></div></td></tr>";	
-												
-										}
-									});
-								}	
-								$("#sales").dataTable().fnDestroy();
-								if(resultRunTime!=0){
-									$("#sales-contain").show();
-									$("#sales tbody").html(result_table);
-									$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-									$("#sales").find("td").css("text-align","center");
-									$("#sales").find("th").css("text-align","center");
-									$(".validateTips").text("");
-								}else{
-									$("#sales-contain").hide();
-								}
-							}
-						});
+							};
+						draw_product(information);
+						$("#update-dialog-form-post").trigger("reset");
 						update_dialog.dialog("close");
 					}
 					new_or_edit=0;
@@ -733,6 +457,8 @@
 			insert_dialog.dialog("open");
 			$("#files").html('');
 			$("#files2").html('');
+			$("#photo0").val('');
+			$("#photo1").val('');
 			$("#new_barcode").focus();
 			scan_exist=1;
 			if(!scan_exist){$("#warning").dialog("open");};
@@ -743,6 +469,10 @@
 			e.preventDefault();
 			$("#files-update").html('');
 			$("#files2-update").html('');
+			$("#photo0-update").val('');
+			$("#photo1-update").val('');
+// 			$("").val();
+// 			$("#photo").val();
 			uuid = $(this).val();
 			product_id = $(this).attr("id");
 			$("input[name='search_product_name'").val("");
@@ -788,7 +518,7 @@
 										}else{
 											$("#product-photo").attr("src","");
 											$("#product-photo").attr("width","100");
-											$("#product-photo").attr("alt","無圖片");
+											$("#product-photo").attr("alt","無");
 										}
 										if (json_obj[i].photo1 != '') {
 											$("#product-photo1").attr("src", "./image.do?picname=" + json_obj[i].photo1);
@@ -797,7 +527,7 @@
 										}else{
 											$("#product-photo1").attr("src","");
 											$("#product-photo1").attr("width","100");
-											$("#product-photo1").attr("alt","  無圖片");
+											$("#product-photo1").attr("alt","無");
 										}
 									}
 								}
@@ -822,7 +552,6 @@
                         term : request.term
                     },
                     success: function(data) {
-                    	//alert(data);
                     	var json_obj = $.parseJSON(data);
                     	response($.map(json_obj, function (item) {
                     		supply_id = item.supply_id;
@@ -847,7 +576,6 @@
          });
   		$("#insert_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
 	    $('#insert_supply_name').bind('autocompleteselect', function (e, ui) {
-	    	//alert(ui.item.supply_id);
 	    	supply_id = ui.item.supply_id;
 	    });
 	    $("#update_supply_name").autocomplete({
@@ -863,7 +591,6 @@
                         term : request.term
                     },
                     success: function(data) {
-                    	//alert(data);
                     	var json_obj = $.parseJSON(data);
                     	response($.map(json_obj, function (item) {
                     		supply_id = item.supply_id;
@@ -888,7 +615,6 @@
          });
   		$("#update_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
 	    $('#update_supply_name').bind('autocompleteselect', function (e, ui) {
-	    	//alert(ui.item.supply_id);
 	    	supply_id = ui.item.supply_id;
 	    });
 	  //X_X
@@ -935,100 +661,54 @@
 	         });
 		
 	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入廠商名稱以供查詢"); } );
-			//處理新增的下拉選單unit_id
-	                $.ajax({
-	                    url : "product.do",
-	                    type : "POST",
-	                    cache : false,
-	                    delay : 1500,
-	                    data : {
-	                    	action : "search_product_data",
-	                    	identity : "ID",
-	                        term : ''
-	                    },
-	                    success: function(data) {
-	                    	var json_obj = $.parseJSON(data);
-							$.map(json_obj, function (item) {
-	                    		if (item.unit_name != '') {
-	                    			$("#select_insert_unit_id").append("<option value='" + item.unit_name + "'>" + item.unit_name + "</option>");
-	                    		}
-// 	                    		console.log("'" + item.unit_name + "'");
-	                          })
-	                    },
-	                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                        alert(textStatus);
-	                    }
-	                });
-			//處理新增的下拉選單type_id
-   					 $.ajax({
-	                    url : "product.do",
-	                    type : "POST",
-	                    cache : false,
-	                    delay : 1500,
-	                    data : {
-	                    	action : "search_product_data",
-	                    	identity : "ID2",
-	                        term : ''
-	                    },
-	                    success: function(data) {
-	                    	var json_obj = $.parseJSON(data);
-							$.map(json_obj, function (item) {
-	                    		if (item.type_name != '') {
-	                    			$("#select_insert_type_id").append("<option value='" + item.type_name + "'>" + item.type_name + "</option>");
-	                    		}
-	                          })
-	                    },
-	                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                        alert(textStatus);
-	                    }
-	                });
-			//處理修改的下拉選單unit_id
-	      			  $.ajax({
-	                    url : "product.do",
-	                    type : "POST",
-	                    cache : false,
-	                    delay : 1500,
-	                    data : {
-	                    	action : "search_product_data",
-	                    	identity : "ID",
-	                        term : ''
-	                    },
-	                    success: function(data) {
-	                    	var json_obj = $.parseJSON(data);
-							$.map(json_obj, function (item) {
-	                    		if (item.unit_name != '') {
-	                    			$("#select_update_unit_id").append("<option value='" + item.unit_name + "'>" + item.unit_name + "</option>");
-	                    		}
-	                          })
-	                    },
-	                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                        alert(textStatus);
-	                    }
-	                });
-			//處理修改的下拉選單type_id
-	     			  $.ajax({
-	                    url : "product.do",
-	                    type : "POST",
-	                    cache : false,
-	                    delay : 1500,
-	                    data : {
-	                    	action : "search_product_data",
-	                    	identity : "ID2",
-	                        term : ''
-	                    },
-	                    success: function(data) {
-	                    	var json_obj = $.parseJSON(data);
-							$.map(json_obj, function (item) {
-	                    		if (item.type_name != '') {
-	                    			$("#select_update_type_id").append("<option value='" + item.type_name + "'>" + item.type_name + "</option>");
-	                    		}
-	                          })
-	                    },
-	                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                        alert(textStatus);
-	                    }
-	                });
-		
+			//處理新增修改的下拉選單unit_id
+               $.ajax({
+                   url : "product.do",
+                   type : "POST",
+                   cache : false,
+                   delay : 1500,
+                   data : {
+                   	action : "search_product_data",
+                   	identity : "ID",
+                       term : ''
+                   },
+                   success: function(data) {
+                   	var json_obj = $.parseJSON(data);
+					$.map(json_obj, function (item) {
+                   		if (item.unit_name != '') {
+                   			$("#select_insert_unit_id").append("<option value='" + item.unit_name + "'>" + item.unit_name + "</option>");
+                   			$("#select_update_unit_id").append("<option value='" + item.unit_name + "'>" + item.unit_name + "</option>");
+                   		}
+                         })
+                   },
+                   error: function(XMLHttpRequest, textStatus, errorThrown) {
+                       alert(textStatus);
+                   }
+               });
+			//處理新增修改的下拉選單type_id
+  			  $.ajax({
+                    url : "product.do",
+                    type : "POST",
+                    cache : false,
+                    delay : 1500,
+                    data : {
+                    	action : "search_product_data",
+                    	identity : "ID2",
+                        term : ''
+                    },
+                    success: function(data) {
+                    	var json_obj = $.parseJSON(data);
+						$.map(json_obj, function (item) {
+                    		if (item.type_name != '') {
+                    			$("#select_insert_type_id").append("<option value='" + item.type_name + "'>" + item.type_name + "</option>");
+                    			$("#select_update_type_id").append("<option value='" + item.type_name + "'>" + item.type_name + "</option>");
+                    		}
+                          })
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert(textStatus);
+                    }
+                });
 		//<!-- photo section jquery begin by Melvin -->
 		'use strict';
 	    var url = window.location.hostname === 'blueimp.github.io' ?
@@ -1074,7 +754,7 @@
 	                    .append(uploadButton.clone(true).data(data));
 	            }
 	            node.appendTo(data.context);
-	            $("#photo").val(file.name);
+	            //$("#photo0").val(file.name);
 	        });
 	    }).on('fileuploadprocessalways', function (e, data) {
 	        var index = data.index,
@@ -1102,10 +782,8 @@
 	            progress + '%'
 	        );
 	    }).on('fileuploaddone', function (e, data) {
-	    	console.log(data.result.files);
-	    	console.log("fileuploaddone");
 	        $.each(data.result.files, function (index, file) {
-	        	$("#photo").val(file.name);
+	        	$("#photo0").val(file.name);/////////////////////////////////////
 	            if (file.url) {
 	                var link = $('<a>')
 	                    .attr('target', '_blank')
@@ -1151,7 +829,6 @@
 	                    .append(uploadButton.clone(true).data(data));
 	            }
 	            node.appendTo(data.context);
-	            $("#photo2").val(file.name);
   	        });
 	    }).on('fileuploadprocessalways', function (e, data) {
 	        var index = data.index,
@@ -1179,10 +856,8 @@
 	            progress + '%'
 	        );
 	    }).on('fileuploaddone', function (e, data) {
-	    	console.log(data.result.files);
-	    	
 	        $.each(data.result.files, function (index, file) {
-	        	$("#photo2").val(file.name);
+	        	$("#photo1").val(file.name);///////////////////////////////////////
 	            if (file.url) {
 	                var link = $('<a>')
 	                    .attr('target', '_blank')
@@ -1206,6 +881,10 @@
 	    }).prop('disabled', !$.support.fileInput)
 	        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 	    
+	    
+	    
+	    
+	    //////////////////////////////////////////////////////////////////
         
 	    $('#fileupload-update').fileupload({
 	        url: url,
@@ -1259,7 +938,7 @@
 	    }).on('fileuploaddone', function (e, data) {
 	    	console.log("fileuploaddone");
 	        $.each(data.result.files, function (index, file) {
-	        	$("#photo-update").val(file.name);
+	        	$("#photo0-update").val(file.name);///////////////////////////////////////
 	            if (file.url) {
 	                var link = $('<a>')
 	                    .attr('target', '_blank')
@@ -1281,7 +960,9 @@
 	                .append(error);
 	        });
 	    }).prop('disabled', !$.support.fileInput)
-	        .parent().addClass($.support.fileInput ? undefined : 'disabled');             
+	        .parent().addClass($.support.fileInput ? undefined : 'disabled');       
+	    
+	    
 	    $('#fileupload2-update').fileupload({
 	        url: url,
 	        dataType: 'json',
@@ -1304,7 +985,6 @@
 	                    .append(uploadButton.clone(true).data(data));
 	            }
 	            node.appendTo(data.context);
-	            $("#photo1-update").val(file.name);
 	        });
 	    }).on('fileuploadprocessalways', function (e, data) {
 	        var index = data.index,
@@ -1336,7 +1016,7 @@
 	    	
 	        $.each(data.result.files, function (index, file) {
 	        	
-	        	$("#photo1-update").val(file.name);  
+	        	$("#photo1-update").val(file.name);  /////////////////////////////////////
 	            if (file.url) {
 	                var link = $('<a>')
 	                    .attr('target', '_blank')
@@ -1536,42 +1216,21 @@
 		</div>
 			
 			<!-- 第一列 -->
-<!-- 			<div class="row" align="center"> -->
-<!-- 				<div id="sales-serah-create-contain" class="ui-widget"> -->
-<!-- 					<table id="sales-serah-create"> -->
-<!-- 						<thead> -->
-<!-- 							<tr> -->
-<!-- 								<td><input type="text" id="searh_product_name" name="searh_product_name" placeholder="請輸入廠商名稱查詢"></td> -->
-<!-- 								<th> -->
-<!-- 									<button id="searh-sale">查詢</button> -->
-<!-- 								</th> -->
-<!-- 							</tr> -->
-<!-- 						</thead> -->
-<!-- 					</table> -->
-<!-- 				</div> -->
-<!-- 			</div>	 -->
-			<!-- 第二列 -->
-<!-- 			<div class="row" align="center"> -->
-<!-- 				<div class="ui-widget"> -->
-<!-- 					<button id="create-sale">新增產品資料</button> -->
-<!-- 				</div> -->
-<!-- 			</div>						 -->
-			<!-- 第三列 -->
 			<div class="row search-result-wrap" align="center">
 				<div id="sales-contain" class="ui-widget" style="display:none">
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>自訂產品ID</th>
-								<th>產品名稱</th>
+								<th style="min-width:80px;">產品名稱</th>
 								<th>廠商名稱</th>
 								<th>產品類別</th>
 								<th>產品單位</th>
 								<th>成本</th>
 								<th>售價</th>
 								<th>安全庫存</th>
-<!-- 								<th><p style="width:100px;">產品圖片名稱</p></th> -->
-<!-- 								<th><p style="width:120px;">產品圖片名稱2</p></th> -->
+								<th style="max-width:100px;">產品圖片1</th>
+								<th style="max-width:100px;">產品圖片2</th>
 								<th>產品說明</th>
 								<th>條碼</th>
 								<th>功能</th>
@@ -1583,30 +1242,11 @@
 				</div>
 				<span class="validateTips"> </span>
 			</div>
-			<!-- 4th -->
-			<div class="row search-result-wrap" align="center">
-				<div id="sales-contain22" class="ui-widget" style="display:none">
-					<table id="sales22" class="result-table">
-						<thead>
-							<tr class="ui-widget-header">
-								<th>自訂產品ID</th>
-								<th>產品名稱</th>
-								<th>數量</th>
-								<th>售價</th>
-								<th>功能</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-				<span class="validateTips"> </span>
-			</div>
 		</div>
 	</div>
-<input type="text" id="photo" style="display:none"/>
+<input type="text" id="photo0" style="display:none"/>
 <input type="text" id="photo1" style="display:none"/>
-<input type="text" id="photo-update" style="display:none"/>
+<input type="text" id="photo0-update" style="display:none"/>
 <input type="text" id="photo1-update" style="display:none"/>
 <input type="text" id="bar_code_focus" style="display:none"/>
 <div id="warning" style="display:none;"></div>

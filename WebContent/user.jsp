@@ -429,7 +429,7 @@ $(function() {
 			});
 		});
 		$("#update_email").blur(function(){
-			alert(this_email);
+			//alert(this_email);
 			if(this_email!=$(this).val()){
 				$.ajax({
 					type : "POST",
@@ -490,7 +490,7 @@ $(function() {
 　							<option value="2">使用者</option>
 							</select></td></tr>
 							<tr><td><h6>Email:&nbsp;&nbsp;</h6></td><td><input type="text" name="email" id="insert_email" placeholder="輸入Email"/><a id="insert_regmsg"></a></td></tr>
-							<tr><td><h6>密碼:</h6></td><td><input type="text" name="password" placeholder="輸入密碼"/></td></tr>
+							<tr><td><h6>密碼:</h6></td><td><input type="password" name="password" placeholder="輸入密碼"/></td></tr>
 							</tbody>
 							</table>	
 					</fieldset>

@@ -52,6 +52,8 @@
 				seq_no : str
 			},
 			success : function(result) {
+				//$("#warning").html(result);
+				//$("#warning").dialog("open");
 				alert(result);
 			}
 		});
@@ -293,7 +295,19 @@
 				});
 		}
 	});
-	
+	$("#warning").dialog({
+		title: "應收帳款明細",
+		draggable : false,//防止拖曳
+		resizable : false,//防止縮放
+		autoOpen : false,
+		height : "auto",
+		modal : true,
+		show : {effect : "bounce",duration : 1500},
+		hide : {effect : "fade",duration : 300},
+		buttons : {
+			"確認" : function() {$(this).dialog("close");}
+		}
+	});
 	//get today yyyy-mm-dd
 	function getCurrentDate(){
 		var fullDate = new Date();
@@ -389,6 +403,7 @@
 				</div>
 			</div>
 		</div>
-	</div>	
+	</div>
+<div id="warning"></div>
 </body>
 </html>
