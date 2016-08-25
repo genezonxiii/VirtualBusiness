@@ -236,3 +236,9 @@ I'm image.java.
   I'm image-java with PID = 8028.
 2016-08-25(星期四):
   I'm image-java with PID = 8028.
+2016-08-25(星期四) 07:36:23:
+  I'm upload-java with PID = 10656.
+2016-08-25(星期四) 07:36:41:
+  I'm upload-java with PID = 10656.
+2016-08-25(星期四) 19:37:38:
+  I'm upload-java with PID = 10100.

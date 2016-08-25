@@ -634,7 +634,7 @@
 			$("#dialog-form-insert").show();
 		    //這邊是用供應商名稱去自動查詢，然後得到ID
 	        $("#searh_purchase_by_supply_name").autocomplete({
-	            minLength: 1,
+	            minLength: 0,
 	            source: function (request, response) {
 	                $.ajax({
 	                    url : "purchase.do",

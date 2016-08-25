@@ -35,7 +35,7 @@ public class photo extends HttpServlet {
 		try{
 			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
 			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E)").format(new Date()))+":\r\n  I'm photo-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
+			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm photo-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
 			FileWriter fw;
 			try{
 				fw = new FileWriter(record_log,true);

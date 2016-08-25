@@ -381,7 +381,7 @@ $(function(){
 	});		
     //這邊是用供應商名稱去自動查詢，然後得到ID
     $("#search_purchase_by_supply_name").autocomplete({
-        minLength: 2,
+        minLength: 0,
         source: function (request, response) {
             $.ajax({
                 url : "purchreturn.do",

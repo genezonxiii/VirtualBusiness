@@ -34,7 +34,7 @@ public class image extends HttpServlet {
 		try{
 			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
 			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E)").format(new Date()))+":\r\n  I'm image-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
+			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm image-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
 			FileWriter fw;
 			try{
 				fw = new FileWriter(record_log,true);
@@ -57,7 +57,9 @@ public class image extends HttpServlet {
 				OutputStream out = response.getOutputStream();
 				ImageIO.write(bi, "jpg", out);
 				out.close();
-			}catch(Exception e){System.out.println("name: "+f+" with: "+e.toString());}
+			}catch(Exception e){
+				System.out.println("name: "+f+" with: "+e.toString());
+				}
 		} else {
 			System.out.println("沒有圖檔名稱");
 		}
