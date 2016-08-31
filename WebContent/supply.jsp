@@ -463,10 +463,10 @@ function draw_supply(info){
 					<table id="products2" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>廠商名稱</th>
+								<th style="min-width:60px">廠商名稱</th>
 								<th>廠商統編</th>
-								<th style="min-width:120px">廠商地址</th>
-								<th>連絡人</th>
+								<th style="min-width:100px">廠商地址</th>
+								<th style="min-width:40px">連絡人</th>
 								<th>連絡人電話</th>
 								<th>連絡人分機</th>
 								<th>連絡人手機</th>

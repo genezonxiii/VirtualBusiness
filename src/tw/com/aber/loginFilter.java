@@ -31,7 +31,7 @@ public class loginFilter implements Filter {
         String path = servletRequest.getRequestURI();
                 
         // 登入頁面不須過濾
-        if(path.indexOf("/login.jsp") > -1) {
+        if(path.indexOf("/login.jsp") > -1||path.indexOf("/registry.jsp") > -1) {
             chain.doFilter(servletRequest, servletResponse);
             return;
         }

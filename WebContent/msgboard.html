@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>電商平台留言板</title>
+	<link rel="stylesheet" href="css/styles.css" />
+	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+</head>
+<body>
+<script>
+
+function people(){
+	var now= new Date();
+	var past= new Date(now.getFullYear()+"/"+now.getMonth()+"/"+now.getDate()+" 00:00:00");
+	document.write( Math.floor(((now.getTime()-past.getTime()) / 30000) %3000));//半分鐘跳一次 最高3000
+}
+
+$(function() {
+	
+});
+</script>
+	<div class="bkg-upper"></div>
+	<div class="bkg-lower"></div>
+		<div class="login-wrapper" style="top:20%;margin-top:-150px;">
+			<h1>留言板</h1>
+			<div class="login-panel-wrap">
+				<div class="registry-panel">
+					<form>
+						<table class="normal-table" align="center">
+							<tr><td>
+								<span class="block-label">連絡人:</span>
+								<input type="text" id="">
+							</td></tr>
+							<tr><td>
+								<span class="block-label">連絡方式:</span>
+								<input type="text" id=""　>
+							</td></tr>
+							<tr><td>
+								<span class="block-label">Email:</span>
+								<input type="text" id="">
+							</td></tr>
+<!-- 							<tr><td> -->
+<!-- 								<span class="block-label">悄悄話:</span> -->
+<!-- 								<input id="no" type="radio" name="silent" value="1" checked="checked" /><label for="no">否</label><input id="yes" type="radio" name="silent" value="0" /><label for="yes">是</label> -->
+<!-- 							</td></tr> -->
+							<tr><td colspan=2>
+								<span class="block-label">留言內容:</span>
+								<textarea name="" rows="2" cols="20" id="" style="height:150px;width:100%;"></textarea>
+							</td></tr>
+							<tr><td>
+								<span class="block-label">驗證碼:</span>
+								<input type="text" id="verify">
+							</td><td>
+							<span class="block-label">點擊可換圖片</span>
+								<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg" onclick='document.getElementById("validateCodeImg").src="HandleDrawValidateCode.do?t=" + Math.random();' style="height:38px;">
+							</td></tr>
+							<tr><td colspan=2>
+								<a class="login-button" id="" onclick="alert('感謝您的建議!');" style="width:100%;">送出</a>
+							</td></tr>
+						</table>
+					</form>
+				瀏覽次數：<script>people();</script>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

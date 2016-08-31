@@ -156,6 +156,10 @@ function who(){
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
 		return "標籤列印";
 		break;
+	case "membercondition.jsp":
+		$(".sidenav > ul > li:nth-child(2)").addClass("active");
+		return "會員分級設定";
+		break;
 //####報表管理############################
 	case "salereport.jsp":
 		$(".sidenav > ul > li:nth-child(3)").addClass("active");
@@ -320,7 +324,7 @@ $(function() {
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
 				<ul>
-					<li><a href="#">Coming Soon</a></li>
+					<li><a href="msgboard.html">Coming Soon</a></li>
 				</ul>
 			</li>
 		</ul>

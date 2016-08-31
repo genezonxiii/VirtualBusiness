@@ -96,18 +96,23 @@ public class login extends HttpServlet {
 			}
 			if (checkcode.equals(convertToCapitalString(validateCode))) {
 				loginService = new LoginService();
-				List<LoginVO> list = loginService.selectlogin(username, password,unicode);
-				if (list.size() != 0) {
-					// HttpSession session = request.getSession();
-					session.setAttribute("sessionID", session.getId());
-					session.setAttribute("user_id", list.get(0).getUser_id());
-					session.setAttribute("group_id", list.get(0).getGroup_id());
-					session.setAttribute("user_name", list.get(0).getUser_name());
+				try{
+					List<LoginVO> list = loginService.selectlogin(username, password,unicode);
+					if (list.size() != 0) {
+						// HttpSession session = request.getSession();
+						session.setAttribute("sessionID", session.getId());
+						session.setAttribute("user_id", list.get(0).getUser_id());
+						session.setAttribute("group_id", list.get(0).getGroup_id());
+						session.setAttribute("user_name", list.get(0).getUser_name());
+						message = new LoginVO();
+						message.setMessage("success");
+					} else {
+						message = new LoginVO();
+						message.setMessage("failure");
+					}
+				}catch(Exception e){
 					message = new LoginVO();
-					message.setMessage("success");
-				} else {
-					message = new LoginVO();
-					message.setMessage("failure");
+					message.setMessage("uni_failure");
 				}
 				gson = new Gson();
 				String jsonStrList = gson.toJson(message);
@@ -287,11 +292,17 @@ public class login extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				System.out.println("hello"+p_email+" "+p_password+" "+p_unicode);
 				pstmt = con.prepareStatement(sp_login);
 				pstmt.setString(1, p_email);
 				pstmt.setString(2, p_password);
 				pstmt.setString(3, p_unicode);
+				System.out.println("hihi");
+				
 				rs = pstmt.executeQuery();
+				
+				System.out.println("hihi2");
+				
 				while (rs.next()) {
 					LoginVO = new LoginVO();
 					LoginVO.setUser_id(rs.getString("uid"));
@@ -302,6 +313,7 @@ public class login extends HttpServlet {
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
+				
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 				// Clean up JDBC resources

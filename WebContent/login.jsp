@@ -49,7 +49,6 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
 	if($("#verify").val().length<1){$("#verify").addClass("error");$("#verify").after("<span class='error-msg'>請輸入驗證碼</span>");wrong=1;}
 	if($("#password").val().length>10){$("#password").addClass("error");$("#password").after("<span class='error-msg'>長度不可超過十個字</span>");wrong=1;}
 	if(wrong==0){
-		unicheck();
 		$.ajax({url : "login.do", type : "POST", cache : false,
             data : {
             	action : "login",
@@ -69,9 +68,13 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             	if (json_obj.message=="failure"){
             		$("#verify").val("");
             		$("#password").val("");
-            		$("#password").after("<span class='error-msg'>請確認密碼與統編是否正確!</span>");
-            		//$("#my_msg").html("請確認密碼與統編是否正確");
-            		//$("#my_msg").dialog("open");
+            		$("#password").after("<span class='error-msg'>請確認密碼是否正確!</span>");
+            		chimg();
+            	}
+            	if (json_obj.message=="uni_failure"){
+            		$("#verify").val("");
+            		$("#password").val("");
+            		$("#uninumber").after("<span class='error-msg'>請確認統編是否正確!</span>");
             		chimg();
             	}
             	if (json_obj.message=="code_failure") {
@@ -136,6 +139,8 @@ $(function() {
 </head>
 
 <body class="login-body">
+	
+	<br><a id="logout" href="./registry.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">註冊</a>
 	<div class="bkg-upper"></div>
 	<div class="bkg-lower"></div>
 	<div class="login-wrapper">

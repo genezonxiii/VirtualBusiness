@@ -540,7 +540,7 @@
 		});
 		//X_X
 		$("#insert_supply_name").autocomplete({
-            minLength: 1,
+            minLength: 0,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -579,7 +579,7 @@
 	    	supply_id = ui.item.supply_id;
 	    });
 	    $("#update_supply_name").autocomplete({
-            minLength: 1,
+            minLength: 0,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -618,7 +618,7 @@
 	    	supply_id = ui.item.supply_id;
 	    });
 	  //X_X
-		//處理初始的查詢autocomplete
+		//處理初始的查詢autocomplete//其實是supply@@@@
 	       $("#searh_product_name").autocomplete({
 	            minLength: 0,
 	            source: function (request, response) {
@@ -659,8 +659,46 @@
 	    	        }
 	    	    }     
 	         });
-		
-	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入廠商名稱以供查詢"); } );
+	       $("#searh_name").autocomplete({
+	            minLength: 1,
+	            source: function (request, response) {
+	                $.ajax({
+	                    url : "purchase.do",
+	                    type : "POST",
+	                    cache : false,
+	                    delay : 1500,
+	                    data : {
+	                    	action : "search_product_data",
+	                        term : request.term,
+	                        identity : "NAME"
+	                    },
+	                    success: function(data) {
+	                    	var json_obj = $.parseJSON(data);
+	                    	response($.map(json_obj, function (item) {
+	                            return {
+		                        	 label: item.product_name,
+		                             value: item.product_name,
+		                             product_id: item.product_id,
+		                             product_name: item.product_name,
+		                             c_product_id: item.c_product_id,
+		                             price: item.price,
+		                             cost: item.cost
+	                            }
+	                          }))
+	                    }
+	                });
+	            },
+	            change: function(event, ui) {
+	    	        var source = $(this).val();
+	    	            var temp = $(".ui-autocomplete li").map(function () { return $(this).text()}).get();
+	    	        var found = $.inArray(source, temp);
+	    	        if(found < 0) {
+	    	            $(this).val('');
+	    	            $(this).attr("placeholder","輸入正確的產品名稱!");
+	    	        }
+	    	    }     
+	         });
+	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
 			//處理新增修改的下拉選單unit_id
                $.ajax({
                    url : "product.do",
@@ -1195,7 +1233,7 @@
 			<div class="form-wrap">
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">廠商名稱查詢</span>
+						<span class="block-label">供應商名稱查詢</span>
 						<input type="text" id="searh_product_name" name="searh_product_name"></input>
 					</label>
 					<button class="btn btn-darkblue" id="searh-sale">查詢</button>
@@ -1223,7 +1261,7 @@
 							<tr class="ui-widget-header">
 								<th>自訂產品ID</th>
 								<th style="min-width:80px;">產品名稱</th>
-								<th>廠商名稱</th>
+								<th>供應商名稱</th>
 								<th>產品類別</th>
 								<th>產品單位</th>
 								<th>成本</th>

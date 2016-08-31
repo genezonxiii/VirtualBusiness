@@ -54,6 +54,34 @@ h5 {
 h6 {
     font-size: 13px;
 }
+/*registry style Ben偷加的*/
+.registry-panel {
+    margin: 0 auto;
+    width: 530px;
+/*     z-index: 1; */
+}
+.registry-panel h3{
+	position:relative;
+	top:-25px;
+    font-size: 40px;
+    padding-left:25px;
+    letter-spacing: 30px;
+    text-align: center;
+    height:0px;
+    margin:0px 0px 20px 0px;
+}
+ .registry-panel .error-msg {
+    box-sizing: border-box;
+    height:0px;
+    margin:0px;
+    display: block;
+    color: #e92500;
+    font-size: 14px;
+    text-align: right;
+    padding: 0px 5px 0;
+    position: relative;
+    top: -62px;
+}
 /* Login Styles
 ---------------------------------- */
 .login-body {
@@ -157,7 +185,7 @@ h6 {
     padding: 5px 12px;
     width: 100%;
 }
-.login-panel input[type=text].error, .login-panel input[type=password].error {
+.login-panel input[type=text].error, .login-panel input[type=password].error, .registry-panel input[type=text].error, .registry-panel input[type=password].error {
     border: 1px solid #e92500;
     background: rgb(255, 213, 204);
 }
@@ -785,6 +813,20 @@ input[type=radio]:checked + label:before {
     border: 1px solid #ccc !important;
 }
 /* Table */
+table.normal-table {
+    border: 0;
+   
+}
+table.normal-table td{
+    padding: 5px;
+}
+
+table.normal-table input{
+/* 	width:100%; */
+	margin: 5px;
+	font-size: 22px;
+}
+
 table.result-table {
     border: 1px solid #ccc;
     font-size: 13px;

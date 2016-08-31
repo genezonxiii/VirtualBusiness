@@ -823,7 +823,7 @@
 		});
 		//新增  廠商欄位autocomplete
         $("#insert_supply_id").autocomplete({
-            minLength: 1,
+            minLength: 0,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",
@@ -863,7 +863,7 @@
 	    }); 		
 		//修改  autocomplete
         $("#update_supply_id").autocomplete({
-            minLength: 1,
+            minLength: 0,
             source: function (request, response) {
                 $.ajax({
                     url : "purchase.do",

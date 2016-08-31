@@ -117,26 +117,35 @@ window.onload = function (e){
 		
 		var validator_insert = $("#insert-dialog-form-post").validate({
 			rules : {
-				post : {
-					digits : true,
-					maxlength : 5
-				},
-				email : {
-					email: true
-				}
+				name : {required : true},
+				address : {required : true},
+				phone : {required : true},
+				mobile : {required : true},
+				email : {email: true},
+				post : {digits : true, maxlength : 5}
 			}
 		});
-		var validator_update = $("#update-dialog-form-post").validate({
+		var validator_insert = $("#update-dialog-form-post").validate({
 			rules : {
-				post : {
-					digits : true,
-					maxlength : 5
-				},
-				email : {
-					email: true
-				}
+				name : {required : true},
+				address : {required : true},
+				phone : {required : true},
+				mobile : {required : true},
+				email : {email: true},
+				post : {digits : true, maxlength : 5}
 			}
-		});	
+		});
+// 		var validator_update = $("#update-dialog-form-post").validate({
+// 			rules : {
+// 				post : {
+// 					digits : true,
+// 					maxlength : 5
+// 				},
+// 				email : {
+// 					email: true
+// 				}
+// 			}
+// 		});	
 					
 		//新增事件聆聽
 		$("#create-customer").click(function(e) {
@@ -164,7 +173,6 @@ window.onload = function (e){
 				text : "新增",
 				click : function() {
 					if ($('#insert-dialog-form-post').valid()) {
-						//alert("進來喔");
 						$.ajax({
 							type : "POST",
 							url : "customer.do",
