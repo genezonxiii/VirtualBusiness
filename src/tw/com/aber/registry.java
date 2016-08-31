@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import com.google.gson.Gson;
+
+import tw.com.aber.salechart.SalechartVO;
+import tw.com.aber.salechart.Salereport_interface;
 
 import java.util.Properties;
 import javax.mail.Message;
@@ -63,30 +67,104 @@ public class registry extends HttpServlet {
 			
 			response.getWriter().write( sendEmail(to,name,user_id,url));
 		}
-		if(" ".equals(action)){
-			
+		if("registry_confirm".equals(action)){
+			Register reg = new Register();
+			String reg_id = new String(Base64.decodeBase64(request.getParameter("regid")));
+			reg.registry_confirm(reg_id);
+			response.getWriter().write("success");
 		}
-		if("register".equals(action)){
+		if("registry".equals(action)){
+			String uninumber = request.getParameter("uninumber");
+			String corporation = request.getParameter("corporation");
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			String pwd = request.getParameter("pwd");
+			Register reg = new Register();
 			
+			response.getWriter().write(reg.registry(uninumber,corporation,name,email,pwd));
 		}
-		//System.out.println(request.getRequestURL().toString().replace(".do",".jsp"));
 	}
 	
-	
+	class Register {
+		// 會使用到的Stored procedure
+		private static final String sp_register = "call sp_register (?,?,?,?,?,?)";
+		private static final String sp_register_confirm = "call sp_register_confirm (?)";
+		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
+		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+		public Register(){}
+		public void registry_confirm(String registry_id) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_register_confirm);
+				pstmt.setString(1,registry_id);
+				pstmt.executeQuery();
+			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
+		}
+		public String registry(String unicode, String group_name, String name, String email, String pwd) {
+			Connection con = null;
+			CallableStatement cs = null;
+			String rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_register);
+				cs.registerOutParameter(6, Types.VARCHAR);
+				cs.setString(1,unicode);
+				cs.setString(2,group_name);
+				cs.setString(3,name);
+				cs.setString(4,email);
+				cs.setString(5,pwd);
+				cs.execute();
+				rs = cs.getString(6);
+				//rs = Base64.encodeBase64String(rs.getBytes());
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return rs;
+		}
+	}
 	
 	public static String sendEmail(String to,String name,String user_id,String url)
     {
+		//還沒測試過在aber上行不行得通?
 		//final String username = "pscaber@cloud.pershing.com.tw";
-        //final String password = "Pershing.0830";
+        //final String password = "==AMzgDMucmbph2cyVGU";
         final String username = "10506002@pershing.com.tw";
         final String password = "ykTNycTNjhnW";
         Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.auth", "true");//props.put("mail.smtp.auth", "false");
         props.put("mail.smtp.starttls.enable", "false");
-		props.put("mail.smtp.host", "mail.pershing.com.tw");
+        props.put("mail.smtp.host", "mail.pershing.com.tw");
+        //props.put("mail.smtp.host", "cloud-pershing-com-tw.mail.protection.outlook.com");
         props.put("mail.smtp.port", "25");
 
-        Session session = Session.getInstance(props,
+        Session session = Session.getInstance(props,//null);
           new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
             	return new PasswordAuthentication(username,new String(Base64.decodeBase64((new StringBuffer(password).reverse().toString()).getBytes())));
@@ -110,7 +188,7 @@ public class registry extends HttpServlet {
             		+"<tr><td style='padding:0 200px;'>&nbsp;<br><div style='background:#1f4f82;padding:13px 0px;width:200px; margin:0 auto; ' align='center'>"
             		//+"<a href='http://a-ber.com.tw/VirtualBusiness/registry.jsp?uid="+user_id+"'>"
             		//+"<a href='http://localhost:8081/VirtualBusiness/registry.jsp?uid="+user_id+"'>"
-            		+"<a href='"+url+"registry.jsp?uid="+user_id+"'>"
+            		+"<a href='"+url+"registry.jsp?regid="+user_id+"'>"
             		+"<font color=white>驗證電子郵件地址 »</font></a></div></td></tr>"
             		+"<tr><td>&nbsp;<br>您收到這封電子郵件是因為最近有一個帳戶使用您的電子郵件地址建立。如果您並未建立此帳戶，請<a href='"+url+"msgboard.html'>提交協助要求</a>或發電子郵件至 <a href='mailto:pscaber@cloud.pershing.com.tw'>pscaber@cloud.pershing.com.tw</a>。</td><tr>"
             		+"<tr><td><h4><br>感謝您!<br>智慧電商團隊</h4></td><tr></table>");

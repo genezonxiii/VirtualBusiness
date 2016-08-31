@@ -292,16 +292,11 @@ public class login extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				System.out.println("hello"+p_email+" "+p_password+" "+p_unicode);
 				pstmt = con.prepareStatement(sp_login);
 				pstmt.setString(1, p_email);
 				pstmt.setString(2, p_password);
 				pstmt.setString(3, p_unicode);
-				System.out.println("hihi");
-				
 				rs = pstmt.executeQuery();
-				
-				System.out.println("hihi2");
 				
 				while (rs.next()) {
 					LoginVO = new LoginVO();
