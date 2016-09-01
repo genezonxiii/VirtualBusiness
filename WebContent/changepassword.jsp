@@ -7,10 +7,6 @@
 <%@ page import="java.sql.Statement"%>
 <%@ page import="java.sql.ResultSet"%>
 <jsp:directive.page import="java.sql.SQLException" />
-<%
-// 	session.setAttribute("group_id", "7373adf8-472e-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
-// 	session.setAttribute("user_id", "035946b1-4f0b-11e6-806e-000c29c1d067"); //還沒拿到session，先自己假設
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +21,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -35,6 +32,7 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		var validator_update = $("#password-form-post").validate({
 			rules : {
 				password : {
@@ -151,6 +149,7 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 		</div>
+	</div>
 	</div>
 </body>
 </html>

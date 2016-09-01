@@ -72,11 +72,11 @@ function unicheck(){
         },
         success: function(data) {
         	var json_obj = $.parseJSON(data);
-        	if("false"==json_obj.message){
+        	if("true"==json_obj.message){
         		$("#uninumber").removeClass("error");
         		$(".error-msg").remove();
         		$("#uninumber").addClass("error");
-        		$("#uninumber").after("<span class='error-msg'>未註冊統編!</span>");
+        		$("#uninumber").after("<span class='error-msg'>此統編已被註冊!</span>");
         		return false;
         	}else{
         		$("#uninumber").removeClass("error");
@@ -87,6 +87,8 @@ function unicheck(){
     });
 }
 function regis(){
+	
+	return;
 	//$("#regis-form").valid();
 	//alert($("#email").val().indexOf("@")==-1);
 	var wrong=0,regexp1=/[a-zA-Z]+/,regexp2=/[0-9]+/,regexp3=/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.com.*/;
@@ -138,17 +140,31 @@ function send_mail(reg_id){
         success: function(data) {
         	alert(data);
         	if("success"==data){
-        		$("#bdy").css("margin-top","-100px");
-        		$("#bdy").html("<div align='center'><h1>註冊成功</h1><h2><font style='font-size:40px'>已發送驗證郵件!</font></h2><img src='images/sendmail.png' width='400px'><br><br><font style='font-size:24px'>已發送驗證郵件至<a href='#'>"
+        		$("#bdy").animate({opacity: '0'},function() {
+        			$("#bdy").css("margin-top","-100px");
+        			$("#bdy").html("<div align='center'><h1>註冊完成</h1><h2><font style='font-size:40px'>已發送驗證郵件!</font></h2><img src='images/sendmail.png' width='400px'><br><br><font style='font-size:24px'>已發送驗證郵件至<a href='#'>"
         				+$("#email").val()+"</a>,<br>請點擊您郵件中的連結來驗證您的帳戶並完成註冊。</font><div>");
+        		});
+        		$("#bdy").animate({opacity: '1'});
         	}else{
-        		$("#bdy").css("margin-top","0px");
-        		$("#bdy").html("<div align='center'><font style='font-size:40px'>不明原因註冊失敗。</font><br><br><br><font style='font-size:20px'>返回<a href='./registry.jsp'>上一頁</a>重新申請註冊。</font><div>");
+        		$("#bdy").animate({opacity: '0'},function() {
+	        		$("#bdy").css("margin-top","0px");
+	        		$("#bdy").html("<div align='center'><font style='font-size:40px'>不明原因註冊失敗。</font><br><br><br><font style='font-size:20px'>返回<a href='./registry.jsp'>上一頁</a>重新申請註冊。</font><div>");
+        		});
+        		$("#bdy").animate({opacity: '1'});
         	}
         }
 	});
 }
 $(function() {
+	$("#bdy").animate({
+		top : '20%',
+		'marginTop': '-150px'
+	});
+	$("#bdy2").css("height","462px");
+	$("#bdy2").animate({
+		height : '510px'
+	});
 	var value='<%=request.getParameter("regid")%>';
 	if(value.length>10){
 		alert(value);
@@ -159,10 +175,13 @@ $(function() {
 	        },
 	        success: function(result) {
 				if("success"==result){
-					$("#bdy").css("margin-top","-100px");
-					$("#bdy").html("<div align='center'><h1>驗證成功</h1><img src='images/laugh.png' width='400px'><br><br>"
+					$("#bdy").animate({opacity: '0'},function() {
+						$("#bdy").css("margin-top","-100px");
+						$("#bdy").html("<div align='center'><h1>驗證成功</h1><img src='images/laugh.png' width='400px'><br><br>"
 							+"<font style='font-size:24px'>恭喜您已完成驗證程序，現在可以盡情使用智慧電商平台</font><br><br><br>"
-							+"<a href='./login.jsp' class='btn btn-darkblue'>返回智慧電商系統</a><div>");
+							+"<a href='./login.jsp' class='btn btn-darkblue'>登入智慧電商系統</a><div>");
+						});
+					$("#bdy").animate({opacity: '1'});
 	        	}
 	        }
 		});
@@ -205,11 +224,11 @@ $(function() {
 <!-- 	<br><a id="logout" href="./login.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">登入</a> -->
 	<div class="bkg-upper"></div>
 	<div class="bkg-lower"></div>
-	<div class="login-wrapper" id="bdy" style="top:20%;margin-top:-150px;">
+	<div class="login-wrapper" id="bdy">
 		<h1>註冊</h1>
 <!-- 		<button onclick="send_mail();">##@_@##</button> -->
 		<div class="login-panel-wrap">
-		<div class="registry-panel" >
+		<div class="registry-panel" id="bdy2">
 			<form id="regis-form">
 				<table class="normal-table">
 					<tr><td>

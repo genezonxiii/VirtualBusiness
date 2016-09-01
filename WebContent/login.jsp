@@ -140,7 +140,7 @@ $(function() {
 
 <body class="login-body">
 	
-	<br><a id="logout" href="./registry.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">註冊</a>
+<!-- 	<br><a id="logout" href="./registry.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">註冊</a> -->
 	<div class="bkg-upper"></div>
 	<div class="bkg-lower"></div>
 	<div class="login-wrapper">
@@ -178,6 +178,7 @@ $(function() {
 					<a class="login-button" id="login_btn">登入</a>
 					<a class="login-reset-button" id="reset_btn">清除重填</a>
 				</div><!-- /.login-btn-wrap -->
+				<div align='center' style="padding-top:5px;">還沒有智慧電商平台的帳號嗎? <a href="./registry.jsp">註冊</a></div>
 			</form>
 		</div><!-- /.login-panel -->
 		</div><!-- /.login-panel-wrap -->

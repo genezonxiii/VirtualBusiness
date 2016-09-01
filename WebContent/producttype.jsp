@@ -21,6 +21,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -30,6 +31,7 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		//使用jquery.validate來做驗證  注意事項: 1.不能用選擇器方式批次設定，它只取最後一個參數 2.要調用resetForm()而不是reset()
 		var validator_insert = $("#insert-dialog-form-post").validate({
 			rules : {
@@ -389,7 +391,7 @@
 			insert_dialog.dialog("open");
 		});
 		//button css
-		$("#searh-producttype").css("width","80px");
+		//$("#searh-producttype").css("width","80px");
 		//$("#create-producttype").css("width","150px");
 		//hold header
 		$("#products2").find("th").css("min-width","50px");
@@ -477,6 +479,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 </body>
 </html>

@@ -427,6 +427,12 @@ h2.page-title {
     height: calc(100vh - 144px);
     overflow: auto;
     width: calc(100% - 120px);
+/*     Ben偷加的背景圖屬性 */
+    background-image: url('../images/flower.png');
+    background-attachment: fixed;
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .input-field-wrap {
     background: #62E0E9;
@@ -828,6 +834,8 @@ table.normal-table input{
 }
 
 table.result-table {
+	font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
+    /*字體Ben偷加的*/
     border: 1px solid #ccc;
     font-size: 13px;
     width: 100%;
@@ -859,7 +867,8 @@ a.btn, button.btn {
     color: #fff;
 /*     font-size: 14px; Ben偷改的 字體也偷加*/
     font-size: 16px;
-    font-family: "微軟正黑體";
+    font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
+/*     font-family: "微軟正黑體"; */
     text-decoration: none;
     box-shadow: 0px 3px 5px rgba(0,0,0,0.3);
 }

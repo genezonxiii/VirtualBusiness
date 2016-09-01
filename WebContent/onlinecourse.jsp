@@ -21,8 +21,10 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script>
 $(function(){
+	$("#bdy").animate({"opacity":"1"});
 	$.ajax({
 		type : "POST",
 		url : "onlinecourse.do",
@@ -44,6 +46,7 @@ $(function(){
 });
 </script>
 		<div id="movie"></div>
+	</div>
 	</div>
 </body>
 </html>

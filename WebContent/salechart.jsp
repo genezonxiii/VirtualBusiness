@@ -24,6 +24,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -156,12 +157,13 @@ function date_format(str) {
 	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12")+"-"+words[1];
 }
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
 				url : "salechart.do",
-				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
+				data : {action :"searh", time1 : $('#datepicker1').val(), time2 : $('#datepicker2').val()},
 				success : function(result) {
 					//console.log(result);
 					var json_obj = $.parseJSON(result);
@@ -181,6 +183,8 @@ function date_format(str) {
 					}
 					if(data.length!=0){
 						draw_chart(400,200,data);
+						$("#chart").animate({"opacity":"0.5"});
+						$("#chart").animate({"opacity":"1"});
 						}else{
 						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
 					}
@@ -200,8 +204,8 @@ function date_format(str) {
 						</label>
 						<div class="forward-mark"></div>
 						<label for="">
-							<span class="block-label" id="datepicker2">轉單迄日</span>
-							<input type="text" class="input-date">
+							<span class="block-label" >轉單迄日</span>
+							<input type="text" class="input-date" id="datepicker2">
 						</label>
 						<button id="searh-productunit" class="btn btn-darkblue">查詢</button>
 					</div>
@@ -210,9 +214,9 @@ function date_format(str) {
 			<!-- 第一列 -->
 		</div>
 	</div>
-<div id="chart" align="center"></div>
+<div id="chart" align="center" style="opacity:0"></div>
 <div class="validateTips" align="center"> </div>
-
+</div>
 </div>
 </body>
 </html>

@@ -30,6 +30,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 
 <script src="js/photo/jquery.min.js"></script>
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
@@ -186,6 +187,7 @@
 	    $(window).scannerDetection('success');
 	});
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		var uuid = "";
 		var c_product_id="";
 		var unit_id="";
@@ -1288,5 +1290,6 @@
 <input type="text" id="photo1-update" style="display:none"/>
 <input type="text" id="bar_code_focus" style="display:none"/>
 <div id="warning" style="display:none;"></div>
+</div>
 </body>
 </html>

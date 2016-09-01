@@ -26,6 +26,8 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
+		
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -38,6 +40,7 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function(){
+		$("#bdy").animate({"opacity":"1"});
 		 $("#return_date_form").validate({
 				rules : {
 					return_staet_date : {
@@ -1263,5 +1266,6 @@
 			</div>	
 		</div>
 	</div>
+</div>
 </body>
 </html>

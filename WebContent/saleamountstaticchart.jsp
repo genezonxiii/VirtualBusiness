@@ -24,6 +24,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -96,6 +97,7 @@ function draw_chart(m_h,m_w,data){
       	}
  };
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -120,6 +122,8 @@ function draw_chart(m_h,m_w,data){
 						}
 						data[j]={"label":json_obj.entrance[i]+"月:"+json_obj.answer[i]+"%", "value":json_obj.answer[i],"vender":json_obj.vender[i]};
 					}
+					$("#chart").animate({"opacity":"0.5"});
+					$("#chart").animate({"opacity":"1"});
 				}
 			});
 		});
@@ -147,7 +151,8 @@ function draw_chart(m_h,m_w,data){
 		</div>
 	</div>
 <div class="validateTips" align="center"> </div>
-<div id="chart" align="center"></div>
+<div id="chart" align="center" style="opacity:0"></div>
+</div>
 </div>
 </body>
 </html>

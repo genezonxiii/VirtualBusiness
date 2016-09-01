@@ -21,6 +21,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script>
 
 function setV(){
@@ -34,6 +35,7 @@ function setV(){
 	return true;
 };
 $(function(){
+	$("#bdy").animate({"opacity":"1"});
 	$("td").css("border","0px solid #aaa");
 	$("td img").css("width","30px");
 });
@@ -42,9 +44,9 @@ $(function(){
 String str=(String)request.getAttribute("action");
 if(str!=null){
 	if("success".equals(str)){
-		out.println("<script>alert('傳輸成功');window.location.href = './upload.jsp';</script>");
+		out.println("<script>alert('匯入成功');window.location.href = './upload.jsp';</script>");
 	}else{
-		out.println("<script>alert('傳輸失敗 ');window.location.href = './upload.jsp';</script>");
+		out.println("<script>alert('匯入失敗 ');window.location.href = './upload.jsp';</script>");
 	}
 }
 %>
@@ -206,6 +208,7 @@ if(str!=null){
 	</form>
 	</div>
 <%-- <h4>${action}</h4> --%>
+</div>
 </div>
 </body>
 </html>

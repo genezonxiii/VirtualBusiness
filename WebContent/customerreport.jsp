@@ -24,6 +24,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -47,6 +48,7 @@
 
 <script>
 window.onload = function (e){ 
+	$("#bdy").animate({"opacity":"1"});
 	e.preventDefault();
 	$.ajax({
 		type : "POST",
@@ -141,6 +143,7 @@ window.onload = function (e){
 			</div>	
 		</div>
 	</div>
+</div>
 </div>
 </body>
 </html>

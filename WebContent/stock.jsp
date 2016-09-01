@@ -21,6 +21,8 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
+		
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -79,6 +81,7 @@
 	});
 var bar_search=0;
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		var validator_update = $("#update-dialog-form-post").validate({
 			rules : {
 				memo : {
@@ -340,6 +343,7 @@ var bar_search=0;
 				<span class="validateTips"> </span>
 			</div>
 		</div>
+	</div>
 	</div>
 </body>
 </html>

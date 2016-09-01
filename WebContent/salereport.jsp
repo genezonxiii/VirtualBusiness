@@ -24,6 +24,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 	
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -93,6 +94,7 @@ function sea() {
 	});
 }
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		var value='<%=request.getParameter("action")%>';
 		if(value=="today"){
 			$('#datepicker1').datepicker('setDate',new Date());
@@ -150,6 +152,7 @@ function sea() {
 			</div>
 			<div class="validateTips" align="center"> </div>
 		</div>
+	</div>
 	</div>
 </body>
 </html>

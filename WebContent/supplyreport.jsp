@@ -22,7 +22,8 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" class="content-wrap" >
+	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
@@ -43,6 +44,7 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		//=============自定義validator=============
 		//字符最大長度驗證（一個中文字符長度為2）
 		//查詢相關設定
@@ -125,6 +127,7 @@
 				<span class="validateTips"> </span>
 			</div>
 		</div>
+	</div>
 	</div>
 </body>
 </html>

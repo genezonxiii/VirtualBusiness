@@ -24,6 +24,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
+		<div id='bdy' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -160,15 +161,16 @@ function draw_chart(m_h,m_w,data){
 		 				.style('stroke', 'black').style('stroke-width', 5);
  };
 	$(function() {
+		$("#bdy").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
-			$("#chart").html("<h2 style='color:red;'>資料查詢中...</h2>");
+			$(".validateTips").html("<h4 style='color:red;'>資料查詢中...</h4>");
+			$("#chart").html('');
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
 				url : "saleamountchart.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
-					//alert(result);
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					var data=[];
@@ -182,8 +184,12 @@ function draw_chart(m_h,m_w,data){
 					}
 					if(data.length!=0){
 						draw_chart(400,200,data);
-						}else{
-						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						$("#chart").animate({"opacity":"0.5"});
+						$("#chart").animate({"opacity":"1"});
+						$(".validateTips").html("");
+					}else{
+						$("#chart").html('');
+						$(".validateTips").html("<h4 style='color:red;'>查無資料</h4>");
 					}
 				}
 			});
@@ -199,8 +205,8 @@ function draw_chart(m_h,m_w,data){
 						</label>
 						<div class="forward-mark"></div>
 						<label for="">
-							<span class="block-label" id="datepicker2">轉單迄日</span>
-							<input type="text" class="input-date">
+							<span class="block-label">轉單迄日</span>
+							<input type="text" class="input-date" id="datepicker2">
 						</label>
 						<button id="searh-productunit" class="btn btn-darkblue">查詢</button>
 					</div>
@@ -208,7 +214,8 @@ function draw_chart(m_h,m_w,data){
 			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
 	<div class="validateTips" align="center"> </div>
-	<div id="chart" align="center"></div>
+	<div id="chart" align="center" style="opacity:0"></div>
+</div>
 </div>
 </body>
 </html>
