@@ -20,23 +20,27 @@ function table_before(str){
 }
 
 function draw_table(table_name,title){
+	$(".tog_col").remove();
+	$("#"+table_name+" td").each(function(index){
+		if($( this ).text().length>10)
+		$( this ).html($( this ).html()+"&nbsp;") ;
+	});
+	$("#"+table_name).dataTable().fnDestroy();
+	var i=0;
+	while($("#animate_table-"+i).length>0){i++;};
+	var name="animate_table-"+i;
 	var selector="#"+table_name;
 	var tmp="<tr><td width='100%'><table class='result-table' id='"+table_name+"'>"+$(selector).html()+"</table></td></tr>";
-	$(selector).attr("id","animate_table");
-	$("#animate_table").attr("class","");
-	$("#animate_table").html(tmp);
-	$("#animate_table").css("width","100%");
+	$(selector).attr("id",name);
+	$("#"+name).attr("class","");
+	$("#"+name).html(tmp);
+	$("#"+name).css("width","100%");
 	//alert("#animate_table").html());
 	//$(selector).before("<a id='animate_table'>111");
 	//$(selector).after("222</a>");
 	//$("#animate_table").css("display","none");
-	$("#animate_table").css("opacity","0");
-	$(".tog_col").remove();
-	$(selector+" td").each(function(index){
-		if($( this ).text().length>10)
-		$( this ).html($( this ).html()+"&nbsp;") ;
-	});
-	$(selector).dataTable().fnDestroy();
+	$("#"+name).css("opacity","0");
+	
 	table_before(table_name);
 	$(selector).dataTable({
 		"lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "全"] ],
@@ -52,8 +56,8 @@ function draw_table(table_name,title){
 		"language": {"url": "js/dataTables_zh-tw.txt"}
 	});
 	//$("#animate_table").fadeIn(1000);
-	$("#animate_table").animate({"opacity":"0.01"},1);
-	$("#animate_table").animate({"opacity":"1"});
+	$("#"+name).animate({"opacity":"0.01"},1);
+	$("#"+name).animate({"opacity":"1"});
 }
 
 function vender_color(vender){

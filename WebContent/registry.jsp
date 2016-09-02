@@ -87,8 +87,6 @@ function unicheck(){
     });
 }
 function regis(){
-	
-	return;
 	//$("#regis-form").valid();
 	//alert($("#email").val().indexOf("@")==-1);
 	var wrong=0,regexp1=/[a-zA-Z]+/,regexp2=/[0-9]+/,regexp3=/[a-zA-Z0-9]+@[a-zA-Z0-9]+\.com.*/;
@@ -138,7 +136,6 @@ function send_mail(reg_id){
         	user_id : reg_id
         },
         success: function(data) {
-        	alert(data);
         	if("success"==data){
         		$("#bdy").animate({opacity: '0'},function() {
         			$("#bdy").css("margin-top","-100px");
@@ -167,7 +164,6 @@ $(function() {
 	});
 	var value='<%=request.getParameter("regid")%>';
 	if(value.length>10){
-		alert(value);
 		$.ajax({url : "registry.do", type : "POST", cache : false,
 	        data : {
 	        	action : "registry_confirm",
@@ -180,6 +176,13 @@ $(function() {
 						$("#bdy").html("<div align='center'><h1>驗證成功</h1><img src='images/laugh.png' width='400px'><br><br>"
 							+"<font style='font-size:24px'>恭喜您已完成驗證程序，現在可以盡情使用智慧電商平台</font><br><br><br>"
 							+"<a href='./login.jsp' class='btn btn-darkblue'>登入智慧電商系統</a><div>");
+						});
+					$("#bdy").animate({opacity: '1'});
+	        	}else{
+	        		$("#bdy").animate({opacity: '0'},function() {
+						$("#bdy").css("margin-top","-100px");
+						$("#bdy").html("<div align='center'><h1>驗證失敗</h1><br><br><br><font style='font-size:24px'>不明原因驗證失敗，請洽系統管理員</font>"
+							+"<br><br><br><br><a href='./login.jsp' class='btn btn-darkblue'>登入智慧電商系統</a><div>");
 						});
 					$("#bdy").animate({opacity: '1'});
 	        	}

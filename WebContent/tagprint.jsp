@@ -21,7 +21,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
-		<div id='bdy' style="opacity:0">
+		<div class='bdyplane' style="opacity:0">
 <!-- jquery-ui js要套用這一版，不然Dialog會偏移，且容易當掉 -->
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -51,7 +51,7 @@
 	}
 
 	$(function() {
-		$("#bdy").animate({"opacity":"1"});
+		$(".bdyplane").animate({"opacity":"1"});
 		// 點選商品名稱時，清除商品ID欄位
 		$("#product_name").focus(function() {
 			$('#c_product_id').val("");

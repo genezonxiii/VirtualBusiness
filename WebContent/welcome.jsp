@@ -12,7 +12,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="background-image: url('./images/welcome.png');background-size: cover;">
-	<div >
+	<div class='bdyplane' style="opacity:0"></div>
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>

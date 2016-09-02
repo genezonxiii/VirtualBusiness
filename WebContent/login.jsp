@@ -17,11 +17,13 @@ function chimg(){
 	document.getElementById("validateCodeImg").src="HandleDrawValidateCode.do?t=" + Math.random();
 }
 function unicheck(){
-	if($("#uninumber").val()<1)return;
+	if($("#uninumber").val()<1)return false;
+	var check=0;
 	$.ajax({
         url : "login.do",
         type : "POST",
         cache : false,
+        async : false,
         delay : 1000,
         data : {
         	action : "check_unicode_exist",
@@ -32,12 +34,15 @@ function unicheck(){
         	if("false"==json_obj.message){
         		$("#uninumber").addClass("error");
         		$("#uninumber").after("<span class='error-msg'>未註冊統編!</span>");
+        		check=1;
         	}else{
         		$("#uninumber").removeClass("error");
         		$(".error-msg").remove();
+        		check=2;
         	}
         }
     });
+	if(check==2){return true;}else{return false;}
 }
 function to_login(){//<span class='error-msg'>請輸入統編</span>
 	$(".error").removeClass("error");
@@ -48,6 +53,8 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
 	if($("#password").val().length<1){$("#password").addClass("error");$("#password").after("<span class='error-msg'>請輸入密碼</span>");wrong=1;}
 	if($("#verify").val().length<1){$("#verify").addClass("error");$("#verify").after("<span class='error-msg'>請輸入驗證碼</span>");wrong=1;}
 	if($("#password").val().length>10){$("#password").addClass("error");$("#password").after("<span class='error-msg'>長度不可超過十個字</span>");wrong=1;}
+	if(!unicheck()){wrong=1;}
+	
 	if(wrong==0){
 		$.ajax({url : "login.do", type : "POST", cache : false,
             data : {
@@ -171,7 +178,7 @@ $(function() {
 					</label>
 					<label style="text-align:center;font-size:14px;padding-top:10px">
 <!-- 					<div class="captcha-wrap"> -->
-						<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg" style="width:100%;">點擊圖片可換一張
+						<img title="看不清楚? 點擊圖片可換一張" src="HandleDrawValidateCode.do" id="validateCodeImg" style="width:100%;height:35px;">點擊圖片可換一張
 					</label>
 				</div><!-- /.verify-wrap -->
 				<div class="login-btn-wrap">

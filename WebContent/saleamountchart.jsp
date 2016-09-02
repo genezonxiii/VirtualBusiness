@@ -24,7 +24,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
-		<div id='bdy' style="opacity:0">
+		<div class='bdyplane' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -161,7 +161,7 @@ function draw_chart(m_h,m_w,data){
 		 				.style('stroke', 'black').style('stroke-width', 5);
  };
 	$(function() {
-		$("#bdy").animate({"opacity":"1"});
+		$(".bdyplane").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
 			$(".validateTips").html("<h4 style='color:red;'>資料查詢中...</h4>");
 			$("#chart").html('');

@@ -15,6 +15,7 @@
 <script type="text/javascript">
 function who(){
 	var page=location.pathname.split("/")[2];
+// 	var page="upload.jsp";
 	var side2=$(".sidenav > ul > li:nth-child(2)");
 	var side3=$(".sidenav > ul > li:nth-child(3)");
 	switch(page){
@@ -194,51 +195,51 @@ function who(){
 		<ul>
 			<li><img src="images/sidenav-transaction.svg" alt="">交易處理
 				<ul>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('upload.jsp');});">訂單拋轉作業</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('upload.jsp');});">訂單拋轉作業</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
 				<ul style="top: -146px;">
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('purchase.jsp');});">進貨管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('purchreturn.jsp');});">進貨退回管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('sale.jsp');});">銷貨管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('salereturn.jsp');});">銷貨退回管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('stock.jsp');});">庫存管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('supply.jsp');});">供應商管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('product.jsp');});">商品管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('tagprint.jsp');});">標籤列印</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('customer.jsp');});">客戶管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('producttype.jsp');});">商品類型管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('productunit.jsp');});">商品單位管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('group.jsp');});">公司管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('user.jsp');});">使用者管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('accreceive.jsp');});">應收帳款管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('accpay.jsp');});">應付帳款管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('changepassword.jsp');});">使用者帳密管理</a></li>
-					
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('purchreturn.jsp');});">進貨退回管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('sale.jsp');});">銷貨管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salereturn.jsp');});">銷貨退回管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('stock.jsp');});">庫存管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('supply.jsp');});">供應商管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('product.jsp');});">商品管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('tagprint.jsp');});">標籤列印</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('customer.jsp');});">客戶管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('producttype.jsp');});">商品類型管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('productunit.jsp');});">商品單位管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('group.jsp');});">公司管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('user.jsp');});">使用者管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accreceive.jsp');});">應收帳款管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accpay.jsp');});">應付帳款管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('changepassword.jsp');});">使用者帳密管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('membercondition.jsp');});">會員分級設定</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
 				<ul style="top: -100px;">
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('salereport.jsp');});">訂單報表</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('shipreport.jsp');});">出貨報表</a></li>
-<!-- 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('distributereport.jsp');});">配送報表</a></li> -->
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('salereturnreport.jsp');});">退貨報表</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('purchreport.jsp');});">進貨報表</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('purchreturnreport.jsp');});">進貨退回報表</a></li>
-			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('stockreport.jsp');});">庫存報表</a></li>
-			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('supplyreport.jsp');});">供應商報表</a></li>
-			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('productreport.jsp');});">商品報表</a></li>
-			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('customerreport.jsp');});">客戶報表</a></li>
-			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('accreceivereport.jsp');});">應收帳款報表</a></li>
-			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('accpayreport.jsp');});">應付帳款報表</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salereport.jsp');});">訂單報表</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('shipreport.jsp');});">出貨報表</a></li>
+<!-- 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('distributereport.jsp');});">配送報表</a></li> -->
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salereturnreport.jsp');});">退貨報表</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('purchreport.jsp');});">進貨報表</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('purchreturnreport.jsp');});">進貨退回報表</a></li>
+			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('stockreport.jsp');});">庫存報表</a></li>
+			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('supplyreport.jsp');});">供應商報表</a></li>
+			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('productreport.jsp');});">商品報表</a></li>
+			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('customerreport.jsp');});">客戶報表</a></li>
+			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accreceivereport.jsp');});">應收帳款報表</a></li>
+			    	<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accpayreport.jsp');});">應付帳款報表</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
 				<ul>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('salechart.jsp');});">出貨量統計圖</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('saleamountchart.jsp');});">銷售金額統計圖</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('saleamountstaticchart.jsp');});">銷售金額比例統計圖</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salechart.jsp');});">出貨量統計圖</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('saleamountchart.jsp');});">銷售金額統計圖</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('saleamountstaticchart.jsp');});">銷售金額比例統計圖</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院

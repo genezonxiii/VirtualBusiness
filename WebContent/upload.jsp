@@ -21,7 +21,7 @@
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
-		<div id='bdy' style="opacity:0">
+		<div class='bdyplane' style="opacity:0">
 <script>
 
 function setV(){
@@ -35,7 +35,7 @@ function setV(){
 	return true;
 };
 $(function(){
-	$("#bdy").animate({"opacity":"1"});
+	$(".bdyplane").animate({"opacity":"1"});
 	$("td").css("border","0px solid #aaa");
 	$("td img").css("width","30px");
 });
