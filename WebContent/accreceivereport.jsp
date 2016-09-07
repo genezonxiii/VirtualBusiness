@@ -128,9 +128,9 @@
 									if(json_obj[i].memo==null){json_obj[i].memo="";}
 									result_table 
 									+= "<tr ondblclick='detail("+json_obj[i].seq_no+")'>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
+									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
@@ -232,9 +232,9 @@
 									}
 									result_table 
 									+= "<tr>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
+									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"

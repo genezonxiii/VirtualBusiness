@@ -162,7 +162,7 @@ $(function(){
 									+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
 									+ "'class='checkbox_return_cancel'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"
@@ -196,15 +196,15 @@ $(function(){
                 				$("#purchase_return_date_err_mes").html("起日不可大於訖日");
                 			}
 						}							
-						if(resultRunTime>2){
-							$("#purchasereturns_false_contain").hide();
-							$("#purchasereturns_true_contain").hide();
-							if(!$("#purchase_return_date_err_mes").length){
-                				$("<p id='purchase_return_date_err_mes'>查無此結果</p>").appendTo($("#return_date_form").parent());
-                			}else{
-                				$("#purchase_return_date_err_mes").html("查無此結果");
-                			}
-						}
+// 						if(resultRunTime>2){
+// 							$("#purchasereturns_false_contain").hide();
+// 							$("#purchasereturns_true_contain").hide();
+// 							if(!$("#purchase_return_date_err_mes").length){
+//                 				$("<p id='purchase_return_date_err_mes'>查無此結果</p>").appendTo($("#return_date_form").parent());
+//                 			}else{
+//                 				$("#purchase_return_date_err_mes").html("查無此結果");
+//                 			}
+// 						}
 						$("#purchasereturns_true_table").dataTable().fnDestroy();
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#purchasereturns_true_contain").show();
@@ -297,7 +297,7 @@ $(function(){
 									+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
 									+ "'class='checkbox_return'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"
@@ -466,7 +466,7 @@ $(function(){
 								+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-								+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+								+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
 								+ "'class='checkbox_return'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"
@@ -590,7 +590,7 @@ $(function(){
 										+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
 										+ "'class='checkbox_return_cancel'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"	
@@ -714,7 +714,7 @@ $(function(){
 										+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].purchase_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].purchase_id+ "'name='"+ json_obj[i].supply_id
 										+ "'class='checkbox_return'></input><label for='my-"+ json_obj[i].purchase_id+ "'></label></td></tr>"	

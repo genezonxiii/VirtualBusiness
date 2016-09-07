@@ -97,7 +97,7 @@
 										+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>";
 									}
 								});
@@ -143,7 +143,7 @@
 								<th>進貨日期</th>
 								<th>進貨發票號碼</th>
 								<th>發票樣式</th>
-								<th>進貨發票金額</th>
+								<th style="min-width:70px;">進貨發票金額</th>
 								<th>備註說明</th>
 							</tr>
 						</thead>

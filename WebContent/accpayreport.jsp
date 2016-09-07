@@ -126,9 +126,9 @@
 									}
 									result_table 
 									+= "<tr>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
+									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ money(json_obj[i].pay_amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
 									+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>";
@@ -231,9 +231,9 @@
 									}
 									result_table 
 									+= "<tr>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ json_obj[i].pay_amount+ "</td>"
+									+ "<td name='"+ json_obj[i].pay_amount +"'>"+ money(json_obj[i].pay_amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].pay_date +"'>"+ json_obj[i].pay_date+ "</td>"
 									+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td></tr>";

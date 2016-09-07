@@ -167,7 +167,7 @@
 									+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 									+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 									+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-									+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+									+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 									+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -243,8 +243,9 @@
 						                }
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-									$("#salereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-									$("#salereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#salereturns_true_table").find("td").css("text-align","center");
+									//$("#salereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									//$("#salereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#return_date_err_mes").length){
                 				$("#return_date_err_mes").remove();
@@ -324,7 +325,7 @@
 										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+										+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -378,8 +379,9 @@
 								$("#salereturns_false_contain").show();
 								$("#salereturns_true_contain").hide();
 								$("#salereturns_false_table tbody").html(result_table);
-								$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-								$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								$("#salereturns_false_table").find("td").css("text-align","center");
+								//$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								//$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 								$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								$("#salereturns_false_table").dataTable({
 									  autoWidth: false,
@@ -482,7 +484,7 @@
 										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+										+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -536,8 +538,9 @@
 								$("#salereturns_false_contain").show();
 								$("#salereturns_true_contain").hide();
 								$("#salereturns_false_table tbody").html(result_table);
-								$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-								$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								$("#salereturns_false_table").find("td").css("text-align","center");
+								//$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+								//$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 								$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								$("#salereturns_false_table").dataTable({
 									  autoWidth: false,
@@ -674,7 +677,7 @@
 								+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 								+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 								+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-								+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+								+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 								+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -722,8 +725,8 @@
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 							$("#salereturns_false_table").find("td").css("text-align","center");
-							$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-							$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							//$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							//$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#search_sale_return_err_mes").length){
                 				$("#search_sale_return_err_mes").remove();
@@ -818,7 +821,7 @@
 											+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 											+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 											+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-											+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+											+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 											+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -839,8 +842,9 @@
 									if(resultRunTime!=0){
 										$("#salereturns_true_contain").show();
 										$("#salereturns_true_table tbody").html(result_table);
-										$("#salereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-										$("#salereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										$("#salereturns_true_table").find("td").css("text-align","center");
+										//$("#salereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										//$("#salereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 										$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 										$("#salereturns_true_table").dataTable({
 											  autoWidth: false,
@@ -865,7 +869,6 @@
 									                }
 									            }
 									          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-										$("#salereturns_true_table").find("td").css("text-align","center");
 									}
 								}
 							});
@@ -962,7 +965,7 @@
 											+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 											+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 											+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-											+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+											+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 											+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -983,8 +986,8 @@
 									if(resultRunTime!=0){
 										$("#salereturns_false_contain").show();
 										$("#salereturns_false_table tbody").html(result_table);
-										$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-										$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										//$("#salereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+										//$("#salereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 										$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 										$("#salereturns_false_table").dataTable({
 											  autoWidth: false,
@@ -1039,8 +1042,8 @@
 			changeYear:true
 		});
 		//hold header
-		$("#salereturns_false_table").find("th").css("min-width","120px");
-		$("#salereturns_true_table").find("th").css("min-width","120px");
+		//$("#salereturns_false_table").find("th").css("min-width","120px");
+		//$("#salereturns_true_table").find("th").css("min-width","120px");
 	})
 </script>
 		<div class="datalistWrap">
@@ -1173,7 +1176,7 @@
 								<th>產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
-								<th>銷貨金額</th>
+								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>
 								<th>發票日期</th>
 								<th>轉單日</th>
@@ -1248,7 +1251,7 @@
 								<th>產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
-								<th>銷貨金額</th>
+								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>
 								<th>發票日期</th>
 								<th>轉單日</th>

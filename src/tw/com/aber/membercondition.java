@@ -45,22 +45,50 @@ public class membercondition extends HttpServlet {
 		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
+		String group_id =request.getSession().getAttribute("group_id").toString();
 		String action = request.getParameter("action");
 		if("select".equals(action)){
-			response.getWriter().write("Action = select 喔 ~");
+			MemberconditionDAO memberDAO = new MemberconditionDAO();
+			List<MemberconditionVO> answer = memberDAO.searhDB(group_id);
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(answer);
+			response.getWriter().write(jsonStrList);
 		}
 		if("insert".equals(action)){
-			System.out.println("Action = insert 喔 ~");
-			int[] array={0,1,2,3,4,5,6,7,8,9,10};
+			String classname = request.getParameter("classname");
+			String total_period = request.getParameter("total_period");
+			String total_consumption = request.getParameter("total_consumption");
+			String continue_period = request.getParameter("continue_period");
+			String continue_consumption = request.getParameter("continue_consumption");
+			MemberconditionDAO memberDAO = new MemberconditionDAO();
+			memberDAO.insertDB(group_id, classname, total_period, total_consumption, continue_period, continue_consumption);
+			List<MemberconditionVO> answer = memberDAO.searhDB(group_id);
 			Gson gson = new Gson();
-			String jsonStrList = gson.toJson(array);
+			String jsonStrList = gson.toJson(answer);
 			response.getWriter().write(jsonStrList);
 		}
 		if("update".equals(action)){
-			response.getWriter().write("Action = update 喔 ~");
+			String condition_id = request.getParameter("condition_id");
+			String classname = request.getParameter("classname");
+			String total_period = request.getParameter("total_period");
+			String total_consumption = request.getParameter("total_consumption");
+			String continue_period = request.getParameter("continue_period");
+			String continue_consumption = request.getParameter("continue_consumption");
+			MemberconditionDAO memberDAO = new MemberconditionDAO();
+			memberDAO.updateDB(group_id, condition_id, classname, total_period, total_consumption, continue_period, continue_consumption);
+			List<MemberconditionVO> answer = memberDAO.searhDB(group_id);
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(answer);
+			response.getWriter().write(jsonStrList);
 		}
 		if("delete".equals(action)){
-			response.getWriter().write("Action = delete 喔 ~");
+			String condition_id = request.getParameter("condition_id");
+			MemberconditionDAO memberDAO = new MemberconditionDAO();
+			memberDAO.deleteDB(group_id, condition_id);
+			List<MemberconditionVO> answer = memberDAO.searhDB(group_id);
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(answer);
+			response.getWriter().write(jsonStrList);
 		}
 		
 	}
@@ -68,37 +96,19 @@ public class membercondition extends HttpServlet {
 
 	/************************* 對應資料庫表格格式 **************************************/
 
-	public class SalereportVO implements java.io.Serializable {
-		private String sale_id;
-		private String seq_no;
+	public class MemberconditionVO implements java.io.Serializable {
+		private String condition_id;
 		private String group_id;
-		private String order_no;
-		private String user_id;
-		private String product_id;
-		private String product_name;
-		private String c_product_id;
-		private String customer_id;
-		private String name;
-		private int quantity;
-		private float price;
-		private String invoice;
-		private java.sql.Date invoice_date;
-		private java.sql.Date trans_list_date;
-		private java.sql.Date dis_date;
-		private String memo;
-		private java.sql.Date sale_date;
-		private String order_source;
-		public String getSale_id() {
-			return sale_id;
+		private String classname;
+		private String total_period;
+		private String total_consumption;
+		private String continue_period;
+		private String continue_consumption;
+		public String getCondition_id() {
+			return condition_id;
 		}
-		public void setSale_id(String sale_id) {
-			this.sale_id = sale_id;
-		}
-		public String getSeq_no() {
-			return seq_no;
-		}
-		public void setSeq_no(String seq_no) {
-			this.seq_no = seq_no;
+		public void setCondition_id(String condition_id) {
+			this.condition_id = condition_id;
 		}
 		public String getGroup_id() {
 			return group_id;
@@ -106,154 +116,68 @@ public class membercondition extends HttpServlet {
 		public void setGroup_id(String group_id) {
 			this.group_id = group_id;
 		}
-		public String getOrder_no() {
-			return order_no;
+		public String getClassname() {
+			return classname;
 		}
-		public void setOrder_no(String order_no) {
-			this.order_no = order_no;
+		public void setClassname(String classname) {
+			this.classname = classname;
 		}
-		public String getUser_id() {
-			return user_id;
+		public String getTotal_period() {
+			return total_period;
 		}
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
+		public void setTotal_period(String total_period) {
+			this.total_period = total_period;
 		}
-		public String getProduct_id() {
-			return product_id;
+		public String getTotal_consumption() {
+			return total_consumption;
 		}
-		public void setProduct_id(String product_id) {
-			this.product_id = product_id;
+		public void setTotal_consumption(String total_consumption) {
+			this.total_consumption = total_consumption;
 		}
-		public String getProduct_name() {
-			return product_name;
+		public String getContinue_period() {
+			return continue_period;
 		}
-		public void setProduct_name(String product_name) {
-			this.product_name = product_name;
+		public void setContinue_period(String continue_period) {
+			this.continue_period = continue_period;
 		}
-		public String getC_product_id() {
-			return c_product_id;
+		public String getContinue_consumption() {
+			return continue_consumption;
 		}
-		public void setC_product_id(String c_product_id) {
-			this.c_product_id = c_product_id;
+		public void setContinue_consumption(String continue_consumption) {
+			this.continue_consumption = continue_consumption;
 		}
-		public String getCustomer_id() {
-			return customer_id;
-		}
-		public void setCustomer_id(String customer_id) {
-			this.customer_id = customer_id;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public int getQuantity() {
-			return quantity;
-		}
-		public void setQuantity(int quantity) {
-			this.quantity = quantity;
-		}
-		public float getPrice() {
-			return price;
-		}
-		public void setPrice(float price) {
-			this.price = price;
-		}
-		public String getInvoice() {
-			return invoice;
-		}
-		public void setInvoice(String invoice) {
-			this.invoice = invoice;
-		}
-		public java.sql.Date getInvoice_date() {
-			return invoice_date;
-		}
-		public void setInvoice_date(java.sql.Date invoice_date) {
-			this.invoice_date = invoice_date;
-		}
-		public java.sql.Date getTrans_list_date() {
-			return trans_list_date;
-		}
-		public void setTrans_list_date(java.sql.Date trans_list_date) {
-			this.trans_list_date = trans_list_date;
-		}
-		public java.sql.Date getDis_date() {
-			return dis_date;
-		}
-		public void setDis_date(java.sql.Date dis_date) {
-			this.dis_date = dis_date;
-		}
-		public String getMemo() {
-			return memo;
-		}
-		public void setMemo(String memo) {
-			this.memo = memo;
-		}
-		public java.sql.Date getSale_date() {
-			return sale_date;
-		}
-		public void setSale_date(java.sql.Date sale_date) {
-			this.sale_date = sale_date;
-		}
-		public String getOrder_source() {
-			return order_source;
-		}
-		public void setOrder_source(String order_source) {
-			this.order_source = order_source;
-		}
+		
 	}
 
 	/*************************** 制定規章方法 ****************************************/
-	interface Salereport_interface {
+	interface Membercondition_interface {
 		//public String select_date(String group_id,Date time1,Date time2);
 		
-		//public void insertDB(SalereportVO productunitVO);
+		public void insertDB(String group_id, String classname, String total_period, String total_consumption, String continue_period,String continue_consumption);
 
-		//public void updateDB(SalereportVO productunitVO);
+		public void updateDB(String group_id, String condition_id, String classname, String total_period, String total_consumption, String continue_period,String continue_consumption);
 
-		//public void deleteDB(String unit_id,String user_id);
+		public void deleteDB(String group_id,String condition_id);
 
-		public List<SalereportVO> searhDB(String group_id,java.sql.Date from_date,java.sql.Date till_date);
-
-		//public List<SalereportVO> searhAllDB(String group_id);
-	}
-
-	/*************************** 處理業務邏輯 ****************************************/
-	class SalereportService {
-		private Salereport_interface dao;
-
-		public SalereportService() {
-			dao = new SalereportDAO();
-		}
-
-		public List<SalereportVO> getSearhDB(String group_id, java.sql.Date from_date,java.sql.Date till_date) {
-			return dao.searhDB(group_id, from_date,till_date);
-		}
-
-		//public List<SalereportVO> getSearAllDB(String group_id) {
-		//	return dao.searhAllDB(group_id);
-		//}
+		public List<MemberconditionVO> searhDB(String group_id);
 	}
 
 	/*************************** 操作資料庫 ****************************************/
-	class SalereportDAO implements Salereport_interface {
+	class MemberconditionDAO implements Membercondition_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_select_sale_bydisdate  = "call sp_select_sale_bydisdate(?,?,?)";
-		/*private static final String sp_insert_product_unit = "call sp_insert_product_unit(?,?,?)";
-		private static final String sp_selectall_product_unit = "call sp_selectall_product_unit (?)";
-		private static final String sp_select_product_unit = "call sp_select_product_unit (?,?)";
-		private static final String sp_del_product_unit = "call sp_del_product_unit (?,?)";
-		private static final String sp_update_product_unit = "call sp_update_product_unit (?,?,?,?)";
-		*/
+		private static final String sp_selectall_member_condition  = "call sp_selectall_member_condition(?)";
+		private static final String sp_insert_member_condition   = "call sp_insert_member_condition (?,?,?,?,?,?)";
+		private static final String sp_update_member_condition  = "call sp_update_member_condition (?,?,?,?,?,?,?)";
+		private static final String sp_del_member_condition  = "call sp_del_member_condition (?)";
+		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		
-		public List<SalereportVO> searhDB(String group_id, java.sql.Date from_date,java.sql.Date till_date) {
-			List<SalereportVO> list =new ArrayList<SalereportVO>();
-			SalereportVO salereportVO = null;
+		public List<MemberconditionVO> searhDB(String group_id) {
+			List<MemberconditionVO> list =new ArrayList<MemberconditionVO>();
+			MemberconditionVO MemberconditionVO = null;
 			
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -261,43 +185,93 @@ public class membercondition extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_sale_bydisdate);
+				pstmt = con.prepareStatement(sp_selectall_member_condition);
 				pstmt.setString(1,group_id);
-				pstmt.setDate(2,from_date);
-				pstmt.setDate(3,till_date);
 				rs = pstmt.executeQuery();
-				int k=0;
 				while (rs.next()) {
-					k++;
-					salereportVO = new SalereportVO();
-					salereportVO.setSale_id(rs.getString("sale_id"));
-					salereportVO.setSeq_no(rs.getString("seq_no"));
-					salereportVO.setGroup_id(rs.getString("group_id"));
-					salereportVO.setOrder_no(rs.getString("order_no"));
-					salereportVO.setUser_id(rs.getString("user_id"));
-					salereportVO.setProduct_id(rs.getString("product_id"));
-					salereportVO.setProduct_name(rs.getString("product_name"));
-					salereportVO.setC_product_id(rs.getString("c_product_id"));
-					salereportVO.setCustomer_id(rs.getString("customer_id"));
-					salereportVO.setName(rs.getString("name"));
-					salereportVO.setQuantity(rs.getInt("quantity"));
-					salereportVO.setPrice(rs.getFloat("price"));
-					salereportVO.setInvoice(rs.getString("invoice"));
-					salereportVO.setInvoice_date(rs.getDate("invoice_date"));
-					salereportVO.setTrans_list_date(rs.getDate("trans_list_date"));
-					salereportVO.setDis_date(rs.getDate("dis_date"));
-					salereportVO.setMemo(rs.getString("memo"));
-					salereportVO.setSale_date(rs.getDate("sale_date"));
-					salereportVO.setOrder_source(rs.getString("order_source"));
-					list.add(salereportVO);
+					MemberconditionVO = new MemberconditionVO();
+					MemberconditionVO.setCondition_id(rs.getString("condition_id"));
+					MemberconditionVO.setGroup_id(rs.getString("group_id"));
+					MemberconditionVO.setClassname(rs.getString("class"));
+					MemberconditionVO.setTotal_period(rs.getString("total_period"));
+					MemberconditionVO.setTotal_consumption(rs.getString("total_consumption"));
+					MemberconditionVO.setContinue_period(rs.getString("continue_period"));
+					MemberconditionVO.setContinue_consumption(rs.getString("continue_consumption"));
+					list.add(MemberconditionVO);
 				}
-				//list 排序 by dis_date
-				//System.out.println("total Data: "+k);
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			}
 			return list;
+		}
+
+		@Override
+		public void insertDB(String group_id, String classname, String total_period, String total_consumption,
+				String continue_period, String continue_consumption) {
+			// TODO Auto-generated method stub
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_insert_member_condition);
+				pstmt.setString(1,group_id);
+				pstmt.setString(2,classname);
+				pstmt.setString(3,total_period);
+				pstmt.setString(4,total_consumption);
+				pstmt.setString(5,continue_period);
+				pstmt.setString(6,continue_consumption);
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
+		}
+
+		@Override
+		public void updateDB(String group_id, String condition_id, String classname, String total_period,
+				String total_consumption, String continue_period, String continue_consumption) {
+			// TODO Auto-generated method stub
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_update_member_condition);
+				pstmt.setString(1,condition_id);
+				pstmt.setString(2,group_id);
+				pstmt.setString(3,classname);
+				pstmt.setString(4,total_period);
+				pstmt.setString(5,total_consumption);
+				pstmt.setString(6,continue_period);
+				pstmt.setString(7,continue_consumption);
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
+		}
+
+		@Override
+		public void deleteDB(String group_id, String condition_id) {
+			// TODO Auto-generated method stub
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_del_member_condition);
+				//pstmt.setString(1,group_id);
+				pstmt.setString(1,condition_id);
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
 		}
 		
 		/*	public String select_date(String group_id,Date time1,Date time2) {
@@ -347,7 +321,7 @@ System.out.println("##########"+k+"###########");
 		}*/
 		/*
 		@Override
-		public void insertDB(SalereportVO productunitVO) {
+		public void insertDB(MemberconditionVO productunitVO) {
 			// TODO Auto-generated method stub
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -384,7 +358,7 @@ System.out.println("##########"+k+"###########");
 		}
 
 		@Override
-		public void updateDB(SalereportVO productunitVO) {
+		public void updateDB(MemberconditionVO productunitVO) {
 			// TODO Auto-generated method stub
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -457,9 +431,9 @@ System.out.println("##########"+k+"###########");
 		}
 
 		@Override
-		public List<SalereportVO> searhDB(String group_id, String unit_name) {
-			List<SalereportVO> list = new ArrayList<SalereportVO>();
-			SalereportVO productunitVO = null;
+		public List<MemberconditionVO> searhDB(String group_id, String unit_name) {
+			List<MemberconditionVO> list = new ArrayList<MemberconditionVO>();
+			MemberconditionVO productunitVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -474,7 +448,7 @@ System.out.println("##########"+k+"###########");
 				rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					productunitVO = new SalereportVO();
+					productunitVO = new MemberconditionVO();
 					productunitVO.setGroup_id(rs.getString("group_id"));
 					productunitVO.setUnit_id(rs.getString("unit_id"));
 					productunitVO.setUnit_name(rs.getString("unit_name"));
@@ -511,10 +485,10 @@ System.out.println("##########"+k+"###########");
 		}
 
 		@Override
-		public List<SalereportVO> searhAllDB(String group_id) {
+		public List<MemberconditionVO> searhAllDB(String group_id) {
 			// TODO Auto-generated method stub
-			List<SalereportVO> list = new ArrayList<SalereportVO>();
-			SalereportVO productunitVO = null;
+			List<MemberconditionVO> list = new ArrayList<MemberconditionVO>();
+			MemberconditionVO productunitVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -526,7 +500,7 @@ System.out.println("##########"+k+"###########");
 				pstmt.setString(1, group_id);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					productunitVO = new SalereportVO();
+					productunitVO = new MemberconditionVO();
 					productunitVO.setGroup_id(rs.getString("group_id"));
 					productunitVO.setUnit_id(rs.getString("unit_id"));
 					productunitVO.setUnit_name(rs.getString("unit_name"));

@@ -20,6 +20,10 @@
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+		
+<link type="text/css" rel="stylesheet" href="css/visualize.jQuery.css"/>
+<!-- 		<link type="text/css" rel="stylesheet" href="https://www.filamentgroup.com/examples/charting_v2/demopage.css"/> -->
+
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -35,8 +39,44 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script src="js/d3.v3.min.js"></script>
 
-<script>
+<!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script> -->
+<script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
+<script>
+function draw_barchart(data,list){
+	//alert(data[0]["yahoo"]==null);
+	var i,j;
+	var charttable="<table id='bar' style='display:none'><caption>出貨量統計圖</caption><thead><tr><td></td>";
+	$.each(list,function(i, item) {
+		charttable+="<th>"+item+"</th>";
+	});
+	charttable+="</tr></thead><tbody>";
+	
+	
+	for(i=0;i<data.length;i++){
+		charttable+="<tr><th>"+data[i]["month"]+"月</th>";
+		for(j=0;j<list.length;j++){
+			charttable+="<td>"+(data[i][list[j]]==null?"":data[i][list[j]])+"</td>";
+			//alert(list[j]+"的資料:"+data[i][list[j]]);
+		}
+		charttable+="</tr>";
+// 		$.each(data[i],function(j, item) {alert(j+" & "+item);});
+	}
+	charttable+="</tbody></table>";
+	$('.visualize').remove();
+	$('#chart').html(charttable);
+	$('#chart').visualize({
+		'type':'bar',
+		'barMargin':'3','barGroupMargin':'10',
+		'width':'800','height':'300',
+		'appendTitle':'true','title':'出貨量統計圖',
+		'appendKey':'true',
+		'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
+		'textColors':'','parseDirection':'y'
+	});
+	$(".visualize").css("opacity","0");
+	//alert(charttable);
+}
 function draw_chart(m_h,m_w,data){
 	//alert(data.length);
 	$('#chart').html("");
@@ -79,8 +119,8 @@ function draw_chart(m_h,m_w,data){
     .data(data).enter().append('text')
     .attr({
       'fill':'#000',
-      'x':function(d){return ((d.x) *(max_w/(data.length+1)))+padding*3 / 2;},
-      'y':function(d){return max_h - ((d.y*max_h *7 / 11) / max_data)- padding/2 - 25;}
+      'x':function(d){return ((d.x) *(max_w/(data.length+1)))+padding*3 / 2+5;},
+      'y':function(d){return max_h - ((d.y*max_h *7 / 11) / max_data)- padding/2 - 40;}
     }).text(function(d){return d.y;})
     .style({'font-size':'20px'});
   //@@
@@ -159,6 +199,7 @@ function date_format(str) {
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
+			$(".visualize").animate({"opacity":"0"});
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
@@ -168,26 +209,58 @@ function date_format(str) {
 					//console.log(result);
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
-					var data=[];
-					var i=0,tmp_month=json_obj.month[0];
-					for(i=0,j=0;i<json_obj.entrance.length;i++,j++){
-						if(json_obj.entrance[i]!=0){
-							if(i==0||json_obj.month[i]!=tmp_month){
-								tmp_month=json_obj.month[i];
-								if(i!=0){data[j]={x:j,month:"",y:"",vender:""};j++;}
-								data[j]={x:j,month:"  "+json_obj.month[i]+"月",y:json_obj.answer[i],vender:json_obj.entrance[i]};
-							}else{
-								data[j]={x:j,month:"",y:json_obj.answer[i],vender:json_obj.entrance[i]};
-							}
-						}
-					}
-					if(data.length!=0){
-						draw_chart(400,200,data);
-						$("#chart").animate({"opacity":"0.5"});
-						$("#chart").animate({"opacity":"1"});
-						}else{
+					var chart_data=[],chart_obj={},i=0,j=0,list=[];
+					var tmp_month=json_obj.month[0];
+					
+					if(json_obj.entrance.length==0){
 						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						return;
 					}
+				
+					$.each(json_obj.entrance,function(i, item) {
+						var k=0;
+						while(list[k]!=item && list[k]!=null){k++;}
+						if(k==list.length)list[k]=item;
+					});
+					
+					
+					//chart_obj["month"]=json_obj.month[0];//init
+					
+					for(i=0;i<json_obj.entrance.length;i++){
+						if(json_obj.month[i]!=tmp_month){ //in&
+							tmp_month=json_obj.month[i];
+							chart_data[j]=chart_obj;
+							chart_obj={};
+							j++;
+						}
+						chart_obj["month"]=json_obj.month[i];
+						chart_obj[json_obj.entrance[i]]=json_obj.answer[i];
+					}
+					chart_data[j]=chart_obj;
+					j++;
+					
+					draw_barchart(chart_data,list);
+					$(".visualize").animate({"opacity":"1"});
+// 					var data=[];
+// 					var i=0,tmp_month=json_obj.month[0];
+// 					for(i=0,j=0;i<json_obj.entrance.length;i++,j++){
+// 						if(json_obj.entrance[i]!=0){
+// 							if(i==0||json_obj.month[i]!=tmp_month){
+// 								tmp_month=json_obj.month[i];
+// 								if(i!=0){data[j]={x:j,month:"",y:"",vender:""};j++;}
+// 								data[j]={x:j,month:"  "+json_obj.month[i]+"月",y:json_obj.answer[i],vender:json_obj.entrance[i]};
+// 							}else{
+// 								data[j]={x:j,month:"",y:json_obj.answer[i],vender:json_obj.entrance[i]};
+// 							}
+// 						}
+// 					}
+// 					if(data.length!=0){
+// 						draw_chart(400,200,data);
+// 						$("#chart").animate({"opacity":"0.5"});
+// 						$("#chart").animate({"opacity":"1"});
+// 					}else{
+// 						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+// 					}
 				}
 			});
 		});
@@ -214,7 +287,7 @@ function date_format(str) {
 			<!-- 第一列 -->
 		</div>
 	</div>
-<div id="chart" align="center" style="opacity:0"></div>
+<div style="margin:30px auto;width:800px;"><div id="chart" style="opacity:0;"></div></div>
 <div class="validateTips" align="center"> </div>
 </div>
 </div>

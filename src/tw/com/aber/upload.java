@@ -39,7 +39,21 @@ public class upload  extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		if(request.getSession().getAttribute("group_id")==null){request.setAttribute("action","no_session");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
-
+		
+		//##########################test####################################
+//		request.setCharacterEncoding("UTF-8");
+//		response.setCharacterEncoding("UTF-8");
+//		String action = request.getParameter("action");
+//		if("test".equals(action)){
+//			String name = request.getParameter("name");
+//			System.out.println("go into:"+action);
+//			try{TimeUnit.SECONDS.sleep(15);}catch(Exception e){}
+//			System.out.println("alive to say hello to:"+name);
+//			response.getWriter().write("I'm back!");
+//			int ii=0;if(ii==0)return;
+//		}
+		//##########################test####################################
+		
 		try{
 			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
 			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();

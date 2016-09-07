@@ -100,8 +100,8 @@
 								+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
 								+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
 								+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-								+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-								+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+								+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
+								+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 								+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
 								+ "<td name='"+ json_obj[i].photo+"'>"+tmp+"</td>"
 								+ "<td name='"+ json_obj[i].photo1 +"'>"+tmp1+"</td>"
@@ -1257,7 +1257,7 @@
 			
 			<!-- 第一列 -->
 			<div class="row search-result-wrap" align="center">
-				<div id="sales-contain" class="ui-widget" style="display:none">
+				<div id="sales-contain" class="ui-widget" style="display:none;">
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
@@ -1266,8 +1266,8 @@
 								<th>供應商名稱</th>
 								<th>產品類別</th>
 								<th>產品單位</th>
-								<th>成本</th>
-								<th>售價</th>
+								<th style="min-width:70px;">成本</th>
+								<th style="min-width:70px;">售價</th>
 								<th>安全庫存</th>
 								<th style="max-width:100px;">產品圖片1</th>
 								<th style="max-width:100px;">產品圖片2</th>

@@ -1,4 +1,30 @@
 
+function get_week_day(number){
+	var i,j;
+	for(i=1;i<13;i++){
+		for(j=1;j<32;j++){
+			if(j==31){
+				if(i==2||i==4||i==6||i==9||i==11){continue;}
+			}
+			if(getYearWeek(2016,i,j)==number){
+				return "2016/"+i+"/"+j+"";
+			}
+		}
+	}
+}
+
+
+function money(amount){
+	 if(!(parseInt(amount)>-1)){return amount};
+	 var num = amount.toString();
+	 var pattern = /(-?\d+)(\d{3})/;
+	 while(pattern.test(num))
+	 {
+		 num = num.replace(pattern, "$1,$2");
+	 }
+	 return "$ " + num + " 元";
+}
+
 function table_before(str){
 	var i;
 	var table_name=str;
@@ -61,24 +87,26 @@ function draw_table(table_name,title){
 }
 
 function vender_color(vender){
-	if(vender=="ibon"){return '#FF0000';}
-	if(vender=="九易"){return '#EEEE00';}
-	if(vender=="Pchome"){return '#0000FF';}
-	if(vender=="ASAP"){return '#FF6666';}
-	if(vender=="GoHappy"){return '#FF00FF';}
-	if(vender=="國泰Tree"){return '#00FFFF';}
-	if(vender=="17Life"){return '#BBBBBB';}
-	if(vender=="yahoo"){return '#BBBB00';}
-	if(vender=="UDN"){return '#BB00BB';}
+	if(vender=="myfone"){return '#be1e2d';}
+	if(vender=="九易"){return '#666699';}
+	if(vender=="Pchome"){return '#92d5ea';}
+	if(vender=="ASAP"){return '#ee8310';}
+	if(vender=="GoHappy"){return '#8d10ee';}
+	if(vender=="愛買"){return '#5a3b16';}
+	if(vender=="momo"){return '#26a4ed';}
+	if(vender=="yahoo"){return '#f45a90';}
+	if(vender=="UDN"){return '#e9e744';}
+	
+	//已下還沒有特定過
+	if(vender=="17Life"){return '#660066';}
 	if(vender=="樂天"){return '#00BBBB';}
-	if(vender=="愛買"){return '#BBBBFF';}
+	if(vender=="國泰Tree"){return '#BBBBFF';}
 	if(vender=="夠麻吉"){return '#BBFFBB';}
 	if(vender=="通用"){return '#FFBBBB';}
 	if(vender=="超級商城"){return '#6666FF';}
 	if(vender=="博客來"){return '#66FF66';}
-	if(vender=="momo"){return '#00FF00';}
 	if(vender=="payeasy"){return '#006666';}
-	if(vender=="myfone"){return '#660066';}
+	if(vender=="ibon"){return '#660066';}
 	if(vender=="森森購物"){return '#666600';}
 	if(vender=="Line Mart"){return '#333333';}
 	return '#553388';

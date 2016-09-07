@@ -20,6 +20,9 @@
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+
+<link type="text/css" rel="stylesheet" href="css/visualize.jQuery.css"/>
+
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -36,8 +39,47 @@
 
 <script src="js/d3.v3.min.js"></script>
 
+<script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
 <script>
+function draw_linechart(data,list){
+	//alert(data[0]["vender"]);
+	var i,j;
+// 	for(i=0;i<data.length;i++){
+// 		$.each(data[i],function(k, item) {
+// 			alert(k+"&&"+item);
+// 		});
+// 	}
+	var charttable="<table id='line' style='display:none'><caption>銷售金額統計圖 </caption><thead><tr><td></td><th></th>";
+	$.each(list,function(i, item) {
+		charttable+="<th>"+get_week_day(item)+"</th>";
+	});
+	charttable += "<th></th></tr></thead><tbody>";
+	
+	for(i=0;i<data.length;i++){
+		charttable+="<tr><th>"+data[i]["vender"]+"</th><td></td>";
+		for(j=0;j<list.length;j++){
+			charttable+="<td>"+(data[i][list[j]]==null?"":data[i][list[j]])+"</td>";
+		}
+		charttable+="</tr>";
+	}
+	charttable+="</tbody></table>";
+	$('.visualize').remove();
+	$('#chart').html(charttable);
+	$('#chart').visualize({
+		'type':'line',
+		'lineWeight':'3',
+		'width':'800','height':'300',
+		'appendTitle':'true','title':'銷售金額統計圖',
+		'appendKey':'true',
+		'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
+		'textColors':'','parseDirection':'x'
+	});
+	$(".visualize").css("opacity","0");
+	//alert(charttable);
+}
+
+
 function getYearWeek(a, b, c) { 
 /* date1是当前日期 date2是当年第一天 d是当前日期是今年第多少天 \用d + 当前年的第一天的周差距的和在除以7就是本年第几周 */ 
 	var date1 = new Date(a, parseInt(b) - 1, c), date2 = new Date(a, 0, 1), 
@@ -118,7 +160,7 @@ function draw_chart(m_h,m_w,data){
 				//color="#"+('00000'+(0|Math.random()*(1<<24)).toString(16)).slice(-6);
 			if(i+1!=data.length)tmp_vender=data[i+1].vender;
 			vis.append('svg:path').attr('d', lineGen(tmp)).attr('stroke', color)
-		       .attr('stroke-width',2).attr('fill', 'none');
+		       .attr('stroke-width',4).attr('fill', 'none');
 			
 			//alert(color);
 			//#######################以下畫哪家vender的說明#############################
@@ -153,6 +195,7 @@ function draw_chart(m_h,m_w,data){
 	      'x':function(d){return ((padding*9)/5)+((d.x+1)*((max_w-padding*3) /(max_month-min_month+2)));},
 	      'y':function(d){return max_h-padding/2;}
 	    }).text(function(d){return d.date;})
+	    //.attr("transform","rotate(10)")
 	    .style({'font-size':'12px'})
 	    .style('fill', function(d){return ((d.x%2==0)?'#000000':'#555555')});
      
@@ -161,9 +204,11 @@ function draw_chart(m_h,m_w,data){
 		 				.style('stroke', 'black').style('stroke-width', 5);
  };
 	$(function() {
+		//alert(get_week_day(22));
 		$(".bdyplane").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
-			$(".validateTips").html("<h4 style='color:red;'>資料查詢中...</h4>");
+			$(".visualize").animate({"opacity":"0"});
+			//$(".validateTips").html("<h4 style='color:red;'>資料查詢中...</h4>");
 			$("#chart").html('');
 			e.preventDefault();
 			$.ajax({
@@ -171,26 +216,60 @@ function draw_chart(m_h,m_w,data){
 				url : "saleamountchart.do",
 				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
+					$(".validateTips").html('');
+					//console.log(result);
 					var json_obj = $.parseJSON(result);
-					var result_table = "";
-					var data=[];
-					var i=0;
-					for(i=0;i<json_obj.entrance.length;i++){
-						if(json_obj.entrance[i]!=0){
-							data[i]={"sale":json_obj.answer[i],"year":json_obj.entrance[i],"vender":json_obj.vender[i] };
+					var chart_data=[],chart_obj={},i=0,j=0,list=[];
+					var tmp_vender=json_obj.vender[0];
+					if(json_obj.entrance.length==0){
+						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						return;
+					}
+					$.each(json_obj.entrance,function(i, item) {
+						var k=0;
+						while(list[k]!=item && list[k]!=null){k++;}
+						if(k==list.length)list[k]=item;
+					});
+					
+					for(i=0,j=0;i<json_obj.entrance.length;i++){
+						if(json_obj.vender[i]!=tmp_vender){
+							chart_data[j]=chart_obj;
+							j++;
+							tmp_vender=json_obj.vender[i];
+							chart_obj={};
 						}
-						//alert(json_obj.entrance[i]);
-						//data[i+1]={"sale":json_obj.answer[i],"year":41,"vender":json_obj.vender[i] };
+						chart_obj["vender"]=json_obj.vender[i];
+						chart_obj[json_obj.entrance[i]]=json_obj.answer[i];
 					}
-					if(data.length!=0){
-						draw_chart(400,200,data);
-						$("#chart").animate({"opacity":"0.5"});
-						$("#chart").animate({"opacity":"1"});
-						$(".validateTips").html("");
-					}else{
-						$("#chart").html('');
-						$(".validateTips").html("<h4 style='color:red;'>查無資料</h4>");
-					}
+					chart_data[j]=chart_obj;
+					j++;
+					
+					draw_linechart(chart_data,list);
+					$(".visualize").animate({"opacity":"1"});
+					
+					
+					
+					//$.each(list,function(k, item){ list[k]=get_week_day(item);});
+					//$.each(list,function(k, item){alert(item);});
+// 					var result_table = "";
+// 					var data=[];
+// 					var i=0;
+// 					for(i=0;i<json_obj.entrance.length;i++){
+// 						if(json_obj.entrance[i]!=0){
+// 							data[i]={"sale":json_obj.answer[i],"year":json_obj.entrance[i],"vender":json_obj.vender[i] };
+// 						}
+// 						//alert(json_obj.entrance[i]);
+// 						//data[i+1]={"sale":json_obj.answer[i],"year":41,"vender":json_obj.vender[i] };
+// 					}
+// 					if(data.length!=0){
+// 						draw_chart(400,200,data);
+// 						$("#chart").animate({"opacity":"0.5"});
+// 						$("#chart").animate({"opacity":"1"});
+// 						$(".validateTips").html("");
+// 					}else{
+// 						$("#chart").html('');
+// 						$(".validateTips").html("<h4 style='color:red;'>查無資料</h4>");
+// 					}
 				}
 			});
 		});
@@ -213,8 +292,8 @@ function draw_chart(m_h,m_w,data){
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
-	<div class="validateTips" align="center"> </div>
-	<div id="chart" align="center" style="opacity:0"></div>
+	<div class="validateTips" align="center" style="position:relative;height:0px;top:-25px;"> </div>
+	<div style="margin:30px auto;width:800px;"><div id="chart" style="opacity:0;"></div></div>
 </div>
 </div>
 </body>

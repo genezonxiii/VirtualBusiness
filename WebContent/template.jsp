@@ -87,7 +87,7 @@ function who(){
 		break;
 	case "changepassword.jsp":
 		side2.addClass("active");
-		return "密碼修改";
+		return "使用者密碼管理";
 		break;
 	case "tagprint.jsp":
 		side2.addClass("active");
@@ -215,7 +215,7 @@ function who(){
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('user.jsp');});">使用者管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accreceive.jsp');});">應收帳款管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accpay.jsp');});">應付帳款管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('changepassword.jsp');});">使用者帳密管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('changepassword.jsp');});">使用者密碼管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('membercondition.jsp');});">會員分級設定</a></li>
 				</ul>
 			</li>
@@ -268,6 +268,7 @@ function who(){
 <script src="js/scripts.js"></script>
 <script type="text/javascript">
 $(function() {
+	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","7px 20px");
 	$("#logout").click(function(e) {
 		$.ajax({
 			type : "POST",
@@ -281,7 +282,7 @@ $(function() {
 			}
 		});
 	});
-	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","8px 20px");
+	
 });
 </script>
 </body>

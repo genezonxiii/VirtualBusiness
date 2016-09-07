@@ -68,7 +68,7 @@ function ship_data(){
 				+ "</td><td>" + (json_obj[i].c_product_id==null?"":json_obj[i].c_product_id.replace("NULL",""))
 				+ "</td><td>" + (json_obj[i].sale_date==null?"":json_obj[i].sale_date.replace("T00:00:00Z",""))
 // 				+ "</td><td>" + (json_obj[i].dis_date==null?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
-				+ "</td><td>" + json_obj[i].price
+				+ "</td><td>" + money(json_obj[i].price)
 				+ "</td><td>" + ((json_obj[i].phone==null)?"":json_obj[i].phone)
 				+ "</td><td>" + json_obj[i].address
 				+ "</td><td>" + ((json_obj[i].post==null)?"":json_obj[i].post.replace("NULL","").replace("null",""))
@@ -148,13 +148,13 @@ function date_format(str) {
 								<th>自訂產品ID</th>
 								<th>出貨日期</th>
 <!-- 								<th>配送日期</th> -->
-								<th>價格</th>
+								<th style="min-width:70px;">價格</th>
 								<th>電話</th>
-								<th><p style="width:120px">地址</p></th>
+								<th style="min-width:100px">地址</th>
 								<th>郵編</th>
 								<th>顧客姓名</th>
 								<th>手機</th>
-								<th><p style="width:120px">產品名稱</p></th>
+								<th style="min-width:100px">產品名稱</th>
 								<th>銷貨單號</th>
 								<th>數量</th>	
 								<th>銷貨平台</th>

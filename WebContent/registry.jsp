@@ -54,6 +54,10 @@ function checkunicode(uniString){
 	}
 }
 function unicheck(){
+	
+// 	$("#register").fadeOut();
+// 	$("#sys").fadeIn();
+	
 	if($("#uninumber").val()<1)return false;
 	if(!checkunicode($("#uninumber").val())){
 		$(".error-msg").remove();
@@ -61,10 +65,12 @@ function unicheck(){
 		$("#uninumber").after("<span class='error-msg'>非正式統編!</span>");
 		return false;
 	}
+	var check=0;
 	$.ajax({
         url : "login.do",
         type : "POST",
         cache : false,
+        async : false,
         delay : 1000,
         data : {
         	action : "check_unicode_exist",
@@ -77,14 +83,15 @@ function unicheck(){
         		$(".error-msg").remove();
         		$("#uninumber").addClass("error");
         		$("#uninumber").after("<span class='error-msg'>此統編已被註冊!</span>");
-        		return false;
+        		check=1;
         	}else{
         		$("#uninumber").removeClass("error");
         		$(".error-msg").remove();
-        		return true;
+        		check=2;
         	}
         }
     });
+	if(check==2){return true;}else{return false;}
 }
 function regis(){
 	//$("#regis-form").valid();
@@ -110,9 +117,8 @@ function regis(){
 	if($("#pwd").val()!=$("#pwd2").val()){
 		$("#pwd2").addClass("error");$("#pwd2").after("<span class='error-msg'>請輸入相同密碼</span>");wrong=1;
 	}
+	if(!unicheck()){wrong=1;}
 	if(wrong){return;}
-	//if(unicheck()){return;}
-	
 	$.ajax({url : "registry.do", type : "POST", cache : false,
 		data : {
 			action : "registry",
@@ -123,6 +129,14 @@ function regis(){
 			pwd : $("#pwd").val(),
 			verify : $("#verify").val()
 		}, success: function(reg_id) {
+			$("input").attr("disabled","disabled");
+			$("input").animate({backgroundColor:"#DDD"});
+			$("#register").animate({opacity: '0'},function() {
+				$("#register").attr("onclick","");
+				$("#register").html("系統處理中，請稍候...");
+				$("#register").animate({backgroundColor: 'gray'});
+				$("#register").animate({opacity: '1'});
+			});
 			send_mail(reg_id);//regid
 		}
 	});

@@ -153,7 +153,7 @@ function date_format(str) {
 							<tr class="ui-widget-header">
 								<th>銷貨單號</th>
 								<th>配送號</th>
-								<th><p style="min-width:90px;">產品名稱</p></th>
+								<th style="min-width:90px;">產品名稱</th>
 								<th>客戶自訂產品ID</th>
 								<th>銷貨數量</th>
 								<th>銷貨金額</th>

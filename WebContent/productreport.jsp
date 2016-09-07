@@ -50,6 +50,62 @@
 <script>
 	var new_or_edit=0;
 	var scan_exist=0;
+	var information;
+	function draw_product(info){
+		$.ajax({
+			type : "POST",
+			url : "product.do",
+			data : info,
+			success : function(result) {
+				console.log(result);
+					var json_obj = $.parseJSON(result);
+					var len=json_obj.length;
+					//判斷查詢結果
+					var resultRunTime = 0;
+					$.each (json_obj, function (i) {
+						resultRunTime+=1;
+					});
+					if(json_obj[resultRunTime-1].message=="驗證通過"){
+						var result_table = "";
+						$.each(json_obj,function(i, item) {
+							if(i<len-1){
+								var tmp=(json_obj[i].photo.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo+" style='max-width:100px;max-height:100px'>";
+								var tmp1=(json_obj[i].photo1.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo1+" style='max-width:100px;max-height:100px'>";
+								result_table 
+								+= "<tr>"
+								+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
+								+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
+								+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
+								+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
+								+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
+								+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
+								+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
+								+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
+								+ "<td name='"+ json_obj[i].photo+"'>"+tmp+"</td>"
+								+ "<td name='"+ json_obj[i].photo1 +"'>"+tmp1+"</td>"
+								+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
+								+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td></tr>";
+							}
+						});
+					}
+					if(resultRunTime==0){
+						$("#sales-contain").hide();
+						$(".validateTips").text("查無此結果");
+					}
+					$("#sales").dataTable().fnDestroy();
+					if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
+						$("#sales-contain").show();
+						$("#sales tbody").html(result_table);
+						draw_table("sales","產品報表");
+						//$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
+						$("#sales").find("td").css("text-align","center");
+						$("#sales").find("th").css("text-align","center");
+						$(".validateTips").text("");
+					}
+				}
+			});
+		
+	}
 	jQuery(document).ready(function($) {
 	    $(window).scannerDetection();
 	    $(window).bind('scannerDetectionComplete',function(e,data){
@@ -61,7 +117,6 @@
 	    			$("#edit_barcode").val(data.string);
 	    		}
 	    		if(new_or_edit==0){
-	    			new_or_edit=3;
 	    			$.ajax({url : "product.do", type : "POST", cache : false,
 			            data : {
 			            	action : "find_barcode",
@@ -70,57 +125,16 @@
 			            success: function(result) {
 			            	var json_obj2 = $.parseJSON(result);
 			            	if(json_obj2.length>0){
-				            	$.ajax({
-									type : "POST",
-									url : "product.do",
-									data : {
+			            		information={
 										action : "search_name",
 										product_name : json_obj2[0].product_name,
-									},
-									success : function(result) {
-											var json_obj = $.parseJSON(result);
-											var len=json_obj.length;
-											//判斷查詢結果
-											var resultRunTime = 0;
-											$.each (json_obj, function (i) {
-												resultRunTime+=1;
-											});
-											if(json_obj[resultRunTime-1].message=="驗證通過"){
-												var result_table = "";
-												$.each(json_obj,function(i, item) {
-													if(i<len-1){
-														result_table 
-														+= "<tr>"
-														+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-														+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-														+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-														+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-														+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-														+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-														+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-														+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-														+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-														+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td></tr>";
-													}
-												});
-											}							
-											if(resultRunTime==0){
-												$("#sales-contain").hide();
-												$(".validateTips").text("查無此結果");
-											}
-											$("#sales").dataTable().fnDestroy();
-											if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-												$("#sales-contain").show();
-												$("#sales tbody").html(result_table);
-												draw_table("sales","商品報表");
-												//$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-												$("#sales").find("td").css("text-align","center");
-												$("#sales").find("th").css("text-align","center");
-												$(".validateTips").text("");
-											}
-										}
-									});
-			            		}
+									};
+			            		
+			            		draw_product(information);
+			            	}else{
+			            		$("#sales-contain").hide();
+								$(".validateTips").text("查無此結果");
+			            	}
 			            }
 		    		});
 	    		}
@@ -131,7 +145,6 @@
 	        .bind('scannerDetectionReceive',function(e,data){
 	            console.log(data);
 	        });
-	
 	    $(window).scannerDetection('success');
 	});
 	$(function() {
@@ -159,287 +172,28 @@
 		}, "只能包括英文字母和數字");
 		//=========================================
 		//驗證
-		var validator_insert = $("#insert-dialog-form-post").validate({
-			rules : {
-				c_product_id : {
-					maxlength : 40,
-					required : true
-				},
-				product_name:{
-					maxlength : 80,
-					required : true
-				},
-				supply_name : {
-					maxlength : 40,
-					required : true
-				},
-				type_id: {
-					required : true
-				},
-				unit_id: {
-					required : true
-				},
-				cost: {
-					required : true
-				},
-				price: {
-					required : true
-				},
-				keep_stock: {
-					required : true
-				},
-				description : {
-					stringMaxLength : 200
-				},
-				barcode : {
-					stringMaxLength : 40
-				}
-			}
-		});
-		var validator_update = $("#update-dialog-form-post").validate({
-			rules : {
-				c_product_id : {
-					maxlength : 40,
-					required : true
-				},
-				product_name:{
-					maxlength : 80,
-					required : true
-				},
-				supply_name : {
-					maxlength : 40,
-					required : true
-				},
-				type_id: {
-					required : true
-				},
-				unit_id: {
-					required : true
-				},
-				cost: {
-					required : true
-				},
-				price: {
-					required : true
-				},
-				keep_stock: {
-					required : true
-				},
-				description : {
-					stringMaxLength : 200
-				},
-				barcode : {
-					stringMaxLength : 40
-				}
-			}
-		});		
 		$("#searh-name").click(function(e) {
 			e.preventDefault();
-			$.ajax({
-					type : "POST",
-					url : "product.do",
-					data : {
-						action : "search_name",
-						product_name : $("#searh_name").val(),
-					},
-					success : function(result) {
-							//alert($("#searh_name").val());
-							//alert(result);
-							var json_obj = $.parseJSON(result);
-							var len=json_obj.length;
-							//判斷查詢結果
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							if(json_obj[resultRunTime-1].message=="驗證通過"){
-								var result_table = "";
-								$.each(json_obj,function(i, item) {
-									
-									//herehere
-									if(i<len-1){
-										result_table 
-										+= "<tr>"
-										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 										+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-										+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-										+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-										+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td></tr>";
-									}
-								});
-							}							
-							if(resultRunTime==0){
-								$("#sales-contain").hide();
-								$(".validateTips").text("查無此結果");
-							}
-							$("#sales").dataTable().fnDestroy();
-							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-								$("#sales-contain").show();
-								$("#sales tbody").html(result_table);
-								draw_table("sales","商品報表");
-								//$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-								$("#sales").find("td").css("text-align","center");
-								$("#sales").find("th").css("text-align","center");
-								$(".validateTips").text("");
-							}
-						}
-					});
+			information={
+					action : "search_name",
+					product_name : $("#searh_name").val(),
+				};
+			draw_product(information);
 		});
 		
 		//自訂產品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
-			$.ajax({
-					type : "POST",
-					url : "product.do",
-					data : {
-						action : "search",
-						supply_name : $("input[name='searh_product_name'").val(),
-					},
-					success : function(result) {
-							var json_obj = $.parseJSON(result);
-							var len=json_obj.length;
-							//判斷查詢結果
-							var resultRunTime = 0;
-							$.each (json_obj, function (i) {
-								resultRunTime+=1;
-							});
-							if(json_obj[resultRunTime-1].message=="驗證通過"){
-								var result_table = "";
-								$.each(json_obj,function(i, item) {
-									
-									//herehere
-									if(i<len-1){
-										result_table 
-										+= "<tr>"
-										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-// 										+ "<td name='"+ json_obj[i].supply_id  +"'>"+ json_obj[i].supply_id + "</td>"
-										+ "<td name='"+ json_obj[i].supply_name +"'>"+ json_obj[i].supply_name + "</td>"
-										+ "<td name='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
-										+ "<td name='"+ json_obj[i].unit_id +"'>"+ json_obj[i].unit_id+ "</td>"
-										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
-										+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo+"'>"+ json_obj[i].photo+ "</td>"
-// 										+ "<td name='"+ json_obj[i].photo1 +"'>"+ json_obj[i].photo1+ "</td>"
-										+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
-										+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td></tr>";
-									}
-								});
-							}							
-							if(resultRunTime==0){
-								$("#sales-contain").hide();
-								$(".validateTips").text("查無此結果");
-							}
-							$("#sales").dataTable().fnDestroy();
-							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-								$("#sales-contain").show();
-								$("#sales tbody").html(result_table);
-								draw_table("sales","商品報表");
-								//$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
-								$("#sales").find("td").css("text-align","center");
-								$("#sales").find("th").css("text-align","center");
-								$(".validateTips").text("");
-							}
-						}
-					});
+			information={
+					action : "search",
+					supply_name : $("input[name='searh_product_name'").val(),
+				};
+			draw_product(information);
 		});
 		//X_X
-		$("#insert_supply_name").autocomplete({
-            minLength: 1,
-            source: function (request, response) {
-                $.ajax({
-                    url : "purchase.do",
-                    type : "POST",
-                    cache : false,
-                    delay : 1500,
-                    data : {
-                    	action : "search_supply_name",
-                        term : request.term
-                    },
-                    success: function(data) {
-                    	//alert(data);
-                    	var json_obj = $.parseJSON(data);
-                    	response($.map(json_obj, function (item) {
-                    		supply_id = item.supply_id;
-                            return {
-                              label: item.supply_name,
-                              value: item.supply_name,
-                              supply_id : item.supply_id
-                            }
-                          }))
-                    }
-                });
-            },
-            change: function(event, ui) {
-    	        var source = $(this).val();
-    	        var temp = $(".ui-autocomplete li").map(function () { return $(this).text()}).get();
-    	        var found = $.inArray(source, temp);
-    	        if(found < 0) {
-    	            $(this).val('');
-    	            $(this).attr("placeholder","輸入正確的供應商名稱!");
-    	        }
-    	    }     
-         });
-  		$("#insert_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
-	    $('#insert_supply_name').bind('autocompleteselect', function (e, ui) {
-	    	//alert(ui.item.supply_id);
-	    	supply_id = ui.item.supply_id;
-	    });
-	    $("#update_supply_name").autocomplete({
-            minLength: 1,
-            source: function (request, response) {
-                $.ajax({
-                    url : "purchase.do",
-                    type : "POST",
-                    cache : false,
-                    delay : 1500,
-                    data : {
-                    	action : "search_supply_name",
-                        term : request.term
-                    },
-                    success: function(data) {
-                    	//alert(data);
-                    	var json_obj = $.parseJSON(data);
-                    	response($.map(json_obj, function (item) {
-                    		supply_id = item.supply_id;
-                            return {
-                              label: item.supply_name,
-                              value: item.supply_name,
-                              supply_id : item.supply_id
-                            }
-                          }))
-                    }
-                });
-            },
-            change: function(event, ui) {
-    	        var source = $(this).val();
-    	        var temp = $(".ui-autocomplete li").map(function () { return $(this).text()}).get();
-    	        var found = $.inArray(source, temp);
-    	        if(found < 0) {
-    	            $(this).val('');
-    	            $(this).attr("placeholder","輸入正確的供應商名稱!");
-    	        }
-    	    }     
-         });
-  		$("#update_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
-	    $('#update_supply_name').bind('autocompleteselect', function (e, ui) {
-	    	//alert(ui.item.supply_id);
-	    	supply_id = ui.item.supply_id;
-	    });
-	  //X_X
-		//處理初始的查詢autocomplete
+		//處理初始的查詢autocomplete//其實是supply@@@@
 	       $("#searh_product_name").autocomplete({
-	            minLength: 1,
+	            minLength: 0,
 	            source: function (request, response) {
 	                $.ajax({
 	                    url : "product.do",
@@ -478,18 +232,94 @@
 	    	        }
 	    	    }     
 	         });
-		
-	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入廠商名稱以供查詢"); } );
+	       $("#searh_name").autocomplete({
+	            minLength: 1,
+	            source: function (request, response) {
+	                $.ajax({
+	                    url : "purchase.do",
+	                    type : "POST",
+	                    cache : false,
+	                    delay : 1500,
+	                    data : {
+	                    	action : "search_product_data",
+	                        term : request.term,
+	                        identity : "NAME"
+	                    },
+	                    success: function(data) {
+	                    	var json_obj = $.parseJSON(data);
+	                    	response($.map(json_obj, function (item) {
+	                            return {
+		                        	 label: item.product_name,
+		                             value: item.product_name,
+		                             product_id: item.product_id,
+		                             product_name: item.product_name,
+		                             c_product_id: item.c_product_id,
+		                             price: item.price,
+		                             cost: item.cost
+	                            }
+	                          }))
+	                    }
+	                });
+	            },
+	            change: function(event, ui) {
+	    	        var source = $(this).val();
+	    	            var temp = $(".ui-autocomplete li").map(function () { return $(this).text()}).get();
+	    	        var found = $.inArray(source, temp);
+	    	        if(found < 0) {
+	    	            $(this).val('');
+	    	            $(this).attr("placeholder","輸入正確的產品名稱!");
+	    	        }
+	    	    }     
+	         });
+	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
+			//處理新增修改的下拉選單unit_id
+               $.ajax({
+                   url : "product.do",
+                   type : "POST",
+                   cache : false,
+                   delay : 1500,
+                   data : {
+                   	action : "search_product_data",
+                   	identity : "ID",
+                       term : ''
+                   },
+                   success: function(data) {
+                   	var json_obj = $.parseJSON(data);
+					$.map(json_obj, function (item) {
+                   		if (item.unit_name != '') {
+                   			$("#select_insert_unit_id").append("<option value='" + item.unit_name + "'>" + item.unit_name + "</option>");
+                   			$("#select_update_unit_id").append("<option value='" + item.unit_name + "'>" + item.unit_name + "</option>");
+                   		}
+                         })
+                   },
+                   error: function(XMLHttpRequest, textStatus, errorThrown) {
+                       alert(textStatus);
+                   }
+               });
+	    $("#warning").dialog({
+			title: "警告",
+			draggable : false,//防止拖曳
+			resizable : false,//防止縮放
+			autoOpen : false,
+			height : "auto",
+			modal : true,
+			show : {effect : "bounce",duration : 1000},
+			hide : {effect : "fade",duration : 300},
+			buttons : {
+				"確認" : function() {$(this).dialog("close");}
+			}
+		});
+	    $("#warning").show();
+	    
 	    
 	});	
 </script>
-
 		<div class="datalistWrap">
 		<div class="input-field-wrap">
 			<div class="form-wrap">
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">廠商名稱查詢</span>
+						<span class="block-label">供應商名稱查詢</span>
 						<input type="text" id="searh_product_name" name="searh_product_name"></input>
 					</label>
 					<button class="btn btn-darkblue" id="searh-sale">查詢</button>
@@ -506,19 +336,21 @@
 		</div>
 			
 			<!-- 第一列 -->
-			<div class="row search-result-wrap">
-				<div id="sales-contain" class="ui-widget" style="display:none">
+			<div class="row search-result-wrap" align="center">
+				<div id="sales-contain" class="ui-widget" style="display:none;">
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>自訂產品ID</th>
-								<th>產品名稱</th>
-								<th>廠商名稱</th>
+								<th style="min-width:80px;">產品名稱</th>
+								<th>供應商名稱</th>
 								<th>產品類別</th>
 								<th>產品單位</th>
-								<th>成本</th>
-								<th>售價</th>
+								<th style="min-width:70px;">成本</th>
+								<th style="min-width:70px;">售價</th>
 								<th>安全庫存</th>
+								<th style="max-width:100px;">產品圖片1</th>
+								<th style="max-width:100px;">產品圖片2</th>
 								<th>產品說明</th>
 								<th>條碼</th>
 							</tr>
@@ -529,10 +361,9 @@
 				</div>
 				<span class="validateTips"> </span>
 			</div>
-			<!-- 4th -->
 		</div>
 	</div>
-	</div>
 <div id="warning" style="display:none;"></div>
+</div>
 </body>
 </html>

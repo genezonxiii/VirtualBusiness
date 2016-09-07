@@ -157,7 +157,9 @@ button.ui-button-icons-only {
 	line-height: normal;
 }
 .ui-button-text-only .ui-button-text {
-	padding: .4em 1em;
+/* 	padding: .4em 1em; Ben偷改的*/
+/* 	color: white; */
+	padding:0px;
 }
 .ui-button-icon-only .ui-button-text,
 .ui-button-icons-only .ui-button-text {
@@ -213,6 +215,9 @@ input.ui-button {
 .ui-buttonset .ui-button {
 	margin-left: 0;
 	margin-right: -.3em;
+	/* 	Ben偷加的 */
+/* 	background: #194A6B; */
+	background-color: #e9e9e9
 }
 
 /* workarounds */

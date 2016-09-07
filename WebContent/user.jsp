@@ -517,10 +517,10 @@ $(function() {
 					<table id="products" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th><p style="width:80px;">使用者名稱</p></th>
-								<th><p style="width:80px;">使用者角色</p></th>
-								<th><p style="width:80px;">Email</p></th>
-								<th><p style="width:80px;">功能</p></th>
+								<th style="min-width:80px;">使用者名稱</th>
+								<th style="min-width:80px;">使用者角色</th>
+								<th style="min-width:80px;">Email</th>
+								<th style="min-width:80px;">功能</th>
 							</tr>
 						</thead>
 						<tbody>

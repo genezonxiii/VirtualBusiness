@@ -428,11 +428,12 @@ h2.page-title {
     overflow: auto;
     width: calc(100% - 120px);
 /*     Ben偷加的背景圖屬性 */
-    background-image: url('../images/flower.png');
-    background-attachment: fixed;
-    background-position: center; 
-    background-repeat: no-repeat;
-    background-size: cover;
+	background-color: #EEF3F9;
+/*     background-image: url('../images/flower.png'); */
+/*     background-attachment: fixed; */
+/*     background-position: center;  */
+/*     background-repeat: no-repeat; */
+/*     background-size: cover; */
 }
 .input-field-wrap {
     background: #62E0E9;
@@ -819,6 +820,24 @@ input[type=radio]:checked + label:before {
     border: 1px solid #ccc !important;
 }
 /* Table */
+table.form-table tr td:nth-child(2n+1) {
+    text-align: right;
+    padding-left: 4px;
+}
+table.form-table tr td:nth-child(2n) {
+    text-align: left;
+}
+table.form-table td{
+/*     padding:0 2px; */
+}
+
+table.dataTable odd{
+	  background: #fff;
+}
+table.dataTable even{
+	  background: #eee;
+}
+
 table.normal-table {
     border: 0;
    
@@ -838,7 +857,8 @@ table.result-table {
     /*字體Ben偷加的*/
     border: 1px solid #ccc;
     font-size: 13px;
-    width: 100%;
+/*     width: 100%; Ben偷改的*/
+    width: 99.9%;
 }
 table.result-table tr {
     background: #eee;
@@ -856,7 +876,9 @@ table.result-table th, table.result-table td {
     padding: 10px;
 }
 table.result-table td {
-    border: 1px solid #ddd;
+/*     border: 1px solid #ddd; Ben偷改失敗的*/
+/*     border-left: 2px solid #ddd; */
+    border-right: 2px solid #ddd;
 }
 /*Button*/
 .btn-row {

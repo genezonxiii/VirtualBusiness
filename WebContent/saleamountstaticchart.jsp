@@ -20,6 +20,15 @@
 <link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+
+<link type="text/css" rel="stylesheet" href="css/visualize.jQuery.css"/>
+<style>
+.visualize-pie .visualize-info { top: 10px; border: 0; right: auto; left: 10px; padding: 0; background: none; }
+.visualize-pie ul.visualize-title { font-weight: bold; border: 0; }
+.visualize-pie ul.visualize-key li { float: none; }
+.visualize-pie { margin:5px 10px; }
+.visualize { border: 0px;float: left; }
+</style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -35,8 +44,47 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/d3.v3.min.js"></script>
 
-<script>
+<script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
+<script>
+function draw_piechart(data,list){
+// 	for(i=0;i<data.length;i++){
+// 		$.each(data[i],function(k, item) {
+// 			alert(i+"&&"+k+"&&"+item);
+// 		});
+// 	}
+	var i,j;
+	$('.visualize').remove();
+	for(m=0;m<data.length;m++){
+		var charttable="<table id='pie' style='display:none'><caption>銷售金額比例統計圖 </caption><thead><tr><td></td>";
+		$.each(list,function(i, item) {
+			charttable+="<th>"+item+"</th>";
+		});
+		charttable += "</tr></thead><tbody>";
+		//i=0;
+	// 	for(i=0;i<data.length;i++){
+			charttable+="<tr><th>"+data[m]["month"]+"</th>";
+			for(j=0;j<list.length;j++){
+				charttable+="<td>"+(data[m][list[j]]==null?"":data[m][list[j]])+"</td>";
+			}
+			charttable+="</tr>";
+	// 	}
+		charttable+="</tbody></table>";
+		
+		$('#chart-'+m).html(charttable);
+		$('#chart-'+m).visualize({
+			'type':'pie',
+			'pieMargin':'50','pieLabelPos':'outside',
+			'width':'380','height':'300',
+			'appendTitle':'true','title':data[m]["month"]+'月銷售金額比例統計圖',
+			'appendKey':'true',
+			'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
+			'textColors':'','parseDirection':'y'
+		});
+		$(".visualize").css("opacity","0");
+	}
+
+}
 function draw_chart(m_h,m_w,data){
 	var i,j;
 	var vender_exist=[],tmp_vender="ya!~";
@@ -60,7 +108,7 @@ function draw_chart(m_h,m_w,data){
             .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
             .attr("height", h)
         .append("svg:g")                //make a group to hold our pie chart
-            .attr("transform", "translate(" + (r*4/3) + "," + (r*4/3) + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+            .attr("transform", "translate(" + (r * 4 / 3) + "," + (r * 4 / 3) + ")")    //move the center of the pie chart from 0, 0 to radius, radius
 
     var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
         .outerRadius(r);
@@ -105,25 +153,54 @@ function draw_chart(m_h,m_w,data){
 				url : "saleamountstaticchart.do",
 				data : {action :"searh", time1 : $('#datepicker1').val(), time2 : $('#datepicker2').val()},
 				success : function(result) {
+					console.log(result);
 					//alert($('#datepicker2').val());
 					var json_obj = $.parseJSON(result);
-					if(json_obj.entrance.length==0){$("#chart").html("<h2 style='color:red;'>查無資料</h2>");return;}
-					var result_table = "";
-					var data=[];
-					var i=0,j=0,last_month=0;
-					$('#chart').html("");
-					if(json_obj.entrance.length>0){last_month=json_obj.entrance[0];}
-					for(i=0,j=0;i<=json_obj.entrance.length;i++,j++){
-						if(json_obj.entrance[i]!=last_month){
-							draw_chart(450,550,data);
-							last_month=json_obj.entrance[i];
-							data=[];
-							j=0;
-						}
-						data[j]={"label":json_obj.entrance[i]+"月:"+json_obj.answer[i]+"%", "value":json_obj.answer[i],"vender":json_obj.vender[i]};
+					var chart_data=[],chart_obj={},i=0,j=0,list=[];
+					
+					if(json_obj.entrance.length==0){
+						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						return;
 					}
-					$("#chart").animate({"opacity":"0.5"});
-					$("#chart").animate({"opacity":"1"});
+					var tmp_month=json_obj.entrance[0];
+					$.each(json_obj.vender,function(i, item) {
+						var k=0;
+						while(list[k]!=item && list[k]!=null){k++;}
+						if(k==list.length)list[k]=item;
+					});
+					
+					for(i=0;i<json_obj.entrance.length;i++){
+						if(json_obj.entrance[i]!=tmp_month){ //in&
+							tmp_month=json_obj.entrance[i];
+							chart_data[j]=chart_obj;
+							chart_obj={};
+							j++;
+						}
+						chart_obj["month"]=json_obj.entrance[i];
+						chart_obj[json_obj.vender[i]]=json_obj.answer[i];
+					}
+					chart_data[j]=chart_obj;
+					j++;
+					
+					draw_piechart(chart_data,list);
+					$(".visualize").animate({"opacity":"1"});
+					
+// 					var result_table = "";
+// 					var data=[];
+// 					var i=0,j=0,last_month=0;
+// 					$('#chart').html("");
+// 					if(json_obj.entrance.length>0){last_month=json_obj.entrance[0];}
+// 					for(i=0,j=0;i<=json_obj.entrance.length;i++,j++){
+// 						if(json_obj.entrance[i]!=last_month){
+// 							draw_chart(450,550,data);
+// 							last_month=json_obj.entrance[i];
+// 							data=[];
+// 							j=0;
+// 						}
+// 						data[j]={"label":json_obj.entrance[i]+"月:"+json_obj.answer[i]+"%", "value":json_obj.answer[i],"vender":json_obj.vender[i]};
+// 					}
+// 					$("#chart").animate({"opacity":"0.5"});
+// 					$("#chart").animate({"opacity":"1"});
 				}
 			});
 		});
@@ -151,7 +228,19 @@ function draw_chart(m_h,m_w,data){
 		</div>
 	</div>
 <div class="validateTips" align="center"> </div>
-<div id="chart" align="center" style="opacity:0"></div>
+<div id="chart-0" align="center" style="opacity:0"></div>
+<div id="chart-1" align="center" style="opacity:0"></div>
+<div id="chart-2" align="center" style="opacity:0"></div>
+<div id="chart-3" align="center" style="opacity:0"></div>
+<div id="chart-4" align="center" style="opacity:0"></div>
+<div id="chart-5" align="center" style="opacity:0"></div>
+<div id="chart-6" align="center" style="opacity:0"></div>
+<div id="chart-7" align="center" style="opacity:0"></div>
+<div id="chart-8" align="center" style="opacity:0"></div>
+<div id="chart-9" align="center" style="opacity:0"></div>
+<div id="chart-10" align="center" style="opacity:0"></div>
+<div id="chart-11" align="center" style="opacity:0"></div>
+<div id="chart-12" align="center" style="opacity:0"></div>
 </div>
 </div>
 </body>

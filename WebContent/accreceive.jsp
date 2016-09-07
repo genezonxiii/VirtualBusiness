@@ -22,6 +22,7 @@
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -124,9 +125,9 @@
 									if(json_obj[i].memo==null){json_obj[i].memo="";}
 									result_table 
 									+= "<tr ondblclick='detail("+json_obj[i].seq_no+")'>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
+									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
@@ -180,8 +181,8 @@
 							$("#account_amount_date_table tbody").html(result_table);
 							$("#account_amount_date_table").dataTable({
 								  autoWidth: false,
-								  "scrollY": "300px",
-								  "scrollX": false,
+								  scrollX:  true,
+						          scrollY:"300px",
 								  dom: 'Blfrtip',
 						          buttons: [{
 						                text: '批次收帳',
@@ -255,9 +256,9 @@
 									}
 									result_table 
 									+= "<tr>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
+									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
@@ -310,8 +311,8 @@
 							$("#account_receive_date_contain").show();
 							$("#account_receive_date_table tbody").html(result_table);
 							$("#account_receive_date_table").dataTable({
-								  //autoWidth: false,
-								  //scrollX:  true,
+								  autoWidth: false,
+								  scrollX:  true,
 						          scrollY:"300px",
 								  dom: 'Blfrtip',
 						          buttons: [{
@@ -398,9 +399,9 @@
 										}
 										result_table 
 										+= "<tr>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
+										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
@@ -425,8 +426,8 @@
 									$("#account_receive_date_contain").show();
 									$("#account_receive_date_table tbody").html(result_table);
 									$("#account_receive_date_table").dataTable({
-										  //autoWidth: false,
-										  //scrollX:  true,
+										  autoWidth: false,
+										  scrollX:  true,
 								          scrollY:"300px",
 										  dom: 'Blfrtip',
 								          buttons: [{
@@ -522,9 +523,9 @@
 										}
 										result_table 
 										+= "<tr>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ json_obj[i].receive_amount+ "</td>"
+										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
@@ -549,8 +550,8 @@
 									$("#account_amount_date_contain").show();
 									$("#account_amount_date_table tbody").html(result_table);
 									$("#account_amount_date_table").dataTable({
-										  //autoWidth: false,
-										 // scrollX:  true,
+										  autoWidth: false,
+										  scrollX:  true,
 								          scrollY:"300px",
 										  dom: 'Blfrtip',
 								          buttons: [{

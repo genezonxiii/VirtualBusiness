@@ -277,7 +277,7 @@
 										+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td ><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
@@ -393,7 +393,7 @@
 								+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 								+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-								+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+								+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
@@ -483,7 +483,7 @@
 									+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
@@ -590,7 +590,7 @@
 													+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 													+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 													+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-													+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+													+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 													+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 													+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 													+ "	<div class='table-function-list'>"
@@ -742,7 +742,7 @@
 										+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ json_obj[i].amount+ "</td>"
+										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
@@ -948,7 +948,7 @@
 								+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 								+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 								+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-								+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
+								+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
 								+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 								+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
@@ -1055,7 +1055,7 @@
 												+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 												+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 												+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-												+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
+												+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
 												+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 												+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 												+ "	<div class='table-function-list'>"
@@ -1152,7 +1152,7 @@
 									+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 									+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 									+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-									+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
+									+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
 									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 									+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 									+ "	<div class='table-function-list'>"
@@ -1293,7 +1293,7 @@
 										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-										+ "<td name='"+ json_obj[i].cost +"'>"+ json_obj[i].cost+ "</td>"
+										+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
 										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
@@ -1808,7 +1808,7 @@
 								<th>自訂產品ID</th>
 								<th>產品名稱</th>
 								<th>進貨數量</th>
-								<th>進貨價格</th>
+								<th>進貨單價</th>
 								<th>備註說明 </th>
 								<th>功能</th>
 							</tr>

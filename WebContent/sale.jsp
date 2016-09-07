@@ -301,7 +301,7 @@
 										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+										+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -337,8 +337,8 @@
 								$("#sales").addClass("result-table");
 								$("#sales").find("td").css("text-align", "center");
 								//$("#sales").find("td").css("max-width", "80px");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								if($("#search_sale_err_mes").length){
 	                				$("#search_sale_err_mes").remove();
 	                			}
@@ -416,7 +416,7 @@
 										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+										+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -474,8 +474,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								if($("#trans_list_date_err_mes").length){
 	                				$("#trans_list_date_err_mes").remove();
 	                			}
@@ -554,7 +554,7 @@
 										+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 										+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 										+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-										+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+										+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 										+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 										+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -611,8 +611,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								if($("#trans_dis_date_err_mes").length){
 	                				$("#trans_dis_date_err_mes").remove();
 	                			}
@@ -719,7 +719,7 @@
 																+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 																+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 																+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-																+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+																+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 																+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 																+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 																+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -743,8 +743,8 @@
 																  scrollX:  true,
 														          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 															$("#sales").find("td").css("text-align", "center");
-															$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
-															$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+															//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+															//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 														}else{
 															$("#sales_contain_row").hide();
 														}
@@ -844,7 +844,7 @@
 									+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 									+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 									+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-									+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+									+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 									+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 									+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -868,8 +868,8 @@
 									  scrollX:  true,
 							          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 								$("#sales").find("td").css("text-align", "center");
-								$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
-								$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+								//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 							}else{
 								$("#sales_contain_row").hide();
 							}
@@ -974,7 +974,7 @@
 											+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 											+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 											+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
-											+ "<td name='"+ json_obj[i].price +"'>"+ json_obj[i].price+ "</td>"
+											+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 											+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 											+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
@@ -999,8 +999,8 @@
 										  scrollX:  true,
 								          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt"}});
 									$("#sales").find("td").css("text-align", "center");
-									$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
-									$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+									//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
+									//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 								}else{
 									$("#sales_contain_row").hide();
 								}
@@ -1536,7 +1536,7 @@
 							<tr>
 								<td><p>備註說明</p></td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
-								<p style="display:none">配送日</p></td>
+								<td><p style="display:none">配送日</p></td>
 								<td><input type="text" name="dis_date"  placeholder="輸入配送日" class="input-date" value="2000-01-01"style="display:none"></td>
 							</tr>
 						</table>
@@ -1671,15 +1671,15 @@
 			
 			<div class="row search-result-wrap" align="center" id ="sales_contain_row"  style="display:none;">
 				<div id="sales-contain" class="ui-widget">
-					<table id="sales" class="result-table">
+					<table id="sales" class="result-table" style="width:99.9%;">
 						<thead>
 							<tr class="ui-widget-header">
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th><p style="width:120px">產品名稱</p></th>
+								<th style="min-width:120px">產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
-								<th>銷貨金額</th>
+								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>
 								<th>發票日期</th>
 								<th>轉單日</th>
