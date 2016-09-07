@@ -164,7 +164,7 @@ $.fn.visualize = function(options, container){
 					while( yLabels[yLabels.length-1] < topValue - loopInterval){
 						yLabels.push(yLabels[yLabels.length-1] + loopInterval); 
 					}
-					yLabels.push(topValue); 
+					yLabels.push(topValue);
 					return yLabels;
 				}			
 			};
@@ -259,18 +259,24 @@ $.fn.visualize = function(options, container){
 					.height(canvas.height())
 					.insertBefore(canvas);
 					
-				$.each(yLabels, function(i){  
-					var thisLi = $('<li><span>'+this+'</span></li>')
+				$.each(yLabels, function(i){
+					//Ben偷改的四捨五入
+					var thisLi = $('<li><span>'+((topValue>1000&&this!=topValue)?(Math.round(this/1000)*1000):this)+'</span></li>')
 						.prepend('<span class="line"  />')
 						.css('bottom',liBottom*i)
 						.prependTo(ylabelsUL);
 					var label = thisLi.find('span:not(.line)');
 					var topOffset = label.height()/-2;
+					
 					if(i == 0){ topOffset = -label.height(); }
 					else if(i== yLabels.length-1){ topOffset = 0; }
 					label
 						.css('margin-top', topOffset)
 						.addClass('label');
+					
+					//TODO TODO TODO TODO TODO
+					//alert(this);
+					
 				});
 
 				//start from the bottom left

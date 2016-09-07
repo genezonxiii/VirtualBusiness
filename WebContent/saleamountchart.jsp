@@ -73,7 +73,8 @@ function draw_linechart(data,list){
 		'appendTitle':'true','title':'銷售金額統計圖',
 		'appendKey':'true',
 		'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
-		'textColors':'','parseDirection':'x'
+		'textColors':'','parseDirection':'x',
+		'yLabelInterval': '40'
 	});
 	$(".visualize").css("opacity","0");
 	//alert(charttable);

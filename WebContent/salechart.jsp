@@ -72,7 +72,8 @@ function draw_barchart(data,list){
 		'appendTitle':'true','title':'出貨量統計圖',
 		'appendKey':'true',
 		'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
-		'textColors':'','parseDirection':'y'
+		'textColors':'','parseDirection':'y',
+		'yLabelInterval': '40'
 	});
 	$(".visualize").css("opacity","0");
 	//alert(charttable);

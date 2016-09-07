@@ -153,7 +153,7 @@ function draw_chart(m_h,m_w,data){
 				url : "saleamountstaticchart.do",
 				data : {action :"searh", time1 : $('#datepicker1').val(), time2 : $('#datepicker2').val()},
 				success : function(result) {
-					console.log(result);
+					//console.log(result);
 					//alert($('#datepicker2').val());
 					var json_obj = $.parseJSON(result);
 					var chart_data=[],chart_obj={},i=0,j=0,list=[];
