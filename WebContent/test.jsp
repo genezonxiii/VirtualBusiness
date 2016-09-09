@@ -45,9 +45,11 @@ $(function(){
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
 		<h1>　</h1>
 <!-- 		<button onclick="send_mail();">##@_@##</button> -->
-		<div class="login-panel-wrap">
-		<div class="registry-panel" style="width:100%" >
-			<button id="btn1">撒尿牛丸!!!</button>
+<!-- 		<div class="login-panel-wrap"> -->
+<!-- 		<div class="registry-panel" style="width:100%" > -->
+<!-- 			<button id="btn1"  > -->
+			<font onmouseover="this.size=(parseInt(this.size)+1)%7" size=1>撒尿牛丸!!!</font>
+<!-- 			</button> -->
 			<table id="example" class="display nowrap" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -692,8 +694,8 @@ $(function(){
             </tr>
         </tbody>
     </table>
-		</div><!-- /.login-panel -->
-		</div><!-- /.login-panel-wrap -->
+<!-- 		</div>/.login-panel -->
+<!-- 		</div>/.login-panel-wrap -->
 <!-- 		<div class="login-footer"> -->
 <!-- 			北祥股份有限公司 <span>服務電話：+886-2-2658-1910 | 傳真：+886-2-2658-1920</span> -->
 <!-- 		</div>/.login-footer -->

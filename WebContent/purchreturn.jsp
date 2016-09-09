@@ -415,7 +415,12 @@ $(function(){
 	        }
 	    }     
      });
-    $("#search_purchase_by_supply_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
+    $("#search_purchase_by_supply_name").bind('focus', function(){ 
+    	$(this).attr("placeholder","輸入供應商名稱");
+    	var eve=jQuery.Event("keydown");
+    	eve.which=40;
+      	$(this).trigger(eve);
+    } );
 	//供應商ID查詢相關設定
 	$("#search_supply_name").click(function(e) {
 		e.preventDefault();

@@ -15,12 +15,17 @@
 <head>
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
+<style>
+.on_it {
+	background:#d8d8d8;
+}
+</style>
     <title>訂單拋轉作業</title>
     <meta content="text/html; charset=UTF8">
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" >
+	<div class="content-wrap" style="overflow-y:auto;">
 		<div class='bdyplane' style="opacity:0">
 <script>
 
@@ -35,9 +40,12 @@ function setV(){
 	return true;
 };
 $(function(){
+	
 	$(".bdyplane").animate({"opacity":"1"});
-	$("td").css("border","0px solid #aaa");
-	$("td img").css("width","30px");
+	$(".upload-table td").css("border","0px solid #aaa");
+	$(".upload-table td").hover(function(){$(this).addClass("on_it");},function(){$(this).removeClass("on_it");});
+	$(".upload-table label").css("width","100%");
+	$(".upload-table td img").css("width","30px");
 });
 </script>
 <%
@@ -51,16 +59,16 @@ if(str!=null){
 }
 %>
 <div class="search-result-wrap">
-	<table class="result-table" >
+	<table class="result-table upload-table" >
 		<thead>
 			<tr>
-				<th colspan=5 style="font-size:30px;">平台選擇</th>
+				<th colspan=5 style="font-size:30px;text-align:left;padding-left:15px;">平台選擇</th>
 			</tr>
 		</thead>
 		<tr>
 			<td style="min-width:200px;">
 				<input id="radio-1" type="radio" name="vender" value="asap" checked>
-					<label for="radio-1"><span class="form-label" >
+					<label for="radio-1" style="width:100%"><span class="form-label" >
 					<img src="./images/store/ASAP.jpg"/>&nbsp;ASAP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</span></label>
 			</td>

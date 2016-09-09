@@ -2,6 +2,8 @@ package tw.com.aber;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -10,7 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -83,8 +87,22 @@ public class registry extends HttpServlet {
 			String name = request.getParameter("name");
 			String email = request.getParameter("email");
 			String pwd = request.getParameter("pwd");
-			Register reg = new Register();
 			
+			try{
+				String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+				String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+				String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm registry-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n  Get a register request from:\r\n  (uninumber, CORP, user, email, password)\r\n  ("+uninumber+", "+corporation+", "+name+", "+email+", "+pwd+")\r\n";
+				FileWriter fw;
+				try{
+					fw = new FileWriter(record_log,true);
+				}catch(FileNotFoundException e){
+					fw = new FileWriter(record_log,false);
+				}
+				fw.write(my_msg);
+				fw.close();
+			}catch(Exception e){System.out.println("Error: "+e.toString());}
+			
+			Register reg = new Register();
 			response.getWriter().write(reg.registry(uninumber,corporation,name,email,pwd));
 		}
 	}

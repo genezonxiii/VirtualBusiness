@@ -18,6 +18,8 @@
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
 <link rel="stylesheet" href="css/styles.css">
+<style type="text/css">
+</style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -75,6 +77,16 @@
 	    $(window).scannerDetection('success');
 	});
 	$(function() {
+		$(".input-field-wrap").append("<div id='upup' class='div_right_bottom'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div id='downdown' class='div_right_top' style='display:none;'><img src='./images/downdown.png'></div>");
+		$("#upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$("#downdown").slideToggle();
+		});
+		$("#downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$("#downdown").slideToggle();
+		});
 		$(".bdyplane").animate({"opacity":"1"});
 		var uuid = "";
 		var c_product_id="";
@@ -1402,6 +1414,7 @@
 		$("#insert_price").change(function(){
 			$("#insert_product_price").val($("#insert_quantity").val()*$("#insert_price").val());
 		});
+		
 		$("#warning").dialog({
 			title: "警告",
 			draggable : false,//防止拖曳
@@ -1586,7 +1599,6 @@
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
-			
 			
 			
 			

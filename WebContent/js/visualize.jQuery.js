@@ -90,6 +90,7 @@ $.fn.visualize = function(options, container){
 						$(allData).each(function(){
 							if(parseFloat(this,10)>topValue) topValue = parseFloat(this);
 						});
+						topValue=Math.round(topValue * 6 / 5);
 						return topValue;
 				},
 				bottomValue: function(){
@@ -261,7 +262,7 @@ $.fn.visualize = function(options, container){
 					
 				$.each(yLabels, function(i){
 					//Ben偷改的四捨五入
-					var thisLi = $('<li><span>'+((topValue>1000&&this!=topValue)?(Math.round(this/1000)*1000):this)+'</span></li>')
+					var thisLi = $('<li><span>'+((topValue>10000&&this!=topValue)?(Math.round(this/1000)*1000):this)+'</span></li>')
 						.prepend('<span class="line"  />')
 						.css('bottom',liBottom*i)
 						.prependTo(ylabelsUL);
@@ -275,7 +276,7 @@ $.fn.visualize = function(options, container){
 						.addClass('label');
 					
 					//TODO TODO TODO TODO TODO
-					//alert(this);
+					//alert(topOffset);
 					
 				});
 

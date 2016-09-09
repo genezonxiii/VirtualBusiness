@@ -69,8 +69,8 @@
 						var result_table = "";
 						$.each(json_obj,function(i, item) {
 							if(i<len-1){
-								var tmp=(json_obj[i].photo.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo+" style='max-width:100px;max-height:100px'>";
-								var tmp1=(json_obj[i].photo1.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo1+" style='max-width:100px;max-height:100px'>";
+// 								var tmp=(json_obj[i].photo.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo+" style='max-width:100px;max-height:100px'>";
+// 								var tmp1=(json_obj[i].photo1.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo1+" style='max-width:100px;max-height:100px'>";
 								result_table 
 								+= "<tr>"
 								+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
@@ -81,8 +81,8 @@
 								+ "<td name='"+ json_obj[i].cost +"'>"+ money(json_obj[i].cost)+ "</td>"
 								+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 								+ "<td name='"+ json_obj[i].keep_stock +"'>"+ json_obj[i].keep_stock+ "</td>"
-								+ "<td name='"+ json_obj[i].photo+"'>"+tmp+"</td>"
-								+ "<td name='"+ json_obj[i].photo1 +"'>"+tmp1+"</td>"
+// 								+ "<td name='"+ json_obj[i].photo+"'>"+tmp+"</td>"
+// 								+ "<td name='"+ json_obj[i].photo1 +"'>"+tmp1+"</td>"
 								+ "<td name='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
 								+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td></tr>";
 							}
@@ -271,7 +271,12 @@
 	    	        }
 	    	    }     
 	         });
-	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
+	       $("#searh_product_name").bind('focus', function(){  
+	       	$(this).attr("placeholder","輸入供應商名稱");
+	    	var eve=jQuery.Event("keydown");
+	    	eve.which=40;
+	      	$(this).trigger(eve);
+	     } );
 			//處理新增修改的下拉選單unit_id
                $.ajax({
                    url : "product.do",
@@ -349,8 +354,8 @@
 								<th style="min-width:70px;">成本</th>
 								<th style="min-width:70px;">售價</th>
 								<th>安全庫存</th>
-								<th style="max-width:100px;">產品圖片1</th>
-								<th style="max-width:100px;">產品圖片2</th>
+<!-- 								<th style="max-width:100px;">產品圖片1</th> -->
+<!-- 								<th style="max-width:100px;">產品圖片2</th> -->
 								<th>產品說明</th>
 								<th>條碼</th>
 							</tr>

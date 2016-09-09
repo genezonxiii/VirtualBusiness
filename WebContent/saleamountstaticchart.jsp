@@ -58,14 +58,18 @@ function draw_piechart(data,list){
 	for(m=0;m<data.length;m++){
 		var charttable="<table id='pie' style='display:none'><caption>銷售金額比例統計圖 </caption><thead><tr><td></td>";
 		$.each(list,function(i, item) {
-			charttable+="<th>"+item+"</th>";
+			if(data[m][list[i]]!=null){
+				charttable+="<th>"+item+"</th>";
+			}
 		});
 		charttable += "</tr></thead><tbody>";
 		//i=0;
 	// 	for(i=0;i<data.length;i++){
 			charttable+="<tr><th>"+data[m]["month"]+"</th>";
 			for(j=0;j<list.length;j++){
-				charttable+="<td>"+(data[m][list[j]]==null?"":data[m][list[j]])+"</td>";
+				if(data[m][list[j]]!=null){//裡面是多餘的判斷
+					charttable+="<td>"+(data[m][list[j]]==null?"":data[m][list[j]])+"</td>";
+				}
 			}
 			charttable+="</tr>";
 	// 	}
@@ -74,7 +78,7 @@ function draw_piechart(data,list){
 		$('#chart-'+m).html(charttable);
 		$('#chart-'+m).visualize({
 			'type':'pie',
-			'pieMargin':'50','pieLabelPos':'outside',
+			'pieMargin':'56','pieLabelPos':'outside',
 			'width':'380','height':'300',
 			'appendTitle':'true','title':data[m]["month"]+'月銷售金額比例統計圖',
 			'appendKey':'true',

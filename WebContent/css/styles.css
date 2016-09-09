@@ -310,6 +310,7 @@ h6 {
     font-weight: 100;
     margin-right: 20px;
     padding-top: 1.3em;
+    font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
 }
 .header .userinfo p span {
     color: #000;
@@ -373,6 +374,11 @@ h6 {
 .sidenav ul li ul li a:hover {
     background: #3F7FAA;
 }
+/* Ben偷加的 */
+.sidenav ul li.hide_everywhere{
+	display:none;
+}
+
 .sidenav > ul {}
 .sidenav > ul > li {
     background: #f6f6f6;
@@ -425,7 +431,8 @@ h2.page-title {
     padding-bottom: 60px;
 /*     height: calc(100vh - 142px); Ben又偷改*/
     height: calc(100vh - 144px);
-    overflow: auto;
+    overflow-y: scroll;
+/*     overflow: auto; */
     width: calc(100% - 120px);
 /*     Ben偷加的背景圖屬性 */
 	background-color: #EEF3F9;
@@ -974,4 +981,25 @@ button.btn {
 .btn-in-table i {
     display: table-cell;
     vertical-align: middle;
+}
+
+/* 以下都是Ben偷加的 */
+.div_right_bottom {
+float:right;
+position:relative;
+right:-20px;
+bottom:0px;
+}
+.div_right_bottom:hover {
+background: #DDD;
+}
+
+.div_right_top {
+float:right;
+position:relative;
+right:10px;
+top:10px;
+}
+.div_right_top:hover {
+background: #DDD;
 }

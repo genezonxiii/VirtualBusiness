@@ -60,7 +60,7 @@ function unicheck(){
 	
 	if($("#uninumber").val()<1)return false;
 	if(!checkunicode($("#uninumber").val())){
-		$(".error-msg").remove();
+		
 		$("#uninumber").addClass("error");
 		$("#uninumber").after("<span class='error-msg'>非正式統編!</span>");
 		return false;
@@ -211,6 +211,7 @@ $(function() {
 	});
 	$("#uninumber").focus();
 	$("#uninumber").blur(function(){
+		$(".error-msg").remove();
 		unicheck();
 	});
 // 	$("input").keydown(function (event) {

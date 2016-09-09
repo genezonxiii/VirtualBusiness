@@ -11,11 +11,11 @@ $articleUrl = "/lab/jquery_visualize_plugin_accessible_charts_graphs_from_tables
 		<title><? echo "Filament Group Lab Example From: $articleTitle"; ?></title>	
 <!-- 		<link rel="shortcut icon" href="https://www.filamentgroup.com//images/favicon2.ico" type="image/x-icon" /> -->
 <!-- 		<link href="https://www.filamentgroup.com//style/demoPages" media="screen" rel="Stylesheet" type="text/css" /> -->
-		<link type="text/css" rel="stylesheet" href="https://www.filamentgroup.com/examples/charting_v2/visualize.jQuery.css"/>
+		<link type="text/css" rel="stylesheet" href="css/visualize.jQuery.css"/>
 		<link type="text/css" rel="stylesheet" href="https://www.filamentgroup.com/examples/charting_v2/demopage.css"/>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <!-- 		[if IE]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif] -->
-		<script type="text/javascript" src="https://www.filamentgroup.com/examples/charting_v2/visualize.jQuery.js"></script>
+		<script type="text/javascript" src="js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
 		
 			$(function(){
@@ -52,8 +52,15 @@ $articleUrl = "/lab/jquery_visualize_plugin_accessible_charts_graphs_from_tables
 				$(".visualize").css("border","0px");
 			});
 		</script>
+<style>
+.visualize-pie .visualize-info { top: 10px; border: 0; right: auto; left: 10px; padding: 0; background: none; }
+.visualize-pie ul.visualize-title { font-weight: bold; border: 0; }
+.visualize-pie ul.visualize-key li { float: none; }
+.visualize-pie { margin:5px 10px; }
+.visualize { border: 0px;float: right; }
+</style>
 	</head>
-	<body>	
+	<body>
 		<table id='bar' style='display:none'><caption>出貨量統計圖</caption><thead><tr><td></td><th>ibon</th><th>Pchome</th><th>九易</th></tr></thead><tbody><tr><th>6月</th><td>59</td><td>19</td><td>118</td></tr><tr><th>7月</th><td>14</td><td>9</td><td>30</td></tr></tbody></table>
 		<br><br>
 		<hr>

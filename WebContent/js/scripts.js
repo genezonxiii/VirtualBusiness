@@ -7,7 +7,7 @@ function get_week_day(number){
 				if(i==2||i==4||i==6||i==9||i==11){continue;}
 			}
 			if(getYearWeek(2016,i,j)==number){
-				return "2016/"+i+"/"+j+"";
+				return ""+i+"/"+j+"";
 			}
 		}
 	}

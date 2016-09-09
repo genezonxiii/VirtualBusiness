@@ -576,7 +576,12 @@
     	        }
     	    }     
          });
-  		$("#insert_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
+  		$("#insert_supply_name").bind('focus', function(){  
+  	    	$(this).attr("placeholder","輸入供應商名稱");
+  	    	var eve=jQuery.Event("keydown");
+  	    	eve.which=40;
+  	      	$(this).trigger(eve);
+  	    });
 	    $('#insert_supply_name').bind('autocompleteselect', function (e, ui) {
 	    	supply_id = ui.item.supply_id;
 	    });
@@ -615,7 +620,12 @@
     	        }
     	    }     
          });
-  		$("#update_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
+  		$("#update_supply_name").bind('focus', function(){  
+  	    	$(this).attr("placeholder","輸入供應商名稱");
+  	    	var eve=jQuery.Event("keydown");
+  	    	eve.which=40;
+  	      	$(this).trigger(eve);
+  	    } );
 	    $('#update_supply_name').bind('autocompleteselect', function (e, ui) {
 	    	supply_id = ui.item.supply_id;
 	    });
@@ -700,7 +710,12 @@
 	    	        }
 	    	    }     
 	         });
-	       $("#searh_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入供應商名稱以供查詢"); } );
+	       $("#searh_product_name").bind('focus', function(){   
+	       	$(this).attr("placeholder","輸入供應商名稱");
+	    	var eve=jQuery.Event("keydown");
+	    	eve.which=40;
+	      	$(this).trigger(eve);
+	     } );
 			//處理新增修改的下拉選單unit_id
                $.ajax({
                    url : "product.do",

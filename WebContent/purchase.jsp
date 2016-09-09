@@ -74,6 +74,16 @@
 	
 	});
 	$(function() {
+		$(".input-field-wrap").append("<div id='upup' class='div_right_bottom'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div id='downdown' class='div_right_top' style='display:none;'><img src='./images/downdown.png'></div>");
+		$("#upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$("#downdown").slideToggle();
+		});
+		$("#downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$("#downdown").slideToggle();
+		});
 		$(".bdyplane").animate({"opacity":"1"});
 // 		$("#purchase_detail_contain_row").dialog({
 // 			title: "明細",
@@ -670,10 +680,17 @@
 	    	        }
 	    	    }     
 	         });
-      	$("#searh_purchase_by_supply_name").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
+      	$("#searh_purchase_by_supply_name").bind('focus', function(){ 
+        	$(this).attr("placeholder","輸入供應商名稱");
+        	var eve=jQuery.Event("keydown");
+        	eve.which=40;
+          	$(this).trigger(eve);
+        });
       	$('#searh_purchase_by_supply_name').bind('autocompleteselect', function (e, ui) {
         	supply_id = ui.item.supply_id;
         });
+//       	$("#searh_purchase_by_supply_name").trigger("focus");
+      	 
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
 			draggable : false,//防止拖曳
@@ -859,7 +876,12 @@
     	        }
     	    }     
          });
-  		$("#insert_supply_id").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
+  		$("#insert_supply_id").bind('click', function(){   
+  	    	$(this).attr("placeholder","輸入供應商名稱");
+  	    	var eve=jQuery.Event("keydown");
+  	    	eve.which=40;
+  	      	$(this).trigger(eve);
+  	    } );
 	    $('#insert_supply_id').bind('autocompleteselect', function (e, ui) {
 	    	supply_id = ui.item.supply_id;
 	    }); 		
@@ -900,7 +922,12 @@
     	        }
     	    }     
          });
-  		$("#update_supply_id").bind('focus', function(){ $(this).attr("placeholder","輸入供應商名稱以供查詢"); } );
+  		$("#update_supply_id").bind('click', function(){  
+  	    	$(this).attr("placeholder","輸入供應商名稱");
+  	    	var eve=jQuery.Event("keydown");
+  	    	eve.which=40;
+  	      	$(this).trigger(eve);
+  	     } );
 	    $('#update_supply_id').bind('autocompleteselect', function (e, ui) {
 	    	supply_id = ui.item.supply_id;
 	    }); 

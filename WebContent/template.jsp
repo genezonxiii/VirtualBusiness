@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
 	<link rel="stylesheet" href="vendor/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/styles.css">
-	
+
 	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript">
 function who(){
@@ -200,7 +200,7 @@ function who(){
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
 				<ul style="top: -146px;">
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.content-wrap').animate({opacity: '0'},100,function() {location.replace('purchase.jsp');});">進貨管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},100,function() {location.replace('purchase.jsp');});">進貨管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('purchreturn.jsp');});">進貨退回管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('sale.jsp');});">銷貨管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salereturn.jsp');});">銷貨退回管理</a></li>
@@ -216,7 +216,7 @@ function who(){
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accreceive.jsp');});">應收帳款管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('accpay.jsp');});">應付帳款管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('changepassword.jsp');});">使用者密碼管理</a></li>
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('membercondition.jsp');});">會員分級設定</a></li>
+<!-- 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('membercondition.jsp');});">會員分級設定</a></li> -->
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
@@ -244,7 +244,11 @@ function who(){
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
 				<ul>
-					<li><a href="msgboard.html">Coming Soon</a></li>
+					<li><a href="#">Coming Soon</a></li>
+					<li class="hide_everywhere"><a href="msgboard.html">留言版</a></li>
+					<li class="hide_everywhere"><a href="membercondition.jsp">會員分級設定</a></li>
+					<li class="hide_everywhere"><a href="distributereport.jsp">配送報表</a></li>
+					<li class="hide_everywhere"><a href="onlinecourse.jsp">線上學院</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -268,6 +272,14 @@ function who(){
 <script src="js/scripts.js"></script>
 <script type="text/javascript">
 $(function() {
+	$('body').keypress(function(e){//ctrl + alt + b
+	    if(e.ctrlKey && e.altKey){
+	    	if(e.which == 98){
+	    		$(".hide_everywhere").removeClass("hide_everywhere");
+	    		$(".sidenav > ul > li:nth-child(5) ul").css("top", "-100px");
+	    	}
+	    }
+	});
 	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","7px 20px");
 	$("#logout").click(function(e) {
 		$.ajax({
@@ -282,7 +294,6 @@ $(function() {
 			}
 		});
 	});
-	
 });
 </script>
 </body>
