@@ -1,4 +1,9 @@
 
+
+function isIE(){
+	return (window.navigator.userAgent.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));	
+}
+
 function get_week_day(number){
 	var i,j;
 	for(i=1;i<13;i++){
@@ -12,7 +17,6 @@ function get_week_day(number){
 		}
 	}
 }
-
 
 function money(amount){
 	 if(!(parseInt(amount)>-1)){return amount};
