@@ -237,7 +237,16 @@ $(function() {
 			}
 	});
 	$("#membercondition-delete").show();
-	
+	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+	$(".upup").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$(".downdown").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
 });
 </script>
 		<div class="input-field-wrap">
@@ -273,7 +282,7 @@ $(function() {
 	</div>
 <div id="membercondition-insert" title="新增會員分級" style="display:none">
 	<form id="membercondition-insert-form">
-		<table class="form-table" style="border-collapse: separate;border-spacing: 10px 20px;">
+		<table class="form-table">
 			<tr>
 				<td>級別名稱：</td>
 				<td><input type="text" name="classname"  placeholder="普通會員"></td>
@@ -310,7 +319,7 @@ $(function() {
 </div>
 <div id="membercondition-update" title="修改會員分級" style="display:none">
 	<form id="membercondition-update-form">
-		<table class="form-table" style="border-collapse: separate;border-spacing: 10px 20px;">
+		<table class="form-table">
 			<tr>
 				<td>級別名稱：</td>
 				<td><input type="text" name="classname"  placeholder="普通會員"></td>

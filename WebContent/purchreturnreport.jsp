@@ -187,6 +187,16 @@ $(function(){
 	//日期設定
 	//hold header
 	$("#purchasereturns_true_table").find("th").css("min-width","120px");	
+	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+	$(".upup").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$(".downdown").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
 })
 </script>
 		<div class="datalistWrap">

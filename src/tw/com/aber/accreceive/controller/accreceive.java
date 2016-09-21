@@ -47,10 +47,10 @@ public class accreceive extends HttpServlet {
 				pstmt.setString(2,seq);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					detail+="　訂單號："+rs.getString("order_no")+"\n";
-					detail+="產品名稱："+rs.getString("product_name")+"\n";
-					detail+="　　價格："+rs.getString("price")+"\n";
-					detail+="　　平台："+rs.getString("order_source")+"\n";
+					detail+="<tr><td>訂單號：</td><td><span class='delete_msg'>"+rs.getString("order_no")+"</span></td></tr>";
+					detail+="<tr><td>產品名稱：</td><td><span class='delete_msg'>"+rs.getString("product_name")+"</span></td></tr>";
+					detail+="<tr><td>價格：</td><td><span class='delete_msg'>"+rs.getString("price")+"</span></td></tr>";
+					detail+="<tr><td>平台：</td><td><span class='delete_msg'>"+rs.getString("order_source")+"</span></td></tr>";
 				}
 			} catch (Exception se) {System.out.println("ERROR WITH: "+se);}
 			//System.out.println(detail);

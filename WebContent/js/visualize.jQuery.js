@@ -99,6 +99,7 @@ $.fn.visualize = function(options, container){
 						$(allData).each(function(){
 							if(this<bottomValue) bottomValue = parseFloat(this);
 						});
+						if(o.type=="line"){bottomValue = bottomValue - topValue / 7 };
 						return bottomValue;
 				},
 				memberTotals: function(){
@@ -262,7 +263,8 @@ $.fn.visualize = function(options, container){
 					
 				$.each(yLabels, function(i){
 					//Ben偷改的四捨五入
-					var thisLi = $('<li><span>'+((topValue>10000&&this!=topValue)?(Math.round(this/1000)*1000):this)+'</span></li>')
+					var tmp = ((this==bottomValue&&bottomValue!=0)?" ":((topValue>10000&&this!=topValue)?(Math.round(this/1000)*1000):this));
+					var thisLi = $('<li><span>'+(o.type=='line'?money(tmp):tmp)+'</span></li>')
 						.prepend('<span class="line"  />')
 						.css('bottom',liBottom*i)
 						.prependTo(ylabelsUL);

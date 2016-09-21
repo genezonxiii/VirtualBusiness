@@ -118,6 +118,7 @@ window.onload = function (e){
 			}						
 		}
 	});
+	$("#dialog-confirm").show();
 }
 
 </script>

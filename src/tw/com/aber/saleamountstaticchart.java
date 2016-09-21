@@ -73,8 +73,8 @@ public class saleamountstaticchart extends HttpServlet {
 	/************************* 對應資料庫表格格式 **************************************/
 
 	public class SalechartVO implements java.io.Serializable {
-		private int[] entrance;
-		private int[] answer;
+		private String[] entrance;
+		private String[] answer;
 		private String[] vender;
 
 		public String[] getVender() {
@@ -85,17 +85,17 @@ public class saleamountstaticchart extends HttpServlet {
 		}
 		public SalechartVO(){
 		}
-		public int[] getEntrance() {
+		public String[] getEntrance() {
 			return entrance;
 		}
 
-		public int[] getAnswer() {
+		public String[] getAnswer() {
 			return answer;
 		}
-		public void setEntrance(int[] entrance) {
+		public void setEntrance(String[] entrance) {
 			this.entrance = entrance;
 		}
-		public void setAnswer(int[] answer) {
+		public void setAnswer(String[] answer) {
 			this.answer = answer;
 		}
 
@@ -147,14 +147,14 @@ public class saleamountstaticchart extends HttpServlet {
 			    }else{
 			       count = 0;
 			    }
-			    int[] entrance=new int[count];
-			    int[] answer=new int[count];
+			    String[] entrance=new String[count];
+			    String[] answer=new String[count];
 			    String[] vender=new String[count];
 			    rs.beforeFirst();
 			    int k=0;
 				while (rs.next()) {
-					entrance[k]=rs.getInt("month");
-					answer[k]=rs.getInt("price");
+					entrance[k]=rs.getString("month");
+					answer[k]=rs.getString("price");
 					vender[k]=rs.getString("order_source");
 					//System.out.println(entrance[k]);
 					//System.out.println(k+"th month: "+rs.getInt("month"));

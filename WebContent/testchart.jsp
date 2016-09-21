@@ -26,7 +26,7 @@ $articleUrl = "/lab/jquery_visualize_plugin_accessible_charts_graphs_from_tables
 					'appendTitle':'true','title':'6',
 					'appendKey':'true',
 					'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
-					'textColors':'','parseDirection':'y'
+					'textColors':'','parseDirection':'x'
 				});
 				//$('#bar').addClass('accessHide');
 				$('#line').visualize({
@@ -57,11 +57,20 @@ $articleUrl = "/lab/jquery_visualize_plugin_accessible_charts_graphs_from_tables
 .visualize-pie ul.visualize-title { font-weight: bold; border: 0; }
 .visualize-pie ul.visualize-key li { float: none; }
 .visualize-pie { margin:5px 10px; }
-.visualize { border: 0px;float: right; }
+.visualize { margin: 0 auto;}
 </style>
 	</head>
 	<body>
-		<table id='bar' style='display:none'><caption>出貨量統計圖</caption><thead><tr><td></td><th>ibon</th><th>Pchome</th><th>九易</th></tr></thead><tbody><tr><th>6月</th><td>59</td><td>19</td><td>118</td></tr><tr><th>7月</th><td>14</td><td>9</td><td>30</td></tr></tbody></table>
+		<table id='bar' style='display:none'>
+			<caption>出貨量統計圖</caption>
+			<thead><tr><td></td>
+				<th>6月</th>
+				<th>7月</th>
+			</tr></thead><tbody>
+				<tr><th>ibon</th><td></td><td>19</td></tr>
+				<tr><th>pchome</th><td>14</td><td>9</td></tr>
+				<tr><th>91</th><td>54</td><td>39</td></tr>
+		</tbody></table>
 		<br><br>
 		<hr>
 		<table id="line">

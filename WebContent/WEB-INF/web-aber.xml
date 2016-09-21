@@ -43,7 +43,7 @@
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
-    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value> 
   </context-param>
   <context-param>
     <param-name>videopath</param-name>
@@ -138,12 +138,10 @@
   <context-param>
     <param-name>uploadpath</param-name>
     <param-value>/data/vbupload</param-value>
-      <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>  
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
     <param-value>/data/productpic</param-value>
-      <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>  
   </context-param>
   <context-param>
     <param-name>videopath</param-name>
@@ -404,7 +402,6 @@
     <servlet-name>registry</servlet-name>
     <url-pattern>/registry.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
   <servlet>
     <servlet-name>membercondition</servlet-name>
     <servlet-class>tw.com.aber.membercondition</servlet-class>
@@ -412,6 +409,23 @@
   <servlet-mapping>
     <servlet-name>membercondition</servlet-name>
     <url-pattern>/membercondition.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  <servlet>
+    <servlet-name>bestsale</servlet-name>
+    <servlet-class>tw.com.aber.bestsale</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bestsale</servlet-name>
+    <url-pattern>/bestsale.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>heavybuyer</servlet-name>
+    <servlet-class>tw.com.aber.heavybuyer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>heavybuyer</servlet-name>
+    <url-pattern>/heavybuyer.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
   <filter>

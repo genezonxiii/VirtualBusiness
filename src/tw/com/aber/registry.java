@@ -27,6 +27,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import com.google.gson.Gson;
 
@@ -63,6 +64,16 @@ public class registry extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
+		if("verify".equals(action)){
+			String verify = request.getParameter("verify");
+			HttpSession session = request.getSession(true);
+			Object checkcode = session.getAttribute("checkcode");
+			if(verify.equals(checkcode.toString())){
+				response.getWriter().write("success");
+			}else{
+				response.getWriter().write("false");
+			}
+		}
 		if("send_mail".equals(action)){
 			String to = request.getParameter("to");
 			String user_id = new String(Base64.encodeBase64String(request.getParameter("user_id").getBytes()));

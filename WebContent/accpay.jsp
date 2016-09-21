@@ -197,7 +197,7 @@
 							$("#account_amount_date_table").dataTable().fnDestroy();
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#account_amount_date_contain").show();
+							$("#account_amount_date_contain").hide();
 							$("#account_amount_date_table tbody").html(result_table);
 							$("#account_amount_date_table").dataTable({
 								  autoWidth: false,
@@ -225,6 +225,7 @@
 							$("#account_amount_date_table").find("td").css("text-align","center");
 							$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#account_amount_date_contain").fadeIn();
 							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#search_amount_err_mes").length){
                 				$("#search_amount_err_mes").remove();
@@ -326,7 +327,7 @@
 							$("#account_pay_date_table").dataTable().fnDestroy();
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#account_pay_date_contain").show();
+							$("#account_pay_date_contain").hide();
 							$("#account_pay_date_table tbody").html(result_table);
 							$("#account_pay_date_table").dataTable({
 								  autoWidth: false,
@@ -354,6 +355,7 @@
 							$("#account_pay_date_table").find("td").css("text-align","center");
 							$("#account_pay_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("#account_pay_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+							$("#account_pay_date_contain").fadeIn();
 							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#pay_err_mes").length){
                 				$("#pay_err_mes").remove();
@@ -380,6 +382,7 @@
 						$.ajax({
 							type : "POST",
 							url : "accpay.do",
+							async : false,
 							data : {
 								action : "pay_account",
 								pay_id : $(this).attr("value"),
@@ -437,7 +440,7 @@
 									$("#account_pay_date_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
-									$("#account_pay_date_contain").show();
+									$("#account_pay_date_contain").hide();
 									$("#account_pay_date_table tbody").html(result_table);
 									$("#account_pay_date_table").dataTable({
 										  autoWidth: false,
@@ -465,6 +468,7 @@
 									$("#account_pay_date_table").find("td").css("text-align","center");
 									$("#account_pay_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("#account_pay_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#account_pay_date_contain").fadeIn();
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								}
 							}
@@ -495,6 +499,7 @@
 						$.ajax({
 							type : "POST",
 							url : "accpay.do",
+							async : false,
 							data : {
 								action : "delete_pay_account",
 								pay_id : $(this).attr("value"),
@@ -553,7 +558,7 @@
 									$("#account_amount_date_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
-									$("#account_amount_date_contain").show();
+									$("#account_amount_date_contain").hide();
 									$("#account_amount_date_table tbody").html(result_table);
 									$("#account_amount_date_table").dataTable({
 										  autoWidth: false,
@@ -581,6 +586,7 @@
 									$("#account_amount_date_table").find("td").css("text-align","center");
 									$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#account_amount_date_contain").fadeIn();
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 								}
 							}
@@ -595,6 +601,16 @@
 		}
 	});	
 	$("#dialog-cancel-confirm").show();
+	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+	$(".upup").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$(".downdown").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
 	//get today yyyy-mm-dd
 	function getCurrentDate(){
 		var fullDate = new Date();
@@ -607,7 +623,7 @@
 	//hold header
 // 	$("#account_amount_date_table").find("th").css("min-width","120px");
 // 	$("#account_pay_date_table").find("th").css("min-width","120px");	
-})
+});
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->

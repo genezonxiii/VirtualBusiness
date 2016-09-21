@@ -95,6 +95,16 @@
 						}
 					}
 				});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	});
 </script>
 		<div class="datalistWrap">
@@ -104,10 +114,10 @@
 					<table id="products2" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>廠商名稱</th>
+								<th style="min-width:60px">廠商名稱</th>
 								<th>廠商統編</th>
-								<th>廠商地址</th>
-								<th>連絡人</th>
+								<th style="min-width:100px">廠商地址</th>
+								<th style="min-width:40px">連絡人</th>
 								<th>連絡人電話</th>
 								<th>連絡人分機</th>
 								<th>連絡人手機</th>

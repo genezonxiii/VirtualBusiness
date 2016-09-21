@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>北祥股份有限公司 智慧電商平台 使用者登入</title>
+	<title>智慧電商平台 註冊</title>
 	
 	<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
     <link rel="stylesheet" href="css/1.12.0/jquery-ui.css">
@@ -117,6 +117,18 @@ function regis(){
 	if($("#pwd").val()!=$("#pwd2").val()){
 		$("#pwd2").addClass("error");$("#pwd2").after("<span class='error-msg'>請輸入相同密碼</span>");wrong=1;
 	}
+	$.ajax({url : "registry.do", type : "POST", cache : false, async : false,
+		data : {
+			action : "verify",
+			verify : $("#verify").val()
+		}, success: function(result) {
+			if("false"==result){
+				$("#verify").addClass("error");$("#verify").after("<span class='error-msg'>驗證碼錯誤</span>");
+				wrong=1;
+			}
+		}
+	});
+
 	if(!unicheck()){wrong=1;}
 	if(wrong){return;}
 	$.ajax({url : "registry.do", type : "POST", cache : false,
@@ -176,6 +188,7 @@ $(function() {
 	$("#bdy2").animate({
 		height : '510px'
 	});
+	
 	var value='<%=request.getParameter("regid")%>';
 	if(value.length>10){
 		$.ajax({url : "registry.do", type : "POST", cache : false,
@@ -214,6 +227,7 @@ $(function() {
 		$(".error-msg").remove();
 		unicheck();
 	});
+	
 // 	$("input").keydown(function (event) {
 //         if (event.which == 13) {
 //         	to_login();
@@ -289,7 +303,7 @@ $(function() {
 						<a class="login-button" id="register" onclick="regis();" style="width:100%;">註冊</a>
 					</td></tr>
 					<tr><td colspan=2>
-						已經有智慧電商平台的帳號嗎? <a href="./login.jsp">登入</a>
+						已經有智慧電商平台的帳號嗎? <a href="#" onclick="$('#regis-form').fadeOut();$('#bdy2').animate({height : '462px'});$('#bdy').animate({top : '50%','marginTop': '-320px'},function(){location.replace('login.jsp');});">登入</a>
 					</td></tr>
 				</table>
 			</form>

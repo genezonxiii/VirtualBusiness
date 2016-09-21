@@ -25,7 +25,11 @@
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <!-- <script type="text/javascript" src="js/jquery-1.10.2.js"></script> -->
-
+<style>
+table.form-table {
+ 	border-spacing: 10px 8px !important; 
+}
+</style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -72,6 +76,8 @@
 	var scan_exist=0;
 	var information;
 	function draw_product(info){
+		$("#sales-contain").css({"opacity":"0"});
+		warning_msg("---讀取中請稍候---");
 		$.ajax({
 			type : "POST",
 			url : "product.do",
@@ -115,10 +121,6 @@
 							}//"src", "./image.do?picname=" + json_obj[i].photo
 						});
 					}
-					if(resultRunTime==0){
-						$("#sales-contain").hide();
-						$(".validateTips").text("查無此結果");
-					}
 					$("#sales").dataTable().fnDestroy();
 					if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 						$("#sales-contain").show();
@@ -126,7 +128,13 @@
 						$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
 						$("#sales").find("td").css("text-align","center");
 						$("#sales").find("th").css("text-align","center");
-						$(".validateTips").text("");
+						$("#sales-contain").animate({"opacity":"0.01"},1);
+						$("#sales-contain").animate({"opacity":"1"},300);
+						warning_msg("");
+					}
+					if(resultRunTime<2){
+						$("#sales-contain").hide();
+						warning_msg("---查無此結果---");
 					}
 				}
 			});
@@ -304,80 +312,67 @@
 			draw_product(information);
 		});
 		//新增Dialog相關設定
-		insert_dialog = $("#dialog-form-insert").dialog(
-						{
-							draggable : false,//防止拖曳
-							resizable : false,//防止縮放
-							autoOpen : false,
-							open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
-							show : {
-								effect : "blind",
-								duration : 300
-							},
-							hide : {
-								effect : "fade",
-								duration : 300
-							},
-							width : 800,
-							modal : true,
-							buttons : [{
-										id : "insert",
-										text : "新增",
-										click : function() {
-											if ($('#insert-dialog-form-post').valid()) {
-												information={
-														action : "insert",
-														c_product_id : $("#dialog-form-insert input[name='c_product_id']").val(),
-														product_name : $("#dialog-form-insert input[name='product_name']").val(),
-// 														supply_id : $("#dialog-form-insert input[name='supply_id']").val(),
-														supply_id : supply_id,
-														supply_name : $("#dialog-form-insert input[name='supply_name']").val(),
-														type_id : $("#dialog-form-insert select[name='select_insert_type_id']").val(),
-														unit_id : $("#dialog-form-insert select[name='select_insert_unit_id']").val(),
-														cost : $("#dialog-form-insert input[name='cost']").val(),
-														price : $("#dialog-form-insert input[name='price']").val(),
-														current_stock : $("#dialog-form-insert input[name='current_stock']").val(),
-														keep_stock : $("#dialog-form-insert input[name='keep_stock']").val(),
-														photo : $("#photo0").val(),
-														photo1 : $("#photo1").val(),
-// 														photo : $("#dialog-form-insert input[name='photo']").val(),
-// 														photo1 : $("#dialog-form-insert input[name='photo1']").val(),
-														description : $("#dialog-form-insert input[name='description']").val(),
-														barcode : $("#dialog-form-insert input[name='barcode']").val()
-													};
-												draw_product(information);
-												
-												insert_dialog.dialog("close");
-												$("#insert-dialog-form-post").trigger("reset");
-											}
-											new_or_edit=0;
-										}
-									}, {
-										text : "取消",
-										click : function() {
-											$("#insert-dialog-form-post").trigger("reset");
-											validator_insert.resetForm();
-											insert_dialog.dialog("close");
-											new_or_edit=0;
-										}
-									} ],
-							close : function() {
-								validator_insert.resetForm();
+		insert_dialog = $("#dialog-form-insert").dialog({
+			draggable : false, resizable : false, autoOpen : false,
+			height : "auto", width : "auto", modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
+			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
+			buttons : [{
+						id : "insert",
+						text : "新增",
+						click : function() {
+							if ($('#insert-dialog-form-post').valid()) {
+								information={
+										action : "insert",
+										c_product_id : $("#dialog-form-insert input[name='c_product_id']").val(),
+										product_name : $("#dialog-form-insert input[name='product_name']").val(),
+			// 							supply_id : $("#dialog-form-insert input[name='supply_id']").val(),
+										supply_id : supply_id,
+										supply_name : $("#dialog-form-insert input[name='supply_name']").val(),
+										type_id : $("#dialog-form-insert select[name='select_insert_type_id']").val(),
+										unit_id : $("#dialog-form-insert select[name='select_insert_unit_id']").val(),
+										cost : $("#dialog-form-insert input[name='cost']").val(),
+										price : $("#dialog-form-insert input[name='price']").val(),
+										current_stock : $("#dialog-form-insert input[name='current_stock']").val(),
+										keep_stock : $("#dialog-form-insert input[name='keep_stock']").val(),
+										photo : $("#photo0").val(),
+										photo1 : $("#photo1").val(),
+			// 							photo : $("#dialog-form-insert input[name='photo']").val(),
+			// 							photo1 : $("#dialog-form-insert input[name='photo1']").val(),
+										description : $("#dialog-form-insert input[name='description']").val(),
+										barcode : $("#dialog-form-insert input[name='barcode']").val()
+									};
+								draw_product(information);
+								
+								insert_dialog.dialog("close");
 								$("#insert-dialog-form-post").trigger("reset");
 							}
+							new_or_edit=0;
+						}
+					}, {
+						text : "取消",
+						click : function() {
+							$("#insert-dialog-form-post").trigger("reset");
+							validator_insert.resetForm();
+							insert_dialog.dialog("close");
+							new_or_edit=0;
+						}
+					} ],
+			close : function() {
+				validator_insert.resetForm();
+				$("#insert-dialog-form-post").trigger("reset");
+			}
 		})
 		.css("width", "10%");
 		$("#dialog-form-insert").show();
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
-			height : "auto",
-			modal : true,
+			draggable : false, resizable : false, autoOpen : false,
+			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
+			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
 			buttons : {
 				"確認刪除" : function() {
 					information={
@@ -395,15 +390,11 @@
 		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			width : 800,
-			height: "auto",
-			modal : true,
-			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
+			draggable : false, resizable : false, autoOpen : false,
+			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
+			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
 			buttons : [{
 				text : "修改",
 				click : function() {
@@ -451,6 +442,13 @@
 		$("#sales").delegate(".btn_delete", "click", function() {
 			uuid = $(this).val();
 			product_id = $(this).attr("id");
+			
+			$("#dialog-confirm").html("");
+			$("#dialog-confirm").html("<table class='dialog-table'>"+
+				"<tr><td>商品名稱：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span></td></tr>"+
+				"<tr><td>進貨來源：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(3)").attr("name")+"'</span></td></tr>"+
+				"</table>"
+			);
 			confirm_dialog.dialog("open");
 		});
 		//新增事件聆聽
@@ -1110,49 +1108,55 @@
 		});
 	    $("#warning").show();
 	    
-	    
+	    $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	});	
 </script>
 
-		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認刪除資料嗎?" style="display:none;">
+			<div id="dialog-confirm" title="是否刪除此商品?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
 			<!--對話窗樣式-修改 -->
 			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline"	>
 					<fieldset>
-				<table class="result-table">
+				<table class="form-table">
 					<tbody>
 						<tr>
-							<td>自訂產品ID:</td><td><input type="text" id="c_p_id2" name="c_product_id"/></td>
-							<td>廠商名稱:</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
+							<td>自訂產品ID：</td><td><input type="text" id="c_p_id2" name="c_product_id"/></td>
+							<td>廠商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
 						</tr><tr>
-							<td>產品類別:</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
-							<td>產品單位:</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
+							<td>產品類別：</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
+							<td>產品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
 						</tr><tr>
-							<td>產品名稱:</td><td><input type="text" name="product_name"  ></td>
-							<td>產品說明:</td><td><input type="text" name="description"/></td>
+							<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+							<td>產品說明：</td><td><input type="text" name="description"/></td>
 						</tr><tr>
-							<td>成本:</td><td><input type="text" name="cost" /></td>
-							<td>售價:</td><td><input type="text" name="price" /></td>
+							<td>成本：</td><td><input type="text" name="cost" /></td>
+							<td>售價：</td><td><input type="text" name="price" /></td>
 						</tr><tr>
-							<td>安全庫存:</td><td><input type="text" name="keep_stock" /></td>
-							<td>條碼:<br><br><input id="same2" type="checkbox" style="position:static;" 
-							onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID</td><td><input type="text" id="edit_barcode" name="barcode"/></td>
+							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
+							<td>條碼：</td><td><input type="text" id="edit_barcode" name="barcode"/></td><td><input id="same2" type="checkbox" style="position:static;" 
+							onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID</td>
 						</tr>
    		         	  </tbody>
    		         	  </table>		
 					</fieldset>
 				</form>
 				<!-- photo section begin by Melvin -->
-					<table border="0">
+					<table class="form-table">
 					<tbody>
 					<tr>
-						<td>
-							<h6>產品圖片:</h6>
-						</td>
+						<td>產品圖片：</td>
 						<td>
 							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
 							<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
@@ -1163,9 +1167,7 @@
                			</td>
                		 	</tr>	
                		<tr>
-              			 <td>	
-               				<h6>產品圖片2:&nbsp;&nbsp;</h6>
-               			 </td>
+              			 <td>產品圖片2：</td>
               			 <td>	
                              <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
 					         <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
@@ -1186,59 +1188,55 @@
 			<div id="dialog-form-insert" title="新增產品資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
-					<table class="result-table">
+					<table class="form-table">
 					<tbody>
 						<tr>
-							<td>自訂產品ID:</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
-							<td>廠商名稱:</td><td><input type="text" id="insert_supply_name" name="supply_name"/></td>
+							<td>自訂產品ID：</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
+							<td>廠商名稱：</td><td><input type="text" id="insert_supply_name" name="supply_name"/></td>
 						</tr><tr>
-							<td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
-							<td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
+							<td>產品類別：</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
+							<td>產品單位：</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
 						</tr><tr>
-							<td>產品名稱:</td><td><input type="text" name="product_name"  ></td>
-							<td>產品說明:</td><td><input type="text" name="description"/></td>
+							<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+							<td>產品說明：</td><td><input type="text" name="description"/></td>
 						</tr><tr>
-							<td>成本:</td><td><input type="text" name="cost" /></td>
-							<td>售價:</td><td><input type="text" name="price" /></td>
+							<td>成本：</td><td><input type="text" name="cost" /></td>
+							<td>售價：</td><td><input type="text" name="price" /></td>
 						</tr><tr>
-							<td>庫存量:</td><td><input type="text" name="current_stock" /></td>
-							<td>安全庫存:</td><td><input type="text" name="keep_stock" /></td>
+							<td>庫存量：</td><td><input type="text" name="current_stock" /></td>
+							<td>條碼：</td><td><input type="text" id="new_barcode" name="barcode"/></td><td><input id="same" type="checkbox" style="position:static;" onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID</td>
 						</tr><tr>
-							<td>條碼:<br><br><input id="same" type="checkbox" style="position:static;" 
-							onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID</td><td><input type="text" id="new_barcode" name="barcode"/></td>
+							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
+							
 						</tr>
    		         	  </tbody>
    		         	  </table>		
 					</fieldset>
 				</form>
 				<!-- photo section begin by Melvin -->
-					<table border="0">
+				<table class='form-table'>
 					<tbody>
-					<tr>
-						<td>
-							<h6>產品圖片:</h6>
-						</td>
-						<td>
-							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
-							<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
-							<input id="fileupload" type="file" name="files[]">
-							<br>
-							</span>
-							<div id="files" class="files" ></div>
-               			</td>
-               		 	</tr>	
-               		<tr>
-              			 <td>	
-               				<h6>產品圖片2:&nbsp;&nbsp;</h6>
-               			 </td>
-              			 <td>	
-                             <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
-					         <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
-					         <input id="fileupload2" type="file" name="files2[]">
-					     	<br>
-					         </span>
-					         <div id="files2" class="files"></div>        
-               			</td>
+						<tr>
+							<td>產品圖片：</td>
+							<td>
+								<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
+								<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
+								<input id="fileupload" type="file" name="files[]">
+								<br>
+								</span>
+								<div id="files" class="files" ></div>
+	               			</td>
+	               		</tr>	
+	               		<tr>
+	              			 <td>產品圖片2：</td>
+	              			 <td>	
+	                             <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
+						         <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
+						         <input id="fileupload2" type="file" name="files2[]">
+						     	<br>
+						         </span>
+						         <div id="files2" class="files"></div>        
+	               			</td>
                			</tr>	
                	  		</tbody>
                	  </table>		
@@ -1262,7 +1260,7 @@
 					</label>
 					<button class="btn btn-darkblue" id="searh-name">查詢</button>
 				</div>
-				<font color=red >掃條碼亦可取得商品資料</font>
+				<font color='#6A5ACD' >掃條碼亦可取得商品資料</font>
 				<div class="btn-row">
 					<button class="btn btn-exec btn-wide" id="create-sale">新增商品資料</button>
 				</div>
@@ -1275,7 +1273,7 @@
 				<div id="sales-contain" class="ui-widget" style="display:none;">
 					<table id="sales" class="result-table">
 						<thead>
-							<tr class="ui-widget-header">
+							<tr>
 								<th>自訂產品ID</th>
 								<th style="min-width:80px;">產品名稱</th>
 								<th>供應商名稱</th>
@@ -1297,7 +1295,6 @@
 				</div>
 				<span class="validateTips"> </span>
 			</div>
-		</div>
 	</div>
 <input type="text" id="photo0" style="display:none"/>
 <input type="text" id="photo1" style="display:none"/>

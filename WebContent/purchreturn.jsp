@@ -207,7 +207,7 @@ $(function(){
 // 						}
 						$("#purchasereturns_true_table").dataTable().fnDestroy();
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#purchasereturns_true_contain").show();
+							$("#purchasereturns_true_contain").hide();
 							$("#purchasereturns_true_table tbody").html(result_table);
 							$("#purchasereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("#purchasereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
@@ -235,6 +235,7 @@ $(function(){
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+									$("#purchasereturns_true_contain").fadeIn();
 							if($("#purchase_return_date_err_mes").length){
                 				$("#purchase_return_date_err_mes").remove();
                 			}
@@ -343,7 +344,7 @@ $(function(){
 						$("#purchasereturns_false_table").dataTable().fnDestroy();
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#purchasereturns_true_contain").hide();
-							$("#purchasereturns_false_contain").show();
+							$("#purchasereturns_false_contain").hide();
 							$("#purchasereturns_false_table tbody").html(result_table);
 							//$("#purchasereturns_false_table").find("td").css("text-align", "center");
 							$("#purchasereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
@@ -372,6 +373,7 @@ $(function(){
 						                }
 						            }
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
+							$("#purchasereturns_false_contain").fadeIn();
 							if($("#purchase_date_err_mes").length){
                 				$("#purchase_date_err_mes").remove();
                 			}
@@ -490,7 +492,7 @@ $(function(){
 						$("#purchasereturns_false_table").dataTable().fnDestroy();
 					}
 					if(resultRunTime!=0){
-						$("#purchasereturns_false_contain").show();
+						$("#purchasereturns_false_contain").hide();
 						$("#purchasereturns_false_table tbody").html(result_table);
 						//$("#purchasereturns_false_table").find("td").css("text-align", "center");
 						$("#purchasereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
@@ -520,6 +522,7 @@ $(function(){
 					            }
 					          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
 						$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+						$("#purchasereturns_false_contain").fadeIn();
 						if($("#supply_name_err_mes").length){
             				$("#supply_name_err_mes").remove();
             			}
@@ -542,6 +545,7 @@ $(function(){
 						$.ajax({
 							type : "POST",
 							url : "purchreturn.do",
+							async : false,
 							data : {
 								action : "insert_purchase_return",
 								purchase_id : $(this).attr("value"),
@@ -608,7 +612,7 @@ $(function(){
 									$("#purchasereturns_true_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
-									$("#purchasereturns_true_contain").show();
+									$("#purchasereturns_true_contain").hide();
 									$("#purchasereturns_true_table tbody").html(result_table);
 									$("#purchasereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("#purchasereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
@@ -636,6 +640,7 @@ $(function(){
 								                }
 								            }
 								          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果","zeroRecords": "沒有符合的結果"}});
+									$("#purchasereturns_true_contain").fadeIn();
 									$("#purchasereturns_true_table").find("td").css("text-align","center");
 								}
 							}
@@ -667,6 +672,7 @@ $(function(){
 						$.ajax({
 							type : "POST",
 							url : "purchreturn.do",
+							async : false,
 							data : {
 								action : "delete_purchase_return",
 								purchase_id : $(this).attr("value"),
@@ -732,7 +738,7 @@ $(function(){
 									$("#purchasereturns_false_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
-									$("#purchasereturns_false_contain").show();
+									$("#purchasereturns_false_contain").hide();
 									$("#purchasereturns_false_table tbody").html(result_table);
 									$("#purchasereturns_false_table").dataTable({
 										  autoWidth: false,
@@ -761,6 +767,7 @@ $(function(){
 									$("#purchasereturns_false_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("#purchasereturns_false_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+									$("#purchasereturns_false_contain").fadeIn();
 								}
 							}
 						});
@@ -793,6 +800,16 @@ $(function(){
 	//hold header
 	$("#purchasereturns_false_table").find("th").css("min-width","120px");
 	$("#purchasereturns_true_table").find("th").css("min-width","120px");	
+	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+	$(".upup").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$(".downdown").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
 })
 </script>
 		<div class="datalistWrap">

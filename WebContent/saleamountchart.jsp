@@ -42,7 +42,7 @@
 <script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
 <script>
-function draw_linechart(data,list){
+function draw_linechart(data,list,choose){
 	//alert(data[0]["vender"]);
 	var i,j;
 // 	for(i=0;i<data.length;i++){
@@ -52,25 +52,24 @@ function draw_linechart(data,list){
 // 	}
 	var charttable="<table id='line' style='display:none'><caption>銷售金額統計圖 </caption><thead><tr><td></td><th></th>";
 	$.each(list,function(i, item) {
-		charttable+="<th>"+get_week_day(item)+"</th>";
+		charttable+="<th>"+(choose=='week'?get_week_day(item):('<span style="width:36px;">'+item+'月</span>'))+"</th>";
 	});
 	charttable += "<th></th></tr></thead><tbody>";
-	
 	for(i=0;i<data.length;i++){
 		charttable+="<tr><th>"+data[i]["vender"]+"</th><td></td>";
 		for(j=0;j<list.length;j++){
-			charttable+="<td>"+(data[i][list[j]]==null?"":data[i][list[j]])+"</td>";
+			charttable+="<td>"+(data[i][list[j]]==null?"0":data[i][list[j]])+"</td>";
 		}
 		charttable+="</tr>";
 	}
 	charttable+="</tbody></table>";
-	$('.visualize').remove();
-	$('#chart').html(charttable);
-	$('#chart').visualize({
+	var choose_chart=(choose=='week'?'#chart1':'#chart2');
+	$(choose_chart).html(charttable);
+	$(choose_chart).visualize({
 		'type':'line',
 		'lineWeight':'3',
-		'width':'800','height':'300',
-		'appendTitle':'true','title':'銷售金額統計圖',
+		'width':'1000','height':'300',
+		'appendTitle':'true','title':'銷售金額統計圖('+(choose=='week'?'週':'月')+')',
 		'appendKey':'true',
 		'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
 		'textColors':'','parseDirection':'x',
@@ -210,27 +209,35 @@ function draw_chart(m_h,m_w,data){
 		$("#searh-productunit").click(function(e) {
 			$(".visualize").animate({"opacity":"0"});
 			//$(".validateTips").html("<h4 style='color:red;'>資料查詢中...</h4>");
-			$("#chart").html('');
+			$("#chart1").html('');
+			$("#chart2").html('');
 			e.preventDefault();
+			$('.visualize').remove();
 			$.ajax({
 				type : "POST",
 				url : "saleamountchart.do",
-				data : {action :"searh",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
+				data : {action :"search_week",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
 					$(".validateTips").html('');
-					//console.log(result);
 					var json_obj = $.parseJSON(result);
 					var chart_data=[],chart_obj={},i=0,j=0,list=[];
 					var tmp_vender=json_obj.vender[0];
 					if(json_obj.entrance.length==0){
-						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
 						return;
 					}
+					var max=0,min=10000;
 					$.each(json_obj.entrance,function(i, item) {
 						var k=0;
+						if(item>max){max=item;}
+						if(item<min){min=item;}
 						while(list[k]!=item && list[k]!=null){k++;}
 						if(k==list.length)list[k]=item;
 					});
+					var k=0;
+					for(k=0;min+k<max+1;k++){
+						list[k]=min+k;
+					}
 					
 					for(i=0,j=0;i<json_obj.entrance.length;i++){
 						if(json_obj.vender[i]!=tmp_vender){
@@ -245,34 +252,68 @@ function draw_chart(m_h,m_w,data){
 					chart_data[j]=chart_obj;
 					j++;
 					
-					draw_linechart(chart_data,list);
+					draw_linechart(chart_data,list,'week');
 					$(".visualize").animate({"opacity":"1"});
-					
-					
-					
-					//$.each(list,function(k, item){ list[k]=get_week_day(item);});
-					//$.each(list,function(k, item){alert(item);});
-// 					var result_table = "";
-// 					var data=[];
-// 					var i=0;
-// 					for(i=0;i<json_obj.entrance.length;i++){
-// 						if(json_obj.entrance[i]!=0){
-// 							data[i]={"sale":json_obj.answer[i],"year":json_obj.entrance[i],"vender":json_obj.vender[i] };
-// 						}
-// 						//alert(json_obj.entrance[i]);
-// 						//data[i+1]={"sale":json_obj.answer[i],"year":41,"vender":json_obj.vender[i] };
-// 					}
-// 					if(data.length!=0){
-// 						draw_chart(400,200,data);
-// 						$("#chart").animate({"opacity":"0.5"});
-// 						$("#chart").animate({"opacity":"1"});
-// 						$(".validateTips").html("");
-// 					}else{
-// 						$("#chart").html('');
-// 						$(".validateTips").html("<h4 style='color:red;'>查無資料</h4>");
-// 					}
 				}
 			});
+			var show_or_not=0;
+			if(!show_or_not){
+				$("#hello").remove();
+			}else{
+				$.ajax({
+					type : "POST",
+					url : "saleamountchart.do",
+					data : {action :"search_month",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
+					success : function(result) {
+						$(".validateTips").html('');
+						var json_obj = $.parseJSON(result);
+						var chart_data=[],chart_obj={},i=0,j=0,list=[];
+						var tmp_vender=json_obj.vender[0];
+						if(json_obj.entrance.length==0){
+							$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
+							return;
+						}
+						var max=0,min=10000;
+						$.each(json_obj.entrance,function(i, item) {
+							var k=0;
+							if(item>max){max=item;}
+							if(item<min){min=item;}
+							while(list[k]!=item && list[k]!=null){k++;}
+							if(k==list.length)list[k]=item;
+						});
+						var k=0;
+						for(k=0;min+k<max+1;k++){
+							list[k]=min+k;
+						}
+						
+						for(i=0,j=0;i<json_obj.entrance.length;i++){
+							if(json_obj.vender[i]!=tmp_vender){
+								chart_data[j]=chart_obj;
+								j++;
+								tmp_vender=json_obj.vender[i];
+								chart_obj={};
+							}
+							chart_obj["vender"]=json_obj.vender[i];
+							chart_obj[json_obj.entrance[i]]=json_obj.answer[i];
+						}
+						chart_data[j]=chart_obj;
+						j++;
+						
+						draw_linechart(chart_data,list,'month');
+						$(".visualize").animate({"opacity":"1"});
+					}
+				});
+			}
+		});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
 		});
 	});
 </script>
@@ -293,8 +334,9 @@ function draw_chart(m_h,m_w,data){
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
 			<!-- 第一列 -->
-	<div class="validateTips" align="center" style="position:relative;height:0px;top:-25px;"> </div>
-	<div style="margin:30px auto;width:800px;"><div id="chart" style="opacity:0;"></div></div>
+	<div style="margin:30px auto;width:1000px;"><div id="chart1" style="opacity:0;"></div></div>
+<div class="validateTips" align="center" style="position:relative;height:0px;top:-25px;"> </div>	
+	<div id='hello' style="margin:80px auto;width:1000px;"><div id="chart2" style="opacity:0;"></div></div>
 </div>
 </div>
 </body>

@@ -1,4 +1,60 @@
 
+//warning_msg(str); 就警告紅字
+//order_source_auto(name); 銷售平台的autocomplete
+//isIE(); 是不是IE
+//money(amount); 換成錢的表示
+//draw_table(table_name,title); 畫 報表的datatable
+//grows_up(str); str半形變全形
+
+//vender_color(vender); X
+//table_before(str);X
+//get_week_day(number);X
+
+function grows_up(str){
+	if(!(str.length>0)){return "";}
+	var tmp =  new Array();
+	var a = str;
+	var b = "";
+	for(var i = 0; i < a.length; i++){
+	  if(a.charCodeAt(i)<=172 && a.charCodeAt(i)>=32){
+	  	tmp[i] = a.charCodeAt(i)+65248;//轉全形unicode +65248
+	  }
+	  else {
+	  	tmp[i] = a.charCodeAt(i)
+	  }
+		b += String.fromCharCode(tmp[i]);
+	}
+		return b;
+}
+
+function warning_msg(str){
+	$(".warning_msg").remove();
+	if(str.length<1){return;}
+	if($(".div_right_top").length>0){
+		$(".div_right_top").after("<div class='warning_msg'>"+str+"</div>");
+	}else{
+		$(".input-field-wrap").after("<div class='warning_msg'>"+str+"</div>");
+	}
+}
+
+function order_source_auto(name) {
+    var availableTags = [
+      "yahoo","超級商城","Pchome","夠麻吉","樂天",
+      "payeasy","博客來","ibon", "momo","愛買",
+      "GoHappy","myfone","森森購物","九易","UDN",
+      "17Life", "ASAP", "通用","國泰Tree","Line Mart"
+    ];
+    $( "#"+name).autocomplete({
+    	minLength: 0,
+    	source: availableTags,
+    	position:  {my: "left top", at: "left bottom", collision: "flipfit"}
+    });
+    $( "#"+name).focus(function(){
+    	var eve=jQuery.Event("keydown");
+    	eve.which=40;
+      	$(this).trigger(eve);
+    });
+}
 
 function isIE(){
 	return (window.navigator.userAgent.indexOf("MSIE ") > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./));	
@@ -12,7 +68,7 @@ function get_week_day(number){
 				if(i==2||i==4||i==6||i==9||i==11){continue;}
 			}
 			if(getYearWeek(2016,i,j)==number){
-				return ""+i+"/"+j+"";
+				return ((i>9)?i:"0"+i)+"/"+((j>9)?j:"0"+j)+"";
 			}
 		}
 	}
@@ -83,9 +139,10 @@ function draw_table(table_name,title){
 		    	columns: ':visible'
 			}
 		  }],
-		"language": {"url": "js/dataTables_zh-tw.txt"}
+		"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "<font size=3>---查無結果---</font>"}
 	});
 	//$("#animate_table").fadeIn(1000);
+	$(selector+" tr").css({"height":"56px"});
 	$("#"+name).animate({"opacity":"0.01"},1);
 	$("#"+name).animate({"opacity":"1"});
 }

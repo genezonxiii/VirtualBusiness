@@ -159,6 +159,14 @@ function who(){
 		$(".sidenav > ul > li:nth-child(4)").addClass("active");
 		return "銷售金額比例統計圖";
 		break;
+	case "bestsale.jsp":
+		$(".sidenav > ul > li:nth-child(4)").addClass("active");
+		return "暢銷商品統計圖";
+		break;
+	case "heavybuyer.jsp":
+		$(".sidenav > ul > li:nth-child(4)").addClass("active");
+		return "訂購人消費排名統計圖";
+		break;	
 //######線上學院##########################
 	case "onlinecourse.jsp":
 		$(".sidenav > ul > li:nth-child(5)").addClass("active");
@@ -182,7 +190,7 @@ function who(){
 </head>
 <body>
 
-<div class="page-wrapper" >
+<div class="page-wrapper" style="" >
 	<div class="header" style="z-index:1;">
 		<h1>智慧電商平台</h1>
 		<div class="userinfo">
@@ -190,7 +198,7 @@ function who(){
 			<a id="logout" class="btn-logout" >登出</a>
 		</div>
 	</div><!-- /.header -->
-	<div id="sidenav-panel" style="position: fixed;top: 56px;width: 120px;height:100%;background: #3F7FAA;"></div>
+	<div class="sidenavpanel"></div>
 	<div class="sidenav" style="z-index:2;">
 		<ul>
 			<li><img src="images/sidenav-transaction.svg" alt="">交易處理
@@ -240,6 +248,8 @@ function who(){
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salechart.jsp');});">出貨量統計圖</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('saleamountchart.jsp');});">銷售金額統計圖</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('saleamountstaticchart.jsp');});">銷售金額比例統計圖</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('heavybuyer.jsp');});">訂購人消費排名統計圖</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('bestsale.jsp');});">暢銷商品統計圖</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
@@ -273,14 +283,15 @@ function who(){
 <script type="text/javascript">
 $(function() {
 	$('body').keypress(function(e){//ctrl + alt + b
-	    if(e.ctrlKey && e.altKey){
-	    	if(e.which == 98){
+	    if(e.shiftKey){
+	    	if(e.which == 41){
 	    		$(".hide_everywhere").removeClass("hide_everywhere");
 	    		$(".sidenav > ul > li:nth-child(5) ul").css("top", "-100px");
 	    	}
 	    }
 	});
 	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","7px 20px");
+	$(".sidenav > ul > li:nth-child(3)").find("a").css("padding","8px 20px");
 	$("#logout").click(function(e) {
 		$.ajax({
 			type : "POST",

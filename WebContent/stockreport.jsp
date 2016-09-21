@@ -250,7 +250,16 @@ var bar_search=0;
 		});
 		$("#dialog-form-update").show();
 		//修改事件聆聽		
-
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	});	
 </script>
 		<div class="datalistWrap">
@@ -258,7 +267,7 @@ var bar_search=0;
 				<div class="form-wrap">
 					<div class="form-row">
 						<label for="">
-							<span class="block-label">商品名稱查詢<font color=red>&nbsp;或讀取條碼</font></span>
+							<span class="block-label">商品名稱查詢<font color='#6A5ACD'>&nbsp;或讀取條碼</font></span>
 							<input type="text" id="searh_stock_name"></input>
 						</label>
 						<button class="btn btn-darkblue" id="searh_stock">查詢</button>
@@ -283,14 +292,14 @@ var bar_search=0;
 				</form>
 			</div>			
 			<!-- 第二列 -->
-			<div class="row search-result-wrap" style="width:600px;margin:0px auto;">
+			<div class="row search-result-wrap" style="margin:0px auto;">
 				<div id="products-contain" class=" result-table-wrap" style="display:none;">
 					<table id="products" class="ui-widget ui-widget-content result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th style="min-width:150px;">產品名稱 </th>
-								<th style="min-width:150px;">庫存數量</th>
-								<th style="min-width:150px;">安全庫存</th>
+								<th >產品名稱 </th>
+								<th style="max-width:150px;">庫存數量</th>
+								<th style="max-width:150px;">安全庫存</th>
 							</tr>
 						</thead>
 						<tbody id="tbdy" style="text-align:center">

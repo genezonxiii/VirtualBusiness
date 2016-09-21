@@ -33,123 +33,96 @@
 <script>
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});
-		var validator_update = $("#password-form-post").validate({
-			rules : {
-				password : {
-					required : true,
-					maxlength : 10
-				},
-		password2 : {
-			required : true,
-			maxlength : 10
-		}
-			},
-			messages : {
-				unit_name : {
-					maxlength : "長度不能超過10個字"
-				}
-			}
-			
-		});
 		$("input[name='password']").bind('focus', function(){ 
-			$("#errormesg").text(""); 
+			warning_msg("");
 			$("#ok").text(""); 
 		});
-		
+		$("#dialog-confirm").dialog({
+			draggable : false, resizable : false, autoOpen : false,
+			height : "auto", width : "auto", modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
+			buttons : {
+				"確認更改" : function() {
+					$.ajax({
+						type : "POST",
+						url : "changepassword.do",
+						data : {
+							action : "update",
+							password : $("input[name='password'").val(),
+						},
+						success : function(result) {
+							warning_msg("");
+							var json_obj = $.parseJSON(result);
+							//判斷查詢結果
+							var resultRunTime = 0;
+							$.each (json_obj, function (i) {
+								resultRunTime+=1;
+							});
+							if(resultRunTime!=0){
+								$("input").attr("value","");
+								$("#ok").text("密碼修改完成"); 										
+							}
+						}		
+					});
+					$(this).dialog("close");
+				},
+				"取消更改" : function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+		$("#dialog-confirm").show();
 		//密碼修改
 		$("#password_btn").click(function(e) {
-			var pass1 = $("input[name='password']").val();
-			var pass2 = $("input[name='password2']").val();
-			if ( pass1 === pass2) {
-			} else {
-				$("#errormesg").text("密碼不相同請重新輸入"); 
-				$("input").attr("value","");
-				return false;
+			e.preventDefault();
+			var regexp1=/[a-zA-Z]+/,regexp2=/[0-9]+/;
+			if($("#pwd").val().length<6||$("#pwd").val().length>12||!regexp1.test($("#pwd").val())||!regexp2.test($("#pwd").val())){
+				$("#pwd").addClass("error");warning_msg("密碼格式不符");return;
 			}
-							e.preventDefault();
-							$.ajax({
-									type : "POST",
-									url : "changepassword.do",
-									data : {
-										action : "update",
-										password : $("input[name='password'").val(),
-									},
-									success : function(result) {
-										if ($('#password-form-post').valid()) {
-											var json_obj = $.parseJSON(result);
-											//判斷查詢結果
-											var resultRunTime = 0;
-											$.each (json_obj, function (i) {
-												resultRunTime+=1;
-											});
-											if(resultRunTime!=0){
-												$("input").attr("value","");
-												$("#ok").text("密碼修改完成"); 										
-											}
-										}
-									}		
-								});
-							});
-						});
+			if($("#pwd").val()!=$("#pwd2").val()){
+				$("#pwd2").addClass("error");warning_msg("請輸入相同密碼");return;
+			}
+			$("#dialog-confirm").dialog("open");
+			$("#dialog-confirm").html("<div class='delete_msg'>'"+$("#pwd").val().substring(0,$("#pwd").val().length-4)+"****"+"'</div>")
+			
+		});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+	});
 </script>
-		<div class="datalistWrap">
-		
 			<!-- 第一列 -->
 		<div class="input-field-wrap">
 			<div class="form-wrap">
-			<form name="password-form-post" id="password-form-post" class="result-table">
 				<div class="form-row">
 					<label for="">
 						<span class="block-label">新密碼</span>
-						<input type="password" name="password">
+						<input type="password" id="pwd" style="width:200px;" name="password">
 					</label>
 				</div>
 				<div class="form-row">
 					<label for="">
 						<span class="block-label">新密碼確認</span>
-						<input type="password" name="password2">
+						<input type="password" id="pwd2" style="width:200px;" name="password2">
 					</label>
 				</div>
+				<font color=brown>長度須為6~12位且包含英文及數字。</font><br><br>
 				<div class="btn-row">
 					<button id="password_btn" class="btn btn-exec btn-wide">更改密碼</button>
 				</div>
-				<div id="errormesg"></div>
-			</form>
 			</div><!-- /.form-wrap -->
 		</div><!-- /.input-field-wrap -->
-			
-			
-			
-<!-- 			<div class="row search-result-wrap" align="center"> -->
-<!-- 				<div id="products-serah-create-contain" class="ui-widget result-table-wrap"> -->
-<!-- 				<form name="password-form-post" id="password-form-post" class="result-table"> -->
-<!-- 						<table  id="password"> -->
-<!-- 							<tbody> -->
-<!-- 								<tr> -->
-<!-- 									<td><h2>新密碼:</h2></td> -->
-<!-- 									<td><input type="password" name="password"  placeholder="輸入新密碼"/></td> -->
-									
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td><h2>新密碼確認:</h2></td> -->
-<!-- 									<td><input type="password" name="password2"  placeholder="再輸入新密碼"/></td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td colspan="2"> -->
-<!-- 										<button id="password_btn" class="btn btn-darkblue">更改密碼</button> -->
-<!-- 									</td> -->
-<!-- 								</tr> -->
-<!-- 								<tr> -->
-<!-- 									<td colspan="2"><div id="errormesg"></div></td> -->
-								
-<!-- 								</tr> -->
-<!-- 							</tbody> -->
-<!-- 						</table> -->
-<!-- 						</form> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-		</div>
+		<div id="ok" align="center" style="color:#00CC00;font-size:32px;"></div>
 	</div>
 	</div>
+	<div id="dialog-confirm" title="是否更改密碼為" style="display:none;"></div>
 </body>
 </html>

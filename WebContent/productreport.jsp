@@ -315,7 +315,16 @@
 			}
 		});
 	    $("#warning").show();
-	    
+	    $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	    
 	});	
 </script>
@@ -336,7 +345,7 @@
 					</label>
 					<button class="btn btn-darkblue" id="searh-name">查詢</button>
 				</div>
-				<font color=red >掃條碼亦可取得商品資料</font>
+				<font color='#6A5ACD' >掃條碼亦可取得商品資料</font>
 			</div><!-- /.form-wrap -->
 		</div>
 			

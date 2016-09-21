@@ -1028,6 +1028,7 @@ public class sale extends HttpServlet {
 					saleVO.setMemo(rs.getString("memo"));
 					saleVO.setSale_date(rs.getDate("sale_date"));
 					saleVO.setOrder_source(rs.getString("order_source"));
+					saleVO.setCustomer_id(rs.getString("customer_id"));
 					list.add(saleVO);
 				}
 				// Handle any driver errors
@@ -1093,6 +1094,7 @@ public class sale extends HttpServlet {
 					saleVO.setMemo(rs.getString("memo"));
 					saleVO.setSale_date(rs.getDate("sale_date"));
 					saleVO.setOrder_source(rs.getString("order_source"));
+					saleVO.setCustomer_id(rs.getString("customer_id"));
 					list.add(saleVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -1160,6 +1162,7 @@ public class sale extends HttpServlet {
 					saleVO.setMemo(rs.getString("memo"));
 					saleVO.setSale_date(rs.getDate("sale_date"));
 					saleVO.setOrder_source(rs.getString("order_source"));
+					saleVO.setCustomer_id(rs.getString("customer_id"));
 					list.add(saleVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -1280,6 +1283,7 @@ public class sale extends HttpServlet {
 					saleVO.setMemo(rs.getString("memo"));
 					saleVO.setSale_date(rs.getDate("sale_date"));
 					saleVO.setOrder_source(rs.getString("order_source"));
+					saleVO.setCustomer_id(rs.getString("customer_id"));
 					list.add(saleVO); // Store the row in the list
 				}
 				// Handle any driver errors

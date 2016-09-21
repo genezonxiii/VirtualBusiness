@@ -19,7 +19,7 @@
     <param-name>jdbcDriver</param-name>
     <param-value>com.mysql.jdbc.Driver</param-value>
   </context-param>
-<!--########################以下自家#####################################-->
+<!--########################以下平常#####################################-->
 
   <context-param>
   <param-name>dbURL</param-name>
@@ -35,29 +35,29 @@
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>C:/</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
-    <param-value>http://192.168.112.164:8090</param-value>
+    <param-value>http://www.a-ber.com.tw:8090</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
-    <param-value>C:/Users/10506002/workspace/VirtualBusiness/WebContent/upload</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value> 
   </context-param>
   <context-param>
     <param-name>videopath</param-name>
-    <param-value>/data/video</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/video</param-value>
   </context-param>
   <context-param>
     <param-name>videourl</param-name>
-    <param-value>http://192.168.112.164/video</param-value>
+    <param-value>http://localhost:8081/VirtualBusiness/video</param-value>
   </context-param>
   <servlet>
 
  <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
-<!-- 
+<!--
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
@@ -69,6 +69,18 @@
   <context-param>
     <param-name>dbPassword</param-name>
     <param-value>Admin@csi1008!</param-value>
+  </context-param>
+  <context-param>
+    <param-name>email</param-name>
+    <param-value>pscaber@cloud.pershing.com.tw</param-value>
+  </context-param>
+  <context-param>
+    <param-name>emailpwd</param-name>
+    <param-value>==AMzgDMucmbph2cyVGU</param-value>
+  </context-param>
+  <context-param>
+    <param-name>smtphost</param-name>
+    <param-value>cloud-pershing-com-tw.mail.protection.outlook.com</param-value>
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
@@ -88,7 +100,7 @@
   </context-param>
   <context-param>
     <param-name>videourl</param-name>
-    <param-value>http://192.168.112.164/video</param-value>
+    <param-value>http://www.a-ber.com.tw/video</param-value>
   </context-param>
   <servlet>
 -->
@@ -106,6 +118,18 @@
   <context-param>
     <param-name>dbPassword</param-name>
     <param-value>admin123</param-value>
+  </context-param>
+  <context-param>
+    <param-name>email</param-name>
+    <param-value>10506002@pershing.com.tw</param-value>
+  </context-param>
+  <context-param>
+    <param-name>emailpwd</param-name>
+    <param-value>ykTNycTNjhnW</param-value>
+  </context-param>
+  <context-param>
+    <param-name>smtphost</param-name>
+    <param-value>mail.pershing.com.tw</param-value>
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
@@ -354,7 +378,6 @@
     <servlet-name>image</servlet-name>
     <url-pattern>/image.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
   <servlet>
     <servlet-name>onlinecourse</servlet-name>
     <servlet-class>tw.com.aber.onlinecourse</servlet-class>
@@ -362,6 +385,47 @@
   <servlet-mapping>
     <servlet-name>onlinecourse</servlet-name>
     <url-pattern>/onlinecourse.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>changepassword</servlet-name>
+    <servlet-class>tw.com.aber.changepassword.controller.changepassword</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>changepassword</servlet-name>
+    <url-pattern>/changepassword.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>registry</servlet-name>
+    <servlet-class>tw.com.aber.registry</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>registry</servlet-name>
+    <url-pattern>/registry.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>membercondition</servlet-name>
+    <servlet-class>tw.com.aber.membercondition</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>membercondition</servlet-name>
+    <url-pattern>/membercondition.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  <servlet>
+    <servlet-name>bestsale</servlet-name>
+    <servlet-class>tw.com.aber.bestsale</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bestsale</servlet-name>
+    <url-pattern>/bestsale.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>heavybuyer</servlet-name>
+    <servlet-class>tw.com.aber.heavybuyer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>heavybuyer</servlet-name>
+    <url-pattern>/heavybuyer.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
   <filter>

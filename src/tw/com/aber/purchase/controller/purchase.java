@@ -32,6 +32,34 @@ public class purchase extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		if("get_supply_name".equals(action)){
+			
+			String supply_id = request.getParameter("supply_id");
+			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+			String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
+			String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement("SELECT supply_name FROM tb_supply where group_id= ? and supply_id = ?");
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, supply_id);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					response.getWriter().write(rs.getString("supply_name"));
+				}
+				
+				// Handle any driver errors
+			} catch (Exception e) {
+				System.out.println(e.toString());
+			}
+		}
+		
+		
 		if ("insert_detail".equals(action)) {
 			try {
 				String purchase_id = request.getParameter("purchase_id");
@@ -65,6 +93,7 @@ public class purchase extends HttpServlet {
 				purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id, product_name, quantity, cost, memo);
 				purchaseService = new PurchaseService();
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
+				
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonList = gson.toJson(list);
 				response.getWriter().write(jsonList);
@@ -182,6 +211,9 @@ public class purchase extends HttpServlet {
 				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
 				purchaseService = new PurchaseService();
 				List<PurchaseVO> salelist = purchaseService.getSearchAllDB(group_id);
+				PurchaseVO purchaseVO = new PurchaseVO();
+				purchaseVO.setMessage("驗證通過");
+				salelist.add(purchaseVO);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonStrList = gson.toJson(salelist);
 				response.getWriter().write(jsonStrList);
@@ -289,6 +321,9 @@ public class purchase extends HttpServlet {
 				purchaseService.addPurchase(seq_no, group_id, user_id, supply_id, memo, purchase_date, invoice, invoice_type, amount);
 				purchaseService = new PurchaseService();
 				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
+				PurchaseVO purchaseVO = new PurchaseVO();
+				purchaseVO.setMessage("驗證通過");
+				resultNameList.add(purchaseVO);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonList = gson.toJson(resultNameList);
 				response.getWriter().write(jsonList);
@@ -310,7 +345,7 @@ public class purchase extends HttpServlet {
 				String invoice = request.getParameter("invoice");
 				String invoice_type = request.getParameter("invoice_type");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+				
 				java.sql.Date purchase_date = null;
 				String purchase_dateStr = request.getParameter("purchase_date");
 				if (purchase_dateStr.length() != 0) {
@@ -326,7 +361,13 @@ public class purchase extends HttpServlet {
 				purchaseService = new PurchaseService();
 				purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date, invoice, invoice_type, amount);
 				purchaseService = new PurchaseService();
+				//System.out.println(purchase_id+ seq_no+ group_id+ user_id+ supply_id+ memo+ purchase_date+ invoice+ invoice_type+ amount);;
 				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
+				//System.out.println(group_id+" & "+supply_name);
+				PurchaseVO purchaseVO = new PurchaseVO();
+				purchaseVO.setMessage("驗證通過");
+				resultNameList.add(purchaseVO);
+				
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonList = gson.toJson(resultNameList);
 				response.getWriter().write(jsonList);
@@ -347,6 +388,9 @@ public class purchase extends HttpServlet {
 				if (supply_name == null || (supply_name.trim()).length() == 0) {
 					purchaseService = new PurchaseService();
 					List<PurchaseVO> list = purchaseService.getSearchAllDB(group_id);
+					PurchaseVO purchaseVO = new PurchaseVO();
+					purchaseVO.setMessage("驗證通過");
+					list.add(purchaseVO);
 					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
@@ -356,6 +400,9 @@ public class purchase extends HttpServlet {
 				if (supply_name != null || supply_name.trim().length() != 0) {
 					purchaseService = new PurchaseService();
 					List<PurchaseVO> list = purchaseService.getSearchDB(group_id, supply_name);
+					PurchaseVO purchaseVO = new PurchaseVO();
+					purchaseVO.setMessage("驗證通過");
+					list.add(purchaseVO);
 					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
@@ -1094,6 +1141,7 @@ public class purchase extends HttpServlet {
 				pstmt.setString(1, group_id);
 				pstmt.setString(2, supply_name);
 				rs = pstmt.executeQuery();
+				//System.out.println("supply: "+supply_name);
 				while (rs.next()) {
 					purchaseVO = new PurchaseVO();
 					purchaseVO.setPurchase_id(rs.getString("purchase_id"));

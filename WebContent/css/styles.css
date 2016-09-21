@@ -54,6 +54,13 @@ h5 {
 h6 {
     font-size: 13px;
 }
+hr {}
+hr.hr-gray {
+    border: none;
+    border-top: 1px solid #ccc;
+    height: 1px;
+    margin: 20px 0;
+}
 /*registry style Ben偷加的*/
 .registry-panel {
     margin: 0 auto;
@@ -408,6 +415,9 @@ h6 {
     opacity: 1;
     visibility: visible;
 }
+.sidenavpanel {
+	position: fixed;top: 56px;width: 120px;height:100%;background: #3F7FAA;
+}
 /* content-wrap
 ---------------------------------- */
 h2.page-title {
@@ -572,6 +582,7 @@ input[type="text"], input[type="password"], select, textarea {
     font-size: 16px;
     margin-bottom: 5px;
     padding: 5px;
+    font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
 }
 input[type="text"]:hover, input[type="password"]:hover, select:hover, textarea:hover {}
 input[type="text"]:focus, input[type="text"].focus, input[type="password"]:focus, input[type="password"].focus, select:focus, select.focus, textarea:focus, textarea.focus {
@@ -826,22 +837,112 @@ input[type=radio]:checked + label:before {
 .ui-datepicker-today {
     border: 1px solid #ccc !important;
 }
+/*-- 訂單拋轉作業 Radio Button styles --*/
+.ec-radio-group-wrap {
+    zoom: 1;
+    margin-bottom: 15px;
+}
+.ec-radio-group-wrap input[type=radio] {
+    position: absolute;
+    left: -9999px;
+    /*Disabled*/
+    /*Checked*/
+}
+.ec-radio-group-wrap input[type=radio] + label {
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    height: 64px;
+    margin: 0;
+    overflow: hidden;
+    padding: 0px 0;
+    position: relative;
+    display: block;
+    float: left;
+    text-align: center;
+    cursor: pointer;
+    width: calc((100% - 60px) / 5);
+    background: #F8F8F8;
+}
+.ec-radio-group-wrap input[type=radio] + label img {
+    max-height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+/*     max-height: 60px; */
+/*     max-width: 240px; */
+    margin: 0 auto;
+}
+.ec-radio-group-wrap input[type=radio] + label span {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    font-size: 13px;
+    color: #aaa;
+    padding: 2px 4px;
+    z-index: -1;
+}
+.ec-radio-group-wrap input[type=radio] + label:not(:last-child) {
+    margin-right: 15px;
+}
+.ec-radio-group-wrap input[type=radio] + label:before {
+    background-image: none;
+}
+.ec-radio-group-wrap input[type=radio]:focus {}
+.ec-radio-group-wrap input[type=radio]:focus:before {}
+.ec-radio-group-wrap input[type=radio]:disabled, .ec-radio-group-wrap input[type=radio].readonly {
+    /*Disabled checked*/
+}
+.ec-radio-group-wrap input[type=radio]:disabled + label, .ec-radio-group-wrap input[type=radio].readonly + label {
+    cursor: not-allowed;
+    color: #666;
+}
+.ec-radio-group-wrap input[type=radio]:disabled + label:before, .ec-radio-group-wrap input[type=radio].readonly + label:before {}
+.ec-radio-group-wrap input[type=radio]:disabled:checked + label, .ec-radio-group-wrap input[type=radio].readonly:checked + label {}
+.ec-radio-group-wrap input[type=radio]:checked + label {
+    border: 3px solid #62E0E9;
+}
+.ec-radio-group-wrap input[type=radio]:checked + label span {
+    background: #62E0E9;
+    color: #fff;
+    z-index: 0;
+}
+.ec-radio-group-wrap:before, .ec-radio-group-wrap:after {
+    content: '';
+    display: table;
+}
+.ec-radio-group-wrap:after {
+    clear: both;
+}
 /* Table */
+table.dialog-table{
+	padding:0 20px;
+}
+table.dialog-table td{
+	word-break: keep-all;
+}
+table.form-table{
+	border-collapse: separate;
+	border-spacing: 10px 20px;
+	margin-right: 30px;
+	font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
+}
 table.form-table tr td:nth-child(2n+1) {
-    text-align: right;
+    text-align: left;
     padding-left: 4px;
+    padding-bottom: 5px;
 }
 table.form-table tr td:nth-child(2n) {
     text-align: left;
 }
 table.form-table td{
 /*     padding:0 2px; */
+/* 	padding: 10px; */
+	word-break: keep-all;
 }
 
-table.dataTable odd{
+table.dataTable tr:nth-child(2n+1){
 	  background: #fff;
 }
-table.dataTable even{
+table.dataTable tr:nth-child(2n){
 	  background: #eee;
 }
 
@@ -985,21 +1086,80 @@ button.btn {
 
 /* 以下都是Ben偷加的 */
 .div_right_bottom {
-float:right;
-position:relative;
-right:-20px;
-bottom:0px;
+	float:right;
+	position:relative;
+	right:-20px;
+	bottom:0px;
 }
 .div_right_bottom:hover {
-background: #DDD;
+	background: #DDD;
 }
 
 .div_right_top {
-float:right;
-position:relative;
-right:10px;
-top:10px;
+	float:right;
+	position:relative;
+	right:10px;
+	top:10px;
 }
 .div_right_top:hover {
-background: #DDD;
+	background: #DDD;
 }
+
+.warning_msg{
+	color:red;
+	text-align: center;
+	font-size:22px;
+	padding-top:20px;
+	font-family: "Microsoft JhengHei";
+/* 	font-family: "Microsoft YaHei"; */
+/* 	font-weight: bold; */
+}
+.delete_msg{
+	color:red;
+	text-align: center;
+	font-size:22px;
+	padding:15px 15px 5px 15px;
+	font-family: "Microsoft JhengHei";
+}
+
+.ui-autocomplete {
+	max-height: 40%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.ui-menu .ui-menu-item{
+	font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
+}
+
+
+/* 直的設備? */
+/* @media screen and (orientation:portrait) { */
+/* 	.sidenav { */
+/* 		transition: all .3s linear; */
+/* 		left: -118px; */
+/* 	} */
+/* 	.sidenav:hover { */
+/* 		left: 0px; */
+/* 	} */
+/* 	.content-wrap { */
+/* 		transition: all .3s linear; */
+/* 		margin-left: 0px; */
+/*     	width: 100%; */
+/* 	} */
+/* 	.sidenavpanel { */
+/* 		transition: all .3s linear; */
+/* 		width: 0px; */
+/* 	} */
+/* 	.header * , .header , h2.page-title{ */
+/* 		transition: all .3s linear; */
+/* 		float: none; */
+/* 		position: fixed; */
+/* 		top: -52px; */
+/* 	} */
+/* 	.header *:hover , .header:hover , h2.page-title:hover { */
+/* 		top: 56px; */
+/* 	} */
+/* } */
+
+
+

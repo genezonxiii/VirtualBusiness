@@ -57,6 +57,7 @@
 					},
 					success : function(result) {
 							var json_obj = $.parseJSON(result);
+							
 							var len=json_obj.length;
 							//判斷查詢結果
 							var resultRunTime = 0;
@@ -102,7 +103,7 @@
 									}
 								});
 							}
-							
+							if(resultRunTime<1){$(".validateTips").html('<font color=red>查無此結果。</font>');return;}
 							$("#purchases").dataTable().fnDestroy();
 							if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 								if($("#purchase_date_err_mes").length){
@@ -116,7 +117,17 @@
 						}
 				});		
 		});
-	})
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+	});
 </script>
 		<div class="input-field-wrap">
 			<div class="form-wrap">
@@ -153,6 +164,7 @@
 				</div>
 			</div>			
 		</div>
+		<div class="validateTips" align="center"> </div>
 	</div>
 </body>
 </html>

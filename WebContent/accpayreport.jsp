@@ -295,6 +295,18 @@
 				});
 		}
 	});
+	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+	$(".upup").click(function(){
+		$("#rad-1").hide();
+		$("#rad-2").hide();
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$(".downdown").click(function(){
+		$(".input-field-wrap").slideToggle("slow",function(){$("#rad-1").show();$("#rad-2").show();});
+		$(".downdown").slideToggle();
+	});
 	//get today yyyy-mm-dd
 	function getCurrentDate(){
 		var fullDate = new Date();
@@ -306,8 +318,8 @@
 	//日期設定
 })
 </script>
-	<input id="radio-1" type="radio" name="group" onclick="$('#div1').show();$('#div2').hide();" checked><label for="radio-1"><span class="form-label">應收未收</span></label>
-	<input id="radio-2" type="radio" name="group" onclick="$('#div1').hide();$('#div2').show();" ><label for="radio-2"><span class="form-label">應收已收</span></label>
+	<input id="radio-1" type="radio" name="group" onclick="$('#div1').show();$('#div2').hide();" checked><label for="radio-1" id="rad-1"><span class="form-label">應收未收</span></label>
+	<input id="radio-2" type="radio" name="group" onclick="$('#div1').hide();$('#div2').show();" ><label for="radio-2" id="rad-2"><span class="form-label">應收已收</span></label>
 		<div class="datalistWrap" id="div1">
 			<!-- 第一列 -->
 				<div class="input-field-wrap">

@@ -443,7 +443,7 @@ public class customer extends HttpServlet {
 			List<CustomerVO> list = new ArrayList<CustomerVO>();
 			
         	String gidInBase64 = new String(Base64.encodeBase64String(group_id.getBytes()));
-        	
+//        	gidInBase64 = new String(Base64.encodeBase64String("cbcc3138-5603-11e6-a532-000d3a800878".getBytes()));
 			String url = wsPath + "/query/group=" + gidInBase64;
         	HttpGet httpRequest = new HttpGet(url);
         	HttpClient client = HttpClientBuilder.create().build();

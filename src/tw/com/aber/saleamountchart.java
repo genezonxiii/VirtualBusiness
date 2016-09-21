@@ -51,22 +51,37 @@ public class saleamountchart extends HttpServlet {
 		String time2 = request.getParameter("time2");
 		time2=(time2==null || time2.length()<3)?"2300-12-31":time2;
 		//System.out.println("from "+time1+" to "+time2);
-		
 		//###########################################
-		try {
-			SalechartService salechartService = null;
-			java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
-			java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
-			salechartService = new SalechartService();
-			SalechartVO chart_data = salechartService.getSearhDB(group_id, from_date, till_date);
-			Gson gson = new Gson();
-			String jsonStrList = gson.toJson(chart_data);
-			//System.out.println("json: "+ jsonStrList);
-			response.getWriter().write(jsonStrList);
-			return;
-		} catch (Exception e) {System.out.println("Error with time parse. :"+e);}
-		
+		String action = request.getParameter("action");
+		if("search_week".equals(action)){
+			try {
+				SalechartService salechartService = null;
+				java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
+				java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
+				salechartService = new SalechartService();
+				SalechartVO chart_data = salechartService.getSearhDB(group_id, from_date, till_date);
+				Gson gson = new Gson();
+				String jsonStrList = gson.toJson(chart_data);
+				//System.out.println("json: "+ jsonStrList);
+				response.getWriter().write(jsonStrList);
+				return;
+			} catch (Exception e) {System.out.println("Error with time parse. :"+e);}
 		}
+		if("search_month".equals(action)){
+			try {
+				SalechartService salechartService = null;
+				java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
+				java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
+				salechartService = new SalechartService();
+				SalechartVO chart_data = salechartService.getSearhDB_month(group_id, from_date, till_date);
+				Gson gson = new Gson();
+				String jsonStrList = gson.toJson(chart_data);
+				//System.out.println("json: "+ jsonStrList);
+				response.getWriter().write(jsonStrList);
+				return;
+			} catch (Exception e) {System.out.println("Error with time parse. :"+e);}
+		}
+	}
 	
 
 	/************************* 對應資料庫表格格式 **************************************/
@@ -111,6 +126,7 @@ public class saleamountchart extends HttpServlet {
 	/*************************** 制定規章方法 ****************************************/
 	interface Salereport_interface {
 		public SalechartVO searhDB(String group_id,java.sql.Date from_date,java.sql.Date till_date);
+		public SalechartVO searhDB_month(String group_id,java.sql.Date from_date,java.sql.Date till_date);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -122,12 +138,16 @@ public class saleamountchart extends HttpServlet {
 		public SalechartVO getSearhDB(String group_id, java.sql.Date from_date,java.sql.Date till_date) {
 			return dao.searhDB(group_id, from_date,till_date);
 		}
+		public SalechartVO getSearhDB_month(String group_id, java.sql.Date from_date,java.sql.Date till_date) {
+			return dao.searhDB_month(group_id, from_date,till_date);
+		}
 	}
 
 	/*************************** 操作資料庫 ****************************************/
 	class SalereportDAO implements Salereport_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_get_sale_price_statistics = "call sp_get_sale_price_statistics_byweek(?,?,?)";
+		private static final String sp_get_sale_price_statistics_byweek = "call sp_get_sale_price_statistics_byweek(?,?,?)";
+		private static final String sp_get_sale_price_statistics = "call sp_get_sale_price_statistics(?,?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -143,7 +163,7 @@ public class saleamountchart extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_sale_price_statistics);
+				pstmt = con.prepareStatement(sp_get_sale_price_statistics_byweek);
 				pstmt.setString(1,group_id);
 				pstmt.setDate(2,from_date);
 				pstmt.setDate(3,till_date);
@@ -181,7 +201,50 @@ public class saleamountchart extends HttpServlet {
 			}
 			return salechartVO;
 		}
-
+		public SalechartVO searhDB_month(String group_id, java.sql.Date from_date,java.sql.Date till_date) {
+			SalechartVO salechartVO = new SalechartVO();
+			
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_sale_price_statistics);
+				pstmt.setString(1,group_id);
+				pstmt.setDate(2,from_date);
+				pstmt.setDate(3,till_date);
+				rs = pstmt.executeQuery();
+				int count;
+			    if (rs.last()){
+			       count = rs.getRow();
+			    }else{
+			       count = 0;
+			    }
+			    int[] entrance=new int[count];
+			    int[] answer=new int[count];
+			    String[] vender=new String[count];
+			    int[] month=new int[count];
+			    rs.beforeFirst();
+			    int k=0;
+				while (rs.next()) {
+					entrance[k]=rs.getInt("month");
+					answer[k]=rs.getInt("price");
+					vender[k]=rs.getString("order_source");
+					month[k]=rs.getInt("month");
+					k++;
+				}
+				salechartVO.setEntrance(entrance);
+				salechartVO.setAnswer(answer);
+				salechartVO.setVender(vender);
+				salechartVO.setMonth(month);
+				//System.out.println("total Data: "+k);
+			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
+			return salechartVO;
+		}
 
 	}
 }

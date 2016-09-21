@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>歡迎畫面</title>
+    <title>智慧電商平台 主頁</title>
 	<meta charset="UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
@@ -13,6 +13,17 @@
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="background-image: url('./images/welcome.png');background-size: cover;overflow-y:auto;">
 	<div class='bdyplane' style="opacity:0"></div>
+<div style="margin:10px;">
+<!--  <img src="./images/welcome.png" alt="welcome" style="width:70%;" > -->
+<div style="text-align: center;margin:100px;font-size:35px;">
+	<div id="ship"></div>
+	<br>
+	<div id="sale"></div>
+</div>
+</div>  
+</div> 
+</div>
+
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -40,16 +51,5 @@ $(function() {
 	});
 });
 </script>
-
-<div style="margin:10px;">
-<!--  <img src="./images/welcome.png" alt="welcome" style="width:70%;" > -->
-<div style="text-align: center;margin:100px;font-size:35px;">
-	<div id="ship"></div>
-	<br>
-	<div id="sale"></div>
-</div>
-</div>  
-</div> 
-</div>  
 </body>
 </html>

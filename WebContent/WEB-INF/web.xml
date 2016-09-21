@@ -402,7 +402,6 @@
     <servlet-name>registry</servlet-name>
     <url-pattern>/registry.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
   <servlet>
     <servlet-name>membercondition</servlet-name>
     <servlet-class>tw.com.aber.membercondition</servlet-class>
@@ -410,6 +409,23 @@
   <servlet-mapping>
     <servlet-name>membercondition</servlet-name>
     <url-pattern>/membercondition.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  <servlet>
+    <servlet-name>bestsale</servlet-name>
+    <servlet-class>tw.com.aber.bestsale</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bestsale</servlet-name>
+    <url-pattern>/bestsale.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>heavybuyer</servlet-name>
+    <servlet-class>tw.com.aber.heavybuyer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>heavybuyer</servlet-name>
+    <url-pattern>/heavybuyer.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
   <filter>

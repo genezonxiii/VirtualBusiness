@@ -163,7 +163,7 @@ function draw_chart(m_h,m_w,data){
 					var chart_data=[],chart_obj={},i=0,j=0,list=[];
 					
 					if(json_obj.entrance.length==0){
-						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
 						return;
 					}
 					var tmp_month=json_obj.entrance[0];
@@ -207,6 +207,16 @@ function draw_chart(m_h,m_w,data){
 // 					$("#chart").animate({"opacity":"1"});
 				}
 			});
+		});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
 		});
 	});
 </script>

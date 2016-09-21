@@ -156,7 +156,7 @@
 		 });
 		
 		//自訂產品查詢相關設定
-		$("#search-taginfo").click(function(e) {
+		$(".search-taginfo").click(function(e) {
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
@@ -340,24 +340,34 @@
 				"確認" : function() {$(this).dialog("close");}
 			}
 		});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	});
 </script>
 	<div class="panel-content">
-	
-	
 	<div class="input-field-wrap">
 			<div class="form-wrap">
 				<div class="form-row">
 					<label for="">
 						<span class="block-label">查詢商品ID</span>
-						<input type="text" id="c_product_id" name="c_product_id">
+						<input type="text" id="c_product_id" name="c_product_id" placeholder="請輸入查詢商品ID">
 					</label>
-					&nbsp;
+					<button class="btn btn-darkblue search-taginfo" id="search-taginfo">查詢</button>
+				</div>
+				<div class="form-row">
 					<label for="">
 						<span class="block-label">查詢商品名稱</span>
-						<input type="text" id="product_name" name="product_name">
+						<input type="text" id="product_name" name="product_name" placeholder="請輸入查詢商品名稱">
 					</label>
-					<button class="btn btn-darkblue" id="search-taginfo">查詢</button>
+					<button class="btn btn-darkblue search-taginfo" id="search-taginfo">查詢</button>
 				</div>
 			</div><!-- /.form-wrap -->
 		</div><!-- /.input-field-wrap -->

@@ -40,19 +40,27 @@
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
-	function detail(str){
-		$.ajax({
-			type : "POST",
-			url : "accreceive.do",
-			data : {
-				action : "melvin",
-				seq_no : str
-			},
-			success : function(result) {
-				alert(result);
-			}
-		});
-	}
+function draw_accreceive(parameter){
+	
+}
+
+
+
+
+function detail(str){
+	$.ajax({
+		type : "POST",
+		url : "accreceive.do",
+		data : {
+			action : "melvin",
+			seq_no : str
+		},
+		success : function(result) {
+			$("#my").html("<table class='dialog-table'>"+result+"</table>");
+			$("#my").dialog("open");
+		}
+	});
+}
 	$(function(){
 		$(".bdyplane").animate({"opacity":"1"});
 		 $("#amount_date_form").validate({
@@ -94,7 +102,7 @@
 	//應收帳款日查詢相關設定
 	$("#searh_amount_date").click(function(e) {
 		e.preventDefault();
-		if($("#amount_date_form").valid()){
+		if($("#amount_date_form").valid()){			
 			$.ajax({
 				type : "POST",
 				url : "accreceive.do",
@@ -177,7 +185,7 @@
 							$("#account_amount_date_table").dataTable().fnDestroy();
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#account_amount_date_contain").show();
+							$("#account_amount_date_contain").hide();
 							$("#account_amount_date_table tbody").html(result_table);
 							$("#account_amount_date_table").dataTable({
 								  autoWidth: false,
@@ -204,6 +212,7 @@
 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 // 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
 							$("#account_amount_date_table").find("td").css("text-align","center");
+							$("#account_amount_date_contain").fadeIn();
 							//$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 							//$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
@@ -308,7 +317,7 @@
 							$("#account_receive_date_table").dataTable().fnDestroy();
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#account_receive_date_contain").show();
+							$("#account_receive_date_contain").hide();
 							$("#account_receive_date_table tbody").html(result_table);
 							$("#account_receive_date_table").dataTable({
 								  autoWidth: false,
@@ -337,6 +346,7 @@
 							$("#account_receive_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("#account_receive_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+							$("#account_receive_date_contain").fadeIn();
 							if($("#search_receive_date_err_mes").length){
                 				$("#search_receive_date_err_mes").remove();
                 			}
@@ -360,6 +370,7 @@
 						$.ajax({
 							type : "POST",
 							url : "accreceive.do",
+							async : false,
 							data : {
 								action : "receive_account",
 								receivable_id : $(this).attr("value"),
@@ -423,7 +434,7 @@
 									$("#account_receive_date_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
-									$("#account_receive_date_contain").show();
+									$("#account_receive_date_contain").hide();
 									$("#account_receive_date_table tbody").html(result_table);
 									$("#account_receive_date_table").dataTable({
 										  autoWidth: false,
@@ -451,6 +462,7 @@
 									$("#account_receive_date_table").find("td").css("text-align","center");
 									$("#account_receive_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("#account_receive_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
+									$("#account_receive_date_contain").fadeIn();
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 									if($("#receive_account_err_mes").length){
 		                				$("#receive_account_err_mes").remove();
@@ -484,6 +496,7 @@
 						$.ajax({
 							type : "POST",
 							url : "accreceive.do",
+							async : false,
 							data : {
 								action : "delete_receive_account",
 								receivable_id : $(this).attr("value"),
@@ -547,7 +560,7 @@
 									$("#account_amount_date_table").dataTable().fnDestroy();
 								}
 								if(resultRunTime!=0){
-									$("#account_amount_date_contain").show();
+									$("#account_amount_date_contain").hide();
 									$("#account_amount_date_table tbody").html(result_table);
 									$("#account_amount_date_table").dataTable({
 										  autoWidth: false,
@@ -576,6 +589,7 @@
 									$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+									$("#account_amount_date_contain").fadeIn();
 									if($("#receive_cancel_account_err_mes").length){
 		                				$("#receive_cancel_account_err_mes").remove();
 		                			}
@@ -592,6 +606,26 @@
 		}
 	});	
 	$("#dialog-cancel-confirm").show();
+	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+	$(".upup").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$(".downdown").click(function(){
+		$(".input-field-wrap").slideToggle("slow");
+		$(".downdown").slideToggle();
+	});
+	$("#my").dialog({
+		title: "明細",
+		draggable : false, resizable : false, autoOpen : false,
+		height : "auto", width : "auto", modal : true,
+		show : {effect : "blind",duration : 300},
+		hide : {effect : "fade",duration : 300},
+		buttons : {
+			"確認" : function() {$(this).dialog("close");},
+		}
+	});
 	//get today yyyy-mm-dd
 	function getCurrentDate(){
 		var fullDate = new Date();
@@ -640,27 +674,8 @@
 				</form>
 			</div><!-- /.form-wrap -->
 		</div><!-- /.input-field-wrap -->
-<!-- 			<div class="row" align="center"> -->
-<!-- 				<div class="ui-widget"> -->
-<!-- 					<form id="amount_date_form" name="trans_list_date_form"> -->
-<!-- 						<table> -->
-<!-- 							<thead> -->
-<!-- 								<tr> -->
-<!-- 									<td><input type="text" id="amount_start_date" name="amount_start_date" class="date" placeholder="請輸入應收帳款產生起日"></td> -->
-<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
-<!-- 									<td><input type="text" id="amount_end_date" name="amount_end_date" class="date" placeholder="請輸入應收帳款產生迄日"></td> -->
-<!-- 									<td>&nbsp;&nbsp;<button id="searh_amount_date">查詢</button></td> -->
-<!-- 								</tr> -->
-<!-- 							</thead> -->
-<!-- 						</table> -->
-<!-- 					</form> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
 			<!-- 第二列 -->
 			<div class=" search-result-wrap" align="center" style="height:433px;">
-<!-- 			<div class="form-row"> -->
-<!-- 				<button id="button_1" align="center" class="btn btn-wide btn-darkblue">批次收帳</button> -->
-<!-- 			</div> -->
 				<div id="account_amount_date_contain" class="result-table-wrap" style="display:none;">
 					<table id="account_amount_date_table" class="result-table">
 						<thead>
@@ -684,23 +699,6 @@
 
 		<div class="datalistWrap">
 			<!-- 第三列 -->
-<!-- 			<div class="row" align="center"> -->
-<!-- 				<div class="ui-widget"> -->
-<!-- 					<form id="receive_date_form" name="trans_list_date_form"> -->
-<!-- 						<table> -->
-<!-- 							<thead> -->
-<!-- 								<tr> -->
-<!-- 									<td><input type="text" id="receive_start_date" name="receive_start_date" class="date" placeholder="請輸入實收帳款產生起日"></td> -->
-<!-- 									<th><p>&nbsp;&nbsp;~&nbsp;&nbsp;</p></th> -->
-<!-- 									<td><input type="text" id="receive_end_date" name="receive_end_date" class="date" placeholder="請輸入實收帳款產生迄日"></td> -->
-<!-- 									<td>&nbsp;&nbsp;<button id="searh_receive_date">查詢</button></td> -->
-<!-- 								</tr> -->
-<!-- 							</thead> -->
-<!-- 						</table> -->
-<!-- 					</form> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-			<!-- 第四列 -->
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<form id="receive_date_form" name="trans_list_date_form">
@@ -720,9 +718,6 @@
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
 			<div class="row search-result-wrap" align="center" style="height:433px;">
-<!-- 			<div class="form-row"> -->
-<!-- 				<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消批次收帳</button> -->
-<!-- 			</div> -->
 				<div id="account_receive_date_contain" class="result-table-wrap" style="display:none;">
 					<table id="account_receive_date_table" class="result-table">
 						<thead>
@@ -745,5 +740,6 @@
 		</div>
 	</div>
 	</div>
+	<div id="my"></div>
 </body>
 </html>

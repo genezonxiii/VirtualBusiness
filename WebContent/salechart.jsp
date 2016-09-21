@@ -67,8 +67,8 @@ function draw_barchart(data,list){
 	$('#chart').html(charttable);
 	$('#chart').visualize({
 		'type':'bar',
-		'barMargin':'3','barGroupMargin':'10',
-		'width':'800','height':'300',
+		'barMargin':'2','barGroupMargin':'15',
+		'width':((data.length*150)>1000?"1000":data.length*150),'height':'300',
 		'appendTitle':'true','title':'出貨量統計圖',
 		'appendKey':'true',
 		'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d'],
@@ -214,7 +214,7 @@ function date_format(str) {
 					var tmp_month=json_obj.month[0];
 					
 					if(json_obj.entrance.length==0){
-						$("#chart").html("<h2 style='color:red;'>查無資料</h2>");
+						$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
 						return;
 					}
 				
@@ -239,7 +239,7 @@ function date_format(str) {
 					}
 					chart_data[j]=chart_obj;
 					j++;
-					
+					$("#board").css({"width":(chart_data.length*150>1000?"1100":chart_data.length*150+100)});
 					draw_barchart(chart_data,list);
 					$(".visualize").animate({"opacity":"1"});
 // 					var data=[];
@@ -265,6 +265,16 @@ function date_format(str) {
 				}
 			});
 		});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;top:-15px;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	});
 </script>
 	<div class="panel-content">
@@ -288,8 +298,9 @@ function date_format(str) {
 			<!-- 第一列 -->
 		</div>
 	</div>
-<div style="margin:30px auto;width:800px;"><div id="chart" style="opacity:0;"></div></div>
-<div class="validateTips" align="center"> </div>
+	<div class="validateTips" align="center"> </div>
+<div id="board" style="margin:30px auto;width:1000px;"><div id="chart" style="opacity:0;"></div></div>
+
 </div>
 </div>
 </body>

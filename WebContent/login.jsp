@@ -23,7 +23,7 @@ function unicheck(){
         url : "login.do",
         type : "POST",
         cache : false,
-        async : false,
+//         async : false,
         delay : 1000,
         data : {
         	action : "check_unicode_exist",
@@ -37,12 +37,12 @@ function unicheck(){
         		check=1;
         	}else{
         		$("#uninumber").removeClass("error");
-        		$(".error-msg").remove();
+        		
         		check=2;
         	}
         }
     });
-	if(check==2){return true;}else{return false;}
+// 	if(check==2){return true;}else{return false;}
 }
 function to_login(){//<span class='error-msg'>請輸入統編</span>
 	$(".error").removeClass("error");
@@ -53,8 +53,8 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
 	if($("#password").val().length<1){$("#password").addClass("error");$("#password").after("<span class='error-msg'>請輸入密碼</span>");wrong=1;}
 	if($("#verify").val().length<1){$("#verify").addClass("error");$("#verify").after("<span class='error-msg'>請輸入驗證碼</span>");wrong=1;}
 	if($("#password").val().length>10){$("#password").addClass("error");$("#password").after("<span class='error-msg'>長度不可超過十個字</span>");wrong=1;}
-	if(!unicheck()){wrong=1;}
-	
+// 	if(!unicheck()){wrong=1;}
+	unicheck();
 	if(wrong==0){
 		$.ajax({url : "login.do", type : "POST", cache : false,
             data : {
@@ -88,7 +88,7 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             		$("#verify").val("");
 					$("#password").val("");
 					$("#verify").addClass("error");
-					$("#verify").after("<span class='error-msg'>驗證碼錯誤</span>");
+					$("#verify").after("<span class='error-msg'>認證碼錯誤</span>");
             	}
             	if (json_obj.message=="user_failure"){
             		$("#username").addClass("error");
@@ -105,6 +105,7 @@ $(function() {
 		chimg();
 	});
 	$("#uninumber").blur(function(){
+		$(".error-msg").remove();
 		unicheck();
 	});
 	$("#uninumber").focus();
@@ -112,7 +113,8 @@ $(function() {
 		to_login();
  	});
 	$("input").keydown(function (event) {
-        if (event.which == 13) {
+		
+        if (event.which == 13&& $(this).attr("id")!="username") {
         	to_login();
         }
     }); 

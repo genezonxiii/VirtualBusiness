@@ -110,6 +110,16 @@ function sea() {
 			parameter="searh";
 			sea();
 		});
+		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		$(".upup").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
+		$(".downdown").click(function(){
+			$(".input-field-wrap").slideToggle("slow");
+			$(".downdown").slideToggle();
+		});
 	});
 </script>
 		<div class="input-field-wrap">
@@ -135,7 +145,7 @@ function sea() {
 						<tr>
 							<th>銷貨單號</th>
 							<th>訂單號</th>
-							<th style="min-width:110px;">產品名稱</th>
+							<th style="min-width:130px;">產品名稱</th>
 							<th>客戶自訂產品ID</th>
 							<th>銷貨數量</th>
 							<th style="min-width:70px;">銷貨金額</th>
