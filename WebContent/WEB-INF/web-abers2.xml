@@ -100,7 +100,7 @@
   </context-param>
   <context-param>
     <param-name>videourl</param-name>
-    <param-value>http://www.a-ber.com.tw/video</param-value>
+    <param-value>http://abers2.eastasia.cloudapp.azure.com/video</param-value>
   </context-param>
   <servlet>
 

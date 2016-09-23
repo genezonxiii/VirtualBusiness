@@ -5,13 +5,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>北祥股份有限公司 智慧電商平台 使用者登入</title>
-	
 	<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
     <link rel="stylesheet" href="css/1.12.0/jquery-ui.css">
     <link rel="stylesheet" href="css/styles.css">
   <script src="js/jquery-1.12.4.js"></script>
   <script src="js/jquery-ui.min.js"></script>
-
+<style>
+input[type="text"], input[type="password"], select, textarea {
+	font-family: sans-serif;
+}
+</style>
 <script>
 function chimg(){
 	document.getElementById("validateCodeImg").src="HandleDrawValidateCode.do?t=" + Math.random();
@@ -67,7 +70,7 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             success: function(data) {
             	var json_obj = $.parseJSON(data);
             	if (json_obj.message=="connect_error"){
-            		$("#uninumber").after("<span class='error-msg'>訊號不穩定，請稍後再試!</span>");
+            		$("#uninumber").after("<span class='error-msg'>連線異常!</span>");
             		//$("#my_msg").html("訊號不穩定，<br>&nbsp;請檢查網路連線，或稍後再嘗試。<br>");
             		//$("#my_msg").dialog("open");
             	}
@@ -187,15 +190,14 @@ $(function() {
 					<a class="login-button" id="login_btn">登入</a>
 					<a class="login-reset-button" id="reset_btn">清除重填</a>
 				</div><!-- /.login-btn-wrap -->
-				<div align='center' style="padding-top:5px;">還沒有智慧電商平台的帳號嗎? <a href="./registry.jsp">註冊</a></div>
+<!-- 				<div align='center' style="padding-top:5px;"><a href="./forget.jsp">忘記密碼</a>?</div> -->
+<!-- 				<div align='center' style="padding-top:5px;">還沒有智慧電商平台的帳號嗎? <a href="./registry.jsp">註冊</a></div> -->
 			</form>
 		</div><!-- /.login-panel -->
 		</div><!-- /.login-panel-wrap -->
-
 		<div class="login-footer">
-			北祥股份有限公司 <span>服務電話：+886-2-2658-1910 | 傳真：+886-2-2658-1920</span>
+			北祥股份有限公司-1 <span>服務電話：+886-2-2658-1910 | 傳真：+886-2-2658-1920</span>
 		</div><!-- /.login-footer -->
-
 	</div><!-- /.login-wrapper -->
 	
 	<div id="my_msg"></div>

@@ -164,7 +164,7 @@ function date_format(str) {
 								<th>郵編</th>
 								<th>顧客姓名</th>
 								<th>手機</th>
-								<th style="min-width:100px">產品名稱</th>
+								<th style="min-width:140px">產品名稱</th>
 								<th>銷貨單號</th>
 								<th>數量</th>	
 								<th>銷貨平台</th>

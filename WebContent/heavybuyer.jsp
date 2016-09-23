@@ -20,7 +20,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap">
+	<div class="content-wrap" style="overflow-y:auto;">
 		<div class='bdyplane' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>

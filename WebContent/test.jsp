@@ -8,15 +8,47 @@
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico"/>
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-
+<script src="js/script.js"></script>
 <script src="http://code.jquery.com/jquery-1.12.3.js"></script>
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <!-- <script src="js/jquery-1.12.4.js"></script> -->
-<style></style>
+<style>
+</style>
 </head>
 <body class="login-body">
-
 <script>
+function grows_up(str){
+	if(!(str.length>0)){return "";}
+	var tmp =  new Array();
+	var a = str;
+	var b = "";
+	for(var i = 0; i < a.length; i++){
+	  
+	  if(a.charCodeAt(i)<=172 && a.charCodeAt(i)>=33){
+	  	tmp[i] = a.charCodeAt(i)+65248;//轉全形unicode +65248
+	  }else if(a.charCodeAt(i)==32){
+		  tmp[i] =12288;
+	  }else{
+	  	tmp[i] = a.charCodeAt(i)
+	  }
+		b += String.fromCharCode(tmp[i]);
+	}
+	alert("'"+b+"'");
+		return b;
+}
+function hello(){
+	$.ajax({
+		type : "POST",
+		url : "test.do",
+		data : {action :"tes", some : "1234" },
+		success : function(result) {
+			alert(result);
+			System.out.println("@@");	
+		}
+	});
+}
+
+
 $(function(){
 	$('#example').DataTable( {
 		"scrollX": "none",
@@ -44,7 +76,8 @@ $(function(){
 	<div class="bkg-lower"></div>
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
 		<h1>　</h1>
-<!-- 		<button onclick="send_mail();">##@_@##</button> -->
+		<input type="text" id="helo">
+		<button onclick="hello()">##@_@##</button>
 <!-- 		<div class="login-panel-wrap"> -->
 <!-- 		<div class="registry-panel" style="width:100%" > -->
 <!-- 			<button id="btn1"  > -->

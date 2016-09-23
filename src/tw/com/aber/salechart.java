@@ -55,7 +55,7 @@ public class salechart extends HttpServlet {
 		String time2 = request.getParameter("time2");
 		time2=(time2==null || time2.length()<3)?"2300-12-31":time2;
 		//System.out.println("from "+time1+" to "+time2);
-		
+		if(!"searh".equals(request.getParameter("action"))){return;}
 		//###########################################
 		try {
 			SalechartService salechartService = null;

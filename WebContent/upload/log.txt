@@ -242,3 +242,13 @@ I'm image.java.
   I'm upload-java with PID = 10656.
 2016-08-25(星期四) 19:37:38:
   I'm upload-java with PID = 10100.
+2016-09-22(星期四) 16:02:21:
+  I'm photo-java with PID = 10612.
+2016-09-22(星期四) 16:02:23:
+  I'm image-java with PID = 10612.
+2016-09-22(星期四) 16:09:50:
+	Start customer classify---
+2016-09-22(星期四) 16:09:55:
+	Start customer classify---
+2016-09-22(星期四) 16:10:55:
+	Finish customer classify.

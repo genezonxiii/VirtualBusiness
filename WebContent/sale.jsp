@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
 
 <link rel="stylesheet" href="css/styles.css">
+
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>

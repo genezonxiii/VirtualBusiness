@@ -14,6 +14,11 @@
   <script type="text/javascript" src="js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <style>
+input[type="text"], input[type="password"], select, textarea {
+	font-family: sans-serif;
+}
+</style>
+<style>
 a {
     color: #0011c3;
     font-weight: bold;
@@ -71,7 +76,7 @@ function unicheck(){
         type : "POST",
         cache : false,
         async : false,
-        delay : 1000,
+        delay : 2000,
         data : {
         	action : "check_unicode_exist",
         	unicode : $("#uninumber").val()
@@ -80,7 +85,6 @@ function unicheck(){
         	var json_obj = $.parseJSON(data);
         	if("true"==json_obj.message){
         		$("#uninumber").removeClass("error");
-        		$(".error-msg").remove();
         		$("#uninumber").addClass("error");
         		$("#uninumber").after("<span class='error-msg'>此統編已被註冊!</span>");
         		check=1;
@@ -108,6 +112,8 @@ function regis(){
 	if($("#verify").val().length<1){$("#verify").addClass("error");$("#verify").after("<span class='error-msg'>請輸入驗證碼</span>");wrong=1;}
 	if(!$("#agree").prop("checked")){$("#privacy").after("<font class='error-msg' style='top:-17px;' color=red>←請閱讀後勾選同意</font>");wrong=1;}
 	if(wrong){return;}
+	
+	if(!unicheck()){wrong=1;}
 	if(!regexp3.test($("#email").val())){
 		$("#email").addClass("error");$("#email").after("<span class='error-msg'>非正式email</span>");wrong=1;
 	}
@@ -120,6 +126,7 @@ function regis(){
 	$.ajax({url : "registry.do", type : "POST", cache : false, async : false,
 		data : {
 			action : "verify",
+			async : false,
 			verify : $("#verify").val()
 		}, success: function(result) {
 			if("false"==result){
@@ -128,9 +135,9 @@ function regis(){
 			}
 		}
 	});
-
-	if(!unicheck()){wrong=1;}
+	
 	if(wrong){return;}
+
 	$.ajax({url : "registry.do", type : "POST", cache : false,
 		data : {
 			action : "registry",
@@ -188,6 +195,7 @@ $(function() {
 	$("#bdy2").animate({
 		height : '510px'
 	});
+	$(".login-panel-wrap").addClass("regis");
 	
 	var value='<%=request.getParameter("regid")%>';
 	if(value.length>10){
@@ -259,7 +267,7 @@ $(function() {
 	<div class="login-wrapper" id="bdy">
 		<h1>註冊</h1>
 <!-- 		<button onclick="send_mail();">##@_@##</button> -->
-		<div class="login-panel-wrap">
+		<div class="login-panel-wrap"> 
 		<div class="registry-panel" id="bdy2">
 			<form id="regis-form">
 				<table class="normal-table">
@@ -303,7 +311,7 @@ $(function() {
 						<a class="login-button" id="register" onclick="regis();" style="width:100%;">註冊</a>
 					</td></tr>
 					<tr><td colspan=2>
-						已經有智慧電商平台的帳號嗎? <a href="#" onclick="$('#regis-form').fadeOut();$('#bdy2').animate({height : '462px'});$('#bdy').animate({top : '50%','marginTop': '-320px'},function(){location.replace('login.jsp');});">登入</a>
+						已經有智慧電商平台的帳號嗎? <a href="#" onclick="$('#regis-form').fadeOut();$('#bdy2').animate({height : '462px'});$('.login-panel-wrap').removeClass('regis');$('#bdy').animate({top : '50%','marginTop': '-320px'},function(){location.replace('login.jsp');});">登入</a>
 					</td></tr>
 				</table>
 			</form>

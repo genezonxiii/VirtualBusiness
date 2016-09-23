@@ -152,6 +152,11 @@ hr.hr-gray {
     top: 0;
     bottom: 100px;
     transform: skewX(30deg);
+    transition: all .3s linear;
+}
+.login-panel-wrap.regis:after {
+	transform: skewX(15deg);
+/*    	width:0px; */
 }
 .login-panel {
     margin: 0 auto;
