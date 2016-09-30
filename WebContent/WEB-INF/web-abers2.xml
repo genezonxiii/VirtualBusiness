@@ -60,7 +60,7 @@
 
   <context-param>
   <param-name>dbURL</param-name>
-  <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
+  <param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -153,7 +153,10 @@
   </context-param>
   <servlet>
 -->
- <!--########################以上164+175#####################################-->
+ <!--######################## 以上164+175 ###################################-->
+ <!--###### C:/Users/10506002/git/VirtualBusiness/WebContent/upload ########-->
+ <!--#################### /data/vbupload ###################################-->
+ <!--#################### /data/productpic #################################-->
 <!--切一個頭防呆-->
     <servlet-name>productunit</servlet-name>
     <servlet-class>tw.com.aber.productunit.controller.productunit</servlet-class>
@@ -428,6 +431,14 @@
   </servlet-mapping>
   <!-- ############新的############ -->
   <servlet>
+    <servlet-name>exchange</servlet-name>
+    <servlet-class>tw.com.aber.exchange</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>exchange</servlet-name>
+    <url-pattern>/exchange.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>test</servlet-name>
     <servlet-class>tw.com.aber.test</servlet-class>
   </servlet>
@@ -436,9 +447,9 @@
     <url-pattern>/test.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
-  <listener>   
+  <listener>
 	<listener-class>tw.com.aber.bystartup</listener-class>   
-  </listener>   
+  </listener>
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>tw.com.aber.loginFilter</filter-class>

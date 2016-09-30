@@ -15,8 +15,9 @@
 <style>
 </style>
 </head>
-<body class="login-body">
+<body class="login-body" style="overflow-y:auto;">
 <script>
+
 function grows_up(str){
 	if(!(str.length>0)){return "";}
 	var tmp =  new Array();
@@ -36,7 +37,41 @@ function grows_up(str){
 	alert("'"+b+"'");
 		return b;
 }
+function hello2(){
+	$("#example").dataTable().fnDestroy();
+	$("#example tr").each(function(index){
+		//alert(index);
+		$(this).css("display","");
+	});
+	$('#example').DataTable();
+}
 function hello(){
+	$("#example").dataTable().fnDestroy();
+	
+	$("#example tr").each(function(index){
+// 		alert("hello"+index+"   "+$(this).html().indexOf("Br"));
+// 		if(index==0)return;
+		//alert("hello"+index+$(this).html());
+		if($(this).html().indexOf($("#helo").val())>-1){
+			$(this).css("display","none");
+		}
+	});
+	
+	
+// 	$("#example tr").each(function(index){
+// 		$(this).css("display","");
+// 	});
+	
+	$('#example').DataTable();
+ 	//$("#example").DataTable().row(".mv").remove().draw();
+	//$("#example").dataTable().fnDestroy();
+	
+// 	$('#example').DataTable( {
+// 		"scrollX": "none",
+//         "scrollY": 300,
+//         //"width": "100%"
+//     } );
+	return;
 	$.ajax({
 		type : "POST",
 		url : "test.do",
@@ -52,7 +87,7 @@ function hello(){
 $(function(){
 	$('#example').DataTable( {
 		"scrollX": "none",
-        "scrollY": 300,
+        "scrollY": 330,
         //"width": "100%"
     } );
 // 	$("#btn1").click(function(){
@@ -74,10 +109,15 @@ $(function(){
 <!-- 	<br><a id="logout" href="./login.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">登入</a> -->
 	<div class="bkg-upper"></div>
 	<div class="bkg-lower"></div>
+	
+	
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
 		<h1>　</h1>
+		<button class='btn-explanation'>?</button>
+			
 		<input type="text" id="helo">
 		<button onclick="hello()">##@_@##</button>
+		<button onclick="hello2()">##X_X##</button>
 <!-- 		<div class="login-panel-wrap"> -->
 <!-- 		<div class="registry-panel" style="width:100%" > -->
 <!-- 			<button id="btn1"  > -->
@@ -727,6 +767,7 @@ $(function(){
             </tr>
         </tbody>
     </table>
+    <p align='center'><a href="http://clterryart.tumblr.com/" target="_blank"> <img src="http://66.media.tumblr.com/282aaeea43d9a7ebd6f58e2270f1d7c5/tumblr_ockldgSWib1qzomoco1_540.gif" style="height:480px; max-width:100%;"> </a></p>
 <!-- 		</div>/.login-panel -->
 <!-- 		</div>/.login-panel-wrap -->
 <!-- 		<div class="login-footer"> -->

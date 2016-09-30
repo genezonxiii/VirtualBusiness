@@ -10,6 +10,14 @@
 //table_before(str);X
 //get_week_day(number);X
 
+function currency_unit(str){
+	if(str=='台幣'){return 'NT＄';}
+	if(str=='人民幣'){return 'RMB￥';}
+	if(str=='日幣'){return '￥';}
+	if(str=='美金'){return 'US＄';}
+	if(str=='韓幣'){return 'KRW';}
+}
+
 function grows_up(str){
 	if(!(str.length>0)){return "";}
 	var tmp =  new Array();

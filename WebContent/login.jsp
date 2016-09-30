@@ -58,6 +58,7 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
 	if($("#password").val().length>10){$("#password").addClass("error");$("#password").after("<span class='error-msg'>長度不可超過十個字</span>");wrong=1;}
 // 	if(!unicheck()){wrong=1;}
 	unicheck();
+	
 	if(wrong==0){
 		$.ajax({url : "login.do", type : "POST", cache : false,
             data : {
@@ -104,6 +105,27 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
 	}
 }
 $(function() {
+	$('body').keypress(function(e){//ctrl + alt + b
+	    if(e.shiftKey){
+	    	if(e.which == 41){
+	    		e.preventDefault();
+	    		if(location.href.indexOf("a-ber")>-1){
+	    			$("#uninumber").val("20939790");
+	    			$("#username").val("pershing@pershing.com.tw");
+	    			$("#password").val("1234");
+	    			$("input").blur();
+	    			$("#verify").focus();
+	    		}
+	    		if(location.href.indexOf("164")>-1||location.href.indexOf("local")>-1){
+	    			$("#uninumber").val("1234");
+	    			$("#username").val("sett@archworld.com");
+	    			$("#password").val("1234");
+	    			$("input").blur();
+	    			$("#verify").focus();
+	    		}
+	    	}
+	    }
+	});
 	$("#validateCodeImg").click(function() {
 		chimg();
 	});
@@ -196,7 +218,7 @@ $(function() {
 		</div><!-- /.login-panel -->
 		</div><!-- /.login-panel-wrap -->
 		<div class="login-footer">
-			北祥股份有限公司-1 <span>服務電話：+886-2-2658-1910 | 傳真：+886-2-2658-1920</span>
+			北祥股份有限公司<script>if(location.href.indexOf("abers2")>-1){document.write('-1');}</script> <span>服務電話：+886-2-2658-1910 | 傳真：+886-2-2658-1920</span>
 		</div><!-- /.login-footer -->
 	</div><!-- /.login-wrapper -->
 	

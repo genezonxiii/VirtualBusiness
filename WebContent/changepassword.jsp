@@ -85,7 +85,6 @@
 			}
 			$("#dialog-confirm").dialog("open");
 			$("#dialog-confirm").html("<div class='delete_msg'>'"+$("#pwd").val().substring(0,$("#pwd").val().length-4)+"****"+"'</div>")
-			
 		});
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");

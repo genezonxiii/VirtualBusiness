@@ -49,7 +49,7 @@ function draw_membercondition(parameter){
 				+ "</td><td>"+ "<div class='table-row-func btn-in-table btn-gray'>"
 				+ "  <i class='fa fa-ellipsis-h'></i><div class='table-function-list'>"
 				+ "    <button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+json_obj[i].condition_id+"'><i class='fa fa-pencil'></i></button>"
-				+ "    <button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+json_obj[i].condition_id+"' val2='"+json_obj[i].classname+"'><i class='fa fa-trash'></i></button>"
+				+ (json_obj[i].classname=='普通會員'?"":"    <button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+json_obj[i].condition_id+"' val2='"+json_obj[i].classname+"'><i class='fa fa-trash'></i></button>")
 				+ "</div></div></td></tr>";
 			});
 			if(json_obj.length!=0){
@@ -64,6 +64,7 @@ function draw_membercondition(parameter){
 				$("#membercondition-table tr td").each(function(index){
 					$( this ).html(money($( this ).html())) ;
 				});
+				$("#err_msg").html("");
 			}else{
 				$("#err_msg").html("<div style='color:red;'>查無資料</div>");
 			}
@@ -106,6 +107,12 @@ $(function() {
 				var json_obj = $.parseJSON(result);
 				$.each(json_obj,function(i, item) {
 					if(json_obj[i].condition_id==$("#membercondition-update").val()){
+						if(json_obj[i].classname=="普通會員"){
+							//$("input").attr("disabled","disabled");
+							$("#membercondition-update input[name='classname']").attr("disabled","disabled");
+						}else{
+							$("#membercondition-update input[name='classname']").attr("disabled",false);
+						}
 						$("#membercondition-update input[name='classname']").val(json_obj[i].classname);
 						if(json_obj[i].total_period%365==0){
 							$("#membercondition-update input[name='total_period']").val(json_obj[i].total_period/365);
@@ -145,7 +152,7 @@ $(function() {
 	});
 	$("#membercondition-insert").dialog({
 			draggable : false, resizable : false, autoOpen : false,
-			width : "auto",height : "auto", modal : true,
+			width : 760 ,height : "auto", modal : true,
 			show : {effect : "blind", duration : 300 },
 			hide : { effect : "fade", duration : 300 },
 			buttons : [{
@@ -158,6 +165,7 @@ $(function() {
 									classname : $("#membercondition-insert input[name='classname']").val(),
 									total_period : $("#membercondition-insert input[name='total_period']").val()*$("#membercondition-insert select[name='total_unit']").val(),
 									total_consumption : $("#membercondition-insert input[name='total_consumption']").val(),
+									expire_day: 30 ,
 									continue_period : $("#membercondition-insert input[name='continue_period']").val()*$("#membercondition-insert select[name='continue_unit']").val(),
 									continue_consumption : $("#membercondition-insert input[name='continue_consumption']").val(),
 								});
@@ -179,7 +187,7 @@ $(function() {
 	$("#membercondition-insert").show();
 	$("#membercondition-update").dialog({
 			draggable : false, resizable : false, autoOpen : false,
-			width : "auto",height : "auto", modal : true,
+			width : 760,height : "auto", modal : true,
 			show : {effect : "blind", duration : 300 },
 			hide : { effect : "fade", duration : 300 },
 			buttons : [{
@@ -193,6 +201,7 @@ $(function() {
 									classname : $("#membercondition-update input[name='classname']").val(),
 									total_period : $("#membercondition-update input[name='total_period']").val()*$("#membercondition-update select[name='total_unit']").val(),
 									total_consumption : $("#membercondition-update input[name='total_consumption']").val(),
+									expire_day: 30 ,
 									continue_period : $("#membercondition-update input[name='continue_period']").val()*$("#membercondition-update select[name='continue_unit']").val(),
 									continue_consumption : $("#membercondition-update input[name='continue_consumption']").val(),
 								});
@@ -214,7 +223,7 @@ $(function() {
 	$("#membercondition-update").show();
 	$("#membercondition-delete").dialog({
 			draggable : false, resizable : false, autoOpen : false,
-			width : "auto",height : "auto", modal : true,
+			width : "auto" ,height : "auto", modal : true,
 			show : {effect : "blind", duration : 300 },
 			hide : { effect : "fade", duration : 300 },
 			buttons : [{
@@ -237,6 +246,16 @@ $(function() {
 			}
 	});
 	$("#membercondition-delete").show();
+	$("#explane").dialog({
+		draggable : true, resizable : false, autoOpen : false,
+		width : 720 ,height : "auto", modal : false,
+		show : {effect : "blind", duration : 300 },
+		hide : { effect : "fade", duration : 300 },
+		buttons : {
+			"確定" : function() {$(this).dialog("close");}
+		}
+	});
+	$("#explane").show();
 	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 	$(".upup").click(function(){
@@ -250,6 +269,7 @@ $(function() {
 });
 </script>
 		<div class="input-field-wrap">
+			<button class='btn-explanation' onclick="$('#explane').dialog('open');" style="">?</button>
 			<!-- 第一列 -->
 			<div class="form-wrap">
 				<div class="btn-row">
@@ -289,7 +309,7 @@ $(function() {
 			</tr>
 			<tr>
 				<td>入會累計期間：</td>
-				<td><input type="text" name="total_period" style="width:84px" placeholder="數字">
+				<td ><input type="text" name="total_period" style="width:84px" placeholder="數字">
 					<select name="total_unit">
 						<option value="1">日</option>
 						<option value="30">月</option>
@@ -353,6 +373,18 @@ $(function() {
 			</tr>
 		</table>
 	</form>
+</div>
+<div id="explane" title="分級辦法詳述 (重要)" style="display:none;">
+	<div style="padding:0 40px; font-family: Helvetica, Arial, '微軟正黑體', '新細明體', sans-serif;">
+		<br><li><font color=red size=4>每月核算日</font>(註1)0點，我們將根據會員在截至上月月底之累計期間內的<font color=red size=4>有效交易次數</font>(註2)與<font color=red size=4>實際消費金額</font>(註3)與<font color=red size=4>上月會員等級身分別</font>(註4)，按進行會員<font color=red size=4>等級調整</font>(註5)並取會員層級較高階者，以企求符合管理會員等級、並可據此對不同會員做出不同管理辦法之需求。</li>
+		<font size=2>
+		<br><br>*註1：每月核算日為　每月8號。
+		<br><br>*註2：有效交易次數係指　統計之累計期間內，上月結算日前至少完成一件以上商品取件之銷貨訂單核算。<!-- 就是出貨日在上月30,31日之前直到現在還沒被退貨的東西算有效。 -->
+		<br><br>*註3：實際消費金額係指　統計之累計期間內，上月結算日前實際完程應收流程有效交易次數中的價款總額。(不含運費、刷卡手續費、購物折價金優惠券)
+		<br><br>*註4：上月會員等級身分別係指　若上次核算日後，該會員被判斷之會員層級，則此次計算核用該會員等級之'續會'與其餘各項'入會'之統計標準(含累計期間及累計金額)
+		<br><br>*註5：調整方式係為　若上述條件符合者將滿足續會標準，不符合者將降為普通會員
+		</font><br><br>
+	</div>
 </div>
 <div id="membercondition-delete" title="是否刪除此級別?" style="display:none;">
 </div>

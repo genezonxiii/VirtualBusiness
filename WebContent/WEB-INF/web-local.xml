@@ -39,7 +39,7 @@
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
-    <param-value>http://www.a-ber.com.tw:8090</param-value>
+    <param-value>http://192.168.112.164:8090</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -153,7 +153,10 @@
   </context-param>
   <servlet>
 -->
- <!--########################以上164+175#####################################-->
+ <!--######################## 以上164+175 ###################################-->
+ <!--###### C:/Users/10506002/git/VirtualBusiness/WebContent/upload ########-->
+ <!--#################### /data/vbupload ###################################-->
+ <!--#################### /data/productpic #################################-->
 <!--切一個頭防呆-->
     <servlet-name>productunit</servlet-name>
     <servlet-class>tw.com.aber.productunit.controller.productunit</servlet-class>
@@ -410,7 +413,6 @@
     <servlet-name>membercondition</servlet-name>
     <url-pattern>/membercondition.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
   <servlet>
     <servlet-name>bestsale</servlet-name>
     <servlet-class>tw.com.aber.bestsale</servlet-class>
@@ -428,6 +430,26 @@
     <url-pattern>/heavybuyer.do</url-pattern>
   </servlet-mapping>
   <!-- ############新的############ -->
+  <servlet>
+    <servlet-name>exchange</servlet-name>
+    <servlet-class>tw.com.aber.exchange</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>exchange</servlet-name>
+    <url-pattern>/exchange.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>test</servlet-name>
+    <servlet-class>tw.com.aber.test</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>test</servlet-name>
+    <url-pattern>/test.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  <listener>
+	<listener-class>tw.com.aber.bystartup</listener-class>   
+  </listener>
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>tw.com.aber.loginFilter</filter-class>

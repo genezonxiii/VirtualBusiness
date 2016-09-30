@@ -58,10 +58,11 @@ public class membercondition extends HttpServlet {
 			String classname = request.getParameter("classname");
 			String total_period = request.getParameter("total_period");
 			String total_consumption = request.getParameter("total_consumption");
+			String expire_day = request.getParameter("expire_day");
 			String continue_period = request.getParameter("continue_period");
 			String continue_consumption = request.getParameter("continue_consumption");
 			MemberconditionDAO memberDAO = new MemberconditionDAO();
-			memberDAO.insertDB(group_id, classname, total_period, total_consumption, continue_period, continue_consumption);
+			memberDAO.insertDB(group_id, classname, total_period, total_consumption, expire_day , continue_period, continue_consumption);
 			List<MemberconditionVO> answer = memberDAO.searhDB(group_id);
 			Gson gson = new Gson();
 			String jsonStrList = gson.toJson(answer);
@@ -72,10 +73,12 @@ public class membercondition extends HttpServlet {
 			String classname = request.getParameter("classname");
 			String total_period = request.getParameter("total_period");
 			String total_consumption = request.getParameter("total_consumption");
+			String expire_day = request.getParameter("expire_day");
 			String continue_period = request.getParameter("continue_period");
 			String continue_consumption = request.getParameter("continue_consumption");
+			
 			MemberconditionDAO memberDAO = new MemberconditionDAO();
-			memberDAO.updateDB(group_id, condition_id, classname, total_period, total_consumption, continue_period, continue_consumption);
+			memberDAO.updateDB(group_id, condition_id, classname, total_period, total_consumption, expire_day , continue_period, continue_consumption);
 			List<MemberconditionVO> answer = memberDAO.searhDB(group_id);
 			Gson gson = new Gson();
 			String jsonStrList = gson.toJson(answer);
@@ -102,6 +105,7 @@ public class membercondition extends HttpServlet {
 		private String classname;
 		private String total_period;
 		private String total_consumption;
+		private String expire_day;
 		private String continue_period;
 		private String continue_consumption;
 		public String getCondition_id() {
@@ -134,6 +138,12 @@ public class membercondition extends HttpServlet {
 		public void setTotal_consumption(String total_consumption) {
 			this.total_consumption = total_consumption;
 		}
+		public String getExpire_day() {
+			return expire_day;
+		}
+		public void setExpire_day(String expire_day) {
+			this.expire_day = expire_day;
+		}
 		public String getContinue_period() {
 			return continue_period;
 		}
@@ -153,9 +163,9 @@ public class membercondition extends HttpServlet {
 	interface Membercondition_interface {
 		//public String select_date(String group_id,Date time1,Date time2);
 		
-		public void insertDB(String group_id, String classname, String total_period, String total_consumption, String continue_period,String continue_consumption);
+		public void insertDB(String group_id, String classname, String total_period, String total_consumption,String expire_day, String continue_period,String continue_consumption);
 
-		public void updateDB(String group_id, String condition_id, String classname, String total_period, String total_consumption, String continue_period,String continue_consumption);
+		public void updateDB(String group_id, String condition_id, String classname, String total_period, String total_consumption,String expire_day, String continue_period,String continue_consumption);
 
 		public void deleteDB(String group_id,String condition_id);
 
@@ -166,8 +176,8 @@ public class membercondition extends HttpServlet {
 	class MemberconditionDAO implements Membercondition_interface {
 		// 會使用到的Stored procedure
 		private static final String sp_selectall_member_condition  = "call sp_selectall_member_condition(?)";
-		private static final String sp_insert_member_condition   = "call sp_insert_member_condition (?,?,?,?,?,?)";
-		private static final String sp_update_member_condition  = "call sp_update_member_condition (?,?,?,?,?,?,?)";
+		private static final String sp_insert_member_condition   = "call sp_insert_member_condition (?,?,?,?,?,?,?)";
+		private static final String sp_update_member_condition  = "call sp_update_member_condition (?,?,?,?,?,?,?,?)";
 		private static final String sp_del_member_condition  = "call sp_del_member_condition (?)";
 		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
@@ -195,6 +205,7 @@ public class membercondition extends HttpServlet {
 					MemberconditionVO.setClassname(rs.getString("class"));
 					MemberconditionVO.setTotal_period(rs.getString("total_period"));
 					MemberconditionVO.setTotal_consumption(rs.getString("total_consumption"));
+					MemberconditionVO.setExpire_day(rs.getString("expire_day"));
 					MemberconditionVO.setContinue_period(rs.getString("continue_period"));
 					MemberconditionVO.setContinue_consumption(rs.getString("continue_consumption"));
 					list.add(MemberconditionVO);
@@ -208,7 +219,7 @@ public class membercondition extends HttpServlet {
 
 		@Override
 		public void insertDB(String group_id, String classname, String total_period, String total_consumption,
-				String continue_period, String continue_consumption) {
+				String expire_day, String continue_period, String continue_consumption) {
 			// TODO Auto-generated method stub
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -221,8 +232,9 @@ public class membercondition extends HttpServlet {
 				pstmt.setString(2,classname);
 				pstmt.setString(3,total_period);
 				pstmt.setString(4,total_consumption);
-				pstmt.setString(5,continue_period);
-				pstmt.setString(6,continue_consumption);
+				pstmt.setString(5,expire_day);
+				pstmt.setString(6,continue_period);
+				pstmt.setString(7,continue_consumption);
 				rs = pstmt.executeQuery();
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {
@@ -232,7 +244,7 @@ public class membercondition extends HttpServlet {
 
 		@Override
 		public void updateDB(String group_id, String condition_id, String classname, String total_period,
-				String total_consumption, String continue_period, String continue_consumption) {
+				String total_consumption,String expire_day, String continue_period, String continue_consumption) {
 			// TODO Auto-generated method stub
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -246,8 +258,9 @@ public class membercondition extends HttpServlet {
 				pstmt.setString(3,classname);
 				pstmt.setString(4,total_period);
 				pstmt.setString(5,total_consumption);
-				pstmt.setString(6,continue_period);
-				pstmt.setString(7,continue_consumption);
+				pstmt.setString(6,expire_day);
+				pstmt.setString(7,continue_period);
+				pstmt.setString(8,continue_consumption);
 				rs = pstmt.executeQuery();
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {

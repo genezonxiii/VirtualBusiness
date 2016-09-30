@@ -82,7 +82,7 @@ if(str!=null){
 	if("success".equals(str)){
 		out.println("<script>alert('匯入成功');window.location.href = './upload.jsp';</script>");
 	}else{
-		out.println("<script>alert('匯入失敗 ');window.location.href = './upload.jsp';</script>");
+		out.println("<script>alert('匯入失敗：\\n　　請確認檔案的格式是否遭到修改。');window.location.href = './upload.jsp';</script>");
 	}
 }
 %>
@@ -93,7 +93,6 @@ $(function(){
 });
 </script>
 <script>
-　
 var x,y,n=0,ny=0,rotINT,rotYINT
 function rotateDIV()
 {

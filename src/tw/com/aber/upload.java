@@ -39,7 +39,13 @@ public class upload  extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		if(request.getSession().getAttribute("group_id")==null){request.setAttribute("action","no_session");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
-		
+//		request.setCharacterEncoding("UTF-8");
+//	    response.setCharacterEncoding("UTF-8");
+//		request.setAttribute("action","succes2s");
+//		RequestDispatcher successView2 = request.getRequestDispatcher("/upload.jsp");
+//		successView2.forward(request, response);
+//		int mm=0;
+//		if(mm==0)return;
 		//##########################test####################################
 //		request.setCharacterEncoding("UTF-8");
 //		response.setCharacterEncoding("UTF-8");

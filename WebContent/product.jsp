@@ -154,6 +154,7 @@ table.form-table {
 	jQuery(document).ready(function($) {
 	    $(window).scannerDetection();
 	    $(window).bind('scannerDetectionComplete',function(e,data){
+	    	e.preventDefault();
 	    		if(data.string=="success"){return;}
 	    		if(new_or_edit==1){
 	    			//$("#new_barcode").focus();
@@ -503,8 +504,12 @@ table.form-table {
 										$("#dialog-form-update input[name='supply_name']").val(json_obj[i].supply_name);
 										$("#dialog-form-update select[name='select_update_type_id']").val(json_obj[i].type_id);
 										$("#dialog-form-update select[name='select_update_unit_id']").val(json_obj[i].unit_id);
+										$("#dialog-form-update input[name='tmp_cost']").val(json_obj[i].cost);
 										$("#dialog-form-update input[name='cost']").val(json_obj[i].cost);
+										$("#update_exchange_cost").html(currency_unit($("#update_currency").find("option:selected").text())+$("#dialog-form-update input[name='tmp_cost']").val()+" x "+$("#update_currency").val()+" = NT$"+$("#dialog-form-update input[name='cost']").val());
+										$("#dialog-form-update input[name='tmp_price']").val(json_obj[i].price);
 										$("#dialog-form-update input[name='price']").val(json_obj[i].price);
+										$("#update_exchange_price").html(currency_unit($("#update_currency").find("option:selected").text())+$("#dialog-form-update input[name='tmp_price']").val()+" x "+$("#update_currency").val()+" = NT$"+$("#dialog-form-update input[name='price']").val());
 										$("#dialog-form-update input[name='keep_stock']").val(json_obj[i].keep_stock);
 										$("#dialog-form-update input[name='photo']").val(json_obj[i].photo);
 										$("#dialog-form-update input[name='photo1']").val(json_obj[i].photo1);
@@ -1108,6 +1113,52 @@ table.form-table {
 		});
 	    $("#warning").show();
 	    
+	    $("#insert_currency").change(function(e){
+	    	$(".currency1").html("("+$("#insert_currency").find("option:selected").text()+")");
+	    	$("#dialog-form-insert input[name='cost']").val(Math.round($("#dialog-form-insert input[name='tmp_cost']").val()*$("#insert_currency").val()*10000) / 10000);
+	    	$("#insert_exchange_cost").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#dialog-form-insert input[name='tmp_cost']").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#dialog-form-insert input[name='cost']").val());
+	    	$("#dialog-form-insert input[name='price']").val(Math.round($("#dialog-form-insert input[name='tmp_price']").val()*$("#insert_currency").val()*10000) / 10000);
+	    	$("#insert_exchange_price").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#dialog-form-insert input[name='tmp_price']").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#dialog-form-insert input[name='price']").val());
+	    });
+	    $("#dialog-form-insert input[name='tmp_cost']").change(function(e){
+	    	$("#dialog-form-insert input[name='cost']").val(Math.round($("#dialog-form-insert input[name='tmp_cost']").val()*$("#insert_currency").val()*10000) / 10000);
+	    	$("#insert_exchange_cost").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#dialog-form-insert input[name='tmp_cost']").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#dialog-form-insert input[name='cost']").val());
+	    });
+	    $("#dialog-form-insert input[name='tmp_price']").change(function(e){
+	    	$("#dialog-form-insert input[name='price']").val(Math.round($("#dialog-form-insert input[name='tmp_price']").val()*$("#insert_currency").val()*10000) / 10000);
+	    	$("#insert_exchange_price").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#dialog-form-insert input[name='tmp_price']").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#dialog-form-insert input[name='price']").val());
+	    });
+	    
+	    $("#update_currency").change(function(e){
+	    	$(".currency2").html("("+$("#update_currency").find("option:selected").text()+")");
+	    	$("#dialog-form-update input[name='cost']").val(Math.round($("#dialog-form-update input[name='tmp_cost']").val()*$("#update_currency").val()*10000) / 10000);
+	    	$("#update_exchange_cost").html(currency_unit($("#update_currency").find("option:selected").text())+$("#dialog-form-update input[name='tmp_cost']").val()+" x "+$("#update_currency").val()+" = NT$"+$("#dialog-form-update input[name='cost']").val());
+	    	$("#dialog-form-update input[name='price']").val(Math.round($("#dialog-form-update input[name='tmp_price']").val()*$("#update_currency").val()*10000) / 10000);
+	    	$("#update_exchange_price").html(currency_unit($("#update_currency").find("option:selected").text())+$("#dialog-form-update input[name='tmp_price']").val()+" x "+$("#update_currency").val()+" = NT$"+$("#dialog-form-update input[name='price']").val());
+	    });
+	    $("#dialog-form-update input[name='tmp_cost']").change(function(e){
+	    	$("#dialog-form-update input[name='cost']").val(Math.round($("#dialog-form-update input[name='tmp_cost']").val()*$("#update_currency").val()*10000) / 10000);
+	    	$("#update_exchange_cost").html(currency_unit($("#update_currency").find("option:selected").text())+$("#dialog-form-update input[name='tmp_cost']").val()+" x "+$("#update_currency").val()+" = NT$"+$("#dialog-form-update input[name='cost']").val());
+	    });
+	    $("#dialog-form-update input[name='tmp_price']").change(function(e){
+	    	$("#dialog-form-update input[name='price']").val(Math.round($("#dialog-form-update input[name='tmp_price']").val()*$("#update_currency").val()*10000) / 10000);
+	    	$("#update_exchange_price").html(currency_unit($("#update_currency").find("option:selected").text())+$("#dialog-form-update input[name='tmp_price']").val()+" x "+$("#update_currency").val()+" = NT$"+$("#dialog-form-update input[name='price']").val());
+	    });
+	    
+	    $.ajax({
+			type : "POST",
+			url : "exchange.do",
+			data : {action : "search"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				var result_select="<option value='1'>台幣</option>";// ="<select  name='' id=''><option value='1'>台幣</option>";
+				$.each(json_obj,function(i, item) {
+					result_select += "<option value='"+json_obj[i].exchange_rate+"'>"+json_obj[i].currency+"</option>";
+				});
+				$("#update_currency").html(result_select);
+				$("#insert_currency").html(result_select);
+			}
+		});
 	    $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){
@@ -1139,14 +1190,19 @@ table.form-table {
 							<td>產品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
 						</tr><tr>
 							<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
-							<td>產品說明：</td><td><input type="text" name="description"/></td>
+							<td>幣別：</td><td><select id='update_currency'></select></td>
 						</tr><tr>
-							<td>成本：</td><td><input type="text" name="cost" /></td>
-							<td>售價：</td><td><input type="text" name="price" /></td>
+							<td>成本：<a class='currency2'></a></td><td><input type="text" name="tmp_cost" /></td>
+							<td>售價：<a class='currency2'></a></td><td><input type="text" name="tmp_price" /></td>
 						</tr><tr>
-							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
+							<td>折合台幣成本：</td><td><a id='update_exchange_cost'>NT＄0 x 1 = NT$0</a><input type="hidden" name="cost" /></td>
+							<td>折合台幣售價：</td><td><a id='update_exchange_price'>NT＄0 x 1 = NT$0</a><input type="hidden" name="price" /></td>
+						</tr><tr>
 							<td>條碼：</td><td><input type="text" id="edit_barcode" name="barcode"/></td><td><input id="same2" type="checkbox" style="position:static;" 
 							onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID</td>
+							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
+						</tr><tr>
+							<td>產品說明：</td><td><input type="text" name="description"/></td>
 						</tr>
    		         	  </tbody>
    		         	  </table>		
@@ -1198,16 +1254,19 @@ table.form-table {
 							<td>產品單位：</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
 						</tr><tr>
 							<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
-							<td>產品說明：</td><td><input type="text" name="description"/></td>
+							<td>幣別：</td><td><select id='insert_currency'></select></td>
 						</tr><tr>
-							<td>成本：</td><td><input type="text" name="cost" /></td>
-							<td>售價：</td><td><input type="text" name="price" /></td>
+							<td>成本：<a class='currency1'></a></td><td><input type="text" name="tmp_cost" /></td>
+							<td>售價：<a class='currency1'></a></td><td><input type="text" name="tmp_price" /></td>
+						</tr><tr>
+							<td>折合台幣成本：</td><td><a id='insert_exchange_cost'>NT＄0 x 1 = NT$0</a><input type="hidden" name="cost" /></td>
+							<td>折合台幣售價：</td><td><a id='insert_exchange_price'>NT＄0 x 1 = NT$0</a><input type="hidden" name="price" /></td>
 						</tr><tr>
 							<td>庫存量：</td><td><input type="text" name="current_stock" /></td>
 							<td>條碼：</td><td><input type="text" id="new_barcode" name="barcode"/></td><td><input id="same" type="checkbox" style="position:static;" onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID</td>
 						</tr><tr>
 							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
-							
+							<td>產品說明：</td><td><input type="text" name="description"/></td>
 						</tr>
    		         	  </tbody>
    		         	  </table>		

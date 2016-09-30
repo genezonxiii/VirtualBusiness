@@ -97,6 +97,11 @@ function who(){
 		side2.addClass("active");
 		return "會員分級設定";
 		break;
+	case "exchange.jsp":
+		side2.addClass("active");
+		return "匯率轉換管理";
+		break;
+		
 //####報表管理############################
 	case "salereport.jsp":
 		side3.addClass("active");
@@ -259,6 +264,7 @@ function who(){
 					<li class="hide_everywhere"><a href="membercondition.jsp">會員分級設定</a></li>
 					<li class="hide_everywhere"><a href="distributereport.jsp">配送報表</a></li>
 					<li class="hide_everywhere"><a href="onlinecourse.jsp">線上學院</a></li>
+					<li class="hide_everywhere"><a href="exchange.jsp">匯率轉換管理</a></li>
 				</ul>
 			</li>
 		</ul>

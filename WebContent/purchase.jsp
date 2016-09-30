@@ -14,7 +14,6 @@
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
-<link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 </head>
@@ -276,8 +275,8 @@ function draw_purchase_detail(parameter){
 		$("#purchase_date_form").validate({ rules : { purchase_start_date : { dateISO : true }, purchase_end_date:{ dateISO : true } }, messages:{ purchase_start_date : { dateISO : "日期格式錯誤" }, purchase_end_date : { dateISO : "日期格式錯誤" } } }); 
 		var validator_insert = $("#insert-dialog-form-post").validate({ rules : { supply_id : { stringMaxLength : 40, required : true }, memo:{ stringMaxLength : 200 }, purchase_date : { dateISO : true, required : true }, invoice : { stringMaxLength : 12, alnum :true }, amount : { required : true, digits :true, min : 1 }, return_date : { dateISO : true } } }); 
 		var validator_update = $("#update-dialog-form-post").validate({ rules : { supply_id : { stringMaxLength : 40, required : true }, memo:{ stringMaxLength : 200 }, purchase_date : { dateISO : true }, invoice : { stringMaxLength : 12, alnum :true }, amount : { required : true, digits :true, min : 1 }, return_date : { dateISO : true } } }); 
-		var validator_detail_insert = $("#detail-insert-dialog-form-post").validate({ rules : { insert_detail_product_name : { stringMaxLength : 80, required : true }, memo:{ stringMaxLength : 200 }, quantity : { required : true, digits :true }, cost : { required : true, number :true } } }); 
-		var validator_detail_update = $("#detail-update-dialog-form-post").validate({ rules : { update_detail_product_name : { stringMaxLength : 80, required : true }, memo:{ stringMaxLength : 200 }, quantity : { required : true, digits :true }, cost : { required : true, number :true } } }); 
+		var validator_detail_insert = $("#detail-insert-dialog-form-post").validate({ rules : { insert_detail_product_name : { stringMaxLength : 80, required : true }, memo:{ stringMaxLength : 200 }, quantity : { required : true, digits :true }, tmp_value : { required : true, number :true } , cost : { required : true, number :true } } }); 
+		var validator_detail_update = $("#detail-update-dialog-form-post").validate({ rules : { update_detail_product_name : { stringMaxLength : 80, required : true }, memo:{ stringMaxLength : 200 }, quantity : { required : true, digits :true }, tmp_value : { required : true, number :true }, cost : { required : true, number :true } } }); 
 		//進貨日查詢相關設定
 		$("#search_purchase_date").click(function(e) {
 			e.preventDefault();
@@ -418,7 +417,7 @@ function draw_purchase_detail(parameter){
 				text : "修改",
 				click : function() {
 					if ($('#update-dialog-form-post').valid()) {
-						alert($("#dialog-form-update input[name='supply_id']").val());
+						//alert($("#dialog-form-update input[name='supply_id']").val());
 						var tmp={
 	 							action : "update",
 	 							purchase_id : uuid,
@@ -616,7 +615,7 @@ function draw_purchase_detail(parameter){
 		detail_insert_dialog = $("#detail-dialog-form-insert").dialog(
 		{
 			draggable : false, resizable : false, autoOpen : false,
-			height : "auto", width : "auto", modal : true,
+			height : "auto", width : 800, modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
 			buttons : [{	
@@ -706,17 +705,16 @@ function draw_purchase_detail(parameter){
 			$("#detail_dialog_form_update input[name='update_detail_product_name']").val($(this).parents("tr").find("td:nth-child(2)").attr("name"));
 			$("#detail_dialog_form_update input[name='quantity']").val($(this).parents("tr").find("td:nth-child(3)").attr("name"));
 			$("#detail_dialog_form_update input[name='cost']").val($(this).parents("tr").find("td:nth-child(4)").attr("name"));
+			$("#update_tmp_value").val($(this).parents("tr").find("td:nth-child(4)").attr("name"));
+			$("#update_exchange_msg").html(currency_unit($("#update_currency").find("option:selected").text())+$("#update_tmp_value").val()+" x "+$("#update_currency").val()+" = NT$"+$("#update_detail_product_price").val());
 			$("#detail_dialog_form_update input[name='total']").val($(this).parents("tr").find("td:nth-child(3)").attr("name")*$(this).parents("tr").find("td:nth-child(4)").attr("name"));
 			$("#detail_dialog_form_update input[name='memo']").val($(this).parents("tr").find("td:nth-child(5)").attr("name"));
 			detail_update_dialog.dialog("open");
 		});	
 		//修改detail update Dialog相關設定
 		detail_update_dialog = $("#detail_dialog_form_update").dialog({
-			draggable : false,//防止拖曳
-			resizable : false,//防止縮放
-			autoOpen : false,
-			width : 700,
-			modal : true,
+			draggable : false, resizable : false, autoOpen : false,
+			height : "auto", width : 800 , modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
 			buttons : [{
@@ -794,15 +792,17 @@ function draw_purchase_detail(parameter){
     	        }
     	    }     
          });
-  		$("#update_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂產品ID名稱以供查詢"); } );
+  		$("#update_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂產品ID查詢"); } );
 	    $('#update_detail_c_product_id').bind('autocompleteselect', function (e, ui) {
 	    	product_id = ui.item.product_id;
 	    	product_name = ui.item.product_name;
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#update_detail_product_name").val(ui.item.product_name);
 	    	$("#update_detail_product_n").val("1");
+	    	$("#update_tmp_value").val(ui.item.cost);
 	    	$("#update_detail_product_price").val(ui.item.cost);
 	    	$("#update_detail_product_cost").val(ui.item.cost);
+	    	$("#update_exchange_msg").html(currency_unit($("#update_currency").find("option:selected").text())+$("#update_tmp_value").val()+" x "+$("#update_currency").val()+" = NT$"+$("#update_detail_product_price").val());
 	    });
         $("#update_detail_product_name").autocomplete({
             minLength: 1,
@@ -851,8 +851,10 @@ function draw_purchase_detail(parameter){
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#update_detail_c_product_id").val(ui.item.c_product_id);
 	    	$("#update_detail_product_n").val("1");
+	    	$("#update_tmp_value").val(ui.item.cost);
 	    	$("#update_detail_product_price").val(ui.item.cost);
 	    	$("#update_detail_product_cost").val(ui.item.cost);
+	    	$("#update_exchange_msg").html(currency_unit($("#update_currency").find("option:selected").text())+$("#update_tmp_value").val()+" x "+$("#update_currency").val()+" = NT$"+$("#update_detail_product_price").val());
 	    });
 		//detail insert autocomplete
         $("#insert_detail_c_product_id").autocomplete({
@@ -896,15 +898,17 @@ function draw_purchase_detail(parameter){
     	        }
     	    }     
          });
-  		$("#insert_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂產品ID名稱以供查詢"); } );
+  		$("#insert_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂產品ID查詢"); } );
 	    $('#insert_detail_c_product_id').bind('autocompleteselect', function (e, ui) {
 	    	product_id = ui.item.product_id;
 	    	product_name = ui.item.product_name;
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#insert_detail_product_name").val(ui.item.product_name);
 	    	$("#insert_detail_product_n").val("1");
+	    	$("#insert_tmp_value").val(ui.item.cost);
 	    	$("#insert_detail_product_price").val(ui.item.cost);
 	    	$("#insert_detail_product_cost").val(ui.item.cost);
+	    	$("#insert_exchange_msg").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#insert_tmp_value").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#insert_detail_product_price").val());
 	    });
         $("#insert_detail_product_name").autocomplete({
             minLength: 1,
@@ -953,31 +957,59 @@ function draw_purchase_detail(parameter){
 	    	c_product_id = ui.item.c_product_id;
 	    	$("#insert_detail_c_product_id").val(ui.item.c_product_id);
 	    	$("#insert_detail_product_n").val("1");
+	    	$("#insert_tmp_value").val(ui.item.cost);
 	    	$("#insert_detail_product_price").val(ui.item.cost);
 	    	$("#insert_detail_product_cost").val(ui.item.cost);
+	    	$("#insert_exchange_msg").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#insert_tmp_value").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#insert_detail_product_price").val());
 	    });
 		//新增事件聆聽
 		$("#create-supply").click( function(e) {
 			e.preventDefault();		
 			insert_dialog.dialog("open");
+			$("#insert_exchange_msg").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#insert_tmp_value").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#insert_detail_product_price").val());
 			//@@@
+		});
+		$("#insert_tmp_value").change(function(e){//'折合台幣：'*4
+			$("#insert_detail_product_price").val(Math.round($("#insert_tmp_value").val()*$("#insert_currency").val()*10000) / 10000);
+			$("#insert_exchange_msg").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#insert_tmp_value").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#insert_detail_product_price").val());
+			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
+		});
+		$("#insert_currency").change(function(e){
+			$(".currency1").html("("+$("#insert_currency").find("option:selected").text()+")");
+			$("#insert_detail_product_price").val(Math.round($("#insert_tmp_value").val()*$("#insert_currency").val()*10000) / 10000);
+			$("#insert_exchange_msg").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#insert_tmp_value").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#insert_detail_product_price").val());
+			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
+		});
+		$("#update_tmp_value").change(function(e){
+			$("#update_detail_product_price").val(Math.round($("#update_tmp_value").val()*$("#update_currency").val()*10000) / 10000);
+			$("#update_exchange_msg").html(currency_unit($("#update_currency").find("option:selected").text())+$("#update_tmp_value").val()+" x "+$("#update_currency").val()+" = NT$"+$("#update_detail_product_price").val());
+			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
+		});
+		$("#update_currency").change(function(e){
+			$(".currency2").html("("+$("#update_currency").find("option:selected").text()+")");
+			$("#update_detail_product_price").val(Math.round($("#update_tmp_value").val()*$("#update_currency").val()*10000) / 10000);
+			$("#update_exchange_msg").html(currency_unit($("#update_currency").find("option:selected").text())+$("#update_tmp_value").val()+" x "+$("#update_currency").val()+" = NT$"+$("#update_detail_product_price").val());
+			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
 		});
 		
 		$("#insert_detail_product_n").change(function(e){
 			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
+			$("#insert_exchange_msg").html(currency_unit($("#insert_currency").find("option:selected").text())+$("#insert_tmp_value").val()+" x "+$("#insert_currency").val()+" = NT$"+$("#insert_detail_product_price").val());
 		});
-		
 		$("#update_detail_product_n").change(function(e){
 			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
+			$("#update_exchange_msg").html(currency_unit($("#update_currency").find("option:selected").text())+$("#update_tmp_value").val()+" x "+$("#update_currency").val()+" = NT$"+$("#update_detail_product_price").val());
 		});
 		
-		$("#insert_detail_product_price").change(function(e){
-			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
-		});
+// 		$("#insert_detail_product_price").change(function(e){
+// 			$("#insert_detail_product_cost").val($("#insert_detail_product_n").val()*$("#insert_detail_product_price").val());
+// 		});
 		
-		$("#update_detail_product_price").change(function(e){
-			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
-		});
+// 		$("#update_detail_product_price").change(function(e){
+// 			$("#update_detail_product_cost").val($("#update_detail_product_n").val()*$("#update_detail_product_price").val());
+// 		});
+		
+		
 
 		$("#warning").dialog({
 			title: "警告",
@@ -990,6 +1022,20 @@ function draw_purchase_detail(parameter){
 			hide : {effect : "fade",duration : 300},
 			buttons : {
 				"確認" : function() {$(this).dialog("close");}
+			}
+		});
+		$.ajax({
+			type : "POST",
+			url : "exchange.do",
+			data : {action : "search"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				var result_select="<option value='1'>台幣</option>";// ="<select  name='' id=''><option value='1'>台幣</option>";
+				$.each(json_obj,function(i, item) {
+					result_select += "<option value='"+json_obj[i].exchange_rate+"'>"+json_obj[i].currency+"</option>";
+				});
+				$("#update_currency").html(result_select);
+				$("#insert_currency").html(result_select);
 			}
 		});
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
@@ -1079,20 +1125,28 @@ function draw_purchase_detail(parameter){
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>自訂產品名稱：</td>
+								<td>自訂產品ID：</td>
 								<td><input type="text" id="update_detail_c_product_id"name="update_detail_c_product_id"  placeholder="輸入自訂產品ID"></td>
 								<td>產品名稱：</td>
 								<td><input type="text" id="update_detail_product_name"name="update_detail_product_name" placeholder="輸入產品名稱"></td>
 							</tr>
 							<tr>
-								<td>進貨數量：</td>
-								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
-								<td>單價：</td>
-								<td><input type="text" id="update_detail_product_price" name="cost" placeholder="輸入單價"></td>
+								<td>幣別：</td>
+								<td><select id='update_currency'></select></td>
 							</tr>
 							<tr>
+								<td>進貨單價：<a class='currency1'></a></td>
+								<td><input type="text" id="update_tmp_value" name='tmp_value' placeholder="輸入單價"></td>
+								<td>折合台幣單價：</td>
+								<td><a id='update_exchange_msg'>NT＄0 x 1 = NT$0</a><input type="hidden" id="update_detail_product_price" name="cost" disabled></td>
+							</tr>
+							<tr>
+								<td>進貨數量：</td>
+								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
 								<td>總價格：</td>
 								<td><input type="text" id="update_detail_product_cost" name="total" disabled></td>
+							</tr>
+							<tr>
 								<td>備註說明：</td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
 							</tr>
@@ -1138,20 +1192,28 @@ function draw_purchase_detail(parameter){
 						<font color=red style="padding-left:26px">掃條碼亦可取得商品資料</font>
 						<table class="form-table">
 							<tr>
-								<td>自訂產品ID名稱：</td>
-								<td><input type="text" id="insert_detail_c_product_id"name="insert_detail_c_product_id"  placeholder="輸入自訂產品ID名稱查詢"></td>
+								<td>自訂產品ID：</td>
+								<td><input type="text" id="insert_detail_c_product_id"name="insert_detail_c_product_id"  placeholder="輸入自訂產品ID"></td>
 								<td>產品名稱：</td>
 								<td><input type="text" id="insert_detail_product_name"name="insert_detail_product_name" placeholder="輸入產品名稱查詢"></td>
 							</tr>
 							<tr>
-								<td>進貨數量：</td>
-								<td><input type="text" id="insert_detail_product_n" name="quantity" placeholder="輸入進貨數量"></td>
-								<td>單價：</td>
-								<td><input type="text" id="insert_detail_product_price" name="cost"placeholder="輸入單價"></td>
+								<td>幣別：</td>
+								<td><select id='insert_currency'></select></td>
 							</tr>
 							<tr>
+								<td>進貨單價：<a class='currency1'></a></td>
+								<td><input type="text" id="insert_tmp_value" name='tmp_value' placeholder="輸入單價"></td>
+								<td>折合台幣單價：</td>
+								<td><a id='insert_exchange_msg'>NT＄0 x 1 = NT$0</a><input  type="hidden" id="insert_detail_product_price" name="cost" disabled></td>
+							</tr>
+							<tr>
+								<td>進貨數量：</td>
+								<td><input type="text" id="insert_detail_product_n" name="quantity" placeholder="輸入進貨數量"></td>
 								<td>總價格：</td>
 								<td><input type="text" id="insert_detail_product_cost" name="total" disabled></td>
+							</tr>
+							<tr>
 								<td>備註說明：</td>
 								<td><input type="text" name="memo"  placeholder="輸入備註說明"></td>
 							</tr>
