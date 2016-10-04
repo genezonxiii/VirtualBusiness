@@ -1,5 +1,5 @@
 
-package tw.com.aber;
+package tw.com.aber.report;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -27,9 +28,12 @@ import javax.sql.DataSource;
 import com.google.gson.Gson;
 import java.util.Date; 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+
 @SuppressWarnings("serial")
 
-public class salereturnreport extends HttpServlet {
+public class distributereport extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -50,14 +54,19 @@ public class salereturnreport extends HttpServlet {
 		time1=(time1.length()<3)?"1999-12-31":time1;
 		String time2 = request.getParameter("time2");
 		time2=(time2.length()<3)?"2300-12-31":time2;
-		//System.out.println("from "+time1+" to "+time2);
+		//System.out.println("from "+time1+" to "+time2 +" groupid: "+group_id);
 		//###########################################
 		try {
 			java.sql.Date from_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
 			java.sql.Date till_date= new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
 			salereportService = new SalereportService();
 			List<SalereportVO> list = salereportService.getSearhDB(group_id, from_date, till_date);
-
+			Collections.sort(list,new Comparator<SalereportVO>(){
+	            public int compare(SalereportVO o1, SalereportVO o2) {
+	                return o1.getDis_date().compareTo(o2.getDis_date());
+	            }
+			});
+					
 			Gson gson = new Gson();
 			String jsonStrList = gson.toJson(list);
 			//System.out.println("json: "+jsonStrList);
@@ -187,8 +196,6 @@ public class salereturnreport extends HttpServlet {
 		private String memo;
 		private java.sql.Date sale_date;
 		private String order_source;
-		private java.sql.Date return_date;
-		
 		public String getSale_id() {
 			return sale_id;
 		}
@@ -303,12 +310,6 @@ public class salereturnreport extends HttpServlet {
 		public void setOrder_source(String order_source) {
 			this.order_source = order_source;
 		}
-		public java.sql.Date getReturn_date() {
-			return return_date;
-		}
-		public void setReturn_date(java.sql.Date return_date) {
-			this.return_date = return_date;
-		}
 	}
 
 	/*************************** 制定規章方法 ****************************************/
@@ -346,7 +347,7 @@ public class salereturnreport extends HttpServlet {
 	/*************************** 操作資料庫 ****************************************/
 	class SalereportDAO implements Salereport_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_select_sale_return_byreturndate  = "call sp_select_sale_return_byreturndate(?,?,?)";
+		private static final String sp_select_sale_bydisdate  = "call sp_select_sale_bydisdate(?,?,?)";
 		/*private static final String sp_insert_product_unit = "call sp_insert_product_unit(?,?,?)";
 		private static final String sp_selectall_product_unit = "call sp_selectall_product_unit (?)";
 		private static final String sp_select_product_unit = "call sp_select_product_unit (?,?)";
@@ -368,7 +369,7 @@ public class salereturnreport extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_sale_return_byreturndate);
+				pstmt = con.prepareStatement(sp_select_sale_bydisdate);
 				pstmt.setString(1,group_id);
 				pstmt.setDate(2,from_date);
 				pstmt.setDate(3,till_date);
@@ -396,9 +397,9 @@ public class salereturnreport extends HttpServlet {
 					salereportVO.setMemo(rs.getString("memo"));
 					salereportVO.setSale_date(rs.getDate("sale_date"));
 					salereportVO.setOrder_source(rs.getString("order_source"));
-					salereportVO.setReturn_date(rs.getDate("return_date"));
 					list.add(salereportVO);
 				}
+				//list 排序 by dis_date
 				//System.out.println("total Data: "+k);
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {

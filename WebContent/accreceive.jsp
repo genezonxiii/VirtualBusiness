@@ -699,6 +699,7 @@ function detail(str){
 
 		<div class="datalistWrap">
 			<!-- 第三列 -->
+			<hr class="hr0">
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<form id="receive_date_form" name="trans_list_date_form">

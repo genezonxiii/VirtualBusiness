@@ -109,7 +109,7 @@ $(function() {
 	    if(e.shiftKey){
 	    	if(e.which == 41){
 	    		e.preventDefault();
-	    		if(location.href.indexOf("a-ber")>-1){
+	    		if(location.href.indexOf("ber")>-1){
 	    			$("#uninumber").val("20939790");
 	    			$("#username").val("pershing@pershing.com.tw");
 	    			$("#password").val("1234");
@@ -212,7 +212,7 @@ $(function() {
 					<a class="login-button" id="login_btn">登入</a>
 					<a class="login-reset-button" id="reset_btn">清除重填</a>
 				</div><!-- /.login-btn-wrap -->
-<!-- 				<div align='center' style="padding-top:5px;"><a href="./forget.jsp">忘記密碼</a>?</div> -->
+				<div align='center' style="padding-top:15px;"><a href="./forget.jsp">忘記密碼</a>?</div>
 <!-- 				<div align='center' style="padding-top:5px;">還沒有智慧電商平台的帳號嗎? <a href="./registry.jsp">註冊</a></div> -->
 			</form>
 		</div><!-- /.login-panel -->

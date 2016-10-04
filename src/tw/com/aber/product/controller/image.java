@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -52,14 +53,19 @@ public class image extends HttpServlet {
 		String picname = request.getParameter("picname");
 		if(picname!=null&&!picname.equals("")){
 			File f = new File(upload_root + "/" + picname);
+			File loss = new File(upload_root+"/loss.gif");
 			try{
 				BufferedImage bi = ImageIO.read(f);
 				OutputStream out = response.getOutputStream();
 				ImageIO.write(bi, "jpg", out);
 				out.close();
 			}catch(Exception e){
+				//String path = getServletContext().getRealPath("./");
+				//System.out.println(path);
+				RequestDispatcher successView = request.getRequestDispatcher("/images/loss.gif");
+				successView.forward(request, response);
 				System.out.println("name: "+f+" with: "+e.toString());
-				}
+			}
 		} else {
 			System.out.println("沒有圖檔名稱");
 		}

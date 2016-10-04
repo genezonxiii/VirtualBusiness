@@ -1,4 +1,4 @@
-package tw.com.aber.customer.controller;
+package tw.com.aber.basicinfo;
 
 
 import java.io.BufferedReader;

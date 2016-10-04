@@ -1,5 +1,5 @@
 
-package tw.com.aber;
+package tw.com.aber.chart;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 
 import com.google.gson.Gson;
 
-import tw.com.aber.salereport.SalereportVO;
+import tw.com.aber.report.salereport.SalereportVO;
 
 import java.util.Date; 
 import java.text.SimpleDateFormat;

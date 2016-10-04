@@ -1,5 +1,5 @@
 
-package tw.com.aber;
+package tw.com.aber.chart;
 
 import java.io.BufferedReader;
 import java.io.IOException;

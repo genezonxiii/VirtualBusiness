@@ -52,16 +52,18 @@ function draw_supply(info){
 					"<tr><td name='name'>"+ json_obj[i].supply_name+
 					"</td><td name='uni'>"+json_obj[i].supply_unicode+ 
 					"</td><td name='addr'>"+json_obj[i].address+
-					"</td><td name='contact0'>"+json_obj[i].contact+
-					"</td><td name='mobile0'>"+json_obj[i].mobile+
-					"</td><td name='phone0'>"+json_obj[i].phone+
-					"</td><td name='ext0'>"+json_obj[i].ext+
-					"</td><td name='email0'>"+json_obj[i].email+
-					"</td><td name='contact1'>"+json_obj[i].contact1+
-					"</td><td name='mobile1'>"+json_obj[i].mobile1+
-					"</td><td name='phone1'>"+json_obj[i].phone1+
-					"</td><td name='ext1'>"+json_obj[i].ext1+
-					"</td><td name='email1'>"+json_obj[i].email1+
+					"</td><td name='contact0'>"+
+						((json_obj[i].contact.length<1)?"":("&nbsp;&nbsp;姓名："+json_obj[i].contact+"<br>"))+
+						((json_obj[i].mobile.length<1)?"":("&nbsp;&nbsp;手機："+json_obj[i].mobile+"<br>"))+
+						((json_obj[i].phone.length<1)?"":("&nbsp;&nbsp;電話："+json_obj[i].phone+"<br>"))+
+						((json_obj[i].ext.length<1)?"":("&nbsp;&nbsp;分機："+json_obj[i].ext+"<br>"))+
+						((json_obj[i].email.length<1)?"":("email："+json_obj[i].email+"<br>"))+
+					"</td><td name='contact1'>"+
+						((json_obj[i].contact1.length<1)?"":("&nbsp;&nbsp;姓名："+json_obj[i].contact1+"<br>"))+
+						((json_obj[i].mobile1.length<1)?"":("&nbsp;&nbsp;手機："+json_obj[i].mobile1+"<br>"))+
+						((json_obj[i].phone1.length<1)?"":("&nbsp;&nbsp;電話："+json_obj[i].phone1+"<br>"))+
+						((json_obj[i].ext1.length<1)?"":("&nbsp;&nbsp;分機："+json_obj[i].ext1+"<br>"))+
+						((json_obj[i].email1.length<1)?"":("email："+json_obj[i].email1+"<br>"))+
 					"</td><td name='memo'>"+json_obj[i].memo+
 					 "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 					+ "	<div class='table-function-list'>"
@@ -79,6 +81,7 @@ function draw_supply(info){
 				$("#products2-contain").show();
 				$("#products2 tbody").html(result_table);
 				$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 				$("#products2").find("td").css("text-align", "center");
 				$("#products2-contain").animate({"opacity":"0.01"},1);
 				$("#products2-contain").animate({"opacity":"1"},300);
 				warning_msg("");
@@ -93,7 +96,6 @@ function draw_supply(info){
 		$(".bdyplane").animate({"opacity":"1"});
 		var information={
 			action : "search",
-			supply_name : $("input[name='searh_supply_name'").val(),
 		};
 		draw_supply(information);
 		//=============自定義validator=============
@@ -272,20 +274,48 @@ function draw_supply(info){
 		$("#products2").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
 			$("#dialog-form-update").val($(this).val());
-			$("#dialog-form-update input[name='supply_name']").val($(this).parents("tr").find("td[name='name']").html());
-			$("#dialog-form-update input[name='supply_unicode']").val($(this).parents("tr").find("td[name='uni']").html());
-			$("#dialog-form-update input[name='address']").val($(this).parents("tr").find("td[name='addr']").html());
-			$("#dialog-form-update input[name='contact']").val($(this).parents("tr").find("td[name='contact0']").html());
-			$("#dialog-form-update input[name='phone']").val($(this).parents("tr").find("td[name='phone0']").html());
-			$("#dialog-form-update input[name='ext']").val($(this).parents("tr").find("td[name='ext0']").html());
-			$("#dialog-form-update input[name='mobile']").val($(this).parents("tr").find("td[name='mobile0']").html());
-			$("#dialog-form-update input[name='contact1']").val($(this).parents("tr").find("td[name='contact1']").html());
-			$("#dialog-form-update input[name='phone1']").val($(this).parents("tr").find("td[name='phone1']").html());
-			$("#dialog-form-update input[name='ext1']").val($(this).parents("tr").find("td[name='ext1']").html());
-			$("#dialog-form-update input[name='mobile1']").val($(this).parents("tr").find("td[name='mobile1']").html());
-			$("#dialog-form-update input[name='email']").val($(this).parents("tr").find("td[name='email0']").html());
-			$("#dialog-form-update input[name='email1']").val($(this).parents("tr").find("td[name='email1']").html());
-			$("#dialog-form-update textarea[name='memo']").val($(this).parents("tr").find("td[name='memo']").html());
+			$.ajax({
+				type : "POST",
+				url : "supply.do",
+				data : { action: "search"},
+				success : function(result) {
+					var json_obj = $.parseJSON(result);
+					var result_table = "";
+					$.each(json_obj,function(i, item) {
+						if(json_obj[i].supply_id==$("#dialog-form-update").val()){
+							$("#dialog-form-update input[name='supply_name']").val(json_obj[i].supply_name);
+							$("#dialog-form-update input[name='supply_unicode']").val(json_obj[i].supply_unicode);
+							$("#dialog-form-update input[name='address']").val(json_obj[i].address);
+							$("#dialog-form-update input[name='contact']").val(json_obj[i].contact);
+							$("#dialog-form-update input[name='phone']").val(json_obj[i].phone);
+							$("#dialog-form-update input[name='ext']").val(json_obj[i].ext);
+							$("#dialog-form-update input[name='mobile']").val(json_obj[i].mobile);
+							$("#dialog-form-update input[name='contact1']").val(json_obj[i].contact1);
+							$("#dialog-form-update input[name='phone1']").val(json_obj[i].phone1);
+							$("#dialog-form-update input[name='ext1']").val(json_obj[i].ext1);
+							$("#dialog-form-update input[name='mobile1']").val(json_obj[i].mobile1);
+							$("#dialog-form-update input[name='email']").val(json_obj[i].email);
+							$("#dialog-form-update input[name='email1']").val(json_obj[i].email1);
+							$("#dialog-form-update textarea[name='memo']").val(json_obj[i].memo);
+						}
+					});
+				}
+			});
+// 			$("#dialog-form-update").val($(this).val());
+// 			$("#dialog-form-update input[name='supply_name']").val($(this).parents("tr").find("td[name='name']").html());
+// 			$("#dialog-form-update input[name='supply_unicode']").val($(this).parents("tr").find("td[name='uni']").html());
+// 			$("#dialog-form-update input[name='address']").val($(this).parents("tr").find("td[name='addr']").html());
+// 			$("#dialog-form-update input[name='contact']").val($(this).parents("tr").find("td[name='contact0']").html());
+// 			$("#dialog-form-update input[name='phone']").val($(this).parents("tr").find("td[name='phone0']").html());
+// 			$("#dialog-form-update input[name='ext']").val($(this).parents("tr").find("td[name='ext0']").html());
+// 			$("#dialog-form-update input[name='mobile']").val($(this).parents("tr").find("td[name='mobile0']").html());
+// 			$("#dialog-form-update input[name='contact1']").val($(this).parents("tr").find("td[name='contact1']").html());
+// 			$("#dialog-form-update input[name='phone1']").val($(this).parents("tr").find("td[name='phone1']").html());
+// 			$("#dialog-form-update input[name='ext1']").val($(this).parents("tr").find("td[name='ext1']").html());
+// 			$("#dialog-form-update input[name='mobile1']").val($(this).parents("tr").find("td[name='mobile1']").html());
+// 			$("#dialog-form-update input[name='email']").val($(this).parents("tr").find("td[name='email0']").html());
+// 			$("#dialog-form-update input[name='email1']").val($(this).parents("tr").find("td[name='email1']").html());
+// 			$("#dialog-form-update textarea[name='memo']").val($(this).parents("tr").find("td[name='memo']").html());
 			update_dialog.dialog("open");
 		});		
 		//新增事件聆聽
@@ -409,18 +439,18 @@ function draw_supply(info){
 						<thead>
 							<tr class="ui-widget-header">
 								<th style="min-width:60px">供應商名稱</th>
-								<th>供應商統編</th>
+								<th style="min-width:60px">供應商統編</th>
 								<th style="min-width:100px">供應商地址</th>
-								<th style="min-width:40px">連絡人</th>
-								<th>連絡人手機</th>
-								<th>連絡人電話</th>
-								<th>連絡人分機</th>
-								<th>連絡人email</th>
+								<th style="min-width:40px">第一連絡人</th>
+<!-- 								<th>連絡人手機</th> -->
+<!-- 								<th>連絡人電話</th> -->
+<!-- 								<th>連絡人分機</th> -->
+<!-- 								<th>連絡人email</th> -->
 								<th>第二連絡人</th>
-								<th>第二連絡人手機</th>
-								<th>第二連絡人電話</th>
-								<th>第二連絡人分機</th>
-								<th>第二連絡人email</th>
+<!-- 								<th>第二連絡人手機</th> -->
+<!-- 								<th>第二連絡人電話</th> -->
+<!-- 								<th>第二連絡人分機</th> -->
+<!-- 								<th>第二連絡人email</th> -->
 								<th>備註說明 </th>
 								<th>功能</th>
 							</tr>

@@ -176,7 +176,7 @@ function vender_color(vender){
 	if(vender=="超級商城"){return '#6666FF';}
 	if(vender=="博客來"){return '#66FF66';}
 	if(vender=="payeasy"){return '#006666';}
-	if(vender=="ibon"){return '#660066';}
+	if(vender=="ibon"){return '#FF5566';}
 	if(vender=="森森購物"){return '#666600';}
 	if(vender=="Line Mart"){return '#333333';}
 	return '#553388';

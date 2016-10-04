@@ -114,7 +114,7 @@ $(function(){
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
 		<h1>　</h1>
 		<button class='btn-explanation'>?</button>
-			
+<!-- 			<div id='memo' style=" background-image: url('./images/memo.png');width:300px;height:300px;position:absolute;z-index:1;display:none;"><div style="padding:40px;">123455</div></div> -->
 		<input type="text" id="helo">
 		<button onclick="hello()">##@_@##</button>
 		<button onclick="hello2()">##X_X##</button>
@@ -123,6 +123,7 @@ $(function(){
 <!-- 			<button id="btn1"  > -->
 			<font onmouseover="this.size=(parseInt(this.size)+1)%7" size=1>撒尿牛丸!!!</font>
 <!-- 			</button> -->
+<div id="memo"  style= "background-image: url('./images/memo.png');width:300px;height:300px;position:absolute;z-index:9999;opacity:0;left:100px;"><div style="padding:40px;">123455</div></div>
 			<table id="example" class="display nowrap" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -161,7 +162,7 @@ $(function(){
                 <td>g.winters@datatables.net</td>
             </tr>
             <tr>
-                <td>Ashton</td>
+                <td onmouseover="$('#memo').animate({opacity: '1'},100);" onmouseout="$('#memo').animate({opacity: '0'},100);">Ashton</td>
                 <td>Cox</td>
                 <td>Junior Technical Author</td>
                 <td>San Francisco</td>

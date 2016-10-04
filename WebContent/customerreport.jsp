@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="tw.com.aber.customer.controller.*"%>
+<%@ page import="tw.com.aber.basicinfo.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.sql.Connection"%>

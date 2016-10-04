@@ -22,6 +22,15 @@
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+ <style type="text/css">
+ <!--
+.hr0{ height:1px;border:none;border-top:1px dashed #0066CC;}
+.hr1{ height:1px;border:none;border-top:1px solid #555555;}
+.hr2{ height:3px;border:none;border-top:3px double red;}
+.hr3{ height:5px;border:none;border-top:5px ridge green;}
+.hr4{ height:10px;border:none;border-top:10px groove skyblue;}
+ -->
+ </style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -1238,6 +1247,7 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第六列 -->
+			<hr class="hr0">
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
@@ -1256,6 +1266,7 @@
 					</div>
 				</div><!-- /.form-wrap -->
 			</div><!-- /.input-field-wrap -->
+			
 			<div class="row search-result-wrap" align="center"style="height:433px;">
 <!-- 				<div class="form-row"> -->
 <!-- 					<button id="button_2" align="center" class="btn btn-wide btn-darkblue">取消銷貨退回</button> -->

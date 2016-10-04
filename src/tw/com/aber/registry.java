@@ -31,8 +31,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import com.google.gson.Gson;
 
-import tw.com.aber.salechart.SalechartVO;
-import tw.com.aber.salechart.Salereport_interface;
+import tw.com.aber.chart.salechart.SalechartVO;
 
 import java.util.Properties;
 import javax.mail.Message;

@@ -172,8 +172,8 @@ function send_mail(reg_id){
         	if("success"==data){
         		$("#bdy").animate({opacity: '0'},function() {
         			$("#bdy").css("margin-top","-100px");
-        			$("#bdy").html("<div align='center'><h1>註冊完成</h1><h2><font style='font-size:40px'>已發送驗證郵件!</font></h2><img src='images/sendmail.png' width='400px'><br><br><font style='font-size:24px'>已發送驗證郵件至<a href='#'>"
-        				+$("#email").val()+"</a>,<br>請點擊您郵件中的連結來驗證您的帳戶並完成註冊。</font><div>");
+        			$("#bdy").html("<div align='center'><h1>註冊完成</h1><h2><font style='font-size:40px'>已發送驗證郵件!</font></h2><img src='images/sendmail.png' width='400px'><br><br><font style='font-size:24px'>已發送驗證郵件至&nbsp;<a href='#'>"
+        				+$("#email").val()+"</a>&nbsp;,<br>請點擊您郵件中的連結來驗證您的帳戶並完成註冊。</font><div>");
         		});
         		$("#bdy").animate({opacity: '1'});
         	}else{

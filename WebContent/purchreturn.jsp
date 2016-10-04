@@ -903,6 +903,7 @@ $(function(){
 			</div>		
 		</div>
 		<div class="datalistWrap">
+		<hr class="hr0">
 		<div class="input-field-wrap">
 			<div class="form-wrap" >
 				<div class="form-row">

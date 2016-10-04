@@ -714,6 +714,7 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<!-- 第四列 -->
+			<hr class="hr0">
 			<div class="input-field-wrap">
 					<div class="form-wrap">
 						<form id="pay_date_form" name="trans_list_date_form">

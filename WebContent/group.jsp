@@ -121,6 +121,7 @@ table.result-table td:nth-child(2n){
 								+ "<tr><td>"+ "負責人"+"</td><td>"+json_obj[i].master+"</td>"
 								+ "<tr><td>"+"負責人Email"+"</td><td>"+ json_obj[i].email+ "</td>"
 								+ "<tr><td>"+"負責人手機"+"</td><td>"+ json_obj[i].mobile+"</td></tr>"
+								+ "<tr><td>"+"電子發票路徑"+"</td><td>"+ json_obj[i].invoice_path+"</td></tr>"
 								+ "<tr><td>"+ "功能"+"</td><td>"
 								+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"
@@ -173,6 +174,7 @@ table.result-table td:nth-child(2n){
 	 							mobile : $("#dialog-form-update input[name='mobile']").val(),
 	 							email : $("#dialog-form-update input[name='email']").val(),
 	 							master : $("#dialog-form-update input[name='master']").val(),
+	 							invoice_path : $("#dialog-form-update input[name='invoice_path']").val(),
 							},				
 							success : function(result) {
 								var json_obj = $.parseJSON(result);
@@ -187,6 +189,7 @@ table.result-table td:nth-child(2n){
 										+ "<tr><td>"+ "負責人"+"</td><td>"+json_obj[i].master+"</td>"
 										+ "<tr><td>"+"負責人Email"+"</td><td>"+ json_obj[i].email+ "</td>"
 										+ "<tr><td>"+"負責人手機"+"</td><td>"+ json_obj[i].mobile+"</td></tr>"
+										+ "<tr><td>"+"電子發票路徑"+"</td><td>"+ json_obj[i].invoice_path+"</td></tr>"
 										+ "<tr><td>"+ "功能"+"</td><td>"
 										+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 										+ "	<div class='table-function-list'>"
@@ -247,20 +250,24 @@ table.result-table td:nth-child(2n){
 						});
 							var result_table = "";
 							$.each(json_obj,function(i, item) {
-										$("#dialog-form-update input[name='group_name']").val(json_obj[i].group_name);
-										$("#dialog-form-update input[name='group_unicode']").val(json_obj[i].group_unicode);
-										$("#dialog-form-update input[name='address']").val(json_obj[i].address);
-										$("#dialog-form-update input[name='phone']").val(json_obj[i].phone);
-										$("#dialog-form-update input[name='fax']").val(json_obj[i].fax);
-										$("#dialog-form-update input[name='mobile']").val(json_obj[i].mobile);
-										$("#dialog-form-update input[name='email']").val(json_obj[i].email);
-										$("#dialog-form-update input[name='master']").val(json_obj[i].master);
+								$("#dialog-form-update input[name='group_name']").val(json_obj[i].group_name);
+								$("#dialog-form-update input[name='group_unicode']").val(json_obj[i].group_unicode);
+								$("#dialog-form-update input[name='address']").val(json_obj[i].address);
+								$("#dialog-form-update input[name='phone']").val(json_obj[i].phone);
+								$("#dialog-form-update input[name='fax']").val(json_obj[i].fax);
+								$("#dialog-form-update input[name='mobile']").val(json_obj[i].mobile);
+								$("#dialog-form-update input[name='email']").val(json_obj[i].email);
+								$("#dialog-form-update input[name='master']").val(json_obj[i].master);
+								$("#dialog-form-update input[name='invoice_path']").val(json_obj[i].invoice_path);
 							});
 						} 
 
 				});			
 			update_dialog.dialog("open");
 		});	
+		$("#file").change(function(){
+			$("#dialog-form-update input[name='invoice_path']").val($("#file").val());
+		});
 		//melvin begin
 		function checkunicode(uniString){       
 			var res = uniString.split("");
@@ -316,6 +323,12 @@ table.result-table td:nth-child(2n){
 							</tr><tr>
 								<td>負責人Email：</td><td><input type="text" name="email"placeholder="修改負責人Email"/></td>
 								<td>負責人連絡手機：</td><td><input type="text" name="mobile"placeholder="修改負責人連絡手機"/></td>
+							</tr><tr>
+								<td>電子發票路徑：</td><td>
+<!-- 								<input type="file" id="file" name="file" style="opacity:0;position:absolute;margin:6px;width:140px;"/> -->
+<!-- 								<div style="opacity:0.9;position:absolute;"><button id="choose_path" onclick="return false;">選擇路徑</button></div> -->
+								<input type="text" name="invoice_path"placeholder="修改電子發票路徑"/>
+								</td>
 							</tr>
 							</tbody>
 							</table>	
@@ -323,7 +336,7 @@ table.result-table td:nth-child(2n){
 				</form>
 			</div>			
 			<!-- 第二列 -->
-			<div class="row search-result-wrap" align="center" style="width:600px;margin:0px auto;">
+			<div class="row search-result-wrap" align="center" style="width:600px;margin:30px auto;">
 				<div id="products-contain" class="ui-widget" style="display:none">
 					<table id="products" class="result-table" style="height:460px">
 						<thead>

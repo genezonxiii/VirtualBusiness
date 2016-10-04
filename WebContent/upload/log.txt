@@ -266,3 +266,84 @@ I'm image.java.
 	Start customer classify---
 2016-09-28(星期三) 14:41:28:
 	Finish customer classify.
+2016-10-01(星期六) 23:28:22:
+  I'm registry-java with PID = 9628.
+  Get a register request from:
+  (uninumber, CORP, user, email, password)
+  (20939778, 1234, 1234, g4ru04@gmail.com, zxc123)
+2016-10-02(星期日) 12:47:44:
+  I'm upload-java with PID = 9072.
+2016-10-02(星期日) 12:48:37:
+  I'm upload-java with PID = 9072.
+2016-10-02(星期日) 12:49:01:
+  I'm upload-java with PID = 9072.
+2016-10-02(星期日) 12:51:37:
+  I'm upload-java with PID = 9072.
+2016-10-02(星期日) 12:52:40:
+  I'm upload-java with PID = 9072.
+2016-10-02(星期日) 12:55:50:
+  I'm upload-java with PID = 9144.
+2016-10-02(星期日) 12:56:24:
+  I'm upload-java with PID = 9144.
+2016-10-02(星期日) 12:58:38:
+  I'm upload-java with PID = 9144.
+2016-10-02(星期日) 14:23:03:
+  I'm image-java with PID = 9656.
+2016-10-02(星期日) 14:27:51:
+  I'm image-java with PID = 2836.
+2016-10-02(星期日) 14:27:58:
+  I'm image-java with PID = 2836.
+2016-10-02(星期日) 14:30:56:
+  I'm image-java with PID = 8952.
+2016-10-02(星期日) 14:31:04:
+  I'm image-java with PID = 8952.
+2016-10-02(星期日) 14:34:22:
+  I'm image-java with PID = 8876.
+2016-10-02(星期日) 14:35:32:
+  I'm image-java with PID = 9920.
+2016-10-02(星期日) 14:36:21:
+  I'm image-java with PID = 9232.
+2016-10-02(星期日) 14:37:56:
+  I'm image-java with PID = 4728.
+2016-10-02(星期日) 14:40:11:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:40:14:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:40:18:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:40:36:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:40:54:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:41:26:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:41:38:
+  I'm image-java with PID = 7480.
+2016-10-02(星期日) 14:44:50:
+  I'm image-java with PID = 1844.
+2016-10-02(星期日) 14:46:04:
+  I'm image-java with PID = 1844.
+2016-10-02(星期日) 17:40:19:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:40:25:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:45:40:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:45:41:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:47:09:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:47:54:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:51:15:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:51:15:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:53:00:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 17:53:54:
+  I'm upload-java with PID = 7372.
+2016-10-02(星期日) 18:19:23:
+  I'm upload-java with PID = 7372.
+2016-10-03(星期一) 16:50:58:
+  I'm upload-java with PID = 11152.

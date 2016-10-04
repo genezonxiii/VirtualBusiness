@@ -191,7 +191,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>salereport</servlet-name>
-    <servlet-class>tw.com.aber.salereport</servlet-class>
+    <servlet-class>tw.com.aber.report.salereport</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>salereport</servlet-name>
@@ -199,7 +199,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>distributereport</servlet-name>
-    <servlet-class>tw.com.aber.distributereport</servlet-class>
+    <servlet-class>tw.com.aber.report.distributereport</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>distributereport</servlet-name>
@@ -207,7 +207,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>salereturnreport</servlet-name>
-    <servlet-class>tw.com.aber.salereturnreport</servlet-class>
+    <servlet-class>tw.com.aber.report.salereturnreport</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>salereturnreport</servlet-name>
@@ -215,7 +215,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>salechart</servlet-name>
-    <servlet-class>tw.com.aber.salechart</servlet-class>
+    <servlet-class>tw.com.aber.chart.salechart</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>salechart</servlet-name>
@@ -223,7 +223,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>saleamountchart</servlet-name>
-    <servlet-class>tw.com.aber.saleamountchart</servlet-class>
+    <servlet-class>tw.com.aber.chart.saleamountchart</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>saleamountchart</servlet-name>
@@ -231,7 +231,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>saleamountstaticchart</servlet-name>
-    <servlet-class>tw.com.aber.saleamountstaticchart</servlet-class>
+    <servlet-class>tw.com.aber.chart.saleamountstaticchart</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>saleamountstaticchart</servlet-name>
@@ -247,7 +247,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>group</servlet-name>
-    <servlet-class>tw.com.aber.group.controller.group</servlet-class>
+    <servlet-class>tw.com.aber.basicinfo.group</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>group</servlet-name>
@@ -255,7 +255,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>stock</servlet-name>
-    <servlet-class>tw.com.aber.stock.controller.stock</servlet-class>
+    <servlet-class>tw.com.aber.basicinfo.stock</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>stock</servlet-name>
@@ -263,7 +263,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>supply</servlet-name>
-    <servlet-class>tw.com.aber.supply.controller.supply</servlet-class>
+    <servlet-class>tw.com.aber.basicinfo.supply</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>supply</servlet-name>
@@ -279,7 +279,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>user</servlet-name>
-    <servlet-class>tw.com.aber.user.controller.user</servlet-class>
+    <servlet-class>tw.com.aber.basicinfo.user</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>user</servlet-name>
@@ -335,7 +335,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>shipreport</servlet-name>
-    <servlet-class>tw.com.aber.shipreport</servlet-class>
+    <servlet-class>tw.com.aber.report.shipreport</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>shipreport</servlet-name>
@@ -359,7 +359,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>customer</servlet-name>
-    <servlet-class>tw.com.aber.customer.controller.customer</servlet-class>
+    <servlet-class>tw.com.aber.basicinfo.customer</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>customer</servlet-name>
@@ -415,7 +415,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>bestsale</servlet-name>
-    <servlet-class>tw.com.aber.bestsale</servlet-class>
+    <servlet-class>tw.com.aber.chart.bestsale</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>bestsale</servlet-name>
@@ -423,13 +423,12 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>heavybuyer</servlet-name>
-    <servlet-class>tw.com.aber.heavybuyer</servlet-class>
+    <servlet-class>tw.com.aber.chart.heavybuyer</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>heavybuyer</servlet-name>
     <url-pattern>/heavybuyer.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
   <servlet>
     <servlet-name>exchange</servlet-name>
     <servlet-class>tw.com.aber.exchange</servlet-class>
@@ -439,6 +438,24 @@
     <url-pattern>/exchange.do</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>forget</servlet-name>
+    <servlet-class>tw.com.aber.forget</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>forget</servlet-name>
+    <url-pattern>/forget.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  
+  <servlet>
+    <servlet-name>invoice</servlet-name>
+    <servlet-class>tw.com.aber.invoice</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>invoice</servlet-name>
+    <url-pattern>/invoice.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>test</servlet-name>
     <servlet-class>tw.com.aber.test</servlet-class>
   </servlet>
@@ -446,10 +463,11 @@
     <servlet-name>test</servlet-name>
     <url-pattern>/test.do</url-pattern>
   </servlet-mapping>
+  
   <!-- ############新的############ -->
-  <listener>
-	<listener-class>tw.com.aber.bystartup</listener-class>   
-  </listener>
+<!--   <listener> -->
+<!-- 	<listener-class>tw.com.aber.bystartup</listener-class> -->
+<!--   </listener> -->
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>tw.com.aber.loginFilter</filter-class>

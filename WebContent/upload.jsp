@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="vendor/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/styles.css">
 <style>
+
+.up_icon,.up_input {position: absolute;top: 10px;left: 10px;width: 64px;height: 64px;z-index: 2}
+.up_icon {overflow: hidden;font-size: 0;line-height: 99em;background: url(http://sfault-image.b0.upaiyun.com/346/967/3469672357-54250d7235406_articlex) no-repeat 0 0;z-index: 1;}
 .on_it {
 	background: #d8d8d8 !important;
 }
@@ -56,10 +59,12 @@
 			</div><!-- /.result-table-func-wrap -->
 			<div style="text-align:center; margin:0px auto;font-size:35px;"></div>
 				<form action="upload.do" id="form1" method="post" enctype="multipart/form-data" style="margin:0px;">
-					<input type="file" id="file" name="file" accept=".csv,.pdf,.xls,xlsx" style="opacity:0.7;position:absolute;margin:6px;"/>
-					<input type="text" id="upload_name" size="40" style="z-index:-1" />
+					<input type="file" id="file" name="file" accept=".csv,.pdf,.xls,.xlsx" style="opacity:0;position:absolute;margin:6px;max-width:353px;"/>
+					<div style="opacity:0.6;position:absolute;padding-top:7px;padding-left:5px;"><button id="btn" onclick="return false;">瀏覽...</button></div>
+					<input type="text" id="upload_name" size="40" style="z-index:-1;padding-left:70px;" />
 					<input type="submit" onclick="return setV();" value="檔案上傳" class="btn btn-exec btn-wide" style="color: #fff;margin-left:20px"/>
 					<br><br>
+					
 					<table width="100%" >
 					<tr><td style="text-align:center">
 							<a href='./salereport.jsp?action=upload' style="font-size:25px;">訂單報表</a>
@@ -82,6 +87,7 @@ if(str!=null){
 	if("success".equals(str)){
 		out.println("<script>alert('匯入成功');window.location.href = './upload.jsp';</script>");
 	}else{
+		out.println("<script>console.log('"+str+"');</script>");
 		out.println("<script>alert('匯入失敗：\\n　　請確認檔案的格式是否遭到修改。');window.location.href = './upload.jsp';</script>");
 	}
 }
@@ -90,6 +96,15 @@ if(str!=null){
 $(function(){
 	$(".bdyplane").animate({"opacity":"1"});
 	$("label").hover(function(){$(this).addClass("on_it");},function(){$(this).removeClass("on_it");});
+	$("#file").change(function(){
+		$("#upload_name").val($("#file").val());
+	});
+	$("#btn").click(function(){
+		$("#file").trigger("click");
+	});
+	$("#upload_name").click(function(){
+		$("#file").trigger("click");
+	});
 });
 </script>
 <script>
@@ -143,6 +158,7 @@ function setV(){
 		i++;
 		if(i==20){alert("請選擇平台");return false;}
 	}
+	console.log("為何進來了?");
 	document.getElementById("form1").action+="?vender="+document.getElementsByName("ec-radio-group")[i].value;
 	return true;
 };

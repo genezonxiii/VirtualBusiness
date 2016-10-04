@@ -37,58 +37,13 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 
+<script src="js/d3.v3.min.js"></script>
 
+<script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
 <script>
-function draw_linechart_plotly(data){
-// 	data = [
-// 	      	  {
-// 	      		x: ['8/15', '8/22', '8/29'],
-// 	      		y: [3, 4, 3],
-// 	      		name: "me",
-// 	      		type: 'scatter'
-// 	      	  },{
-// 	      		x: [ '8/22', '8/29'],
-// 	      		y: [ 3, 6],
-// 	      		type: 'scatter'
-// 	      	  }
-// 	      	];
-	var layout = {
-	  title: '銷售金額統計圖(週)',
-	  titlefont: {
-	        family: "Microsoft JhengHei",
-	        size: 32,
-	        color: '#000'
-	  },
-	  xaxis: {
-	    title: '日期',
-	    titlefont: {
-	        family: "Microsoft JhengHei",
-	        size: 16,
-	        color: '#7f7f7f'
-	      },
-	    showgrid: false,
-	    zeroline: false
-	  },
-	  yaxis: {
-	    title: '金額',
-	    titlefont: {
-	        family: "Microsoft JhengHei",
-	        size: 16,
-	        color: '#7f7f7f'
-	    },
-	    showline: true
-	  },
-// 	  showlegend: true,legend: {x: 1,y: 1000},
-	  //legend: {annotations: "123"},
-	  paper_bgcolor: '#E0E8F0',
-	  plot_bgcolor: '#E0E8F0'//'#DDE2E8' "#EEF3F9"
-	};
-	Plotly.newPlot('chart1', data,layout);
-	//Plotly.deleteTraces('chart1', 0);
-	$(".ytitle").attr("transform","rotate(0,42,235) translate(-10, 0)");
-	$("#chart1").animate({opacity: '1'});
-// 	$(".main-svg").css({"background":"#EEF3F9"});
+function draw_linechart_plotly(data,list,choose){
+	
 }
 function draw_linechart(data,list,choose){
 // 	for(i=0;i<data.length;i++){
@@ -260,9 +215,8 @@ function draw_chart(m_h,m_w,data){
 		$(".bdyplane").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
 			$(".visualize").animate({"opacity":"0"});
-			$("#chart1").animate({"opacity":"0"});
 			//$(".validateTips").html("<h4 style='color:red;'>資料查詢中...</h4>");
-			//$("#chart1").html('');
+			$("#chart1").html('');
 			$("#chart2").html('');
 			e.preventDefault();
 			$('.visualize').remove();
@@ -271,11 +225,10 @@ function draw_chart(m_h,m_w,data){
 				url : "saleamountchart.do",
 				data : {action :"search_week",time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 				success : function(result) {
+					alert(result);
 					$(".validateTips").html('');
 					var json_obj = $.parseJSON(result);
 					var chart_data=[],chart_obj={},i=0,j=0,list=[];
-					chart_obj["x"]=[];
-					chart_obj["y"]=[];
 					var tmp_vender=json_obj.vender[0];
 					if(json_obj.entrance.length==0){
 						$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
@@ -293,48 +246,21 @@ function draw_chart(m_h,m_w,data){
 					for(k=0;min+k<max+1;k++){
 						list[k]=min+k;
 					}
-					for(k=0;k<list.length;k++){
-						chart_obj["x"][k]=get_week_day(list[k]+1);
-						chart_obj["y"][k]=0;
-						chart_obj["mode"]='lines';
-						chart_obj["line"]={};
-						chart_obj["line"]["width"]=0;
-						chart_obj["showlegend"]= false;
-						chart_obj["name"]='';
-					}
 					
-					
-					chart_data[j]=chart_obj;
-					j++;
-					chart_obj={};
-					chart_obj["x"]=[];
-					chart_obj["y"]=[];
-					
-					
-					
-					for(i=0,j=1;i<json_obj.entrance.length;i++){
+					for(i=0,j=0;i<json_obj.entrance.length;i++){
 						if(json_obj.vender[i]!=tmp_vender){
 							chart_data[j]=chart_obj;
 							j++;
 							tmp_vender=json_obj.vender[i];
 							chart_obj={};
-							chart_obj["x"]=[];
-							chart_obj["y"]=[];
-							k=0;
 						}
-// 						chart_obj["vender"]=json_obj.vender[i];
-// 						chart_obj[json_obj.entrance[i]]=json_obj.answer[i];
-						//alert(json_obj.vender[i]+get_week_day(json_obj.entrance[i])+json_obj.answer[i]);
-						chart_obj["name"]=json_obj.vender[i];
-						chart_obj["x"][k]=get_week_day(json_obj.entrance[i]+1);
-						chart_obj["y"][k]=json_obj.answer[i];
-						chart_obj["type"]='scatter';
-						k++;
+						chart_obj["vender"]=json_obj.vender[i];
+						chart_obj[json_obj.entrance[i]]=json_obj.answer[i];
 					}
 					chart_data[j]=chart_obj;
 					j++;
-					draw_linechart_plotly(chart_data);
-					//draw_linechart(chart_data,list,'week');
+// 					draw_linechart_plotly(chart_data,list,'week');
+					draw_linechart(chart_data,list,'week');
 					$(".visualize").animate({"opacity":"1"});
 				}
 			});
@@ -419,12 +345,7 @@ function draw_chart(m_h,m_w,data){
 	<div style="margin:30px auto;width:1000px;"><div id="chart1" style="opacity:0;"></div></div>
 <div class="validateTips" align="center" style="position:relative;height:0px;top:-25px;"> </div>	
 	<div id='hello' style="margin:80px auto;width:1000px;"><div id="chart2" style="opacity:0;"></div></div>
-	
 </div>
 </div>
-<script src="js/d3.v3.min.js"></script>
-
-<script type="text/javascript" src="js/visualize.jQuery.js"></script>
-<script type="text/javascript" src="js/plotly-latest.min.js"></script>
 </body>
 </html>

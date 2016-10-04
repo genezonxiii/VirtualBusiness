@@ -55,6 +55,7 @@ h6 {
     font-size: 13px;
 }
 hr {}
+hr.hr0{ height:1px;border:none;border-top:1px dashed #0066CC;}
 hr.hr-gray {
     border: none;
     border-top: 1px solid #ccc;
@@ -443,6 +444,7 @@ h2.page-title {
     float: left;
     margin-left: 120px;
     margin-top: 56px;
+/*     padding-bottom: 60px;Ben又偷改了 */
     padding-bottom: 60px;
 /*     height: calc(100vh - 142px); Ben又偷改*/
     height: calc(100vh - 144px);
@@ -483,7 +485,8 @@ h2.page-title {
 }
 .search-result-wrap {
     padding: 20px 30px;
-    margin-bottom: 60px;
+/*     margin-bottom: 60px;Ben又偷改 */
+    margin-bottom: 20px;
 }
 .result-table-func-wrap {
     zoom: 1;
@@ -979,6 +982,12 @@ table.result-table tr {
 }
 table.result-table tr:nth-child(2n+1) {
     background: #fff;
+}
+table.result-table tr:hover {
+    background: #ccc;
+}
+table.result-table tr:nth-child(2n+1):hover {
+    background: #ddd;
 }
 table.result-table th {
     background: #194A6B;

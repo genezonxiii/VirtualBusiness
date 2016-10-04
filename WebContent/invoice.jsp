@@ -10,10 +10,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>銷貨管理</title>
+<title>開立發票</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-<link href="<c:url value="css/css.css" />" rel="stylesheet">
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
@@ -98,22 +97,23 @@ function draw_sale(parameter){
 							+ "<td name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+ "</td>"
 							+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
 							+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-							+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
-							+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
+// 							+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
+// 							+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
 							+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 							+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 							+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
-							+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
+// 							+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
 //								+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
-							+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
+// 							+ "<td name='"+ json_obj[i].sale_date +"'>"+ json_obj[i].sale_date+ "</td>"
 							+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
-							+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+// 							+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 							+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 							+ "	<div class='table-function-list'>"
 							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' val2='"+json_obj[i].order_no+"'><i class='fa fa-trash'></i></button>"
 							+ "	</div>"
-							+ "</div></td></tr>";
+							+ "</div></td>"
+							+"</tr>";
 						}
 					});
 				}
@@ -1650,16 +1650,16 @@ function draw_sale(parameter){
 								<th>銷貨單號</th>
 								<th>訂單號</th>
 								<th style="min-width:120px">產品名稱</th>
-								<th>自訂產品ID</th>
-								<th>銷貨數量</th>
+<!-- 								<th>自訂產品ID</th> -->
+<!-- 								<th>銷貨數量</th> -->
 								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>
 								<th>發票日期</th>
-								<th>轉單日</th>
+<!-- 								<th>轉單日</th> -->
 <!-- 								<th>配送日</th> -->
-								<th>銷貨/出貨日期</th>
+<!-- 								<th>銷貨/出貨日期</th> -->
 								<th>銷售平台</th>
-								<th>備註說明</th>
+<!-- 								<th>備註說明</th> -->
 								<th>功能</th>
 							</tr>
 						</thead>

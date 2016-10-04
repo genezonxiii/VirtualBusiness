@@ -101,6 +101,14 @@ function who(){
 		side2.addClass("active");
 		return "匯率轉換管理";
 		break;
+	case "invoice.jsp":
+		side2.addClass("active");
+		return "開立發票";
+		break;
+	case "invoicetrack.jsp":
+		side2.addClass("active");
+		return "發票字軌管理";
+		break;
 		
 //####報表管理############################
 	case "salereport.jsp":
@@ -213,7 +221,7 @@ function who(){
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
 				<ul style="top: -146px;">
-					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},100,function() {location.replace('purchase.jsp');});">進貨管理</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('purchase.jsp');});">進貨管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('purchreturn.jsp');});">進貨退回管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('sale.jsp');});">銷貨管理</a></li>
 					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('salereturn.jsp');});">銷貨退回管理</a></li>
@@ -260,6 +268,8 @@ function who(){
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
 				<ul>
 					<li><a href="#">Coming Soon</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('invoice.jsp');});">開立發票</a></li>
+					<li><a href="#" onclick="$('.sidenav > ul > li:hover ul').css('opacity','0');$('.bdyplane').animate({opacity: '0'},300,function() {location.replace('invoicetrack.jsp');});">發票字軌管理</a></li>
 					<li class="hide_everywhere"><a href="msgboard.html">留言版</a></li>
 					<li class="hide_everywhere"><a href="membercondition.jsp">會員分級設定</a></li>
 					<li class="hide_everywhere"><a href="distributereport.jsp">配送報表</a></li>

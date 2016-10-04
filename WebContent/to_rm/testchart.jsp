@@ -11,11 +11,11 @@ $articleUrl = "/lab/jquery_visualize_plugin_accessible_charts_graphs_from_tables
 		<title><? echo "Filament Group Lab Example From: $articleTitle"; ?></title>	
 <!-- 		<link rel="shortcut icon" href="https://www.filamentgroup.com//images/favicon2.ico" type="image/x-icon" /> -->
 <!-- 		<link href="https://www.filamentgroup.com//style/demoPages" media="screen" rel="Stylesheet" type="text/css" /> -->
-		<link type="text/css" rel="stylesheet" href="css/visualize.jQuery.css"/>
+		<link type="text/css" rel="stylesheet" href="../css/visualize.jQuery.css"/>
 		<link type="text/css" rel="stylesheet" href="https://www.filamentgroup.com/examples/charting_v2/demopage.css"/>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <!-- 		[if IE]><script type="text/javascript" src="excanvas.compiled.js"></script><![endif] -->
-		<script type="text/javascript" src="js/visualize.jQuery.js"></script>
+		<script type="text/javascript" src="../js/visualize.jQuery.js"></script>
 		<script type="text/javascript">
 		
 			$(function(){

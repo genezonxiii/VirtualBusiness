@@ -1222,7 +1222,7 @@ function draw_purchase_detail(parameter){
 				</form>
 			</div>			
 			<!-- 第四列 -->
-			<div class="row search-result-wrap" align="center" id ="purchases_contain_row" style="margin-bottom:0px;display:none;">
+			<div class="row search-result-wrap" align="center" id ="purchases_contain_row" style="margin-bottom:30px;display:none;">
 				<div id="purchases-contain" class="result-table-wrap">
 					<table id="purchases" class="result-table">
 						<thead>
@@ -1242,7 +1242,9 @@ function draw_purchase_detail(parameter){
 				</div>
 			</div>
 			<!-- 第五列 -->
+			
 			<div class="row search-result-wrap" align="center" id="purchase_detail_contain_row" style="display:none;">
+				<hr class="hr0" style="padding-top:40px;">
 				<div id="purchase-detail-contain" class="ui-widget result-table-wrap">
 					<table id="purchase-detail-table" class="ui-widget ui-widget-content result-table">
 						<thead>

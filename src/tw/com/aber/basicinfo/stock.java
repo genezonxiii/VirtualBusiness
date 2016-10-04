@@ -1,4 +1,4 @@
-package tw.com.aber.stock.controller;
+package tw.com.aber.basicinfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;

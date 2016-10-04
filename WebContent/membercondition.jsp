@@ -37,9 +37,11 @@ function draw_membercondition(parameter){
 		url : "membercondition.do",
 		data : parameter,
 		success : function(result) {
+			var normal=0;
 			var json_obj = $.parseJSON(result);
 			var result_table = "";
 			$.each(json_obj,function(i, item) {
+				if(json_obj[i].classname=='普通會員'){normal=1;}
 				result_table += "<tr name='"+json_obj[i].condition_id+"'><td>"+ json_obj[i].classname 
 				+ "</td><td>&nbsp;"+ json_obj[i].total_period + " 天"
 				+ "</td><td>" + json_obj[i].total_consumption
@@ -52,6 +54,21 @@ function draw_membercondition(parameter){
 				+ (json_obj[i].classname=='普通會員'?"":"    <button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+json_obj[i].condition_id+"' val2='"+json_obj[i].classname+"'><i class='fa fa-trash'></i></button>")
 				+ "</div></div></td></tr>";
 			});
+			if(normal==0){
+				$.ajax({
+					type : "POST",
+					url : "membercondition.do",
+					data : {
+						action : "insert",
+						classname : "普通會員",
+						total_period : 0,
+						total_consumption : 0,
+						expire_day: 30 ,
+						continue_period : 0,
+						continue_consumption : 0
+					},success : function(result) {}
+				});
+			}
 			if(json_obj.length!=0){
 				$("#membercondition-table").dataTable().fnDestroy();
 				$("#membercondition-table tbody").html(result_table);

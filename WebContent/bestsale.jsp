@@ -42,7 +42,8 @@ function draw_barchart(data,title){
                 'width':800,
                 'height':data.length*25+100
               }).style({
-                'border':'1px solid #000'
+                'border':'1px solid #000',
+                'background-color' : '#E0E8F0'
               });
     var rect = s.append('g')
                 .attr({

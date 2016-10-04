@@ -1,5 +1,6 @@
 package tw.com.aber;
 
+import org.apache.commons.codec.binary.Hex;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -113,7 +114,7 @@ public class upload  extends HttpServlet {
 		String conString="",ret="E";
 		conString=putFile(request, response);
 		try{
-			TimeUnit.SECONDS.sleep(3);
+			//TimeUnit.SECONDS.sleep(3);
 		}catch(Exception e){
 			ret="Sleep error";
 		}
@@ -146,14 +147,14 @@ public class upload  extends HttpServlet {
 		String no_way = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/"+group_id+"/"+_uid;
 		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender).mkdir();
 		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/"+group_id).mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/fail").mkdir();
+		new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/fail").mkdir();
 		int maxFileSize = 5000 * 1024;
 		int maxMemSize = 5000 * 1024;
 		String contentType = request.getContentType();
 		if (contentType!=null && (contentType.indexOf("multipart/form-data") >= 0)) {
 		      DiskFileItemFactory factory = new DiskFileItemFactory();
 		      factory.setSizeThreshold(maxMemSize);
-		      String file_over=getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender+"/fail";
+		      String file_over=getServletConfig().getServletContext().getInitParameter("uploadpath")+"/fail";
 		      factory.setRepository(new File(file_over));
 		      ServletFileUpload upload = new ServletFileUpload(factory);
 		      upload.setSizeMax( maxFileSize );
@@ -177,6 +178,29 @@ public class upload  extends HttpServlet {
 								+"&usid="
 								+new String(Base64.encodeBase64String(user_id.getBytes()));
 		                File file ;
+		                
+//		                InputStream is = fi.getInputStream();
+//		        		byte[] first = new byte[5] ;
+//		        		is.read(first, 0, 5);
+//		        		is.close();
+//		        		byte[] bytePDF = new byte[]{0x25, 0x50, 0x44, 0x46, 0x2D};
+//		        		byte[] byteXLS = new byte[]{(byte) 0xD0, (byte) 0xCF, 0x11, (byte) 0xE0, (byte) 0xA1};//, (byte) 0xB1, 0x1A, (byte) 0xEA};
+//		        		byte[] byteCSV = new byte[]{0x5B, 0x75, 0x72, 0x6C};
+//		        		byte[] byteXLSX = new byte[]{0x50, 0x4B, 0x03, 0x04, 0x14};
+//		        		
+//		        		System.out.println(Hex.encodeHexString(first));
+//		        		System.out.println(Arrays.toString(first));
+//		        		if(Arrays.equals(first, bytePDF)){
+//		        			System.out.println("pdf喔~");
+//		        		}else if(Arrays.equals(first, byteXLS)){
+//		        			System.out.println("xls喔~");
+//		        		}else if(Arrays.equals(first, byteXLSX)){
+//		        			System.out.println("xlsv喔~");
+//		        		}else if(Arrays.equals(first, byteCSV)){
+//		        			System.out.println("csv喔~");
+//		        		}else{
+//		        			System.out.println("沒有喔~");
+//		        		}
 		                file = new File(fullname) ;
 		                fi.write( file ) ;
 		                //System.out.println("success");
@@ -204,12 +228,16 @@ public class upload  extends HttpServlet {
 			ret=e.toString();
 			ret="Error of call webservice:"+ret; 
 		}
-		if("success".compareTo(method.getResponseBodyAsString())!=0){
-			ret="Error_Connection: "+conString;
-		}else{
-			ret="success";
+		try{
+			if("success".compareTo(method.getResponseBodyAsString())!=0){
+				ret="Error_Connection: "+conString;
+			}else{
+				ret="success";
+			}
+		}catch(Exception e){
+			ret=e.toString();
+			ret="Error of call webservice content:"+ret; 
 		}
-		
 		method.releaseConnection();
 		return ret;
 	}

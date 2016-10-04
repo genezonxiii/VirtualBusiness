@@ -28,6 +28,7 @@
 .visualize-pie ul.visualize-key li { float: none; }
 .visualize-pie { margin:5px 10px; }
 .visualize { border: 0px;float: left; }
+canvas { background-color:#E0E8F0; } 
 </style>
 </head>
 <body>

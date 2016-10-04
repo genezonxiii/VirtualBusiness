@@ -1,4 +1,4 @@
-package tw.com.aber.group.controller;
+package tw.com.aber.basicinfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,10 +74,10 @@ public class group extends HttpServlet {
 				String mobile = request.getParameter("mobile");
 				String email = request.getParameter("email");
 				String master = request.getParameter("master");
-
+				String invoice_path = request.getParameter("invoice_path");
 				/*************************** 2.開始修改資料 ***************************************/
 				groupService = new GroupService();
-				groupService.updateGroup(group_id, group_name, group_unicode, address, phone, fax, mobile, email, master, user_id);
+				groupService.updateGroup(group_id, group_name, group_unicode, address, phone, fax, mobile, email, master, user_id,invoice_path);
 				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
 				groupService = new GroupService();
 				List<GroupBean> list = groupService.getSearchAllDB(group_id);
@@ -103,6 +103,7 @@ public class group extends HttpServlet {
 		private String  email;
 		private String  master;	
 		private String user_id;
+		private String invoice_path;
 		public String getGroup_id() {
 			return group_id;
 		}
@@ -163,6 +164,12 @@ public class group extends HttpServlet {
 		public void setUser_id(String user_id) {
 			this.user_id = user_id;
 		}
+		public String getInvoice_path() {
+			return invoice_path;
+		}
+		public void setInvoice_path(String invoice_path) {
+			this.invoice_path = invoice_path;
+		}
 		
 		
 	}
@@ -185,7 +192,7 @@ public class group extends HttpServlet {
 		
 
 		public GroupBean updateGroup(String group_id, String group_name, String group_unicode,
-				String address,String phone,String fax,String mobile,String email,String master,String user_id) {
+				String address,String phone,String fax,String mobile,String email,String master,String user_id,String invoice_path) {
 			GroupBean groupBean = new GroupBean();
 			groupBean.setGroup_id(group_id);
 			groupBean.setGroup_name(group_name);
@@ -197,6 +204,7 @@ public class group extends HttpServlet {
 			groupBean.setEmail(email);
 			groupBean.setMaster(master);
 			groupBean.setUser_id(user_id);
+			groupBean.setInvoice_path(invoice_path);
 			dao.updateDB(groupBean);
 			return groupBean;
 		}
@@ -211,7 +219,7 @@ public class group extends HttpServlet {
 	class GroupDAO implements Group_interface {
 		// 會使用到的Stored procedure	
 		private static final String sp_selectall_group = "call sp_selectall_group(?)";
-		private static final String sp_update_group = "call sp_update_group(?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_update_group = "call sp_update_group(?,?,?,?,?,?,?,?,?,?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -239,7 +247,7 @@ public class group extends HttpServlet {
 				pstmt.setString(8, groupBean.getEmail());
 				pstmt.setString(9, groupBean.getMaster());
 				pstmt.setString(10, groupBean.getUser_id());
-				
+				pstmt.setString(11, groupBean.getInvoice_path());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -294,6 +302,8 @@ public class group extends HttpServlet {
 					groupBean.setMobile(rs.getString("mobile"));
 					groupBean.setEmail(rs.getString("email"));
 					groupBean.setMaster(rs.getString("master"));
+					groupBean.setInvoice_path(rs.getString("invoice_path"));
+					
 					list.add(groupBean); // Store the row in the list
 				}
 
