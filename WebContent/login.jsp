@@ -115,8 +115,7 @@ $(function() {
 	    			$("#password").val("1234");
 	    			$("input").blur();
 	    			$("#verify").focus();
-	    		}
-	    		if(location.href.indexOf("164")>-1||location.href.indexOf("local")>-1){
+	    		}else if(location.href.indexOf("164")>-1||location.href.indexOf("local")>-1){
 	    			$("#uninumber").val("1234");
 	    			$("#username").val("sett@archworld.com");
 	    			$("#password").val("1234");

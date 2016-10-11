@@ -20,33 +20,30 @@
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" >
 		<div class='bdyplane' style="opacity:0">
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
-<script type="text/javascript" src="js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/additional-methods.min.js"></script>
-<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
+
 <script>
 
 function draw_exchange(parameter){
 	$.ajax({
 		type : "POST",
-		url : "exchange.do",
+		url : "invoicetrack.do",
 		data : parameter,
 		success : function(result) {
 				var json_obj = $.parseJSON(result);
 				var result_table = "";
 				$.each(json_obj,function(i, item) {
-					result_table +="<tr><td>"
-					+ json_obj[i].currency
-					+ "</td><td>"
-					+ json_obj[i].exchange_rate
+					result_table 
+					+="<tr><td name='invoice_type'>" + json_obj[i].invoice_type
+					+ "</td><td name='year_month'>"+ json_obj[i].year_month
+					+ "</td><td name='invoice_track'>"+ json_obj[i].invoice_track
+					+ "</td><td name='invoice_beginno'>"+ json_obj[i].invoice_beginno
+					+ "</td><td name='invoice_endno'>"+ json_obj[i].invoice_endno
+					+ "</td><td name='seq'>"+ json_obj[i].seq
 					+ "</td><td>"
 					+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 					+ "	<div class='table-function-list'>"
-					+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].exchange_id+ "' name= '"+json_obj[i].currency+"' val2='"+json_obj[i].exchange_rate+"'><i class='fa fa-pencil'></i></button>"
-					+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].exchange_id+"' val2='"+json_obj[i].currency+"'><i class='fa fa-trash'></i></button>"
+					+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].invoice_id+ "'><i class='fa fa-pencil'></i></button>"
+					+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].invoice_id+"' val2='"+json_obj[i].year_month+"'><i class='fa fa-trash'></i></button>"
 					+ "	</div></div>"
 					+ "</td></tr>";
 				});
@@ -80,14 +77,22 @@ function draw_exchange(parameter){
 		//使用jquery.validate來做驗證  注意事項: 1.不能用選擇器方式批次設定，它只取最後一個參數 2.要調用resetForm()而不是reset()
 		var validator_insert = $("#insert-dialog-form-post").validate({
 			rules : {
-				name : {required : true,maxlength : 10},
-				rate : {required : true,maxlength : 10,number :true }
+				invoice_type : {required : true,maxlength : 10,number :true },
+				year_month : {required : true,maxlength : 5,number :true },
+				invoice_track : {required : true,maxlength : 2, minlength : 2},
+				invoice_beginno : {required : true,maxlength : 8, minlength : 8,number :true },
+				invoice_endno : {required : true,maxlength : 8, minlength : 8,number :true },
+				seq : {required : true,maxlength : 10,number :true }
 			}
 		});
 		var validator_update = $("#update-dialog-form-post").validate({
 			rules : {
-				name : {required : true,maxlength : 10},
-				rate : {required : true,maxlength : 10,number :true }
+				invoice_type : {required : true,maxlength : 10,number :true },
+				year_month : {required : true,maxlength : 5,number :true },
+				invoice_track : {required : true,maxlength : 2},
+				invoice_beginno : {required : true,maxlength : 10,number :true },
+				invoice_endno : {required : true,maxlength : 10,number :true },
+				seq : {required : true,maxlength : 10,number :true }
 			}
 		});
 	
@@ -104,8 +109,12 @@ function draw_exchange(parameter){
 							if ($('#insert-dialog-form-post').valid()) {
 								var tmp={
 									action : "insert",
-									currency : $("#dialog-form-insert input[name='name']").val(),
-									exchange_rate : $("#dialog-form-insert input[name='rate']").val()
+									invoice_type : $("#dialog-form-insert input[name='invoice_type']").val(),
+									year_month : $("#dialog-form-insert input[name='year_month']").val(),
+									invoice_track : $("#dialog-form-insert input[name='invoice_track']").val(),
+									invoice_beginno : $("#dialog-form-insert input[name='invoice_beginno']").val(),
+									invoice_endno : $("#dialog-form-insert input[name='invoice_endno']").val(),
+									seq : $("#dialog-form-insert input[name='seq']").val()
 								};
 								draw_exchange(tmp);
 								insert_dialog.dialog("close");
@@ -134,7 +143,7 @@ function draw_exchange(parameter){
 				"確認刪除" : function() {
 					var tmp={
 							action : "delete",
-							exchange_id : $(this).val()
+							invoice_id : $(this).val()
 						};
 					draw_exchange(tmp);
 					$(this).dialog("close");
@@ -157,9 +166,13 @@ function draw_exchange(parameter){
 					if ($('#update-dialog-form-post').valid()) {
 						var tmp={
 	 							action : "update",
-	 							exchange_id : $(this).val(),
-	 							currency : $("#dialog-form-update input[name='name']").val(),
-	 							exchange_rate : $("#dialog-form-update input[name='rate']").val()
+	 							invoice_id : $(this).val(),
+	 							invoice_type : $("#dialog-form-update input[name='invoice_type']").val(),
+	 							year_month : $("#dialog-form-update input[name='year_month']").val(),
+	 							invoice_track : $("#dialog-form-update input[name='invoice_track']").val(),
+	 							invoice_beginno : $("#dialog-form-update input[name='invoice_beginno']").val(),
+	 							invoice_endno : $("#dialog-form-update input[name='invoice_endno']").val(),
+	 							seq : $("#dialog-form-update input[name='seq']").val()
 							};
 						draw_exchange(tmp);
 						update_dialog.dialog("close");
@@ -186,15 +199,23 @@ function draw_exchange(parameter){
 		//修改事件聆聽
 		$("#products2").delegate(".btn_update", "click", function() {
 			$("#dialog-form-update").val($(this).val());
-			$("#update-dialog-form-post input[name='name']").val($(this).attr("name"));
-			$("#update-dialog-form-post input[name='rate']").val($(this).attr("val2"));
+			$("#update-dialog-form-post input[name='invoice_type']").val($(this).parents("tr").find("td[name='invoice_type']").html());
+			$("#update-dialog-form-post input[name='year_month']").val($(this).parents("tr").find("td[name='year_month']").html());
+			$("#update-dialog-form-post input[name='invoice_track']").val($(this).parents("tr").find("td[name='invoice_track']").html());
+			$("#update-dialog-form-post input[name='invoice_beginno']").val($(this).parents("tr").find("td[name='invoice_beginno']").html());
+			$("#update-dialog-form-post input[name='invoice_endno']").val($(this).parents("tr").find("td[name='invoice_endno']").html());
+			$("#update-dialog-form-post input[name='seq']").val($(this).parents("tr").find("td[name='seq']").html());
 			update_dialog.dialog("open");
 		});
 		//新增事件聆聽
 		$("#create-exchange").click( function() {
+			$("#dialog-form-insert input[name='invoice_type']").val('');
+			$("#dialog-form-insert input[name='year_month']").val('');
+			$("#dialog-form-insert input[name='invoice_track']").val('');
+			$("#dialog-form-insert input[name='invoice_beginno']").val('');
+			$("#dialog-form-insert input[name='invoice_endno']").val('');
+			$("#dialog-form-insert input[name='seq']").val('');
 			insert_dialog.dialog("open");
-			$("#dialog-form-insert input[name='name']").val('');
-			$("#dialog-form-insert input[name='rate']").val('');
 		});
 		
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
@@ -211,7 +232,7 @@ function draw_exchange(parameter){
 </script>
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="是否刪除此幣值?" style="display:none;">
+			<div id="dialog-confirm" title="是否刪除此時期之發票字軌?" style="display:none;">
 			</div>
 			<!--對話窗樣式-修改 -->
 			<div id="dialog-form-update" title="修改幣值匯率" style="display:none;">
@@ -219,11 +240,21 @@ function draw_exchange(parameter){
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>幣值名稱：</td>
-								<td><input type="text" name="name" placeholder="修改幣值名稱"></td>
+								<td>發票類型：</td>
+								<td><input type="text" name="invoice_type" placeholder="修改類型"></td>
 							</tr><tr>
-								<td>匯率：</td>
-								<td><input type="text" name="rate" placeholder="修改匯率"></td>
+								<td>發票年月：</td>
+								<td><input type="text" name="year_month" placeholder="修改年月"></td>
+								<td>發票字頭：</td>
+								<td><input type="text" name="invoice_track" placeholder="修改字頭"></td>
+							</tr><tr>
+								<td>字軌開頭號：</td>
+								<td><input type="text" name="invoice_beginno" placeholder="修改字軌開頭號"></td>
+								<td>字軌結尾號：</td>
+								<td><input type="text" name="invoice_endno" placeholder="修改字軌結尾號"></td>
+							</tr><tr>
+								<td>字軌捲數：</td>
+								<td><input type="text" name="seq" placeholder="修改字軌捲數"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -235,11 +266,21 @@ function draw_exchange(parameter){
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>幣值名稱：</td>
-								<td><input type="text" name="name" placeholder="修改幣值名稱"></td>
+								<td>發票類型：</td>
+								<td><input type="text" name="invoice_type" placeholder="修改類型"></td>
 							</tr><tr>
-								<td>匯率：</td>
-								<td><input type="text" name="rate" placeholder="修改匯率"></td>
+								<td>發票年月：</td>
+								<td><input type="text" name="year_month" placeholder="修改年月"></td>
+								<td>發票字頭：</td>
+								<td><input type="text" name="invoice_track" placeholder="修改字頭"></td>
+							</tr><tr>
+								<td>字軌開頭號：</td>
+								<td><input type="text" name="invoice_beginno" placeholder="修改字軌開頭號"></td>
+								<td>字軌結尾號：</td>
+								<td><input type="text" name="invoice_endno" placeholder="修改字軌結尾號"></td>
+							</tr><tr>
+								<td>字軌捲數：</td>
+								<td><input type="text" name="seq" placeholder="修改字軌捲數"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -253,7 +294,7 @@ function draw_exchange(parameter){
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
-			<div class="row search-result-wrap" align="center" id="products2_contain_row" style="width:600px;margin:0px auto;display:none;">
+			<div class="row search-result-wrap" align="center" id="products2_contain_row" style="display:none;">
 				<div id="products2-contain" class="ui-widget">
 					<table id="products2" class="result-table">
 						<thead>
@@ -263,7 +304,8 @@ function draw_exchange(parameter){
 								<th>字頭</th>
 								<th>字軌開頭</th>
 								<th>字軌結尾</th>
-								<th>捲</th>
+								<th>捲數</th>
+								<th>功能</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -274,5 +316,12 @@ function draw_exchange(parameter){
 		</div>
 	</div>
 	</div>
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/additional-methods.min.js"></script>
+<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 </body>
 </html>

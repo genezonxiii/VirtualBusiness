@@ -21,6 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import com.google.gson.Gson;
@@ -29,7 +30,7 @@ import com.google.gson.GsonBuilder;
 
 public class customer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	String err="";
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -45,7 +46,11 @@ public class customer extends HttpServlet {
 				List<CustomerVO> list = customerService.getAllCustomer(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
-				response.getWriter().write(jsonStrList);
+				if(err.length()>3){
+					response.getWriter().write(err);
+				}else{
+					response.getWriter().write(jsonStrList);
+				}
 				return;// 程式中斷				
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
@@ -240,7 +245,7 @@ public class customer extends HttpServlet {
 		public CustomerVO getEncodeData(CustomerVO customerVO);
 	}
 
-	class CustomerService {
+	public class CustomerService {
 		private Customer_interface dao;
 
 		public CustomerService() {
@@ -447,9 +452,9 @@ public class customer extends HttpServlet {
 			String url = wsPath + "/query/group=" + gidInBase64;
         	HttpGet httpRequest = new HttpGet(url);
         	HttpClient client = HttpClientBuilder.create().build();
-//        	System.out.println("gid: "+group_id);
+        	//System.out.println("gid: "+group_id);
 //        	System.out.println("wspath: "+wsPath);
-//        	System.out.println("url: "+url);
+        	//System.out.println("url: "+url);
         	
         	HttpResponse httpResponse;
         	try {
@@ -478,8 +483,11 @@ public class customer extends HttpServlet {
     			e.printStackTrace();
     		} catch (IOException e) {
     			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}	
+//    			e.printStackTrace();
+    			err="ConnectIOE Error: "+e.toString();
+    		}catch (Exception e){
+    			err="Connect Error: "+e.toString();
+    		}
 			return list;
 		}
 		

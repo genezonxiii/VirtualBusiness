@@ -39,7 +39,7 @@
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
-    <param-value>http://192.168.112.164:8090</param-value>
+    <param-value>http://abers1.eastasia.cloudapp.azure.com:8090</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -137,7 +137,7 @@
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>/data/vbupload</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -445,8 +445,6 @@
     <servlet-name>forget</servlet-name>
     <url-pattern>/forget.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
-  
   <servlet>
     <servlet-name>invoice</servlet-name>
     <servlet-class>tw.com.aber.invoice</servlet-class>
@@ -454,6 +452,40 @@
   <servlet-mapping>
     <servlet-name>invoice</servlet-name>
     <url-pattern>/invoice.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>invoicetrack</servlet-name>
+    <servlet-class>tw.com.aber.invoicetrack</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>invoicetrack</servlet-name>
+    <url-pattern>/invoicetrack.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>saledifftype</servlet-name>
+    <servlet-class>tw.com.aber.chart.saledifftype</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>saledifftype</servlet-name>
+    <url-pattern>/saledifftype.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>saledifftypestatic</servlet-name>
+    <servlet-class>tw.com.aber.chart.saledifftypestatic</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>saledifftypestatic</servlet-name>
+    <url-pattern>/saledifftypestatic.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  
+  <servlet>
+    <servlet-name>function</servlet-name>
+    <servlet-class>tw.com.aber.function</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>function</servlet-name>
+    <url-pattern>/function.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>test</servlet-name>

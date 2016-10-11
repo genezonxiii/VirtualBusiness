@@ -45,6 +45,8 @@ function draw_customer(parameter){
 		url : "customer.do",
 		data :parameter,
 		success : function(result) {
+			console.log(result);
+			if(result.indexOf('Error')>-1){warning_msg("連現異常,請洽系統管理員。");}
 			var json_obj = $.parseJSON(result);
 			//判斷查詢結果
 			var resultRunTime = 0;
@@ -170,16 +172,16 @@ function draw_customer(parameter){
 				click : function() {
 					if ($('#insert-dialog-form-post').valid()) {
 						var tmp={
-								action : "insert",
-								name : $("#dialog-form-insert input[name='name']").val(),
-								address : $("#dialog-form-insert input[name='address']").val(),
-								phone : $("#dialog-form-insert input[name='phone']").val(),
-								mobile : $("#dialog-form-insert input[name='mobile']").val(),
-								email : $("#dialog-form-insert input[name='email']").val(),
-								post : $("#dialog-form-insert input[name='post']").val(),
-								class : $("#dialog-form-insert input[name='class']").val(),
-								memo : $("#dialog-form-insert input[name='memo']").val()
-							};
+							action : "insert",
+							name : $("#dialog-form-insert input[name='name']").val(),
+							address : $("#dialog-form-insert input[name='address']").val(),
+							phone : $("#dialog-form-insert input[name='phone']").val(),
+							mobile : $("#dialog-form-insert input[name='mobile']").val(),
+							email : $("#dialog-form-insert input[name='email']").val(),
+							post : $("#dialog-form-insert input[name='post']").val(),
+							class : $("#dialog-form-insert input[name='class']").val(),
+							memo : $("#dialog-form-insert input[name='memo']").val()
+						};
 						draw_customer(tmp);
 						$("#insert-dialog-form-post").trigger("reset");
 						insert_dialog.dialog("close");

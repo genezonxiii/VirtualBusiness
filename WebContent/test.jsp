@@ -8,7 +8,7 @@
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico"/>
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-<script src="js/script.js"></script>
+<script src="js/scripts.js"></script>
 <script src="http://code.jquery.com/jquery-1.12.3.js"></script>
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <!-- <script src="js/jquery-1.12.4.js"></script> -->
@@ -85,6 +85,11 @@ function hello(){
 
 
 $(function(){
+	var bar="",i;
+	for(i=0;i<20;i++){
+		bar+="<div style='height:10px;width:200px;margin:5px;background-color:"+vender_color(i)+"'>"+i+"</div>"
+	}
+	$("#bar").html(bar);
 	$('#example').DataTable( {
 		"scrollX": "none",
         "scrollY": 330,
@@ -112,7 +117,8 @@ $(function(){
 	
 	
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
-		<h1>　</h1>
+		<h1>1234　</h1>
+	<div id="bar"></div>
 		<button class='btn-explanation'>?</button>
 <!-- 			<div id='memo' style=" background-image: url('./images/memo.png');width:300px;height:300px;position:absolute;z-index:1;display:none;"><div style="padding:40px;">123455</div></div> -->
 		<input type="text" id="helo">

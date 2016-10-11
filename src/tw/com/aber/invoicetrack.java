@@ -26,11 +26,15 @@ import javax.sql.DataSource;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.accpay.controller.accpay.AccpayVO;
+import tw.com.aber.chart.saleamountstaticchart.SalechartVO;
+import tw.com.aber.productunit.controller.productunit.ProductunitVO;
+
 import java.util.Date; 
 import java.text.SimpleDateFormat;
 @SuppressWarnings("serial")
 
-public class exchange extends HttpServlet {
+public class invoicetrack extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
@@ -42,27 +46,37 @@ public class exchange extends HttpServlet {
 		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
+		
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		group_id=(group_id==null||group_id.length()<3)?"KNOWN":group_id;
+		//group_id ="cbcc3138-5603-11e6-a532-000d3a800878";
 		String action= request.getParameter("action");
-		ExchangeDAO dao= new ExchangeDAO();
-		List<ExchangeVO> list = new ArrayList<ExchangeVO>();
+		InvoicetrackDAO dao= new InvoicetrackDAO();
+		List<InvoicetrackVO> list = new ArrayList<InvoicetrackVO>();
 		if("search".equals(action)){
 			list=dao.searhDB(group_id);
 		}else if("insert".equals(action)){
-			String currency= request.getParameter("currency");
-			String exchange_rate= request.getParameter("exchange_rate");
-			dao.insert(group_id, currency, exchange_rate);
+			String invoice_type = request.getParameter("invoice_type");
+			String year_month = request.getParameter("year_month");
+			String invoice_track = request.getParameter("invoice_track");
+			String invoice_beginno = request.getParameter("invoice_beginno");
+			String invoice_endno = request.getParameter("invoice_endno");
+			String seq = request.getParameter("seq");
+			dao.insert(group_id,invoice_type,year_month,invoice_track,invoice_beginno,invoice_endno,seq);
 			list=dao.searhDB(group_id);
 		}else if("update".equals(action)){
-			String exchange_id= request.getParameter("exchange_id");
-			String currency= request.getParameter("currency");
-			String exchange_rate= request.getParameter("exchange_rate");
-			dao.update(exchange_id,group_id, currency, exchange_rate);
+			String invoice_id = request.getParameter("invoice_id");
+			String invoice_type = request.getParameter("invoice_type");
+			String year_month = request.getParameter("year_month");
+			String invoice_track = request.getParameter("invoice_track");
+			String invoice_beginno = request.getParameter("invoice_beginno");
+			String invoice_endno = request.getParameter("invoice_endno");
+			String seq = request.getParameter("seq");
+			dao.update(invoice_id,group_id,invoice_type,year_month,invoice_track,invoice_beginno,invoice_endno,seq);
 			list=dao.searhDB(group_id);
 		}else if("delete".equals(action)){
-			String exchange_id= request.getParameter("exchange_id");
-			dao.delete(group_id, exchange_id);
+			String invoice_id = request.getParameter("invoice_id");
+			dao.delete(invoice_id);
 			list=dao.searhDB(group_id);
 		}
 		Gson gson = new Gson();
@@ -76,46 +90,54 @@ public class exchange extends HttpServlet {
 
 	/************************* 對應資料庫表格格式 **************************************/
 
-	public class ExchangeVO implements java.io.Serializable {
-		public String exchange_id;
+	public class InvoicetrackVO implements java.io.Serializable {
+		public String invoice_id;
 		public String group_id;
-		public String currency;
-		public String exchange_rate;
+		public String invoice_type;
+		public String year_month;
+		public String invoice_track;
+		public String invoice_beginno;
+		public String invoice_endno;
+		public String seq;
 	}
 
 	/*************************** 操作資料庫 ****************************************/
-	class ExchangeDAO  {
+	class InvoicetrackDAO  {
 		// 會使用到的Stored procedure
-		private static final String sp_selectall_exchange = "call sp_selectall_exchange(?)";
-		private static final String sp_insert_exchange = "call sp_insert_exchange(?,?,?)";
-		private static final String sp_update_exchange = "call sp_update_exchange(?,?,?,?)";
-		private static final String sp_del_exchange  = "call sp_del_exchange (?,?)";
+		private static final String sp_selectall_invoice_track = "call sp_selectall_invoice_track(?)";
+		private static final String sp_insert_invoice_track = "call sp_insert_invoice_track(?,?,?,?,?,?,?)";
+		private static final String sp_update_invoice_track = "call sp_update_exchange(?,?,?,?,?,?,?,?)";
+		private static final String sp_del_invoice_track  = "call sp_del_invoice_track(?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		
-		public List<ExchangeVO> searhDB(String group_id) {
-			ExchangeVO exchangeVO = null;
-			List<ExchangeVO > list = new ArrayList<ExchangeVO>();
+		public List<InvoicetrackVO> searhDB(String group_id) {
+			InvoicetrackVO invoicetrackVO = null;
+			List<InvoicetrackVO > list = new ArrayList<InvoicetrackVO>();
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_selectall_exchange);
+				pstmt = con.prepareStatement(sp_selectall_invoice_track);
 				pstmt.setString(1,group_id);
 				rs = pstmt.executeQuery();
 
 			    while (rs.next()) {
-			    	exchangeVO =new ExchangeVO();
-			    	exchangeVO.exchange_id   =rs.getString("exchange_id");
-			    	exchangeVO.group_id      =rs.getString("group_id");
-			    	exchangeVO.currency      =rs.getString("currency");
-					exchangeVO.exchange_rate =rs.getString("exchange_rate");
-					list.add(exchangeVO);
+			    	invoicetrackVO =new InvoicetrackVO();
+			    	invoicetrackVO.invoice_id  =rs.getString("invoice_id");
+			    	invoicetrackVO.group_id    =rs.getString("group_id");
+			    	invoicetrackVO.invoice_type=rs.getString("invoice_type");
+					invoicetrackVO.year_month  =rs.getString("year_month");
+					invoicetrackVO.invoice_track=rs.getString("invoice_track");
+					invoicetrackVO.invoice_beginno=rs.getString("invoice_beginno");
+					invoicetrackVO.invoice_endno=rs.getString("invoice_endno");
+					invoicetrackVO.seq          =rs.getString("seq");
+					list.add(invoicetrackVO);
 				}
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {
@@ -124,16 +146,20 @@ public class exchange extends HttpServlet {
 			return list;
 		}
 		
-		public void insert(String group_id,String currency, String exchange_rate) {
+		public void insert(String group_id,String invoice_type, String year_month, String invoice_track, String invoice_beginno, String invoice_endno, String seq) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_insert_exchange);
+				pstmt = con.prepareStatement(sp_insert_invoice_track);
 				pstmt.setString(1,group_id);
-				pstmt.setString(2,currency);
-				pstmt.setString(3,exchange_rate);
+				pstmt.setString(2,invoice_type);
+				pstmt.setString(3,year_month);
+				pstmt.setString(4,invoice_track);
+				pstmt.setString(5,invoice_beginno);
+				pstmt.setString(6,invoice_endno);
+				pstmt.setString(7,seq);
 				pstmt.executeQuery();
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {
@@ -142,18 +168,21 @@ public class exchange extends HttpServlet {
 			return ;
 		}
 		
-		public void update(String exchange_id, String group_id,  String currency,  String exchange_rate) {
+		public void update(String invoice_id,String group_id,String invoice_type, String year_month, String invoice_track, String invoice_beginno, String invoice_endno, String seq) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_update_exchange);
-//				System.out.println(exchange_id+" "+group_id+" "+currency+" "+exchange_rate);
-				pstmt.setString(1,exchange_id);
+				pstmt = con.prepareStatement(sp_update_invoice_track);
+				pstmt.setString(1,invoice_id);
 				pstmt.setString(2,group_id);
-				pstmt.setString(3,currency);
-				pstmt.setString(4,exchange_rate);
+				pstmt.setString(3,invoice_type);
+				pstmt.setString(4,year_month);
+				pstmt.setString(5,invoice_track);
+				pstmt.setString(6,invoice_beginno);
+				pstmt.setString(7,invoice_endno);
+				pstmt.setString(8,seq);
 				pstmt.executeQuery();
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {
@@ -162,15 +191,14 @@ public class exchange extends HttpServlet {
 			return ;
 		}
 		
-		public void delete(String group_id, String exchange_id) {
+		public void delete(String track_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_del_exchange);
-				pstmt.setString(1,group_id);
-				pstmt.setString(2,exchange_id);
+				pstmt = con.prepareStatement(sp_del_invoice_track);
+				pstmt.setString(1,track_id);
 				pstmt.executeQuery();
 			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
 			} catch (ClassNotFoundException cnfe) {

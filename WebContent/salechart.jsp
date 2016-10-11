@@ -43,7 +43,7 @@
 <script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
 <script>
-function draw_barchart__plotly(data){
+function draw_barchart__plotly(data,list){
 // 	data = [ {
 // 		  x: ['giraffes', 'orangutans', 'monkeys'], 
 // 		  y: [20, 14, 23], 
@@ -56,6 +56,7 @@ function draw_barchart__plotly(data){
 // 		  type: 'bar'
 // 		}];
 // 	alert(data[0].y[1]);
+	
 	var layout = {
 	  title: '出貨量統計圖',
 	  titlefont: {
@@ -83,7 +84,9 @@ function draw_barchart__plotly(data){
 	    showline: true
 	  },
 	  paper_bgcolor: '#E0E8F0',
-	  plot_bgcolor: '#E0E8F0'
+	  plot_bgcolor: '#E0E8F0',
+	  bargap: 0.15,
+	  bargroupgap: 0.1
 	};
 	
 	Plotly.newPlot('chart', data,layout);
@@ -252,6 +255,7 @@ function date_format(str) {
 			$(".visualize").animate({"opacity":"0"});
 			$("#chart").animate({opacity: '0'});
 			e.preventDefault();
+// 			warning_msg("---讀取中請稍候---");
 			$.ajax({
 				type : "POST",
 				url : "salechart.do",
@@ -262,19 +266,30 @@ function date_format(str) {
 					var result_table = "";
 					var chart_data=[],chart_obj={},i=0,j=0,list=[];
 					var tmp_layer=json_obj.entrance[0];
-					chart_obj["x"]=[];
-					chart_obj["y"]=[];
+					
 					if(json_obj.entrance.length==0){
-						$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
+						warning_msg("---查無資料---");
+// 						$(".validateTips").html("<h2 style='color:red;'>查無資料</h2>");
 						return;
 					}
-				
-					$.each(json_obj.entrance,function(i, item) {
-						var k=0;
-						while(list[k]!=item && list[k]!=null){k++;}
-						if(k==list.length)list[k]=item;
+					warning_msg(" ");
+					var max_m=0,min_m=13;
+					$.each(json_obj.month,function(i, item) {
+						if(item>max_m){max_m=item;}
+						if(item<min_m){min_m=item;}
 					});
+					for(i=min_m;i<max_m+1;i++){
+						list[i-min_m]=i+"月";
+					}
 					
+					
+					chart_obj["x"]=[];
+					chart_obj["y"]=[];
+					$.each(list,function(i, item) {
+						var k=0;
+						chart_obj["x"][i]=list[i];
+						chart_obj["y"][i]=0;
+					});
 					
 					//chart_obj["month"]=json_obj.month[0];//init
 					var k=0;
@@ -285,13 +300,20 @@ function date_format(str) {
 							chart_obj={};
 							chart_obj["x"]=[];
 							chart_obj["y"]=[];
+							$.each(list,function(i, item) {
+								var k=0;
+								chart_obj["x"][i]=list[i];
+								chart_obj["y"][i]=0;
+							});
 							j++;
 							k=0;
 						}
 						//chart_obj["month"]=json_obj.month[i];
 						//chart_obj[json_obj.entrance[i]]=json_obj.answer[i];
 						//alert(json_obj.month[i]+json_obj.entrance[i]+json_obj.answer[i]+" "+k);
-						chart_obj["x"][k]=json_obj.month[i]+"月";
+						//alert(chart_obj["x"][0]);
+						while(chart_obj["x"][k]!=(json_obj.month[i]+"月")&&k<13){k++;}
+						//alert(k+"  "+chart_obj["x"][k]+"  "+json_obj.month[i]+"月");
 						chart_obj["y"][k]=json_obj.answer[i];
 						
 						chart_obj["marker"]={};
@@ -305,7 +327,7 @@ function date_format(str) {
 					chart_data[j]=chart_obj;
 					j++;
 					$("#board").css({"width":(chart_data.length*150>1000?"1100":chart_data.length*150+100)});
-					draw_barchart__plotly(chart_data);
+					draw_barchart__plotly(chart_data,list);
 // 					draw_barchart(chart_data,list);
 					$(".visualize").animate({"opacity":"1"});
 // 					var data=[];

@@ -39,6 +39,14 @@ function draw_sale(parameter){
 	warning_msg("---讀取中請稍候---");
 	$.ajax({
 		type : "POST",
+		url : "customer.do",
+		data :{action : "search"},
+		success : function(result) {
+			console.log(result);
+		}
+	});
+	$.ajax({
+		type : "POST",
 		url : "sale.do",
 		data : parameter,
 		success : function(result) {

@@ -11,18 +11,17 @@
 <html>
 <head>
 <style type="text/css">
-.dataTables_wrapper .dt-buttons {float:right;}
+.dataTables_wrapper .dt-buttons {float:right;margin-bottom:10px;}
 </style>
 <title>應收帳款</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-<link rel="stylesheet" href="css/styles.css" />
-<link href="<c:url value="css/css.css" />" rel="stylesheet">
+
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
-
+<link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -36,7 +35,6 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <!-- data table buttons -->
-
 <script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
@@ -722,7 +720,7 @@ function detail(str){
 				<div id="account_receive_date_contain" class="result-table-wrap" style="display:none;">
 					<table id="account_receive_date_table" class="result-table">
 						<thead>
-							<tr class="ui-widget-header">
+							<tr>
 								<th>應收帳款金額</th>
 								<th>應收帳款產生日期</th>
 								<th>實收帳款金額</th>

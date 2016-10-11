@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>暢銷商品統計圖</title>
+<title>各類別商品銷售數量統計圖</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/styles.css" />
@@ -35,8 +35,13 @@ function draw_barchart(data,title){
 		if(data[i].quantity>maxdata){maxdata=data[i].quantity;}
 		//alert(i+"th: "+data[i].name+" && "+data[i].quantity);
 	}
-	scale= 480 / ( maxdata * 21 / 20 );
-	var leftpad=280,toppad=80;
+	
+	scale= 500 / (( maxdata * 21) / 20 );
+	var leftpad=260,toppad=80;
+	if(title.indexOf("!!!")<0){
+		scale= 600 / (( maxdata * 21) / 20 );
+		leftpad=160
+	}
     var s = d3.select('#board').append('svg')
               .attr({
                 'width':800,
@@ -131,30 +136,45 @@ function draw_barchart(data,title){
 		$(".bdyplane").animate({"opacity":"1"});
 		order_source_auto("order_source");
 		$(".searhbestsale").click(function(e) {
+			
+// 			$("#order_source").removeClass("error");
+// 			if($("#order_source").val().length<1){
+// 				$("#order_source").attr("placeholder","此為必填欄位");
+// 				$("#order_source").addClass("error");
+// 				return;
+// 			}
+			
 			$("#board").css({"opacity":"0"});
 			e.preventDefault();
 			$.ajax({
 				type : "POST",
-				url : "bestsale.do",
+				url : "saledifftype.do",
 				data : {action :"search_best_sale",ordersource: $("#order_source").val() ,time1 : $('#datepicker1').val(), time2 : $('#datepicker2').val()},
 				success : function(result) {
 					//alert(result);
 					$("#board").html('');
 					var json_obj = $.parseJSON(result);
 					var chart_data=[],chart_obj={},j=0;
-					if(json_obj.length==0){warning_msg('---此平台查無商品---');return;}else{warning_msg("");}
+					if(json_obj.length==0){
+						if($("#order_source").val().length>0){
+							warning_msg('---此平台查無類別---');
+						}else{
+							warning_msg('---全平台查無類別---');
+						}
+						return;
+					}else{warning_msg("");}
 					$.each (json_obj, function (i) {
 						chart_obj={}
 						chart_obj["x"]=j;
 						chart_obj["quantity"]=json_obj[i].quantity;//(10-i)*30;
-						chart_obj["name"]=json_obj[i].product_name;
+						chart_obj["name"]=json_obj[i].product_name+(json_obj[i].order_source!=null?"("+json_obj[i].order_source+")":"");
 						chart_data[j]=chart_obj;
 						j++;
 					});
 					if($("#order_source").val().length>0){
-						draw_barchart(chart_data,$("#order_source").val()+"平台 暢銷商品");
+						draw_barchart(chart_data,$("#order_source").val()+"平台 暢銷類別");
 					}else{
-						draw_barchart(chart_data,"暢銷商品統計 TOP10!!");
+						draw_barchart(chart_data,"全平台暢銷類別統計排行榜!!!");
 					}
 					$("#board").animate({"opacity":"1"});
 				}

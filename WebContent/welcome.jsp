@@ -40,7 +40,7 @@ $(function() {
 	$.ajax({
 		type : "POST",
 		url : "welcome.do",
-		data : {action :"searh",time1 : "2016/06/01",time2 : "2016/07/26" },
+		data : {action :"searh"},
 		success : function(result) {
 			var json_obj = $.parseJSON(result);
 			//$.each(json_obj,function(i, item) {json_obj.count;});

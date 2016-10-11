@@ -43,6 +43,16 @@ public class test  extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
 		String some = request.getParameter("some");
+		//新增幾個功能
+		//tbsale有很多無主訂單 主要是給 customer_id建檔
+		//訂單物品沒有類別單位
+		//
+		//
+		//
+		
+		
+		
+		
 		if("test".equals(action)){
 			path=getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
 			showTimer();
@@ -71,7 +81,7 @@ public class test  extends HttpServlet {
                 
                 
                 try{
-                	TimeUnit.SECONDS.sleep(20);
+                	TimeUnit.SECONDS.sleep(5);
                 }catch(Exception e){
                 	System.out.println(e.toString());
                 }

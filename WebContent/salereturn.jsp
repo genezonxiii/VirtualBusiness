@@ -1249,6 +1249,7 @@
 			<!-- 第六列 -->
 			<hr class="hr0">
 			<div class="input-field-wrap">
+				<div style=";color:#7f7f7f;height:0px;width:0px;">已退回訂單</div>
 				<div class="form-wrap">
 					<div class="form-row">
 						<form id="return_date_form" name="trans_dis_date_form">

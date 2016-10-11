@@ -1,4 +1,8 @@
 
+//current_time() 2016-01-01之類的
+//currency_unit(str) 幣值單位
+//sleep(500) 就sleep sleep(1500).then(() => { 
+
 //warning_msg(str); 就警告紅字
 //order_source_auto(name); 銷售平台的autocomplete
 //isIE(); 是不是IE
@@ -10,12 +14,21 @@
 //table_before(str);X
 //get_week_day(number);X
 
+function current_time(){
+	var d=new Date();
+	return d.getFullYear()+"-"+((d.getMonth()+1)>9?"":"0")+(d.getMonth()+1)+"-"+((d.getDate())>9?"":"0")+(d.getDate());
+}
+
 function currency_unit(str){
 	if(str=='台幣'){return 'NT＄';}
 	if(str=='人民幣'){return 'RMB￥';}
 	if(str=='日幣'){return '￥';}
 	if(str=='美金'){return 'US＄';}
 	if(str=='韓幣'){return 'KRW';}
+}
+
+function sleep(time) {
+	  return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 function grows_up(str){
@@ -40,9 +53,19 @@ function warning_msg(str){
 	$(".warning_msg").remove();
 	if(str.length<1){return;}
 	if($(".div_right_top").length>0){
-		$(".div_right_top").after("<div class='warning_msg'>"+str+"</div>");
+		$(".div_right_top:first").after("<div class='warning_msg'>"+str+"</div>");
 	}else{
-		$(".input-field-wrap").after("<div class='warning_msg'>"+str+"</div>");
+		$(".input-field-wrap:first").after("<div class='warning_msg'>"+str+"</div>");
+	}
+}
+
+function warning_msg_last(str){
+	$(".warning_msg").remove();
+	if(str.length<1){return;}
+	if($(".div_right_top").length>0){
+		$(".div_right_top:last").after("<div class='warning_msg'>"+str+"</div>");
+	}else{
+		$(".input-field-wrap:last").after("<div class='warning_msg'>"+str+"</div>");
 	}
 }
 
@@ -53,6 +76,16 @@ function order_source_auto(name) {
       "GoHappy","myfone","森森購物","九易","UDN",
       "17Life", "ASAP", "通用","國泰Tree","Line Mart"
     ];
+    //{label:"", value:""}, {label:"車王電", value:"車王電"}];
+//    var availableTags = [{label:"yahoo", val2:"1"},{label:"超級商城", val2:"2"},{label:"Pchome", val2:"3"},
+//                         {label:"通用", value:"4"},{label:"夠麻吉", value:"5"},{label:"樂天", value:"6"},
+//                         {label:"payeasy", value:"7"},{label:"博客來", value:"8"},{label:"ibon", value:"9"},
+//                         {label:"momo", value:"10"},{label:"愛買", value:"11"},{label:"GoHappy", value:"12"},
+//                         {label:"myfone", value:"13"},{label:"森森購物", value:"14"},{label:"九易", value:"15"},
+//                         {label:"UDN", value:"16"},{label:"17Life", value:"17"},{label:"ASAP", value:"18"},
+//                         {label:"國泰Tree", value:"19"},{label:"Line Mart", value:"20"}
+//                       ];
+    
     $( "#"+name).autocomplete({
     	minLength: 0,
     	source: availableTags,
@@ -157,28 +190,28 @@ function draw_table(table_name,title){
 }
 
 function vender_color(vender){
-	if(vender=="myfone"){return '#be1e2d';}
-	if(vender=="九易"){return '#666699';}
-	if(vender=="Pchome"){return '#92d5ea';}
-	if(vender=="ASAP"){return '#ee8310';}
-	if(vender=="GoHappy"){return '#8d10ee';}
-	if(vender=="愛買"){return '#5a3b16';}
-	if(vender=="momo"){return '#26a4ed';}
-	if(vender=="yahoo"){return '#f45a90';}
-	if(vender=="UDN"){return '#e9e744';}
+	if(vender=="myfone"||vender==0){return '#be1e2d';}
+	if(vender=="九易"||vender==1){return '#666699';}
+	if(vender=="Pchome"||vender==2){return '#92d5ea';}
+	if(vender=="ASAP"||vender==3){return '#ee8310';}
+	if(vender=="GoHappy"||vender==4){return '#8d10ee';}
+	if(vender=="愛買"||vender==5){return '#5a3b16';}
+	if(vender=="momo"||vender==6){return '#26a4ed';}
+	if(vender=="yahoo"||vender==7){return '#f45a90';}
+	if(vender=="UDN"||vender==8){return '#e9e744';}
 	
 	//已下還沒有特定過
-	if(vender=="17Life"){return '#660066';}
-	if(vender=="樂天"){return '#00BBBB';}
-	if(vender=="國泰Tree"){return '#BBBBFF';}
-	if(vender=="夠麻吉"){return '#BBFFBB';}
-	if(vender=="通用"){return '#FFBBBB';}
-	if(vender=="超級商城"){return '#6666FF';}
-	if(vender=="博客來"){return '#66FF66';}
-	if(vender=="payeasy"){return '#006666';}
-	if(vender=="ibon"){return '#FF5566';}
-	if(vender=="森森購物"){return '#666600';}
-	if(vender=="Line Mart"){return '#333333';}
+	if(vender=="17Life"||vender==9){return '#660066';}
+	if(vender=="樂天"||vender==10){return '#00BBBB';}
+	if(vender=="國泰Tree"||vender==11){return '#BBBBFF';}
+	if(vender=="夠麻吉"||vender==12){return '#BBFFBB';}
+	if(vender=="通用"||vender==13){return '#FFBBBB';}
+	if(vender=="超級商城"||vender==14){return '#6666FF';}
+	if(vender=="博客來"||vender==15){return '#66FF66';}
+	if(vender=="payeasy"||vender==16){return '#006666';}
+	if(vender=="ibon"||vender==17){return '#FF5566';}
+	if(vender=="森森購物"||vender==18){return '#666600';}
+	if(vender=="Line Mart"||vender==19){return '#333333';}
 	return '#553388';
 }
 /* 行事曆

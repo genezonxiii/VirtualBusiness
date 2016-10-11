@@ -214,7 +214,7 @@ function draw_exchange(parameter){
 			<div id="dialog-confirm" title="是否刪除此幣值?" style="display:none;">
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改幣值匯率" style="display:none;">
+			<div id="dialog-form-update" title="修改匯率" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
@@ -230,7 +230,7 @@ function draw_exchange(parameter){
 				</form>
 			</div>			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品類別" style="display:none;">
+			<div id="dialog-form-insert" title="新增匯率" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 						<table class="form-table">

@@ -131,6 +131,12 @@
     <param-name>smtphost</param-name>
     <param-value>mail.pershing.com.tw</param-value>
   </context-param>
+  
+  <context-param>
+    <param-name>invoicepath</param-name>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
+  </context-param>
+  
   <context-param>
     <param-name>pythonwebservice</param-name>
     <param-value>http://192.168.112.164:8090</param-value>
@@ -445,8 +451,6 @@
     <servlet-name>forget</servlet-name>
     <url-pattern>/forget.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
-  
   <servlet>
     <servlet-name>invoice</servlet-name>
     <servlet-class>tw.com.aber.invoice</servlet-class>
@@ -455,6 +459,16 @@
     <servlet-name>invoice</servlet-name>
     <url-pattern>/invoice.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>invoicetrack</servlet-name>
+    <servlet-class>tw.com.aber.invoicetrack</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>invoicetrack</servlet-name>
+    <url-pattern>/invoicetrack.do</url-pattern>
+  </servlet-mapping>
+  <!-- ############新的############ -->
+  
   <servlet>
     <servlet-name>test</servlet-name>
     <servlet-class>tw.com.aber.test</servlet-class>

@@ -33,13 +33,16 @@ import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.codec.binary.Base64;
 import java.util.concurrent.TimeUnit;
 public class upload  extends HttpServlet {
-
+	public String file_name = "";
+	public String ori_file_name = "";
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+		
 		if(request.getSession().getAttribute("group_id")==null){request.setAttribute("action","no_session");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
+		if(request.getParameter("vender")==null){request.setAttribute("action","no_vender");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
 //		request.setCharacterEncoding("UTF-8");
 //	    response.setCharacterEncoding("UTF-8");
 //		request.setAttribute("action","succes2s");
@@ -61,19 +64,22 @@ public class upload  extends HttpServlet {
 //		}
 		//##########################test####################################
 		
-		try{
-			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm upload-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
-			FileWriter fw;
-			try{
-				fw = new FileWriter(record_log,true);
-			}catch(FileNotFoundException e){
-				fw = new FileWriter(record_log,false);
-			}
-			fw.write(my_msg);
-			fw.close();
-		}catch(Exception e){System.out.println("Error: "+e.toString());}
+//		try{
+//			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+//			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+//			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm "+request.getSession().getAttribute("group_id")+" upload " +file_name+ " with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
+//			FileWriter fw;
+//			try{
+//				fw = new FileWriter(record_log,true);
+//			}catch(FileNotFoundException e){
+//				fw = new FileWriter(record_log,false);
+//			}
+//			fw.write(my_msg);
+//			fw.close();
+//		}catch(Exception e){System.out.println("Error: "+e.toString());}
+		
+		
+		
 		//FileWriter fw = new FileWriter("C:/Users/10506002/Desktop/hello.txt",false);
 //		   int temp=0;
 //		   String _uid= UUID.randomUUID().toString();
@@ -113,8 +119,24 @@ public class upload  extends HttpServlet {
 		   //if(temp==0)return;
 		String conString="",ret="E";
 		conString=putFile(request, response);
+		
 		try{
-			//TimeUnit.SECONDS.sleep(3);
+			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm "+request.getSession().getAttribute("user_name")+" upload "+ori_file_name+" as -> " +file_name+ " with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
+			FileWriter fw;
+			try{
+				fw = new FileWriter(record_log,true);
+			}catch(FileNotFoundException e){
+				fw = new FileWriter(record_log,false);
+			}
+			fw.write(my_msg);
+			fw.close();
+		}catch(Exception e){System.out.println("Error: "+e.toString());}
+		
+		
+		try{
+			TimeUnit.SECONDS.sleep(2);
 		}catch(Exception e){
 			ret="Sleep error";
 		}
@@ -128,6 +150,18 @@ public class upload  extends HttpServlet {
 		request.setAttribute("action",ret);
 		RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
 		successView.forward(request, response);
+		try{
+			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+			String my_msg ="  Result as \'"+ret+"\'.At ("+(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+")\r\n";
+			FileWriter fw;
+			try{
+				fw = new FileWriter(record_log,true);
+			}catch(FileNotFoundException e){
+				fw = new FileWriter(record_log,false);
+			}
+			fw.write(my_msg);
+			fw.close();
+		}catch(Exception e){System.out.println("Error: "+e.toString());}
 		//############################################################
 		return ;
 	}
@@ -158,14 +192,16 @@ public class upload  extends HttpServlet {
 		      factory.setRepository(new File(file_over));
 		      ServletFileUpload upload = new ServletFileUpload(factory);
 		      upload.setSizeMax( maxFileSize );
-		      try{ 
+		      try{
 		         List fileItems = upload.parseRequest(request);
 		         Iterator i = fileItems.iterator();
 		         while ( i.hasNext () ) 
 		         {
 		            FileItem fi = (FileItem)i.next();
 		            if ( !fi.isFormField () ) {
+		            	
 		                String fileName = fi.getName();
+		                ori_file_name=fi.getName();
 		                String[] tmp = fileName.split("\\.");
 		                int j=0;
 		                while(j<tmp.length){j++;}
@@ -177,30 +213,46 @@ public class upload  extends HttpServlet {
 								+new String(Base64.encodeBase64String((fullname).getBytes()))
 								+"&usid="
 								+new String(Base64.encodeBase64String(user_id.getBytes()));
-		                File file ;
 		                
-//		                InputStream is = fi.getInputStream();
-//		        		byte[] first = new byte[5] ;
-//		        		is.read(first, 0, 5);
-//		        		is.close();
-//		        		byte[] bytePDF = new byte[]{0x25, 0x50, 0x44, 0x46, 0x2D};
-//		        		byte[] byteXLS = new byte[]{(byte) 0xD0, (byte) 0xCF, 0x11, (byte) 0xE0, (byte) 0xA1};//, (byte) 0xB1, 0x1A, (byte) 0xEA};
+		                InputStream is = fi.getInputStream();
+		        		byte[] first = new byte[5] ;
+		        		is.read(first, 0, 5);
+		        		is.close();
+		        		byte[] bytePDF = new byte[]{0x25, 0x50, 0x44, 0x46, 0x2D};
+		        		byte[] byteXLS = new byte[]{(byte) 0xD0, (byte) 0xCF, 0x11, (byte) 0xE0, (byte) 0xA1};//, (byte) 0xB1, 0x1A, (byte) 0xEA};
 //		        		byte[] byteCSV = new byte[]{0x5B, 0x75, 0x72, 0x6C};
-//		        		byte[] byteXLSX = new byte[]{0x50, 0x4B, 0x03, 0x04, 0x14};
-//		        		
+		        		byte[] byteXLSX = new byte[]{0x50, 0x4B, 0x03, 0x04, 0x14};
 //		        		System.out.println(Hex.encodeHexString(first));
 //		        		System.out.println(Arrays.toString(first));
-//		        		if(Arrays.equals(first, bytePDF)){
-//		        			System.out.println("pdf喔~");
-//		        		}else if(Arrays.equals(first, byteXLS)){
-//		        			System.out.println("xls喔~");
-//		        		}else if(Arrays.equals(first, byteXLSX)){
-//		        			System.out.println("xlsv喔~");
-//		        		}else if(Arrays.equals(first, byteCSV)){
-//		        			System.out.println("csv喔~");
-//		        		}else{
-//		        			System.out.println("沒有喔~");
-//		        		}
+		        		if(Arrays.equals(first, bytePDF)){
+		        			fullname = no_way+".pdf";
+		        		}else if(Arrays.equals(first, byteXLS)){
+		        			fullname = no_way+".xls";
+		        		}else if(Arrays.equals(first, byteXLSX)){
+		        			fullname = no_way+".xlsx";
+		        		}else{
+//		        			System.out.println(fi.getString("UTF-8"));
+		        			String filecontent_ori= fi.getString("UTF-8");
+			            	String[] filecontent = filecontent_ori.split(",");
+			            	if(filecontent_ori.contains("content='text/html;")){
+			            		fullname = no_way+".html";
+			            	}else{
+				            	j=0;
+				            	while(j<filecontent.length){
+//				            		System.out.println(filecontent[j].length()+" "+filecontent[j]);
+				            		if(filecontent[j].length()>80){break;}
+				            		j++;
+				            	}
+				            	if(j==filecontent.length){
+				            		fullname = no_way+".csv";
+				            	}else{
+				            		fullname = no_way+".txt";
+				            	}
+			            	}
+		        		}
+		        		//fullname = no_way+"."+tmp[j];
+		                file_name=fullname;
+		                File file ;
 		                file = new File(fullname) ;
 		                fi.write( file ) ;
 		                //System.out.println("success");
@@ -229,8 +281,12 @@ public class upload  extends HttpServlet {
 			ret="Error of call webservice:"+ret; 
 		}
 		try{
-			if("success".compareTo(method.getResponseBodyAsString())!=0){
-				ret="Error_Connection: "+conString;
+			String content=method.getResponseBodyAsString();
+			if("success".compareTo(content)!=0){
+				if(content.length()>100){
+					content=content.substring(0,90)+"....";
+				}
+				ret="Error_Connection: get "+content+" on: "+conString;
 			}else{
 				ret="success";
 			}

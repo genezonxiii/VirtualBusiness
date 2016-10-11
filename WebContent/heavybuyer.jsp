@@ -143,7 +143,7 @@ function draw_barchart(data,title){
 					//console.log(result);
 					//if(result.indexOf("WebService Error")>-1){warning_msg("---網路不穩定，請稍候再試---");return;}
 					$("#board").html('');
-					if(result.indexOf("WebService")>-1){$(".validateTips").html('<font color=red size=5>訊號不穩定，請稍候再試。</font>');return};
+					if(result.indexOf("WebService")>-1){$(".validateTips").html('<font color=red size=5>連線異常，請洽系統管理員。</font>');return};
 					var json_obj = $.parseJSON(result);
 					var chart_data=[],chart_obj={},j=0;
 					if(json_obj.length==0){$(".validateTips").html('<font color=red size=5>此平台查無貴人名冊。</font>');return;}
@@ -182,7 +182,7 @@ function draw_barchart(data,title){
 				<div class="form-wrap">
 					<div class="form-row">
 						<label for="">
-							<span class="block-label">銷售平台<font color=red>(選填)</font></span>
+							<span class="block-label">銷售平台<font color=brown>(選填)</font></span>
 							<input type="text" id="order_source">
 						</label>
 						<button class="btn btn-darkblue searhbestsale">查詢</button>

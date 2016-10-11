@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+
+import tw.com.aber.membercondition.MemberconditionVO;
+import tw.com.aber.sale.controller.sale.SaleVO;
 
 public class invoice extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -44,7 +48,63 @@ public class invoice extends HttpServlet {
 		
 		String action = request.getParameter("action");
 		
-		if ("generateInvoiceNo".equals(action)) {
+		if ("search_invoice_false".equals(action) ){
+			try {TimeUnit.MILLISECONDS.sleep(100);} catch (InterruptedException e) {}
+			String invoice_false_start = request.getParameter("invoice_false_start");
+			String invoice_false_end = request.getParameter("invoice_false_end");
+			invoice_false_start = invoice_false_start.length()<3?"2000-01-01":invoice_false_start;
+			invoice_false_end = invoice_false_end.length()<3?"3000-01-01":invoice_false_end;
+			List<SaleVO> list =new ArrayList<SaleVO>();
+			InvoiceDao invoicedao= new InvoiceDao();
+			list=invoicedao.search_invoice_false(group_id, invoice_false_start, invoice_false_end);
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(list);
+			response.getWriter().write(jsonStrList);
+		}else if("search_invoice_true".equals(action) ){
+			try {TimeUnit.MILLISECONDS.sleep(100);} catch (InterruptedException e) {}
+			String invoice_true_start = request.getParameter("invoice_true_start");
+			String invoice_true_end = request.getParameter("invoice_true_end");
+			invoice_true_start = invoice_true_start.length()<3?"2000-01-01":invoice_true_start;
+			invoice_true_end = invoice_true_end.length()<3?"3000-01-01":invoice_true_end;
+			List<SaleVO> list =new ArrayList<SaleVO>();
+			InvoiceDao invoicedao= new InvoiceDao();
+			list=invoicedao.search_invoice_true(group_id, invoice_true_start, invoice_true_end);
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(list);
+			response.getWriter().write(jsonStrList);
+		}else if("make_invoice_true".equals(action) ){
+			//暫時沒有這個 叫兩個下面的代替
+			int i;
+			String sale_array = request.getParameter("sale_array");
+			String[] sale_id = sale_array.split(",");
+			List<String> list =new ArrayList<String>();
+//			System.out.println(sale_id.length);
+			for(i=1;i<sale_id.length;i++){
+//				System.out.println(sale_id[i]);
+				invoiceService = new InvoiceService();
+				String tmp=invoiceService.generateInvoiceNo(group_id, sale_id[i]);
+				list.add(sale_id[i]);
+				try {
+					TimeUnit.SECONDS.sleep(1);
+//					TimeUnit.MILLISECONDS.sleep(800);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			Gson gson = new Gson();
+			String jsonStrList = gson.toJson(list);
+			response.getWriter().write(jsonStrList);
+//			System.out.println("("+sale_array+")");
+//			int j=0;if(j==0)return;
+//			String invoice_no = invoiceService.generateInvoiceNo(group_id, sale_id[i]);
+			
+		}else if("make_invoice_false".equals(action) ){
+			String invoice_id = request.getParameter("invoice_id");
+			InvoiceDao invoicedao= new InvoiceDao();
+			invoicedao.make_invoice_false(group_id, invoice_id);
+			response.getWriter().write(invoice_id);
+		}else if ("generateInvoiceNo".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數 ****************************************/
 				String sale_id = request.getParameter("sale_id");
@@ -53,12 +113,18 @@ public class invoice extends HttpServlet {
 				invoiceService = new InvoiceService();
 				String invoice_no = invoiceService.generateInvoiceNo(group_id, sale_id);
 //				String result = invoiceService.updateInvoiceNo2Sale(group_id, sale_id, invoice_no);
-				
-				System.out.println(invoice_no);
+//				if("Error".equals(invoice_no)){
+//					
+//					return;
+//				}
+				//System.out.println(invoice_no);
 //				Gson gson = new Gson();
 //				String jsonStrList = gson.toJson(list);
 //				response.getWriter().write(jsonStrList);
-				
+				request.setCharacterEncoding("UTF-8");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(invoice_no);
+				return;
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -94,8 +160,10 @@ public class invoice extends HttpServlet {
 				invoiceService = new InvoiceService();
 				List<InvoiceBean> list = invoiceService.getSearchAllDB(group_id, sale_id);
 				
-				String invoicepath = getServletConfig().getServletContext().getInitParameter("invoicepath");
-				
+//				String invoicepath = getServletConfig().getServletContext().getInitParameter("invoicepath");
+				InvoiceDao dao= new InvoiceDao();
+				String invoicepath = dao.invoice_path_ingroup(group_id);
+				if(invoicepath.length()<2)return;
 				File f = new File(invoicepath + "/" + sale_id + ".txt");
 				
 				Writer objWriter = new BufferedWriter(new FileWriter(f));
@@ -194,6 +262,29 @@ public class invoice extends HttpServlet {
 
 	/************************* 對應資料庫表格格式 **************************************/
 	@SuppressWarnings("serial")
+	public class SaleVO{
+		public String sale_id;
+		public String seq_no;
+		public String group_id;
+		public String order_no;
+		public String user_id;
+		public String product_id;
+		public String product_name;
+		public String c_product_id;
+		public String customer_id;
+		public String name;
+		public String quantity;
+		public String price;
+		public String invoice;
+		public String invoice_date;
+		public String trans_list_date;
+		public String dis_date;
+		public String memo;
+		public String sale_date;
+		public String order_source;
+		public String return_date;
+		public String isreturn;
+	}
 	public class InvoiceBean implements java.io.Serializable {
 		private String group_id;
 		private String aMessageType;
@@ -498,16 +589,154 @@ public class invoice extends HttpServlet {
 
 	/*************************** 操作資料庫 ****************************************/
 	class InvoiceDao implements Invoice_interface {
-		// 會使用到的Stored procedure	
+		// 會使用到的Stored procedure
 		private static final String sp_get_sale_by_id = "call sp_get_sale_by_id(?, ?)";
 		private static final String sp_insert_invoice = "call sp_insert_invoice(?, ?, ?)";
 		private static final String update_invoiceno2sale = "update tb_sale set invoice = ?, invoice_date = DATE_FORMAT(NOW(),'%Y/%m/%d') where group_id = ? and sale_id = ?";
 		
+		private static final String sp_select_sale_invoice = "call sp_select_sale_invoice(?,?,?)";
+		private static final String sp_select_sale_not_invoice = "call sp_select_sale_not_invoice(?,?,?)";
+		private static final String sp_del_invoice = "call sp_del_invoice(?,?)";
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		
+		public String invoice_path_ingroup(String group_id){
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String ret="";
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement("SELECT invoice_path FROM `tb_group` where group_id =?");
+				pstmt.setString(1, group_id);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					ret=rs.getString("invoice_path");
+				}
+				return ret;
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
+		}
+		
+		public void make_invoice_false(String group_id, String invoice_id) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_del_invoice);
+				//System.out.println(group_id+"   "+invoice_id);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, invoice_id);
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			}
+		}
+		public List<SaleVO> search_invoice_false(String group_id, String invoice_false_start, String invoice_false_end) {
+			List<SaleVO> list =new ArrayList<SaleVO>();
+			SaleVO saleVO = null;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_sale_not_invoice);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, invoice_false_start);
+				pstmt.setString(3, invoice_false_end);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					saleVO = new SaleVO();
+					saleVO.sale_id=rs.getString("sale_id");
+					saleVO.seq_no=rs.getString("seq_no");
+					saleVO.group_id=rs.getString("group_id");
+					saleVO.order_no=rs.getString("order_no");
+					saleVO.user_id=rs.getString("user_id");
+					saleVO.product_id=rs.getString("product_id");
+					saleVO.product_name=rs.getString("product_name");
+					saleVO.c_product_id=rs.getString("c_product_id");
+					saleVO.customer_id=rs.getString("customer_id");
+					saleVO.quantity=rs.getString("quantity");
+					saleVO.price=rs.getString("price");
+					saleVO.invoice=rs.getString("invoice");
+					saleVO.invoice_date=rs.getString("invoice_date");
+					saleVO.trans_list_date=rs.getString("trans_list_date");
+					saleVO.dis_date=rs.getString("dis_date");
+					saleVO.sale_date=rs.getString("sale_date");
+					saleVO.order_source=rs.getString("order_source");
+					saleVO.return_date=rs.getString("return_date");
+					saleVO.isreturn=rs.getString("isreturn");
+					list.add(saleVO); 
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			}
+			return list;
+		}
+		public List<SaleVO> search_invoice_true(String group_id, String invoice_true_start, String invoice_true_end) {
+			List<SaleVO> list =new ArrayList<SaleVO>();
+			SaleVO saleVO = null;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_sale_invoice);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, invoice_true_start);
+				pstmt.setString(3, invoice_true_end);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					saleVO = new SaleVO();
+					saleVO.sale_id=rs.getString("sale_id");
+					saleVO.seq_no=rs.getString("seq_no");
+					saleVO.group_id=rs.getString("group_id");
+					saleVO.order_no=rs.getString("order_no");
+					saleVO.user_id=rs.getString("user_id");
+					saleVO.product_id=rs.getString("product_id");
+					saleVO.product_name=rs.getString("product_name");
+					saleVO.c_product_id=rs.getString("c_product_id");
+					saleVO.customer_id=rs.getString("customer_id");
+					saleVO.quantity=rs.getString("quantity");
+					saleVO.price=rs.getString("price");
+					saleVO.invoice=rs.getString("invoice");
+					saleVO.invoice_date=rs.getString("invoice_date");
+					saleVO.trans_list_date=rs.getString("trans_list_date");
+					saleVO.dis_date=rs.getString("dis_date");
+					saleVO.sale_date=rs.getString("sale_date");
+					saleVO.order_source=rs.getString("order_source");
+					saleVO.return_date=rs.getString("return_date");
+					saleVO.isreturn=rs.getString("isreturn");
+					list.add(saleVO); 
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			}
+			return list;
+		}
 		@Override
 		public String generateInvoiceNo(String group_id, String sale_id) {
 			String invoice_no = "";
@@ -531,10 +760,10 @@ public class invoice extends HttpServlet {
 				cs.execute();
 				invoice_no = cs.getString(3);
 				
-				System.out.println("invoice_no:" + invoice_no);
+				//System.out.println("invoice_no:" + invoice_no);
 			} catch (Exception se) {
-				throw new RuntimeException("Exception. " + se.getMessage());
-				
+				return "Error";
+//				throw new RuntimeException("Exception. " + se.getMessage());
 			} finally {
 			
 			}

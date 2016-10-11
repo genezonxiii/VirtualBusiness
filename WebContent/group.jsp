@@ -25,6 +25,7 @@ table.result-table td:nth-child(2n){
 	font-size:22px;
 	font-family: "Times New Roman", Times, serif;
 	font-family: DFKai-sb;
+	font-family:"微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif ;
  	font-weight: lighter; 
  	padding-left: 60px;
 }
@@ -50,37 +51,40 @@ table.result-table td:nth-child(2n){
 				group_name : {
 					required : true,
 					maxlength : 10
+				},
+				address : {
+					required : true,
+					maxlength : 80
+				},
+				phone : {
+					required : true,
+					maxlength : 12
+				},
+				fax : {
+					required : true,
+					maxlength : 12
+				},
+				mobile : {
+					required : true,
+					maxlength : 15
+				},
+				email : {
+					required : true,
+					maxlength : 30
+				},
+				master : {
+					required : true,
+					maxlength : 10
+				},
+				invoice_path : {
+					maxlength : 50
 				}
 			},
 			messages : {
 				group_name : {
 					maxlength : "長度不能超過10個字"
 				}
-			},
-			address : {
-				required : true,
-				maxlength : 80
-			},
-			phone : {
-				required : true,
-				maxlength : 12
-			},
-			fax : {
-				required : true,
-				maxlength : 12
-			},
-			mobile : {
-				required : true,
-				maxlength : 15
-			},
-			email : {
-				required : true,
-				maxlength : 30
-			},
-			master : {
-				required : true,
-				maxlength : 10
-			},
+			}
 		});
 		//melvin begin
 		$("[name^=group_unicode]").rules("add", {
@@ -159,6 +163,7 @@ table.result-table td:nth-child(2n){
 			buttons : [{
 				text : "修改",
 				click : function() {
+					$("#dialog-form-update input[name='invoice_path']").val($("#dialog-form-update input[name='invoice_path']").val().replace(new RegExp("\\\\","g"),"/"));
 					if ($('#update-dialog-form-post').valid()) {
 						$.ajax({
 							type : "POST",

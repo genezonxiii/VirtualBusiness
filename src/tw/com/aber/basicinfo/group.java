@@ -75,6 +75,7 @@ public class group extends HttpServlet {
 				String email = request.getParameter("email");
 				String master = request.getParameter("master");
 				String invoice_path = request.getParameter("invoice_path");
+				//System.out.println(invoice_path.length());
 				/*************************** 2.開始修改資料 ***************************************/
 				groupService = new GroupService();
 				groupService.updateGroup(group_id, group_name, group_unicode, address, phone, fax, mobile, email, master, user_id,invoice_path);
@@ -226,7 +227,6 @@ public class group extends HttpServlet {
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
-		
 		@Override
 		public void updateDB(GroupBean groupBean) {
 			// TODO Auto-generated method stub

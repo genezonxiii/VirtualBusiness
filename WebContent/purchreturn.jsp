@@ -823,6 +823,7 @@ $(function(){
 			</div>			
 			<!-- 第一列 -->
 			<div class="input-field-wrap">
+<!-- 			<font style=";color:#7f7f7f;">未退回</font> -->
 			<div class="form-wrap" >
 				<div class="form-row" id="purchase_search_contain"> 
 					<label for="">
@@ -905,6 +906,7 @@ $(function(){
 		<div class="datalistWrap">
 		<hr class="hr0">
 		<div class="input-field-wrap">
+			<div style=";color:#7f7f7f;height:0px;width:0px;">已退回進貨</div>
 			<div class="form-wrap" >
 				<div class="form-row">
 					<form id="return_date_form" name="trans_dis_date_form">

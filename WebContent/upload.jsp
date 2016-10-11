@@ -158,7 +158,7 @@ function setV(){
 		i++;
 		if(i==20){alert("請選擇平台");return false;}
 	}
-	console.log("為何進來了?");
+	//console.log("為何進來了?");
 	document.getElementById("form1").action+="?vender="+document.getElementsByName("ec-radio-group")[i].value;
 	return true;
 };

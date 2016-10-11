@@ -599,7 +599,10 @@ input[type="text"]:focus, input[type="text"].focus, input[type="password"]:focus
     border: 1px solid #3F7FAA;
 }
 input[type="text"]:disabled, input[type="text"].readonly, input[type="password"]:disabled, input[type="password"].readonly, select:disabled, select.readonly, textarea:disabled, textarea.readonly {}
-input[type="text"].error, input[type="password"].error, select.error, textarea.error {}
+input[type="text"].error, input[type="password"].error, select.error, textarea.error {
+	border: 1px solid #e92500;
+	background: rgb(255, 213, 204);
+}
 select {
     background: #eee url('../images/dropdown.svg') no-repeat 96% 2px;
     border: 1px solid #999;
@@ -983,12 +986,8 @@ table.result-table tr {
 table.result-table tr:nth-child(2n+1) {
     background: #fff;
 }
-table.result-table tr:hover {
-    background: #ccc;
-}
-table.result-table tr:nth-child(2n+1):hover {
-    background: #ddd;
-}
+table.result-table tbody tr:hover {background: #d8d8d8;}
+table.result-table tbody tr:hover:nth-child(2n+1) {background: #d8d8d8;}
 table.result-table th {
     background: #194A6B;
     border-bottom: 2px solid #62E0E9;
@@ -1170,6 +1169,17 @@ button.btn {
 	color: red;
 	font-size: 15px;
 	margin-top: 5px;
+	border: 1px solid #e92500;
+	background: rgb(255, 213, 204);
+}
+.watermark{
+	font-family : "Microsoft JhengHei";
+	color : '#7f7f7f';
+}
+.dataTables_wrapper .dt-buttons {
+	float:right;
+	margin-bottom:10px;
+	margin-left:5px;
 }
 
 /* .dataTables_info{ */
