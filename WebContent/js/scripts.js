@@ -1,4 +1,5 @@
 
+//auto_complete(name,[])
 //current_time() 2016-01-01之類的
 //currency_unit(str) 幣值單位
 //sleep(500) 就sleep sleep(1500).then(() => { 
@@ -14,6 +15,21 @@
 //table_before(str);X
 //get_week_day(number);X
 
+function tooltip(clas){
+	$("."+clas).mouseover(function(e){
+		 this.newTitle = this.title;
+		 this.title = "";
+		 var tooltip = "<div id='tooltip'>"+ this.newTitle +"<\/div>";
+		 $("body").append(tooltip);
+		 $("#tooltip").css({"top": (e.pageY+20) + "px","left": (e.pageX+10)  + "px"}).show("fast");
+	 }).mouseout(function(){
+	         this.title = this.newTitle;
+	         $("#tooltip").remove();
+	 }).mousemove(function(e){
+	         $("#tooltip").css({"top": (e.pageY+20) + "px","left": (e.pageX+10)  + "px"});
+	 });
+}
+
 function current_time(){
 	var d=new Date();
 	return d.getFullYear()+"-"+((d.getMonth()+1)>9?"":"0")+(d.getMonth()+1)+"-"+((d.getDate())>9?"":"0")+(d.getDate());
@@ -27,9 +43,9 @@ function currency_unit(str){
 	if(str=='韓幣'){return 'KRW';}
 }
 
-function sleep(time) {
-	  return new Promise((resolve) => setTimeout(resolve, time));
-}
+//function sleep(time) { 備註 IE 不可用
+//	  return new Promise((resolve) => setTimeout(resolve, time));
+//}
 
 function grows_up(str){
 	if(!(str.length>0)){return "";}
@@ -68,6 +84,21 @@ function warning_msg_last(str){
 		$(".input-field-wrap:last").after("<div class='warning_msg'>"+str+"</div>");
 	}
 }
+
+function auto_complete(name,tags){
+	$("#"+name).autocomplete({
+    	minLength: 1,
+    	source: tags,
+    	position:  {my: "left top", at: "left bottom", collision: "flipfit"}
+    });
+    $("#"+name).dblclick(function(){ $("#"+name).autocomplete({minLength: 0}); });
+	$("#"+name).click(function(){
+    	var eve=jQuery.Event("keydown");
+    	eve.which=40;
+      	$(this).trigger(eve);
+    });
+}
+
 
 function order_source_auto(name) {
     var availableTags = [
@@ -153,11 +184,13 @@ function draw_table(table_name,title){
 		if($( this ).text().length>10)
 		$( this ).html($( this ).html()+"&nbsp;") ;
 	});
-	$("#"+table_name).dataTable().fnDestroy();
+	//alert($("#"+table_name+" tbody").html());
 	var i=0;
 	while($("#animate_table-"+i).length>0){i++;};
 	var name="animate_table-"+i;
 	var selector="#"+table_name;
+	//$(selector).dataTable().fnDestroy();
+	
 	var tmp="<tr><td width='100%'><table class='result-table' id='"+table_name+"'>"+$(selector).html()+"</table></td></tr>";
 	$(selector).attr("id",name);
 	$("#"+name).attr("class","");
@@ -170,6 +203,7 @@ function draw_table(table_name,title){
 	$("#"+name).css("opacity","0");
 	
 	table_before(table_name);
+	
 	$(selector).dataTable({
 		"lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "全"] ],
 		dom: 'lfrB<t>ip',
@@ -212,6 +246,10 @@ function vender_color(vender){
 	if(vender=="ibon"||vender==17){return '#FF5566';}
 	if(vender=="森森購物"||vender==18){return '#666600';}
 	if(vender=="Line Mart"||vender==19){return '#333333';}
+	
+//	var x=255;
+//	alert(x.toString(16));
+	
 	return '#553388';
 }
 /* 行事曆

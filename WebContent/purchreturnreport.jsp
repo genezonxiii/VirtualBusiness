@@ -163,11 +163,12 @@ $(function(){
 						$("#purchasereturns_true_table").dataTable().fnDestroy();
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#purchasereturns_true_contain").show();
+							$("#purchasereturns_true_table").dataTable().fnDestroy();
 							$("#purchasereturns_true_table tbody").html(result_table);
 							$("#purchasereturns_true_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							$("#purchasereturns_true_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
 							draw_table("purchasereturns_true_table","進貨退回報表");
-									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
+							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
 							if($("#purchase_return_date_err_mes").length){
                 				$("#purchase_return_date_err_mes").remove();
                 			}

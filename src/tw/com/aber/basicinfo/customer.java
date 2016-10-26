@@ -452,9 +452,9 @@ public class customer extends HttpServlet {
 			String url = wsPath + "/query/group=" + gidInBase64;
         	HttpGet httpRequest = new HttpGet(url);
         	HttpClient client = HttpClientBuilder.create().build();
-        	//System.out.println("gid: "+group_id);
+//        	System.out.println("gid: "+group_id);
 //        	System.out.println("wspath: "+wsPath);
-        	//System.out.println("url: "+url);
+//        	System.out.println("url: "+url);
         	
         	HttpResponse httpResponse;
         	try {

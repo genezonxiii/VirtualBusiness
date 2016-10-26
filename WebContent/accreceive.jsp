@@ -685,7 +685,7 @@ function detail(str){
 								<th>交易平台</th>
 								<th>訂單號</th>
 								<th>備註</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -728,7 +728,7 @@ function detail(str){
 								<th>交易平台</th>
 								<th>訂單號</th>
 								<th>備註</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>

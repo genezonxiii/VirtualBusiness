@@ -3,6 +3,8 @@ package tw.com.aber.chart;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -34,7 +36,8 @@ import java.text.SimpleDateFormat;
 //import java.util.Comparator;
 //import java.util.UUID;
 import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.*; 
+import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.codec.binary.Base64;
 @SuppressWarnings("serial")
 
@@ -116,8 +119,11 @@ public class heavybuyer extends HttpServlet {
 			try{
 				method=new GetMethod(conString);
 				client.executeMethod(method);
-				ret=method.getResponseBodyAsString().replaceAll("null", "\"\"");
-				//System.out.println(ret.charAt(0));
+				
+				StringWriter writer = new StringWriter();
+				IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
+			    ret=writer.toString().replaceAll("null", "\"\"");
+				//ret=method.getResponseBodyAsString().replaceAll("null", "\"\"");
 				if('<'==ret.charAt(0)){
 					ret="WebService Error";
 				}
@@ -145,7 +151,11 @@ public class heavybuyer extends HttpServlet {
 			try{
 				method=new GetMethod(conString);
 				client.executeMethod(method);
-				ret=method.getResponseBodyAsString().replaceAll("null", "\"\"");
+				StringWriter writer = new StringWriter();
+				IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
+			    ret=writer.toString().replaceAll("null", "\"\"");
+//				ret=method.getResponseBodyAsString().replaceAll("null", "\"\"");
+			    
 			}catch(Exception e){
 				return "WebService Error for:"+e.toString();
 			}

@@ -143,6 +143,7 @@ table.result-table td:nth-child(2n){
 							$("#products-contain").show();
 							$("#products tbody").html(result_table);
 			// 				$("#products").dataTable({"bFilter": false, "bInfo": false, "paging": false, "bSort": false, "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+							tooltip('btn_update');
 							warning_msg("");
 						}else{
 							$("#products-contain").hide();

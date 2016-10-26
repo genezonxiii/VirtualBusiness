@@ -972,11 +972,24 @@ table.normal-table input{
 	font-size: 22px;
 }
 
+/* table.discuss { */
+/* 	font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4; */
+/*     字體Ben偷加的 */
+/*     border: 1px solid #ccc; */
+/*     font-size: 13px; */
+/*     width: 90%; */
+/* } */
+/* table.discuss td { */
+/*     border: 1px solid #ccc; */
+/*     padding: 10px; */
+/* } */
+
 table.result-table {
 	font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
     /*字體Ben偷加的*/
     border: 1px solid #ccc;
     font-size: 13px;
+/*     line-height: 15px; */
 /*     width: 100%; Ben偷改的*/
     width: 99.9%;
 }
@@ -992,6 +1005,7 @@ table.result-table th {
     background: #194A6B;
     border-bottom: 2px solid #62E0E9;
     color: #fff;
+     word-break: keep-all;
 }
 table.result-table th, table.result-table td {
     /*border: 1px solid #aaa;*/
@@ -1180,6 +1194,20 @@ button.btn {
 	float:right;
 	margin-bottom:10px;
 	margin-left:5px;
+}
+.dataTables_wrapper .dataTables_filter input {
+	height:32px;
+	margin-bottom:10px;
+}
+
+#tooltip{
+        position:absolute;
+        border:1px solid #333;
+        background:#f7f5d1;
+/* 		background:red; */
+        padding:1px;
+        color:#333;
+        display:none;
 }
 
 /* .dataTables_info{ */

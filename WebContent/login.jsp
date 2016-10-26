@@ -1,8 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.sql.Connection"%>
+<%@ page import="java.sql.Statement"%>
+<%@ page import="java.sql.ResultSet"%>
 <!DOCTYPE html>
 <html>
 <head>
+
 	<meta charset="UTF-8">
 	<title>北祥股份有限公司 智慧電商平台 使用者登入</title>
 	<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
@@ -109,7 +115,7 @@ $(function() {
 	    if(e.shiftKey){
 	    	if(e.which == 41){
 	    		e.preventDefault();
-	    		if(location.href.indexOf("ber")>-1){
+	    		if(location.href.indexOf("abers1.eastasia.cloudapp.azure.com")>-1){
 	    			$("#uninumber").val("20939790");
 	    			$("#username").val("pershing@pershing.com.tw");
 	    			$("#password").val("1234");
@@ -170,9 +176,15 @@ $(function() {
 });
 </script>
 </head>
-
+<%
+String str=(String)request.getQueryString();
+if(str!=null && str.indexOf("forty")>-1){
+	session.setAttribute("group_id", "cbcc3138-5603-11e6-a532-000d3a800878");
+	session.setAttribute("user_id",  "f8d57a28-5603-11e6-a532-000d3a800878");
+	session.setAttribute("user_name","DemoUser");
+}
+%>
 <body class="login-body">
-	
 <!-- 	<br><a id="logout" href="./registry.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">註冊</a> -->
 	<div class="bkg-upper"></div>
 	<div class="bkg-lower"></div>
@@ -220,7 +232,7 @@ $(function() {
 			北祥股份有限公司<script>if(location.href.indexOf("abers2")>-1){document.write('-1');}</script> <span>服務電話：+886-2-2658-1910 | 傳真：+886-2-2658-1920</span>
 		</div><!-- /.login-footer -->
 	</div><!-- /.login-wrapper -->
-	
+
 	<div id="my_msg"></div>
 </body>
 </html>

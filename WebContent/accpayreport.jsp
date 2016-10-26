@@ -176,6 +176,7 @@
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#account_amount_date_contain").show();
+							$("#account_amount_date_table").dataTable().fnDestroy();
 							$("#account_amount_date_table tbody").html(result_table);
 							draw_table("account_amount_date_table","應付未付報表");
 							$("#account_amount_date_table").find("td").css("text-align","center");
@@ -281,6 +282,7 @@
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#account_pay_date_contain").show();
+							$("#account_pay_date_table").dataTable().fnDestroy();
 							$("#account_pay_date_table tbody").html(result_table);
 							draw_table("account_pay_date_table","應付已付報表");
 							$("#account_pay_date_table").find("td").css("text-align","center");
@@ -352,7 +354,7 @@
 								<th>實付帳款金額</th>
 								<th>實付帳款產生日期</th>
 								<th>供應商名稱</th>
-								<th>備註</th>
+								<th style="background-image: none !important;">備註</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -392,7 +394,7 @@
 								<th>實付帳款金額</th>
 								<th>實付帳款產生日期</th>
 								<th>供應商名稱</th>
-								<th>備註</th>
+								<th style="background-image: none !important;">備註</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -20,7 +20,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="overflow-y:auto;">
+	<div class="content-wrap" >
 		<div class='bdyplane' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -37,7 +37,7 @@ function draw_barchart(data,title){
 		//alert(i+"th: "+data[i].name+" && "+data[i].quantity);
 	}
 	scale= 640 / ( maxdata * 21 / 20 );
-	var leftpad=120,toppad=80;
+	var leftpad=140,toppad=80;
     var s = d3.select('#board').append('svg')
               .attr({
                 'width':800,
@@ -64,65 +64,88 @@ function draw_barchart(data,title){
       .enter()
       .append('rect')
       .attr({
-        'width':function(d){
-          return d.quantity * scale;
-        },
+//         'width':function(d){
+//           return d.quantity * scale;
+//         },
+		'width':0,
         'height':10,
-        'fill':function(d){
-          if(d.quantity>(maxdata * 7 / 8)){
-            return '#c00';
-          }else if(d.quantity>(maxdata * 6 / 8)&& d.quantity <=(maxdata * 7 / 8)){
-            return '#f90';
-          }else if(d.quantity>(maxdata * 5 / 8)&& d.quantity <=(maxdata * 6 / 8)){
-            return '#aa0';
-          }else if(d.quantity>(maxdata * 4 / 8)&& d.quantity <=(maxdata * 5 / 8)){
-            return '#ac0';
-          }else{
-            return '#6c0';
-          }
-        },
+        'fill':'#9d0',
         'x':leftpad,
         'y':function(d){
           return d.x*25+toppad;
         }
-      });
+      })
+      .transition()
+      .duration(2000)
+      .attr({
+    	  'width':function(d){
+              return d.quantity * scale;
+            },
+          'fill':function(d){
+              if(d.quantity>(maxdata * 7 / 8)){
+                return '#c00';
+              }else if(d.quantity>(maxdata * 6 / 8)&& d.quantity <=(maxdata * 7 / 8)){
+                return '#f90';
+              }else if(d.quantity>(maxdata * 5 / 8)&& d.quantity <=(maxdata * 6 / 8)){
+                return '#ec0';
+              }else if(d.quantity>(maxdata * 4 / 8)&& d.quantity <=(maxdata * 5 / 8)){
+                return '#9d0';
+              }else{
+                return '#ae0';
+              }
+          }
+      })
+      ;
 //title
 	s.append('g').selectAll('text')
 	  .data("t").enter().append('text')
 	  .attr({'fill':'#222','x':200 ,'y':50 }).text(title)
-	  .style({'font-size':'32px','font-family':'DFKai-sb'});
+	  .style({'font-size':'32px','font-family':'Microsoft JhengHei'});
 //數量
     num.selectAll('text')
       .data(data)
       .enter()
       .append('text')
+      .style({
+        'font-size':'12px'
+      })
       .attr({
         'fill':'#000',
-        'x':function(d){
-          return d.quantity*scale+leftpad+10;
-        },
+        'x':leftpad+10,
         'y':function(d){
           return d.x * 25 + toppad+10;
         }
-      }).text(function(d){
-        return d.quantity;
-      }).style({
-        'font-size':'12px'
-      });
+      })
+      .transition()
+      .duration(2000)
+      .attr({
+        'x':function(d){
+          return d.quantity*scale+leftpad+10;
+        }
+      })
+      .tween('number',function(d){
+          var i = d3.interpolateRound(0, d.quantity);
+            return function(t) {
+            this.textContent = i(t);
+          };
+       })
+      ;
 //名字
     date.selectAll('text')
       .data(data)
       .enter()
       .append('text')
       .attr({
-        'fill':'#000',
+        'fill':function(d){
+        	return (d.x<3?"#FF0000":"#000")
+        },
         'text-anchor': 'end',
         'x':leftpad-10,
         'y':function(d){
           return d.x * 25 + toppad+12;
         }
       }).text(function(d){
-        return d.name;
+        return (d.x<3?"★ ":"")+(d.x+1)+". "+d.name;
       }).style({
         'font-size':'20px'
       });
@@ -158,7 +181,7 @@ function draw_barchart(data,title){
 					if($("#order_source").val().length>0){
 						draw_barchart(chart_data,$("#order_source").val()+"平台 貴人名冊");
 					}else{
-						draw_barchart(chart_data,"蔽公司貴人名單 TOP10!!");
+						draw_barchart(chart_data,"貴人名單 TOP10!!");
 					}
 					$("#board").animate({"opacity":"1"});
 				}

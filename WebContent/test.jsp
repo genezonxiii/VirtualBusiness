@@ -8,10 +8,13 @@
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico"/>
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
-<script src="js/scripts.js"></script>
+<link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
+<!-- <script src="js/jquery-1.11.4.js"></script> -->
 <script src="http://code.jquery.com/jquery-1.12.3.js"></script>
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-<!-- <script src="js/jquery-1.12.4.js"></script> -->
+<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
+<script src="js/scripts.js"></script>
 <style>
 </style>
 </head>
@@ -46,6 +49,7 @@ function hello2(){
 	$('#example').DataTable();
 }
 function hello(){
+	 $("#helo").autocomplete({minLength: 3});
 	$("#example").dataTable().fnDestroy();
 	
 	$("#example tr").each(function(index){
@@ -85,7 +89,56 @@ function hello(){
 
 
 $(function(){
-	var bar="",i;
+	
+	var availableTags = [
+      "yahoo","超級商城","Pchome","夠麻吉","樂天",
+      "payeasy","博客來","ibon", "momo","愛買",
+      "GoHappy","myfone","森森購物","九易","UDN",
+      "17Life", "ASAP", "通用","國泰Tree","Line Mart"
+    ];
+	var customer_menu=[];
+	availableTags=[];
+	$.ajax({
+		type : "POST",
+		url : "customer.do",
+		async : false,
+		data :{action : "search"},
+		success : function(result) {
+			console.log("@@@ "+result);
+			var json_obj = $.parseJSON(result);
+			$.each (json_obj, function (i) {
+// 				alert(i+json_obj[i].customer_id+json_obj[i].name+(json_obj[i].name!=null));
+				customer_menu[json_obj[i].name]=json_obj[i].customer_id;
+				
+				if(json_obj[i].name!=null){
+					availableTags[i]=json_obj[i].name;
+// 					alert(i+" "+json_obj[i].name+" "+availableTags[i]);
+				}
+				
+			});
+		}
+	});
+// 	alert(availableTags[1]);
+	auto_complete("helo",availableTags);
+// 	for (x in customer_menu){
+// 		alert(customer_menu[x]);
+// 	}
+//     $( "#helo").autocomplete({
+//     	minLength: 1,
+//     	source: availableTags,
+//     	position:  {my: "left top", at: "left bottom", collision: "flipfit"}
+//     });
+//     $("#helo").click(function(){alert('123');});
+//     $("#helo").click(function(){alert('456');});
+//     $("#helo").dblclick(function(){$( "#helo").autocomplete({minLength: 0});});
+	
+// 	$( "#helo").focus(function(){
+//     	var eve=jQuery.Event("keydown");
+//     	eve.which=40;
+//       	$(this).trigger(eve);
+//     });
+	 
+ 	var bar="",i;
 	for(i=0;i<20;i++){
 		bar+="<div style='height:10px;width:200px;margin:5px;background-color:"+vender_color(i)+"'>"+i+"</div>"
 	}
@@ -95,6 +148,7 @@ $(function(){
         "scrollY": 330,
         //"width": "100%"
     } );
+	
 // 	$("#btn1").click(function(){
 // 		alert("I will be back!");
 // 		$.ajax({
@@ -122,6 +176,9 @@ $(function(){
 		<button class='btn-explanation'>?</button>
 <!-- 			<div id='memo' style=" background-image: url('./images/memo.png');width:300px;height:300px;position:absolute;z-index:1;display:none;"><div style="padding:40px;">123455</div></div> -->
 		<input type="text" id="helo">
+		<% int iii=0;while(iii<0){iii++;%>
+		<script>alert('111222');</script>
+		<% }%>
 		<button onclick="hello()">##@_@##</button>
 		<button onclick="hello2()">##X_X##</button>
 <!-- 		<div class="login-panel-wrap"> -->

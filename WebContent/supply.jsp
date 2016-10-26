@@ -21,6 +21,14 @@
 table.form-table {
  	border-spacing: 10px 8px !important; 
 }
+#tooltip{
+    position:absolute;
+    border:1px solid #333;
+    background:#f7f5d1;
+    padding:1px;
+    color:#333;
+    display:none;
+}
 </style>
 </head>
 <body>
@@ -30,12 +38,14 @@ table.form-table {
 		
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
+
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
+
 <script>
 function draw_supply(info){
 	$("#products2-contain").css({"opacity":"0"});
@@ -53,11 +63,13 @@ function draw_supply(info){
 					"</td><td name='uni'>"+json_obj[i].supply_unicode+ 
 					"</td><td name='addr'>"+json_obj[i].address+
 					"</td><td name='contact0'>"+
+// 					"<a class='tool' title='"+
 						((json_obj[i].contact.length<1)?"":("&nbsp;&nbsp;姓名："+json_obj[i].contact+"<br>"))+
 						((json_obj[i].mobile.length<1)?"":("&nbsp;&nbsp;手機："+json_obj[i].mobile+"<br>"))+
 						((json_obj[i].phone.length<1)?"":("&nbsp;&nbsp;電話："+json_obj[i].phone+"<br>"))+
 						((json_obj[i].ext.length<1)?"":("&nbsp;&nbsp;分機："+json_obj[i].ext+"<br>"))+
 						((json_obj[i].email.length<1)?"":("email："+json_obj[i].email+"<br>"))+
+// 						"'>關係人A</a>"+
 					"</td><td name='contact1'>"+
 						((json_obj[i].contact1.length<1)?"":("&nbsp;&nbsp;姓名："+json_obj[i].contact1+"<br>"))+
 						((json_obj[i].mobile1.length<1)?"":("&nbsp;&nbsp;手機："+json_obj[i].mobile1+"<br>"))+
@@ -76,12 +88,30 @@ function draw_supply(info){
 			$.each (json_obj, function (i) {
 				resultRunTime+=1;
 			});
+			
+			
 			$("#products2").dataTable().fnDestroy();
 			if(resultRunTime!=0){
 				$("#products2-contain").show();
 				$("#products2 tbody").html(result_table);
 				$("#products2").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});
+// 				$("#products2 tbody tr").css("line-height", "20px");
+				tooltip('btn_update');
+				tooltip('btn_delete');
+				
 // 				$("#products2").find("td").css("text-align", "center");
+// 				$("a.tool").mouseover(function(e){
+// 		            this.newTitle = this.title;
+// 		            this.title = "";
+// 		            var tooltip = "<div id='tooltip'>"+ this.newTitle +"<\/div>";
+// 		            $("body").append(tooltip);
+// 		            $("#tooltip").css({"top": (e.pageY+20) + "px","left": (e.pageX+10)  + "px"}).show("fast");
+// 		        }).mouseout(function(){
+// 		                this.title = this.newTitle;
+// 		                $("#tooltip").remove();
+// 		        }).mousemove(function(e){
+// 		                $("#tooltip").css({"top": (e.pageY+20) + "px","left": (e.pageX+10)  + "px"});
+// 		        });
 				$("#products2-contain").animate({"opacity":"0.01"},1);
 				$("#products2-contain").animate({"opacity":"1"},300);
 				warning_msg("");
@@ -440,22 +470,22 @@ function draw_supply(info){
 							<tr class="ui-widget-header">
 								<th style="min-width:60px">供應商名稱</th>
 								<th style="min-width:60px">供應商統編</th>
-								<th style="min-width:100px">供應商地址</th>
-								<th style="min-width:40px">第一連絡人</th>
+								<th style="min-width:100px;background-image: none !important;">供應商地址</th>
+								<th style="background-image: none !important;">第一連絡人</th>
 <!-- 								<th>連絡人手機</th> -->
 <!-- 								<th>連絡人電話</th> -->
 <!-- 								<th>連絡人分機</th> -->
 <!-- 								<th>連絡人email</th> -->
-								<th>第二連絡人</th>
+								<th style="background-image: none !important;">第二連絡人</th>
 <!-- 								<th>第二連絡人手機</th> -->
 <!-- 								<th>第二連絡人電話</th> -->
 <!-- 								<th>第二連絡人分機</th> -->
 <!-- 								<th>第二連絡人email</th> -->
-								<th>備註說明 </th>
-								<th>功能</th>
+								<th style="background-image: none !important;">備註說明 </th>
+								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody style="line-height:16px;">
 						</tbody>
 					</table>
 				</div>

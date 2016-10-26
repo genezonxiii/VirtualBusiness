@@ -1087,7 +1087,7 @@
 			<div class="form-wrap">
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">產品 ID 查詢</span>
+						<span class="block-label">自訂產品 ID 查詢</span>
 						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
 					</label>
 					<button class="btn btn-darkblue" id="searh_salereturn">查詢</button>
@@ -1210,8 +1210,8 @@
 <!-- 								<th>配送日</th> -->
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
-								<th>備註說明</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">備註說明</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -1288,8 +1288,8 @@
 <!-- 								<th>配送日</th> -->
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
-								<th>備註說明</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">備註說明</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>

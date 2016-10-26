@@ -78,6 +78,8 @@ function draw_membercondition(parameter){
 			         "language": {"url": "js/dataTables_zh-tw.txt"},
 			         "order": [2]
 				});
+				tooltip("btn_update");
+				tooltip("btn_delete");
 				$("#membercondition-table tr td").each(function(index){
 					$( this ).html(money($( this ).html())) ;
 				});
@@ -300,13 +302,13 @@ $(function() {
 				<table id="membercondition-table" class="result-table" style="display:none">
 					<thead>
 						<tr>
-							<th>級別</th>
+							<th style="background-image: none !important;">級別</th>
 							<th>入會累計期間</th>
 							<th>入會累計金額</th>
 							<th>續會累計期間</th>
 							<th>續會累計金額</th>
-							<th>備註</th>
-							<th>功能</th>
+							<th style="background-image: none !important;">備註</th>
+							<th style="background-image: none !important;">功能</th>
 						</tr>
 					</thead>
 					<tbody style="text-align:right;">

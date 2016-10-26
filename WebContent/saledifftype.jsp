@@ -20,7 +20,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="overflow-y:auto;">
+	<div class="content-wrap">
 		<div class='bdyplane' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -38,10 +38,10 @@ function draw_barchart(data,title){
 	
 	scale= 500 / (( maxdata * 21) / 20 );
 	var leftpad=260,toppad=80;
-	if(title.indexOf("!!!")<0){
-		scale= 600 / (( maxdata * 21) / 20 );
-		leftpad=160
-	}
+// 	if(title.indexOf("!!!")<0){
+// 		scale= 600 / (( maxdata * 21) / 20 );
+// 		leftpad=160
+// 	}
     var s = d3.select('#board').append('svg')
               .attr({
                 'width':800,
@@ -62,74 +62,116 @@ function draw_barchart(data,title){
                 .attr({
                   'id':'date'
                 });
+    var date2 = s.append('g')
+			    .attr({
+			      'id':'date2'
+			    });
 //長方形
     rect.selectAll('rect')
       .data(data)
       .enter()
       .append('rect')
       .attr({
-        'width':function(d){
-          return d.quantity * scale;
-        },
+        'width':0,
         'height':10,
-        'fill':function(d){
-          if(d.quantity>(maxdata * 4 / 5)){
-            return '#c00';
-          }else if(d.quantity>(maxdata * 3 / 5)&& d.quantity <=(maxdata * 4 / 5)){
-            return '#f90';
-          }else if(d.quantity>(maxdata * 2 / 5)&& d.quantity <=(maxdata * 3 / 5)){
-            return '#aa0';
-          }else if(d.quantity>(maxdata * 1 / 5)&& d.quantity <=(maxdata * 2 / 5)){
-            return '#ac0';
-          }else{
-            return '#6c0';
-          }
-        },
+        'fill': '#9d0',
         'x':leftpad,
         'y':function(d){
           return d.x*25+toppad;
+        }
+      })
+      .transition()
+      .duration(2000)
+      .attr({
+        'width':function(d){
+          return d.quantity * scale;
+        },
+        'fill':function(d){
+          if(d.quantity>(maxdata * 4 / 7)){
+            return '#c00';
+          }else if(d.quantity>(maxdata * 3 / 7)&& d.quantity <=(maxdata * 4 / 7)){
+            return '#f90';
+          }else if(d.quantity>(maxdata * 2 / 7)&& d.quantity <=(maxdata * 3 / 7)){
+            return '#ec0';
+          }else if(d.quantity>(maxdata * 1 / 7)&& d.quantity <=(maxdata * 2 / 7)){
+            return '#9d0';
+          }else{
+            return '#ae0';
+          }
         }
       });
 //title
 	s.append('g').selectAll('text')
 	  .data("t").enter().append('text')
 	  .attr({'fill':'#222','x':180 ,'y':50 }).text(title)
-	  .style({'font-size':'32px','font-family':'DFKai-sb'});
+	  .style({'font-size':'32px','font-family':'Microsoft JhengHei'});
 //數量
     num.selectAll('text')
       .data(data)
       .enter()
       .append('text')
+      .style({
+        'font-size':'12px'
+      })
       .attr({
         'fill':'#000',
-        'x':function(d){
-          return d.quantity*scale+leftpad+10;
-        },
+        'x':leftpad+10,
         'y':function(d){
           return d.x * 25 + toppad+10;
         }
-      }).text(function(d){
-        return d.quantity;
-      }).style({
-        'font-size':'12px'
-      });
-//商品名字
+      })
+      .transition()
+      .duration(2000)
+      .attr({
+        'x':function(d){
+          return d.quantity*scale+leftpad+10;
+        }
+      }).tween('number',function(d){
+          var i = d3.interpolateRound(0, d.quantity);
+          return function(t) {
+          this.textContent = i(t);
+        };
+     });
+  //商品前面的數字加星號
     date.selectAll('text')
       .data(data)
       .enter()
       .append('text')
       .attr({
-        'fill':'#000',
+   	  	'fill':function(d){
+         	return (d.x<3?"#FF0000":"#000")
+         },
         'text-anchor': 'end',
-        'x':leftpad-10,
+        'x':leftpad-210,
         'y':function(d){
           return d.x * 25 + toppad+10;
         }
       }).text(function(d){
-        return (d.name.length>13?(grows_up(d.name.substring(0,12))+"..."):grows_up(d.name));
+        return (d.x<3?"★ ":"")+(d.x+1)+". ";
       }).style({
-        'font-size':'16px'
+        'font-size':'16px',
       });
+  //商品名字
+    date2.selectAll('text')
+    .data(data)
+    .enter()
+    .append('text')
+    .attr({
+ 	  	'fill':function(d){
+       	return (d.x<3?"#FF0000":"#000")
+       },
+      'text-anchor': 'end',
+      'textLength':"190",
+      'lengthAdjust':'spacing',
+      'x':leftpad-10,
+      'y':function(d){
+        return d.x * 25 + toppad+10;
+      }
+    }).text(function(d){
+      return (d.name.length>13?(grows_up(d.name.substring(0,12))+"..."):grows_up(d.name));
+    }).style({
+      'font-size':'16px',
+    });
         
 }
 	$(function() {

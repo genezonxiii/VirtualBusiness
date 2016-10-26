@@ -150,6 +150,7 @@ function draw_chart(m_h,m_w,data){
       	}
  };
 	$(function() {
+		//draw_chart(400,400,);
 		$(".bdyplane").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
@@ -243,6 +244,7 @@ function draw_chart(m_h,m_w,data){
 		</div>
 	</div>
 <div class="validateTips" align="center"> </div>
+<div id="chart" align="center" style="opacity:0"></div>
 <div id="chart-0" align="center" style="opacity:0"></div>
 <div id="chart-1" align="center" style="opacity:0"></div>
 <div id="chart-2" align="center" style="opacity:0"></div>

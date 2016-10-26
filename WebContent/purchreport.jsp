@@ -110,6 +110,7 @@
 									$("#purchase_date_err_mes").remove();
 	                			}
 								$("#purchases_contain_row").show();
+								$("#purchases").dataTable().fnDestroy();
 								$("#purchases tbody").html(result_table);
 								draw_table("purchases",'進貨報表');
 								$("#purchases").find("td").css("text-align", "center");

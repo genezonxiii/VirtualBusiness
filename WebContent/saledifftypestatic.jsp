@@ -23,7 +23,7 @@ canvas { background-color:#E0E8F0; }
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="overflow-y:auto;">
+	<div class="content-wrap">
 		<div class='bdyplane' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -37,6 +37,7 @@ function draw_piechart(data,list){
 // 			alert(i+"&&"+k+"&&"+item);
 // 		});
 // 	}
+
 	var i,j;
 	$('.visualize').remove();
 	for(m=0;m<data.length;m++){
@@ -64,7 +65,7 @@ function draw_piechart(data,list){
 			'type':'pie',
 			'pieMargin':'85','pieLabelPos':'outside',
 			'width':'600','height':'400',
-			'appendTitle':'true','title':data[0]["layer"]+'平台 各類別銷售比例統計圖',
+			'appendTitle':'true','title':data[0]["layer"]+'平台　'+((data[0]["ten"])?'前十大暢銷':'各')+'類別銷售比例統計圖',
 			'appendKey':'true',
 			'colors':['#e9e744','#666699','#92d5ea','#ee8310','#8d10ee','#5a3b16','#26a4ed','#f45a90','#be1e2d','#FFFF2d'],
 			'textColors':'','parseDirection':'y'
@@ -199,8 +200,12 @@ function draw_piechart(data,list){
 					}
 // 					var tmp_month=json_obj.entrance[0];
 					$.each(json_obj,function(i, item) {
-						list[i]=item.product_name;
-						chart_obj[json_obj[i].product_name]=json_obj[i].quantity;
+						if(i<10){
+							list[i]=item.product_name;
+							chart_obj[json_obj[i].product_name]=json_obj[i].quantity;
+						}else{
+							chart_obj["ten"]=true;
+						}
 					});
 // 					json_obj[i].product_name;
 // 					json_obj[i].quantity;

@@ -108,6 +108,7 @@ function date_format(str) {
 								$("#products").dataTable().fnDestroy();
 								if(resultRunTime!=0){
 									$("#products-contain").show();
+									$("#products").dataTable().fnDestroy();
 									$("#products tbody").html(result_table);
 									draw_table("products",'退貨報表');
 									$(".validateTips").text("");

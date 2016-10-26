@@ -684,8 +684,8 @@
 								<th>實付帳款金額</th>
 								<th>實付帳款產生日期</th>
 								<th>供應商名稱</th>
-								<th>備註</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">備註</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -746,8 +746,8 @@
 								<th>實付帳款金額</th>
 								<th>實付帳款產生日期</th>
 								<th>供應商名稱</th>
-								<th>備註</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">備註</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -95,6 +95,7 @@
 					$("#sales").dataTable().fnDestroy();
 					if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 						$("#sales-contain").show();
+						$("#sales").dataTable().fnDestroy();
 						$("#sales tbody").html(result_table);
 						draw_table("sales","產品報表");
 						//$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});

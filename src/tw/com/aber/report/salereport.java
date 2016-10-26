@@ -51,6 +51,7 @@ public class salereport extends HttpServlet {
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		String time1 = request.getParameter("time1");
 		time1=(time1.length()<3)?"1999/12/31":time1;
+		//System.out.println(time1);
 		String time2 = request.getParameter("time2");
 		time2=(time2.length()<3)?"2300/12/31":time2;
 		if("today".equals(action)){
@@ -384,6 +385,7 @@ public class salereport extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
+			//System.out.println(group_id+" "+from_date+" "+till_date);
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);

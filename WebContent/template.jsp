@@ -17,7 +17,7 @@ function trans(str){
 	$('.sidenav > ul > li:hover ul').css('opacity','0');
 	$('.bdyplane').animate({opacity: '0'},300,function() {
 		location.replace(str);
-		$('.bdyplane').animate({opacity: '1'},3000);
+		$('.bdyplane').animate({opacity: '1'},10000);
 // 		$('.sidenav > ul > li:hover ul').animate({opacity: '1'});
 	});
 	
@@ -207,6 +207,22 @@ function who(){
 		$(".sidenav > ul > li:nth-child(5)").addClass("active");
 		return "線上學院";
 		break;
+	case "disscussion.jsp":
+		$(".sidenav > ul > li:nth-child(5)").addClass("active");
+		return "留言版";
+		break;
+	case "disscussionsubject.jsp":
+		$(".sidenav > ul > li:nth-child(5)").addClass("active");
+		return "留言版主題列表";
+		break;
+	case "chat.jsp":
+		$(".sidenav > ul > li:nth-child(5)").addClass("active");
+		return "討論區";
+		break;
+	case "chatsubject.jsp":
+		$(".sidenav > ul > li:nth-child(5)").addClass("active");
+		return "討論區主題列表";
+		break;
 	case "function.jsp":
 		$(".sidenav > ul > li:nth-child(5)").addClass("active");
 		return "真●後臺系統";
@@ -215,12 +231,15 @@ function who(){
 		window.location.href = './welcome.jsp';
 		return "　　";
 		break;
+	case "group_tmp.jsp":
+		return "　　";
+		break;
 	case "welcome.jsp":
 		return "首頁";
 		break;
 		
 	default:
-		window.location.href = './404.jsp';
+		window.location.href = './404.html';
 		return "";
 		break;
 	}
@@ -247,7 +266,7 @@ function who(){
 				</ul>
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
-				<ul style="top: -146px;">
+				<ul style="top: -100px;">
 					<li><a href="#" onclick="trans('purchase.jsp');">進貨管理</a></li>
 					<li><a href="#" onclick="trans('purchreturn.jsp');">進貨退回管理</a></li>
 					<li><a href="#" onclick="trans('sale.jsp');">銷貨管理</a></li>
@@ -259,15 +278,17 @@ function who(){
 					<li><a href="#" onclick="trans('customer.jsp');">客戶管理</a></li>
 					<li><a href="#" onclick="trans('producttype.jsp');">商品類型管理</a></li>
 					<li><a href="#" onclick="trans('productunit.jsp');">商品單位管理</a></li>
-					<li><a href="#" onclick="trans('group.jsp');">公司管理</a></li>
-					<li><a href="#" onclick="trans('user.jsp');">使用者管理</a></li>
 					<li><a href="#" onclick="trans('accreceive.jsp');">應收帳款管理</a></li>
 					<li><a href="#" onclick="trans('accpay.jsp');">應付帳款管理</a></li>
+				</ul>
+				<ul style="top: -100px;left: 321px;height:520px;">
+					<li><a href="#" onclick="trans('group.jsp');">公司管理</a></li>
+					<li><a href="#" onclick="trans('user.jsp');">使用者管理</a></li>
 					<li><a href="#" onclick="trans('changepassword.jsp');">使用者密碼管理</a></li>
 					<li><a href="#" onclick="trans('invoicetrack.jsp');">發票字軌管理</a></li>
 					<li><a href="#" onclick="trans('invoice.jsp');">開立發票</a></li>
-<!-- 					<li><a href="#" onclick="trans('exchange.jsp');">匯率轉換管理</a></li> -->
-<!-- 					<li><a href="#" onclick="trans('membercondition.jsp');">會員分級設定</a></li> -->
+					<li><a href="#" onclick="trans('exchange.jsp');">匯率轉換管理</a></li>
+					<li><a href="#" onclick="trans('membercondition.jsp');">會員分級設定</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
@@ -300,15 +321,14 @@ function who(){
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
 				<ul>
-					<li><a href="#">Coming Soon</a></li>
-					<li class="hide_everywhere"><a href="invoice.jsp">開立發票</a></li>
-					<li class="hide_everywhere"><a href="invoicetrack.jsp">發票字軌管理</a></li>
+<!-- 					<li><a href="#">Coming Soon</a></li> -->
+					<li><a href="#" onclick="trans('onlinecourse.jsp');">線上課程</a></li>
+					<li><a href="#" onclick="trans('disscussionsubject.jsp');">課程留言版</a></li>
+					<li><a href="#" onclick="trans('chatsubject.jsp');">課程討論區</a></li>
 					<li class="hide_everywhere"><a href="msgboard.html">留言版</a></li>
-					<li class="hide_everywhere"><a href="membercondition.jsp">會員分級設定</a></li>
 					<li class="hide_everywhere"><a href="distributereport.jsp">配送報表</a></li>
 					<li class="hide_everywhere"><a href="onlinecourse.jsp">線上學院</a></li>
-					<li class="hide_everywhere"><a href="exchange.jsp">匯率轉換管理</a></li>
-					<li class="hide_everywhere"><a href="function.jsp">真❤後臺系統</a></li>
+					<li class="hide_everywhere"><a href="function.jsp#func">真❤後臺系統</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -330,17 +350,19 @@ function who(){
 <script src="vendor/js/jquery-ui.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="js/scripts.js"></script>
+
 <script type="text/javascript">
+
 $(function() {
 	$('body').keypress(function(e){//ctrl + alt + b
-	    if(e.shiftKey){
+	    if(e.shiftKey && (location.href.indexOf("abers1.eastasia.cloudapp.azure.com")>-1 ||(location.href.indexOf("164")>-1||location.href.indexOf("local")>-1))){
 	    	if(e.which == 41){
 	    		$(".hide_everywhere").removeClass("hide_everywhere");
 	    		$(".sidenav > ul > li:nth-child(5) ul").css("top", "-200px");
 	    	}
 	    }
 	});
-	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","7px 20px");
+// 	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","7px 20px");
 	$(".sidenav > ul > li:nth-child(3)").find("a").css("padding","8px 20px");
 	$("#logout").click(function(e) {
 		$.ajax({

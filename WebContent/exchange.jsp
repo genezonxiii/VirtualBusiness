@@ -62,6 +62,8 @@ function draw_exchange(parameter){
 					$("#products2 tbody").html(result_table);
 					$("#products2").dataTable({
 						"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+					tooltip('btn_update');
+					tooltip('btn_delete');
 					$("#products2").find("td").css({"text-align":"center","height":"32px"});
 					$("#products2_contain_row").animate({"opacity":"0.01"},1);
 					$("#products2_contain_row").animate({"opacity":"1"},300);
@@ -267,7 +269,7 @@ function draw_exchange(parameter){
 							<tr>
 								<th>幣別</th>
 								<th>匯率</th>
-								<th>功能</th>
+								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>
 						<tbody>

@@ -1,0 +1,93 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>tooltip</title>
+<!--   引入jQuery -->
+<!--  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"type="text/javascript"></script> -->
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<style type="text/css">
+body{
+        margin:0;
+        padding:40px;
+        background:#fff;
+        color:#555;
+        line-height:180%;
+}
+p{
+        clear:both;
+        margin:0;
+        padding:.5em 0;
+}
+/* tooltip */
+#tooltip{
+        position:absolute;
+        border:1px solid #333;
+        background:#f7f5d1;
+        padding:1px;
+        color:#333;
+        display:none;
+}
+</style>
+<script type="text/javascript">
+
+$(function(){
+        /*設定tooltip的div區塊和滑鼠指標之間的距離,x軸距及y軸距,
+          避免tooltip的div和滑鼠指標太接近*/
+          $("#aaa").after("<a class='tooltip' title='1234'>關係人A</a>");
+        var x = 10;
+        var y = 20;
+
+        /*指定TagName為a且其CalssName=tooltip的Tag,
+          當滑鼠移到其上面時進行函式動作*/
+        $("a.tooltip").mouseover(function(e){
+
+            /*將此Tag的title的值給予到newTitle,接著將title的值空白,
+                避免滑鼠移到Tag時,同時出現tooltip及title的效果*/
+            this.newTitle = this.title;
+            this.title = "";
+
+            /*建立tooltip用來儲存你要顯示的內容,而內容就是由div區塊所組成;
+                這範例是用文字來作,你要的圖片效果,只要在div中加入<img src>*/
+            var tooltip = "<div id='tooltip'>"+ this.newTitle +"<\/div>";
+
+            /*利用.append()把這段div加到body,而條件就是:
+                當滑鼠指標移動你指定的Tag的範圍時,才會加入*/
+            $("body").append(tooltip);
+
+                /*利用.css()設定tooltip的css,其中e.pageY及e.pageX就是滑鼠指標
+                  的座標,避免tooltip和滑鼠指標太靠近,後面加上前面設定的x及y*/
+                $("#tooltip")
+                        .css({
+                                "top": (e.pageY+y) + "px",
+                                "left": (e.pageX+x)  + "px"
+
+                        /*利用.show()讓tooltip這段div區塊顯示*/
+                        }).show("fast");
+
+        /*當滑鼠移開時,將newTitle的值還給title,
+            並且利用.remove()將tooltip這段div區塊移除*/
+        }).mouseout(function(){
+                this.title = this.newTitle;
+                $("#tooltip").remove();
+
+        /*當滑鼠指標在指定的Tag範圍內移動時,
+          tooltip的div區塊也會隨著滑鼠指標作移動*/
+        }).mousemove(function(e){
+                $("#tooltip")
+                        .css({
+                                "top": (e.pageY+y) + "px",
+                                "left": (e.pageX+x)  + "px"
+                        });
+        });
+})
+
+</script>
+
+</head>
+
+<body>
+<p><a href="#" class="tooltip" title="這是提示1.">提示1.</a></p>
+<p><a href="#" class="tooltip" id='aaa' title="這是提示2.">提示2.</a></p>
+</body>
+</html>

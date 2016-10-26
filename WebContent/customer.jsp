@@ -45,7 +45,7 @@ function draw_customer(parameter){
 		url : "customer.do",
 		data :parameter,
 		success : function(result) {
-			console.log(result);
+// 			console.log(result);
 			if(result.indexOf('Error')>-1){warning_msg("連現異常,請洽系統管理員。");}
 			var json_obj = $.parseJSON(result);
 			//判斷查詢結果
@@ -108,7 +108,7 @@ function draw_customer(parameter){
 				$("#customer-contain").show();
 				$("#customer tbody").html(result_table);
 				$("#customer").find("td").css("text-align", "center");
-				
+				$("#customer tbody td:nth-child(2)").css("text-align", "left");
 // 				if(first==0){$("#customer").dataTable().fnDraw(true);}
 // 				else{
 // 					first=1;
@@ -118,6 +118,9 @@ function draw_customer(parameter){
 // 					"bDestroy": true,
 // 					"order": [],
 					"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "<font size=3>---查無結果---</font>"}});
+				tooltip('btn_update');
+				tooltip('btn_delete');
+				
 // 				}
 				$("#customer-contain").animate({"opacity":"0.01"},1);
 				$("#customer-contain").animate({"opacity":"1"},300);
@@ -410,13 +413,13 @@ function draw_customer(parameter){
 							<tr>
 								<th>客戶姓名</th>
 								<th>收貨地址</th>
-								<th>電話</th>
-								<th>手機</th>
-								<th>Email</th>
-								<th>郵政編號</th>
-								<th>客戶等級</th>
-								<th>備註</th>
-								<th>功能</th>
+								<th style="background-image: none !important;">電話</th>
+								<th style="background-image: none !important;">手機</th>
+								<th style="background-image: none !important;">Email</th>
+								<th style="background-image: none !important;">郵政編號</th>
+								<th style="background-image: none !important;">客戶等級</th>
+								<th style="background-image: none !important;">備註</th>
+								<th style="background-image: none !important;">功能</th>
 							</tr>	
 						</thead>
 						<tbody>

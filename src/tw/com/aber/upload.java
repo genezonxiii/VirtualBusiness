@@ -13,6 +13,7 @@ import javax.servlet.http.*;
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.disk.*;
 import org.apache.commons.fileupload.servlet.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.*;
 import org.apache.commons.codec.binary.Base64;
 
@@ -281,7 +282,10 @@ public class upload  extends HttpServlet {
 			ret="Error of call webservice:"+ret; 
 		}
 		try{
-			String content=method.getResponseBodyAsString();
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
+			String content=ret=writer.toString();
+			//String content=method.getResponseBodyAsString();
 			if("success".compareTo(content)!=0){
 				if(content.length()>100){
 					content=content.substring(0,90)+"....";

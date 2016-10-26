@@ -2,6 +2,8 @@ package tw.com.aber.login.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -35,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import com.google.gson.Gson;
 
 public class login extends HttpServlet {
@@ -52,7 +56,6 @@ public class login extends HttpServlet {
 			response.getWriter().write("{\"message\":\"connect_error\"}");
 			return;
 		}
-		
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
@@ -104,6 +107,20 @@ public class login extends HttpServlet {
 						session.setAttribute("user_id", list.get(0).getUser_id());
 						session.setAttribute("group_id", list.get(0).getGroup_id());
 						session.setAttribute("user_name", list.get(0).getUser_name());
+						//log.txt
+						try{
+							String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+							String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  "+list.get(0).getUser_name()+" login.\r\n";
+							FileWriter fw;
+							try{
+								fw = new FileWriter(record_log,true);
+							}catch(FileNotFoundException e){
+								fw = new FileWriter(record_log,false);
+							}
+							fw.write(my_msg);
+							fw.close();
+						}catch(Exception e){System.out.println("Error: "+e.toString());}
+						//log.txt
 						message = new LoginVO();
 						message.setMessage("success");
 					} else {

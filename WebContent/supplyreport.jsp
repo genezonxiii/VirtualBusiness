@@ -85,6 +85,7 @@
 						if(resultRunTime!=0){
 							
 							$("#products2-contain").show();
+							$("#products2").dataTable().fnDestroy();
 							$("#products2 tbody").html(result_table);
 							draw_table("products2","供應商報表");
 							$("#products2").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });

@@ -107,7 +107,7 @@ public class HandleDrawValidateCode extends HttpServlet {
 		graphics.setFont(new Font("宋体", Font.BOLD, 20));
 
 		// 数字和字母的组合
-		String baseNumLetter = "123456789";//"123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+		String baseNumLetter = "12345689";//"123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
 		StringBuffer sBuffer = new StringBuffer();
 
 		int x = 5; // 旋转原点的 x 坐标

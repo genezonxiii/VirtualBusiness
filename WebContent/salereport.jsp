@@ -56,6 +56,8 @@ function date_format(str) {
 
 var parameter="searh";
 function sea() {
+	console.log($('#datepicker1').val());
+	//alert($('#datepicker1').val().replace("-","/").replace("-","/"));
 	$.ajax({
 		type : "POST",
 		url : "salereport.do",
@@ -79,6 +81,7 @@ function sea() {
 			});
 			if(json_obj.length!=0){
 				$("#products-contain").show();
+				$("#products").dataTable().fnDestroy();
 				$("#products tbody").html(result_table);
 				//alert("111");
 // 				$("#products td").each(function(index) {

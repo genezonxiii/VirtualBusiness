@@ -30,6 +30,7 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
+<script type="text/javascript" src="js/scripts.js"></script>
 <script>
 function draw_purchase(parameter){
 	$("#purchases_contain_row").css({"opacity":"0"});
@@ -84,7 +85,7 @@ function draw_purchase(parameter){
 							+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 							+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 							+ (isIE()?"<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>":"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>")
-							+ "	<div class='table-function-list'>"
+							+ "	<div class='table-function-list' >"
 							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
 							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 							+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
@@ -101,6 +102,10 @@ function draw_purchase(parameter){
 						  autoWidth: false,
 						  scrollX:  true,
 				          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+					tooltip('btn_update');
+					tooltip('btn_delete');
+					tooltip('btn_detail');
+					tooltip('btn_create');
 					$("#purchases_contain_row").show();
 					$("#purchases_contain_row").animate({"opacity":"0.01"},1);
 					$("#purchases_contain_row").animate({"opacity":"1"},300);
@@ -186,6 +191,8 @@ function draw_purchase_detail(parameter){
 					  autoWidth: false,
 					  scrollX:  true,
 			          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+				tooltip('btn_update');
+				tooltip('btn_delete');
 				$("#purchase-detail-table").find("td").css("text-align", "center");
 				$("#purchase_detail_contain_row").show();
 				$("#purchase_detail_contain_row").animate({"opacity":"0.01"},1);
@@ -1229,11 +1236,11 @@ function draw_purchase_detail(parameter){
 							<tr>
 								<th>進貨單號</th>
 								<th>進貨日期</th>
-								<th>進貨發票號碼</th>
-								<th>發票樣式</th>
+								<th style="background-image: none !important;">進貨發票號碼</th>
+								<th style="background-image: none !important;">發票樣式</th>
 								<th>進貨發票金額</th>
-								<th>備註說明</th>
-								<th style="min-width:75px;">功能</th>
+								<th style="background-image: none !important;">備註說明</th>
+								<th style="min-width:75px;background-image: none !important;">功能</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -1249,12 +1256,12 @@ function draw_purchase_detail(parameter){
 					<table id="purchase-detail-table" class="ui-widget ui-widget-content result-table">
 						<thead>
 							<tr>
-								<th>自訂產品ID</th>
-								<th>產品名稱</th>
+								<th style="background-image: none !important;">自訂產品ID</th>
+								<th style="background-image: none !important;">產品名稱</th>
 								<th>進貨數量</th>
 								<th>進貨單價</th>
-								<th>備註說明 </th>
-								<th>功能</th>
+								<th style="background-image: none !important;">備註說明 </th>
+								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>
 						<tbody>

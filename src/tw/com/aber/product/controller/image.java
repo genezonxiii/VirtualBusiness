@@ -32,19 +32,19 @@ public class image extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		try{
-			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm image-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
-			FileWriter fw;
-			try{
-				fw = new FileWriter(record_log,true);
-			}catch(FileNotFoundException e){
-				fw = new FileWriter(record_log,false);
-			}
-			fw.write(my_msg);
-			fw.close();
-		}catch(Exception e){System.out.println("Error: "+e.toString());}
+//		try{
+//			String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
+//			String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
+//			String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  I'm image-java with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
+//			FileWriter fw;
+//			try{
+//				fw = new FileWriter(record_log,true);
+//			}catch(FileNotFoundException e){
+//				fw = new FileWriter(record_log,false);
+//			}
+//			fw.write(my_msg);
+//			fw.close();
+//		}catch(Exception e){System.out.println("Error: "+e.toString());}
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		response.setContentType("image/jpeg");
 

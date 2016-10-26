@@ -126,8 +126,16 @@ table.form-table {
 						$("#sales-contain").show();
 						$("#sales tbody").html(result_table);
 						$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
+						tooltip('btn_update');
+						tooltip('btn_delete');
 						$("#sales").find("td").css("text-align","center");
 						$("#sales").find("th").css("text-align","center");
+						$("#sales tbody td:nth-child(2)").css("text-align", "left");
+						$("#sales tbody td:nth-child(3)").css("text-align", "left");
+						$("#sales tbody td:nth-child(4)").css("text-align", "left");
+						$("#sales tbody td:nth-child(5)").css("text-align", "left");
+						$("#sales tbody td:nth-child(11)").css("text-align", "left");
+						$("#sale tbody tr").css("line-height", "20px");
 						$("#sales-contain").animate({"opacity":"0.01"},1);
 						$("#sales-contain").animate({"opacity":"1"},300);
 						warning_msg("");
@@ -518,20 +526,20 @@ table.form-table {
 										
 										if (json_obj[i].photo != '') {
 											$("#product-photo").attr("src", "./image.do?picname=" + json_obj[i].photo);
-											$("#product-photo").attr("width","150");
+											$("#product-photo").attr("max-width","150");
 											$("#product-photo").attr("alt",json_obj[i].photo);
 										}else{
 											$("#product-photo").attr("src","");
-											$("#product-photo").attr("width","100");
+											$("#product-photo").attr("max-width","100");
 											$("#product-photo").attr("alt","無");
 										}
 										if (json_obj[i].photo1 != '') {
 											$("#product-photo1").attr("src", "./image.do?picname=" + json_obj[i].photo1);
-											$("#product-photo1").attr("width","150");
+											$("#product-photo1").attr("max-width","150");
 											$("#product-photo1").attr("alt",json_obj[i].photo1);
 										}else{
 											$("#product-photo1").attr("src","");
-											$("#product-photo1").attr("width","100");
+											$("#product-photo1").attr("max-width","100");
 											$("#product-photo1").attr("alt","無");
 										}
 									}
@@ -775,7 +783,8 @@ table.form-table {
 	            .addClass('btn btn-primary')
 	            .prop('disabled', true)
 	            .text('處理中...')
-	            .on('click', function () {
+	            .on('click', function (e) {
+	            	e.preventDefault();
 	            	var $this = $(this),
 	                    data = $this.data();
 	                $this
@@ -1198,9 +1207,9 @@ table.form-table {
 							<td>折合台幣成本：</td><td><a id='update_exchange_cost'>NT＄0 x 1 = NT$0</a><input type="hidden" name="cost" /></td>
 							<td>折合台幣售價：</td><td><a id='update_exchange_price'>NT＄0 x 1 = NT$0</a><input type="hidden" name="price" /></td>
 						</tr><tr>
+							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
 							<td>條碼：</td><td><input type="text" id="edit_barcode" name="barcode"/></td><td><input id="same2" type="checkbox" style="position:static;" 
 							onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID</td>
-							<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
 						</tr><tr>
 							<td>產品說明：</td><td><input type="text" name="description"/></td>
 						</tr>
@@ -1330,25 +1339,25 @@ table.form-table {
 			<!-- 第一列 -->
 			<div class="row search-result-wrap" align="center">
 				<div id="sales-contain" class="ui-widget" style="display:none;">
-					<table id="sales" class="result-table">
+					<table id="sales" class="result-table" >
 						<thead>
 							<tr>
 								<th>自訂產品ID</th>
 								<th style="min-width:80px;">產品名稱</th>
 								<th>供應商名稱</th>
-								<th>產品類別</th>
-								<th>產品單位</th>
+								<th style="min-width:40px;">類別</th>
+								<th style="min-width:40px;">單位</th>
 								<th style="min-width:70px;">成本</th>
 								<th style="min-width:70px;">售價</th>
 								<th>安全庫存</th>
-								<th style="max-width:100px;">產品圖片1</th>
-								<th style="max-width:100px;">產品圖片2</th>
-								<th>產品說明</th>
+								<th style="max-width:100px;background-image: none !important;">圖片1</th>
+								<th style="max-width:100px;background-image: none !important;">圖片2</th>
+								<th style="background-image: none !important;">產品說明</th>
 								<th>條碼</th>
-								<th>功能</th>
+								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody style="line-height:16px;">
 						</tbody>
 					</table>
 				</div>

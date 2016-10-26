@@ -150,16 +150,16 @@ function startYRotate()
 	}
 }
 function setV(){
-	//alert("hello".indexOf('he')!=-1);
+
 	if($("#file").val()<1){alert("請選擇檔案");return false;}
 	var i=0;
-	//alert("跳轉upload.do前");
+
 	while(!document.getElementsByName("ec-radio-group")[i].checked){
 		i++;
 		if(i==20){alert("請選擇平台");return false;}
 	}
-	//console.log("為何進來了?");
-	document.getElementById("form1").action+="?vender="+document.getElementsByName("ec-radio-group")[i].value;
+	
+	document.getElementById("form1").action="upload.do?vender="+document.getElementsByName("ec-radio-group")[i].value;
 	return true;
 };
 </script>

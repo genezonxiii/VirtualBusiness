@@ -50,6 +50,7 @@ function draw_invoice(parameter){
 		start="#invoice_true_start";
 		end="#invoice_true_end";
 	}
+// 	alert(!(parameter["async"]==false));
 	$(contain).hide();
 	$(contain).css({"opacity":"0"});
 	if(parameter["invoice"]==true){warning_msg_last("---讀取中請稍候---");}else{warning_msg("---讀取中請稍候---");}
@@ -64,6 +65,7 @@ function draw_invoice(parameter){
 			type : "POST",
 			url : "invoice.do",
 			data : parameter,
+			async : (!(parameter["async"]==false)),
 			success : function(result) {
 				var json_obj = $.parseJSON(result);
 				var len=json_obj.length;
@@ -316,17 +318,19 @@ function draw_invoice(parameter){
 						action : "search_invoice_false",
 						invoice_false_start: $("#invoice_false_start").val(),
 						invoice_false_end: $("#invoice_false_end").val(),
-						invoice: false
+						invoice : false,
+						async : false
 					});
 // 					sleep2(3000);
-					sleep(1500).then(() => {
+// 					sleep(1500).then(() => {
 						draw_invoice({
 							action : "search_invoice_true",
 							invoice_true_start: $("#invoice_true_start").val(),
 							invoice_true_end: $("#invoice_true_end").val(),
-							invoice: true
+							invoice: true,
+							async : true
 						});
-					});
+// 					});
 					//alert('顯示今天下面');//顯示今天下面
 					$(this).dialog("close");
 				},"不作廢發票" : function() {
@@ -345,6 +349,17 @@ function draw_invoice(parameter){
 			$(".input-field-wrap").slideToggle("slow");
 			$(".downdown").slideToggle();
 		});
+		$.ajax({
+			type : "POST",
+			url : "invoice.do",
+			data : {
+				action : "get_path"
+			},
+			success : function(result) {
+				$("#no_path").html(result);	    						
+			}
+		});
+		
 	});
 	</script>
 <!-- 		<div class="datalistWrap" > -->
@@ -371,8 +386,9 @@ function draw_invoice(parameter){
 			</div><!-- /.input-field-wrap -->
 			<!-- 第二列 -->
 			<div class=" search-result-wrap" style="height:457px;">
-			
+				
 				<div id="invoice_false_table_contain" class="result-table-wrap" style="display:none;">
+					<div id='no_path' align=center></div>
 					<table id="invoice_false_table" class="result-table">
 						<thead>
 							<tr>
@@ -384,7 +400,7 @@ function draw_invoice(parameter){
 								<th>發票日期</th>
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
-								<th><div><input type='checkbox' style="position:static;" onclick='$(".false_checkbox").attr("checked",$(this).prop("checked"));'></input></div>勾選</th>
+								<th style="background-image: none !important;"><div><input type='checkbox' style="position:static;" onclick='$(".false_checkbox").attr("checked",$(this).prop("checked"));'></input></div>勾選</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -429,7 +445,7 @@ function draw_invoice(parameter){
 								<th>發票日期</th>
 								<th>銷貨/出貨日期</th>
 								<th>銷售平台</th>
-								<th><div><input type='checkbox' style="position:static;" onclick='$(".true_checkbox").attr("checked",$(this).prop("checked"));'></input></div>勾選</th>
+								<th style="background-image: none !important;"><div><input type='checkbox' style="position:static;" onclick='$(".true_checkbox").attr("checked",$(this).prop("checked"));'></input></div>勾選</th>
 							</tr>
 						</thead>
 						<tbody>

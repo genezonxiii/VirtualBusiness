@@ -179,6 +179,7 @@
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#account_amount_date_contain").show();
+							$("#account_amount_date_table").dataTable().fnDestroy();
 							$("#account_amount_date_table tbody").html(result_table);
 							draw_table("account_amount_date_table","應收未收報表");
 							$("#account_amount_date_table").find("td").css("text-align","center");
@@ -283,6 +284,7 @@
 						}
 						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 							$("#account_receive_date_contain").show();
+							$("#account_receive_date_table").dataTable().fnDestroy();
 							$("#account_receive_date_table tbody").html(result_table);
 							draw_table("account_receive_date_table","應收已收報表");
 							$("#account_receive_date_table").find("td").css("text-align","center");
@@ -363,11 +365,11 @@
 							<tr class="">
 								<th>應收帳款金額</th>
 								<th>應收帳款產生日期</th>
-								<th>實收帳款金額</th>
-								<th>實收帳款產生日期</th>
+								<th style="background-image: none !important;">實收帳款金額</th>
+								<th style="background-image: none !important;">實收帳款產生日期</th>
 								<th>交易平台</th>
 								<th>訂單號</th>
-								<th>備註</th>
+								<th style="background-image: none !important;">備註</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -408,7 +410,7 @@
 								<th>實收帳款產生日期</th>
 								<th>交易平台</th>
 								<th>訂單號</th>
-								<th>備註</th>
+								<th style="background-image: none !important;">備註</th>
 							</tr>
 						</thead>
 						<tbody>

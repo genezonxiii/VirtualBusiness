@@ -75,7 +75,6 @@ section {
 						success : function(result) {
 							//alert(result);
 							if(result=="success"){
-								alert("執行成功");
 								warning_msg("執行成功");
 							}else{
 								warning_msg("執行失敗");
@@ -100,7 +99,7 @@ section {
 		<div class="search-result-wrap">
 			
 			<section>
-				<h3 class="ui-list-title">設定1</h3>
+				<h3 class="ui-list-title">顯示設定</h3>
 				<div class="form-wrap">
 					<div class="form-row">
 						<input id="checkbox-1" type="checkbox" checked>
@@ -130,13 +129,13 @@ section {
 					<button>畫面優先</button>
 				</div>
 			</section>
-			<section>
-				<h3 class="ui-list-title">內部功能</h3>
+			<section id="func" style="padding-top:10px;">
+				<h3 class="ui-list-title" >內部功能</h3>
 				<div class="form-row">
 					<a href="#" class="btn btn-primary" id="customer_class_now">O立即執行會員分級</a><br><br>
 					<a href="#" class="btn btn-exec" id="default_primary_data">O產生預設基礎資料<br>(含 unit type 供應商 )</a><br><br>
 					<a href="#" class="btn btn-alert" id="default_senior_data">O產生進階預設資料<br>(含customer product)</a>&nbsp;<input type="text" placeholder='增加會員數' id="default_senior_data_n"><br><br>
-					<a href="#" class="btn btn-darkblue" id="random_product_value">O匹配亂數基礎資料<br>(對現有product 隨機產生 unit type 供應商 圖片2)</a><br><br>
+					<a href="#" class="btn btn-darkblue" id="random_product_value">O匹配亂數基礎資料<br>(對現有product 隨機產生 unit type 供應商 圖片1)</a><br><br>
 					<a href="#" class="btn btn-green" id="random_sale">O亂數產生訂單</a>&nbsp;<input type="text" placeholder='增加訂單筆數' id="random_sale_n">&nbsp;<input type="text" placeholder='月份' id="month">&nbsp;<input type="text" placeholder='平台' id="order_source"><br><br>
 					<a href="#" class="btn btn-orange" id="random_purchase">亂數產生進貨單</a>&nbsp;<input type="text" placeholder='筆數' id="random_purchase_n"><br><br>
 					<a href="#" class="btn btn-gray" id="init">O清除這頁製造的所有資料</a>

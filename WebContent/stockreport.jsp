@@ -71,6 +71,7 @@
 						$("#products").dataTable().fnDestroy();
 						if(resultRunTime!=0){
 							$("#products-contain").show();
+							$("#products").dataTable().fnDestroy();
 							$("#products tbody").html(result_table);
  							draw_table("products","庫存報表");
 							//$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
@@ -131,6 +132,7 @@ var bar_search=0;
 					$("#products").dataTable().fnDestroy();
 					if(resultRunTime!=0){
 						$("#products-contain").show();
+						$("#products").dataTable().fnDestroy();
 						$("#products tbody").html(result_table);
 						draw_table("products","庫存報表");
 						//$("#products").dataTable({ "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
@@ -186,6 +188,7 @@ var bar_search=0;
 								$("#products").dataTable().fnDestroy();
 								if(resultRunTime!=0){
 									$("#products-contain").show();
+									$("#products").dataTable().fnDestroy();
 									$("#products tbody").html(result_table);
 									draw_table("products","庫存報表");
 									//$("#products").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"}});

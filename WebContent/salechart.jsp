@@ -27,7 +27,7 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="overflow-y:auto;">
+	<div class="content-wrap">
 		<div class='bdyplane' style="opacity:0">
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
@@ -326,7 +326,7 @@ function date_format(str) {
 					}
 					chart_data[j]=chart_obj;
 					j++;
-					$("#board").css({"width":(chart_data.length*150>1000?"1100":chart_data.length*150+100)});
+					$("#board").css({"width":(list.length*150>1000?"1100":list.length*150+100)});
 					draw_barchart__plotly(chart_data,list);
 // 					draw_barchart(chart_data,list);
 					$(".visualize").animate({"opacity":"1"});

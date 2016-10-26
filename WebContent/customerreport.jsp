@@ -109,11 +109,14 @@ window.onload = function (e){
 			$("#customer").dataTable().fnDestroy();
 			if(resultRunTime!=0){
 				$("#customer-contain").show();
+				$("#customer").dataTable().fnDestroy();
 				$("#customer tbody").html(result_table);
 				$("#customer").find("td").css("text-align", "center");
 				draw_table("customer","客戶資料報表");
 				$("#customer").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
 				$("#customer").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
+				$("#customer tbody td:nth-child(2)").css("text-align", "left");
+				$("#customer tbody td:nth-child(8)").css("text-align", "left");
 				$(".validateTips").text("");
 			}						
 		}

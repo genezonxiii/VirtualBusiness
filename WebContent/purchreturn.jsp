@@ -893,8 +893,8 @@ $(function(){
 								<th>進貨發票號碼</th>
 								<th>發票樣式</th>
 								<th>進貨發票金額</th>
-								<th>備註說明</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">備註說明</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -955,8 +955,8 @@ $(function(){
 								<th>進貨發票號碼</th>
 								<th>發票樣式</th>
 								<th>進貨發票金額</th>
-								<th>備註說明</th>
-								<th>勾選</th>
+								<th style="background-image: none !important;">備註說明</th>
+								<th style="background-image: none !important;">勾選</th>
 							</tr>
 						</thead>
 						<tbody>

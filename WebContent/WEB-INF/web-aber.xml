@@ -39,7 +39,7 @@
   </context-param>
   <context-param>
     <param-name>pythonwebservice</param-name>
-    <param-value>http://192.168.112.164:8090</param-value>
+    <param-value>http://abers1.eastasia.cloudapp.azure.com:8090</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -60,7 +60,7 @@
 
   <context-param>
   <param-name>dbURL</param-name>
-  <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
+  <param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -131,19 +131,13 @@
     <param-name>smtphost</param-name>
     <param-value>mail.pershing.com.tw</param-value>
   </context-param>
-  
-  <context-param>
-    <param-name>invoicepath</param-name>
-    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
-  </context-param>
-  
   <context-param>
     <param-name>pythonwebservice</param-name>
     <param-value>http://192.168.112.164:8090</param-value>
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>/data/vbupload</param-value>
+    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -467,8 +461,32 @@
     <servlet-name>invoicetrack</servlet-name>
     <url-pattern>/invoicetrack.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>saledifftype</servlet-name>
+    <servlet-class>tw.com.aber.chart.saledifftype</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>saledifftype</servlet-name>
+    <url-pattern>/saledifftype.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>saledifftypestatic</servlet-name>
+    <servlet-class>tw.com.aber.chart.saledifftypestatic</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>saledifftypestatic</servlet-name>
+    <url-pattern>/saledifftypestatic.do</url-pattern>
+  </servlet-mapping>
   <!-- ############新的############ -->
   
+  <servlet>
+    <servlet-name>function</servlet-name>
+    <servlet-class>tw.com.aber.function</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>function</servlet-name>
+    <url-pattern>/function.do</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>test</servlet-name>
     <servlet-class>tw.com.aber.test</servlet-class>

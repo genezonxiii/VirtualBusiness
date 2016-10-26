@@ -70,7 +70,7 @@ function ship_data(){
 // 				+ "</td><td>" + (json_obj[i].dis_date==null?"":json_obj[i].dis_date.replace("T00:00:00Z",""))
 				+ "</td><td>" + money(json_obj[i].price)
 				+ "</td><td>" + ((json_obj[i].phone==null)?"":json_obj[i].phone)
-				+ "</td><td>" + json_obj[i].address
+				+ "</td><td>" + ((json_obj[i].phone==json_obj[i].address)?"":json_obj[i].address)
 				+ "</td><td>" + ((json_obj[i].post==null)?"":json_obj[i].post.replace("NULL","").replace("null",""))
 				+ "</td><td>" + json_obj[i].name
 				+ "</td><td>" + json_obj[i].mobile
@@ -84,6 +84,7 @@ function ship_data(){
 			$("#products").dataTable().fnDestroy();
 			if(json_obj.length!=0){
 				$("#products-contain").show();
+				$("#products").dataTable().fnDestroy();
 				$("#products tbody").html(result_table);
 				draw_table("products","出貨報表");
 				$("#products").find("td").css({"word-break":"break-all","min-width":"50px","text-align":"center" });

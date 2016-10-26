@@ -60,7 +60,7 @@
 <!--
   <context-param>
   <param-name>dbURL</param-name>
-  <param-value>jdbc:mysql://127.0.0.1/db_virtualbusiness</param-value>
+  <param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -105,6 +105,8 @@
   <servlet>
 -->
 <!--########################以上server#####################################-->
+<!--######### jdbc:mysql://192.168.112.164/db_virtualbusiness  http://192.168.112.164:8090###########-->
+<!--######### jdbc:mysql://192.168.112.164/test_virtualbusiness http://192.168.112.164:9000#########-->
 <!--########################以下164+175####################################-->
 
   <context-param>
@@ -137,7 +139,7 @@
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
+    <param-value>/data/vbupload</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -152,7 +154,7 @@
     <param-value>http://192.168.112.164/video</param-value>
   </context-param>
   <servlet>
-
+  
  <!--######################## 以上164+175 ###################################-->
  <!--###### C:/Users/10506002/git/VirtualBusiness/WebContent/upload ########-->
  <!--#################### /data/vbupload ###################################-->
@@ -477,8 +479,57 @@
     <servlet-name>saledifftypestatic</servlet-name>
     <url-pattern>/saledifftypestatic.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>disscussion</servlet-name>
+    <servlet-class>tw.com.aber.disscussion</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>disscussion</servlet-name>
+    <url-pattern>/disscussion.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>disscussionsubject</servlet-name>
+    <servlet-class>tw.com.aber.disscussionsubject</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>disscussionsubject</servlet-name>
+    <url-pattern>/disscussionsubject.do</url-pattern>
+  </servlet-mapping>
   <!-- ############新的############ -->
   
+  
+  <servlet>
+    <servlet-name>group_tmp</servlet-name>
+    <servlet-class>tw.com.aber.group_tmp</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>group_tmp</servlet-name>
+    <url-pattern>/group_tmp.do</url-pattern>
+  </servlet-mapping>
+<!--   <servlet> -->
+<!--     <servlet-name>WsChatServlet</servlet-name> -->
+<!--     <servlet-class>wsapp.WsChatServlet</servlet-class> -->
+<!--   </servlet> -->
+<!--   <servlet-mapping> -->
+<!--     <servlet-name>WsChatServlet</servlet-name> -->
+<!--     <url-pattern>/wschat/WsChatServlet</url-pattern> -->
+<!--   </servlet-mapping> -->
+  <servlet>
+	<servlet-name>chatsubject</servlet-name>
+	<servlet-class>tw.com.aber.chatsubject</servlet-class>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>chatsubject</servlet-name>
+	<url-pattern>/chatsubject.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+	<servlet-name>ChatServlet</servlet-name>
+	<servlet-class>tw.com.aber.chat.ChatServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>ChatServlet</servlet-name>
+	<url-pattern>/chat</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>function</servlet-name>
     <servlet-class>tw.com.aber.function</servlet-class>

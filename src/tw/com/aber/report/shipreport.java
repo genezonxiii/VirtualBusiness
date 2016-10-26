@@ -2,6 +2,7 @@ package tw.com.aber.report;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,7 +32,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.UUID;
 import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.*; 
+import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.codec.binary.Base64;
 
 @SuppressWarnings("serial")
@@ -92,7 +94,10 @@ public class shipreport extends HttpServlet {
 			response.getWriter().write("WebService Error for:"+e);
 			return;
 		}
-		response.getWriter().write(method.getResponseBodyAsString().replaceAll("null", "\"\""));
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
+	    String ret=writer.toString().replaceAll("null", "\"\"");
+		response.getWriter().write(ret);
 		//System.out.println(method.getResponseBodyAsString());
 		method.releaseConnection();
 		return;

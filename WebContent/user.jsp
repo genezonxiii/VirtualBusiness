@@ -81,9 +81,9 @@
 						<thead>
 							<tr>
 								<th style="min-width:80px;">使用者名稱</th>
-								<th style="min-width:80px;">使用者角色</th>
-								<th style="min-width:80px;">Email</th>
-								<th style="min-width:80px;">功能</th>
+								<th style="min-width:80px; background-image: none !important;">使用者角色</th>
+								<th style="min-width:80px; background-image: none !important;">Email</th>
+								<th style="min-width:80px; background-image: none !important;">功能</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -146,6 +146,8 @@ function draw_user(parameter){
 // 						"bRetrieve": true,
 // 						"order": [],
 						"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+					tooltip('btn_update');
+					tooltip('btn_delete');
 					$("#products-contain").animate({"opacity":"0.01"},1);
 					$("#products-contain").animate({"opacity":"1"},300);
 					warning_msg("");

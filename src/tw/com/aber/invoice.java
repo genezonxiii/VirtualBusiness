@@ -47,8 +47,15 @@ public class invoice extends HttpServlet {
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		
 		String action = request.getParameter("action");
-		
-		if ("search_invoice_false".equals(action) ){
+		if ("get_path".equals(action) ){
+			InvoiceDao dao= new InvoiceDao();
+			String invoicepath = dao.invoice_path_ingroup(group_id);
+			if(invoicepath.length()<2) {
+				response.getWriter().write("無發票路徑,欲開立發票請至<font color=red>公司管理</font>介面新增。");
+			}else{
+				response.getWriter().write("");
+			}
+		}else if ("search_invoice_false".equals(action) ){
 			try {TimeUnit.MILLISECONDS.sleep(100);} catch (InterruptedException e) {}
 			String invoice_false_start = request.getParameter("invoice_false_start");
 			String invoice_false_end = request.getParameter("invoice_false_end");

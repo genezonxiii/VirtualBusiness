@@ -75,6 +75,7 @@ function draw_stock(parameter){
 				$("#products-contain").show();
 				$("#products tbody").html(result_table);
 				$("#products").dataTable({ "language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
+				tooltip('btn_update');
 				$("#products-contain").animate({"opacity":"0.01"},1);
 				$("#products-contain").animate({"opacity":"1"},300);
 				warning_msg("");
@@ -254,7 +255,7 @@ function draw_stock(parameter){
 								<th>產品名稱 </th>
 								<th style="max-width:150px;">庫存數量</th>
 								<th style="max-width:150px;">安全庫存</th>
-								<th>功能</th>
+								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>
 						<tbody id="tbdy" style="text-align:center">
