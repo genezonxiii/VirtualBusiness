@@ -105,14 +105,14 @@ function draw_sale(parameter){
 // 					 		}
 							result_table 
 							+= "<tr>"
-							+ "<td name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+"</td>"
-							+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
-							+ "<td name='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-							+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
+							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+"</td>"
+							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
+							+ "<td name='"+ json_obj[i].product_name +"' name2='"+ json_obj[i].c_product_id +"'><div style='padding-bottom:4px;'>●"+json_obj[i].c_product_id+"</div>"+ json_obj[i].product_name+ "</td>"
+// 							+ "<td >"+ json_obj[i].c_product_id+ "</td>"
 							+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
 							+ "<td name='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 							+ "<td name='"+ json_obj[i].customer_id+"'>"+(json_obj[i].customer_id.length<1?  ((json_obj[i].name.length>0&&json_obj[i].name.length<16)?json_obj[i].name:"")  :  (customer_menu[json_obj[i].customer_id]==null?"":customer_menu[json_obj[i].customer_id]))+"</td>"
-							+ "<td sytle='word-break: keep-all;' name='"+ json_obj[i].invoice +"' name2='"+json_obj[i].invoice_date+"'>"+(json_obj[i].invoice.length<1?"":" 號碼："+json_obj[i].invoice+"<br> 日期："+json_obj[i].invoice_date)+"</td>"
+							+ "<td sytle='word-break: keep-all;' name='"+ json_obj[i].invoice +"' name2='"+json_obj[i].invoice_date+"'>"+(json_obj[i].invoice.length<1?"":"<div style='padding-bottom:4px;'> 號碼："+json_obj[i].invoice+"</div>日期："+json_obj[i].invoice_date)+"</td>"
 // 							+ "<td name='"+ json_obj[i].invoice_date +"'>"+ json_obj[i].invoice_date+ "</td>"
 							+ "<td name='"+ json_obj[i].trans_list_date +"'>"+ json_obj[i].trans_list_date+ "</td>"
 //								+ "<td name='"+ json_obj[i].dis_date +"'>"+ json_obj[i].dis_date+ "</td>"
@@ -453,18 +453,18 @@ function draw_sale(parameter){
 // 			alert($(this).parents("tr").find("td:nth-child(3)").attr("name"));
 			$("#dialog-form-update input[name='order_no']").val($(this).parents("tr").find("td:nth-child(2)").attr("name"));
 			$("#dialog-form-update input[name='product_name']").val($(this).parents("tr").find("td:nth-child(3)").attr("name"));
-			$("#dialog-form-update input[name='c_product_id']").val($(this).parents("tr").find("td:nth-child(4)").attr("name"));
-			$("#dialog-form-update input[name='name']").val(customer_menu[$(this).parents("tr").find("td:nth-child(7)").attr("name")]);//"somebody"
-			$("#dialog-form-update input[name='quantity']").val($(this).parents("tr").find("td:nth-child(5)").attr("name"));
-			$("#dialog-form-update input[name='price']").val($(this).parents("tr").find("td:nth-child(6)").attr("name"));
-			$("#dialog-form-update input[name='update_product_price']").val($(this).parents("tr").find("td:nth-child(5)").attr("name")*$(this).parents("tr").find("td:nth-child(6)").attr("name"));
-			$("#dialog-form-update input[name='invoice']").val($(this).parents("tr").find("td:nth-child(8)").attr("name"));
-			$("#dialog-form-update input[name='invoice_date']").val($(this).parents("tr").find("td:nth-child(9)").attr("name"));
-			$("#dialog-form-update input[name='trans_list_date']").val($(this).parents("tr").find("td:nth-child(10)").attr("name"));
+			$("#dialog-form-update input[name='c_product_id']").val($(this).parents("tr").find("td:nth-child(3)").attr("name2"));
+			$("#dialog-form-update input[name='name']").val(customer_menu[$(this).parents("tr").find("td:nth-child(6)").attr("name")]);//"somebody"
+			$("#dialog-form-update input[name='quantity']").val($(this).parents("tr").find("td:nth-child(4)").attr("name"));
+			$("#dialog-form-update input[name='price']").val($(this).parents("tr").find("td:nth-child(5)").attr("name"));
+			$("#dialog-form-update input[name='update_product_price']").val($(this).parents("tr").find("td:nth-child(4)").attr("name")*$(this).parents("tr").find("td:nth-child(5)").attr("name"));
+			$("#dialog-form-update input[name='invoice']").val($(this).parents("tr").find("td:nth-child(7)").attr("name"));
+			$("#dialog-form-update input[name='invoice_date']").val($(this).parents("tr").find("td:nth-child(7)").attr("name2"));
+			$("#dialog-form-update input[name='trans_list_date']").val($(this).parents("tr").find("td:nth-child(8)").attr("name"));
 			$("#dialog-form-update input[name='dis_date']").val("1991-06-29");
-			$("#dialog-form-update input[name='memo']").val($(this).parents("tr").find("td:nth-child(13)").attr("name"));
-			$("#dialog-form-update input[name='sale_date']").val($(this).parents("tr").find("td:nth-child(11)").attr("name"));
-			$("#dialog-form-update input[name='order_source']").val($(this).parents("tr").find("td:nth-child(12)").attr("name"));
+			$("#dialog-form-update input[name='memo']").val($(this).parents("tr").find("td:nth-child(11)").attr("name"));
+			$("#dialog-form-update input[name='sale_date']").val($(this).parents("tr").find("td:nth-child(9)").attr("name"));
+			$("#dialog-form-update input[name='order_source']").val($(this).parents("tr").find("td:nth-child(10)").attr("name"));
 			
 			update_dialog.dialog("open");
 // 			$("#update_c_product_id").focus();
@@ -725,7 +725,7 @@ function draw_sale(parameter){
        		$("#update_quantity").val('1');
        		$("#update_product_price").val($("#update_quantity").val()*$("#update_price").val());
        		product_id = ui.item.product_id;
-       });       
+       });
 		$("#update_quantity").change(function(){
 			$("#update_product_price").val($("#update_quantity").val()*$("#update_price").val());
 		});
@@ -941,8 +941,8 @@ function draw_sale(parameter){
 							<tr class="">
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th style="min-width:120px">產品名稱</th>
-								<th>自訂產品ID</th>
+								<th style="min-width:120px">產品　ID/名稱</th>
+<!-- 								<th>自訂產品ID</th> -->
 								<th>數量</th>
 								<th style="min-width:80px">銷貨金額</th>
 								<th>銷貨對象</th>

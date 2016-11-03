@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>討論區</title>
+<title>留言版</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
@@ -93,6 +93,7 @@ function draw_disscussion(parameter){
 		});
 }
 	$(function() {
+		$("body").append('<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a>');
 		var page_info=location.href.split("?disscussion_id=")[1];
 // 		alert(page_info);
 		if(page_info==null){window.location.href = './disscussionsubject.jsp';}
@@ -260,7 +261,7 @@ function draw_disscussion(parameter){
 					<button class="btn btn-darkblue" id="post" style="margin:15px ;">發表</button>
 				</div>
 			</div>
-			<div class='btn-explanation' style='position:fixed;top:80%;right:60px;background-color:blue;border-radius: 200px;'><a href='#msg' onclick="$('.btn-explanation').fadeOut();"><img src='images/post.png'style="max-height:40px;"></a></div>
+			<div class='btn-explanation' style='position:fixed;top:75%;right:60px;background-color:blue;border-radius: 200px;'><a href='#msg' onclick="$('.btn-explanation').fadeOut();"><img src='images/post.png'style="max-height:40px;"></a></div>
 		</div>
 	</div>
 	</div>

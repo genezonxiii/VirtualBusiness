@@ -100,6 +100,10 @@ input#chat {
 
             Chat.socket.onmessage = function (message) {
                 if((message.data).indexOf("System(>_<):")>-1){
+//                 	if((message.data).split(":")[1]=="online"){
+                		$("#online_list").html("<li style='padding:2px 5px;'><b>"+"<img src='./images/online_icon.png' style='width:15px;padding-right:3px;'>"+(message.data).split(":")[1]+"</b></li>");
+//                 	}
+                	return;
                 	$("#online_n").html("<a href='chatsubject.jsp' style='float:right;padding-right:50px;'>返回主題列表</a><br>在線人數: "+(message.data).split(":")[1].split(",")[0]+"人。<br>");
                 	var tmp = (message.data).split(":")[1].split(",");
                 	var name_list="",i=0;
@@ -118,11 +122,11 @@ input#chat {
 
         Chat.initialize = function() {
             if (window.location.protocol == 'http:') {
-                Chat.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
-                console.log('ws://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
+                Chat.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                console.log('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
             } else {
-                Chat.connect('wss://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
-                console.log('wss://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
+                Chat.connect('wss://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                console.log('wss://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
             }
         };
 

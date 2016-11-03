@@ -11,19 +11,21 @@
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" style="background-image: url('./images/welcome.png');background-size: cover;overflow-y:auto;">
-	<div class='bdyplane' style="opacity:0">
-		<div style="margin:10px;">
-<!--  <img src="./images/welcome.png" alt="welcome" style="width:70%;" > -->
-			<div style="text-align: center;margin:100px;font-size:35px;">
-				<div id="ship"></div>
-				<br>
-				<div id="sale"></div>
+	<div class="content-wrap" style="background-image: url('./images/welcometo.png');background-size: 100% 100%;overflow-y:auto;">
+	<div class='bdyplane' style="opacity:0;"></div>
+	<div class='board' style="opacity:0;">
+		<div style="position:absolute;top:52%;left:27.0%;text-align:center;font-size:65px;color:#00BCD5;">
+			<div id="sale" style="position:relative;top:-18px;left:78px;">
+				　
 			</div>
-		</div>  
+		</div>
+		<div style="position:absolute;top:52%;left:70.5%;text-align:center;font-size:65px;color:#00BCD5;">
+			<div id="ship" style="position:relative;top:-18px;left:24px;">
+				　
+			</div>
+		</div>
 	</div> 
 	</div>
-
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
@@ -46,8 +48,17 @@ $(function() {
 			//$.each(json_obj,function(i, item) {json_obj.count;});
 			//alert("any one else?");
 			//alert(result);
-			$("#sale").html("<h1 style='color: brown;'>本日訂單計<a href='./salereport.jsp?action=today'>"+json_obj.sale_data+"</a>筆。</h1>");
-			$("#ship").html("<h1 style='color: brown;'>本日出貨計<a href='./shipreport.jsp?action=today'>"+json_obj.ship_data+"</a>筆。</h1>");
+			$("#sale").html(json_obj.sale_data);
+			$("#ship").html(json_obj.ship_data);
+			if(json_obj.sale_data>9){
+				$("#sale").css("left","28%");
+				$("#sale").parent().css("left","50px");
+			}
+			if(json_obj.ship_data>9){
+				$("#ship").css("left","71.5%");
+				$("#ship").parent().css("left","-4px");
+			}
+			$(".board").animate({"opacity":"1"});
 		}
 	});
 });

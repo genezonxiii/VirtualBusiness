@@ -135,6 +135,7 @@ function draw_chattopic(parameter){
 		});
 }
 	$(function() {
+		$("body").append('<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a>');
 		//window.addEventListener('DOMMouseScroll', function(){alert("1");});
 		//window.addEventListener('MozMousePixelScroll', function(e){alert(evt.deltaY || evt.wheelDelta || evt.detail);});
 		//window.addEventListener('mousewheel', function(){alert("3");});

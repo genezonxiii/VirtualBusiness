@@ -40,7 +40,7 @@ public class ChatAnnotation {
 
     private static final Log log = LogFactory.getLog(ChatAnnotation.class);
 
-    private static final String GUEST_PREFIX = "Guest";
+   // private static final String GUEST_PREFIX = "Guest";
     private static final AtomicInteger connectionIds = new AtomicInteger(0);
     private static final Set<ChatAnnotation> connections =
             new CopyOnWriteArraySet<>();

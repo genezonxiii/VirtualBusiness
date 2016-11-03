@@ -1111,7 +1111,7 @@ button.btn {
 	right:-22px;
 	top:-8px;
     background: #16C1D5;
-    box-shadow:0px 0px 0px #555;
+    box-shadow:0px 0px 5px #aaa;
 }
 /*-by Function-*/
 .btn-in-table {

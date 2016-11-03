@@ -21,6 +21,21 @@
 
 <link rel="stylesheet" href="css/styles.css" />
 <!-- <link rel="stylesheet" href="css/beagle/beagle.css"> -->
+
+
+<style>
+.spbg{
+/* 	border:1px dotted #a00; */
+	font-size:16px;
+	font-weight:bold;
+	color:red;
+	background-image:url('./images/sp_bg.png');
+}
+tr:hover .spbg{
+	background-image:none;
+	border: 1px solid #ddd;
+}
+</style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -56,8 +71,8 @@ function draw_stock(parameter){
 				if(bar_search==null||uuid==json_obj[i].product_id){
 					result_table += 
 						  "<tr><td>"+json_obj[i].product_name
-						+ "</td><td>" + json_obj[i].quantity
-						+ "</td><td>"+json_obj[i].keep_stock+"</td>"
+						+ "</td><td "+((json_obj[i].quantity>json_obj[i].keep_stock) ? "" : "class='spbg'")+">" + json_obj[i].quantity +"</td>"
+						+ "<td>"+json_obj[i].keep_stock+"</td>"
 						+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 						+ "	<div class='table-function-list'>"
 						+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].product_id+"'name='"+ json_obj[i].stock_id+"' "+(parameter.action=="bar_code_search"||bar_search!=null?"id='bar_search'":"")+"><i class='fa fa-pencil'></i></button>"

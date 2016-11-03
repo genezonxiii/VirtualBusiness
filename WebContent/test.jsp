@@ -173,6 +173,7 @@ $(function(){
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
 		<h1>1234　</h1>
 	<div id="bar"></div>
+	
 		<button class='btn-explanation'>?</button>
 <!-- 			<div id='memo' style=" background-image: url('./images/memo.png');width:300px;height:300px;position:absolute;z-index:1;display:none;"><div style="padding:40px;">123455</div></div> -->
 		<input type="text" id="helo">
@@ -180,7 +181,12 @@ $(function(){
 		<script>alert('111222');</script>
 		<% }%>
 		<button onclick="hello()">##@_@##</button>
-		<button onclick="hello2()">##X_X##</button>
+		<button onclick="hello2(); document.getElementById('mus').play();">##X_X##</button>
+		
+		<audio id="mus" controls="controls" style='display:none'>
+			<source src="./audio/new_message.mp3" type="audio/mpeg">
+			您的浏览器不支持 audio 标签。
+		</audio>
 <!-- 		<div class="login-panel-wrap"> -->
 <!-- 		<div class="registry-panel" style="width:100%" > -->
 <!-- 			<button id="btn1"  > -->

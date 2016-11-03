@@ -82,19 +82,34 @@
 		</div><!-- /.search-result-wrap -->
 	</div><!-- /.content-wrap -->
 <%
-String str=(String)request.getAttribute("action");
-if(str!=null){
-	if("success".equals(str)){
-		out.println("<script>alert('匯入成功');window.location.href = './upload.jsp';</script>");
-	}else{
-		out.println("<script>console.log('"+str+"');</script>");
-		out.println("<script>alert('匯入失敗：\\n　　請確認檔案的格式是否遭到修改。');window.location.href = './upload.jsp';</script>");
-	}
-}
+// String str=(String)request.getAttribute("action");
+// if(str!=null){
+// 	if("success".equals(str)){
+// 		out.println("<script>alert('匯入成功');window.location.href = './upload.jsp';</script>");
+// 	}else{
+// 		out.println("<script>console.log('"+str+"');</script>");
+// 		out.println("<script>alert('匯入失敗：\\n　　請確認檔案的格式是否遭到修改。');window.location.href = './upload.jsp';</script>");
+// 	}
+// }
 %>
 <script>
 $(function(){
-	$(".bdyplane").animate({"opacity":"1"});
+// 	$(".bdyplane").animate({"opacity":"1"},function(){ 
+		<%
+			String str=(String)request.getAttribute("action");
+			if(str!=null){
+				if("success".equals(str)){
+					out.println("$('.bdyplane').css('opacity','1');alert('匯入成功');window.location.href = './upload.jsp';");
+				}else{
+					out.println("console.log('"+str+"');");
+					out.println("$('.bdyplane').css('opacity','1');alert('匯入失敗：\\n　　請確認檔案的格式是否遭到修改。');window.location.href = './upload.jsp';");
+				}
+			}else{
+				out.println("$('.bdyplane').animate({'opacity':'1'});");
+			}
+		%>
+// 	});
+	
 	$("label").hover(function(){$(this).addClass("on_it");},function(){$(this).removeClass("on_it");});
 	$("#file").change(function(){
 		$("#upload_name").val($("#file").val());

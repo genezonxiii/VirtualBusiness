@@ -30,6 +30,7 @@ function melvin_movie(location){
 
 $(function(){
 	$(".bdyplane").animate({"opacity":"1"});
+	$("body").append('<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a>');
 	$.ajax({
 		type : "POST",
 		url : "onlinecourse.do",
@@ -56,6 +57,7 @@ $(function(){
 	});
 });
 </script>
+
 			<div id="movie"></div>
 <!-- 			<div class='row4mpeg'><iframe  width='400' height='300' src='./video/experience_share.mp4'></iframe ><div>hello!~</div></div> -->
 
