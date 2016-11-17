@@ -238,10 +238,10 @@ function draw_exchange(parameter){
 						<table class="form-table">
 							<tr>
 								<td>幣值名稱：</td>
-								<td><input type="text" name="name" placeholder="修改幣值名稱"></td>
+								<td><input type="text" name="name" placeholder="輸入幣值名稱"></td>
 							</tr><tr>
 								<td>匯率：</td>
-								<td><input type="text" name="rate" placeholder="修改匯率"></td>
+								<td><input type="text" name="rate" placeholder="輸入匯率"></td>
 							</tr>
 						</table>
 					</fieldset>

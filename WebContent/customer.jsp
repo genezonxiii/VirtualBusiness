@@ -46,7 +46,7 @@ function draw_customer(parameter){
 		data :parameter,
 		success : function(result) {
 // 			console.log(result);
-			if(result.indexOf('Error')>-1){warning_msg("連現異常,請洽系統管理員。");}
+			if(result.indexOf('Error')>-1){warning_msg("連線異常,請洽系統管理員。");}
 			var json_obj = $.parseJSON(result);
 			//判斷查詢結果
 			var resultRunTime = 0;

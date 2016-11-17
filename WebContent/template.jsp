@@ -71,7 +71,8 @@
 	font-size:16px;
 }
 .livehelp > div:nth-child(2n+2) > div:nth-child(2) p{
-	line-height:14px;
+	line-height:16px;
+	margin: 0 0 5px;
 }
 .livehelp > div:nth-child(2n+2) > div:nth-child(2) p .tag{
 	font-size:12px;
@@ -142,6 +143,10 @@ function who(){
 	case "product.jsp":
 		side2.addClass("active");
 		return "商品管理";
+		break;
+	case "productpackage.jsp":
+		side2.addClass("active");
+		return "商品管理（組合包）";
 		break;
 	case "supply.jsp":
 		side2.addClass("active");
@@ -351,7 +356,7 @@ function who(){
 					<li><a href="#" onclick="trans('stock.jsp');">庫存管理</a></li>
 					<li><a href="#" onclick="trans('supply.jsp');">供應商管理</a></li>
 					<li><a href="#" onclick="trans('product.jsp');">商品管理</a></li>
-					<li><a href="#" onclick="trans('tagprint.jsp');">標籤列印</a></li>
+					<li><a href="#" onclick="trans('productpackage.jsp');">商品管理（組合包）</a></li>
 					<li><a href="#" onclick="trans('customer.jsp');">客戶管理</a></li>
 					<li><a href="#" onclick="trans('producttype.jsp');">商品類型管理</a></li>
 					<li><a href="#" onclick="trans('productunit.jsp');">商品單位管理</a></li>
@@ -359,6 +364,7 @@ function who(){
 					<li><a href="#" onclick="trans('accpay.jsp');">應付帳款管理</a></li>
 				</ul>
 				<ul style="top: -100px;left: 321px;height:520px;">
+					<li><a href="#" onclick="trans('tagprint.jsp');">標籤列印</a></li>
 					<li><a href="#" onclick="trans('group.jsp');">公司管理</a></li>
 					<li><a href="#" onclick="trans('user.jsp');">使用者管理</a></li>
 					<li><a href="#" onclick="trans('changepassword.jsp');">使用者密碼管理</a></li>
@@ -402,9 +408,8 @@ function who(){
 					<li><a href="#" onclick="trans('onlinecourse.jsp');">線上課程</a></li>
 					<li><a href="#" onclick="trans('disscussionsubject.jsp');">課程留言版</a></li>
 					<li><a href="#" onclick="trans('chatsubject.jsp');">課程討論區</a></li>
-					<li class="hide_everywhere"><a href="msgboard.html">留言版</a></li>
+<!-- 					<li class="hide_everywhere"><a href="msgboard.html">留言版</a></li> -->
 					<li class="hide_everywhere"><a href="distributereport.jsp">配送報表</a></li>
-					<li class="hide_everywhere"><a href="onlinecourse.jsp">線上學院</a></li>
 					<li class="hide_everywhere"><a href="function.jsp#func">真❤後臺系統</a></li>
 				</ul>
 			</li>
@@ -420,23 +425,22 @@ function who(){
 <!-- 	</div>   /.content-wrap -->
 
 	<footer class="footer" style="z-index:1;">
-		北祥股份有限公司 <span>服務電話：+886-2-2658-1910  |  傳真：+886-2-2658-1920</span>
-		
+		　　　　　　　　　　　北祥股份有限公司 <span>服務電話：+886-2-2658-1910  |  傳真：+886-2-2658-1920</span>
 	</footer><!-- / .footer -->
 	<div class='livehelp'>
 	
 		<div id="livehelp_m" ondblclick="$('#livehelp_m').hide();$('#livehelp').fadeIn();">
 			<div>
-				<font class="online_or_not" color=#aaa size='1'> ● </font>線上客服
+				<font class="online_or_not" style="color:#aaa;" size='1'> ● </font>線上客服
 				<a><img src='./images/putback.png' class='func' style='margin:0px;float:right;' onclick="$('#livehelp_m').hide();$('#livehelp').fadeIn();"></a>
 			</div>
 		</div>
 		<div id="livehelp">
 			<div ondblclick="$('#livehelp').hide();$('#livehelp_m').fadeIn();">
-				<div style="padding:6px 5px"><font class="online_or_not" color=#4f4 size="3"> ● </font>線上客服</div>
+				<div style="padding:6px 5px"><font class="online_or_not" style="color:#4f4;" size="3"> ● </font>線上客服</div>
 				<div style="position:absolute;top:0px;right:0px;">
 					<a><img src="./images/minimize.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$('#livehelp').hide();$('#livehelp_m').fadeIn();"></a>
-					<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$('#livehelp').hide();$('#livehelp_m').fadeIn();"></a>
+					<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$('.livehelp').fadeOut(function(){$('.livehelp').remove();});"></a>
 				</div>
 			</div>
 			<div id="consoleL">
@@ -446,30 +450,6 @@ function who(){
 				<div id="send_msgL" style="position:absolute;top:0px;right:4px;margin:8px 4px;padding:0px 3px 4px 4px;" class="func2">→</div>
 			</div>
 		</div>
-<!-- 		################################################## -->
-<!-- 		################################################## -->
-<!-- 		################################################## -->
-<!-- 		################################################## -->
-		
-		
-		
-<!-- 		<div id="livehelp_m" ondblclick="$('#livehelp_m').hide();$('#livehelp').fadeIn();" style="width:200px;height:20px;float:right;margin: 0 30px 3px 0;font-size:12px; background-color:rgb(120, 180, 255);"> -->
-<!-- 			<div style="padding:3px 5px"><font class="online_or_not" color=#aaa size='1'> ● </font>LiveHelp</div><div style="position:absolute;top:0px;right:30px;"><a ><img onclick="$('#livehelp_m').hide();$('#livehelp').fadeIn();" class='func' style='padding:0px 0px;' src='./images/putback.png'></a></div> -->
-<!-- 		</div> -->
-
-<!-- 		<div id="livehelp" style="width:360px;height:300px;float:right;margin-right:30px;font-size:20px;display:none;"> -->
-<!-- 			<div style="width:360px;height:34px;background-color:rgb(64, 128, 255);position:absolute;top:0px;"> -->
-<!-- 				<div style="padding:6px 5px"><font class="online_or_not" color=#4f4 size='3'> ● </font>LiveHelp</div><div style="position:absolute;top:0px;right:0px;"><a><img class='func' style='padding:6px 2px;' src='./images/minimize.png'></a><a><img class='func' style='padding:6px 0px;' src='./images/close.png'></a></div> -->
-<!-- 			</div> -->
-<!-- 			<div style="width:340px;height:calc(100% - 93px);background-color:#ccc;position:absolute;top:34px;opacity:0.9;overflow-y: scroll;border-top:1px solid #999;padding:10px;"> -->
-<!-- 				跟A對話：　<script>document.write(Math.floor(Math.random()*1000));</script> -->
-<!-- 				<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12 -->
-<!-- 			</div> -->
-<!-- 			<div style="width:350px;height:30px;background-color:#ddd;position:absolute;bottom:0px;padding: 4px 5px;border-top:1px solid #999;"> -->
-<!-- 				<input type="text" style='width:300px;height:19px;margin:0;'/> -->
-<!-- 				<div style="position:absolute;top:0px;right:10px;padding:8px 4px;">→</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
 <!-- 	repeat..... -->
 	</div>
 </div><!-- /.page-wrapper -->
@@ -482,14 +462,13 @@ function who(){
 
 $(function() {
 	$('body').keypress(function(e){//ctrl + alt + b
-	    if(e.shiftKey && (location.href.indexOf("abers1.eastasia.cloudapp.azure.com")>-1 ||(location.href.indexOf("164")>-1||location.href.indexOf("local")>-1))){
+	    if(e.shiftKey && (location.href.indexOf("bers1.eastasia")>-1 ||(location.href.indexOf("112.164")>-1||location.href.indexOf("local")>-1))){
 	    	if(e.which == 41){
 	    		$(".hide_everywhere").removeClass("hide_everywhere");
-	    		$(".sidenav > ul > li:nth-child(5) ul").css("top", "-200px");
+	    		$(".sidenav > ul > li:nth-child(5) ul").css("top", "-100px");
 	    	}
 	    }
 	});
-// 	$(".sidenav > ul > li:nth-child(2)").find("a").css("padding","7px 20px");
 	$(".sidenav > ul > li:nth-child(3)").find("a").css("padding","8px 20px");
 	$("#logout").click(function(e) {
 		$.ajax({
@@ -499,7 +478,6 @@ $(function() {
 				action : "logout"
 			},
 			success : function(result) {
-				//top.location.href = "login.jsp";
 				location.replace('login.jsp');
 			}
 		});
@@ -507,14 +485,18 @@ $(function() {
 	
 	var me='<%=request.getSession().getAttribute("user_name")%>';
 // 	if(me=='DemoUser'){
-		
 // 	}else{
-		
 // 	}
 	if(me=='DemoUser'){
 		//LiveHelper  alert('1');
-		$(".livehelp").html('');
-		//asker  alert('2');
+		$(".livehelp").html(
+			'<div id="hello">'+
+				'<div style="text-align:center;">'+
+					'<font size="2"  style="color:#f44;"><b> ● 請友善對待客戶 ● </b></font>'+
+					//'<a><img src='./images/putback.png' class='func' style='margin:0px;float:right;' onclick="$('#livehelp_m').hide();$('#livehelp').fadeIn();"></a>'+
+				'</div>'+
+			'</div>'
+		);
 		var Livehelp = {};
 		Livehelp.socket = null;
 		Livehelp.connect = (function(host) {
@@ -527,8 +509,6 @@ $(function() {
                 return;
             }
             Livehelp.socket.onopen = function () {
-//                 Console.log('~<font color=gray>您進入了聊天室</font>~');
-                //$(".livehelp").append("<button class='send'>來來來 哩來哩來</button>");
                 $(".livehelp").delegate(".send", "click", function(event) {
                 	var name = $(this).parent().attr("name");
                 	event.preventDefault();
@@ -549,7 +529,7 @@ $(function() {
 
             Livehelp.socket.onclose = function () {
                 //document.getElementById('chatL').onkeydown = null;
-                Console.log('~<font color=red>連線異常，中斷連線</font>~');
+                ConsoleL.log('~<font style="color:#f44;">連線異常，中斷連線</font>~');
             };
 
             Livehelp.socket.onmessage = function (message) {
@@ -557,8 +537,8 @@ $(function() {
                 	var name= (message.data).split(":Leave:")[1];
                 	$('#consoleL_'+name).append("<p style='word-wrap: break-word;color:red;'>"+name+"關閉了視窗。</p>");
                 	
-                	$('#livehelp_m_'+name+' .online_or_not').attr("color","#aaa");
-                	$('#livehelp_'+name+' .online_or_not').attr("color","#aaa");
+                	$('#livehelp_m_'+name+' .online_or_not').css("color","#aaa");
+                	$('#livehelp_'+name+' .online_or_not').css("color","#aaa");
                 	$('#chatL_'+name).prop("disabled",true);
 //                 	if((message.data).split(":Leave:")[1]=="online"){
 //                 		if($("#chatL").prop("disabled")){
@@ -576,23 +556,23 @@ $(function() {
 //                 	}
                 }else{
                 	//alert(message.data);
+                	if(message.data.split("name='name'>").length<2) return ;
                 	var name = message.data.split("name='name'>")[1].split("</font>")[0];
-//                 	alert($('#livehelp_m_'+name).length<1);
-//                 	alert(name);
                 	if(message.data.indexOf("@﹀︿﹀") < 0 && $('#livehelp_m_'+name).length < 1 ){
+                		$('#hello').remove();
 	                	$(".livehelp").append(
 	               			'<div id="livehelp_m_'+name+'" style="display:none;" >'+
 		               			'<div ondblclick="$(\'#livehelp_m_'+name+'\').hide();$(\'#livehelp_'+name+'\').show();">'+
-		            				'<font class="online_or_not" color=#4f4 size="1"> ● </font>'+name+
+		            				'<font class="online_or_not" style="color:#4f4;" size="1"> ● </font>'+name+"<font size='2' style='color:#f44;'><b> ● 請友善對待客戶 ● </b></font>"+
 		            				'<a><img src="./images/putback.png" class="func" style="margin:0px;float:right;" onclick="$(\'#livehelp_m_'+name+'\').hide();$(\'#livehelp_'+name+'\').show();"></a>'+
 		            			'</div>'+
 	                		'</div>'+
-	                		'<div id="livehelp_'+name+'" style="display:block;">'+
+	                		'<div id="livehelp_'+name+'" style="display:none;">'+
 	                			'<div ondblclick="$(\'#livehelp_'+name+'\').hide();$(\'#livehelp_m_'+name+'\').show();">'+
-	            					'<div style="padding:6px 5px"><font class="online_or_not" color=#4f4 size="3"> ● </font>'+name+'</div>'+
+	            					'<div style="padding:6px 5px"><font class="online_or_not" style="color:#4f4;" size="3"> ● </font>'+name+"<font size='4'  style='color:#fb3;'><b> ( 請友善對待客戶 ) </b></font>"+'</div>'+
 		            				'<div style="position:absolute;top:0px;right:0px;">'+
 		            					'<a><img src="./images/minimize.png" class="fun" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').hide();$(\'#livehelp_m_'+name+'\').show();"></a>'+
-		            					'<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').hide();$(\'#livehelp_m_'+name+'\').show();"></a>'+
+		            					'<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').fadeOut(function(){$(\'#livehelp_'+name+'\').remove();$(\'#livehelp_m_'+name+'\').remove();});"></a>'+
 	            					'</div>'+
 	            				'</div>'+
 	            			'<div id="consoleL_'+name+'"></div>'+
@@ -601,6 +581,7 @@ $(function() {
 	            				'<div id="send_msgL_'+name+'" class="send" style="position:absolute;top:0px;right:4px;margin:8px 4px;padding:0px 3px 4px 4px;" class="func2">→</div>'+
 	            			'</div>'+
 	            		'</div>');
+	                	$("#livehelp_"+name).fadeIn(function(){alert('有人需要您的幫助呦~');});
 	                	$('#consoleL_'+name).append('<p style="word-wrap: break-word;">'+message.data+'</p>');
                 	}else{
                 		var msg =  message.data ;
@@ -610,12 +591,11 @@ $(function() {
                 			//alert(message.data+"\nXXXXXX"+name+"\n#####"+msg);
                 		}
                 		if($('#chatL_'+name).prop("disabled")){$('#consoleL_'+name).append("<p style='word-wrap: break-word;color:red;'>"+name+"又上線了喔。</p>");}
-                    	$('#livehelp_m_'+name+' .online_or_not').attr("color","#4f4");
-                    	$('#livehelp_'+name+' .online_or_not').attr("color","#4f4");
+                    	$('#livehelp_m_'+name+' .online_or_not').css("color","#4f4");
+                    	$('#livehelp_'+name+' .online_or_not').css("color","#4f4");
                     	$('#chatL_'+name).prop("disabled",false);
                 		$('#consoleL_'+name).append('<p style="word-wrap: break-word;">'+msg+'</p>');
                 	}
-                	
                 }
                 //所有東西都從這邊經過 如果要加特殊處理人數 名單 都在這邊做
             };
@@ -623,7 +603,19 @@ $(function() {
 
 		Livehelp.initialize = function() {
             if (window.location.protocol == 'http:') {
-            	Livehelp.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+            	if(window.location.host.indexOf("112.164")>-1){
+                	//164
+                	console.log("ws_ver_livehelp_164");
+                	Livehelp.connect('ws://'+get_sensitive("164")+'/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }else if(window.location.host.indexOf("ber.com.tw")>-1||window.location.host.indexOf("ers1.eastasia")>-1){
+                	//aber
+                	console.log("ws_ver_livehelp_aber");
+                	Livehelp.connect('ws://'+get_sensitive("aber")+'/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }else{
+                	//localhost
+                	console.log("ws_ver_livehelp_local");
+                	Livehelp.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }
             } else {
             	Livehelp.connect('wss://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
             }
@@ -671,7 +663,7 @@ $(function() {
                 return;
             }
             Livehelp.socket.onopen = function () {
-//                 Console.log('~<font color=gray>您進入了聊天室</font>~');
+//                 ConsoleL.log('~<font color=gray>您進入了聊天室</font>~');
                 document.getElementById('send_msgL').onclick =function(event) {
                    	event.preventDefault();
                    	Livehelp.sendMessage();
@@ -686,7 +678,7 @@ $(function() {
 
             Livehelp.socket.onclose = function () {
                 document.getElementById('chatL').onkeydown = null;
-                Console.log('~<font color=red>連線不穩定</font>~');
+                ConsoleL.log('~<font style="color:#F33;font-size:18px;"><b>連線不穩定</b></font>~');
                 $("#chatL").prop("disabled",true);
             };
 
@@ -694,16 +686,16 @@ $(function() {
                 if((message.data).indexOf("System(>_<):")>-1){
                 	if((message.data).split(":")[1]=="online"){
                 		if($("#chatL").prop("disabled")){
-                			ConsoleL.log("<font color=#080 style='font-size:12px;line-height: 10px;'>~客服人員在線~</font>");
+                			ConsoleL.log("<font style='color:#080;' style='font-size:12px;line-height: 10px;'>~客服人員在線~</font>");
                 		}
-                		$(".online_or_not").attr("color","#4f4");
+                		$(".online_or_not").css("color","#4f4");
                 		$("#chatL").prop("disabled",false);
                 	}else if((message.data).split(":")[1]=="offline"){
                 		if(!$("#chatL").prop("disabled")){
-	                		ConsoleL.log("<font color=red style='font-size:12px;line-height: 10px;'>~客服人員離線~</font>");
-	                		ConsoleL.log("<font color=red style='font-size:12px;line-height: 10px;'>請於上班時間使用。</font>");
+	                		ConsoleL.log("<font style='color:#f44;' style='font-size:12px;line-height: 10px;'>~客服人員離線~</font>");
+	                		ConsoleL.log("<font style='color:#f44;' style='font-size:12px;line-height: 10px;'>請於上班時間使用。</font>");
                 		}
-                		$(".online_or_not").attr("color","#aaa");
+                		$(".online_or_not").css("color","#aaa");
                 		$("#chatL").prop("disabled",true);
                 	}
                 }else{
@@ -715,7 +707,19 @@ $(function() {
 
 		Livehelp.initialize = function() {
             if (window.location.protocol == 'http:') {
-            	Livehelp.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+            	if(window.location.host.indexOf("112.164")>-1){
+                	//164
+                	console.log("ws_ver_livehelp_164");
+                	Livehelp.connect('ws://'+get_sensitive("164")+'/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }else if(window.location.host.indexOf("ber.com.tw")>-1||window.location.host.indexOf("ers1.eastasia.cloudapp.azure.com")>-1){
+                	//abe
+                	console.log("ws_ver_livehelp_aber");
+                	Livehelp.connect('ws://'+get_sensitive("aber")+'/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }else{
+                	//localhost
+                	console.log("ws_ver_livehelp_local");
+                	Livehelp.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }
             } else {
             	Livehelp.connect('wss://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
             }

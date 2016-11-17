@@ -58,6 +58,10 @@ function draw_barchart(data,title){
                 .attr({
                   'id':'date'
                 });
+    var date2 = s.append('g')
+    .attr({
+      'id':'date2'
+    });
 //長方形
     rect.selectAll('rect')
       .data(data)
@@ -130,7 +134,7 @@ function draw_barchart(data,title){
           };
        })
       ;
-//名字
+//排名數字
     date.selectAll('text')
       .data(data)
       .enter()
@@ -140,16 +144,36 @@ function draw_barchart(data,title){
         	return (d.x<3?"#FF0000":"#000")
         },
         'text-anchor': 'end',
-        'x':leftpad-10,
+        'x':leftpad-90,
         'y':function(d){
           return d.x * 25 + toppad+12;
         }
       }).text(function(d){
-        return (d.x<3?"★ ":"")+(d.x+1)+". "+d.name;
+        return (d.x<3?"★ ":"")+(d.x+1)+". ";//+d.name;
       }).style({
         'font-size':'20px'
       });
-        
+  //名字  
+    date2.selectAll('text')
+    .data(data)
+    .enter()
+    .append('text')
+    .attr({
+      'fill':function(d){
+      	return (d.x<3?"#FF0000":"#000")
+      },
+      'text-anchor': 'end',
+      'textLength':"72",
+      'lengthAdjust':'spacing',
+      'x':leftpad-10,
+      'y':function(d){
+        return d.x * 25 + toppad+10;
+      }
+    }).text(function(d){
+      return (d.name.length>13?(grows_up(d.name.substring(0,12))+"..."):grows_up(d.name));
+    }).style({
+      'font-size':'16px'
+    });
 }
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});

@@ -112,7 +112,7 @@ function draw_chattopic(parameter){
 					if(isIE()){opening=(new Date(json_obj[i].start_time.replace(" ","T"))-1000 * 60 * 10 < new Date())&&(new Date(json_obj[i].end_time.replace(" ","T"))  > new Date()-1000 * 60 * 10);}
 					result_table+= "<tr style='height:50px;"+(opening?"background-color:pink;":"")+"'>"
 					+ "<td>"+json_obj[i].topic+"</td>"
-					+ "<td>"+json_obj[i].start_time.replace(":00.0"," - ").replace(" ","<br>　")+json_obj[i].end_time.replace(json_obj[i].start_time.substring(0,10),"").replace(":00.0","")+"</td>"
+					+ "<td>"+json_obj[i].start_time.replace(":00.0"," - ").replace(" ","<br>　")+("<br>"+json_obj[i].end_time.replace(" ","<br>　")).replace(("<br>"+json_obj[i].start_time.replace(" ","<br>　")).substring(0,18),"").replace(":00.0","")+"</td>"
 // 					+ "<td>"+json_obj[i].end_time.replace(":00.0","")+"</td>"
 					+ "<td>"+json_obj[i].teacher+"</td>"
 					+ "<td>"+json_obj[i].memo+"</td>"
@@ -135,6 +135,7 @@ function draw_chattopic(parameter){
 		});
 }
 	$(function() {
+		//alert(("<br>"+"123").replace("1","222").substring(0,6));
 		$("body").append('<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a>');
 		//window.addEventListener('DOMMouseScroll', function(){alert("1");});
 		//window.addEventListener('MozMousePixelScroll', function(e){alert(evt.deltaY || evt.wheelDelta || evt.detail);});

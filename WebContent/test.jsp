@@ -76,20 +76,32 @@ function hello(){
 //         //"width": "100%"
 //     } );
 	return;
-	$.ajax({
-		type : "POST",
-		url : "test.do",
-		data : {action :"tes", some : "1234" },
-		success : function(result) {
-			alert(result);
-			System.out.println("@@");	
-		}
+}
+function lookdown(){
+	$("body").append("<div id='godown' style='opacity:0.3;position:fixed;top:10%;left:50%;'><img id='godownpic' src='./images/godown.png' /></div>");
+	$("#godown").animate({opacity: '0.7'},100);
+	$("#godown").animate({
+	    top: '+=60%',
+		opacity: '0.2'
+	},1500,function(){
+		$(this).remove();
+		$("body").append("<div id='godown' style='opacity:0.7;position:fixed;top:10%;left:50%;'><img id='godownpic' src='./images/godown.png' /></div>");
+		$("#godown").animate({
+		    top: '+=60%',
+			opacity: '0.1'
+		},1500,function(){
+			$(this).remove();
+		});
 	});
 }
 
-
 $(function(){
 	
+	
+// 	$("#godownpic").animate({
+//  	    height:  $("#godownpic").height()*2,
+//  	    width:  $("#godownpic").width(),
+// 	},1000);
 	var availableTags = [
       "yahoo","超級商城","Pchome","夠麻吉","樂天",
       "payeasy","博客來","ibon", "momo","愛買",
@@ -173,16 +185,34 @@ $(function(){
 	<div class="login-wrapper" id="bdy" style="top:20%; margin-top:-150px;">
 		<h1>1234　</h1>
 	<div id="bar"></div>
-	
+		
 		<button class='btn-explanation'>?</button>
 <!-- 			<div id='memo' style=" background-image: url('./images/memo.png');width:300px;height:300px;position:absolute;z-index:1;display:none;"><div style="padding:40px;">123455</div></div> -->
 		<input type="text" id="helo">
 		<% int iii=0;while(iii<0){iii++;%>
 		<script>alert('111222');</script>
 		<% }%>
-		<button onclick="hello()">##@_@##</button>
+		
+		<button onclick="down()">##@_@##</button>
+<!-- 		<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a> -->
 		<button onclick="hello2(); document.getElementById('mus').play();">##X_X##</button>
 		
+		
+		<script type="text/javascript" src="http://www.skypeassets.com/i/scom/js/skype-uri.js"></script>
+			
+			<div id="SkypeButton_Call">
+			    <script type="text/javascript">
+			        Skype.ui({
+			            "name": "call",
+			            "element": "SkypeButton_Call",
+			            "participants": ["2:benchen@pershing.com.tw"],
+			            "imageColor": "blue",
+			            "imageSize": 32
+			        });
+			    </script>
+			</div>
+			
+			
 		<audio id="mus" controls="controls" style='display:none'>
 			<source src="./audio/new_message.mp3" type="audio/mpeg">
 			您的浏览器不支持 audio 标签。

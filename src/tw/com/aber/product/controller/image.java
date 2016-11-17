@@ -49,11 +49,10 @@ public class image extends HttpServlet {
 		response.setContentType("image/jpeg");
 
 		String upload_root = getServletConfig().getServletContext().getInitParameter("photopath");
-		
 		String picname = request.getParameter("picname");
 		if(picname!=null&&!picname.equals("")){
 			File f = new File(upload_root + "/" + picname);
-			File loss = new File(upload_root+"/loss.gif");
+			//File loss = new File(upload_root+"/loss.gif");
 			try{
 				BufferedImage bi = ImageIO.read(f);
 				OutputStream out = response.getOutputStream();
@@ -61,10 +60,13 @@ public class image extends HttpServlet {
 				out.close();
 			}catch(Exception e){
 				//String path = getServletContext().getRealPath("./");
-				//System.out.println(path);
 				RequestDispatcher successView = request.getRequestDispatcher("/images/loss.gif");
+				
 				successView.forward(request, response);
+//				if(picname.indexOf("images_")<0){
 				System.out.println("name: "+f+" with: "+e.toString());
+//				System.out.flush();	
+//				}
 			}
 		} else {
 			System.out.println("沒有圖檔名稱");

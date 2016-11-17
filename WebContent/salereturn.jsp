@@ -1068,6 +1068,7 @@
 			$(".input-field-wrap").slideToggle("slow");
 			$(".downdown").slideToggle();
 		});
+		$("#searh_c_product_id").dblclick(function(){ $("#searh_c_product_id").autocomplete({minLength: 1}); });
 		//hold header
 		//$("#salereturns_false_table").find("th").css("min-width","120px");
 		//$("#salereturns_true_table").find("th").css("min-width","120px");
@@ -1200,7 +1201,7 @@
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th>產品名稱</th>
+								<th style="min-width:120px">產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>
@@ -1278,7 +1279,7 @@
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th>產品名稱</th>
+								<th style="min-width:120px">產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>

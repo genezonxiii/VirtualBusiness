@@ -71,7 +71,7 @@ function draw_stock(parameter){
 				if(bar_search==null||uuid==json_obj[i].product_id){
 					result_table += 
 						  "<tr><td>"+json_obj[i].product_name
-						+ "</td><td "+((json_obj[i].quantity>json_obj[i].keep_stock) ? "" : "class='spbg'")+">" + json_obj[i].quantity +"</td>"
+						+ "</td><td "+((json_obj[i].quantity<json_obj[i].keep_stock) ? "class='spbg'" : "")+">" + json_obj[i].quantity +"</td>"
 						+ "<td>"+json_obj[i].keep_stock+"</td>"
 						+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 						+ "	<div class='table-function-list'>"
@@ -215,7 +215,22 @@ function draw_stock(parameter){
 
 				});			
 			update_dialog.dialog("open");
-		});		
+		});	
+		var product_name_tags=[];
+		$.ajax({
+			type : "POST",
+			url : "product.do",
+			data :{action : "search"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].product_name!=null){
+						product_name_tags[i]=json_obj[i].product_name;
+					}
+				});
+			}
+		});
+		auto_complete("searh_stock_name",product_name_tags);
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){

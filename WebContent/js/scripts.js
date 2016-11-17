@@ -1,4 +1,4 @@
-
+//lookdown()//視覺效果
 //auto_complete(name,[])
 //current_time() 2016-01-01之類的
 //currency_unit(str) 幣值單位
@@ -14,6 +14,43 @@
 //vender_color(vender); X
 //table_before(str);X
 //get_week_day(number);X
+
+function lookdown(){
+	var tmp = Math.floor(Math.random()*2000);
+	var tmp2=tmp+1;
+	$("body").append("<div id='godown_"+tmp+"' style='opacity:0.3;position:fixed;top:10%;left:50%;'><img src='./images/godown.png' /></div>");
+	$("#godown_"+tmp).animate({opacity: '0.7'},100);
+	$("#godown_"+tmp).animate({
+	    top: '+=60%',
+		opacity: '0.2'
+	},1500,function(){
+		$("#godown_"+tmp).remove();
+		$("body").append("<div id='godown_"+tmp2+"' style='opacity:0.7;position:fixed;top:10%;left:50%;'><img src='./images/godown.png' /></div>");
+		$("#godown_"+tmp2).animate({
+		    top: '+=60%',
+			opacity: '0.1'
+		},1500,function(){
+			$("#godown_"+tmp2).remove();
+		});
+	});
+}
+
+function get_sensitive(askfor){
+	var ret="?";
+	$.ajax({
+		type : "POST",
+		async : false,
+		url : "function.do",
+		data : {
+			action : "get_controversial",
+			askfor : askfor
+		},
+		success : function(result) {
+			ret=result;
+		}
+	});
+	return ret;
+}
 
 function tooltip(clas){
 	$("."+clas).mouseover(function(e){
@@ -91,11 +128,15 @@ function auto_complete(name,tags){
     	source: tags,
     	position:  {my: "left top", at: "left bottom", collision: "flipfit"}
     });
-    $("#"+name).dblclick(function(){ $("#"+name).autocomplete({minLength: 0}); });
-	$("#"+name).click(function(){
-    	var eve=jQuery.Event("keydown");
-    	eve.which=40;
-      	$(this).trigger(eve);
+    $("#"+name).dblclick(function(event){ 
+    	event.preventDefault();
+    	$("#"+name).autocomplete({minLength: 0}); 
+    	
+    	$("#"+name).click(function(){
+        	var eve=jQuery.Event("keydown");
+        	eve.which=40;
+          	$(this).trigger(eve);
+        });
     });
 }
 
@@ -218,7 +259,7 @@ function draw_table(table_name,title){
 		"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "<font size=3>---查無結果---</font>"}
 	});
 	//$("#animate_table").fadeIn(1000);
-	$(selector+" tr").css({"height":"56px","text-align": "center"});
+	$(selector+" tbody tr").css({"height":"48px","text-align": "center"});
 	$("#"+name).animate({"opacity":"0.01"},1);
 	$("#"+name).animate({"opacity":"1"});
 }

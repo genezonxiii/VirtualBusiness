@@ -17,7 +17,7 @@
 <!-- 圖片的 -->
 <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
 <!-- Generic page styles -->
-<link rel="stylesheet" href="css/photo/style.css">	
+<link rel="stylesheet" href="css/photo/style.css">
 <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
 <link rel="stylesheet" href="css/photo/jquery.fileupload.css">
 <link rel="stylesheet" href="css/styles.css" />
@@ -25,10 +25,80 @@
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <!-- <script type="text/javascript" src="js/jquery-1.10.2.js"></script> -->
-<style>
-table.form-table {
- 	border-spacing: 10px 8px !important; 
-}
+<style type="text/css">
+	table.form-table {
+	 	border-spacing: 10px 8px !important; 
+	}
+/* 	.warning_msg{ */
+/* 		position:absolute; */
+/* 		left:calc(47%); */
+/* 		z-index:9999; */
+/* 	} */
+
+	ul, li {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.abgne_tab {
+		position:relative;
+		top: -43px;
+		left:5px;
+		clear: left;
+		width: 99.3%;
+		margin: 10px 0;
+
+	}
+	ul.tabs {
+		width: 100%;
+		height: 32px;
+/* 		border-bottom: 1px solid #999; */
+/* 		border-left: 1px solid #999; */
+	}
+	ul.tabs li {
+/* 	 	border-radius: 15px 15px 0 0; */
+		float: left;
+		height: 31px;
+		line-height: 31px;
+		overflow: hidden;
+		position: relative;
+		margin-bottom: -1px;	/* 讓 li 往下移來遮住 ul 的部份 border-bottom */
+/* 		border: 1px solid #999; */
+		border:0px solid #fff;
+		border-left: none;
+/* 		background: #e1e1e1; */
+		background:#85b9fF;
+	}
+	ul.tabs li a {
+		display: block;
+		padding: 0 20px;
+		color: #000;
+		border: 1px solid #fff;
+		text-decoration: none;
+	}
+	ul.tabs li a:hover {
+		background: #5599FF;
+	}
+	ul.tabs li.active  {
+		background: #EEF3F9;
+/* 		#fff; */
+/* 		border-bottom: 1px solid #fff; */
+	}
+	ul.tabs li.active a:hover {
+/* 		background: #cEd3d9; */
+		background: #EEF3F9;
+	}
+	div.tab_container {
+		clear: left;
+		width: 100%;
+/* 		border: 1px solid #999; */
+		border:0px solid #fff;
+		border-top: none;
+		background: #EEF3F9;
+	}
+	div.tab_container .tab_content {
+/* 		padding: 20px; */
+	}
 </style>
 </head>
 <body>
@@ -65,25 +135,34 @@ table.form-table {
 <script type="text/javascript" src="js/jquery-1.11.4.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script src="js/photo/jquery-ui.js"></script>
+<script type="text/javascript" src="js/photo/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 
 <script>
+var c_product_id_tags=[];
+var product_name_tags=[];
 	var new_or_edit=0;
 	var scan_exist=0;
 	var information;
+	//##############Draw_datatable##############
+	//##############Draw_datatable##############
+	//##############Draw_datatable##############
 	function draw_product(info){
 		$("#sales-contain").css({"opacity":"0"});
+		$("#packages-contain").css({"opacity":"0"});
 		warning_msg("---讀取中請稍候---");
+// 		$(".warning_msg").remove();
+// 		$("#sales").append('<div class="warning_msg">---讀取中請稍候---</div>');
+// 		$("#packages").append('<div class="warning_msg">---讀取中請稍候---</div>');
 		$.ajax({
 			type : "POST",
 			url : "product.do",
 			data : info,
 			success : function(result) {
-				console.log(result);
+				//console.log(result);
 					var json_obj = $.parseJSON(result);
 					var len=json_obj.length;
 					//判斷查詢結果
@@ -139,26 +218,56 @@ table.form-table {
 						$("#sales-contain").animate({"opacity":"0.01"},1);
 						$("#sales-contain").animate({"opacity":"1"},300);
 						warning_msg("");
+// 						$("#sales .warning_msg").remove();
 					}
 					if(resultRunTime<2){
 						$("#sales-contain").hide();
 						warning_msg("---查無此結果---");
+// 						$("#sales").append('<div class="warning_msg">---查無此結果---</div>');
 					}
 				}
 			});
-		
+// 		skypeforbusiness
+// 		$.ajax({
+// 			type : "POST",
+// 			url : "productpackage.do",
+// 			data :{ action : "search"},
+// 			success : function(result) {
+// 				alert(result);
+// 				var result_table = "";
+// 				var json_obj = $.parseJSON(result);
+// 				$.each(json_obj,function(i, item) {
+// 					var json_obj2 = $.parseJSON(json_obj[i].content);
+					
+// 					result_table+="<tr>"+
+// 					"<td>"+json_obj[i].c_product_id+"</td>"+
+// 					"<td>"+json_obj[i].product_name+"</td>"+
+// 					"<td>"+json_obj[i].supply_name+"</td>"+
+// 					"<td>"+json_obj[i].price+"</td>"+
+// 					"<td>"+json_obj[i].type_id+"</td>"+
+// 					"<td>"+json_obj[i].barcode+"</td>"+
+// 					"<td>"+json_obj[i].description+"</td>"+
+// 					"<td>"+json_obj[i].content+
+// 					"</td></tr>";
+// 				});
+// 				$("#packages").dataTable().fnDestroy();
+// 				if(json_obj.length>0){
+// 					$("#packages tbody").html(result_table);
+// 					$("#packages").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
+// 					$("#packages-contain").show();
+// 					$("#packages-contain").animate({"opacity":"0.01"},1);
+// 					$("#packages-contain").animate({"opacity":"1"},300);
+// 					$("#packages .warning_msg").remove();
+// 				}else{
+// 					$("#packages-contain").hide();
+// 					$("#packages").append('<div class="warning_msg">---查無組合包---</div>');
+// 				}
+// 			}
+// 		});
 	}
-	
-	
-	
-// 	$(document).scannerDetection({
-//     	timeBeforeScanTest: 200, // wait for the next character for upto 200ms
-//     	startChar: [120], // Prefix character for the cabled scanner (OPL6845R)
-//     	endChar: [13], // be sure the scan is complete if key 13 (enter) is detected
-//     	avgTimeByChar: 40, // it's not a barcode if a character takes longer than 40ms
-//     	onComplete: function(barcode, qty){}, // main callback function	
-//     	onKeyDetect:function(barcode,qty){$("input").blur();}
-//     });
+	//##############Scanner##############
+	//##############Scanner##############
+	//##############Scanner##############
 	jQuery(document).ready(function($) {
 	    $(window).scannerDetection();
 	    $(window).bind('scannerDetectionComplete',function(e,data){
@@ -203,7 +312,10 @@ table.form-table {
 	        });
 	    $(window).scannerDetection('success');
 	});
+	
+	
 	$(function() {
+		
 		$(".bdyplane").animate({"opacity":"1"});
 		var uuid = "";
 		var c_product_id="";
@@ -230,84 +342,38 @@ table.form-table {
 		//驗證
 		var validator_insert = $("#insert-dialog-form-post").validate({
 			rules : {
-				c_product_id : {
-					maxlength : 40,
-					required : true
-				},
-				product_name:{
-					maxlength : 80,
-					required : true
-				},
-				supply_name : {
-					maxlength : 40,
-					required : true
-				},
-				type_id: {
-					required : true
-				},
-				unit_id: {
-					required : true
-				},
-				cost: {
-					required : true
-				},
-				price: {
-					required : true
-				},
-				keep_stock: {
-					required : true
-				},
-				description : {
-					stringMaxLength : 200
-				},
-				barcode : {
-					stringMaxLength : 40
-				}
+				c_product_id : {maxlength : 40,required : true},
+				product_name:{maxlength : 80,required : true},
+				supply_name : {maxlength : 40,required : true},
+				type_id: {required : true},
+				unit_id: {required : true},
+				cost: {required : true},
+				price: {required : true},
+				keep_stock: {required : true},
+				description : {stringMaxLength : 200},
+				barcode : {stringMaxLength : 40}
 			}
 		});
 		var validator_update = $("#update-dialog-form-post").validate({
 			rules : {
-				c_product_id : {
-					maxlength : 40,
-					required : true
-				},
-				product_name:{
-					maxlength : 80,
-					required : true
-				},
-				supply_name : {
-					maxlength : 40,
-					required : true
-				},
-				type_id: {
-					required : true
-				},
-				unit_id: {
-					required : true
-				},
-				cost: {
-					required : true
-				},
-				price: {
-					required : true
-				},
-				keep_stock: {
-					required : true
-				},
-				description : {
-					stringMaxLength : 200
-				},
-				barcode : {
-					stringMaxLength : 40
-				}
+				c_product_id : {maxlength : 40,required : true},
+				product_name:{maxlength : 80,required : true},
+				supply_name : {maxlength : 40,required : true},
+				type_id: {required : true},
+				unit_id: {required : true},
+				cost: {required : true},
+				price: {required : true},
+				keep_stock: {required : true},
+				description : {stringMaxLength : 200},
+				barcode : {stringMaxLength : 40}
 			}
-		});		
+		});
 		$("#searh-name").click(function(e) {
 			e.preventDefault();
 			information={
-					action : "search_name",
-					product_name : $("#searh_name").val(),
-				};
+				action : "search_name",
+				product_name : $("#searh_name").val(),
+			};
 			draw_product(information);
 		});
 		
@@ -315,9 +381,9 @@ table.form-table {
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			information={
-					action : "search",
-					supply_name : $("input[name='searh_product_name'").val(),
-				};
+				action : "search",
+				supply_name : $("input[name='searh_product_name'").val(),
+			};
 			draw_product(information);
 		});
 		//新增Dialog相關設定
@@ -350,7 +416,8 @@ table.form-table {
 			// 							photo : $("#dialog-form-insert input[name='photo']").val(),
 			// 							photo1 : $("#dialog-form-insert input[name='photo1']").val(),
 										description : $("#dialog-form-insert input[name='description']").val(),
-										barcode : $("#dialog-form-insert input[name='barcode']").val()
+										barcode : $("#dialog-form-insert input[name='barcode']").val(),
+										ispackage : "0"
 									};
 								draw_product(information);
 								
@@ -372,9 +439,53 @@ table.form-table {
 				validator_insert.resetForm();
 				$("#insert-dialog-form-post").trigger("reset");
 			}
-		})
-		.css("width", "10%");
+		}).css("width", "10%");
 		$("#dialog-form-insert").show();
+		
+// 		skypeforbusiness
+// 		$("#dialog-form-package").dialog({
+// 			draggable : false, resizable : false, autoOpen : false,
+// 			height : "auto", width : "auto", modal : true,
+// 			show : {effect : "blind",duration : 300},
+// 			hide : {effect : "fade",duration : 300},
+// 			buttons : [{
+// 						id : "insert",
+// 						text : "新增",
+// 						click : function() {
+// 							//$("#sales tbody").html("<tr style='text-align:center;'><td rowspan='2'>123</td><td rowspan='2'>ABC組合包</td><td rowspan='2'>pershing</td><td rowspan='2' colspan='2'>組合包</td><td rowspan='2'>販售價格:<br>$123元</td><td rowspan='2' style=''>內含<img src='./images/hifi.png' style='height:50px;vertical-align:middle;' /></td><td>123</td><td>123</td><td>123</td><td>123</td><td>123</td><td>123</td></tr><tr><td>　</td></tr>"+$("#sales tbody").html());
+// 							$("#dialog-form-package").dialog("close");
+// 							var tmp='[{"package_id":"708d91ca-a71d-11e6-922d-005056af760c","parent_id":"b1eebd9b-a4bc-11e6-922d-005056af760c","product_id":"e3205e2a-809a-11e6-ac1c-005056af760c","quantity":"3","package_desc":"紅色三層派"},{"package_id":"708d91ca-a71d-11e6-922d-005056af760d","parent_id":"b1eebd9b-a4bc-11e6-922d-005056af760c","product_id":"e3205e2a-809a-11e6-ac1c-005056af760c","quantity":"2","package_desc":"黃色三層派"},{"package_id":"c3ef439b-a623-11e6-922d-005056af760c","parent_id":"b1eebd9b-a4bc-11e6-922d-005056af760c","product_id":"0a8b87bb-a256-11e6-922d-005056af760c","quantity":"1","package_desc":"#紅黃藍組合包#"}]';
+// 							$.ajax({
+// 								type : "POST",
+// 								url : "productpackage.do",
+// 								data :{
+// 									action : "search",
+// 									c_package_id : $("#dialog-form-package input[name='c_product_id']").val(),
+// 									supply_name : $("#dialog-form-package input[name='supply_name']").val(),
+// 									package_name: $("#dialog-form-package input[name='product_name']").val(),
+// 									price: $("#dialog-form-package input[name='price']").val(),
+// 									package_type: $("#dialog-form-package input[name='package_type']").val(),
+// 									barcode: $("#dialog-form-package input[name='barcode']").val(),
+// 									description: $("#dialog-form-package input[name='description']").val(),
+// 									packagecontain: tmp  //$().val(),
+// 								},
+// 								success : function(result) {
+// 									//alert($("#dialog-form-package input[name='c_product_id']").val());
+// 									alert(result);
+// 								}
+// 						 	});
+							
+							
+// 						}
+// 				},{
+// 						text : "取消",
+// 						click : function() {
+// 							$("#dialog-form-package").dialog("close");
+// 						}
+// 				}]
+// 		});
+// 		$("#dialog-form-package").show();
+		
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
 			draggable : false, resizable : false, autoOpen : false,
@@ -385,9 +496,9 @@ table.form-table {
 			buttons : {
 				"確認刪除" : function() {
 					information={
-							action : "delete",
-							product_id : uuid
-						};
+						action : "delete",
+						product_id : uuid
+					};
 					draw_product(information);
 					$(this).dialog("close");
 				},
@@ -409,22 +520,23 @@ table.form-table {
 				click : function() {
 					if ($('#update-dialog-form-post').valid()) {
 						information={
-	 							action : "update",
-								product_id : product_id,
-	 							c_product_id : $("#dialog-form-update input[name='c_product_id']").val(),
-								product_name : $("#dialog-form-update input[name='product_name']").val(),
-								supply_id : $("#dialog-form-update input[name='supply_id']").val(),
-								supply_name : $("#dialog-form-update input[name='supply_name']").val(),
-								type_id : $("#dialog-form-update select[name='select_update_type_id']").val(),
-								unit_id : $("#dialog-form-update select[name='select_update_unit_id']").val(),
-								cost : $("#dialog-form-update input[name='cost']").val(),
-								price : $("#dialog-form-update input[name='price']").val(),
-								keep_stock : $("#dialog-form-update input[name='keep_stock']").val(),
-								photo : $("#photo0-update").val(),//$("#dialog-form-update input[name='photo-update']").val(),
-								photo1 : $("#photo1-update").val(),//$("#dialog-form-update input[name='photo1-update']").val(),
-								description : $("#dialog-form-update input[name='description']").val(),
-								barcode : $("#dialog-form-update input[name='barcode']").val()
-							};
+ 							action : "update",
+							product_id : product_id,
+ 							c_product_id : $("#dialog-form-update input[name='c_product_id']").val(),
+							product_name : $("#dialog-form-update input[name='product_name']").val(),
+							supply_id : $("#dialog-form-update input[name='supply_id']").val(),
+							supply_name : $("#dialog-form-update input[name='supply_name']").val(),
+							type_id : $("#dialog-form-update select[name='select_update_type_id']").val(),
+							unit_id : $("#dialog-form-update select[name='select_update_unit_id']").val(),
+							cost : $("#dialog-form-update input[name='cost']").val(),
+							price : $("#dialog-form-update input[name='price']").val(),
+							keep_stock : $("#dialog-form-update input[name='keep_stock']").val(),
+							photo : $("#photo0-update").val(),//$("#dialog-form-update input[name='photo-update']").val(),
+							photo1 : $("#photo1-update").val(),//$("#dialog-form-update input[name='photo1-update']").val(),
+							description : $("#dialog-form-update input[name='description']").val(),
+							barcode : $("#dialog-form-update input[name='barcode']").val(),
+							ispackage : "0"
+						};
 						draw_product(information);
 						$("#update-dialog-form-post").trigger("reset");
 						update_dialog.dialog("close");
@@ -461,6 +573,12 @@ table.form-table {
 			confirm_dialog.dialog("open");
 		});
 		//新增事件聆聽
+		
+// 		skypeforbusiness
+// 		$("#create-package").click( function() {
+// 			$("#dialog-form-package").dialog("open");
+// 		});
+		
 		$("#create-sale").click( function() {
 			new_or_edit=1;
 			insert_dialog.dialog("open");
@@ -472,6 +590,7 @@ table.form-table {
 			scan_exist=1;
 			if(!scan_exist){$("#warning").dialog("open");};
 		});
+		
 		//修改事件聆聽
 		$("#sales").delegate(".btn_update", "click", function(e) {
 			new_or_edit=2;
@@ -585,7 +704,7 @@ table.form-table {
     	            $(this).val('');
     	            $(this).attr("placeholder","輸入正確的供應商名稱!");
     	        }
-    	    }     
+    	    }
          });
   		$("#insert_supply_name").bind('focus', function(){  
   	    	$(this).attr("placeholder","輸入供應商名稱");
@@ -719,14 +838,18 @@ table.form-table {
 	    	            $(this).val('');
 	    	            $(this).attr("placeholder","輸入正確的產品名稱!");
 	    	        }
-	    	    }     
+	    	    }  
+	            
 	         });
+	       $("#searh_name").dblclick(function(event){ $("#searh_name").autocomplete({minLength: 0}); });
 	       $("#searh_product_name").bind('focus', function(){   
 	       	$(this).attr("placeholder","輸入供應商名稱");
 	    	var eve=jQuery.Event("keydown");
 	    	eve.which=40;
 	      	$(this).trigger(eve);
+	      	
 	     } );
+	    
 			//處理新增修改的下拉選單unit_id
                $.ajax({
                    url : "product.do",
@@ -948,9 +1071,6 @@ table.form-table {
 	    }).prop('disabled', !$.support.fileInput)
 	        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 	    
-	    
-	    
-	    
 	    //////////////////////////////////////////////////////////////////
         
 	    $('#fileupload-update').fileupload({
@@ -1168,6 +1288,48 @@ table.form-table {
 				$("#insert_currency").html(result_select);
 			}
 		});
+		 
+	    $.ajax({
+			type : "POST",
+			url : "exchange.do",
+			data :{action : "search"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].c_product_id!=null){
+						c_product_id_tags[i]=json_obj[i].c_product_id;
+					}
+					if(json_obj[i].product_name!=null){
+						product_name_tags[i]=json_obj[i].product_name;
+					}
+				});
+			}
+		});
+
+	    auto_complete("package_product_name",product_name_tags);
+	    
+// 	    skypeforbusiness
+// 	    var _showTab = 0;
+// 		var $defaultLi = $('ul.tabs li').eq(_showTab).addClass('active');
+// 		$($defaultLi.find('a').attr('href')).siblings().hide();
+		
+// 		// 當 li 頁籤被點擊時...
+// 		// 若要改成滑鼠移到 li 頁籤就切換時, 把 click 改成 mouseover
+// 		$('ul.tabs li').click(function() {
+// 			// 找出 li 中的超連結 href(#id)
+// 			var $this = $(this),
+// 				_clickTab = $this.find('a').attr('href');
+// 			// 把目前點擊到的 li 頁籤加上 .active
+// 			// 並把兄弟元素中有 .active 的都移除 class
+// 			$this.addClass('active').siblings('.active').removeClass('active');
+// 			// 淡入相對應的內容並隱藏兄弟元素
+// 			$(_clickTab).stop(false, true).fadeIn().siblings().hide();
+
+// 			return false;
+// 		}).find('a').focus(function(){
+// 			this.blur();
+// 		});
+		
 	    $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){
@@ -1178,22 +1340,21 @@ table.form-table {
 			$(".input-field-wrap").slideToggle("slow");
 			$(".downdown").slideToggle();
 		});
-	});	
+	});
 </script>
-
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="是否刪除此商品?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
 			<!--對話窗樣式-修改 -->
 			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
-				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline"	>
+				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline">
 					<fieldset>
 				<table class="form-table">
 					<tbody>
 						<tr>
 							<td>自訂產品ID：</td><td><input type="text" id="c_p_id2" name="c_product_id"/></td>
-							<td>廠商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
+							<td>供應商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
 						</tr><tr>
 							<td>產品類別：</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
 							<td>產品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
@@ -1214,11 +1375,11 @@ table.form-table {
 							<td>產品說明：</td><td><input type="text" name="description"/></td>
 						</tr>
    		         	  </tbody>
-   		         	  </table>		
+   		         	  </table>
 					</fieldset>
 				</form>
 				<!-- photo section begin by Melvin -->
-					<table class="form-table">
+				<table class="form-table">
 					<tbody>
 					<tr>
 						<td>產品圖片：</td>
@@ -1230,7 +1391,7 @@ table.form-table {
 							</span>
 							<div id="files-update" class="files" ></div>
                			</td>
-               		 	</tr>	
+               		</tr>	
                		<tr>
               			 <td>產品圖片2：</td>
               			 <td>	
@@ -1241,15 +1402,70 @@ table.form-table {
 					         </span>
 					         <div id="files2-update" class="files"></div>        
                			</td>
-               			</tr>	
-               	  		</tbody>
-               	  </table>		
+               		</tr>
+               	</tbody>
+               	</table>		
                	<!-- photo section end by Melvin -->
                	<img id="product-photo" src="">
                	<img id="product-photo1" src="">
  
 			</div>
 			<!--對話窗樣式-新增 -->
+			
+<!-- 			skypeforbusiness -->
+<!-- 			<div id="dialog-form-package" title="新增產品包" style="display:none;"> -->
+<!-- 				<form name="insert-dialog-form-post" id="insert-dialog-form-post_" style="display:inline"> -->
+<!-- 					<fieldset> -->
+<!-- 					<table class="form-table"> -->
+<!-- 					<tbody> -->
+<!-- 						<tr> -->
+<!-- 							<td>自訂組合包ID：</td><td><input type="text" id="package_c_p_id_"name="c_product_id"/></td> -->
+<!-- 							<td>供應商名稱：</td><td><input type="text" id="package_supply_name_" name="supply_name"/></td> -->
+<!-- 						</tr><tr> -->
+<!-- 							<td>組合包名稱：</td><td><input type="text" id="package_name"name="product_name"/></td> -->
+<!-- 							<td>售價：</td><td><input type="text" id="package_price" name="price"/></td> -->
+<!-- 						</tr><tr> -->
+<!-- 							<td>產品類別：</td><td><input type="text" id="package_type"name="package_type"/></td> -->
+<!-- 							<td>條碼(<input id="same3" type="checkbox" style="position:static;transform: scale(0.8);"  -->
+<!-- 							onclick="if($('#same3').prop('checked')){$('#package_barcode').val($('#package_c_p_id_').val());}else{$('#package_barcode').val('');}">同ID)：</td><td><input type="text" id="package_barcode" name="barcode"/></td> -->
+<!-- 						</tr><tr> -->
+<!-- 							<td>說明：</td><td><input type="text" name="description"/></td> -->
+<!-- 						</tr><tr> -->
+<!-- 							<td colspan='4' style='width:100%;text-align:center;'> -->
+<!-- 							<hr style='margin-left: 30px;margin-right: 10px;border-top:1px solid #ccc;'> -->
+<!-- 							產品包內含 -->
+<!-- 							</td> -->
+<!-- 						</tr><tr> -->
+<!-- 							<td colspan='4' style='width:100%;text-align:center;'> -->
+<!-- 							商品自訂ID：<input type="text" style="width:100px;" id="package_product_name"name="product_name"/> -->
+<!-- 							商品名稱：　<input type="text" id="package_product_name"name="product_name"/> -->
+<!-- 							　數量：　<input type="text" id="package_amount" style="width:70px;"/> -->
+<!-- 							　<a class='btn btn-primary' onclick='if($("#package_product_name").val().length>1){$("#package-contain tbody").append("<tr><td>某ID</td><td>"+$("#package_product_name").val()+"</td><td>"+$("#package_amount").val()+"</td><td>"+" <div class=\"table-row-func btn-in-table btn-gray\"><i class=\"fa fa-ellipsis-h\"></i><div class=\"table-function-list\"><button class=\"btn-in-table btn-alert btn_delete\" title=\"刪除\" onclick=\"$(this).parent().parent().parent().parent().remove();\" ><i class=\"fa fa-trash\"></i></button></div></div> "+"</td></tr>")}'>>></a> -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
+<!--    		         	  </tbody> -->
+<!--    		         	  </table> -->
+<!--    		        <div style='max-height:180px;overflow-y:auto;'> -->
+<!--    		         	 	<table id="package-contain" style="margin:0 auto;width:75%;"class='result-table'> -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<th>產品ID</th><th>產品名稱</th><th>數量</th><th>功能</th> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 							<tbody> -->
+<!-- 								<tr> -->
+<!-- 									<td>3345678</td><td>咖啡陶杯</td><td>1</td> -->
+<!-- 									<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i> -->
+<!-- 									<div class='table-function-list'> -->
+<!-- 										<button class='btn-in-table btn-alert btn_delete' title='刪除' id=''value=''onclick='$(this).parent().parent().parent().parent().remove();' ><i class='fa fa-trash'></i></button> -->
+<!-- 									</div></div></td> -->
+<!-- 								</tr> -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
+<!-- 				</div> -->
+<!-- 					</fieldset> -->
+<!-- 				</form> -->
+<!-- 			</div> -->
 			<div id="dialog-form-insert" title="新增產品資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
@@ -1330,40 +1546,70 @@ table.form-table {
 				</div>
 				<font color='#6A5ACD' >掃條碼亦可取得商品資料</font>
 				<div class="btn-row">
-					<button class="btn btn-exec btn-wide" id="create-sale">新增商品資料</button>
+					<button class="btn btn-exec btn-wide" id="create-sale">新增商品資料</button>　
+<!-- 					<button class="btn btn-exec btn-wide" id="create-package">新增組合包</button> -->
 				</div>
-				
 			</div><!-- /.form-wrap -->
 		</div>
-			
 			<!-- 第一列 -->
-			<div class="row search-result-wrap" align="center">
-				<div id="sales-contain" class="ui-widget" style="display:none;">
-					<table id="sales" class="result-table" >
-						<thead>
-							<tr>
-								<th>自訂產品ID</th>
-								<th style="min-width:80px;">產品名稱</th>
-								<th>供應商名稱</th>
-								<th style="min-width:40px;">類別</th>
-								<th style="min-width:40px;">單位</th>
-								<th style="min-width:70px;">成本</th>
-								<th style="min-width:70px;">售價</th>
-								<th>安全庫存</th>
-								<th style="max-width:100px;background-image: none !important;">圖片1</th>
-								<th style="max-width:100px;background-image: none !important;">圖片2</th>
-								<th style="background-image: none !important;">產品說明</th>
-								<th>條碼</th>
-								<th style="background-image: none !important;">功能</th>
-							</tr>
-						</thead>
-						<tbody style="line-height:16px;">
-						</tbody>
-					</table>
+<!-- 	<div class="abgne_tab"> -->
+<!-- 		<ul class="tabs"> -->
+<!-- 			<li><a href="#tab1">普通商品</a></li> -->
+<!-- 			<li><a href="#tab2">組合包</a></li> -->
+<!-- 		</ul> -->
+<!-- 		<div class="tab_container"> -->
+<!-- 			<div id="tab1" class="tab_content"> -->
+				<div class="row search-result-wrap" align="center">
+					<div id="sales-contain" class="ui-widget" style="display:none;">
+						<table id="sales" class="result-table" >
+							<thead>
+								<tr>
+									<th>自訂產品ID</th>
+									<th style="min-width:100px;">產品名稱</th>
+									<th>供應商名稱</th>
+									<th style="min-width:40px;">類別</th>
+									<th style="min-width:40px;">單位</th>
+									<th style="min-width:70px;">成本</th>
+									<th style="min-width:70px;">售價</th>
+									<th>安全庫存</th>
+									<th style="max-width:100px;background-image: none !important;">圖片1</th>
+									<th style="max-width:100px;background-image: none !important;">圖片2</th>
+									<th style="background-image: none !important;">產品說明</th>
+									<th>條碼</th>
+									<th style="background-image: none !important;">功能</th>
+								</tr>
+							</thead>
+							<tbody style="line-height:16px;">
+							</tbody>
+						</table>
+					</div>
+					<span class="validateTips"> </span>
 				</div>
-				<span class="validateTips"> </span>
+<!-- 			</div> -->
+<!-- 			<div id="tab2" class="tab_content"> -->
+<!-- 				<div class="row search-result-wrap" align="center"> -->
+<!-- 					<div id="packages-contain" class="ui-widget" style="display:none;"> -->
+<!-- 						<table id="packages" class="result-table" > -->
+<!-- 							<thead> -->
+<!-- 								<tr> -->
+<!-- 									<th>自訂組合包ID</th> -->
+<!-- 									<th>組合包名稱</th> -->
+<!-- 									<th>供應商名稱</th> -->
+<!-- 									<th>售價</th> -->
+<!-- 									<th>產品類別</th> -->
+<!-- 									<th>條碼</th> -->
+<!-- 									<th>備註</th> -->
+<!-- 									<th>功能</th> -->
+<!-- 								</tr> -->
+<!-- 							</thead> -->
+<!-- 							<tbody > -->
+<!-- 							</tbody> -->
+<!-- 						</table> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			</div>
-	</div>
+		</div>
 <input type="text" id="photo0" style="display:none"/>
 <input type="text" id="photo1" style="display:none"/>
 <input type="text" id="photo0-update" style="display:none"/>

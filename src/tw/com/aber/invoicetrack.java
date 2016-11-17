@@ -106,7 +106,7 @@ public class invoicetrack extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_selectall_invoice_track = "call sp_selectall_invoice_track(?)";
 		private static final String sp_insert_invoice_track = "call sp_insert_invoice_track(?,?,?,?,?,?,?)";
-		private static final String sp_update_invoice_track = "call sp_update_exchange(?,?,?,?,?,?,?,?)";
+		private static final String sp_update_invoice_track = "call sp_update_invoice_track(?,?,?,?,?,?,?,?)";
 		private static final String sp_del_invoice_track  = "call sp_del_invoice_track(?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")

@@ -105,6 +105,8 @@
   <servlet>
 
 <!--########################以上server#####################################-->
+<!--######### jdbc:mysql://192.168.112.164/db_virtualbusiness  http://192.168.112.164:8090###########-->
+<!--######### jdbc:mysql://192.168.112.164/test_virtualbusiness http://192.168.112.164:9000#########-->
 <!--########################以下164+175####################################-->
 <!--
   <context-param>
@@ -137,7 +139,7 @@
   </context-param>
   <context-param>
     <param-name>uploadpath</param-name>
-    <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value>
+    <param-value>/data/vbupload</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -477,8 +479,40 @@
     <servlet-name>saledifftypestatic</servlet-name>
     <url-pattern>/saledifftypestatic.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>disscussion</servlet-name>
+    <servlet-class>tw.com.aber.disscussion</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>disscussion</servlet-name>
+    <url-pattern>/disscussion.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>disscussionsubject</servlet-name>
+    <servlet-class>tw.com.aber.disscussionsubject</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>disscussionsubject</servlet-name>
+    <url-pattern>/disscussionsubject.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+	<servlet-name>chatsubject</servlet-name>
+	<servlet-class>tw.com.aber.chat.chatsubject</servlet-class>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>chatsubject</servlet-name>
+	<url-pattern>/chatsubject.do</url-pattern>
+  </servlet-mapping>
   <!-- ############新的############ -->
   
+  <servlet>
+    <servlet-name>productpackage</servlet-name>
+    <servlet-class>tw.com.aber.product.controller.productpackage</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>productpackage</servlet-name>
+    <url-pattern>/productpackage.do</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>function</servlet-name>
     <servlet-class>tw.com.aber.function</servlet-class>
@@ -486,14 +520,6 @@
   <servlet-mapping>
     <servlet-name>function</servlet-name>
     <url-pattern>/function.do</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>test</servlet-name>
-    <servlet-class>tw.com.aber.test</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>test</servlet-name>
-    <url-pattern>/test.do</url-pattern>
   </servlet-mapping>
   
   <!-- ############新的############ -->

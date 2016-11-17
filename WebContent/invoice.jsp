@@ -256,7 +256,9 @@ function draw_invoice(parameter){
     									sale_id : json_obj[i]
     								},
     								success : function(result) {
-    									console.log('test');
+    									if("path_error"==result){alert("發票輸出路徑異常。\n\t請至'公司管理'介面輸入合法發票路徑。\n( 檔案名稱不可包含 \ / : ? \" < > | 字元 )");}
+    									if("no_invoiceNo"==result.substring(0, 12)){alert("沒有讀取到字軌規則。\n\t請至'發票字軌管理'介面\n\t建立合法發票字軌規則。");}
+    									console.log(result);
     								}
     							});
 //     							alert(json_obj[i]);

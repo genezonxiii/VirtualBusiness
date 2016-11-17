@@ -45,7 +45,7 @@ function draw_sale(parameter){
 		url : "sale.do",
 		data : parameter,
 		success : function(result) {
-				console.log(result);
+				//console.log(result);
 				var json_obj = $.parseJSON(result);
 				var len=json_obj.length;
 				//判斷查詢結果
@@ -754,6 +754,7 @@ function draw_sale(parameter){
 				
 			}
 		});
+		$("#searh_c_product_id").dblclick(function(){ $("#searh_c_product_id").autocomplete({minLength: 1}); });
 		auto_complete("insert-dialog-form-post input[name='name']",customer_tags);
 	 	auto_complete("update-dialog-form-post input[name='name']",customer_tags);
 	 	order_source_auto("insert-dialog-form-post input[name='order_source']");
@@ -877,7 +878,7 @@ function draw_sale(parameter){
 							</tr>
 							<tr>
 								<td>總金額：</td>
-								<td><input type="text" id="insert_product_price" name="insert_product_price" disabled></td>
+								<td><input type="text" id="insert_product_price" name="insert_product_price" placeholder="系統自動產生金額" disabled></td>
 								
 							</tr>
 							<tr>
@@ -944,15 +945,15 @@ function draw_sale(parameter){
 								<th style="min-width:120px">產品　ID/名稱</th>
 <!-- 								<th>自訂產品ID</th> -->
 								<th>數量</th>
-								<th style="min-width:80px">銷貨金額</th>
+								<th style="min-width:60px">銷貨金額</th>
 								<th>銷貨對象</th>
 								<th style="min-width:110px">發票</th>
 <!-- 								<th>發票日期</th> -->
 								<th>轉單日</th>
 <!-- 								<th>配送日</th> -->
-								<th>銷貨/出貨日期</th>
+								<th>銷/出貨日期</th>
 								<th>銷售平台</th>
-								<th style="background-image: none !important;">備註</th>
+								<th style="background-image: none !important;">註</th>
 								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>

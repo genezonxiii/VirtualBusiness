@@ -39,9 +39,14 @@ section {
 <!-- <script type="text/javascript" src="js/additional-methods.min.js"></script> -->
 <!-- <script type="text/javascript" src="js/messages_zh_TW.min.js"></script> -->
 <script>
+var unit_tags=[];
+var type_tags=[];
+var c_product_id_tags=[];
+var product_name_tags=[];
+var supply_tags=[];
+var customer_tags=[];
 
 	$(function() {
-		var sys;
 		$(".bdyplane").animate({"opacity":"1"});
 		$(".content-wrap a").click(function(){
 			$("#dialog-confirm").html("<table class='dialog-table'>"+
@@ -93,6 +98,92 @@ section {
 		$("#dialog-confirm").show();
 		order_source_auto("order_source");
 		order_source_auto("order_source2");
+		
+		
+// 		var unit_tags=[];
+// 		var type_tags=[];
+// 		var c_product_id_tags=[];
+// 		var product_name_tags=[];
+// 		var supply_tags=[];
+// 		var customer_tags=[];
+		
+		$.ajax({
+			type : "POST",
+			url : "productunit.do",
+			data :{action : "searh"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].unit_name!=null){
+						unit_tags[i]=json_obj[i].unit_name;
+					}
+				});
+			}
+		});
+		$.ajax({
+			type : "POST",
+			url : "producttype.do",
+			data :{action : "searh"},
+			success : function(result) {
+				//alert(result);
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].type_name!=null){
+						type_tags[i]=json_obj[i].type_name;
+					}
+				});
+			}
+		});
+		$.ajax({
+			type : "POST",
+			url : "product.do",
+			data :{action : "search"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].c_product_id!=null){
+						c_product_id_tags[i]=json_obj[i].c_product_id;
+					}
+					if(json_obj[i].product_name!=null){
+						product_name_tags[i]=json_obj[i].product_name;
+					}
+				});
+			}
+		});
+		$.ajax({
+			type : "POST",
+			url : "supply.do",
+			data :{action : "search"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].supply_name!=null){
+						supply_tags[i]=json_obj[i].supply_name;
+						$("#supply2").append("<option value='"+json_obj[i].supply_name+"'>"+json_obj[i].supply_name+"</option>");
+					}
+				});
+			}
+		});
+		$.ajax({
+			type : "POST",
+			url : "customer.do",
+			data :{action : "search"},
+			success : function(result) {alert(result);
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].name!=null){
+						customer_tags[i]=json_obj[i].name;
+					}
+				});
+			}
+		});
+		
+		auto_complete("unit",unit_tags);
+		auto_complete("type",type_tags);
+		auto_complete("c_product_id",c_product_id_tags);
+		auto_complete("product_name",product_name_tags);
+		auto_complete("supply",supply_tags);
+		auto_complete("customer",customer_tags);
 	});
 </script>
 			<!-- 第一列 -->
@@ -147,24 +238,24 @@ section {
 				<div class="form-wrap">
 					<div class="form-row">
 						<label for="">unit
-							<input type="text">
+							<input type="text" id='unit'>
 						</label>
 						<label for="">type
-							<input type="text">
+							<input type="text" id='type'>
 						</label>
 						<label for="">產品c_product_id
-							<input type="text">
+							<input type="text" id='c_product_id'>
 						</label>
 						<label for="">產品名
-							<input type="text">
+							<input type="text" id='product_name'>
 						</label>
 					</div>
 					<div class="form-wrap">
 						<label for="">供應商
-							<input type="text">
+							<input type="text" id='supply'>
 						</label>
 						<label for="">客戶名
-							<input type="text">
+							<input type="text" id='customer'>
 						</label>
 						<label for="">銷售平台
 							<input type="text" id="order_source2">
@@ -200,7 +291,7 @@ section {
 						</select>
 					</label>
 					<label for="">
-						<select name="" id="">
+						<select name="" id="supply2">
 							<option value="">供應商</option>
 							<option value="">選項</option>
 						</select>

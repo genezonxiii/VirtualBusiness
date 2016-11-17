@@ -16,6 +16,14 @@
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<style type="text/css">
+	.warning_msg{
+		position:relative;
+		height:0px;
+ 		padding-top:0px ! important; 
+		top:20px;
+	}
+</style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -86,8 +94,8 @@ function draw_purchase(parameter){
 							+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 							+ (isIE()?"<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>":"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>")
 							+ "	<div class='table-function-list' >"
-							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改進貨單' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
+							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除進貨單' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 							+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 							+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 							+ "	</div></div></td></tr>";	
@@ -616,7 +624,7 @@ function draw_purchase_detail(parameter){
 				purchase_id : $(this).val()
 			};
 			draw_purchase_detail(tmp);
-			
+			lookdown();
 		});
 		//明細新增Dialog相關設定
 		detail_insert_dialog = $("#detail-dialog-form-insert").dialog(
@@ -643,6 +651,7 @@ function draw_purchase_detail(parameter){
 								
 								detail_insert_dialog.dialog("close");
 								$("#detail-insert-dialog-form-post").trigger("reset");
+								lookdown();
 							}
 						}
 					}, {

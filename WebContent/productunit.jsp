@@ -41,7 +41,7 @@ function draw_productunit(parameter){
 				$.each(json_obj,function(i, item) {
 					var text = "";
 					if(json_obj[i].group_id!="common"){
-						text+= "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
+						text+="<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 							+ "	<div class='table-function-list'>"
 							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' ><i class='fa fa-pencil'></i></button>"
 							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' value='"+ json_obj[i].unit_id+ "'name='" + json_obj[i].unit_name+"' val2='"+json_obj[i].unit_name+"'><i class='fa fa-trash'></i></button>"
@@ -227,6 +227,24 @@ function draw_productunit(parameter){
 		$("#create-productunit").click( function() {
 			insert_dialog.dialog("open");
 		});
+		
+		
+		var unit_tags=[];
+		$.ajax({
+			type : "POST",
+			url : "productunit.do",
+			data :{action : "searh"},
+			success : function(result) {
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].unit_name!=null){
+						unit_tags[i]=json_obj[i].unit_name;
+					}
+				});
+			}
+		});
+		auto_complete("products2-serah-create input[name='searh_unit_name']",unit_tags);
+		
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){

@@ -1,5 +1,5 @@
 
-package tw.com.aber;
+package tw.com.aber.chat;
 
 import java.io.BufferedReader;
 import java.io.IOException;

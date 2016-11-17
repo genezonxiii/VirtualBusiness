@@ -103,7 +103,7 @@
     <param-value>http://www.a-ber.com.tw/video</param-value>
   </context-param>
   <servlet>
--->
+  -->
 <!--########################以上server#####################################-->
 <!--######### jdbc:mysql://192.168.112.164/db_virtualbusiness  http://192.168.112.164:8090###########-->
 <!--######### jdbc:mysql://192.168.112.164/test_virtualbusiness http://192.168.112.164:9000#########-->
@@ -495,32 +495,23 @@
     <servlet-name>disscussionsubject</servlet-name>
     <url-pattern>/disscussionsubject.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+	<servlet-name>chatsubject</servlet-name>
+	<servlet-class>tw.com.aber.chat.chatsubject</servlet-class>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>chatsubject</servlet-name>
+	<url-pattern>/chatsubject.do</url-pattern>
+  </servlet-mapping>
   <!-- ############新的############ -->
   
-  
   <servlet>
-    <servlet-name>group_tmp</servlet-name>
-    <servlet-class>tw.com.aber.group_tmp</servlet-class>
+    <servlet-name>productpackage</servlet-name>
+    <servlet-class>tw.com.aber.product.controller.productpackage</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>group_tmp</servlet-name>
-    <url-pattern>/group_tmp.do</url-pattern>
-  </servlet-mapping>
-<!--   <servlet> -->
-<!--     <servlet-name>WsChatServlet</servlet-name> -->
-<!--     <servlet-class>wsapp.WsChatServlet</servlet-class> -->
-<!--   </servlet> -->
-<!--   <servlet-mapping> -->
-<!--     <servlet-name>WsChatServlet</servlet-name> -->
-<!--     <url-pattern>/wschat/WsChatServlet</url-pattern> -->
-<!--   </servlet-mapping> -->
-  <servlet>
-	<servlet-name>ChatServlet</servlet-name>
-	<servlet-class>tw.com.aber.chat.ChatServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-	<servlet-name>ChatServlet</servlet-name>
-	<url-pattern>/chat</url-pattern>
+    <servlet-name>productpackage</servlet-name>
+    <url-pattern>/productpackage.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>function</servlet-name>
@@ -529,14 +520,6 @@
   <servlet-mapping>
     <servlet-name>function</servlet-name>
     <url-pattern>/function.do</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>test</servlet-name>
-    <servlet-class>tw.com.aber.test</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>test</servlet-name>
-    <url-pattern>/test.do</url-pattern>
   </servlet-mapping>
   
   <!-- ############新的############ -->

@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/styles.css">
   <script src="js/jquery-1.12.4.js"></script>
   <script src="js/jquery-ui.min.js"></script>
+  <script src="js/scripts.js"></script>
 <style>
 input[type="text"], input[type="password"], select, textarea {
 	font-family: sans-serif;
@@ -115,16 +116,16 @@ $(function() {
 	    if(e.shiftKey){
 	    	if(e.which == 41){
 	    		e.preventDefault();
-	    		if(location.href.indexOf("abers1.eastasia.cloudapp.azure.com")>-1){
-	    			$("#uninumber").val("20939790");
-	    			$("#username").val("pershing@pershing.com.tw");
-	    			$("#password").val("1234");
+	    		if(location.href.indexOf("bers1.eastasia")>-1){
+	    			$("#uninumber").val(get_sensitive("Demouser_uni"));
+	    			$("#username").val(get_sensitive("Demouser_usr"));
+	    			$("#password").val(get_sensitive("Demouser_pwd"));
 	    			$("input").blur();
 	    			$("#verify").focus();
 	    		}else if(location.href.indexOf("164")>-1||location.href.indexOf("local")>-1){
-	    			$("#uninumber").val("1234");
-	    			$("#username").val("sett@archworld.com");
-	    			$("#password").val("1234");
+	    			$("#uninumber").val(get_sensitive("Myuser_uni"));
+	    			$("#username").val(get_sensitive("Myuser_usr"));
+	    			$("#password").val(get_sensitive("Myuser_pwd"));
 	    			$("input").blur();
 	    			$("#verify").focus();
 	    		}

@@ -171,9 +171,28 @@ public class invoice extends HttpServlet {
 				InvoiceDao dao= new InvoiceDao();
 				String invoicepath = dao.invoice_path_ingroup(group_id);
 				if(invoicepath.length()<2)return;
-				File f = new File(invoicepath + "/" + sale_id + ".txt");
 				
-				Writer objWriter = new BufferedWriter(new FileWriter(f));
+				//new File(getServletConfig().getServletContext().getInitParameter("uploadpath")+"/"+vender).mkdir();
+				//String path="/data/vbupload/invoice/";
+				String path=getServletConfig().getServletContext().getInitParameter("uploadpath")+"/invoice";
+				//path="C:/Users/10506002/git/VirtualBusiness/WebContent/upload/invoice";
+				new File(path).mkdir();
+				String[] tokens = invoicepath.split("/");
+				int i=0;
+				for(i=0;i<tokens.length;i++){
+					path=path+"/"+tokens[i].replace(':','_');
+					new File(path).mkdir();
+				}
+				File f = new File(path+ "/" + sale_id + ".txt");
+				Writer objWriter;
+				try{
+					objWriter = new BufferedWriter(new FileWriter(f));
+				}catch(Exception e){
+					System.out.println(e.toString());
+					System.out.println("path_error");
+					response.getWriter().write("path_error");
+					return;
+				}
 				
 				for(InvoiceBean master : list) {
 					
@@ -181,8 +200,16 @@ public class invoice extends HttpServlet {
 					objWriter.write("\t");
 					objWriter.write(master.getbMDFlag());	
 					objWriter.write("\t");
-					objWriter.write(master.getcInvoiceNo());	
-					objWriter.write("\t");
+					try{
+						objWriter.write(master.getcInvoiceNo());	
+						objWriter.write("\t");
+					}catch(Exception e){
+						objWriter.write("");	
+						objWriter.write("\t");
+						System.out.println(e.toString());
+						System.out.println("no_invoiceNo");
+						response.getWriter().write("no_invoiceNo");
+					}
 					objWriter.write(master.getdInvoiceDate());	
 					objWriter.write("\t");
 					objWriter.write(master.geteRandomNumber());	

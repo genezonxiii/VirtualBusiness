@@ -598,7 +598,10 @@ input[type="text"]:focus, input[type="text"].focus, input[type="password"]:focus
     background-color: #fff;
     border: 1px solid #3F7FAA;
 }
-input[type="text"]:disabled, input[type="text"].readonly, input[type="password"]:disabled, input[type="password"].readonly, select:disabled, select.readonly, textarea:disabled, textarea.readonly {}
+input[type="text"]:disabled, input[type="text"].readonly, input[type="password"]:disabled, input[type="password"].readonly, select:disabled, select.readonly, textarea:disabled, textarea.readonly {
+	/* 	Ben偷加的 */
+	background: #d3d3d3;
+}
 input[type="text"].error, input[type="password"].error, select.error, textarea.error {
 	border: 1px solid #e92500;
 	background: rgb(255, 213, 204);
@@ -1205,7 +1208,7 @@ button.btn {
         border:1px solid #333;
         background:#f7f5d1;
 /* 		background:red; */
-        padding:1px;
+        padding:3px;
         color:#333;
         display:none;
 }

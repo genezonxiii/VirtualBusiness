@@ -113,7 +113,7 @@
 		         }
 		     }           
 		 });
-
+		$("#c_product_id").dblclick(function(event){ $("#c_product_id").autocomplete({minLength: 1}); });
 		//處理 product name 的autocomplete查詢
 		$("#product_name").autocomplete({
 		     minLength: 2,
@@ -154,7 +154,7 @@
 		         }
 		     }           
 		 });
-		
+		$("#product_name").dblclick(function(event){ $("#product_name").autocomplete({minLength: 0}); });
 		//自訂產品查詢相關設定
 		$(".search-taginfo").click(function(e) {
 			e.preventDefault();

@@ -219,7 +219,15 @@ function draw_exchange(parameter){
 			$("#dialog-form-insert input[name='seq']").val('');
 			insert_dialog.dialog("open");
 		});
-		
+		$("#explane").dialog({
+			draggable : true, resizable : false, autoOpen : false,
+			width : 720 ,height : "auto", modal : false,
+			show : {effect : "blind", duration : 300 },
+			hide : { effect : "fade", duration : 300 },
+			buttons : {
+				"確定" : function() {$(this).dialog("close");}
+			}
+		});
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){
@@ -233,6 +241,7 @@ function draw_exchange(parameter){
 	});
 </script>
 		<div class="datalistWrap">
+			
 			<!--對話窗樣式-確認 -->
 			<div id="dialog-confirm" title="是否刪除此時期之發票字軌?" style="display:none;">
 			</div>
@@ -269,20 +278,20 @@ function draw_exchange(parameter){
 						<table class="form-table">
 							<tr>
 								<td>發票類型：</td>
-								<td><input type="text" name="invoice_type" placeholder="修改類型"></td>
+								<td><input type="text" name="invoice_type" placeholder="輸入發票類型"></td>
 							</tr><tr>
 								<td>發票年月：</td>
-								<td><input type="text" name="year_month" placeholder="修改年月"></td>
+								<td><input type="text" name="year_month" placeholder="輸入發票年月"></td>
 								<td>發票字頭：</td>
-								<td><input type="text" name="invoice_track" placeholder="修改字頭"></td>
+								<td><input type="text" name="invoice_track" placeholder="輸入發票字頭"></td>
 							</tr><tr>
 								<td>字軌開頭號：</td>
-								<td><input type="text" name="invoice_beginno" placeholder="修改字軌開頭號"></td>
+								<td><input type="text" name="invoice_beginno" placeholder="輸入發票字軌開頭號"></td>
 								<td>字軌結尾號：</td>
-								<td><input type="text" name="invoice_endno" placeholder="修改字軌結尾號"></td>
+								<td><input type="text" name="invoice_endno" placeholder="輸入發票字軌結尾號"></td>
 							</tr><tr>
 								<td>字軌捲數：</td>
-								<td><input type="text" name="seq" placeholder="修改字軌捲數"></td>
+								<td><input type="text" name="seq" placeholder="輸入發票字軌捲數"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -290,6 +299,7 @@ function draw_exchange(parameter){
 			</div>
 			<!-- 第一列 -->
 		<div class="input-field-wrap">
+		<button class='btn-explanation' onclick="$('#explane').dialog('open');" style="">?</button>
 			<div class="form-wrap">
 				<div class="btn-row">
 					<button class="btn btn-exec btn-wide" id="create-exchange">新增發票字軌</button>
@@ -318,6 +328,28 @@ function draw_exchange(parameter){
 		</div>
 	</div>
 	</div>
+<div id="explane" title="發票字軌規則詳述 (重要)" style="display:none;">
+	<div style="padding:0 40px; font-family: Helvetica, Arial, '微軟正黑體', '新細明體', sans-serif;">
+		<br><li>發票年月欄填入<font color=red size=4>5碼</font>代表的是開立發票檔期(註2)的<font color=red size=4>民國</font>年加上月份<font color=red size=4>需補零</font>，並且，捲數必須從<font color=red size=4>1</font>開始計數，發票號碼配給自'字軌開頭'開始往上計數至'字軌結尾'。</li>
+		<font size=2>
+		<br>*註1：發票字頭虛為兩碼英文字母。
+		<br><br>*註2：發票年月欄的發票檔期為兩個月一期，輸入<font color=red size=3>雙月</font>月份，即不論開立發票日期為105年1月 105年2月份，年月欄皆填入10502。
+		<br><br>*註3：發票字軌開頭及字軌結尾需為八位數字。
+		<br><br>*註4：發票類型說明如下:
+		<div style='padding-left:20px;line-height:18px;'>
+			<br>01：三聯式發票
+			<br>02：二聯式發票
+			<br>03：二聯式收銀機
+			<br>04：特種稅額
+			<br>05：電子計算機
+			<br>06：三聯是收銀機
+			<br><font color=red size=3>07：一般稅額計算之電子發票</font>
+			<br>08：特種稅額計算之電子發票
+		</div>
+		<br><br>*註5：目前提供之服務為<font color=red size=3>07：一般稅額計算之電子發票</font>，<br>　　　故，請發票類型請務必輸入07已確保系統之正確性。
+		</font><br><br>
+	</div>
+</div>
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>

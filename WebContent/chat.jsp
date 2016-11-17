@@ -117,8 +117,20 @@ input#chat {
         });
 
         Chat.initialize = function() {
-            if (window.location.protocol == 'http:') {
-                Chat.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
+            if (window.location.protocol == 'http:') { 
+                if(window.location.host.indexOf("168.112.164")>-1){
+                	//164
+                	console.log("ws_ver_chat_164");get_sensitive("164")
+                	Chat.connect('ws://'+get_sensitive("164")+'/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }else if(window.location.host.indexOf("ber.com.tw")>-1||window.location.host.indexOf("ers1.eastasia.cloudapp.azure.com")>-1){
+                	//abe
+                	console.log("ws_ver_chat_aber");
+                	Chat.connect('ws://'+get_sensitive("aber")+'/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }else{
+                	//localhost
+                	console.log("ws_ver_chat_local");
+                	Chat.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
+                }
                 console.log('ws://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
             } else {
                 Chat.connect('wss://' + window.location.host + '/VirtualBusiness/websocket/chat/'+'<%=request.getSession().getAttribute("user_name")%>');
@@ -135,7 +147,7 @@ input#chat {
         });
 
         var Console = {};
-
+        
         Console.log = (function(message) {
             var console = document.getElementById('console');
             var p = document.createElement('p');
@@ -147,9 +159,8 @@ input#chat {
             }
             console.scrollTop = console.scrollHeight;
         });
-
+        
         Chat.initialize();
-
         document.addEventListener("DOMContentLoaded", function() {
         	
             // Remove elements with "noscript" class - <noscript> is not allowed in XHTML
@@ -166,7 +177,6 @@ input#chat {
 //     	$("#send_msg").click(function(){});
     	$(".bdyplane").animate({"opacity":"1"});
 <%--     	var str = "<%=request.getSession().getAttribute("user_name")%>"; --%>
-//     	alert(str); 
     });
     </script>
 <!--     <div style="padding-right:20px;"><a href="chatsubject.jsp" style='position:absolute;right:150px;top:80px;'>返回</a></div> -->

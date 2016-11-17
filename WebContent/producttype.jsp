@@ -223,6 +223,23 @@ function draw_producttype(parameter){
 			insert_dialog.dialog("open");
 		});
 		
+		var type_tags=[];
+		$.ajax({
+			type : "POST",
+			url : "producttype.do",
+			data :{action : "searh"},
+			success : function(result) {
+				//alert(result);
+				var json_obj = $.parseJSON(result);
+				$.each (json_obj, function (i,item) {
+					if(json_obj[i].type_name!=null){
+						type_tags[i]=json_obj[i].type_name;
+					}
+				});
+			}
+		});
+		auto_complete("searh_type_name",type_tags);
+		
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){
@@ -259,7 +276,7 @@ function draw_producttype(parameter){
 						<table class="form-table">
 							<tr>
 								<td>產品類別：</td>
-								<td><input type="text" name="type_name"  placeholder="輸入商品類別名稱"></td>
+								<td><input type="text" name="type_name" placeholder="輸入商品類別名稱"></td>
 							</tr>
 						</table>
 					</fieldset>
@@ -271,7 +288,7 @@ function draw_producttype(parameter){
 				<div class="form-row">
 					<label for="">
 						<span class="block-label">商品類別名稱查詢</span>
-						<input type="text" name="searh_type_name">
+						<input type="text" id='searh_type_name' name="searh_type_name">
 					</label>
 					<button class="btn btn-darkblue" id="searh-producttype">查詢</button>
 				</div>

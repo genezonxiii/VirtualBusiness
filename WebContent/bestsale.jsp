@@ -126,7 +126,7 @@ function draw_barchart(data,title){
           this.textContent = i(t);
         };
      });
-//數量
+//排名數字
     date.selectAll('text')
     .data(data)
     .enter()

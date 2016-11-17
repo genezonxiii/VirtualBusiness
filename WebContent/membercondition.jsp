@@ -337,7 +337,7 @@ $(function() {
 					</select>
 				</td>
 				<td>入會累計金額：</td>
-				<td><input type="text" name="total_consumption"></td>
+				<td><input type="text" name="total_consumption"  placeholder="$"></td>
 			</tr>
 			<tr>
 				<td>續會累計期間：</td>
@@ -351,7 +351,7 @@ $(function() {
 					</select> 
 				</td>
 				<td>續會累計金額：</td>
-				<td><input type="text" name="continue_consumption"></td>
+				<td><input type="text" name="continue_consumption" placeholder="$"></td>
 			</tr>
 		</table>
 	</form>
@@ -374,7 +374,7 @@ $(function() {
 					</select>
 				</td>
 				<td>入會累計金額：</td>
-				<td><input type="text" name="total_consumption"></td>
+				<td><input type="text" name="total_consumption" placeholder="$"></td>
 			</tr>
 			<tr>
 				<td>續會累計期間：</td>
@@ -388,7 +388,7 @@ $(function() {
 					</select> 
 				</td>
 				<td>續會累計金額：</td>
-				<td><input type="text" name="continue_consumption"></td>
+				<td><input type="text" name="continue_consumption" placeholder="$"></td>
 			</tr>
 		</table>
 	</form>

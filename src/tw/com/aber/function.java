@@ -57,9 +57,24 @@ public class function extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
+		String action2= request.getParameter("action");
+		if("get_controversial".equals(action2)){
+			String askfor= request.getParameter("askfor");
+			if("164".equals(askfor)){response.getWriter().write("192.168.112.164:8080");}
+			if("aber".equals(askfor)){response.getWriter().write("abers1.eastasia.cloudapp.azure.com:8080");}
+			if("Demouser_uni".equals(askfor)){response.getWriter().write("20939790");}
+			if("Demouser_usr".equals(askfor)){response.getWriter().write("pershing@pershing.com.tw");}
+			if("Demouser_pwd".equals(askfor)){response.getWriter().write("1234");}
+			if("Myuser_uni".equals(askfor)){response.getWriter().write("1234");}
+			if("Myuser_usr".equals(askfor)){response.getWriter().write("sett@archworld.com");}
+			if("Myuser_pwd".equals(askfor)){response.getWriter().write("1234");}
+			
+			return ;
+		}
+		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
+		
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		int i=0,j;
