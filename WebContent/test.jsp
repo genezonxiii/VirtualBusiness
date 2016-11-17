@@ -29,7 +29,8 @@ function grows_up(str){
 	for(var i = 0; i < a.length; i++){
 	  
 	  if(a.charCodeAt(i)<=172 && a.charCodeAt(i)>=33){
-	  	tmp[i] = a.charCodeAt(i)+65248;//轉全形unicode +65248
+	  	tmp[i] = a.charCodeAt(i)+65248;
+	  	//轉全形unicode +65248
 	  }else if(a.charCodeAt(i)==32){
 		  tmp[i] =12288;
 	  }else{
