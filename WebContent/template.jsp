@@ -25,7 +25,6 @@
 	right:5px;
 	z-index:1;
 }
-
 .livehelp > div:nth-child(2n+1){
 	height:21px;
   	position: relative;
