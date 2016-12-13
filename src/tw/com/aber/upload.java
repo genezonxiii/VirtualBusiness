@@ -214,7 +214,7 @@ public class upload  extends HttpServlet {
 								+new String(Base64.encodeBase64String((fullname).getBytes()))
 								+"&usid="
 								+new String(Base64.encodeBase64String(user_id.getBytes()));
-		                
+						//System.out.println(conString);
 		                InputStream is = fi.getInputStream();
 		        		byte[] first = new byte[5] ;
 		        		is.read(first, 0, 5);

@@ -80,7 +80,7 @@ input#chat {
             }
 
             Chat.socket.onopen = function () {
-                Console.log('~<font color=gray>您進入了聊天室</font>~');
+                Console.log('~<font color=gray>您進入了討論區</font>~');
                 document.getElementById('send_msg').onclick =function(event) {
                    	event.preventDefault();
                     Chat.sendMessage();
@@ -95,7 +95,7 @@ input#chat {
 
             Chat.socket.onclose = function () {
                 document.getElementById('chat').onkeydown = null;
-                Console.log('~<font color=red>您離開了聊天室</font>~');
+                Console.log('~<font color=red>您離開了討論區</font>~');
             };
 
             Chat.socket.onmessage = function (message) {

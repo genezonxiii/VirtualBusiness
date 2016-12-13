@@ -311,6 +311,7 @@ public class customer extends HttpServlet {
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		private final String wsPath = getServletConfig().getServletContext().getInitParameter("pythonwebservice");
+//		private final String wsPath = "http://abers1.eastasia.cloudapp.azure.com:8090";
 
 		@Override
 		public void deleteCustomer(String customer_id, String user_id) {
@@ -444,9 +445,9 @@ public class customer extends HttpServlet {
 
 		@Override
 		public List<CustomerVO> searchAllDB(String group_id) {
-			
+
 			List<CustomerVO> list = new ArrayList<CustomerVO>();
-			
+	
         	String gidInBase64 = new String(Base64.encodeBase64String(group_id.getBytes()));
 //        	gidInBase64 = new String(Base64.encodeBase64String("cbcc3138-5603-11e6-a532-000d3a800878".getBytes()));
 			String url = wsPath + "/query/group=" + gidInBase64;

@@ -106,7 +106,7 @@ function draw_sale(parameter){
 							result_table 
 							+= "<tr>"
 							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+"</td>"
-							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
+							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].order_no +"'><a class='report' title='出貨報表' onclick='' href='./report.do?sale_id="+json_obj[i].sale_id+"'>"+ json_obj[i].order_no+ "</a></td>"
 							+ "<td name='"+ json_obj[i].product_name +"' name2='"+ json_obj[i].c_product_id +"'><div style='padding-bottom:4px;'>●"+json_obj[i].c_product_id+"</div>"+ json_obj[i].product_name+ "</td>"
 // 							+ "<td >"+ json_obj[i].c_product_id+ "</td>"
 							+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
@@ -143,7 +143,7 @@ function draw_sale(parameter){
 					$("#sales_contain_row").animate({"opacity":"1"},300);
 					tooltip("btn_update");
 					tooltip("btn_delete");
-					
+					tooltip("report");
 					warning_msg("");
 					//$("#sales").find("th").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
 					//$("#sales").find("td").css({"word-break":"break-all","min-width":"40px","text-align":"center" });
