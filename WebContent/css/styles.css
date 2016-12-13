@@ -438,6 +438,7 @@ h2.page-title {
     margin: 0;
     padding: 0 2em;
     position: fixed;
+    word-break:keep-all;
 }
 .content-wrap {
     background: #fff;

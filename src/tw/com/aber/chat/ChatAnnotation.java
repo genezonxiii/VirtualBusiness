@@ -75,7 +75,7 @@ public class ChatAnnotation {
         //System.out.println(this.color);
         connectionIds.incrementAndGet();
         connections.add(this);
-        String message = String.format("[<font color=red>系統</font>] %s %s", "<font color='"+color+"'>"+nickname+"</font>", "進入了聊天室");
+        String message = String.format("[<font color=red>系統</font>] %s %s", "<font color='"+color+"'>"+nickname+"</font>", "進入了討論區");
         //message = " * "+username+" has joined.";
         
         
@@ -97,7 +97,7 @@ public class ChatAnnotation {
     	connectionIds.decrementAndGet();
         connections.remove(this);
         String message = String.format("[<font color=red>系統</font>] %s %s",
-        		"<font color='"+color+"'>"+nickname+"</font>", "離開了聊天室.");
+        		"<font color='"+color+"'>"+nickname+"</font>", "離開了討論區.");
         broadcast(message);
         
         String tmp=""+connectionIds;

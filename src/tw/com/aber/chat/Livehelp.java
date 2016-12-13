@@ -57,6 +57,7 @@ public class Livehelp {
         }
         //broadcast("System(>_<):Leave:"+this.getName(),livehelper);
         broadcast("System(>_<):"+(online==1?"online":"offline"), this.getName());
+        broadcast("System(>_<):Total:"+connectionIds,livehelper);
     }
 
     @OnClose
@@ -71,6 +72,7 @@ public class Livehelp {
         }
         broadcast("System(>_<):Leave:"+this.getName(),livehelper);
         broadcast("System(>_<):"+(online==1?"online":"offline"), this.getName());
+        broadcast("System(>_<):Total:"+connectionIds,livehelper);
     }
 
     @OnMessage

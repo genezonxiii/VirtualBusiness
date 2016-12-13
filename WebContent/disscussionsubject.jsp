@@ -42,6 +42,7 @@ table.discuss tr:hover {
   background: #e8e8e8;
   border: 1px solid #aaa;
   width:40%;
+  min-width: 310px;
   transition: all 0.3s linear;
 }
 .title-block:hover {
@@ -96,6 +97,7 @@ function gethi(str){
 	if(str.indexOf("網路營銷")>-1){return "<span class='hi' style='background-color:blue;'>網路營銷</span>";}
 	if(str.indexOf("經營")>-1||str.indexOf("服務")>-1){return "<span class='hi' style='background-color:orange;'>經營服務</span>";}
 	if(str.indexOf("技巧")>-1){return "<span class='hi' style='background-color:green;'>技巧講座</span>";}
+	if(str.indexOf("系統")>-1){return "<span class='hi' style='background-color:red;'>系統層面</span>";}
 	return "<span class='hi' style='background-color:green;'>額外增開</span>";
 }
 function draw_disscussion(parameter){

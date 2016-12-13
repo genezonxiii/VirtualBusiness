@@ -53,6 +53,7 @@ function draw_disscussion(parameter){
 		url : "disscussion.do",
 		data : parameter,
 		success : function(result) {
+			alert(result);
 				var json_obj = $.parseJSON(result);
 				var result_table = "";
 				$.each(json_obj,function(i, item) {

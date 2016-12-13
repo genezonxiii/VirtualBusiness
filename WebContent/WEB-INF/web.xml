@@ -19,6 +19,7 @@
     <param-name>jdbcDriver</param-name>
     <param-value>com.mysql.jdbc.Driver</param-value>
   </context-param>
+  
 <!--########################以下平常#####################################-->
 <!--
   <context-param>
@@ -57,7 +58,7 @@
 -->
  <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
-
+<!--
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
@@ -103,12 +104,12 @@
     <param-value>http://www.a-ber.com.tw/video</param-value>
   </context-param>
   <servlet>
-
+  -->
 <!--########################以上server#####################################-->
 <!--######### jdbc:mysql://192.168.112.164/db_virtualbusiness  http://192.168.112.164:8090###########-->
 <!--######### jdbc:mysql://192.168.112.164/test_virtualbusiness http://192.168.112.164:9000#########-->
 <!--########################以下164+175####################################-->
-<!--
+
   <context-param>
   	<param-name>dbURL</param-name>
   	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
@@ -154,7 +155,7 @@
     <param-value>http://192.168.112.164/video</param-value>
   </context-param>
   <servlet>
--->
+
  <!--######################## 以上164+175 ###################################-->
  <!--###### C:/Users/10506002/git/VirtualBusiness/WebContent/upload ########-->
  <!--#################### /data/vbupload ###################################-->
@@ -503,8 +504,14 @@
 	<servlet-name>chatsubject</servlet-name>
 	<url-pattern>/chatsubject.do</url-pattern>
   </servlet-mapping>
-  <!-- ############新的############ -->
-  
+  <servlet>
+    <servlet-name>report</servlet-name>
+    <servlet-class>tw.com.aber.report.controller.Report</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>report</servlet-name>
+    <url-pattern>/report.do</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>productpackage</servlet-name>
     <servlet-class>tw.com.aber.product.controller.productpackage</servlet-class>
@@ -513,6 +520,8 @@
     <servlet-name>productpackage</servlet-name>
     <url-pattern>/productpackage.do</url-pattern>
   </servlet-mapping>
+  <!-- ############新的############ -->
+  
   <servlet>
     <servlet-name>function</servlet-name>
     <servlet-class>tw.com.aber.function</servlet-class>

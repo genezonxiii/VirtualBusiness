@@ -112,7 +112,8 @@ function draw_chattopic(parameter){
 					if(isIE()){opening=(new Date(json_obj[i].start_time.replace(" ","T"))-1000 * 60 * 10 < new Date())&&(new Date(json_obj[i].end_time.replace(" ","T"))  > new Date()-1000 * 60 * 10);}
 					result_table+= "<tr style='height:50px;"+(opening?"background-color:pink;":"")+"'>"
 					+ "<td>"+json_obj[i].topic+"</td>"
-					+ "<td>"+json_obj[i].start_time.replace(":00.0"," - ").replace(" ","<br>　")+("<br>"+json_obj[i].end_time.replace(" ","<br>　")).replace(("<br>"+json_obj[i].start_time.replace(" ","<br>　")).substring(0,18),"").replace(":00.0","")+"</td>"
+					+ "<td>"+json_obj[i].start_time.replace(":00.0"," - ").replace(" ","<br>　")+
+					("<br>"+json_obj[i].end_time.replace(" ","<br>　")).replace(("<br>"+json_obj[i].start_time.replace(" ","<br>　")).substring(0,19),"").replace(":00.0","")+"</td>"
 // 					+ "<td>"+json_obj[i].end_time.replace(":00.0","")+"</td>"
 					+ "<td>"+json_obj[i].teacher+"</td>"
 					+ "<td>"+json_obj[i].memo+"</td>"
@@ -157,10 +158,10 @@ function draw_chattopic(parameter){
 	  			<thead>
 	  				<tr>
 		  				<th style="min-width:120px">主題</th>
-		  				<th>討論區開放時間</th>
+		  				<th>討論區開放時間&nbsp;</th>
 <!-- 		  				<th>結束時間</th> -->
 		  				<th style="min-width:60px">講師</th>
-		  				<th width='50%'>備註</th>
+		  				<th width='50%' style='min-width:280px;'>備註</th>
 		  				<th width='80px'></th>
 		  			</tr>
 	  			</thead>

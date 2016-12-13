@@ -175,8 +175,8 @@ var product_name_tags=[];
 						$.each(json_obj,function(i, item) {
 							if(i<len-1){
 								//alert(json_obj[i].photo);
-								var tmp=(json_obj[i].photo.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo+" style='max-width:100px;max-height:100px'>";
-								var tmp1=(json_obj[i].photo1.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo1+" style='max-width:100px;max-height:100px'>";
+								var tmp=(json_obj[i].photo==null?"":(json_obj[i].photo.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo+" style='max-width:100px;max-height:100px'>");
+								var tmp1=(json_obj[i].photo==null?"":(json_obj[i].photo1.length<1)?"無圖片":"<img src=./image.do?picname="+json_obj[i].photo1+" style='max-width:100px;max-height:100px'>");
 								result_table 
 								+= "<tr>"
 								+ "<td name='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"

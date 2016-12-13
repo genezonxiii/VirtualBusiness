@@ -97,7 +97,18 @@ function lookdown(){
 }
 
 $(function(){
-	
+// 	$.ajax({
+// 		type : "POST",
+// 		url : "report.do",
+// 		async : false,
+// 		data :{
+// 			action : "genReport",
+// 			reportName : "rptPickReport"
+// 		},
+// 		success : function(result) {
+// 			alert(result);
+// 		}
+// 	});
 	
 // 	$("#godownpic").animate({
 //  	    height:  $("#godownpic").height()*2,
@@ -193,6 +204,10 @@ $(function(){
 		<% int iii=0;while(iii<0){iii++;%>
 		<script>alert('111222');</script>
 		<% }%>
+		
+		<a href='./report.do?reportName=rptPickReport&action=genReport'>pdf檔</a>
+		<embed src="./report.do?reportName=rptPickReport&action=genReport" height="400" width="560">
+<!-- 		<embed src="./images/white.pdf" height="400" width="560"> -->
 		
 		<button onclick="down()">##@_@##</button>
 <!-- 		<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a> -->

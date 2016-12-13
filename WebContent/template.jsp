@@ -25,7 +25,6 @@
 	right:5px;
 	z-index:1;
 }
-
 .livehelp > div:nth-child(2n+1){
 	height:21px;
   	position: relative;
@@ -196,7 +195,7 @@ function who(){
 		side2.addClass("active");
 		return "發票字軌管理";
 		break;
-		
+
 //####報表管理############################
 	case "salereport.jsp":
 		side3.addClass("active");
@@ -245,6 +244,10 @@ function who(){
 	case "accpayreport.jsp":
 		side3.addClass("active");
 		return "應付帳款報表";
+		break;
+	case "pickingreport.jsp":
+		side3.addClass("active");
+		return "撿貨單";
 		break;
 	
 //######分析圖表##########################
@@ -378,7 +381,7 @@ function who(){
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
-				<ul style="top: -100px;">
+				<ul style="top: -160px;">
 					<li><a href="#" onclick="trans('salereport.jsp');">訂單報表</a></li>
 					<li><a href="#" onclick="trans('shipreport.jsp');">出貨報表</a></li>
 <!-- 					<li><a href="#" onclick="trans('distributereport.jsp');">配送報表</a></li> -->
@@ -391,6 +394,7 @@ function who(){
 			    	<li><a href="#" onclick="trans('customerreport.jsp');">客戶報表</a></li>
 			    	<li><a href="#" onclick="trans('accreceivereport.jsp');">應收帳款報表</a></li>
 			    	<li><a href="#" onclick="trans('accpayreport.jsp');">應付帳款報表</a></li>
+			    	<li><a href="#" onclick="trans('pickingreport.jsp');">撿貨單</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
@@ -495,7 +499,7 @@ $(function() {
 		$(".livehelp").html(
 			'<div id="hello">'+
 				'<div style="text-align:center;">'+
-					'<font size="2"  style="color:#f44;"><b> ● 請友善對待客戶 ● </b></font>'+
+					'<font size="2"  style="color:#f44;"><b> ● 請友善對待客戶 ● <span id="total"></span></b></font>'+
 					//'<a><img src='./images/putback.png' class='func' style='margin:0px;float:right;' onclick="$('#livehelp_m').hide();$('#livehelp').fadeIn();"></a>'+
 				'</div>'+
 			'</div>'
@@ -536,7 +540,9 @@ $(function() {
             };
 
             Livehelp.socket.onmessage = function (message) {
-                if((message.data).indexOf("System(>_<):Leave:")>-1){
+            	if((message.data).indexOf("System(>_<):Total:")>-1){
+            		$("#total").html("("+((message.data).split(":Total:")[1]-1)+")");
+            	}else if((message.data).indexOf("System(>_<):Leave:")>-1){
                 	var name= (message.data).split(":Leave:")[1];
                 	$('#consoleL_'+name).append("<p style='word-wrap: break-word;color:red;'>"+name+"關閉了視窗。</p>");
                 	
