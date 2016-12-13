@@ -309,6 +309,9 @@ function who(){
 		$(".sidenav > ul > li:nth-child(5)").addClass("active");
 		return "真●後臺系統";
 		break;
+	case "youtubeSchedule.jsp":
+		return "直播排程設定作業";
+		break;
 	case "template.jsp":
 		window.location.href = './welcome.jsp';
 		return "　　";

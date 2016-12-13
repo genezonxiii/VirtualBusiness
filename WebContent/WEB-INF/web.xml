@@ -60,7 +60,7 @@
 
   <context-param>
   <param-name>dbURL</param-name>
-  <param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value>
+  <param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -68,7 +68,7 @@
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>Admin@csi1008!</param-value>
+    <param-value>admin123</param-value>
   </context-param>
   <context-param>
     <param-name>email</param-name>
@@ -521,17 +521,25 @@
     <servlet-name>function</servlet-name>
     <url-pattern>/function.do</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>youtube</servlet-name>
+    <servlet-class>tw.com.aber.youtube.controller.Youtube</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>youtube</servlet-name>
+    <url-pattern>/youtube.do</url-pattern>
+  </servlet-mapping>
+   
   <!-- ############新的############ -->
 <!--   <listener> -->
 <!-- 	<listener-class>tw.com.aber.bystartup</listener-class> -->
 <!--   </listener> -->
-  <filter>
-    <filter-name>loginFilter</filter-name>
-    <filter-class>tw.com.aber.loginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>loginFilter</filter-name>
-    <url-pattern>*.jsp</url-pattern>
-  </filter-mapping>
+<!--   <filter> -->
+<!--     <filter-name>loginFilter</filter-name> -->
+<!--     <filter-class>tw.com.aber.loginFilter</filter-class> -->
+<!--   </filter> -->
+<!--   <filter-mapping> -->
+<!--     <filter-name>loginFilter</filter-name> -->
+<!--     <url-pattern>*.jsp</url-pattern> -->
+<!--   </filter-mapping> -->
 </web-app>
