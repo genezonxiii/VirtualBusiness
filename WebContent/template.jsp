@@ -7,6 +7,8 @@
 	<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 	<link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
 	<link rel="stylesheet" href="vendor/css/jquery-ui.min.css">
+<!-- 	<link rel="stylesheet" href="vendor/css/jquery-ui.min.css"> -->
+	
 	<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
 	<link rel="stylesheet" href="vendor/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/styles.css">
@@ -85,14 +87,18 @@
 </style>
 
 	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<!-- 	<script type="text/javascript" src="http://demonstration.abgne.tw/jquery/jquery.easing.1.3.js"></script> -->
 <script type="text/javascript">
 function trans(str){
 	$('.sidenav > ul > li:hover ul').css('opacity','0');
-	$('.bdyplane').animate({opacity: '0'},300,function() {
-		location.replace(str);
-		$('.bdyplane').animate({opacity: '1'},10000);
-// 		$('.sidenav > ul > li:hover ul').animate({opacity: '1'});
-	});
+// 	settimeout();
+	if($('.bdyplane').length==0){location.replace(str);}else{
+		$('.bdyplane').animate({opacity: '0'},300,function() {
+			location.replace(str);
+			$('.bdyplane').animate({opacity: '1'},10000);
+	// 		$('.sidenav > ul > li:hover ul').animate({opacity: '1'});
+		});
+	}
 	
 }
 function who(){
@@ -104,11 +110,11 @@ function who(){
 //####交易處理############################
 	case "upload.jsp":
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
-		return "訂單拋轉作業";
+		return "網購拋轉作業";
 		break;
-	case "upload.do":
+	case "groupbuying.jsp":
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
-		return "訂單拋轉作業";
+		return "團購轉檔作業";
 		break;
 //####後臺支援系統############################
 	case "purchase.jsp":
@@ -341,7 +347,7 @@ function who(){
 		<h1 ondblclick="location.href = './welcome.jsp';">智慧電商平台</h1>
 		<div class="userinfo">
 			<p>使用者<span><%= (request.getSession().getAttribute("user_name")==null)?"尚未登入?":request.getSession().getAttribute("user_name").toString() %></span></p>
-			<a id="logout" class="btn-logout" >登出</a>
+			<a href='#' id="logout" class="btn-logout" >登出</a>
 		</div>
 	</div><!-- /.header -->
 	<div class="sidenavpanel"></div>
@@ -349,8 +355,8 @@ function who(){
 		<ul>
 			<li><img src="images/sidenav-transaction.svg" alt="">交易處理
 				<ul>
-					<li><a href="#" onclick="trans('upload.jsp');">訂單拋轉作業</a></li>
-					
+					<li><a href="#" onclick="trans('upload.jsp');">網購拋轉作業</a></li>
+					<li><a href="#" onclick="trans('groupbuying.jsp');">團購轉檔作業</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
@@ -415,6 +421,11 @@ function who(){
 					<li><a href="#" onclick="trans('onlinecourse.jsp');">線上課程</a></li>
 					<li><a href="#" onclick="trans('disscussionsubject.jsp');">課程留言版</a></li>
 					<li><a href="#" onclick="trans('chatsubject.jsp');">課程討論區</a></li>
+					<% if(((String)request.getSession().getAttribute("user_name")).equals("DemoUser")
+							||((String)request.getSession().getAttribute("user_name")).equals("Arch")){ %>
+					<li><a href="#" onclick="trans('youtubeSchedule.jsp');">線上直播排程區</a></li>
+					<% } %>
+					
 <!-- 					<li class="hide_everywhere"><a href="msgboard.html">留言版</a></li> -->
 					<li class="hide_everywhere"><a href="distributereport.jsp">配送報表</a></li>
 					<li class="hide_everywhere"><a href="function.jsp#func">真❤後臺系統</a></li>

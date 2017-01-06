@@ -97,18 +97,20 @@ function lookdown(){
 }
 
 $(function(){
-// 	$.ajax({
-// 		type : "POST",
-// 		url : "report.do",
-// 		async : false,
-// 		data :{
-// 			action : "genReport",
-// 			reportName : "rptPickReport"
-// 		},
-// 		success : function(result) {
-// 			alert(result);
-// 		}
+// 	$.get("./test.jsp", function(response){
+// 		alert(response)
 // 	});
+	$.ajax({
+		type : "POST",
+		url : "fileoutput.do",
+		async : false,
+		data :{
+			filename : "",
+		},
+		success : function(result) {
+			alert(result);
+		}
+	});
 	
 // 	$("#godownpic").animate({
 //  	    height:  $("#godownpic").height()*2,
@@ -173,6 +175,16 @@ $(function(){
         //"width": "100%"
     } );
 	
+	$("#mykey").click(function(){
+// 		var $body = (window.opera) ? (document.compatMode == "CSS1Compat" ? $('html') : $('body')) : $('html,body');
+// 		$body.animate({
+// 			scrollTop: 2000
+// 		}, 600);
+		$('html,body').animate({
+			scrollTop: 2000
+		}, 600);
+	});
+	
 // 	$("#btn1").click(function(){
 // 		alert("I will be back!");
 // 		$.ajax({
@@ -206,10 +218,14 @@ $(function(){
 		<% }%>
 		
 		<a href='./report.do?reportName=rptPickReport&action=genReport'>pdf檔</a>
+		<a href='#' onclick="var a = prompt('請輸入姓名');alert(a);">下載</a>
+		原本長這樣:<a href='OOXX'>下載</a>
+		
+		改成:<a href="#" onclick="var input1=prompt('名字:'),input2=prompt('email:');if(input1.length*input2.length>0){location.replace('OOXX');}">下載</a>
 		<embed src="./report.do?reportName=rptPickReport&action=genReport" height="400" width="560">
 <!-- 		<embed src="./images/white.pdf" height="400" width="560"> -->
 		
-		<button onclick="down()">##@_@##</button>
+		<button id='mykey' onclick="/*$('html, body').scrollTop(100);*/">##@_@##</button>
 <!-- 		<a href="sip:<benchen@pershing.com.tw>" class="btn-explanation" style="position: fixed; top: 85%; right: 60px; background-color: white; border-radius: 200px; display: block;"><img src="./images/skype-icon.png"/></a> -->
 		<button onclick="hello2(); document.getElementById('mus').play();">##X_X##</button>
 		

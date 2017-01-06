@@ -1201,7 +1201,7 @@
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th style="min-width:120px">產品名稱</th>
+								<th style="min-width:60px">產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>
@@ -1279,7 +1279,7 @@
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th style="min-width:120px">產品名稱</th>
+								<th style="min-width:60px">產品名稱</th>
 								<th>自訂產品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>

@@ -649,6 +649,7 @@ $(function(){
 						
 					}
 				});
+				lookdown();
 				$(this).dialog("close");
 			},
 			"取消退回" : function() {
@@ -773,6 +774,7 @@ $(function(){
 						});
 
 					}
+					
 				});
 				$(this).dialog("close");
 			},

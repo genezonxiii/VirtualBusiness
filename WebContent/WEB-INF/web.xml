@@ -47,6 +47,14 @@
     <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/upload</param-value> 
   </context-param>
   <context-param>
+    <param-name>groupbuypath</param-name>
+    <param-value>/data/vbGroupbuy</param-value>
+  </context-param>
+  <context-param>
+    <param-name>groupbuyoutputpath</param-name>
+    <param-value>/data/vbGroupbuy_output</param-value>
+  </context-param>
+  <context-param>
     <param-name>videopath</param-name>
     <param-value>C:/Users/10506002/git/VirtualBusiness/WebContent/video</param-value>
   </context-param>
@@ -92,6 +100,14 @@
     <param-value>/data/vbupload</param-value>
   </context-param>
   <context-param>
+    <param-name>groupbuypath</param-name>
+    <param-value>/data/vbGroupbuy</param-value>
+  </context-param>
+  <context-param>
+    <param-name>groupbuyoutputpath</param-name>
+    <param-value>/data/vbGroupbuy_output</param-value>
+  </context-param>
+  <context-param>
     <param-name>photopath</param-name>
     <param-value>/data/productpic</param-value>
   </context-param>
@@ -112,8 +128,7 @@
 
   <context-param>
   	<param-name>dbURL</param-name>
-  	<param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value>
-<!--   	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value> -->
+  	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -121,8 +136,7 @@
   </context-param>
   <context-param>
     <param-name>dbPassword</param-name>
-    <param-value>Admin@csi1008!</param-value>
-<!--     <param-value>admin123</param-value> -->
+    <param-value>admin123</param-value>
   </context-param>
   <context-param>
     <param-name>email</param-name>
@@ -143,6 +157,14 @@
   <context-param>
     <param-name>uploadpath</param-name>
     <param-value>/data/vbupload</param-value>
+  </context-param>
+  <context-param>
+    <param-name>groupbuypath</param-name>
+    <param-value>/data/vbGroupbuy</param-value>
+  </context-param>
+  <context-param>
+    <param-name>groupbuyoutputpath</param-name>
+    <param-value>/data/vbGroupbuy_output</param-value>
   </context-param>
   <context-param>
     <param-name>photopath</param-name>
@@ -539,6 +561,22 @@
   <servlet-mapping>
     <servlet-name>youtube</servlet-name>
     <url-pattern>/youtube.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>fileoutput</servlet-name>
+    <servlet-class>tw.com.aber.fileoutput</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fileoutput</servlet-name>
+    <url-pattern>/fileoutput.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>groupbuying</servlet-name>
+    <servlet-class>tw.com.aber.groupbuying</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>groupbuying</servlet-name>
+    <url-pattern>/groupbuying.do</url-pattern>
   </servlet-mapping>
    
   <!-- ############新的############ -->

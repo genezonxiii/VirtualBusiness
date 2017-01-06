@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="tw.com.aber.productunit.controller.*"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.sql.DriverManager"%>
 <%@ page import="java.sql.Connection"%>
@@ -75,7 +74,7 @@ input[type=text].error{
 	<div id="msgAlert"></div>
 	
 	<div class="search-result-wrap">
-		<div id='view' style='background:#f8f8f8;padding:20px;border: 3px solid #666;margin:20px auto;width:860px;	border-radius: 8px;box-shadow: 10px 10px 5px #999;'>
+		<div id='view' style='background:#f8f8f8;padding:20px;border: 3px solid #666;margin:60px auto;width:860px;	border-radius: 8px;box-shadow: 10px 10px 5px #999;'>
 			<div align='center' style='font-size:36px;color:#888;'>直播排程設定作業</div>
 			<form id='youtubeBroadcast' style='margin:20px;'>
 				<table class='form-table'>
@@ -111,9 +110,9 @@ input[type=text].error{
 				
 				<div align='center'>
 					<a id='confirm' class='btn btn-primary'>確認</a>
-					<a id='reset' class='btn btn-primary'>重置</a>
-					<a id='broadcast_page' class='btn btn-primary' target="_blank">開啟直播連結</a>
-					<a id='control_room' class='btn btn-primary' href="https://www.youtube.com/my_live_events" target="_blank">開啟中控室</a>
+					<a id='reset' class='btn btn-gray'>重置</a>
+					<a id='broadcast_page' class='btn btn-exec' target="_blank">開啟直播連結</a>
+					<a id='control_room' class='btn btn-exec' href="https://www.youtube.com/my_live_events" target="_blank">開啟中控室</a>
 					
 				</div>
 			</form>
@@ -122,9 +121,6 @@ input[type=text].error{
 </div>
 <script>
 	$(function(){
-		
-
-		
 		$("#youtubeBroadcast").validate({ 
 			rules : { 
 			broadcast_title : { required : true }, 
@@ -145,9 +141,6 @@ input[type=text].error{
 		}); 
 		
 		
-		var d = $.datepicker.formatDate('yy-mm-dd', new Date());
-		$("#start_date").val(d);
-		
 		
 		for (var i = 0; i < 24; i++) {
 			$("select[name='select_start_hour']").append("<option value='" + i + "'>" + i + "</option>");
@@ -159,6 +152,12 @@ input[type=text].error{
 			$("select[name='select_start_minute']").append("<option value='" + (i * section) + "'>" + (i * section) + "</option>");
 			$("select[name='select_end_minute']").append("<option value='" + (i * section) + "'>" + (i * section) + "</option>");
 		}
+		
+		var d = $.datepicker.formatDate('yy-mm-dd', new Date());
+		$("#start_date").val(d);
+		$("#end_date").val(d);
+		$("select[name='select_start_hour']").val((new Date()).getHours()+1);
+		$("select[name='select_end_hour']").val((new Date()).getHours()+2);
 		
 		$("#confirm").click(function(){
 			

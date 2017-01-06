@@ -262,6 +262,7 @@ function draw_purchase_detail(parameter){
 	        .bind('scannerDetectionReceive',function(e,data){console.log(data);});
 	});
 	$(function() {
+		
 		$(".bdyplane").animate({"opacity":"1"});
 		var uuid = "";
 		var seqNo = "";

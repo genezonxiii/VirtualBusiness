@@ -13,16 +13,20 @@
 	<jsp:include page="template.jsp" flush="true"/>
 	<div class="content-wrap" style="background-image: url('./images/welcometo.png');background-size: 100% 100%;overflow-y:auto;">
 	<div class='bdyplane' style="opacity:0;"></div>
-	<div class='board' style="opacity:0;">
+	<div class='board' style="opacity:0.1;">
 		<div style="position:absolute;top:52%;left:27.0%;text-align:center;font-size:65px;color:#00BCD5;">
-			<div id="sale" style="position:relative;top:-18px;left:78px;">
-				　
-			</div>
+			<a href='./salereport.jsp?action=today' style='color:#00BCD5;'>
+				<div id="sale" style="position:relative;top:-18px;left:78px;">
+					0
+				</div>
+			</a>
 		</div>
 		<div style="position:absolute;top:52%;left:70.5%;text-align:center;font-size:65px;color:#00BCD5;">
-			<div id="ship" style="position:relative;top:-18px;left:24px;">
-				　
-			</div>
+			<a href='./shipreport.jsp?action=today' style='color:#00BCD5;'>
+				<div id="ship" style="position:relative;top:-18px;left:24px;">
+					0
+				</div>
+			</a>
 		</div>
 	</div> 
 	</div>
@@ -46,7 +50,7 @@ $(function() {
 		success : function(result) {
 			var json_obj = $.parseJSON(result);
 			//$.each(json_obj,function(i, item) {json_obj.count;});
-			//alert("any one else?");
+// 			alert("any one else?");
 			//alert(result);
 			$("#sale").html(json_obj.sale_data);
 			$("#ship").html(json_obj.ship_data);

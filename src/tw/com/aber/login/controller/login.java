@@ -110,7 +110,7 @@ public class login extends HttpServlet {
 						//log.txt
 						try{
 							String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-							String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E) HH:mm:ss").format(new Date()))+":\r\n  "+list.get(0).getUser_name()+" login.\r\n";
+							String my_msg =(new SimpleDateFormat("yyyy-MM-dd(u) HH:mm:ss").format(new Date()))+":\r\n  "+list.get(0).getUser_name()+" login.\r\n";
 							FileWriter fw;
 							try{
 								fw = new FileWriter(record_log,true);
