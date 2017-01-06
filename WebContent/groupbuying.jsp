@@ -157,7 +157,7 @@ $(function(){
 		$("#submitbtn").attr("onclick","return setV();");
 		$("#submitbtn").addClass("btn-exec");
 	    $("#submitbtn").removeClass("btn-gray");
-		
+			
 		var str = result;
 		console.log(str);
 		$("#message").html(str);
