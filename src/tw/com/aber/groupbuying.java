@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class groupbuying  extends HttpServlet {
 	public String file_name = "";
 	public String ori_file_name = "";
+	public String public_uuid = "";
 	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
@@ -204,6 +205,7 @@ public class groupbuying  extends HttpServlet {
 	    group_id=(group_id==null)?"UNKNOWN":group_id;
 	    vender  =(vender==null)?"UNKNOWN":vender;
 	    String _uid= UUID.randomUUID().toString();
+	    
 		//_uid="454c9c52-cb76-46d3-bf4e-e3ae820c8064";
 		String no_way = getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/"+vender+"/"+ordertype+"/"+group_id+"/"+_uid;
 		new File(getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/"+vender).mkdir();
@@ -245,8 +247,8 @@ public class groupbuying  extends HttpServlet {
 		        		byte[] byteXLS = new byte[]{(byte) 0xD0, (byte) 0xCF, 0x11, (byte) 0xE0, (byte) 0xA1};//, (byte) 0xB1, 0x1A, (byte) 0xEA};
 //		        		byte[] byteCSV = new byte[]{0x5B, 0x75, 0x72, 0x6C};
 		        		byte[] byteXLSX = new byte[]{0x50, 0x4B, 0x03, 0x04, 0x14};
-//		        		System.out.println(Hex.encodeHexString(first));
-//		        		System.out.println(Arrays.toString(first));
+//		        		System.out.println("1: "+Hex.encodeHexString(first));
+//		        		System.out.println("2: "+Arrays.toString(first));
 		        		if(Arrays.equals(first, bytePDF)){
 		        			fullname = no_way+".pdf";
 		        		}else if(Arrays.equals(first, byteXLS)){
@@ -279,11 +281,12 @@ public class groupbuying  extends HttpServlet {
 								+new String(Base64.encodeBase64String((fullname).getBytes()))
 								+"&usid="
 								+new String(Base64.encodeBase64String(user_id.getBytes()))
-								+"&delivertype="
+								+"&tdpl="//+"&delivertype="
 								+new String(Base64.encodeBase64String(delivertype.getBytes()))
-								+"&productcode="
+								+"&pdcd="//+"&productcode="
 								+new String(Base64.encodeBase64String(productcode.getBytes()));
 		        		//fullname = no_way+"."+tmp[j];
+		        		
 		                file_name=fullname;
 		                File file ;
 		                file = new File(fullname) ;
@@ -304,6 +307,8 @@ public class groupbuying  extends HttpServlet {
 		return conString;
 	}
 	protected String webService(HttpServletRequest request,HttpServletResponse response,String conString) throws ServletException, IOException {
+		//System.out.println("comein");
+		
 		String ret="";
 		HttpClient client = new HttpClient();
 		HttpMethod method=new GetMethod(conString); 
@@ -318,8 +323,31 @@ public class groupbuying  extends HttpServlet {
 			IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
 			String content=ret=writer.toString();
 			//String content=method.getResponseBodyAsString();
-			if("success".compareTo(content)==0 || content.contains("\"success\": true") ){
-				ret=content;
+//			System.out.println("url: "+conString);
+//			System.out.println("content: "+content);
+			int isJson=0;
+			Webserviceoutput jsonobj = new Webserviceoutput();
+			Gson gson = new Gson();
+			try {
+			    jsonobj = gson.fromJson(content, Webserviceoutput.class);
+			    isJson=1;
+			} catch(com.google.gson.JsonSyntaxException ex) { 
+				isJson=0;
+			}
+			
+			if( isJson == 1 ){
+				if("true".equals(jsonobj.success)){
+					String[] tmp = jsonobj.download.split("/");
+	                int j=0;
+	                while(j<tmp.length){j++;}
+	                j=j>0?j-1:j;
+					ret=new String(Base64.encodeBase64String((tmp[j]).getBytes()));
+				}else{
+					ret="false";
+				}
+//				System.out.println(new String(Base64.encodeBase64String((jsonobj.download).getBytes())));
+//				ret=gson.toJson(jsonobj);
+//				ret=content;
 			}else{
 				if(content.length()>100){
 					content=content.substring(0,90)+"....";
@@ -342,5 +370,10 @@ public class groupbuying  extends HttpServlet {
 		String icon;
 		String memo;
 		String reversed;
+	}
+	class Webserviceoutput{
+		String info;
+		String download;
+		String success;
 	}
 }

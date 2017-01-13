@@ -143,7 +143,7 @@ function draw_stock(parameter){
 		});
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width :480, modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},

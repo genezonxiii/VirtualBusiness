@@ -416,7 +416,7 @@ function who(){
 				</ul>
 			</li>
 			<li><img src="images/sidenav-school.svg" alt="">線上學院
-				<ul>
+				<ul style="top: -30px;">
 <!-- 					<li><a href="#">Coming Soon</a></li> -->
 					<li><a href="#" onclick="trans('onlinecourse.jsp');">線上課程</a></li>
 					<li><a href="#" onclick="trans('disscussionsubject.jsp');">課程留言版</a></li>
@@ -479,6 +479,20 @@ function who(){
 <script type="text/javascript">
 
 $(function() {
+	function checksession () {
+		setTimeout(function () {
+			$.ajax({
+				type : "POST",
+				url : "welcome.do",
+				data : { action : "current_login" },
+				success : function(result) {
+					if(result=="false"){ window.location.href = './login.jsp'; }
+				}
+			});
+			checksession();
+		}, 1*1000);
+	}
+	checksession(); 
 	$('body').keypress(function(e){//ctrl + alt + b
 	    if(e.shiftKey && (location.href.indexOf("bers1.eastasia")>-1 ||(location.href.indexOf("112.164")>-1||location.href.indexOf("local")>-1))){
 	    	if(e.which == 41){

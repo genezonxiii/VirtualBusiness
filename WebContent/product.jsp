@@ -388,13 +388,13 @@ var product_name_tags=[];
 		});
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
 			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
 			buttons : [{
-						id : "insert",
+						id : "insert_enter",
 						text : "新增",
 						click : function() {
 							if ($('#insert-dialog-form-post').valid()) {
@@ -442,9 +442,57 @@ var product_name_tags=[];
 		}).css("width", "10%");
 		$("#dialog-form-insert").show();
 		
+		$("#dialog-form-insert input[name='product_name']").focusout(function() {
+			var tmp= $(this).val();
+			$.ajax({
+				type : "POST",
+				url : "product.do",
+				async : false,
+				data : {
+					action : "is_duplicate",
+					product_name : tmp,
+				},
+				success : function(result) {
+					if(result=="true"){
+						$("#insert_enter").attr("disabled",true);
+						setTimeout(function(){
+							$("#insert_enter").attr("disabled",false);
+// 							$("#dialog-form-insert input[name='product_name']").focus();
+						}, 200);
+						$("#warning").html("同名稱之商品已存在，請更改")
+						$("#warning").val($("#dialog-form-insert input[name='product_name']"));
+						$("#warning").dialog("open");
+					}
+				}
+			});
+		});
+		$("#dialog-form-update input[name='product_name']").focusout(function() {
+			var tmp= $(this).val();
+			$.ajax({
+				type : "POST",
+				url : "product.do",
+				async : false,
+				data : {
+					action : "is_duplicate",
+					product_name : tmp,
+				},
+				success : function(result) {
+					if(result=="true"&& tmp!=$("#dialog-form-update").val()){
+						$("#update_enter").attr("disabled",true);
+						setTimeout(function(){
+							$("#update_enter").attr("disabled",false);
+							//$("#dialog-form-update input[name='product_name']").focus();
+						}, 200);
+						$("#warning").html("同名稱之商品已存在，請更改商品名稱");
+						$("#warning").val($("#dialog-form-update input[name='product_name']"));
+						$("#warning").dialog("open");
+					}
+				}
+			});
+		});
 // 		skypeforbusiness
 // 		$("#dialog-form-package").dialog({
-// 			draggable : false, resizable : false, autoOpen : false,
+// 			draggable : true, resizable : false, autoOpen : false,
 // 			height : "auto", width : "auto", modal : true,
 // 			show : {effect : "blind",duration : 300},
 // 			hide : {effect : "fade",duration : 300},
@@ -488,7 +536,7 @@ var product_name_tags=[];
 		
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -510,12 +558,13 @@ var product_name_tags=[];
 		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
 			open : function(event, ui) {$(this).parent().children().children('.ui-dialog-titlebar-close').hide();},
 			buttons : [{
+				id : "update_enter",
 				text : "修改",
 				click : function() {
 					if ($('#update-dialog-form-post').valid()) {
@@ -624,6 +673,7 @@ var product_name_tags=[];
 							$.each(json_obj,function(i, item) {
 								if(i<len-1){
 									if(json_obj[i].product_id==uuid){
+										$("#dialog-form-update").val(json_obj[i].product_name);
 										$("#dialog-form-update input[name='product_id']").val(json_obj[i].product_id);
 										$("#dialog-form-update input[name='c_product_id']").val(json_obj[i].c_product_id);
 										$("#dialog-form-update input[name='product_name']").val(json_obj[i].product_name);
@@ -1229,15 +1279,21 @@ var product_name_tags=[];
 	    //<!-- photo section jquery end by Melvin -->
 	    $("#warning").dialog({
 			title: "警告",
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : "auto",
+			width : "auto",
 			modal : true,
-			show : {effect : "bounce",duration : 1000},
+			show : {effect : "fade",duration : 300},
 			hide : {effect : "fade",duration : 300},
 			buttons : {
-				"確認" : function() {$(this).dialog("close");}
+				"確認" : function() {
+					$(this).dialog("close");
+					setTimeout(function(){
+						$("#warning").val().focus();
+					},500);
+				}
 			}
 		});
 	    $("#warning").show();
@@ -1615,7 +1671,7 @@ var product_name_tags=[];
 <input type="text" id="photo0-update" style="display:none"/>
 <input type="text" id="photo1-update" style="display:none"/>
 <input type="text" id="bar_code_focus" style="display:none"/>
-<div id="warning" style="display:none;"></div>
+<div id="warning" style="display:none;font-size:30px;color:red;font-family: '微軟正黑體', 'Microsoft JhengHei', 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;"></div>
 </div>
 </body>
 </html>

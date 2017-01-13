@@ -366,7 +366,7 @@
 		}
 	});
 	confirm_dialog = $("#dialog-confirm").dialog({
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : "auto",
@@ -484,7 +484,7 @@
 	});
 	$("#dialog-confirm").show();
 	confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : "auto",

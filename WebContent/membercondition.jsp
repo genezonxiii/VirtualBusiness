@@ -170,7 +170,7 @@ $(function() {
 		$("#membercondition-update").dialog('open');
 	});
 	$("#membercondition-insert").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			width : 760 ,height : "auto", modal : true,
 			show : {effect : "blind", duration : 300 },
 			hide : { effect : "fade", duration : 300 },
@@ -205,7 +205,7 @@ $(function() {
 	});
 	$("#membercondition-insert").show();
 	$("#membercondition-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			width : 760,height : "auto", modal : true,
 			show : {effect : "blind", duration : 300 },
 			hide : { effect : "fade", duration : 300 },
@@ -241,7 +241,7 @@ $(function() {
 	});
 	$("#membercondition-update").show();
 	$("#membercondition-delete").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			width : "auto" ,height : "auto", modal : true,
 			show : {effect : "blind", duration : 300 },
 			hide : { effect : "fade", duration : 300 },

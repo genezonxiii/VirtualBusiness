@@ -46,13 +46,7 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 
 <script>
-function date_format(str) {
-	if(str==null){
-		return "";
-	}
-	var words=str.replace(","," ").split(" ");
-	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
-}
+
 
 var parameter="searh";
 function sea() {
@@ -63,6 +57,7 @@ function sea() {
 		url : "salereport.do",
 		data : {action :parameter,time1 : ($('#datepicker1').val().replace("-","/").replace("-","/")),time2 : ($('#datepicker2').val().replace("-","/").replace("-","/"))},
 		success : function(result) {
+			console.log(result);
 			var json_obj = $.parseJSON(result);
 			var result_table = "";
 			$.each(json_obj,function(i, item) {

@@ -184,6 +184,8 @@ public class invoice extends HttpServlet {
 					new File(path).mkdir();
 				}
 				File f = new File(path+ "/" + sale_id + ".txt");
+				
+				//System.out.println(path+ "/" + sale_id + ".txt");
 				Writer objWriter;
 				try{
 					objWriter = new BufferedWriter(new FileWriter(f));
@@ -284,8 +286,8 @@ public class invoice extends HttpServlet {
 				objWriter.flush();
 				objWriter.close();
 				
-				response.getWriter().write("{}");
-				
+				//response.getWriter().write("{}");
+				response.getWriter().write(path+ "/" + sale_id + ".txt");
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();

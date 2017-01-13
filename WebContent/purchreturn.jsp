@@ -412,8 +412,10 @@ $(function(){
 	        var found = $.inArray(source, temp);
 	
 	        if(found < 0) {
+	        	$("#search_supply_name").attr("supply_error",$(this).val());
 	            $(this).val('');
 	            $(this).attr("placeholder","請輸入正確的供應商名稱!");
+	            setTimeout(function(){$("#search_supply_name").attr("supply_error","");}, 200); 
 	        }
 	    }     
      });
@@ -426,6 +428,13 @@ $(function(){
 	//供應商ID查詢相關設定
 	$("#search_supply_name").click(function(e) {
 		e.preventDefault();
+		if($("#search_supply_name").attr("supply_error").length>0){
+		    var tmp="查無供應商名稱: "+$("#search_supply_name").attr("supply_error")+"\n將為您查詢所有進貨單";
+		    if(!confirm(tmp,"繼續","取消") ){
+		        return;
+		    }
+		}
+		
 		$.ajax({
 			type : "POST",
 			url : "purchreturn.do",
@@ -531,7 +540,7 @@ $(function(){
 			});
 	});
 	confirm_dialog = $("#dialog_confirm").dialog({
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : 200,
@@ -659,7 +668,7 @@ $(function(){
 	});
 	$("#dialog_confirm").show();
 	confirm_cancel_dialog = $("#dialog_cancel_confirm").dialog({
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : 200,
@@ -832,7 +841,7 @@ $(function(){
 						<span class="block-label">供應商名稱查詢</span>
 						<input type="text" id="search_purchase_by_supply_name" name="search_purchase_by_supply_name">
 					</label>
-					<button id="search_supply_name" class="btn btn-darkblue">查詢</button>
+					<button id="search_supply_name" class="btn btn-darkblue" supply_error="">查詢</button>
 				</div>
 				<div class="form-row" id="select_dates_contain">
 					<form id="purchase_date_form" name="purchase_date_form">

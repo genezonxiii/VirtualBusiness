@@ -47,6 +47,7 @@
 var do_what="searh";
 function ship_data(){
 	$(".validateTips").text("請稍候片刻");
+	
 	$.ajax({
 		type : "POST",
 		url : "shipreport.do",
@@ -61,7 +62,9 @@ function ship_data(){
 				//$(".validateTips").text("查無資料:請確認客戶資料及銷貨資料");
 				return;
 			}
+			var tmp = setTimeout( function() {alert("發生未知異常錯誤，請聯絡管理員。")}, 200);
 			var json_obj = $.parseJSON(result);
+			clearTimeout(tmp);
 			var result_table = "";
 			$.each(json_obj,function(i, item) {
 				result_table += "<tr><td>"+ json_obj[i].order_no 
@@ -96,11 +99,7 @@ function ship_data(){
 		}
 	});
 }
-function date_format(str) {
-	if(str==null){return "";}
-	var words=str.replace(","," ").split(" ");
-	return words[3]+"-"+words[0].replace("一月","1").replace("二月","2").replace("三月","3").replace("四月","4").replace("五月","5").replace("六月","6").replace("七月","7").replace("八月","8").replace("九月","9").replace("十月","10").replace("十一月","11").replace("十二月","12").replace("Jan","1").replace("Feb","2").replace("Mar","3").replace("Apr","4").replace("May","5").replace("Jun","6").replace("Jul","7").replace("Aug","8").replace("Sep","9").replace("Oct","10").replace("Nov","11").replace("Dec","12")+"-"+words[1];
-}
+
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});
 		var value='<%=request.getParameter("action")%>';

@@ -301,7 +301,7 @@
 	});
 	$("#warning").dialog({
 		title: "應收帳款明細",
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : "auto",

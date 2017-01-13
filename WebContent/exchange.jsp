@@ -95,7 +95,7 @@ function draw_exchange(parameter){
 	
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -128,7 +128,7 @@ function draw_exchange(parameter){
 		var uuid = "";
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -149,7 +149,7 @@ function draw_exchange(parameter){
 		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},

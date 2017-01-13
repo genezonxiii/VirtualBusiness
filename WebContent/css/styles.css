@@ -914,10 +914,12 @@ input[type=radio]:checked + label:before {
 .ec-radio-group-wrap input[type=radio]:disabled + label:before, .ec-radio-group-wrap input[type=radio].readonly + label:before {}
 .ec-radio-group-wrap input[type=radio]:disabled:checked + label, .ec-radio-group-wrap input[type=radio].readonly:checked + label {}
 .ec-radio-group-wrap input[type=radio]:checked + label {
-    border: 3px solid #62E0E9;
+/*     border: 3px solid #62E0E9;Ben偷改的 */
+    border: 5px solid #1cb5c1 ;
 }
 .ec-radio-group-wrap input[type=radio]:checked + label span {
-    background: #62E0E9;
+/*     background: #62E0E9;Ben偷改的 */
+    background: #1cb5c1; 
     color: #fff;
     z-index: 0;
 }

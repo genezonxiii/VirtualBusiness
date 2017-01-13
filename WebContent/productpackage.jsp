@@ -222,7 +222,7 @@ var product_id_tags=[];
 		
 		//新增Package Dialog
 		$("#dialog-insert-package").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -252,7 +252,7 @@ var product_id_tags=[];
 		$("#dialog-insert-package").show();
 		//修改Package Dialog
 		$("#dialog-update-package").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -283,7 +283,7 @@ var product_id_tags=[];
 		$("#dialog-update-package").show();
 		//刪除Package Dialog
 		$("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -303,7 +303,7 @@ var product_id_tags=[];
 		
 		//新增Package detail Dialog
 		$("#dialog-insert-package-detail").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -335,7 +335,7 @@ var product_id_tags=[];
 		
 		//修改Package detail Dialog
 		$("#dialog-update-package-detail").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -364,7 +364,7 @@ var product_id_tags=[];
 		$("#dialog-update-package-detail").show();
 		//刪除Package detail Dialog
 		$("#dialog-delete-package-detail").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -587,7 +587,7 @@ var product_id_tags=[];
 		
 	    $("#warning").dialog({
 			title: "警告",
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : "auto",

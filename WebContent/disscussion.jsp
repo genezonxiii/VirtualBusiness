@@ -132,7 +132,7 @@ function draw_disscussion(parameter){
 		});
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : 600, modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},

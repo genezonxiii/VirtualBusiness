@@ -74,7 +74,7 @@ input[type=text].error{
 	<div id="msgAlert"></div>
 	
 	<div class="search-result-wrap">
-		<div id='view' style='background:#f8f8f8;padding:20px;border: 3px solid #666;margin:60px auto;width:860px;	border-radius: 8px;box-shadow: 10px 10px 5px #999;'>
+		<div id='view' style='background:#f8f8f8;padding:20px;border: 3px solid #666;margin:60px auto;width:720px;	border-radius: 8px;box-shadow: 10px 10px 5px #999;'>
 			<div align='center' style='font-size:36px;color:#888;'>直播排程設定作業</div>
 			<form id='youtubeBroadcast' style='margin:20px;'>
 				<table class='form-table'>

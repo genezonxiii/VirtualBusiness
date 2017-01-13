@@ -106,7 +106,7 @@ function draw_sale(parameter){
 							result_table 
 							+= "<tr>"
 							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+"</td>"
-							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].order_no +"'><a class='report' title='出貨報表' onclick='' href='./report.do?sale_id="+json_obj[i].sale_id+"'>"+ json_obj[i].order_no+ "</a></td>"
+							+ "<td style='min-width:70px;word-break:break-all;' name='"+ json_obj[i].order_no +"'><a class='report' title='出貨單' onclick='' href='./report.do?sale_id="+json_obj[i].sale_id+"'>"+ json_obj[i].order_no+ "</a></td>"
 							+ "<td name='"+ json_obj[i].product_name +"' name2='"+ json_obj[i].c_product_id +"'><div style='padding-bottom:4px;'>●"+json_obj[i].c_product_id+"</div>"+ json_obj[i].product_name+ "</td>"
 // 							+ "<td >"+ json_obj[i].c_product_id+ "</td>"
 							+ "<td name='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity+ "</td>"
@@ -252,6 +252,14 @@ function draw_sale(parameter){
 		//自訂產品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
+// 			alert($("input[name='searh_c_product_id'").val());
+			if($("#searh-sale").attr("c_product_id_error").length>0){
+				var tmp="查無商品ID: "+$("#searh-sale").attr("c_product_id_error")+"\n將為您查詢所有訂單";
+				if(!confirm(tmp,"繼續","取消") ){
+					return;
+				}
+			}
+			
 			var tmp={
 				action : "search",
 				c_product_id : $("input[name='searh_c_product_id'").val(),
@@ -286,7 +294,7 @@ function draw_sale(parameter){
 		});		
 		//新增Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -340,7 +348,7 @@ function draw_sale(parameter){
 		$("#dialog-form-insert").show();
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -362,7 +370,7 @@ function draw_sale(parameter){
 		$("#dialog-confirm").show();
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -471,7 +479,7 @@ function draw_sale(parameter){
 		});
 		//處理初始的查詢autocomplete
        $("#searh_c_product_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "sale.do",
@@ -500,15 +508,18 @@ function draw_sale(parameter){
     	        var found = $.inArray(source, temp);
     	
     	        if(found < 0) {
-    	            $(this).val('');
+//     	        	alert($(this).val());
+    	        	$("#searh-sale").attr("c_product_id_error",$(this).val());
+    	        	$(this).val('');
     	            $(this).attr("placeholder","請輸入正確的產品ID名稱!");
+    	            setTimeout(function(){$("#searh-sale").attr("c_product_id_error","");}, 200);    	            
     	        }
     	    }     
          });
        $("#searh_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入產品ID以供查詢"); } );
 		//處理新增的名稱autocomplete
        $("#insert_product_name").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "sale.do",
@@ -557,7 +568,7 @@ function draw_sale(parameter){
        });   
 		//處理新增的自訂ID autocomplete
        $("#insert_c_product_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "sale.do",
@@ -589,6 +600,7 @@ function draw_sale(parameter){
            	 if (!ui.item) {
            		 $(this).val("");
                     $(this).attr("placeholder","請輸入正確產品ID名稱!");
+//                     alert("請輸入正確產品ID名稱");
                 }
            },
             response: function(e, ui) {
@@ -630,7 +642,7 @@ function draw_sale(parameter){
        });
 		//處理修改的名稱autocomplete
        $("#update_product_name").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "sale.do",
@@ -679,7 +691,7 @@ function draw_sale(parameter){
        });   
 		//處理修改的自訂ID autocomplete
        $("#update_c_product_id").autocomplete({
-            minLength: 2,
+            minLength: 1,
             source: function (request, response) {
                 $.ajax({
                     url : "sale.do",
@@ -754,14 +766,18 @@ function draw_sale(parameter){
 				
 			}
 		});
-		$("#searh_c_product_id").dblclick(function(){ $("#searh_c_product_id").autocomplete({minLength: 1}); });
+		$("#searh_c_product_id").dblclick(function(){ $("#searh_c_product_id").autocomplete({minLength: 0}); });
+		$("#update_c_product_id").dblclick(function(){ $("#update_c_product_id").autocomplete({minLength: 0}); });
+		$("#update_product_name").dblclick(function(){ $("#update_product_name").autocomplete({minLength: 0}); });
+		$("#insert_c_product_id").dblclick(function(){ $("#insert_c_product_id").autocomplete({minLength: 0}); });
+		$("#insert_product_name").dblclick(function(){ $("#insert_product_name").autocomplete({minLength: 0}); });
 		auto_complete("insert-dialog-form-post input[name='name']",customer_tags);
 	 	auto_complete("update-dialog-form-post input[name='name']",customer_tags);
 	 	order_source_auto("insert-dialog-form-post input[name='order_source']");
 		order_source_auto("update-dialog-form-post input[name='order_source']");
 		$("#warning").dialog({
 			title: "警告",
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : "auto",
@@ -801,7 +817,7 @@ function draw_sale(parameter){
 					<fieldset>
 						<table class='form-table'>
 							<tr>
-								<td>訂單號：</td>
+								<td>平台訂單號：</td>
 								<td><input type="text" name="order_no"  placeholder="輸入訂單號"></td>
 								<td>客戶名字：</td>
 								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
@@ -857,8 +873,8 @@ function draw_sale(parameter){
 							<tr>
 								<td>銷貨單號：</td>
 								<td><input type="text" name="original_seq_no" disabled="disabled" value="系統自動產生"></td>
-								<td>訂單號：</td>
-								<td><input type="text" name="order_no"  placeholder="輸入訂單號"></td>
+								<td>平台訂單號：</td>
+								<td><input type="text" name="order_no"  placeholder="未輸入將代入銷貨單號"></td>
 							</tr>
 							<tr>
 								<td>客戶名字：</td>
@@ -914,7 +930,7 @@ function draw_sale(parameter){
 						<span class="block-label">自訂產品 ID 查詢</span>
 						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
 					</label>
-					<button class="btn btn-darkblue" id="searh-sale">查詢</button>
+					<button class="btn btn-darkblue" id="searh-sale" c_product_id_error="">查詢</button>
 				</div>
 				<div class="form-row">
 				<form id="trans_list_date_form" name="trans_list_date_form">
@@ -967,6 +983,6 @@ function draw_sale(parameter){
 	</div>
 	</div>
 	</div>
-<div id="warning"  style="display:none;"></div>
+<div id="warning"  style="display:none;color:#f00;font-size:28px;"></div>
 </body>
 </html>

@@ -17,31 +17,61 @@ public class fileoutput  extends HttpServlet {
 		doPost(request, response);
 	}
 	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-		
+
 		//input the path retrieve from webservice 
-		String filename = request.getParameter("filename");
-		if(filename==null)return ;
+		String fileforgroupbuy = request.getParameter("fileforgroupbuy");
+		String fileforinvoice = request.getParameter("fileforinvoice");
+		String file_name="";//new String(Base64.decodeBase64((fileforgroupbuy).getBytes()));
+		String file_path="";
+		if(fileforgroupbuy==null && fileforinvoice==null) return ;
+		if(fileforgroupbuy!=null){
+			file_name = new String(Base64.decodeBase64(fileforgroupbuy.getBytes()));
+			file_path = getServletConfig().getServletContext().getInitParameter("groupbuyoutputpath")+"/"
+					+ file_name;//request.getRealPath("/") + "test.xls";
+			
+			if("log.txt".equals(file_name)){
+				file_path="/data/vbupload/log.txt";
+			}
+		}
+		if(fileforinvoice!=null){
+			file_name = new String(Base64.decodeBase64(fileforinvoice.getBytes()));
+			file_path = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/invoice/"+
+					file_name.replace("/data/vbupload/invoice/", "");
+			file_name=file_name.substring(file_name.lastIndexOf("/")+1);
+		}
+		
+		
 //		System.out.println(new String(Base64.decodeBase64((filename).getBytes())));
 //		filename="C:/result1.csv";
-		try {	
-			String path =getServletConfig().getServletContext().getInitParameter("groupbuyoutputpath")+"/"
-					+ (new String(Base64.decodeBase64((filename).getBytes())));//request.getRealPath("/") + "test.xls";
-			if("log.txt".equals(new String(Base64.decodeBase64((filename).getBytes())))){
-				path="/data/vbupload/log.txt";
-			}
-			FileInputStream fileInput = new FileInputStream(path);
+//		if(fileforinvoice!=null){
+//			String path =getServletConfig().getServletContext().getInitParameter("groupbuyoutputpath")+"/"
+//					+ (new String(Base64.decodeBase64((fileforinvoice).getBytes())));
+//		}
+		//if(filename==null) return ;
+		//String file_name=new String(Base64.decodeBase64((file_name).getBytes()));
+		//String file_path="";
+		//用file_name和file_path至於內容 前面決定
+		try {
+			
+			// =getServletConfig().getServletContext().getInitParameter("groupbuyoutputpath")+"/"
+					//+ (new String(Base64.decodeBase64((filename).getBytes())));//request.getRealPath("/") + "test.xls";
+			FileInputStream fileInput = new FileInputStream(file_path);
 			int i = fileInput.available();
 			byte[] content = new byte[i];
 			fileInput.read(content);
 			response.setContentType("application/octet-stream");
-			response.setHeader("Content-Disposition", "attachment;filename=".concat(new String(Base64.decodeBase64((filename).getBytes()))));
+			
+			response.setHeader("Content-Disposition", "attachment;filename=".concat(file_name));
 			OutputStream output = response.getOutputStream();
 			output.write(content);
 			output.flush();
 			fileInput.close();
 			output.close();
 		} catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
+			//e.getStackTrace();
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write("<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>找不到檔案</body></html>");
 			System.out.println(e.toString());
 		}
 	}

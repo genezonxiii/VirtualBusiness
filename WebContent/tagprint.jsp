@@ -329,7 +329,7 @@
 		$("#warning").html("貼心提醒您:<br>&nbsp;&nbsp;本列印功能只支援IE瀏覽器。");
 		$("#warning").dialog({
 			title: "警告",
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : "auto",

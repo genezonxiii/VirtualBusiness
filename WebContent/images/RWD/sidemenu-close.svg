@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>sidemenu-close</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="sidemenu-close" stroke="#FFFFFF">
+            <g id="Group-8">
+                <path d="M-5.73460038,15.7288143 L37.1922289,15.7288143" id="Line" transform="translate(15.728814, 15.728814) rotate(-315.000000) translate(-15.728814, -15.728814) "></path>
+                <path d="M0.780487805,31.1343399 L31.1343399,0.780487805" id="Line"></path>
+            </g>
+        </g>
+    </g>
+</svg>

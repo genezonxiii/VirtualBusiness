@@ -60,7 +60,7 @@ var customer_tags=[];
 			//alert($("#dialog-confirm").val()+" "+$("#dialog-confirm").attr("val2"));
 		});
 		$("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},

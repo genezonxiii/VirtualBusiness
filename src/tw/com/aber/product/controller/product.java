@@ -2,12 +2,14 @@ package tw.com.aber.product.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import tw.com.aber.basicinfo.supply.SupplyBean;
+import tw.com.aber.invoicetrack.InvoicetrackVO;
 
 
 
@@ -63,6 +66,16 @@ public class product extends HttpServlet {
 //			return;
 //			
 //		}
+		if ("is_duplicate".equals(action)) {
+			String product_name = request.getParameter("product_name");
+			if (product_name == null || (product_name.trim()).length() == 0) {}else{
+				productService = new ProductService();
+				String result = productService.is_duplicate(group_id, product_name);
+//				System.out.println(product_name);
+				response.getWriter().write(result);
+				return;
+			}
+		}
 		if ("search_name".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數-格式檢查 ****************************************/
@@ -172,16 +185,15 @@ public class product extends HttpServlet {
 				String supply_name = request.getParameter("supply_name");
 				String type_id = request.getParameter("type_id");
 				String unit_id = request.getParameter("unit_id");
-				float cost = Float.valueOf(request.getParameter("cost"));
-				float price = Float.valueOf(request.getParameter("price"));
-				int  current_stock = Integer.valueOf(request.getParameter("current_stock"));
-				int  keep_stock = Integer.valueOf(request.getParameter("keep_stock"));
+				float cost = Float.valueOf((request.getParameter("cost")+"").equals("")?"0":request.getParameter("cost"));
+				float price = Float.valueOf((request.getParameter("price")+"").equals("")?"0":request.getParameter("price"));
+				int  current_stock = Integer.valueOf((request.getParameter("current_stock")+"").equals("")?"0":request.getParameter("current_stock"));
+				int  keep_stock = Integer.valueOf((request.getParameter("keep_stock")+"").equals("")?"0":request.getParameter("keep_stock"));
 				String photo = request.getParameter("photo");
 				String photo1 = request.getParameter("photo1");
 				String description = request.getParameter("description");
 				String barcode = request.getParameter("barcode");
 				String ispackage = request.getParameter("ispackage");
-				//System.out.println(supply_name);
 				/*************************** 2.開始新增資料 ***************************************/
 				productService = new ProductService();
 				//System.out.println(photo+" @@ "+photo1);
@@ -480,6 +492,8 @@ public class product extends HttpServlet {
 		public List<ProductBean> getsearch_byname(String group_id,String product_name);
 		
 		public List<ProductBean> getsearchBarcode(String group_id,String barcode);
+		
+		public String is_duplicate(String group_id,String product_name);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -494,7 +508,6 @@ public class product extends HttpServlet {
 				String type_id, String unit_id, Float cost, Float price,int current_stock, int keep_stock, String photo, String photo1,
 				String description, String barcode, String ispackage, String user_id) {
 			ProductBean productBean = new ProductBean();
-
 			productBean.setGroup_id(group_id);
 			productBean.setC_product_id(c_product_id);
 			productBean.setProduct_name(product_name);
@@ -572,6 +585,9 @@ public class product extends HttpServlet {
 		public List<ProductBean> getsearchBarcode(String group_id,String barcode){
 			return dao.getsearchBarcode(group_id,barcode);
 		}
+		public String is_duplicate(String group_id,String product_name){
+			return dao.is_duplicate(group_id, product_name);
+		}
 		
 	}
 
@@ -589,7 +605,9 @@ public class product extends HttpServlet {
 		private static final String sp_get_supplyname = "call sp_get_supplyname (?,?)";
 		private static final String	sp_get_type_byname =  "call sp_select_type_byname (?,?)";
 		private static final String sp_get_unit_byname =  "call sp_select_unit_byname (?,?)";
-
+		private static final String sp_check_ProductName =  "call sp_check_ProductName (?,?,?)";
+		
+		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -1170,6 +1188,31 @@ public class product extends HttpServlet {
 			}
 		}
 		return list;
+		}
+	
+		public String is_duplicate(String group_id, String product_name) {
+//			System.out.println("ERROR?? ");
+			Connection con = null;
+			CallableStatement cs = null;
+			Boolean rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_check_ProductName);
+				cs.registerOutParameter(3, Types.BOOLEAN);
+				cs.setString(1, group_id);
+				cs.setString(2, product_name);
+				cs.execute();
+				rs = cs.getBoolean(3);
+			} catch (SQLException se) {System.out.println("ERROR WITH: "+se);
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			}
+			if(rs){
+				return "true";
+			}else{
+				return "false";
+			} 
 		}
 	}
 }

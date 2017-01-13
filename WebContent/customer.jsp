@@ -165,7 +165,7 @@ function draw_customer(parameter){
 		
 		// "新增" Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -223,7 +223,7 @@ function draw_customer(parameter){
 		
 		// "修改" Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -272,7 +272,7 @@ function draw_customer(parameter){
 		
 		// "刪除" Dialog相關設定
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},

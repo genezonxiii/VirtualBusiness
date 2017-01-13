@@ -616,8 +616,10 @@
 	    	        var found = $.inArray(source, temp);
 	    	
 	    	        if(found < 0) {
+	    	        	$("#searh_salereturn").attr("c_product_id_error",$(this).val());
 	    	            $(this).val('');
 	    	            $(this).attr("placeholder","請輸入正確的產品ID名稱!");
+	    	            setTimeout(function(){$("#searh_salereturn").attr("c_product_id_error","");}, 200);  
 	    	        }
 	    	    }     
 	         });
@@ -625,6 +627,13 @@
 		//自訂產品ID查詢相關設定
 		$("#searh_salereturn").click(function(e) {
 			e.preventDefault();
+// 			alert($("#searh_salereturn").attr("c_product_id_error"));
+			if($("#searh_salereturn").attr("c_product_id_error").length>0){
+				var tmp="查無商品ID: "+$("#searh_salereturn").attr("c_product_id_error")+"\n將為您查詢所有訂單";
+				if(!confirm(tmp,"繼續","取消") ){
+					return;
+				}
+			}
 			$.ajax({
 				type : "POST",
 				url : "salereturn.do",
@@ -749,7 +758,7 @@
 				});
 		});
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : 200,
@@ -898,7 +907,7 @@
 		});
 		$("#dialog-confirm").show();
 		confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : 200,
@@ -1091,7 +1100,7 @@
 						<span class="block-label">自訂產品 ID 查詢</span>
 						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
 					</label>
-					<button class="btn btn-darkblue" id="searh_salereturn">查詢</button>
+					<button class="btn btn-darkblue" id="searh_salereturn" c_product_id_error="">查詢</button>
 				</div>
 	          	
 				<div class="form-row">

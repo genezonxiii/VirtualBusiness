@@ -150,17 +150,22 @@ $(function(){
 	
 	
 	$('#form1').ajaxForm(function(result) {
-		//################################
-		//###########  修改內容    ############
-		//################################
-		$("#download").append("&nbsp;&nbsp;&nbsp;<a href='./fileoutput.do?filename=bG9nLnR4dA=='class='btn btn-primary'>檔案下載</a>");
+		
+		if(result=="false"){
+			$("#download").html("");
+			$("#message").html("轉檔失敗<br><div style='font-size:18px;'>請確認檔案的格式是否遭到修改。</div>");
+	 		$("#message").dialog("open");
+		}else{
+			$("#download").append("&nbsp;&nbsp;&nbsp;<a href='./fileoutput.do?fileforgroupbuy="+result+"'class='btn btn-primary'>檔案下載</a>");
+		}
+		
 		$("#submitbtn").attr("onclick","return setV();");
 		$("#submitbtn").addClass("btn-exec");
 	    $("#submitbtn").removeClass("btn-gray");
 			
-		var str = result;
-		console.log(str);
-		$("#message").html(str);
+// 		var str = result;
+// 		console.log(str);
+// 		$("#message").html(str);
 // 		$("#message").dialog("open");
 
     });
@@ -189,7 +194,7 @@ $(function(){
 	});
 	
 	$("#message").dialog({
-		draggable : false, resizable : false, autoOpen : false,
+		draggable : true, resizable : false, autoOpen : false,
 		height : "auto", width : 400, modal : true,
 		show : {effect : "size",duration : 300},
 		hide : {effect : "fade",duration : 300},
@@ -205,7 +210,7 @@ $(function(){
 	});
 	$("#message").show();
 	$("#choose-order-type").dialog({
-		draggable : false, resizable : false, autoOpen : false,
+		draggable : true, resizable : false, autoOpen : false,
 		height : "auto", width : "auto", modal : true,
 		show : {effect : "blind",duration : 300},
 		hide : {effect : "fade",duration : 300},

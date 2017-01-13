@@ -117,7 +117,7 @@ $(function(){
 						var ordertype = "",dialogvalue="";
 						$.each (json_obj, function (i) {
 							if(json_obj[i].throwfile_type!="general"){
-								ordertype+="<input id='type-radio-"+i+"' type='radio' name='ordertype' value='"+json_obj[i].throwfile_type+"' restrict='"+json_obj[i].throwfile_fileextension+"'><label for='type-radio-"+i+"'><span class='form-label'>"+json_obj[i].throwfile_name+"</span></label>";
+								ordertype+="<input id='type-radio-"+i+"' type='radio' name='ordertype' value='"+json_obj[i].throwfile_type+"' restrict='"+json_obj[i].throwfile_fileextension+"'><label for='type-radio-"+i+"' ><span class='form-label'>"+json_obj[i].throwfile_name+"</span></label>";
 							}
 						});
 						dialogvalue+="<div align='center'>"+ordertype+"</div>";
@@ -130,7 +130,7 @@ $(function(){
 					platforms+='</div><div class="ec-radio-group-wrap">';
 				}
 				platforms+= '<input id="radio-'+ i +'" type="radio" name="ec-radio-group" value="';
-				platforms+= json_obj[i].throwfile_platform+'"><label for="radio-'+i+'"><img src="images/';
+				platforms+= json_obj[i].throwfile_platform+'"><label for="radio-'+i+'" style="position:relative;"><img src="images/';
 				platforms+= ((json_obj[i].icon.length>1) ? json_obj[i].icon : "ec-logos/noname.png");
 				platforms+= '"alt=""><span>'+json_obj[i].memo+'</span></label>';
 			});
@@ -156,7 +156,7 @@ $(function(){
 				if(json_obj["success"]==true){
 					clearTimeout(timer);
 // 					alert('成功匯入　"'+json_obj["total"]+'"　筆資料');
-					$("#message").html('成功匯入　"'+json_obj["total"]+'"　筆資料');
+					$("#message").html('成功匯入&nbsp;"'+json_obj["total"]+'"&nbsp;筆資料');
 					$("#message").dialog("open");
 				}
 			}
@@ -192,7 +192,7 @@ $(function(){
 		}
 	});
 	$("#message").dialog({
-		draggable : false, resizable : false, autoOpen : false,
+		draggable : true, resizable : false, autoOpen : false,
 		height : "auto", width : 400, modal : true,
 		show : {effect : "size",duration : 300},
 		hide : {effect : "fade",duration : 300},
@@ -208,7 +208,7 @@ $(function(){
 	});
 	$("#message").show();
 	$("#choose-order-type").dialog({
-		draggable : false, resizable : false, autoOpen : false,
+		draggable : true, resizable : false, autoOpen : false,
 		height : "auto", width : "auto", modal : true,
 		show : {effect : "blind",duration : 300},
 		hide : {effect : "fade",duration : 300},
@@ -216,6 +216,17 @@ $(function(){
 					text : "確定",
 					click : function() {
 						if($( "input:checked[name='ordertype']" ).length>0){
+							//instore-pickup 超取 <img class='choose' style="position:absolute;left:0;" src="./images/seal_1.png"/>
+							//home-delivery 宅配
+							//drop-shipping 第三方
+							$(".choosed").remove();
+							if($( "input:checked[name='ordertype']" ).val()=="instore-pickup"){
+								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left+30)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-40)+'px;" src="./images/seal_1.png"/>');
+							}else if($( "input:checked[name='ordertype']" ).val()=="home-delivery"){
+								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left+30)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-40)+'px;" src="./images/seal_2.png"/>');
+							}else if($( "input:checked[name='ordertype']" ).val()=="drop-shipping"){
+								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left+0)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-40)+'px;" src="./images/seal_3.png"/>');
+							}
 							$( "input:checked[name='ec-radio-group']" ).attr("value2",$( "input:checked[name='ordertype']" ).val());
 							$("#submitbtn").attr("restrict",$( "input:checked[name='ordertype']" ).attr("restrict"));
 							$("#choose-order-type").dialog("close");
@@ -312,13 +323,24 @@ function setV(){
 // 	}
 	document.getElementById("form1").action="upload.do?vender="+$( "input:checked[name='ec-radio-group']" ).val()+"&ordertype="+$( "input:checked[name='ec-radio-group']" ).attr("value2");
 	
-	$("#msg").show();
-	setTimeout( function() {$("#msg").hide();}, 2600);
+	$("#msg").fadeIn();
+	setTimeout( function() {$("#msg").fadeOut();}, 2600);
 	
 	return true;
 };
 
-
+var getAbsPos = function(o) {
+    var pos = {x:0, y:0};
+    while (o!=null)
+    {
+    pos.x += o.offsetLeft;
+    pos.y += o.offsetTop;
+    o = o.offsetParent; //若區塊外還有父元素，就繼續往外推
+    }
+    return pos;
+}
+var POS = getAbsPos(document.getElementById("demo")).x;
+console.log("top: "+POS.y, "left: "+ POS.x);
 
 
 </script>

@@ -40,6 +40,7 @@ public class loginFilter implements Filter {
 		if(session.getAttribute("group_id")==null || session.getAttribute("user_id")==null){
             // 導到登入畫面
             servletResponse.sendRedirect("./login.jsp");
+            return;
         } else {
             // 已登入 繼續動作
             chain.doFilter(request, response);

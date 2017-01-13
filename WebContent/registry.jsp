@@ -243,7 +243,7 @@ $(function() {
 //     }); 
 // 	$("#my_msg").dialog({
 // 		title : "註冊失敗",
-// 		draggable : false,//防止拖曳
+// 		draggable : true,//防止拖曳
 // 		resizable : false,//防止縮放
 // 		autoOpen : false,
 // 		height : "auto",

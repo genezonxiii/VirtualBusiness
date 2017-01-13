@@ -293,7 +293,9 @@ public class sale extends HttpServlet {
 					seq_no = getGenerateSeqNo(list.get(0).getSeq_no());
 				}
 				saleService = new SaleService();
-
+				if(order_no.length()<1){
+					order_no=seq_no;
+				}
 				saleService.addSale(seq_no, group_id, order_no, user_id, product_id, product_name, c_product_id,cus_id, name, quantity, price, invoice,
 						invoice_date, trans_list_date, dis_date, memo, sale_date, order_source);
 				/***************************

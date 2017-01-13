@@ -354,7 +354,7 @@ function detail(str){
 		}
 	});
 	confirm_dialog = $("#dialog-confirm").dialog({
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : 200,
@@ -480,7 +480,7 @@ function detail(str){
 	 $("#dialog-confirm").show();
 	
 	confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
-		draggable : false,//防止拖曳
+		draggable : true,//防止拖曳
 		resizable : false,//防止縮放
 		autoOpen : false,
 		height : 200,
@@ -616,7 +616,7 @@ function detail(str){
 	});
 	$("#my").dialog({
 		title: "明細",
-		draggable : false, resizable : false, autoOpen : false,
+		draggable : true, resizable : false, autoOpen : false,
 		height : "auto", width : "auto", modal : true,
 		show : {effect : "blind",duration : 300},
 		hide : {effect : "fade",duration : 300},

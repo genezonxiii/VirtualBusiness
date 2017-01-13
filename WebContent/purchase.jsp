@@ -310,6 +310,13 @@ function draw_purchase_detail(parameter){
 		//供應商ID查詢相關設定
 		$("#searh_supply_name").click(function(e) {
 			e.preventDefault();
+			if($("#searh_supply_name").attr("supply_error").length>0){
+			    var tmp="查無供應商名稱: "+$("#searh_supply_name").attr("supply_error")+"\n將為您查詢所有進貨單";
+			    if(!confirm(tmp,"繼續","取消") ){
+			        return;
+			    }
+			}
+			
 			var tmp={
 					action : "search",
 					supply_name : $("input[name='searh_purchase_by_supply_name'").val()
@@ -318,7 +325,7 @@ function draw_purchase_detail(parameter){
 		});
 		//確認Dialog相關設定(刪除功能)
 		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -339,7 +346,7 @@ function draw_purchase_detail(parameter){
 		$("#dialog-confirm").show();
 		//新增Dialog相關設定
 			insert_dialog = $("#dialog-form-insert").dialog({
-				draggable : false, resizable : false, autoOpen : false,
+				draggable : true, resizable : false, autoOpen : false,
 				height : "auto", width : "auto", modal : true,
 				show : {effect : "blind",duration : 300},
 				hide : {effect : "fade",duration : 300},
@@ -408,8 +415,10 @@ function draw_purchase_detail(parameter){
 	    	        var found = $.inArray(source, temp);
 	    	
 	    	        if(found < 0) {
+	    	        	$("#searh_supply_name").attr("supply_error",$(this).val());
 	    	            $(this).val('');
 	    	            $(this).attr("placeholder","輸入正確的供應商名稱!");
+	    	            setTimeout(function(){$("#searh_supply_name").attr("supply_error","");}, 200);
 	    	        }
 	    	    }     
 	         });
@@ -425,7 +434,7 @@ function draw_purchase_detail(parameter){
       	 
 		//修改Dialog相關設定
 		update_dialog = $("#dialog-form-update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -630,7 +639,7 @@ function draw_purchase_detail(parameter){
 		//明細新增Dialog相關設定
 		detail_insert_dialog = $("#detail-dialog-form-insert").dialog(
 		{
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : 800, modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -677,7 +686,7 @@ function draw_purchase_detail(parameter){
 		});		
 		///明細確認Dialog相關設定(刪除功能)
 		confirm_detail_dialog = $("#dialog-detail-confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -730,7 +739,7 @@ function draw_purchase_detail(parameter){
 		});	
 		//修改detail update Dialog相關設定
 		detail_update_dialog = $("#detail_dialog_form_update").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : 800 , modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -1030,7 +1039,7 @@ function draw_purchase_detail(parameter){
 
 		$("#warning").dialog({
 			title: "警告",
-			draggable : false,//防止拖曳
+			draggable : true,//防止拖曳
 			resizable : false,//防止縮放
 			autoOpen : false,
 			height : "auto",
@@ -1074,7 +1083,7 @@ function draw_purchase_detail(parameter){
 						<span class="block-label">供應商名稱查詢</span>
 						<input type="text" id="searh_purchase_by_supply_name" name="searh_purchase_by_supply_name">
 					</label>
-					<button class="btn btn-darkblue" id="searh_supply_name">查詢</button>
+					<button class="btn btn-darkblue" id="searh_supply_name" supply_error="">查詢</button>
 				</div>
 				<div class="form-row">
 				<form id="purchase_date_form" name="purchase_date_form">

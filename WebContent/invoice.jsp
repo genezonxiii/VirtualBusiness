@@ -38,6 +38,7 @@ body { overflow-y: hidden; }
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <!-- <script src="js/typed.custom.js"></script> -->
 	<script>
+var invoice_map={};//只是給開完發票的下載output用而已
 function draw_invoice(parameter){
 //  	alert(parameter["invoice_date"]==null);
 	var table="#invoice_false_table";
@@ -73,9 +74,10 @@ function draw_invoice(parameter){
 				var resultRunTime = 0;
 				$.each (json_obj, function (i) {resultRunTime+=1;});
 				if(resultRunTime!=0){
-					
+					//alert(result);//invoice_map[json_obj[i].sale_id]=json_obj[i].order_no;
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
+						invoice_map[json_obj[i].sale_id]=json_obj[i].order_no;
 // 						if(parameter["invoice_date"]!=null){
 // 							alert(parameter["invoice_date"]);
 // 							alert(json_obj[i].invoice_date);
@@ -132,7 +134,7 @@ function draw_invoice(parameter){
 				            			}
 				            		});
 				            		message+="</div>";
-				            		$(".ui-dialog-title").html("是否要作廢 此"+ count + "筆 發票嗎?")
+				            		$(".ui-dialog-title").html("是否要作廢 此"+ count + "筆 發票嗎?");
 				            		$("#make_false_confirm").html(message);
 				            		$("#make_false_confirm").dialog("open");
 				                }
@@ -218,7 +220,7 @@ function draw_invoice(parameter){
 			alert(count);
 		});
 		$("#make_true_confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -246,6 +248,7 @@ function draw_invoice(parameter){
     						console.log(result);
     						var json_obj = $.parseJSON(result);
     						var resultRunTime = 0;
+    						var invoice_download="請<font style='color:#f00;font-size:28px;'>務必</font>下載這些訂單的支票檔後<br>開立電子發票<br>";
     						$.each (json_obj, function (i) {
     							$.ajax({
     								type : "POST",
@@ -256,13 +259,31 @@ function draw_invoice(parameter){
     									sale_id : json_obj[i]
     								},
     								success : function(result) {
-    									if("path_error"==result){alert("發票輸出路徑異常。\n\t請至'公司管理'介面輸入合法發票路徑。\n( 檔案名稱不可包含 \ / : ? \" < > | 字元 )");}
-    									if("no_invoiceNo"==result.substring(0, 12)){alert("沒有讀取到字軌規則。\n\t請至'發票字軌管理'介面\n\t建立合法發票字軌規則。");}
+    									if("path_error"==result){alert("發票輸出路徑異常。\n\t請至'公司管理'介面輸入合法發票路徑。\n( 檔案名稱不可包含 \ / : ? \" < > | 字元 )");return;}
+    									if("no_invoiceNo"==result.substring(0, 12)){alert("沒有讀取到字軌規則。\n\t請至'發票字軌管理'介面\n\t建立合法發票字軌規則。");return;}
+    									invoice_download+="<a href='./fileoutput.do?fileforinvoice="+btoa(result)+"'>"+invoice_map[json_obj[i]]+"</a><br>";
     									console.log(result);
     								}
     							});
-//     							alert(json_obj[i]);
     						});
+    						$("#message").html(invoice_download);
+    						$("#stay").attr("disabled",true);
+    						$("#stay").html("<font style='color:gray;'>確定(5)</font>");
+					 		$("#message").dialog("open");
+					 		var tmp_i=0,tmp_t;
+					 		function myLoop (i) {
+								setTimeout(function () {
+									$("#stay").html("<font style='color:gray;'>確定("+(5-i)+")</font>");
+									if(i<5){
+										myLoop(i+1);
+									}else{
+										$("#stay").attr("disabled",false);
+							 			$("#stay").css("border","1px solid gray");
+							 			$("#stay").html("<font style='color:black;'>確定</font>");
+									}
+								}, 1000);
+							}
+							myLoop(tmp_i); 
     						draw_invoice({
 								action : "search_invoice_false",
 								invoice_false_start: $("#invoice_false_start").val(),
@@ -288,7 +309,7 @@ function draw_invoice(parameter){
 		});
 		$("#make_true_confirm").show();
 		$("#make_false_confirm").dialog({
-			draggable : false, resizable : false, autoOpen : false,
+			draggable : true, resizable : false, autoOpen : false,
 			height : "auto", width : "auto", modal : true,
 			show : {effect : "blind",duration : 300},
 			hide : {effect : "fade",duration : 300},
@@ -341,6 +362,23 @@ function draw_invoice(parameter){
 			}
 		});
 		$("#make_false_confirm").show();
+		$("#message").dialog({
+			draggable : true, resizable : false, autoOpen : false,
+			height : "auto", width : 400, modal : true,
+			show : {effect : "size",duration : 300},
+			hide : {effect : "fade",duration : 300},
+			buttons : [{
+						id : "stay",
+						text : "確定",
+						click : function() {
+							$("#message").dialog("close");
+						}
+					}],
+			close : function() {
+				$("#message").dialog("close");
+			}
+		});
+		$("#message").show();
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){
@@ -460,6 +498,6 @@ function draw_invoice(parameter){
 	<div id="make_true_confirm"  style="display:none;"></div>
 	<div id="make_false_confirm"  style="display:none;"></div>
 </div>
-
+<div id ="message" title="訊息" style='display:none;padding:30px 0;text-align:center;font-size:18px;font-family: "微軟正黑體", "Microsoft JhengHei", Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;'></div>
 </body>
 </html>
