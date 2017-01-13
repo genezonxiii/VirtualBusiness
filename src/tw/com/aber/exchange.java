@@ -36,7 +36,7 @@ public class exchange extends HttpServlet {
 		// TODO Auto-generated method stub
 		doPost(request, response);
 	}
-
+	 //aa
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
