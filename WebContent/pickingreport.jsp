@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>撿貨單</title>
+<title>揀貨單</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
@@ -34,7 +34,7 @@
 		$("#search").click( function(e) {
 			e.preventDefault();
 			if($("#pickingday").val().length==0){
-				warning_msg("請選擇撿貨日期");
+				warning_msg("請選擇揀貨日期");
 				return;
 			}
 			var tmp = './report.do?dis_date=' + $("#pickingday").val().replace(/-/g, "");
@@ -50,7 +50,7 @@
 		 				warning_msg($("#pickingday").val()+" 無訂單");
 		 				$("#board").html("");
 		 			}else{
-		 				warning_msg("輸出撿貨單中請稍候...");
+		 				warning_msg("輸出揀貨單中請稍候...");
 		 				$("#board").html("<embed id='pdf' src='"+tmp+"' style='width:100%;height:calc(100vh - 210px);'>");
 		 				
 		 				setTimeout(function () { warning_msg(""); }, 1000);
@@ -81,7 +81,7 @@
 				<form id="amount_date_form" name="trans_list_date_form">
 					<div class="form-row">
 						<label for="">
-							<span class="block-label">撿貨日期</span>
+							<span class="block-label">揀貨日期</span>
 							<input type="text" class="input-date" id="pickingday" >
 						</label>
 						<button id="search" class="btn btn-darkblue">查詢</button>

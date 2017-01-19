@@ -253,7 +253,7 @@ function who(){
 		break;
 	case "pickingreport.jsp":
 		side3.addClass("active");
-		return "撿貨單";
+		return "揀貨單";
 		break;
 	
 //######分析圖表##########################
@@ -400,7 +400,7 @@ function who(){
 			    	<li><a href="#" onclick="trans('customerreport.jsp');">客戶報表</a></li>
 			    	<li><a href="#" onclick="trans('accreceivereport.jsp');">應收帳款報表</a></li>
 			    	<li><a href="#" onclick="trans('accpayreport.jsp');">應付帳款報表</a></li>
-			    	<li><a href="#" onclick="trans('pickingreport.jsp');">撿貨單</a></li>
+			    	<li><a href="#" onclick="trans('pickingreport.jsp');">揀貨單</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
