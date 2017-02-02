@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,16 +16,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-@SuppressWarnings("serial")
+import tw.com.aber.vo.ProductUnitVO;
+
 public class productunit extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		doPost(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		ProductunitService productunitService = null;
@@ -33,21 +39,27 @@ public class productunit extends HttpServlet {
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		if ("searh".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ****************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ****************************************/
 				String unit_name = request.getParameter("unit_name");
-				/*************************** 2.開始查詢資料 ****************************************/
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (unit_name == null || (unit_name.trim()).length() == 0) {
 					productunitService = new ProductunitService();
-					List<ProductunitVO> list = productunitService.getSearAllDB(group_id);
+					List<ProductUnitVO> list = productunitService.getSearAllDB(group_id);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
 				productunitService = new ProductunitService();
-				List<ProductunitVO> list = productunitService.getSearhDB(group_id, unit_name);
-				/*************************** 3.查詢完成,準備轉交(Send the Success view) ***********/
+				List<ProductUnitVO> list = productunitService.getSearhDB(group_id, unit_name);
+				/***************************
+				 * 3.查詢完成,準備轉交(Send the Success view)
+				 ***********/
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -58,15 +70,21 @@ public class productunit extends HttpServlet {
 		}
 		if ("insert".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 **************************************/
+				/***************************
+				 * 1.接收請求參數
+				 **************************************/
 				String unit_name = request.getParameter("unit_name");
-				/*************************** 2.開始新增資料 ***************************************/
+				/***************************
+				 * 2.開始新增資料
+				 ***************************************/
 				productunitService = new ProductunitService();
 				productunitService.addProductunit(group_id, unit_name, user_id);
 
-				/*************************** 3.新增完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.新增完成,準備轉交(Send the Success view)
+				 ***********/
 				productunitService = new ProductunitService();
-				List<ProductunitVO> list = productunitService.getSearAllDB(group_id);
+				List<ProductUnitVO> list = productunitService.getSearAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -77,15 +95,21 @@ public class productunit extends HttpServlet {
 		}
 		if ("update".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String unit_id = request.getParameter("unit_id");
 				String unit_name = request.getParameter("unit_name");
-				/*************************** 2.開始修改資料 ***************************************/
+				/***************************
+				 * 2.開始修改資料
+				 ***************************************/
 				productunitService = new ProductunitService();
 				productunitService.updateProductunit(unit_id, group_id, unit_name, user_id);
-				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.修改完成,準備轉交(Send the Success view)
+				 ***********/
 				productunitService = new ProductunitService();
-				List<ProductunitVO> list = productunitService.getSearAllDB(group_id);
+				List<ProductUnitVO> list = productunitService.getSearAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -96,14 +120,20 @@ public class productunit extends HttpServlet {
 		}
 		if ("delete".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String unit_id = request.getParameter("unit_id");
-				/*************************** 2.開始刪除資料 ***************************************/
+				/***************************
+				 * 2.開始刪除資料
+				 ***************************************/
 				productunitService = new ProductunitService();
 				productunitService.deleteProductunit(unit_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.刪除完成,準備轉交(Send the Success view)
+				 ***********/
 				productunitService = new ProductunitService();
-				List<ProductunitVO> list = productunitService.getSearAllDB(group_id);
+				List<ProductUnitVO> list = productunitService.getSearAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -114,58 +144,18 @@ public class productunit extends HttpServlet {
 		}
 	}
 
-	/************************* 對應資料庫表格格式 **************************************/
-	public class ProductunitVO implements java.io.Serializable {
-		private String unit_id;
-		private String group_id;
-		private String unit_name;
-		private String user_id;
-
-		public String getUser_id() {
-			return user_id;
-		}
-
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-
-		public String getUnit_id() {
-			return unit_id;
-		}
-
-		public void setUnit_id(String unit_id) {
-			this.unit_id = unit_id;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String getUnit_name() {
-			return unit_name;
-		}
-
-		public void setUnit_name(String unit_name) {
-			this.unit_name = unit_name;
-		}
-	}
-
 	/*************************** 制定規章方法 ****************************************/
 	interface Productunit_interface {
 
-		public void insertDB(ProductunitVO productunitVO);
+		public void insertDB(ProductUnitVO productUnitVO);
 
-		public void updateDB(ProductunitVO productunitVO);
+		public void updateDB(ProductUnitVO productUnitVO);
 
 		public void deleteDB(String unit_id, String user_id);
 
-		public List<ProductunitVO> searhDB(String group_id, String unit_name);
+		public List<ProductUnitVO> searhDB(String group_id, String unit_name);
 
-		public List<ProductunitVO> searhAllDB(String group_id);
+		public List<ProductUnitVO> searhAllDB(String group_id);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -176,34 +166,34 @@ public class productunit extends HttpServlet {
 			dao = new ProductunitDAO();
 		}
 
-		public ProductunitVO addProductunit(String group_id, String unit_name, String user_id) {
-			ProductunitVO productunitVO = new ProductunitVO();
-			productunitVO.setGroup_id(group_id);
-			productunitVO.setUnit_name(unit_name);
-			productunitVO.setUser_id(user_id);
-			dao.insertDB(productunitVO);
-			return productunitVO;
+		public ProductUnitVO addProductunit(String group_id, String unit_name, String user_id) {
+			ProductUnitVO productUnitVO = new ProductUnitVO();
+			productUnitVO.setGroup_id(group_id);
+			productUnitVO.setUnit_name(unit_name);
+			productUnitVO.setUser_id(user_id);
+			dao.insertDB(productUnitVO);
+			return productUnitVO;
 		}
 
-		public ProductunitVO updateProductunit(String unit_id, String group_id, String unit_name, String user_id) {
-			ProductunitVO productunitVO = new ProductunitVO();
-			productunitVO.setUnit_id(unit_id);
-			productunitVO.setGroup_id(group_id);
-			productunitVO.setUnit_name(unit_name);
-			productunitVO.setUser_id(user_id);
-			dao.updateDB(productunitVO);
-			return productunitVO;
+		public ProductUnitVO updateProductunit(String unit_id, String group_id, String unit_name, String user_id) {
+			ProductUnitVO productUnitVO = new ProductUnitVO();
+			productUnitVO.setUnit_id(unit_id);
+			productUnitVO.setGroup_id(group_id);
+			productUnitVO.setUnit_name(unit_name);
+			productUnitVO.setUser_id(user_id);
+			dao.updateDB(productUnitVO);
+			return productUnitVO;
 		}
 
 		public void deleteProductunit(String unit_id, String user_id) {
 			dao.deleteDB(unit_id, user_id);
 		}
 
-		public List<ProductunitVO> getSearhDB(String group_id, String unit_name) {
+		public List<ProductUnitVO> getSearhDB(String group_id, String unit_name) {
 			return dao.searhDB(group_id, unit_name);
 		}
 
-		public List<ProductunitVO> getSearAllDB(String group_id) {
+		public List<ProductUnitVO> getSearAllDB(String group_id) {
 			return dao.searhAllDB(group_id);
 		}
 	}
@@ -223,8 +213,8 @@ public class productunit extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		@Override
-		public void insertDB(ProductunitVO productunitVO) {
-			// TODO Auto-generated method stub
+		public void insertDB(ProductUnitVO productUnitVO) {
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -232,9 +222,9 @@ public class productunit extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_insert_product_unit);
 
-				pstmt.setString(1, productunitVO.getGroup_id());
-				pstmt.setString(2, productunitVO.getUnit_name());
-				pstmt.setString(3, productunitVO.getUser_id());
+				pstmt.setString(1, productUnitVO.getGroup_id());
+				pstmt.setString(2, productUnitVO.getUnit_name());
+				pstmt.setString(3, productUnitVO.getUser_id());
 
 				pstmt.executeUpdate();
 
@@ -263,8 +253,8 @@ public class productunit extends HttpServlet {
 		}
 
 		@Override
-		public void updateDB(ProductunitVO productunitVO) {
-			// TODO Auto-generated method stub
+		public void updateDB(ProductUnitVO productUnitVO) {
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -272,10 +262,10 @@ public class productunit extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_product_unit);
 
-				pstmt.setString(1, productunitVO.getUnit_id());
-				pstmt.setString(2, productunitVO.getGroup_id());
-				pstmt.setString(3, productunitVO.getUnit_name());
-				pstmt.setString(4, productunitVO.getUser_id());
+				pstmt.setString(1, productUnitVO.getUnit_id());
+				pstmt.setString(2, productUnitVO.getGroup_id());
+				pstmt.setString(3, productUnitVO.getUnit_name());
+				pstmt.setString(4, productUnitVO.getUser_id());
 
 				pstmt.executeUpdate();
 
@@ -305,7 +295,7 @@ public class productunit extends HttpServlet {
 
 		@Override
 		public void deleteDB(String unit_id, String user_id) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -342,9 +332,9 @@ public class productunit extends HttpServlet {
 		}
 
 		@Override
-		public List<ProductunitVO> searhDB(String group_id, String unit_name) {
-			List<ProductunitVO> list = new ArrayList<ProductunitVO>();
-			ProductunitVO productunitVO = null;
+		public List<ProductUnitVO> searhDB(String group_id, String unit_name) {
+			List<ProductUnitVO> list = new ArrayList<ProductUnitVO>();
+			ProductUnitVO productUnitVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -360,11 +350,11 @@ public class productunit extends HttpServlet {
 				rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					productunitVO = new ProductunitVO();
-					productunitVO.setGroup_id(rs.getString("group_id"));
-					productunitVO.setUnit_id(rs.getString("unit_id"));
-					productunitVO.setUnit_name(rs.getString("unit_name"));
-					list.add(productunitVO);
+					productUnitVO = new ProductUnitVO();
+					productUnitVO.setGroup_id(rs.getString("group_id"));
+					productUnitVO.setUnit_id(rs.getString("unit_id"));
+					productUnitVO.setUnit_name(rs.getString("unit_name"));
+					list.add(productUnitVO);
 				}
 				// Handle any driver errors
 			} catch (SQLException se) {
@@ -399,10 +389,10 @@ public class productunit extends HttpServlet {
 		}
 
 		@Override
-		public List<ProductunitVO> searhAllDB(String group_id) {
-			// TODO Auto-generated method stub
-			List<ProductunitVO> list = new ArrayList<ProductunitVO>();
-			ProductunitVO productunitVO = null;
+		public List<ProductUnitVO> searhAllDB(String group_id) {
+
+			List<ProductUnitVO> list = new ArrayList<ProductUnitVO>();
+			ProductUnitVO productUnitVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -415,11 +405,11 @@ public class productunit extends HttpServlet {
 				pstmt.setString(1, group_id);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					productunitVO = new ProductunitVO();
-					productunitVO.setGroup_id(rs.getString("group_id"));
-					productunitVO.setUnit_id(rs.getString("unit_id"));
-					productunitVO.setUnit_name(rs.getString("unit_name"));
-					list.add(productunitVO); // Store the row in the list
+					productUnitVO = new ProductUnitVO();
+					productUnitVO.setGroup_id(rs.getString("group_id"));
+					productUnitVO.setUnit_id(rs.getString("unit_id"));
+					productUnitVO.setUnit_name(rs.getString("unit_name"));
+					list.add(productUnitVO); // Store the row in the list
 				}
 
 				// Handle any driver errors

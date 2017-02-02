@@ -11,16 +11,10 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import tw.com.aber.login.controller.login.LoginService;
-import tw.com.aber.login.controller.login.LoginVO;
-
-import com.google.gson.Gson;
 
 public class HandleDrawValidateCode extends HttpServlet {
 	private static final long serialVersionUID = 1L;

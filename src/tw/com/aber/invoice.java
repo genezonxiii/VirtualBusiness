@@ -26,9 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import tw.com.aber.membercondition.MemberconditionVO;
-import tw.com.aber.sale.controller.sale.SaleVO;
-
 public class invoice extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -95,7 +92,6 @@ public class invoice extends HttpServlet {
 					TimeUnit.SECONDS.sleep(1);
 //					TimeUnit.MILLISECONDS.sleep(800);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

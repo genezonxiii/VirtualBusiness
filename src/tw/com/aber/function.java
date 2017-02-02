@@ -37,7 +37,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import com.google.gson.Gson;
 
-import tw.com.aber.basicinfo.supply.SupplyBean;
 import tw.com.aber.product.controller.product.ProductBean;
 
 //import tw.com.aber.basicinfo.customer.CustomerDAO;

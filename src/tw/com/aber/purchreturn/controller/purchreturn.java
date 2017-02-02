@@ -17,15 +17,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import tw.com.aber.salereturn.controller.salereturn.SaleReturnVO;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import tw.com.aber.vo.PurchaseReturnVO;
+import tw.com.aber.vo.SupplyVO;
 
 public class purchreturn extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PurchaseReturnService purchaseReturnService = null;
@@ -43,9 +45,13 @@ public class purchreturn extends HttpServlet {
 		}
 		if ("search".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數-格式檢查 ****************************************/
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
 				String supply_name = request.getParameter("supply_name");
-				/*************************** 2.開始查詢資料 ****************************************/
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (supply_name == null || (supply_name.trim()).length() == 0) {
 					purchaseReturnService = new PurchaseReturnService();
@@ -71,7 +77,9 @@ public class purchreturn extends HttpServlet {
 		}
 		if ("insert_purchase_return".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String purchase_id = request.getParameter("purchase_id");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -81,34 +89,45 @@ public class purchreturn extends HttpServlet {
 					java.util.Date invoice_date_util = sdf.parse(return_date_str);
 					return_date = new java.sql.Date(invoice_date_util.getTime());
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
-				/*************************** 2.開始銷貨退回 ***************************************/
+				/***************************
+				 * 2.開始銷貨退回
+				 ***************************************/
 				purchaseReturnService = new PurchaseReturnService();
 				purchaseReturnService.addPurchaseReturn(purchase_id, user_id, return_date);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.刪除完成,準備轉交(Send the Success view)
+				 ***********/
 				purchaseReturnService = new PurchaseReturnService();
-				List<PurchaseReturnVO> list = purchaseReturnService.getSearchReturnDateDB(group_id, return_date, return_date);
+				List<PurchaseReturnVO> list = purchaseReturnService.getSearchReturnDateDB(group_id, return_date,
+						return_date);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
 				return;// 程式中斷
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
 		if ("delete_purchase_return".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String supply_name = request.getParameter("sale_id");
 				String purchase_id = request.getParameter("purchase_id");
-				/*************************** 2.開始銷貨退回 ***************************************/
+				/***************************
+				 * 2.開始銷貨退回
+				 ***************************************/
 				purchaseReturnService = new PurchaseReturnService();
 				purchaseReturnService.deletePurchaseReturn(purchase_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.刪除完成,準備轉交(Send the Success view)
+				 ***********/
 				// 假如無查詢條件，則是查詢全部
 				if (supply_name == null || (supply_name.trim()).length() == 0) {
 					purchaseReturnService = new PurchaseReturnService();
@@ -129,7 +148,7 @@ public class purchreturn extends HttpServlet {
 				}
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
@@ -170,7 +189,8 @@ public class purchreturn extends HttpServlet {
 					} else {
 						// 查詢指定期限
 						purchaseReturnService = new PurchaseReturnService();
-						List<PurchaseReturnVO> list = purchaseReturnService.getSearchPurchaseDateDB(group_id, start_date, end_date);
+						List<PurchaseReturnVO> list = purchaseReturnService.getSearchPurchaseDateDB(group_id,
+								start_date, end_date);
 						PurchaseReturnVO purchaseReturnVO = new PurchaseReturnVO();
 						purchaseReturnVO.setMessage("驗證通過");
 						list.add(purchaseReturnVO);
@@ -199,7 +219,9 @@ public class purchreturn extends HttpServlet {
 		}
 		if ("search_return_date".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數-格式檢查 ****************************************/
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
 				String start_date = request.getParameter("return_start_date");
 				String end_date = request.getParameter("return_end_date");
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
@@ -251,7 +273,8 @@ public class purchreturn extends HttpServlet {
 
 						// 查詢指定期限
 						purchaseReturnService = new PurchaseReturnService();
-						List<PurchaseReturnVO> list = purchaseReturnService.getSearchReturnDateDB(group_id, return_start_date, return_end_date);
+						List<PurchaseReturnVO> list = purchaseReturnService.getSearchReturnDateDB(group_id,
+								return_start_date, return_end_date);
 						PurchaseReturnVO purchaseReturnVO = new PurchaseReturnVO();
 						purchaseReturnVO.setMessage("驗證通過");
 						list.add(purchaseReturnVO);
@@ -290,149 +313,6 @@ public class purchreturn extends HttpServlet {
 		return Integer.parseInt(str.toString());
 	}
 
-	@SuppressWarnings("serial")
-	class PurchaseReturnVO implements java.io.Serializable {
-		private String purchase_id;
-		private String seq_no;
-		private String group_id;
-		private String user_id;
-		private String memo;
-		private java.sql.Date purchase_date;
-		private String invoice;
-		private String invoice_type;
-		private java.sql.Date return_date;
-		private Boolean isreturn;
-		private Float amount;
-		private String supply_id;
-		private String message;
-
-		public String getSupply_id() {
-			return supply_id;
-		}
-
-		public void setSupply_id(String supply_id) {
-			this.supply_id = supply_id;
-		}
-
-		public Float getAmount() {
-			return amount;
-		}
-
-		public void setAmount(Float amount) {
-			this.amount = amount;
-		}
-
-		public String getPurchase_id() {
-			return purchase_id;
-		}
-
-		public void setPurchase_id(String purchase_id) {
-			this.purchase_id = purchase_id;
-		}
-
-		public String getSeq_no() {
-			return seq_no;
-		}
-
-		public void setSeq_no(String seq_no) {
-			this.seq_no = seq_no;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String getUser_id() {
-			return user_id;
-		}
-
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-
-		public String getMemo() {
-			return memo;
-		}
-
-		public void setMemo(String memo) {
-			this.memo = memo;
-		}
-
-		public java.sql.Date getPurchase_date() {
-			return purchase_date;
-		}
-
-		public void setPurchase_date(java.sql.Date purchase_date) {
-			this.purchase_date = purchase_date;
-		}
-
-		public String getInvoice() {
-			return invoice;
-		}
-
-		public void setInvoice(String invoice) {
-			this.invoice = invoice;
-		}
-
-		public String getInvoice_type() {
-			return invoice_type;
-		}
-
-		public void setInvoice_type(String invoice_type) {
-			this.invoice_type = invoice_type;
-		}
-
-		public java.sql.Date getReturn_date() {
-			return return_date;
-		}
-
-		public void setReturn_date(java.sql.Date return_date) {
-			this.return_date = return_date;
-		}
-
-		public Boolean getIsreturn() {
-			return isreturn;
-		}
-
-		public void setIsreturn(Boolean isreturn) {
-			this.isreturn = isreturn;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	class SupplyVO implements java.io.Serializable {
-		private String supply_id;
-		private String supply_name;
-
-		public String getSupply_id() {
-			return supply_id;
-		}
-
-		public void setSupply_id(String supply_id) {
-			this.supply_id = supply_id;
-		}
-
-		public String getSupply_name() {
-			return supply_name;
-		}
-
-		public void setSupply_name(String supply_name) {
-			this.supply_name = supply_name;
-		}
-	}
-
 	interface Purchreturn_interface {
 
 		public void insertPurchaseReturnTotDB(String purchase_id, String user_id, Date return_date);
@@ -442,14 +322,15 @@ public class purchreturn extends HttpServlet {
 		public List<PurchaseReturnVO> searchDB(String group_id, String supply_name);
 
 		public List<PurchaseReturnVO> searchAllDB(String group_id);
-		
+
 		public List<PurchaseReturnVO> getSearchAllPurchaseReturnDB(String group_id);
-		
+
 		public List<SupplyVO> getSupplyName(String group_id, String supply_name);
 
 		public List<PurchaseReturnVO> getSearchReturnDateDB(String group_id, Date start_date, Date end_date);
 
-		public List<PurchaseReturnVO> getSearchPurchaseDateDB(String group_id, String purchase_start_date, String purchase_end_date);
+		public List<PurchaseReturnVO> getSearchPurchaseDateDB(String group_id, String purchase_start_date,
+				String purchase_end_date);
 	}
 
 	class PurchaseReturnService {
@@ -475,9 +356,10 @@ public class purchreturn extends HttpServlet {
 			return dao.searchAllDB(group_id);
 		}
 
-		public List<PurchaseReturnVO> getSearchAllPurchaseReturnDB(String group_id){
+		public List<PurchaseReturnVO> getSearchAllPurchaseReturnDB(String group_id) {
 			return dao.getSearchAllPurchaseReturnDB(group_id);
 		}
+
 		public List<SupplyVO> getSupplyname(String group_id, String supply_name) {
 			return dao.getSupplyName(group_id, supply_name);
 		}
@@ -486,7 +368,8 @@ public class purchreturn extends HttpServlet {
 			return dao.getSearchReturnDateDB(group_id, start_date, end_date);
 		}
 
-		public List<PurchaseReturnVO> getSearchPurchaseDateDB(String group_id, String purchase_start_date, String purchase_end_date) {
+		public List<PurchaseReturnVO> getSearchPurchaseDateDB(String group_id, String purchase_start_date,
+				String purchase_end_date) {
 			return dao.getSearchPurchaseDateDB(group_id, purchase_start_date, purchase_end_date);
 		}
 	}
@@ -495,7 +378,7 @@ public class purchreturn extends HttpServlet {
 		private static final String sp_get_supplyname = "call sp_get_supplyname(?,?)";
 		private static final String sp_select_purchase_bysupllyname = "call sp_select_purchase_bysupllyname(?,?)";
 		private static final String sp_selectall_purchase = "call sp_selectall_purchase (?)";
-		private static final String sp_selectall_purch_return= "call sp_selectall_purch_return (?)";
+		private static final String sp_selectall_purch_return = "call sp_selectall_purch_return (?)";
 		private static final String sp_insert_purch_return = "call sp_insert_purch_return(?,?,?)";
 		private static final String sp_del_purch_return = "call sp_del_purch_return(?,?)";
 		private static final String sp_select_purchase_return_byreturndate = "call sp_select_purchase_return_byreturndate(?,?,?)";
@@ -507,7 +390,7 @@ public class purchreturn extends HttpServlet {
 
 		@Override
 		public List<PurchaseReturnVO> searchDB(String group_id, String supply_name) {
-			// TODO Auto-generated method stub
+
 			List<PurchaseReturnVO> list = new ArrayList<PurchaseReturnVO>();
 			PurchaseReturnVO purchaseReturnVO = null;
 
@@ -765,7 +648,8 @@ public class purchreturn extends HttpServlet {
 		}
 
 		@Override
-		public List<PurchaseReturnVO> getSearchReturnDateDB(String group_id, Date return_start_date, Date return_end_date) {
+		public List<PurchaseReturnVO> getSearchReturnDateDB(String group_id, Date return_start_date,
+				Date return_end_date) {
 			List<PurchaseReturnVO> list = new ArrayList<PurchaseReturnVO>();
 			PurchaseReturnVO purchaseReturnVO = null;
 
@@ -830,8 +714,9 @@ public class purchreturn extends HttpServlet {
 		}
 
 		@Override
-		public List<PurchaseReturnVO> getSearchPurchaseDateDB(String group_id, String purchase_start_date, String purchase_end_date) {
-			// TODO Auto-generated method stub
+		public List<PurchaseReturnVO> getSearchPurchaseDateDB(String group_id, String purchase_start_date,
+				String purchase_end_date) {
+
 			List<PurchaseReturnVO> list = new ArrayList<PurchaseReturnVO>();
 			PurchaseReturnVO purchaseReturnVO = null;
 
@@ -897,7 +782,7 @@ public class purchreturn extends HttpServlet {
 
 		@Override
 		public List<PurchaseReturnVO> getSearchAllPurchaseReturnDB(String group_id) {
-			// TODO Auto-generated method stub
+
 			List<PurchaseReturnVO> list = new ArrayList<PurchaseReturnVO>();
 			PurchaseReturnVO purchaseReturnVO = null;
 

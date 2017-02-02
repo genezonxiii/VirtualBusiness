@@ -1,40 +1,32 @@
 package tw.com.aber.basicinfo;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
 import com.google.gson.Gson;
 
-//@SuppressWarnings("serial")
+import tw.com.aber.vo.GroupVO;
+
 public class group extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		GroupService groupService = null;
@@ -50,7 +42,7 @@ public class group extends HttpServlet {
 				// 假如無查詢條件，則是查詢全部
 				if (group_id2 == null || (group_id2.trim()).length() == 0) {
 					groupService = new GroupService();
-					List<GroupBean> list = groupService.getSearchAllDB(group_id);
+					List<GroupVO> list = groupService.getSearchAllDB(group_id);
 					request.setAttribute("action", "searchResults");
 					request.setAttribute("list", list);
 					Gson gson = new Gson();
@@ -81,7 +73,7 @@ public class group extends HttpServlet {
 				groupService.updateGroup(group_id, group_name, group_unicode, address, phone, fax, mobile, email, master, user_id,invoice_path);
 				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
 				groupService = new GroupService();
-				List<GroupBean> list = groupService.getSearchAllDB(group_id);
+				List<GroupVO> list = groupService.getSearchAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -92,94 +84,11 @@ public class group extends HttpServlet {
 		}
 	}
 
-	/************************* 對應資料庫表格格式 **************************************/
-	public class GroupBean implements java.io.Serializable {
-		private String  group_id;
-		private String  group_name;
-		private String  group_unicode;
-		private String  address;
-		private String 	phone;
-		private String	fax;
-		private String	mobile;	
-		private String  email;
-		private String  master;	
-		private String user_id;
-		private String invoice_path;
-		public String getGroup_id() {
-			return group_id;
-		}
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-		public String getGroup_name() {
-			return group_name;
-		}
-		public void setGroup_name(String group_name) {
-			this.group_name = group_name;
-		}
-		public String getGroup_unicode() {
-			return group_unicode;
-		}
-		public void setGroup_unicode(String group_unicode) {
-			this.group_unicode = group_unicode;
-		}
-		public String getAddress() {
-			return address;
-		}
-		public void setAddress(String address) {
-			this.address = address;
-		}
-		public String getPhone() {
-			return phone;
-		}
-		public void setPhone(String phone) {
-			this.phone = phone;
-		}
-		public String getFax() {
-			return fax;
-		}
-		public void setFax(String fax) {
-			this.fax = fax;
-		}
-		public String getMobile() {
-			return mobile;
-		}
-		public void setMobile(String mobile) {
-			this.mobile = mobile;
-		}
-		public String getEmail() {
-			return email;
-		}
-		public void setEmail(String email) {
-			this.email = email;
-		}
-		public String getMaster() {
-			return master;
-		}
-		public void setMaster(String master) {
-			this.master = master;
-		}
-		public String getUser_id() {
-			return user_id;
-		}
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-		public String getInvoice_path() {
-			return invoice_path;
-		}
-		public void setInvoice_path(String invoice_path) {
-			this.invoice_path = invoice_path;
-		}
-		
-		
-	}
-
 	/*************************** 制定規章方法 ****************************************/
 	interface Group_interface {
-		public void updateDB(GroupBean groupBean);
+		public void updateDB(GroupVO groupVO);
 		
-		public List<GroupBean> searchAllDB(String group_id);
+		public List<GroupVO> searchAllDB(String group_id);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -192,26 +101,26 @@ public class group extends HttpServlet {
 
 		
 
-		public GroupBean updateGroup(String group_id, String group_name, String group_unicode,
+		public GroupVO updateGroup(String group_id, String group_name, String group_unicode,
 				String address,String phone,String fax,String mobile,String email,String master,String user_id,String invoice_path) {
-			GroupBean groupBean = new GroupBean();
-			groupBean.setGroup_id(group_id);
-			groupBean.setGroup_name(group_name);
-			groupBean.setGroup_unicode(group_unicode);
-			groupBean.setAddress(address);
-			groupBean.setPhone(phone);
-			groupBean.setFax(fax);
-			groupBean.setMobile(mobile);
-			groupBean.setEmail(email);
-			groupBean.setMaster(master);
-			groupBean.setUser_id(user_id);
-			groupBean.setInvoice_path(invoice_path);
-			dao.updateDB(groupBean);
-			return groupBean;
+			GroupVO groupVO = new GroupVO();
+			groupVO.setGroup_id(group_id);
+			groupVO.setGroup_name(group_name);
+			groupVO.setGroup_unicode(group_unicode);
+			groupVO.setAddress(address);
+			groupVO.setPhone(phone);
+			groupVO.setFax(fax);
+			groupVO.setMobile(mobile);
+			groupVO.setEmail(email);
+			groupVO.setMaster(master);
+			groupVO.setUser_id(user_id);
+			groupVO.setInvoice_path(invoice_path);
+			dao.updateDB(groupVO);
+			return groupVO;
 		}
 
 	
-		public List<GroupBean> getSearchAllDB(String group_id) {
+		public List<GroupVO> getSearchAllDB(String group_id) {
 			return dao.searchAllDB(group_id);
 		}
 	}
@@ -228,8 +137,8 @@ public class group extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		@Override
-		public void updateDB(GroupBean groupBean) {
-			// TODO Auto-generated method stub
+		public void updateDB(GroupVO groupVO) {
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -237,17 +146,17 @@ public class group extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_group);
 
-				pstmt.setString(1, groupBean.getGroup_id());
-				pstmt.setString(2, groupBean.getGroup_name());
-				pstmt.setString(3, groupBean.getGroup_unicode());
-				pstmt.setString(4, groupBean.getAddress());
-				pstmt.setString(5, groupBean.getPhone());
-				pstmt.setString(6, groupBean.getFax());
-				pstmt.setString(7, groupBean.getMobile());
-				pstmt.setString(8, groupBean.getEmail());
-				pstmt.setString(9, groupBean.getMaster());
-				pstmt.setString(10, groupBean.getUser_id());
-				pstmt.setString(11, groupBean.getInvoice_path());
+				pstmt.setString(1, groupVO.getGroup_id());
+				pstmt.setString(2, groupVO.getGroup_name());
+				pstmt.setString(3, groupVO.getGroup_unicode());
+				pstmt.setString(4, groupVO.getAddress());
+				pstmt.setString(5, groupVO.getPhone());
+				pstmt.setString(6, groupVO.getFax());
+				pstmt.setString(7, groupVO.getMobile());
+				pstmt.setString(8, groupVO.getEmail());
+				pstmt.setString(9, groupVO.getMaster());
+				pstmt.setString(10, groupVO.getUser_id());
+				pstmt.setString(11, groupVO.getInvoice_path());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -276,10 +185,10 @@ public class group extends HttpServlet {
 
 		
 		@Override
-		public List<GroupBean> searchAllDB(String group_id) {
-			// TODO Auto-generated method stub
-			List<GroupBean> list = new ArrayList<GroupBean>();
-			GroupBean groupBean = null;
+		public List<GroupVO> searchAllDB(String group_id) {
+			
+			List<GroupVO> list = new ArrayList<GroupVO>();
+			GroupVO groupVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -292,19 +201,19 @@ public class group extends HttpServlet {
 				pstmt.setString(1, group_id);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					groupBean = new GroupBean();
-					groupBean.setGroup_id(rs.getString("group_id"));
-					groupBean.setGroup_name(rs.getString("group_name"));
-					groupBean.setGroup_unicode(rs.getString("group_unicode"));
-					groupBean.setAddress(rs.getString("address"));
-					groupBean.setPhone(rs.getString("phone"));
-					groupBean.setFax(rs.getString("fax"));
-					groupBean.setMobile(rs.getString("mobile"));
-					groupBean.setEmail(rs.getString("email"));
-					groupBean.setMaster(rs.getString("master"));
-					groupBean.setInvoice_path(rs.getString("invoice_path"));
+					groupVO = new GroupVO();
+					groupVO.setGroup_id(rs.getString("group_id"));
+					groupVO.setGroup_name(rs.getString("group_name"));
+					groupVO.setGroup_unicode(rs.getString("group_unicode"));
+					groupVO.setAddress(rs.getString("address"));
+					groupVO.setPhone(rs.getString("phone"));
+					groupVO.setFax(rs.getString("fax"));
+					groupVO.setMobile(rs.getString("mobile"));
+					groupVO.setEmail(rs.getString("email"));
+					groupVO.setMaster(rs.getString("master"));
+					groupVO.setInvoice_path(rs.getString("invoice_path"));
 					
-					list.add(groupBean); // Store the row in the list
+					list.add(groupVO); // Store the row in the list
 				}
 
 				// Handle any driver errors

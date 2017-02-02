@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -22,18 +21,24 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.vo.ProductVO;
+import tw.com.aber.vo.PurchaseDetailVO;
+import tw.com.aber.vo.PurchaseVO;
+import tw.com.aber.vo.SupplyVO;
+
 public class purchase extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		PurchaseService purchaseService = null;
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
-		if("get_supply_name".equals(action)){
-			
+		if ("get_supply_name".equals(action)) {
+
 			String supply_id = request.getParameter("supply_id");
 			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -52,14 +57,13 @@ public class purchase extends HttpServlet {
 				while (rs.next()) {
 					response.getWriter().write(rs.getString("supply_name"));
 				}
-				
+
 				// Handle any driver errors
 			} catch (Exception e) {
 				System.out.println(e.toString());
 			}
 		}
-		
-		
+
 		if ("insert_detail".equals(action)) {
 			try {
 				String purchase_id = request.getParameter("purchase_id");
@@ -75,7 +79,7 @@ public class purchase extends HttpServlet {
 						quantity = Integer.valueOf(quantityStr);
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 				Float cost = null;
@@ -85,20 +89,21 @@ public class purchase extends HttpServlet {
 						cost = Float.valueOf(costStr);
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 
 				purchaseService = new PurchaseService();
-				purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id, product_name, quantity, cost, memo);
+				purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id,
+						product_name, quantity, cost, memo);
 				purchaseService = new PurchaseService();
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
-				
+
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonList = gson.toJson(list);
 				response.getWriter().write(jsonList);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
@@ -114,7 +119,7 @@ public class purchase extends HttpServlet {
 				String jsonList = gson.toJson(list);
 				response.getWriter().write(jsonList);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
@@ -132,7 +137,7 @@ public class purchase extends HttpServlet {
 						quantity = Integer.valueOf(quantityStr);
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 				String memo = request.getParameter("memo");
@@ -143,26 +148,26 @@ public class purchase extends HttpServlet {
 						cost = Float.valueOf(costStr);
 					}
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 				purchaseService = new PurchaseService();
-				purchaseService.updatePurchaseDetail(purchaseDetail_id, purchase_id, group_id, user_id, product_id, c_product_id, product_name,
-						quantity, cost, memo);
+				purchaseService.updatePurchaseDetail(purchaseDetail_id, purchase_id, group_id, user_id, product_id,
+						c_product_id, product_name, quantity, cost, memo);
 				purchaseService = new PurchaseService();
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonList = gson.toJson(list);
 				response.getWriter().write(jsonList);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
 		if ("search_product_data".equals(action)) {
 			String term = request.getParameter("term");
 			String identity = request.getParameter("identity");
-			
+
 			if ("ID".equals(identity)) {
 				purchaseService = new PurchaseService();
 				List<ProductVO> list = purchaseService.getSearchProductById(group_id, term);
@@ -203,12 +208,18 @@ public class purchase extends HttpServlet {
 		}
 		if ("delete".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String purchase_id = request.getParameter("purchase_id");
-				/*************************** 2.開始刪除資料 ***************************************/
+				/***************************
+				 * 2.開始刪除資料
+				 ***************************************/
 				purchaseService = new PurchaseService();
 				purchaseService.deletePurchase(purchase_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.刪除完成,準備轉交(Send the Success view)
+				 ***********/
 				purchaseService = new PurchaseService();
 				List<PurchaseVO> salelist = purchaseService.getSearchAllDB(group_id);
 				PurchaseVO purchaseVO = new PurchaseVO();
@@ -219,7 +230,7 @@ public class purchase extends HttpServlet {
 				response.getWriter().write(jsonStrList);
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
@@ -318,7 +329,8 @@ public class purchase extends HttpServlet {
 					seq_no = getGenerateSeqNo(list.get(0).getSeq_no());
 				}
 				purchaseService = new PurchaseService();
-				purchaseService.addPurchase(seq_no, group_id, user_id, supply_id, memo, purchase_date, invoice, invoice_type, amount);
+				purchaseService.addPurchase(seq_no, group_id, user_id, supply_id, memo, purchase_date, invoice,
+						invoice_type, amount);
 				purchaseService = new PurchaseService();
 				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
 				PurchaseVO purchaseVO = new PurchaseVO();
@@ -328,10 +340,10 @@ public class purchase extends HttpServlet {
 				String jsonList = gson.toJson(resultNameList);
 				response.getWriter().write(jsonList);
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
@@ -345,7 +357,7 @@ public class purchase extends HttpServlet {
 				String invoice = request.getParameter("invoice");
 				String invoice_type = request.getParameter("invoice_type");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				
+
 				java.sql.Date purchase_date = null;
 				String purchase_dateStr = request.getParameter("purchase_date");
 				if (purchase_dateStr.length() != 0) {
@@ -359,31 +371,38 @@ public class purchase extends HttpServlet {
 					amount = Float.valueOf(amountStr);
 				}
 				purchaseService = new PurchaseService();
-				purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date, invoice, invoice_type, amount);
+				purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date,
+						invoice, invoice_type, amount);
 				purchaseService = new PurchaseService();
-				//System.out.println(purchase_id+ seq_no+ group_id+ user_id+ supply_id+ memo+ purchase_date+ invoice+ invoice_type+ amount);;
+				// System.out.println(purchase_id+ seq_no+ group_id+ user_id+
+				// supply_id+ memo+ purchase_date+ invoice+ invoice_type+
+				// amount);;
 				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
-				//System.out.println(group_id+" & "+supply_name);
+				// System.out.println(group_id+" & "+supply_name);
 				PurchaseVO purchaseVO = new PurchaseVO();
 				purchaseVO.setMessage("驗證通過");
 				resultNameList.add(purchaseVO);
-				
+
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonList = gson.toJson(resultNameList);
 				response.getWriter().write(jsonList);
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 		}
 		if ("search".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數-格式檢查 ****************************************/
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
 				String supply_name = request.getParameter("supply_name");
-				/*************************** 2.開始查詢資料 ****************************************/
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (supply_name == null || (supply_name.trim()).length() == 0) {
 					purchaseService = new PurchaseService();
@@ -470,312 +489,6 @@ public class purchase extends HttpServlet {
 		return (getThisYearMonthDate() + formatSeqNo((Integer.valueOf(str) + 1)));
 	}
 
-	@SuppressWarnings("serial")
-	public class PurchaseVO implements java.io.Serializable {
-		private String purchase_id;
-		private String seq_no;
-		private String group_id;
-		private String user_id;
-		private String memo;
-		private java.sql.Date purchase_date;
-		private String invoice;
-		private String invoice_type;
-		private java.sql.Date return_date;
-		private Boolean isreturn;
-		private Float amount;
-		private String supply_id;
-		private String message;// 此參數用來存放錯誤訊息
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-		public String getSupply_id() {
-			return supply_id;
-		}
-
-		public void setSupply_id(String supply_id) {
-			this.supply_id = supply_id;
-		}
-
-		public Float getAmount() {
-			return amount;
-		}
-
-		public void setAmount(Float amount) {
-			this.amount = amount;
-		}
-
-		public String getPurchase_id() {
-			return purchase_id;
-		}
-
-		public void setPurchase_id(String purchase_id) {
-			this.purchase_id = purchase_id;
-		}
-
-		public String getSeq_no() {
-			return seq_no;
-		}
-
-		public void setSeq_no(String seq_no) {
-			this.seq_no = seq_no;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String getUser_id() {
-			return user_id;
-		}
-
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-
-		public String getMemo() {
-			return memo;
-		}
-
-		public void setMemo(String memo) {
-			this.memo = memo;
-		}
-
-		public java.sql.Date getPurchase_date() {
-			return purchase_date;
-		}
-
-		public void setPurchase_date(java.sql.Date purchase_date) {
-			this.purchase_date = purchase_date;
-		}
-
-		public String getInvoice() {
-			return invoice;
-		}
-
-		public void setInvoice(String invoice) {
-			this.invoice = invoice;
-		}
-
-		public String getInvoice_type() {
-			return invoice_type;
-		}
-
-		public void setInvoice_type(String invoice_type) {
-			this.invoice_type = invoice_type;
-		}
-
-		public java.sql.Date getReturn_date() {
-			return return_date;
-		}
-
-		public void setReturn_date(java.sql.Date return_date) {
-			this.return_date = return_date;
-		}
-
-		public Boolean getIsreturn() {
-			return isreturn;
-		}
-
-		public void setIsreturn(Boolean isreturn) {
-			this.isreturn = isreturn;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	public class SupplyVO implements java.io.Serializable {
-		private String supply_id;
-		private String supply_name;
-
-		public String getSupply_id() {
-			return supply_id;
-		}
-
-		public void setSupply_id(String supply_id) {
-			this.supply_id = supply_id;
-		}
-
-		public String getSupply_name() {
-			return supply_name;
-		}
-
-		public void setSupply_name(String supply_name) {
-			this.supply_name = supply_name;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	public class PurchaseDetailVO implements java.io.Serializable {
-		private String purchaseDetail_id;
-		private String purchase_id;
-		private String group_id;
-		private String user_id;
-		private String product_id;
-		private String c_product_id;
-		private String product_name;
-		private Integer quantity;
-		private Float cost;
-		private String memo;
-		private java.sql.Date return_date;
-		private Boolean isreturn;
-
-		public String getPurchaseDetail_id() {
-			return purchaseDetail_id;
-		}
-
-		public void setPurchaseDetail_id(String purchaseDetail_id) {
-			this.purchaseDetail_id = purchaseDetail_id;
-		}
-
-		public String getPurchase_id() {
-			return purchase_id;
-		}
-
-		public void setPurchase_id(String purchase_id) {
-			this.purchase_id = purchase_id;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String getUser_id() {
-			return user_id;
-		}
-
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-
-		public String getProduct_id() {
-			return product_id;
-		}
-
-		public void setProduct_id(String product_id) {
-			this.product_id = product_id;
-		}
-
-		public String getC_product_id() {
-			return c_product_id;
-		}
-
-		public void setC_product_id(String c_product_id) {
-			this.c_product_id = c_product_id;
-		}
-
-		public String getProduct_name() {
-			return product_name;
-		}
-
-		public void setProduct_name(String product_name) {
-			this.product_name = product_name;
-		}
-
-		public Integer getQuantity() {
-			return quantity;
-		}
-
-		public void setQuantity(Integer quantity) {
-			this.quantity = quantity;
-		}
-
-		public Float getCost() {
-			return cost;
-		}
-
-		public void setCost(Float cost) {
-			this.cost = cost;
-		}
-
-		public String getMemo() {
-			return memo;
-		}
-
-		public void setMemo(String memo) {
-			this.memo = memo;
-		}
-
-		public java.sql.Date getReturn_date() {
-			return return_date;
-		}
-
-		public void setReturn_date(java.sql.Date return_date) {
-			this.return_date = return_date;
-		}
-
-		public Boolean getIsreturn() {
-			return isreturn;
-		}
-
-		public void setIsreturn(Boolean isreturn) {
-			this.isreturn = isreturn;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	public class ProductVO implements java.io.Serializable {
-		private String product_id;
-		private String product_name;
-		private String c_product_id;
-		private String price;
-		private String cost;
-		
-
-		public String getProduct_id() {
-			return product_id;
-		}
-
-		public void setProduct_id(String product_id) {
-			this.product_id = product_id;
-		}
-
-		public String getProduct_name() {
-			return product_name;
-		}
-
-		public void setProduct_name(String product_name) {
-			this.product_name = product_name;
-		}
-
-		public String getC_product_id() {
-			return c_product_id;
-		}
-
-		public void setC_product_id(String c_product_id) {
-			this.c_product_id = c_product_id;
-		}
-
-		public String getPrice() {
-			return price;
-		}
-
-		public void setPrice(String price) {
-			this.price = price;
-		}
-
-		public String getCost() {
-			return cost;
-		}
-
-		public void setCost(String cost) {
-			this.cost = cost;
-		}
-		
-	}
-
 	interface Purchase_interface {
 		public void insertDB(PurchaseVO purchaseVO);
 
@@ -797,7 +510,8 @@ public class purchase extends HttpServlet {
 
 		public List<PurchaseDetailVO> searchAllPurchaseDetail(String purchase_id);
 
-		public List<PurchaseVO> searchPurchaseDateDB(String group_id, String purchase_start_date, String purchase_end_date);
+		public List<PurchaseVO> searchPurchaseDateDB(String group_id, String purchase_start_date,
+				String purchase_end_date);
 
 		public List<SupplyVO> getSupplyName(String group_id, String supply_name);
 
@@ -853,8 +567,8 @@ public class purchase extends HttpServlet {
 			return dao.getProductByName(group_id, product_name);
 		}
 
-		public PurchaseVO addPurchase(String seq_no, String group_id, String user_id, String supply_id, String memo, Date purchase_date,
-				String invoice, String invoice_type, Float amount) {
+		public PurchaseVO addPurchase(String seq_no, String group_id, String user_id, String supply_id, String memo,
+				Date purchase_date, String invoice, String invoice_type, Float amount) {
 			PurchaseVO purchaseVO = new PurchaseVO();
 			purchaseVO.setSeq_no(seq_no);
 			purchaseVO.setGroup_id(group_id);
@@ -869,8 +583,9 @@ public class purchase extends HttpServlet {
 			return purchaseVO;
 		}
 
-		public PurchaseDetailVO addPurchaseDetail(String purchase_id, String group_id, String user_id, String product_id, String c_product_id,
-				String product_name, Integer quantity, Float cost, String memo) {
+		public PurchaseDetailVO addPurchaseDetail(String purchase_id, String group_id, String user_id,
+				String product_id, String c_product_id, String product_name, Integer quantity, Float cost,
+				String memo) {
 			PurchaseDetailVO purchaseDetailVO = new PurchaseDetailVO();
 			purchaseDetailVO.setPurchase_id(purchase_id);
 			purchaseDetailVO.setGroup_id(group_id);
@@ -885,8 +600,8 @@ public class purchase extends HttpServlet {
 			return purchaseDetailVO;
 		}
 
-		public PurchaseVO updatePurchase(String purchase_id, String seq_no, String group_id, String user_id, String supply_id, String memo,
-				Date purchase_date, String invoice, String invoice_type, Float amount) {
+		public PurchaseVO updatePurchase(String purchase_id, String seq_no, String group_id, String user_id,
+				String supply_id, String memo, Date purchase_date, String invoice, String invoice_type, Float amount) {
 			PurchaseVO purchaseVO = new PurchaseVO();
 			purchaseVO.setPurchase_id(purchase_id);
 			purchaseVO.setSeq_no(seq_no);
@@ -902,8 +617,9 @@ public class purchase extends HttpServlet {
 			return purchaseVO;
 		}
 
-		public PurchaseDetailVO updatePurchaseDetail(String purchaseDetail_id, String purchase_id, String group_id, String user_id,
-				String product_id, String c_product_id, String product_name, Integer quantity, Float cost, String memo) {
+		public PurchaseDetailVO updatePurchaseDetail(String purchaseDetail_id, String purchase_id, String group_id,
+				String user_id, String product_id, String c_product_id, String product_name, Integer quantity,
+				Float cost, String memo) {
 			PurchaseDetailVO purchaseDetailVO = new PurchaseDetailVO();
 			purchaseDetailVO.setPurchaseDetail_id(purchaseDetail_id);
 			purchaseDetailVO.setPurchase_id(purchase_id);
@@ -943,7 +659,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public void insertDB(PurchaseVO purchaseVO) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -989,7 +705,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public void updateDB(PurchaseVO purchaseVO) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -1036,7 +752,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public void deleteDB(String purchase_id, String user_id) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -1126,7 +842,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public List<PurchaseVO> searchDB(String group_id, String supply_name) {
-			// TODO Auto-generated method stub
+
 			List<PurchaseVO> list = new ArrayList<PurchaseVO>();
 			PurchaseVO purchaseVO = null;
 
@@ -1141,7 +857,7 @@ public class purchase extends HttpServlet {
 				pstmt.setString(1, group_id);
 				pstmt.setString(2, supply_name);
 				rs = pstmt.executeQuery();
-				//System.out.println("supply: "+supply_name);
+				// System.out.println("supply: "+supply_name);
 				while (rs.next()) {
 					purchaseVO = new PurchaseVO();
 					purchaseVO.setPurchase_id(rs.getString("purchase_id"));
@@ -1254,8 +970,9 @@ public class purchase extends HttpServlet {
 		}
 
 		@Override
-		public List<PurchaseVO> searchPurchaseDateDB(String group_id, String purchase_start_date, String purchase_end_date) {
-			// TODO Auto-generated method stub
+		public List<PurchaseVO> searchPurchaseDateDB(String group_id, String purchase_start_date,
+				String purchase_end_date) {
+
 			List<PurchaseVO> list = new ArrayList<PurchaseVO>();
 			PurchaseVO purchaseVO = null;
 
@@ -1375,7 +1092,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public List<PurchaseDetailVO> searchAllPurchaseDetail(String purchase_id) {
-			// TODO Auto-generated method stub
+
 			List<PurchaseDetailVO> list = new ArrayList<PurchaseDetailVO>();
 			PurchaseDetailVO purchaseDetailVO = null;
 
@@ -1439,7 +1156,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public void updateDetailToDB(PurchaseDetailVO purchaseDetailVO) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -1486,7 +1203,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public List<ProductVO> getProductByName(String group_id, String product_name) {
-			// TODO Auto-generated method stub
+
 			List<ProductVO> list = new ArrayList<ProductVO>();
 			ProductVO productVO = null;
 
@@ -1544,7 +1261,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public List<ProductVO> getProductById(String group_id, String c_product_id) {
-			// TODO Auto-generated method stub
+
 			List<ProductVO> list = new ArrayList<ProductVO>();
 			ProductVO productVO = null;
 
@@ -1602,7 +1319,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public void deleteDetail(String purchaseDetail_id) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -1639,7 +1356,7 @@ public class purchase extends HttpServlet {
 
 		@Override
 		public void insertDetail(PurchaseDetailVO purchaseDetailVO) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {

@@ -260,7 +260,7 @@ function draw_table(table_name,title){
 	//$("#animate_table").css("display","none");
 	$("#"+name).css("opacity","0");
 	
-	table_before(table_name);
+	//table_before(table_name);
 	
 	$(selector).dataTable({
 		"lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "全"] ],

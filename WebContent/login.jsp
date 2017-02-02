@@ -14,6 +14,7 @@
   <script src="js/jquery-ui.min.js"></script>
   <script src="js/scripts.js"></script>
 </head>
+
 <script>
 function chimg(){
 	document.getElementById("validateCodeImg").src="HandleDrawValidateCode.do?t=" + Math.random();
@@ -118,6 +119,7 @@ $(function() {
 	    if(e.shiftKey){
 	    	if(e.which == 41){
 	    		e.preventDefault();
+	    		
 	    		if(location.href.indexOf("bers1.eastasia")>-1){
 	    			$("#uninumber").val(get_sensitive("Demouser_uni"));
 	    			$("#username").val(get_sensitive("Demouser_usr"));

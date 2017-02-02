@@ -43,9 +43,9 @@ function currency_unit(str){
 	if(str=='韓幣'){return 'KRW';}
 }
 
-function sleep(time) {
-	  return new Promise((resolve) => setTimeout(resolve, time));
-}
+//function sleep(time) {
+//	  return new Promise((resolve) => setTimeout(resolve, time));
+//}
 
 function grows_up(str){
 	if(!(str.length>0)){return "";}

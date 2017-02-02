@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.vo.AccpayVO;
+
 
 public class accpay extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -201,7 +203,6 @@ public class accpay extends HttpServlet {
 					java.util.Date invoice_date_util = sdf.parse(pay_date_str);
 					pay_date = new java.sql.Date(invoice_date_util.getTime());
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				/*************************** 2.開始付帳退回 ***************************************/
@@ -216,7 +217,6 @@ public class accpay extends HttpServlet {
 				return;// 程式中斷
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -265,7 +265,6 @@ public class accpay extends HttpServlet {
 				}
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}		
@@ -278,109 +277,6 @@ public class accpay extends HttpServlet {
 			str.append(i);
 		}
 		return Integer.parseInt(str.toString());
-	}
-	@SuppressWarnings("serial")
-	public class AccpayVO implements java.io.Serializable {
-		private String pay_id;
-		private String group_id;
-		private String seq_no;
-		private Float amount;
-		private java.sql.Date amount_date;
-		private Float pay_amount;
-		private java.sql.Date pay_date;
-		private String user_id;
-		private String memo;
-		private String supply_name;
-		private String message;
-		
-
-		public String getPay_id() {
-			return pay_id;
-		}
-
-		public void setPay_id(String pay_id) {
-			this.pay_id = pay_id;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String getSeq_no() {
-			return seq_no;
-		}
-
-		public void setSeq_no(String seq_no) {
-			this.seq_no = seq_no;
-		}
-
-		public Float getAmount() {
-			return amount;
-		}
-
-		public void setAmount(Float amount) {
-			this.amount = amount;
-		}
-
-		public java.sql.Date getAmount_date() {
-			return amount_date;
-		}
-
-		public void setAmount_date(java.sql.Date amount_date) {
-			this.amount_date = amount_date;
-		}
-
-		public Float getPay_amount() {
-			return pay_amount;
-		}
-
-		public void setPay_amount(Float pay_amount) {
-			this.pay_amount = pay_amount;
-		}
-
-		public java.sql.Date getPay_date() {
-			return pay_date;
-		}
-
-		public void setPay_date(java.sql.Date pay_date) {
-			this.pay_date = pay_date;
-		}
-
-		public String getUser_id() {
-			return user_id;
-		}
-
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-
-		public String getMemo() {
-			return memo;
-		}
-
-		public void setMemo(String memo) {
-			this.memo = memo;
-		}
-		
-		public String getSupply_name() {
-			return supply_name;
-		}
-
-		public void setSupply_name(String supply_name) {
-			this.supply_name = supply_name;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
 	}
 
 	interface accpay_interface {

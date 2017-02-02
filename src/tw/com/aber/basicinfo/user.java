@@ -1,6 +1,5 @@
 package tw.com.aber.basicinfo;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -10,32 +9,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
 import com.google.gson.Gson;
 
-//@SuppressWarnings("serial")
+import tw.com.aber.vo.UserVO;
+
 public class user extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		UserService userService = null;
@@ -47,12 +40,10 @@ public class user extends HttpServlet {
 		if ("check_email".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數 ****************************************/
-				//String user_name = request.getParameter("user_name");
 				String email=request.getParameter("email");
 				/*************************** 2.開始查詢資料 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				userService = new UserService();
-//				System.out.println(userService.checkemail(group_id,email));
 				String which=userService.checkemail(group_id,email)+"";
 				response.getWriter().write(which);
 				//Gson gson = new Gson();
@@ -72,7 +63,7 @@ public class user extends HttpServlet {
 				// 假如無查詢條件，則是查詢全部
 				if (user_name == null || (user_name.trim()).length() == 0) {
 					userService = new UserService();
-					List<UserBean> list = userService.getSearchAllDB(group_id);
+					List<UserVO> list = userService.getSearchAllDB(group_id);
 					request.setAttribute("action", "searchResults");
 					request.setAttribute("list", list);
 					Gson gson = new Gson();
@@ -98,7 +89,7 @@ public class user extends HttpServlet {
 
 				/*************************** 3.新增完成,準備轉交(Send the Success view) ***********/
 				userService = new UserService();
-				List<UserBean> list = userService.getSearchAllDB(group_id);
+				List<UserVO> list = userService.getSearchAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -120,7 +111,7 @@ public class user extends HttpServlet {
 				userService.updateUser(user_id1, group_id, user_name, role, email);
 				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
 				userService = new UserService();
-				List<UserBean> list = userService.getSearchAllDB(group_id);
+				List<UserVO> list = userService.getSearchAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -139,7 +130,7 @@ public class user extends HttpServlet {
 				userService.deleteUser(user_id2,operation);
 				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
 				userService = new UserService();
-				List<UserBean> list = userService.getSearchAllDB(group_id);
+				List<UserVO> list = userService.getSearchAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -150,71 +141,16 @@ public class user extends HttpServlet {
 		}
 	}
 
-	/************************* 對應資料庫表格格式 **************************************/
-	public class UserBean implements java.io.Serializable {
-		private String  user_id;
-		private String 	group_id;
-		private String  user_name;
-		private String  role;
-		private String  email;
-		private String  password;
-		private String  operation;
-		public String getUser_id() {
-			return user_id;
-		}
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-		public String getGroup_id() {
-			return group_id;
-		}
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-		public String getUser_name() {
-			return user_name;
-		}
-		public void setUser_name(String user_name) {
-			this.user_name = user_name;
-		}
-		public String getRole() {
-			return role;
-		}
-		public void setRole(String role) {
-			this.role = role;
-		}
-		public String getEmail() {
-			return email;
-		}
-		public void setEmail(String email) {
-			this.email = email;
-		}
-		public String getPassword() {
-			return password;
-		}
-		public void setPassword(String password) {
-			this.password = password;
-		}
-		public String getOperation() {
-			return operation;
-		}
-		public void setOperation(String operation) {
-			this.operation = operation;
-		}
-		
-	
-	}
-
 	/*************************** 制定規章方法 ****************************************/
 	interface User_interface {
 
-		public void insertDB(UserBean userBean);
+		public void insertDB(UserVO userVO);
 
-		public void updateDB(UserBean userBean);
+		public void updateDB(UserVO userVO);
 
 		public void deleteDB(String user_id,String operation);
 
-		public List<UserBean> searchAllDB(String group_id);
+		public List<UserVO> searchAllDB(String group_id);
 		
 		public Boolean checkemail(String group_id, String email);
 	}
@@ -227,33 +163,33 @@ public class user extends HttpServlet {
 			dao = new UserDAO();
 		}
 
-		public UserBean addUser(String group_id, String user_name,String role,String email,String password	) {
-			UserBean userBean = new UserBean();
-			userBean.setGroup_id(group_id);
-			userBean.setUser_name(user_name);
-			userBean.setRole(role);
-			userBean.setEmail(email);
-			userBean.setPassword(password);
-			dao.insertDB(userBean);
-			return userBean;
+		public UserVO addUser(String group_id, String user_name,String role,String email,String password	) {
+			UserVO userVO = new UserVO();
+			userVO.setGroup_id(group_id);
+			userVO.setUser_name(user_name);
+			userVO.setRole(role);
+			userVO.setEmail(email);
+			userVO.setPassword(password);
+			dao.insertDB(userVO);
+			return userVO;
 		}
 
-		public UserBean updateUser(String user_id, String group_id, String user_name,String role,String email) {
-			UserBean userBean = new UserBean();
-			userBean.setUser_id(user_id);
-			userBean.setGroup_id(group_id);
-			userBean.setUser_name(user_name);
-			userBean.setRole(role);
-			userBean.setEmail(email);
-			dao.updateDB(userBean);
-			return userBean;
+		public UserVO updateUser(String user_id, String group_id, String user_name,String role,String email) {
+			UserVO userVO = new UserVO();
+			userVO.setUser_id(user_id);
+			userVO.setGroup_id(group_id);
+			userVO.setUser_name(user_name);
+			userVO.setRole(role);
+			userVO.setEmail(email);
+			dao.updateDB(userVO);
+			return userVO;
 		}
 
 		public void deleteUser(String user_id,String operation) {
 			dao.deleteDB(user_id,operation);
 		}
 
-		public List<UserBean> getSearchAllDB(String group_id) {
+		public List<UserVO> getSearchAllDB(String group_id) {
 			return dao.searchAllDB(group_id);
 		}
 		public Boolean checkemail(String group_id,String email){
@@ -277,8 +213,8 @@ public class user extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		@Override
-		public void insertDB(UserBean userBean) {
-			// TODO Auto-generated method stub
+		public void insertDB(UserVO userVO) {
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -286,11 +222,11 @@ public class user extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_insert_user);
 
-				pstmt.setString(1, userBean.getGroup_id());
-				pstmt.setString(2, userBean.getUser_name());
-				pstmt.setString(3, userBean.getRole());
-				pstmt.setString(4, userBean.getEmail());
-				pstmt.setString(5, userBean.getPassword());
+				pstmt.setString(1, userVO.getGroup_id());
+				pstmt.setString(2, userVO.getUser_name());
+				pstmt.setString(3, userVO.getRole());
+				pstmt.setString(4, userVO.getEmail());
+				pstmt.setString(5, userVO.getPassword());
 				
 				pstmt.executeUpdate();
 
@@ -319,19 +255,19 @@ public class user extends HttpServlet {
 		}
 
 		@Override
-		public void updateDB(UserBean userBean) {
-			// TODO Auto-generated method stub
+		public void updateDB(UserVO userVO) {
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_user);
-				pstmt.setString(1, userBean.getUser_id());
-				pstmt.setString(2, userBean.getGroup_id());
-				pstmt.setString(3, userBean.getUser_name());
-				pstmt.setString(4, userBean.getRole());
-				pstmt.setString(5, userBean.getEmail());
+				pstmt.setString(1, userVO.getUser_id());
+				pstmt.setString(2, userVO.getGroup_id());
+				pstmt.setString(3, userVO.getUser_name());
+				pstmt.setString(4, userVO.getRole());
+				pstmt.setString(5, userVO.getEmail());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -360,7 +296,7 @@ public class user extends HttpServlet {
 
 		@Override
 		public void deleteDB(String user_id,String operation) {
-			// TODO Auto-generated method stub
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -396,10 +332,10 @@ public class user extends HttpServlet {
 			}
 		}
 		@Override
-		public List<UserBean> searchAllDB(String group_id) {
-			// TODO Auto-generated method stub
-			List<UserBean> list = new ArrayList<UserBean>();
-			UserBean userBean = null;
+		public List<UserVO> searchAllDB(String group_id) {
+			
+			List<UserVO> list = new ArrayList<UserVO>();
+			UserVO userVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -412,14 +348,14 @@ public class user extends HttpServlet {
 				pstmt.setString(1, group_id);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					userBean = new UserBean();
-					userBean.setUser_id(rs.getString("user_id"));
-					userBean.setGroup_id(rs.getString("group_id"));
-					userBean.setUser_name(rs.getString("user_name"));
-					userBean.setRole(rs.getString("role"));
-					userBean.setEmail(rs.getString("email"));
-					userBean.setPassword(rs.getString("password"));
-					list.add(userBean);
+					userVO = new UserVO();
+					userVO.setUser_id(rs.getString("user_id"));
+					userVO.setGroup_id(rs.getString("group_id"));
+					userVO.setUser_name(rs.getString("user_name"));
+					userVO.setRole(rs.getString("role"));
+					userVO.setEmail(rs.getString("email"));
+					userVO.setPassword(rs.getString("password"));
+					list.add(userVO);
 				}
 
 				// Handle any driver errors

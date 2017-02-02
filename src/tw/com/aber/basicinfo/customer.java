@@ -21,11 +21,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import tw.com.aber.vo.CustomerVO;
 
 
 public class customer extends HttpServlet {
@@ -78,7 +79,7 @@ public class customer extends HttpServlet {
 				String jsonList = gson.toJson(list);
 				response.getWriter().write(jsonList);
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch blockdbURL
+				
 				e.printStackTrace();
 			}
 		}
@@ -104,7 +105,7 @@ public class customer extends HttpServlet {
 				String jsonList = gson.toJson(list);
 				response.getWriter().write(jsonList);
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -123,114 +124,10 @@ public class customer extends HttpServlet {
 				response.getWriter().write(jsonStrList);
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@SuppressWarnings("serial")
-	public class CustomerVO implements java.io.Serializable {
-		private String customer_id;
-		private String group_id;
-		private String name;
-		private String address;
-		private String phone;
-		private String mobile;
-		private String email;
-		private String post;
-		private String customerClass;
-		private String memo;
-		private String message;// 此參數用來存放錯誤訊息
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-		public String getCustomer_id() {
-			return customer_id;
-		}
-
-		public void setCustomer_id(String customer_id) {
-			this.customer_id = customer_id;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public String getAddress() {
-			return address;
-		}
-
-		public void setAddress(String address) {
-			this.address = address;
-		}
-
-		public String getPhone() {
-			return phone;
-		}
-
-		public void setPhone(String phone) {
-			this.phone = phone;
-		}
-
-		public String getMobile() {
-			return mobile;
-		}
-
-		public void setMobile(String mobile) {
-			this.mobile = mobile;
-		}
-
-		public String getEmail() {
-			return email;
-		}
-
-		public void setEmail(String email) {
-			this.email = email;
-		}
-
-		public String getPost() {
-			return post;
-		}
-
-		public void setPost(String post) {
-			this.post = post;
-		}
-
-		public String getMemo() {
-			return memo;
-		}
-
-		public void setMemo(String memo) {
-			this.memo = memo;
-		}
-
-		public String getCustomerClass() {
-			return customerClass;
-		}
-
-		public void setCustomerClass(String customerClass) {
-			this.customerClass = customerClass;
-		}
-
 	}
 
 	interface Customer_interface {
@@ -315,7 +212,7 @@ public class customer extends HttpServlet {
 
 		@Override
 		public void deleteCustomer(String customer_id, String user_id) {
-			// TODO Auto-generated method stub
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -351,7 +248,7 @@ public class customer extends HttpServlet {
 		}
 		@Override
 		public void insertDB(CustomerVO customerVO, String user_id) {
-			// TODO Auto-generated method stub
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -397,7 +294,7 @@ public class customer extends HttpServlet {
 
 		@Override
 		public void updateDB(CustomerVO customerVO, String user_id) {
-			// TODO Auto-generated method stub
+			
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -477,13 +374,13 @@ public class customer extends HttpServlet {
     	    		System.out.println("fail to get data");
     	    	}    	    	
     		} catch (ClientProtocolException e) {
-    			// TODO Auto-generated catch block
+    			
     			e.printStackTrace();
     		} catch (UnsupportedOperationException e) {
-    			// TODO Auto-generated catch block
+    			
     			e.printStackTrace();
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
+    			
 //    			e.printStackTrace();
     			err="ConnectIOE Error: "+e.toString();
     		}catch (Exception e){
@@ -526,13 +423,13 @@ public class customer extends HttpServlet {
     	    	}
     	    	
     		} catch (ClientProtocolException e) {
-    			// TODO Auto-generated catch block
+    			
     			e.printStackTrace();
     		} catch (UnsupportedOperationException e) {
-    			// TODO Auto-generated catch block
+    			
     			e.printStackTrace();
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
+    			
     			e.printStackTrace();
     		}	
         	return voFromJson;

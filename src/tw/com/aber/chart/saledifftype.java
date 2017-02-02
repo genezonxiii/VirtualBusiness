@@ -2,46 +2,32 @@
 //索性沒改參數 直接用暢銷的寫
 package tw.com.aber.chart;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 
 import com.google.gson.Gson;
-
-import tw.com.aber.report.salereport.SalereportVO;
-
-import java.util.Date; 
-import java.text.SimpleDateFormat;
-@SuppressWarnings("serial")
 
 public class saledifftype extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		if(request.getSession().getAttribute("group_id")==null){System.out.println("no_session");return;}
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
@@ -52,8 +38,6 @@ public class saledifftype extends HttpServlet {
 		time1=(time1==null || time1.length()<3)?"1999-12-31":time1;
 		String time2 = request.getParameter("time2");
 		time2=(time2==null || time2.length()<3)?"2300-12-31":time2;
-		//System.out.println("from "+time1+" to "+time2);
-		//###########################################
 		String action = request.getParameter("action");
 		if("search_best_sale".equals(action)){
 			try {
@@ -70,7 +54,6 @@ public class saledifftype extends HttpServlet {
 				}
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
-				//System.out.println(jsonStrList);
 				response.getWriter().write(jsonStrList);
 				return;
 			} catch (Exception e) {System.out.println("Error with time parse. :"+e);}

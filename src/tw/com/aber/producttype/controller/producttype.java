@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +16,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.vo.ProductTypeVO;
+
 public class producttype extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		doPost(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		producttypeService producttypeService = null;
@@ -32,21 +37,27 @@ public class producttype extends HttpServlet {
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		if ("searh".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ****************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ****************************************/
 				String type_name = request.getParameter("type_name");
-				/*************************** 2.開始查詢資料 ****************************************/
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (type_name == null || (type_name.trim()).length() == 0) {
 					producttypeService = new producttypeService();
-					List<producttypeVO> list = producttypeService.getSearAllDB(group_id);
+					List<ProductTypeVO> list = producttypeService.getSearAllDB(group_id);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
 				producttypeService = new producttypeService();
-				List<producttypeVO> list = producttypeService.getSearhDB(group_id, type_name);
-				/*************************** 3.查詢完成,準備轉交(Send the Success view) ***********/
+				List<ProductTypeVO> list = producttypeService.getSearhDB(group_id, type_name);
+				/***************************
+				 * 3.查詢完成,準備轉交(Send the Success view)
+				 ***********/
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -57,15 +68,21 @@ public class producttype extends HttpServlet {
 		}
 		if ("insert".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 **************************************/
+				/***************************
+				 * 1.接收請求參數
+				 **************************************/
 				String type_name = request.getParameter("type_name");
-				/*************************** 2.開始新增資料 ***************************************/
+				/***************************
+				 * 2.開始新增資料
+				 ***************************************/
 				producttypeService = new producttypeService();
 				producttypeService.addproducttype(group_id, type_name, user_id);
 
-				/*************************** 3.新增完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.新增完成,準備轉交(Send the Success view)
+				 ***********/
 				producttypeService = new producttypeService();
-				List<producttypeVO> list = producttypeService.getSearAllDB(group_id);
+				List<ProductTypeVO> list = producttypeService.getSearAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -76,15 +93,21 @@ public class producttype extends HttpServlet {
 		}
 		if ("update".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String type_id = request.getParameter("type_id");
 				String type_name = request.getParameter("type_name");
-				/*************************** 2.開始修改資料 ***************************************/
+				/***************************
+				 * 2.開始修改資料
+				 ***************************************/
 				producttypeService = new producttypeService();
 				producttypeService.updateproducttype(type_id, group_id, type_name, user_id);
-				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.修改完成,準備轉交(Send the Success view)
+				 ***********/
 				producttypeService = new producttypeService();
-				List<producttypeVO> list = producttypeService.getSearAllDB(group_id);
+				List<ProductTypeVO> list = producttypeService.getSearAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -95,14 +118,20 @@ public class producttype extends HttpServlet {
 		}
 		if ("delete".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String type_id = request.getParameter("type_id");
-				/*************************** 2.開始刪除資料 ***************************************/
+				/***************************
+				 * 2.開始刪除資料
+				 ***************************************/
 				producttypeService = new producttypeService();
 				producttypeService.deleteproducttype(type_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.刪除完成,準備轉交(Send the Success view)
+				 ***********/
 				producttypeService = new producttypeService();
-				List<producttypeVO> list = producttypeService.getSearAllDB(group_id);
+				List<ProductTypeVO> list = producttypeService.getSearAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -113,58 +142,18 @@ public class producttype extends HttpServlet {
 		}
 	}
 
-	/************************* 對應資料庫表格格式 **************************************/
-	public class producttypeVO implements java.io.Serializable {
-		private String type_id;
-		private String group_id;
-		private String type_name;
-		private String user_id;
-
-		public String getUser_id() {
-			return user_id;
-		}
-
-		public void setUser_id(String user_id) {
-			this.user_id = user_id;
-		}
-
-		public String gettype_id() {
-			return type_id;
-		}
-
-		public void settype_id(String type_id) {
-			this.type_id = type_id;
-		}
-
-		public String getGroup_id() {
-			return group_id;
-		}
-
-		public void setGroup_id(String group_id) {
-			this.group_id = group_id;
-		}
-
-		public String gettype_name() {
-			return type_name;
-		}
-
-		public void settype_name(String type_name) {
-			this.type_name = type_name;
-		}
-	}
-
 	/*************************** 制定規章方法 ****************************************/
 	interface producttype_interface {
 
-		public void insertDB(producttypeVO producttypeVO);
+		public void insertDB(ProductTypeVO productTypeVO);
 
-		public void updateDB(producttypeVO producttypeVO);
+		public void updateDB(ProductTypeVO productTypeVO);
 
 		public void deleteDB(String type_id, String user_id);
 
-		public List<producttypeVO> searhDB(String group_id, String type_name);
+		public List<ProductTypeVO> searhDB(String group_id, String type_name);
 
-		public List<producttypeVO> searhAllDB(String group_id);
+		public List<ProductTypeVO> searhAllDB(String group_id);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -175,34 +164,34 @@ public class producttype extends HttpServlet {
 			dao = new producttypeDAO();
 		}
 
-		public producttypeVO addproducttype(String group_id, String type_name, String user_id) {
-			producttypeVO producttypeVO = new producttypeVO();
-			producttypeVO.setGroup_id(group_id);
-			producttypeVO.settype_name(type_name);
-			producttypeVO.setUser_id(user_id);
-			dao.insertDB(producttypeVO);
-			return producttypeVO;
+		public ProductTypeVO addproducttype(String group_id, String type_name, String user_id) {
+			ProductTypeVO productTypeVO = new ProductTypeVO();
+			productTypeVO.setGroup_id(group_id);
+			productTypeVO.setType_name(type_name);
+			productTypeVO.setUser_id(user_id);
+			dao.insertDB(productTypeVO);
+			return productTypeVO;
 		}
 
-		public producttypeVO updateproducttype(String type_id, String group_id, String type_name, String user_id) {
-			producttypeVO producttypeVO = new producttypeVO();
-			producttypeVO.settype_id(type_id);
-			producttypeVO.setGroup_id(group_id);
-			producttypeVO.settype_name(type_name);
-			producttypeVO.setUser_id(user_id);
-			dao.updateDB(producttypeVO);
-			return producttypeVO;
+		public ProductTypeVO updateproducttype(String type_id, String group_id, String type_name, String user_id) {
+			ProductTypeVO productTypeVO = new ProductTypeVO();
+			productTypeVO.setType_id(type_id);
+			productTypeVO.setGroup_id(group_id);
+			productTypeVO.setType_name(type_name);
+			productTypeVO.setUser_id(user_id);
+			dao.updateDB(productTypeVO);
+			return productTypeVO;
 		}
 
 		public void deleteproducttype(String type_id, String user_id) {
 			dao.deleteDB(type_id, user_id);
 		}
 
-		public List<producttypeVO> getSearhDB(String group_id, String type_name) {
+		public List<ProductTypeVO> getSearhDB(String group_id, String type_name) {
 			return dao.searhDB(group_id, type_name);
 		}
 
-		public List<producttypeVO> getSearAllDB(String group_id) {
+		public List<ProductTypeVO> getSearAllDB(String group_id) {
 			return dao.searhAllDB(group_id);
 		}
 	}
@@ -222,8 +211,8 @@ public class producttype extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		@Override
-		public void insertDB(producttypeVO producttypeVO) {
-			// TODO Auto-generated method stub
+		public void insertDB(ProductTypeVO productTypeVO) {
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -231,9 +220,9 @@ public class producttype extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_insert_product_type);
 
-				pstmt.setString(1, producttypeVO.getGroup_id());
-				pstmt.setString(2, producttypeVO.gettype_name());
-				pstmt.setString(3, producttypeVO.getUser_id());
+				pstmt.setString(1, productTypeVO.getGroup_id());
+				pstmt.setString(2, productTypeVO.getType_name());
+				pstmt.setString(3, productTypeVO.getUser_id());
 
 				pstmt.executeUpdate();
 
@@ -262,8 +251,8 @@ public class producttype extends HttpServlet {
 		}
 
 		@Override
-		public void updateDB(producttypeVO producttypeVO) {
-			// TODO Auto-generated method stub
+		public void updateDB(ProductTypeVO productTypeVO) {
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -271,10 +260,10 @@ public class producttype extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_product_type);
 
-				pstmt.setString(1, producttypeVO.gettype_id());
-				pstmt.setString(2, producttypeVO.getGroup_id());
-				pstmt.setString(3, producttypeVO.gettype_name());
-				pstmt.setString(4, producttypeVO.getUser_id());
+				pstmt.setString(1, productTypeVO.getType_id());
+				pstmt.setString(2, productTypeVO.getGroup_id());
+				pstmt.setString(3, productTypeVO.getType_name());
+				pstmt.setString(4, productTypeVO.getUser_id());
 
 				pstmt.executeUpdate();
 
@@ -304,7 +293,7 @@ public class producttype extends HttpServlet {
 
 		@Override
 		public void deleteDB(String type_id, String user_id) {
-			// TODO Auto-generated method stub
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -341,9 +330,9 @@ public class producttype extends HttpServlet {
 		}
 
 		@Override
-		public List<producttypeVO> searhDB(String group_id, String type_name) {
-			List<producttypeVO> list = new ArrayList<producttypeVO>();
-			producttypeVO producttypeVO = null;
+		public List<ProductTypeVO> searhDB(String group_id, String type_name) {
+			List<ProductTypeVO> list = new ArrayList<ProductTypeVO>();
+			ProductTypeVO productTypeVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -359,11 +348,11 @@ public class producttype extends HttpServlet {
 				rs = pstmt.executeQuery();
 
 				while (rs.next()) {
-					producttypeVO = new producttypeVO();
-					producttypeVO.setGroup_id(rs.getString("group_id"));
-					producttypeVO.settype_id(rs.getString("type_id"));
-					producttypeVO.settype_name(rs.getString("type_name"));
-					list.add(producttypeVO);
+					productTypeVO = new ProductTypeVO();
+					productTypeVO.setGroup_id(rs.getString("group_id"));
+					productTypeVO.setType_id(rs.getString("type_id"));
+					productTypeVO.setType_name(rs.getString("type_name"));
+					list.add(productTypeVO);
 				}
 				// Handle any driver errors
 			} catch (SQLException se) {
@@ -398,10 +387,10 @@ public class producttype extends HttpServlet {
 		}
 
 		@Override
-		public List<producttypeVO> searhAllDB(String group_id) {
-			// TODO Auto-generated method stub
-			List<producttypeVO> list = new ArrayList<producttypeVO>();
-			producttypeVO producttypeVO = null;
+		public List<ProductTypeVO> searhAllDB(String group_id) {
+
+			List<ProductTypeVO> list = new ArrayList<ProductTypeVO>();
+			ProductTypeVO productTypeVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -414,11 +403,11 @@ public class producttype extends HttpServlet {
 				pstmt.setString(1, group_id);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					producttypeVO = new producttypeVO();
-					producttypeVO.setGroup_id(rs.getString("group_id"));
-					producttypeVO.settype_id(rs.getString("type_id"));
-					producttypeVO.settype_name(rs.getString("type_name"));
-					list.add(producttypeVO); // Store the row in the list
+					productTypeVO = new ProductTypeVO();
+					productTypeVO.setGroup_id(rs.getString("group_id"));
+					productTypeVO.setType_id(rs.getString("type_id"));
+					productTypeVO.setType_name(rs.getString("type_name"));
+					list.add(productTypeVO); // Store the row in the list
 				}
 				// Handle any driver errors
 			} catch (SQLException se) {
