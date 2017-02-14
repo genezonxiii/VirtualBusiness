@@ -329,8 +329,7 @@
 				hide : {effect : "fade",duration : 300},
 				width : 800,
 				buttons : [{
-							id : "insert",
-							text : "新增",
+							id : "insert_dialog_btn_0",
 							click : function(e) {
 								
 								e.preventDefault();
@@ -390,8 +389,8 @@
 										    	contrast_id : $(this).data("contrast_id"),
 										    	platform_id :(
 											    				$("#dialog_platform_platform_name").val()==undefined ?
-					    										$("#dialog_platform_platform_name").val():
-					    										$(this).data("platform_id")
+											    				$(this).data("platform_id"):
+					    										$("#dialog_platform_platform_name").val()
 				    										),
 										    	contrast_type : $("input[name='radio-group-type']:checked").val(),
 										    	product_name_platform : $("#dialog_contrast_platform_name").val(),
@@ -651,9 +650,14 @@
 		
 		//insert	
 		$("#create-product-contrast").click(function(e){
-			e.preventDefault();				
-
-			insert_dialog.data("action","insert").dialog("option","title","新增資料").dialog("open");
+			e.preventDefault();		
+			
+		$("#insert_dialog_btn_0").button("option","label","新增");
+		
+		insert_dialog
+				.data("action","insert")
+				.dialog("option","title","新增資料")
+				.dialog("open");
 		});		
 		
 		//update
@@ -716,7 +720,9 @@
 			
 			var contrast_id = $(this).attr("id");
 			console.log(contrast_id);
-
+			
+			$("#insert_dialog_btn_0").button("option","label","修改");
+			
 			insert_dialog
 			.data("action","update")
 			.data("contrast_id",contrast_id)
