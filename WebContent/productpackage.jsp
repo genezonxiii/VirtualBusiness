@@ -69,7 +69,6 @@
 	var information;
 	
 	function draw_product_package(info){
-		console.log(info);
 		warning_msg("---讀取中請稍候---");
 		$.ajax({
 			type : "POST",
@@ -512,7 +511,7 @@
 			data :{action : "search"},
 			success : function(result) {
 				var json_obj = $.parseJSON(result);
-				console.log(json_obj);
+				
 				$.each (json_obj, function (i,item) {
 					if(json_obj[i].product_id!=null){
 												
@@ -549,7 +548,6 @@
 				});
 			},
             select: function( event, ui ){
-            	console.log('select');
             	event.preventDefault();
             	
 				var idx = product_list.map(function(x) {return x.product_id; }).indexOf(ui.item.value);
@@ -652,6 +650,13 @@
 				$("#dialog-update-package-detail input[name='c_product_id']").val( product_list[idx].c_product_id );
 				$("#dialog-update-package-detail input[name='package_name']").val( product_list[idx].product_name );
 				$("#dialog-update-package-detail input[name='package_desc']").val( product_list[idx].description );
+			},
+			focus: function( event, ui ) {
+				event.preventDefault();
+				
+				var idx = product_list.map(function(x) { return x.product_id; }).indexOf(ui.item.value);
+				
+				$("#dialog-update-package-detail input[name='c_product_id']").val( product_list[idx].c_product_id );
 			}
 		});
 		
