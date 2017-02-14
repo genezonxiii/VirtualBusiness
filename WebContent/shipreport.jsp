@@ -53,6 +53,7 @@ function ship_data(){
 		url : "shipreport.do",
 		data : {action :do_what,time1 : $('#datepicker1').val(),time2 : $('#datepicker2').val()},
 		success : function(result) {
+			//alert(result);
 			if(result.indexOf("WebService")!=-1){
 				$(".validateTips").text("WebService Error: "+result);
 				return;

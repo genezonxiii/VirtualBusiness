@@ -32,6 +32,9 @@ public class fileoutput  extends HttpServlet {
 			if("log.txt".equals(file_name)){
 				file_path="/data/vbupload/log.txt";
 			}
+			if("pyupload.log".equals(file_name)){
+				file_path="/data/VirtualBusiness_Data/pyupload.log";
+			}
 		}
 		if(fileforinvoice!=null){
 			file_name = new String(Base64.decodeBase64(fileforinvoice.getBytes()));

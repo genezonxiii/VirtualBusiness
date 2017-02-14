@@ -24,7 +24,7 @@
 <!--
   <context-param>
   <param-name>dbURL</param-name>
-  <param-value>jdbc:mysql://localhost/db_virtualbusiness</param-value>
+  <param-value>jdbc:mysql://localhost/db_virtualbusiness2</param-value>
   </context-param>
   <context-param>
     <param-name>dbUserName</param-name>
@@ -66,7 +66,7 @@
 -->
  <!--########################以上平常#####################################-->
  <!--########################以下server##################################-->
-<!--
+ 
   <context-param>
   <param-name>dbURL</param-name>
   <param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value>
@@ -120,12 +120,12 @@
     <param-value>http://www.a-ber.com.tw/video</param-value>
   </context-param>
   <servlet>
-  -->
+
 <!--########################以上server#####################################-->
 <!--######### jdbc:mysql://192.168.112.164/db_virtualbusiness  http://192.168.112.164:8090###########-->
 <!--######### jdbc:mysql://192.168.112.164/test_virtualbusiness http://192.168.112.164:9000#########-->
 <!--########################以下164+175####################################-->
-
+<!--
   <context-param>
   	<param-name>dbURL</param-name>
   	<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
@@ -179,7 +179,7 @@
     <param-value>http://192.168.112.164/video</param-value>
   </context-param>
   <servlet>
-
+-->
  <!--######################## 以上164+175 ###################################-->
  <!--###### C:/Users/10506002/git/VirtualBusiness/WebContent/upload ########-->
  <!--#################### /data/vbupload ###################################-->
@@ -578,8 +578,20 @@
     <servlet-name>groupbuying</servlet-name>
     <url-pattern>/groupbuying.do</url-pattern>
   </servlet-mapping>
-   
+  <servlet>
+    <servlet-name>deliveryOrder</servlet-name>
+    <servlet-class>tw.com.aber.deliveryorder.controller.DeliveryOrder</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>deliveryOrder</servlet-name>
+    <url-pattern>/deliveryOrder.do</url-pattern>
+  </servlet-mapping>
+  
+  
+  
   <!-- ############新的############ -->
+  
+  
 <!--   <listener> -->
 <!-- 	<listener-class>tw.com.aber.bystartup</listener-class> -->
 <!--   </listener> -->

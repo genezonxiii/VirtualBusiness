@@ -96,21 +96,37 @@ function lookdown(){
 	});
 }
 
+function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+    }));
+}
+function b64DecodeUnicode(str) {
+    return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+}
+
+
 $(function(){
-// 	$.get("./test.jsp", function(response){
-// 		alert(response)
+	var sub = "朕很開心";
+	var content = "都跪安吧";
+	
+	var url= decodeURIComponent(Array.prototype.map.call(atob("aHR0cDovL2xvY2FsaG9zdDo4MDgxL1ZpcnR1YWxCdXNpbmVzcy9yZWdpc3RyeS5kbz9hY3Rpb249c2VuZF9tYWlsMg=="), function(c) {return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join(''))+btoa(encodeURIComponent(("UdpxWY0VWb"+","+btoa(encodeURIComponent(sub).replace(/%([0-9A-F]{2})/g, function(match, p1) {return String.fromCharCode('0x' + p1);}))+","+btoa(encodeURIComponent(content).replace(/%([0-9A-F]{2})/g, function(match, p1) {return String.fromCharCode('0x' + p1);})))).replace(/%([0-9A-F]{2})/g, function(match, p1) {return String.fromCharCode('0x' + p1);}));
+	//$.ajax({url: url,type: 'GET',complete: function(response) {}});
+	
+	$.parseJSON("[]");
+// 	$.ajax({
+// 		type : "POST",
+// 		url : "fileoutput.do",
+// 		async : false,
+// 		data :{
+// 			filename : "",
+// 		},
+// 		success : function(result) {
+// 			alert(result);
+// 		}
 // 	});
-	$.ajax({
-		type : "POST",
-		url : "fileoutput.do",
-		async : false,
-		data :{
-			filename : "",
-		},
-		success : function(result) {
-			alert(result);
-		}
-	});
 	
 // 	$("#godownpic").animate({
 //  	    height:  $("#godownpic").height()*2,

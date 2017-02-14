@@ -20,6 +20,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 
+@ServerEndpoint(value = "/websocket/livehelp/{Username}")
 public class Livehelp {
 
 	private static final Log log = LogFactory.getLog(Livehelp.class);

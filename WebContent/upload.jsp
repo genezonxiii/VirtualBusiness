@@ -18,10 +18,10 @@
 	<jsp:include page="template.jsp" flush="true"/>
 	
 	<script src="./js/jquery.form.js"></script> 
-	<div class="content-wrap">
+	<div class="content-wrap" style='position:relative;'>
 		<div class='bdyplane' style="opacity:0">
 <!-- 	<h2 class="page-title">訂單拋轉作業</h2> -->
-		<div class="search-result-wrap" style="margin-bottom: 0px;">
+		<div class="search-result-wrap" style="margin-bottom: 0px;" >
 			<div class="result-table-func-wrap" id='panel'>
 
 				<div class="ec-radio-group-wrap">
@@ -91,6 +91,7 @@
 	</div><!-- /.content-wrap -->
 	<div id ="message" title="訊息" style='padding:30px 0;text-align:center;font-size:30px;font-family: "微軟正黑體", "Microsoft JhengHei", Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;'></div>
 	<div id ="choose-order-type" title="選擇訂單類型"></div>
+	<audio id="stamp_voice" src="./audio/stamp_voice.wav" style='display:none;'></audio> 
 <script>
 var platform_dialog={};
 $(function(){
@@ -187,6 +188,7 @@ $(function(){
 		if(platform_dialog[$(this).val()].length>30){
 			$("#choose-order-type").dialog("open");
 		}else{
+			$(".choosed").remove();
 			$( "input:checked[name='ec-radio-group']" ).attr("value2","general");
 			$("#submitbtn").attr("restrict","");
 		}
@@ -220,12 +222,13 @@ $(function(){
 							//home-delivery 宅配
 							//drop-shipping 第三方
 							$(".choosed").remove();
+							document.getElementById('stamp_voice').play();
 							if($( "input:checked[name='ordertype']" ).val()=="instore-pickup"){
-								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left+30)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-40)+'px;" src="./images/seal_1.png"/>');
+								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left-90)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-80)+'px;" src="./images/seal_1.png"/>');
 							}else if($( "input:checked[name='ordertype']" ).val()=="home-delivery"){
-								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left+30)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-40)+'px;" src="./images/seal_2.png"/>');
+								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left-90)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-80)+'px;" src="./images/seal_2.png"/>');
 							}else if($( "input:checked[name='ordertype']" ).val()=="drop-shipping"){
-								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left+0)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-40)+'px;" src="./images/seal_3.png"/>');
+								$( ".content-wrap" ).append('<img class="choosed" style="position:absolute;left:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().left-120)+'px;top:'+($( "label[for='"+$( "input:checked[name='ec-radio-group']" ).attr("id")+"']" ).offset().top-80)+'px;" src="./images/seal_3.png"/>');
 							}
 							$( "input:checked[name='ec-radio-group']" ).attr("value2",$( "input:checked[name='ordertype']" ).val());
 							$("#submitbtn").attr("restrict",$( "input:checked[name='ordertype']" ).attr("restrict"));

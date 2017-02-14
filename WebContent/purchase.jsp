@@ -122,6 +122,7 @@ function draw_purchase(parameter){
 				}
 				if(resultRunTime<2){
 					$("#purchases_contain_row").hide();
+					$("#purchase_detail_contain_row").hide();
 					warning_msg("---查無此結果---");
 				}
 				if(json_obj[resultRunTime-1].message=="如要以日期查詢，完整填寫起日欄位"){

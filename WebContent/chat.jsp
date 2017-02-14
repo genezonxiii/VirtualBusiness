@@ -190,12 +190,12 @@ input#chat {
 				<td rowspan='2' style='border-right:3px solid #aaa;width:132px;'>
 					<ul id='online_list' class="name_list">
 <!-- 			    	<li style='background:gray;'>　</li> -->
-			    	<li>讀取中...</li>
-				</ul>
+			    		<li>讀取中...</li>
+					</ul>
 				</td>
-				<td style='border-bottom:3px solid #aaa;' valign="bottom" colspan='2'>
+				<td style='border-bottom:3px solid #aaa;height:327px;' valign="bottom" colspan='2'>
 <!-- 					<div id="console-container"> -->
-				        <div id="console" style="max-height:327px;max-width:968px;">
+				        <div id="console" style=" max-height:327px;max-width:968px;">
 				        </div>
 <!-- 				    </div> -->
 				</td>

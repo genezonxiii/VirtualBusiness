@@ -160,10 +160,10 @@ function draw_barchart(data,title){
  	  	'fill':function(d){
        	return (d.x<3?"#FF0000":"#000")
        },
-      'text-anchor': 'end',
+      'text-anchor': 'start',
       'textLength':"190",
-      'lengthAdjust':'spacing',
-      'x':leftpad-10,
+     // 'lengthAdjust':'spacing',
+      'x':leftpad-200,
       'y':function(d){
         return d.x * 25 + toppad+10;
       }

@@ -23,7 +23,28 @@
 		
 <link type="text/css" rel="stylesheet" href="css/visualize.jQuery.css"/>
 <!-- 		<link type="text/css" rel="stylesheet" href="https://www.filamentgroup.com/examples/charting_v2/demopage.css"/> -->
-
+<style>
+        .axis path, .axis line{
+            fill: none;
+            stroke: black;
+            shape-rendering: auto;
+        }
+        .axis text{
+            font-size: 12px;
+        }
+        #tooltip{
+            position: absolute;
+            background: #eee;
+            width: 150px;
+            height: auto;
+            padding: 0px 10px;
+            border-radius: 10px;
+            box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+        }
+        #tooltip.hidden{
+            display: none;
+        }
+    </style>
 </head>
 <body>
 	<jsp:include page="template.jsp" flush="true"/>
@@ -43,6 +64,189 @@
 <script type="text/javascript" src="js/visualize.jQuery.js"></script>
 
 <script>
+function dataformat(dataSet){
+	var linearr=[];
+	var aline=[];
+	var current_order_source;
+	if(dataSet[0]!=null){ current_order_source=dataSet[0].ordersource; }
+	var aline_i=0;
+	var linearr_i=0;
+	$.each(dataSet,function(i, item) {
+		//alert(item.month);
+		if(dataSet[i].ordersource!=current_order_source){
+			linearr[linearr_i] = aline;
+			aline=[];
+			linearr_i++;
+			aline_i=0;
+			//###########################
+			current_order_source=dataSet[i].ordersource;
+			aline[aline_i]=item;
+			aline_i++;
+		}else{
+			aline[aline_i]=item;
+			aline_i++;
+		}
+// 		if(dataSet.length==i+1){
+// 		}
+		
+		//alert(i+" "+aline_i+" "+linearr_i);
+		//linearr
+		//aline
+		//dataSet[i]
+	});
+	//alert(linearr[0][0]);
+	return linearr;
+}
+function svg(){
+    d3.select("#board").append("svg").attr({
+        width: 900,
+        height: 360
+    });
+    d3.select("svg").append("g").append("rect").attr({
+        width: "100%",
+        height: "100%",
+        fill: "white"
+    });
+    d3.select("svg").append("g").attr("id","axisX");
+    d3.select("svg").append("g").attr("id","axisY");
+}
+
+
+function return_to_d3js(data,ori_dataSet){
+	var w=900;
+	var h=360;
+	var padding = 80;
+	var xScale = d3.time.scale()
+	    .domain([new Date(d3.min(ori_dataSet, function(d){
+	        return new Date(d.month);
+	    })),new Date(d3.max(ori_dataSet, function(d){
+	        return new Date(d.month);
+	    }))])
+	    .range([padding,w-padding]);
+	
+	var yScale = d3.scale.linear()
+	    .domain([0,d3.max(ori_dataSet, function(d){
+	        return +d.amount;
+	    })])
+	    .range([h-padding,padding]);
+	var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+	var yAxis = d3.svg.axis().scale(yScale).orient("left");
+	
+	d3.select("svg")
+	    .select("g#axisY")
+	    .attr("class","axis")
+	    .attr("transform", "translate("+(padding)+",0)")
+	    .call(yAxis);
+	d3.select("svg")
+	    .select("g#axisX")
+	    .attr("class","axis")
+	    .attr("transform", "translate(0,"+(h-padding)+")")
+	    .call(xAxis);
+
+    
+    
+    
+    
+    
+    
+    
+	
+	
+	
+	console.log(JSON.stringify(data));
+}
+function bind(dataSet){
+    var selection = d3.select("svg")
+                        .selectAll("circle")
+                        .data(dataSet);
+    selection.enter().append("circle");
+    selection.exit().remove();
+}
+function render(dataSet,ori_dataSet){
+    //比例尺們 xScale, yScale, rScale, fScale
+     var xScale = d3.time.scale()
+              .domain([new Date(d3.min(dataSet, function(d){
+                  return new Date(d.date);
+              })),new Date(d3.max(dataSet, function(d){
+                  return new Date(d.date);
+              }))])
+              .range([padding,w-padding]);
+     var yScale = d3.scale.linear()
+              .domain([0,d3.max(dataSet, function(d){
+                  return +d.number;
+              })])
+              .range([h-padding,padding]);
+     var rScale = d3.scale.linear()
+              .domain([d3.min(dataSet, function(d){
+                  return +d.amount;
+              }),d3.max(dataSet, function(d){
+                  return +d.amount;
+              })])
+              .range([5,20]);
+     var fScale = d3.scale.category20();
+      
+     //開始畫圈圈
+     d3.selectAll("circle")
+      .transition()
+      .attr({
+          cx: function(d){
+            return xScale(new Date(d.date)); 
+          },
+          cy:function(d){
+            return yScale(+d.number); 
+          },
+          r:function(d){
+            return rScale(+d.amount); 
+          },
+          fill: function(d){
+            return fScale(letterList.indexOf(d.cid));
+          }
+      });
+//         .append("title").text(function(d){
+//         return d.city+"\r\n"+d.industry+"\r\n發票金額:"+d.amount;
+//          })
+     d3.selectAll("circle")
+      .on("mouseover",function(d){
+         cX=d3.select(this).attr("cx");
+         cY=d3.select(this).attr("cy");
+         var tooltip = d3.select("#tooltip")
+          .style({
+              left: (+cX+20)+"px",
+              top: (+cY+20)+"px"
+          });
+          //替換tooltip內容(選擇其id後,修改內容)
+          d3.select("#tooltip").select("#city").text(d.city);
+          d3.select("#tooltip").select("#industry").text(d.industry);
+          d3.select("#tooltip").classed("hidden",false);
+     }).on("mouseout",function(d){
+          d3.select("#tooltip").classed("hidden",true);
+     });
+      
+     //開始畫x,y軸線 
+      var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+      var yAxis = d3.svg.axis().scale(yScale).orient("left");
+      d3.select("svg")
+          .select("g#axisY")
+          .attr("class","axis")
+          .attr("transform", "translate("+(padding-10)+",0)")
+          .call(yAxis);
+      d3.select("svg")
+          .select("g#axisX")
+          .attr("class","axis")
+          .attr("transform", "translate(0,"+(h-padding+10)+")")
+          .call(xAxis);
+  }
+
+
+
+
+
+
+
+
+
+
+
 function draw_barchart__plotly(data,list){
 // 	data = [ {
 // 		  x: ['giraffes', 'orangutans', 'monkeys'], 
@@ -245,6 +449,7 @@ function draw_chart(m_h,m_w,data){
  };
  
 	$(function() {
+		svg();
 		$(".bdyplane").animate({"opacity":"1"});
 		$("#searh-productunit").click(function(e) {
 			$(".visualize").animate({"opacity":"0"});
@@ -256,7 +461,14 @@ function draw_chart(m_h,m_w,data){
 				url : "salechart.do",
 				data : {action :"searh", time1 : $('#datepicker1').val(), time2 : $('#datepicker2').val()},
 				success : function(result) {
-					console.log(result);
+					
+					//console.log(result);
+					var json_obj = $.parseJSON(result);
+					var linearr = dataformat(json_obj);
+					
+					return_to_d3js(linearr,json_obj);
+					$(".visualize").animate({"opacity":"1"});
+					return ;
 					var json_obj = $.parseJSON(result);
 					var result_table = "";
 					var chart_data=[],chart_obj={},i=0,j=0,list=[];
@@ -382,7 +594,9 @@ function draw_chart(m_h,m_w,data){
 		</div>
 	</div>
 	<div class="validateTips" align="center"> </div>
-<div id="board" style="margin:30px auto;width:1000px;"><div id="chart" style="opacity:0;"></div></div>
+	<div style="color:red;margin:10px auto;text-align:center;font-size:32px;">為了提供您更好的使用品質，該功能維護中。</div>
+	
+<div id="board" style="margin:10px auto;width:1000px;"><div id="chart" style="opacity:0;"></div></div>
 
 </div>
 </div>

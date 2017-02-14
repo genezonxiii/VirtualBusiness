@@ -876,8 +876,7 @@ input[type=radio]:checked + label:before {
     float: left;
     text-align: center;
     cursor: pointer;
-/*     width: calc((100% - 60px) / 5); Ben又偷改了*/
-    width: calc((100% - 64px) / 5);
+    width: calc((100% - 60px) / 5);
     background: #F8F8F8;
 }
 .ec-radio-group-wrap input[type=radio] + label img {

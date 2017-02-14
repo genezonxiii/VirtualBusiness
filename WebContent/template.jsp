@@ -381,17 +381,17 @@ function who(){
 					<li><a href="#" onclick="trans('productunit.jsp');">商品單位管理</a></li>
 					<li><a href="#" onclick="trans('accreceive.jsp');">應收帳款管理</a></li>
 					<li><a href="#" onclick="trans('accpay.jsp');">應付帳款管理</a></li>
-					<li><a href="#" onclick="trans('productContrast.jsp');">產品對照資料管理</a></li>
 				</ul>
 				<ul style="top: -100px;left: 321px;height:520px;">
 					<li><a href="#" onclick="trans('tagprint.jsp');">標籤列印</a></li>
-					<li><a href="#" onclick="trans('group.jsp');">公司管理</a></li>
-					<li><a href="#" onclick="trans('user.jsp');">使用者管理</a></li>
-					<li><a href="#" onclick="trans('changepassword.jsp');">使用者密碼管理</a></li>
-					<li><a href="#" onclick="trans('invoicetrack.jsp');">發票字軌管理</a></li>
+					<li><a href="#" onclick="trans('group.jsp');" style="position:absolute;bottom:80px;text-align:right;">公司管理</a></li>
+					<li><a href="#" onclick="trans('user.jsp');" style="position:absolute;bottom:40px;text-align:right;">使用者管理</a></li>
+					<li><a href="#" onclick="trans('changepassword.jsp');" style="position:absolute;bottom:0px;text-align:right;">使用者密碼管理</a></li>
 					<li><a href="#" onclick="trans('invoice.jsp');">開立發票</a></li>
+					<li><a href="#" onclick="trans('invoicetrack.jsp');">發票字軌管理</a></li>
 					<li><a href="#" onclick="trans('exchange.jsp');">匯率轉換管理</a></li>
 					<li><a href="#" onclick="trans('membercondition.jsp');">會員分級設定</a></li>
+					<li><a href="#" onclick="trans('productContrast.jsp');">產品對照資料管理</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
@@ -414,7 +414,7 @@ function who(){
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表
 				<ul style="top: -100px;">
-					<li><a href="#" onclick="trans('salechart.jsp');">出貨量統計圖</a></li>
+<!-- 					<li><a href="#" onclick="trans('salechart.jsp');">出貨量統計圖</a></li> -->
 					<li><a href="#" onclick="trans('saleamountchart.jsp');">銷售金額統計圖</a></li>
 					<li><a href="#" onclick="trans('saleamountstaticchart.jsp');">銷售金額比例統計圖</a></li>
 					<li><a href="#" onclick="trans('heavybuyer.jsp');">訂購人消費排名統計圖</a></li>
@@ -467,7 +467,7 @@ function who(){
 				<div style="padding:6px 5px"><font class="online_or_not" style="color:#4f4;" size="3"> ● </font>線上客服</div>
 				<div style="position:absolute;top:0px;right:0px;">
 					<a><img src="./images/minimize.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$('#livehelp').hide();$('#livehelp_m').fadeIn();"></a>
-					<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$('.livehelp').fadeOut(function(){$('.livehelp').remove();});"></a>
+<!-- 					<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$('.livehelp').fadeOut(function(){$('.livehelp').remove();});"></a> -->
 				</div>
 			</div>
 			<div id="consoleL">
@@ -604,6 +604,7 @@ $(function() {
                 	var name = message.data.split("name='name'>")[1].split("</font>")[0];
                 	if(message.data.indexOf("@﹀︿﹀") < 0 && $('#livehelp_m_'+name).length < 1 ){
                 		$('#hello').remove();
+                		$(".content-wrap").append('<audio src="./audio/message.mp3" autoplay="autoplay" style="display:none;"></audio>');
 	                	$(".livehelp").append(
 	               			'<div id="livehelp_m_'+name+'" style="display:none;" >'+
 		               			'<div ondblclick="$(\'#livehelp_m_'+name+'\').hide();$(\'#livehelp_'+name+'\').show();">'+
@@ -615,8 +616,8 @@ $(function() {
 	                			'<div ondblclick="$(\'#livehelp_'+name+'\').hide();$(\'#livehelp_m_'+name+'\').show();">'+
 	            					'<div style="padding:6px 5px"><font class="online_or_not" style="color:#4f4;" size="3"> ● </font>'+name+"<font size='4'  style='color:#fb3;'><b> ( 請友善對待客戶 ) </b></font>"+'</div>'+
 		            				'<div style="position:absolute;top:0px;right:0px;">'+
-		            					'<a><img src="./images/minimize.png" class="fun" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').hide();$(\'#livehelp_m_'+name+'\').show();"></a>'+
-		            					'<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').fadeOut(function(){$(\'#livehelp_'+name+'\').remove();$(\'#livehelp_m_'+name+'\').remove();});"></a>'+
+		            					'<a><img src="./images/minimize.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').hide();$(\'#livehelp_m_'+name+'\').show();"></a>'+
+// 		            					'<a><img src="./images/close.png" class="func" style="margin:7px 4px 0px 0px;padding:3px;" onclick="$(\'#livehelp_'+name+'\').fadeOut(function(){$(\'#livehelp_'+name+'\').remove();$(\'#livehelp_m_'+name+'\').remove();});"></a>'+
 	            					'</div>'+
 	            				'</div>'+
 	            			'<div id="consoleL_'+name+'"></div>'+
@@ -658,6 +659,7 @@ $(function() {
                 }else{
                 	//localhost
                 	console.log("ws_ver_livehelp_local");
+<%--                 	Livehelp.connect('ws://'+get_sensitive("164")+'/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>'); --%>
                 	Livehelp.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
                 }
             } else {
@@ -762,6 +764,7 @@ $(function() {
                 }else{
                 	//localhost
                 	console.log("ws_ver_livehelp_local");
+<%--                 	Livehelp.connect('ws://'+get_sensitive("164")+'/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>'); --%>
                 	Livehelp.connect('ws://' + window.location.host + '/VirtualBusiness/websocket/livehelp/'+'<%=request.getSession().getAttribute("user_name")%>');
                 }
             } else {

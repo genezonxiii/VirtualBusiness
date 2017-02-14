@@ -1,29 +1,40 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.util.*"%>
+<%@ page import="java.sql.DriverManager"%>
+<%@ page import="java.sql.Connection"%>
+<%@ page import="java.sql.Statement"%>
+<%@ page import="java.sql.ResultSet"%>
 <!DOCTYPE html>
 <html>
 <head>
+
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="format-detection" content="telephone=no">
-	<title>北祥股份有限公司 雲端電商管理平台 使用者登入</title>
-	<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-	<link rel="stylesheet" href="css/RWD/styles.css">
-	<link rel="stylesheet" href="css/1.12.0/jquery-ui.css">
-<!--     <link rel="stylesheet" href="css/styles.css"> -->
-  <script src="js/jquery-1.12.4.js"></script>
-  <script src="js/jquery-ui.min.js"></script>
-  <script src="js/scripts.js"></script>
-</head>
+	<title>北祥股份有限公司 智慧電商平台 使用者登入</title>
+	<link rel="Shortcut Icon" type="image/x-icon" href="./cssjs/Rockettheme-Ecommerce-Shop.ico" />
+    <link rel="stylesheet" href="./cssjs/jquery-ui.css">
+    <link rel="stylesheet" href="./cssjs/styles.css">
+
+<!--     <script type="text/javascript" src="http://www.pershing.com.tw/tw/js/jquery-1.6.2.min.js"></script> -->
+  <script src="./cssjs/jquery-1.12.4.js"></script>
+  <script src="./cssjs/jquery-ui.min.js"></script>
+  <script src="./cssjs/scripts.js"></script>
+  
+<style>
+input[type="text"], input[type="password"], select, textarea {
+	font-family: sans-serif;
+}
+</style>
 
 <script>
 function chimg(){
-	document.getElementById("validateCodeImg").src="HandleDrawValidateCode.do?t=" + Math.random();
+	document.getElementById("validateCodeImg").src="../../HandleDrawValidateCode.do?t=" + Math.random();
 }
 function unicheck(){
 	if($("#uninumber").val()<1)return false;
 	var check=0;
 	$.ajax({
-        url : "login.do",
+        url : "../../login.do",
         type : "POST",
         cache : false,
 //         async : false,
@@ -53,21 +64,14 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
 	var wrong=0;
 	if($("#uninumber").val().length<1){$("#uninumber").addClass("error");$("#uninumber").after("<span class='error-msg'>請輸入統編</span>");wrong=1;}
 	if($("#username").val().length<1){$("#username").addClass("error");$("#username").after("<span class='error-msg'>請輸入帳號</span>");wrong=1;}
-	if($("#password").val().length<1){
-		$("#password").addClass("error");
-		$("#password").after("<span class='error-msg'>請輸入密碼</span>");
-		wrong=1;
-		if($("#forgetpwd").css("display")=="none"){
-			$("#forgetpwd").slideToggle();
-		}
-	}
+	if($("#password").val().length<1){$("#password").addClass("error");$("#password").after("<span class='error-msg'>請輸入密碼</span>");wrong=1;}
 	if($("#verify").val().length<1){$("#verify").addClass("error");$("#verify").after("<span class='error-msg'>請輸入驗證碼</span>");wrong=1;}
 	if($("#password").val().length>10){$("#password").addClass("error");$("#password").after("<span class='error-msg'>長度不可超過十個字</span>");wrong=1;}
 // 	if(!unicheck()){wrong=1;}
 	unicheck();
 	
 	if(wrong==0){
-		$.ajax({url : "login.do", type : "POST", cache : false,
+		$.ajax({url : "../../login.do", type : "POST", cache : false,
             data : {
             	action : "login",
             	unicode : $("#uninumber").val(),
@@ -82,15 +86,12 @@ function to_login(){//<span class='error-msg'>請輸入統編</span>
             		//$("#my_msg").html("訊號不穩定，<br>&nbsp;請檢查網路連線，或稍後再嘗試。<br>");
             		//$("#my_msg").dialog("open");
             	}
-            	if (json_obj.message=="success"){location.replace("./welcome.jsp");}
+            	if (json_obj.message=="success"){location.replace("../../welcome.jsp");}
             	if (json_obj.message=="failure"){
             		$("#verify").val("");
             		$("#password").val("");
             		$("#password").after("<span class='error-msg'>請確認密碼是否正確!</span>");
             		chimg();
-            		if($("#forgetpwd").css("display")=="none"){
-            			$("#forgetpwd").slideToggle();
-            		}
             	}
             	if (json_obj.message=="uni_failure"){
             		$("#verify").val("");
@@ -119,7 +120,6 @@ $(function() {
 	    if(e.shiftKey){
 	    	if(e.which == 41){
 	    		e.preventDefault();
-	    		
 	    		if(location.href.indexOf("bers1.eastasia")>-1){
 	    			$("#uninumber").val(get_sensitive("Demouser_uni"));
 	    			$("#username").val(get_sensitive("Demouser_usr"));
@@ -181,65 +181,50 @@ $(function() {
 });
 </script>
 </head>
-
 <body class="login-body">
-<div class="bkg-cloud"></div>
-<div class="aber-logo-wrap">
-	<div class="aber-logo"></div>
-	<div class="aber-txt">
-		<h1>雲端電商管理平台</h1>
-	</div>
-</div><!-- /.aber-logo-wrap -->
+		<div class="login-panel" style='z-index:5;position:absolute;top:28%;left:40%;'>
+<!-- 			<h2>使用者登入</h2> -->
 
-<div class="login-wrapper">
-	<div class="login-panel-wrap">
-	<h2 class="login-txt">使用者登入</h2>
-	<%if(request.getSession().getAttribute("user_name")!=null){%>
-		<script>top.location.href="welcome.jsp";</script>
-	<%}%>
-	<div class="login-panel">
-		<form>
-			<label for="uninumber">
-				<span class="block-label">統編</span>
-				<input type="text" id="uninumber">
-<!-- 				<span class="error-msg">查無貴公司統編</span> -->
-			</label>
-			<label for="username">
-				<span class="block-label">帳號</span>
-				<input type="text" id="username">
-				<!-- <span class="error-msg">長度不能超過10個字</span> -->
-			</label>
-			<label for="password">
-				<span class="block-label">密碼</span>
-				<input type="password" id="password">
-				<!-- <span class="error-msg">長度不能超過10個字</span> -->
-			</label>
-			<div class="verify-wrap">
-				<label for="verify">
-					<span class="block-label">認證碼</span>
-					<input type="text" id="verify">
-					<!-- <span class="error-msg">認證錯誤</span> -->
+			<form>
+				<label for="uninumber">
+					<span class="block-label">統編</span>
+					<input type="text" id="uninumber">
 				</label>
-				<div class="captcha-wrap">
-					<img src="HandleDrawValidateCode.do" id="validateCodeImg" alt="">
-				</div>
-			</div><!-- /.verify-wrap -->
-			<div class="login-btn-wrap">
-				<a href="#" id="login_btn" class="login-button">登入</a>
-				<a href="#" class="login-reset-button" id="reset_btn">清除重填</a>					
-			</div><!-- /.login-btn-wrap -->
-			<div class="login-btn-wrap" id='forgetpwd' style='display:none;'>
-				<div align='center' style="padding-top:15px;" ><a href="./forget.jsp">忘記密碼</a>?</div>		
-			</div><!-- /.login-btn-wrap -->
-		</form>
-	</div><!-- /.login-panel -->
-	</div><!-- /.login-panel-wrap -->
+				<label for="username">
+					<span class="block-label">帳號</span>
+					<input type="text" id="username">
+				</label>
+				<label for="password">
+					<span class="block-label">密碼</span>
+					<input type="password" id="password">
+				</label>
+				<div class="verify-wrap">
+					<label for="verify">
+						<span class="block-label">認證碼</span>
+						<input type="text" id="verify">
+					</label>
+					<label style="text-align:center;font-size:14px;padding-top:10px">
+<!-- 					<div class="captcha-wrap"> -->
+						<img title="看不清楚? 點擊圖片可換一張" src="../../HandleDrawValidateCode.do" id="validateCodeImg" style="width:100%;height:35px;">點擊圖片可換一張
+					</label>
+				</div><!-- /.verify-wrap -->
+				<div class="login-btn-wrap">
+					<a class="login-button" id="login_btn">登入</a>
+					<a class="login-reset-button" id="reset_btn">清除重填</a>
+				</div><!-- /.login-btn-wrap -->
+				<div align='center' style="padding-top:15px;"><a href="../../forget.jsp">忘記密碼</a>?</div>
+<!-- 				<div align='center' style="padding-top:5px;">還沒有智慧電商平台的帳號嗎? <a href="./registry.jsp">註冊</a></div> -->
+			</form>
+		</div><!-- /.login-panel -->
+		<div style='position:absolute;top:0px;left:0px;height:100%;width:100%;z-index:-100;'>
+			<img id="scream" src="./cssjs/loginbg.png" style='display:none;'alt="The Scream">
+			<canvas id='canv'></canvas>
+			<script type="application/javascript" src="./cssjs/snow.js"></script>
+		</div>
+	<div id="my_msg"></div>
+<!-- 	<canvas id='canv'></canvas> -->
+<!-- 	<script type="application/javascript" src="js/snow.js"></script> -->
 
-	<div class="login-footer">
-		<p>北祥股份有限公司</p>
-		<span>電話：02-2658-1910 | 傳真：02-2658-1920</span>
-	</div><!-- /.login-footer -->
-
-</div><!-- /.login-wrapper -->
 </body>
 </html>
+

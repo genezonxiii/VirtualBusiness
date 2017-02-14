@@ -1068,6 +1068,7 @@ public class salereturn extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					saleReturnVO = new SaleReturnVO();
+					saleReturnVO.setSale_id(rs.getString("sale_id"));
 					saleReturnVO.setSeq_no(rs.getString("seq_no"));
 					saleReturnVO.setOrder_no(rs.getString("order_no"));
 					saleReturnVO.setProduct_name(rs.getString("product_name"));
@@ -1135,6 +1136,7 @@ public class salereturn extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					saleReturnVO = new SaleReturnVO();
+					saleReturnVO.setSale_id(rs.getString("sale_id"));
 					saleReturnVO.setSeq_no(rs.getString("seq_no"));
 					saleReturnVO.setOrder_no(rs.getString("order_no"));
 					saleReturnVO.setProduct_name(rs.getString("product_name"));

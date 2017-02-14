@@ -49,6 +49,7 @@ var customer_tags=[];
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});
 		$(".content-wrap a").click(function(){
+			if($(this).attr("class")=="no_alert"){return;}
 			$("#dialog-confirm").html("<table class='dialog-table'>"+
 				"<tr><td><span class='delete_msg'>'"+$(this).html()+"'</span></td></tr>"+
 				"</table>"
@@ -168,8 +169,10 @@ var customer_tags=[];
 			type : "POST",
 			url : "customer.do",
 			data :{action : "search"},
-			success : function(result) {alert(result);
+			success : function(result) {
+				var tmp = setTimeout( function() {alert("發生未知異常錯誤，請聯絡管理員。")}, 200);
 				var json_obj = $.parseJSON(result);
+				clearTimeout(tmp);
 				$.each (json_obj, function (i,item) {
 					if(json_obj[i].name!=null){
 						customer_tags[i]=json_obj[i].name;
@@ -188,7 +191,52 @@ var customer_tags=[];
 </script>
 			<!-- 第一列 -->
 		<div class="search-result-wrap">
-			
+			<section>
+				<h3 class="ui-list-title">可愛的Log們</h3>
+				<div class="form-wrap">
+					<div class="form-row">
+						<table>
+							<tr>
+								<td width='80px'><a href='./fileoutput.do?fileforgroupbuy=bG9nLnR4dA==' class='no_alert'><img src='./images/file.png' class='func'></a></td>
+								<td width='80px'><a href='./fileoutput.do?fileforgroupbuy=cHl1cGxvYWQubG9n' class='no_alert'><img src='./images/file.png' class='func'></a></td>
+							</tr>
+							<tr>
+								<td align='center'>Ben的</td>
+								<td align='center'>Avery的</td>
+							</tr>
+						</table>
+					</div>
+				</div><!-- /.form-wrap -->
+			</section>
+			<section>
+				<h3 class="ui-list-title">webservice狀態</h3>
+				<div class="form-wrap">
+					<div class="form-row">
+						<table>
+							<tr height='24px'>
+								<td>Customer相關部份:</td>
+								<td><a id='webstatus_4' style='color:brown;'>時好時壞</a></td>
+							</tr>
+							<tr height='24px'>
+								<td width='180px'>GroupBuy部份:</td>
+								<td width='180px'><a id='webstatus_1' style='color:blue;'>良好</a></td>
+							</tr>
+							<tr height='24px'>
+								<td>Shipper部份:</td>
+								<td><a id='webstatus_3' style='color:red;'>無回應</a></td>
+							</tr>
+							<tr height='24px'>
+								<td>網購部份:</td>
+								<td><a id='webstatus_2' style='color:red;'>無回應</a></td>
+							</tr>
+							<tr height='24px'>
+								<td>其餘部份:</td>
+								<td><a id='webstatus' style='color:red;'>無回應</a></td>
+							</tr>
+						</table>
+					</div>
+				</div><!-- /.form-wrap -->
+			</section>
 			<section>
 				<h3 class="ui-list-title">顯示設定</h3>
 				<div class="form-wrap">
@@ -215,9 +263,9 @@ var customer_tags=[];
 			<section>
 				<h3 class="ui-list-title">系統設置</h3>
 				<div class="form-row">
-					<button>性能優先</button>
-					<button>均衡設置</button>
-					<button>畫面優先</button>
+					<button onclick='$("input[type=\"checkbox\"]").prop("checked",false);'>性能優先</button>
+					<button onclick='alert("你不要給我太貪心了喔 混帳傢伙\n沒有這麼容易的 給我其他兩個選一個!!");'>均衡設置</button>
+					<button onclick='$("input[type=\"checkbox\"]").prop("checked",true);$("input[name=\"radio-group-2\"]").prop("checked",false);$("input[name=\"radio-group-3\"]").prop("checked",true);'>畫面優先</button>
 				</div>
 			</section>
 			<section id="func" style="padding-top:10px;">

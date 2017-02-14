@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+//import tw.com.aber.chart.saleamountstaticchart.Salechart;
+
 public class salechart extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,10 +52,11 @@ public class salechart extends HttpServlet {
 			java.sql.Date from_date = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
 			java.sql.Date till_date = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
 			salechartService = new SalechartService();
-			SalechartVO chart_data = salechartService.getSearhDB(group_id, from_date, till_date);
-			Gson gson = new Gson();
-			String jsonStrList = gson.toJson(chart_data);
-			response.getWriter().write(jsonStrList);
+//			SalechartVO chart_data = salechartService.getSearhDB(group_id, from_date, till_date);
+			response.getWriter().write(salechartService.getSearhDB(group_id, from_date, till_date));
+//			Gson gson = new Gson();
+//			String jsonStrList = gson.toJson(chart_data);
+//			response.getWriter().write(jsonStrList);
 			return;
 		} catch (Exception e) {
 			System.out.println("Error with time parse. :" + e);
@@ -62,7 +65,11 @@ public class salechart extends HttpServlet {
 	}
 
 	/************************* 對應資料庫表格格式 **************************************/
-
+	public class Salechart{
+		public String month;
+		public String ordersource;
+		public String amount;
+	}
 	public class SalechartVO implements java.io.Serializable {
 		private int[] month;
 		private String[] entrance;
@@ -98,7 +105,7 @@ public class salechart extends HttpServlet {
 
 	/*************************** 制定規章方法 ****************************************/
 	interface Salereport_interface {
-		public SalechartVO searhDB(String group_id, java.sql.Date from_date, java.sql.Date till_date);
+		public String searhDB(String group_id, java.sql.Date from_date, java.sql.Date till_date);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -109,7 +116,7 @@ public class salechart extends HttpServlet {
 			dao = new SalereportDAO();
 		}
 
-		public SalechartVO getSearhDB(String group_id, java.sql.Date from_date, java.sql.Date till_date) {
+		public String getSearhDB(String group_id, java.sql.Date from_date, java.sql.Date till_date) {
 			return dao.searhDB(group_id, from_date, till_date);
 		}
 	}
@@ -124,8 +131,8 @@ public class salechart extends HttpServlet {
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
-		public SalechartVO searhDB(String group_id, java.sql.Date from_date, java.sql.Date till_date) {
-			SalechartVO salechartVO = new SalechartVO();
+		public String searhDB(String group_id, java.sql.Date from_date, java.sql.Date till_date) {
+//			SalechartVO salechartVO = new SalechartVO();
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -144,26 +151,34 @@ public class salechart extends HttpServlet {
 					count = 0;
 				}
 				int k = 0;
-				String[] vender = new String[count];
-				;
-				int[] answer = new int[count];
-				int[] month = new int[count];
+				Salechart[] arr =new Salechart[count];
+//				String[] vender = new String[count];
+//				int[] answer = new int[count];
+//				int[] month = new int[count];
 				rs.beforeFirst();
 				while (rs.next()) {
-					month[k] = rs.getInt("month");
-					answer[k] = rs.getInt("price");
-					vender[k] = rs.getString("order_source");
+					arr[k] = new Salechart();
+					arr[k].month = rs.getString("month").substring(0,4)+"-"+rs.getString("month").substring(4);
+					arr[k].ordersource = rs.getString("order_source");
+					arr[k].amount = rs.getString("price");
+//					month[k] = rs.getInt("month");
+//					answer[k] = rs.getInt("price");
+//					vender[k] = rs.getString("order_source");
 					k++;
 				}
-				salechartVO.setEntrance(vender);
-				salechartVO.setAnswer(answer);
-				salechartVO.setMonth(month);
+				Gson gson = new Gson();
+				String jsonStrList = gson.toJson(arr);
+				return jsonStrList;
+//				salechartVO.setEntrance(vender);
+//				salechartVO.setAnswer(answer);
+//				salechartVO.setMonth(month);
 			} catch (SQLException se) {
 				System.out.println("ERROR WITH: " + se);
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			}
-			return salechartVO;
+			return "[]";
+//			return salechartVO;
 		}
 	}
 }

@@ -178,14 +178,6 @@ $(function() {
 });
 </script>
 </head>
-<%
-String str=(String)request.getQueryString();
-if(str!=null && str.indexOf("forty")>-1){
-	session.setAttribute("group_id", "cbcc3138-5603-11e6-a532-000d3a800878");
-	session.setAttribute("user_id",  "f8d57a28-5603-11e6-a532-000d3a800878");
-	session.setAttribute("user_name","DemoUser");
-}
-%>
 <body class="login-body">
 <!-- 	<br><a id="logout" href="./registry.jsp" class="btn btn-primary" style="float:right;margin-right:20px;">註冊</a> -->
 	<div class="bkg-upper"></div>

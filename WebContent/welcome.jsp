@@ -16,14 +16,14 @@
 	<div class='board' style="opacity:0.1;">
 		<div style="position:absolute;top:52%;left:27.0%;text-align:center;font-size:65px;color:#00BCD5;">
 			<a href='./salereport.jsp?action=today' style='color:#00BCD5;'>
-				<div id="sale" style="position:relative;top:-18px;left:78px;">
+				<div id="sale" style="position:relative;top:-18px;left:78px;" onmouseover="$(this).parent().animate({ color: '#7F4E54'}, 300);" onmouseout="$(this).parent().animate({ color: '#00BCD5'}, 200);" >
 					0
 				</div>
 			</a>
 		</div>
 		<div style="position:absolute;top:52%;left:70.5%;text-align:center;font-size:65px;color:#00BCD5;">
 			<a href='./shipreport.jsp?action=today' style='color:#00BCD5;'>
-				<div id="ship" style="position:relative;top:-18px;left:24px;">
+				<div id="ship" style="position:relative;top:-18px;left:24px;" onmouseover="$(this).parent().animate({ color: '#7F4E54'}, 300);" onmouseout="$(this).parent().animate({ color: '#00BCD5'}, 200);">
 					0
 				</div>
 			</a>
@@ -54,14 +54,24 @@ $(function() {
 			//alert(result);
 			$("#sale").html(json_obj.sale_data);
 			$("#ship").html(json_obj.ship_data);
+// 			$("#sale").html(20);
+// 			$("#ship").html(20);
+// 			$("#sale").css("left","78%");
+// 			$("#sale").parent().css("left","50px");
+// 			$("#ship").css("left","7.15%");
+// 			$("#ship").parent().css("left","-4px");
+			
 			if(json_obj.sale_data>9){
-				$("#sale").css("left","28%");
+// 				$("#sale").css("left","28%");
+				$("#sale").css("left","78%");
 				$("#sale").parent().css("left","50px");
 			}
 			if(json_obj.ship_data>9){
-				$("#ship").css("left","71.5%");
+// 				$("#ship").css("left","71.5%");
+				$("#ship").css("left","7.15%");
 				$("#ship").parent().css("left","-4px");
 			}
+			
 			$(".board").animate({"opacity":"1"});
 		}
 	});

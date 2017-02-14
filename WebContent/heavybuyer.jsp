@@ -165,7 +165,7 @@ function draw_barchart(data,title){
       'text-anchor': 'end',
       'textLength':"72",
       'lengthAdjust':'spacing',
-      'x':leftpad-10,
+      'x':(isIE()?leftpad-40:leftpad-10),
       'y':function(d){
         return d.x * 25 + toppad+10;
       }
