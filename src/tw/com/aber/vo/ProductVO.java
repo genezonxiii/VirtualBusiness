@@ -3,6 +3,7 @@ package tw.com.aber.vo;
 public class ProductVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	private String product_id;
 	private String product_name;
 	private String c_product_id;

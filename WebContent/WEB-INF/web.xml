@@ -586,7 +586,14 @@
     <servlet-name>deliveryOrder</servlet-name>
     <url-pattern>/deliveryOrder.do</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <servlet-name>productContrast</servlet-name>
+    <servlet-class>tw.com.aber.product.controller.ProductContrast</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>productContrast</servlet-name>
+    <url-pattern>/productContrast.do</url-pattern>
+  </servlet-mapping>  
   
   
   <!-- ############新的############ -->
