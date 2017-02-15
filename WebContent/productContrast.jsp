@@ -369,9 +369,9 @@
 						    			console.log("product_id: " + $(this).data("product_id"));
 				    					console.log("contrast_id: " + $(this).data("contrast_id"));
 		    							console.log("platform_id: " + 
-		    									($("#dialog_platform_platform_name").val()==undefined ?
-		    									$("#dialog_platform_platform_name").val():
-		    										$(this).data("platform_id")));
+		    									($("#dialog_platform_platform_name").val().length === 0 ?
+		    									 $(this).data("platform_id"):
+		    									 $("#dialog_platform_platform_name").val()));
    										console.log("contrast_type: " + $("input[name='radio-group-type']:checked").val());
 										console.log("product_name_platform: " + $("#dialog_contrast_platform_name").val());
 										console.log("product_spec_platform: " + $("#contrast_spec_platform_name").val());
@@ -388,7 +388,7 @@
 										    	product_id : $(this).data("product_id"),
 										    	contrast_id : $(this).data("contrast_id"),
 										    	platform_id :(
-											    				$("#dialog_platform_platform_name").val()==undefined ?
+											    				$("#dialog_platform_platform_name").val().length === 0 ?
 											    				$(this).data("platform_id"):
 					    										$("#dialog_platform_platform_name").val()
 				    										),
