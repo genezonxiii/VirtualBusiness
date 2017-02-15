@@ -65,9 +65,6 @@ public class product extends HttpServlet {
 				if (product_name == null || (product_name.trim()).length() == 0) {
 					productService = new ProductService();
 					List<ProductBean> list = productService.SearchAllDB(group_id);
-					ProductBean productBean = new ProductBean();
-					productBean.setMessage("驗證通過");
-					list.add(productBean);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
@@ -77,9 +74,6 @@ public class product extends HttpServlet {
 				if (product_name != null || (product_name.trim()).length() > 0) {
 					productService = new ProductService();
 					List<ProductBean> list = productService.getsearch_byname(group_id, product_name);
-					ProductBean productBean = new ProductBean();
-					productBean.setMessage("驗證通過");
-					list.add(productBean);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					// System.out.println(jsonStrList);
@@ -104,21 +98,15 @@ public class product extends HttpServlet {
 				if (supply_name == null || (supply_name.trim()).length() == 0) {
 					productService = new ProductService();
 					List<ProductBean> list = productService.SearchAllDB(group_id);
-					ProductBean productBean = new ProductBean();
-					productBean.setMessage("驗證通過");
-					list.add(productBean);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
-				// 查詢指定Name 假如廠商名稱輸入不適空白 或是有東西 進入下面
+				// 查詢指定Name 假如廠商名稱輸入不是空白 或是有東西 進入下面
 				if (supply_name != null || (supply_name.trim()).length() > 0) {
 					productService = new ProductService();
 					List<ProductBean> list = productService.getsearchSupplyname(group_id, supply_name);
-					ProductBean productBean = new ProductBean();
-					productBean.setMessage("驗證通過");
-					list.add(productBean);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
@@ -196,11 +184,8 @@ public class product extends HttpServlet {
 				 * 3.新增完成,準備轉交(Send the Success view)
 				 ***********/
 				productService = new ProductService();
-				ProductBean productBean = new ProductBean();
-				productBean.setMessage("驗證通過");
 				List<ProductBean> list = productService.SearchAllDB(group_id);
 				Gson gson = new Gson();
-				list.add(productBean);
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
 				/*************************** 其他可能的錯誤處理 **********************************/
@@ -223,10 +208,7 @@ public class product extends HttpServlet {
 				 * 3.刪除完成,準備轉交(Send the Success view)
 				 ***********/
 				productService = new ProductService();
-				ProductBean productBean = new ProductBean();
-				productBean.setMessage("驗證通過");
 				List<ProductBean> list = productService.SearchAllDB(group_id);
-				list.add(productBean);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -267,11 +249,8 @@ public class product extends HttpServlet {
 				 * 3.修改完成,準備轉alert(json_obj)交(Send the Success view)
 				 ***********/
 				productService = new ProductService();
-				ProductBean productBean = new ProductBean();
-				productBean.setMessage("驗證通過");
 				List<ProductBean> list = productService.SearchAllDB(group_id);
 				Gson gson = new Gson();
-				list.add(productBean);
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
 				/*************************** 其他可能的錯誤處理 **********************************/
