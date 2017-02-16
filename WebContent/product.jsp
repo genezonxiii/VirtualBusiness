@@ -66,7 +66,7 @@
 	<link rel="stylesheet" href="css/styles.css" />
 	<link href="<c:url value="css/css.css" />" rel="stylesheet">
 	<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
-	<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+<%-- 	<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet"> --%>
 	
 	
 	<script src="js/photo/jquery.min.js"></script>
@@ -199,7 +199,7 @@
 			warning_msg("");
 	}
 	
-	jQuery(document).ready(function($) {
+	$(document).ready(function($) {
 	    $(window).scannerDetection();
 	    
 	    $(window).bind('scannerDetectionComplete',function(e,data){
@@ -261,7 +261,7 @@
 		
 		//=============自定義validator=============
 		//字符最大長度驗證（一個中文字符長度為2）
-		jQuery.validator.addMethod("stringMaxLength", function(value, element, param) { 
+		$.validator.addMethod("stringMaxLength", function(value, element, param) { 
 			var length = value.length; 
 			for ( var i = 0; i < value .length; i++) { 
 				if (value.charCodeAt(i) > 127) { 
@@ -272,7 +272,7 @@
 		}, $.validator.format("長度不能大於{0}!"));
 		
 		//字母數字
-		jQuery.validator.addMethod("alnum", function(value, element) {
+		$.validator.addMethod("alnum", function(value, element) {
 		return this.optional(element) || /^[a-zA-Z0-9]+$/.test(value);
 		}, "只能包括英文字母和數字");
 			
@@ -526,8 +526,8 @@
 							cost : $("#dialog-form-update input[name='cost']").val(),
 							price : $("#dialog-form-update input[name='price']").val(),
 							keep_stock : $("#dialog-form-update input[name='keep_stock']").val(),
-							photo : $("#photo0-update").val(),//$("#dialog-form-update input[name='photo-update']").val(),
-							photo1 : $("#photo1-update").val(),//$("#dialog-form-update input[name='photo1-update']").val(),
+							photo : ($("#photo0-update").val() === '' ? $(this).data("photo") : $("#photo0-update").val()),
+							photo1 : ($("#photo1-update").val() === '' ? $(this).data("photo1") : $("#photo1-update").val()),
 							description : $("#dialog-form-update input[name='description']").val(),
 							barcode : $("#dialog-form-update input[name='barcode']").val(),
 							ispackage : "0"
@@ -558,7 +558,7 @@
 		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
 		$("#sales").delegate(".btn_delete", "click", function() {
 			
-			var row = jQuery(this).closest('tr');
+			var row = $(this).closest('tr');
 			
 		    var data = $("#sales").dataTable().fnGetData(row);
 		    
@@ -592,10 +592,10 @@
 			new_or_edit=2;
 			e.preventDefault();
 			
-			var row = jQuery(this).closest('tr');
+			var row = $(this).closest('tr');
 			
 		    var data = $("#sales").dataTable().fnGetData(row);
-		    
+
 			$("#files-update").html('');
 			$("#files2-update").html('');
 			$("#photo0-update").val('');
@@ -640,24 +640,31 @@
 			
 			if (data.photo != '') {
 				$("#product-photo").attr("src", "./image.do?picname=" + data.photo);
-				$("#product-photo").attr("max-width","150");
+				$("#product-photo").attr("style","max-width:150px;max-height:150px;");
 				$("#product-photo").attr("alt",data.photo);
 			}else{
 				$("#product-photo").attr("src","");
-				$("#product-photo").attr("max-width","100");
+				$("#product-photo").attr("style","max-width:150px;max-height:150px;");
 				$("#product-photo").attr("alt","無");
 			}
 			if (data.photo1 != '') {
 				$("#product-photo1").attr("src", "./image.do?picname=" + data.photo1);
-				$("#product-photo1").attr("max-width","150");
+				$("#product-photo1").attr("style","max-width:150px;max-height:150px;");
 				$("#product-photo1").attr("alt",data.photo1);
 			}else{
 				$("#product-photo1").attr("src","");
-				$("#product-photo1").attr("max-width","100");
+				$("#product-photo1").attr("style","max-width:150px;max-height:150px;");
 				$("#product-photo1").attr("alt","無");
 			}
 			
-			update_dialog.dialog("open");
+			var row = $(this).closest('tr');
+			
+		    var data = $("#sales").dataTable().fnGetData(row);
+		    
+			update_dialog
+				.data("photo",data.photo)
+				.data("photo1",data.photo1)
+				.dialog("open");
 			$("#edit_barcode").focus();
 		});
 		
@@ -699,7 +706,7 @@
 		
   		$("#insert_supply_name").bind('focus', function(){  
   	    	$(this).attr("placeholder","輸入供應商名稱");
-  	    	var eve=jQuery.Event("keydown");
+  	    	var eve=$.Event("keydown");
   	    	eve.which=40;
   	      	$(this).trigger(eve);
   	    });
@@ -747,7 +754,7 @@
 	    
   		$("#update_supply_name").bind('focus', function(){ 
   	    	$(this).attr("placeholder","輸入供應商名稱");
-  	    	var eve=jQuery.Event("keydown");
+  	    	var eve=$.Event("keydown");
   	    	eve.which=40;
   	      	$(this).trigger(eve);
   	    });
@@ -846,7 +853,7 @@
 		
 		$("#searh_product_name").bind('focus', function(){   
 			$(this).attr("placeholder","輸入供應商名稱");
-			var eve=jQuery.Event("keydown");
+			var eve=$.Event("keydown");
 			eve.which=40;
 			$(this).trigger(eve);
 	    });
@@ -1432,6 +1439,7 @@
 			<div id="dialog-confirm" title="是否刪除此商品?" style="display:none;">
 				<p>是否確認刪除該筆資料</p>
 			</div>
+			
 			<!--對話窗樣式-修改 -->
 			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline">
@@ -1441,12 +1449,14 @@
 								<tr>
 									<td>自訂產品ID：</td>
 									<td><input type="text" id="c_p_id2" name="c_product_id"/></td>
-									<td>供應商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
-								</tr><tr>
 									<td>產品類別：</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
+								</tr><tr>
+									<td>供應商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
 									<td>產品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
 								</tr><tr>
 									<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+								</tr><tr>
+									<td>產品說明：</td><td><input type="text" name="description"/></td>
 									<td>幣別：</td><td><select id='update_currency'></select></td>
 								</tr><tr>
 									<td>成本：<a class='currency2'></a></td><td><input type="text" name="tmp_cost" /></td>
@@ -1465,9 +1475,6 @@
 										<input id="same2" type="checkbox" style="position:static;"
 											onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID
 									</td>
-								</tr>
-								<tr>
-									<td>產品說明：</td><td><input type="text" name="description"/></td>
 								</tr>
 							</tbody>
 						</table>
@@ -1513,12 +1520,20 @@
 							<tbody>
 								<tr>
 									<td>自訂產品ID：</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
-									<td>廠商名稱：</td><td><input type="text" id="insert_supply_name" name="supply_name"/></td>
-								</tr><tr>
 									<td>產品類別：</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
+								</tr><tr>
+									<td>供應商名稱：</td><td><input type="text" id="insert_supply_name" name="supply_name"/></td>
 									<td>產品單位：</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
 								</tr><tr>
 									<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+									<td>條碼：</td>
+									<td><input type="text" id="new_barcode" name="barcode"/></td>
+									<td>
+										<input id="same" type="checkbox" style="position:static;" 
+											onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID
+									</td>
+								</tr><tr>
+									<td>產品說明：</td><td><input type="text" name="description"/></td>
 									<td>幣別：</td><td><select id='insert_currency'></select></td>
 								</tr><tr>
 									<td>成本：<a class='currency1'></a></td><td><input type="text" name="tmp_cost" /></td>
@@ -1528,15 +1543,7 @@
 									<td>折合台幣售價：</td><td><a id='insert_exchange_price'>NT＄0 x 1 = NT$0</a><input type="hidden" name="price" /></td>
 								</tr><tr>
 									<td>庫存量：</td><td><input type="text" name="current_stock" /></td>
-									<td>條碼：</td>
-									<td><input type="text" id="new_barcode" name="barcode"/></td>
-									<td>
-										<input id="same" type="checkbox" style="position:static;" 
-											onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID
-									</td>
-								</tr><tr>
 									<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
-									<td>產品說明：</td><td><input type="text" name="description"/></td>
 								</tr>
 							</tbody>
 						</table>		
@@ -1570,6 +1577,7 @@
 					</tbody>
 				</table>
 			</div>
+			
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
