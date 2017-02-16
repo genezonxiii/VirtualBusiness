@@ -167,8 +167,9 @@
 				}],
 				columns: [
 				          {"data": "c_product_id" ,"defaultContent":""},
-				          {"data": "product_name" ,"defaultContent":""},
 				          {"data": "supply_name" ,"defaultContent":""},
+				          {"data": "product_name" ,"defaultContent":""},
+				          {"data": "description" ,"defaultContent":""},
 				          {"data": "type_id" ,"defaultContent":""},
 				          {"data": "unit_id" ,"defaultContent":""},
 				          {"data": "cost" ,"defaultContent":""},
@@ -176,7 +177,6 @@
 				          {"data": "keep_stock" ,"defaultContent":""},
 				          {"data": "photo" ,"defaultContent":""},
 				          {"data": "photo1" ,"defaultContent":""},
-				          {"data": "description" ,"defaultContent":""},
 				          {"data": "barcode" ,"defaultContent":""},
 				          {"data": null ,"defaultContent":""},
 				]							
@@ -1455,6 +1455,12 @@
 									<td>產品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
 								</tr><tr>
 									<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+									<td>條碼：</td>
+									<td><input type="text" id="edit_barcode" name="barcode"/></td>
+									<td>
+										<input id="same2" type="checkbox" style="position:static;"
+											onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID
+									</td>
 								</tr><tr>
 									<td>產品說明：</td><td><input type="text" name="description"/></td>
 									<td>幣別：</td><td><select id='update_currency'></select></td>
@@ -1469,12 +1475,6 @@
 								</tr><tr>
 									<td>安全庫存：</td>
 									<td><input type="text" name="keep_stock" /></td>
-									<td>條碼：</td>
-									<td><input type="text" id="edit_barcode" name="barcode"/></td>
-									<td>
-										<input id="same2" type="checkbox" style="position:static;"
-											onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID
-									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -1608,8 +1608,9 @@
 						<thead>
 							<tr>
 								<th>自訂產品ID</th>
-								<th style="min-width:100px;">產品名稱</th>
 								<th>供應商名稱</th>
+								<th style="min-width:100px;">產品名稱</th>
+								<th style="background-image: none !important;">產品說明</th>
 								<th style="min-width:40px;">類別</th>
 								<th style="min-width:40px;">單位</th>
 								<th style="min-width:70px;">成本</th>
@@ -1617,7 +1618,6 @@
 								<th>安全庫存</th>
 								<th style="max-width:100px;background-image: none !important;">圖片1</th>
 								<th style="max-width:100px;background-image: none !important;">圖片2</th>
-								<th style="background-image: none !important;">產品說明</th>
 								<th>條碼</th>
 								<th style="background-image: none !important;">功能</th>
 							</tr>

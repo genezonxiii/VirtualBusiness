@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>商品管理(組合包)</title>
+<title>組合包管理</title>
 <meta charset="utf-8">
 
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
@@ -86,8 +86,8 @@
 							+= "<tr>"
 							+ "<td name='c_package_id' value='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 							+ "<td name='package_name' value='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
-							+ "<td name='price' value='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 							+ "<td name='type' value='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
+							+ "<td name='price' value='"+ json_obj[i].price +"'>"+ money(json_obj[i].price)+ "</td>"
 							+ "<td name='barcode' value='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td>"
 							+ "<td name='description' value='"+ json_obj[i].description +"'>"+ json_obj[i].description+ "</td>"
 							+ (isIE()?"<td width='150px'><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>":"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>")
@@ -151,11 +151,11 @@
 						+= "<tr>"
 						+ "<td name='c_product_id' value='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 						+ "<td name='product_name' value='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
+						+ "<td name='package_desc' value='"+ json_obj[i].package_desc +"'>"+ json_obj[i].package_desc+ "</td>"
 						+ "<td name='quantity' value='"+ json_obj[i].quantity +"'>"+ json_obj[i].quantity + "</td>"
 						+ "<td name='price' value='"+ json_obj[i].price +"'><del>"+"原價："+ money(json_obj[i].price)+ "</del></td>"
 						+ "<td name='photo' value='"+ json_obj[i].photo+"' align='center'>"+tmp+"</td>"
 						+ "<td name='photo1' value='"+ json_obj[i].photo1 +"' align='center'>"+tmp1+"</td>"
-						+ "<td name='package_desc' value='"+ json_obj[i].package_desc +"'>"+ json_obj[i].package_desc+ "</td>"
 						+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 						+ "	<div class='table-function-list'>"
 						+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' value='"+ json_obj[i].package_id+ "' parent='"+ json_obj[i].parent_id+"' product='"+ json_obj[i].product_id+"'><i class='fa fa-pencil'></i></button>"
@@ -434,7 +434,7 @@
 			$("#dialog-confirm").val($(this).val());
 			$("#dialog-confirm").html("<table class='dialog-table'>"+
 				"<tr><td>組合包名稱：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td[name='package_name']").attr("value")+"'</span></td></tr>"+
-				"<tr><td>組合包類別：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td[name='type']").attr("value")+"'</span></td></tr>"+
+				"<tr><td>組合包規格：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td[name='type']").attr("value")+"'</span></td></tr>"+
 				"</table>"
 			);
 			$("#dialog-confirm").dialog("open");
@@ -741,20 +741,20 @@
 			<div id="dialog-insert-package" title="新增產品包" style="display:none;">
 				<form name="insert-dialog-form-post" id="dialog-insert-package-form" style="display:inline">
 					<table class="form-table">
-					  <tbody>
-						<tr>
-							<td>自訂組合包ID：</td><td><input type="text" id="package_c_p_id_"name="c_product_id" placeholder="輸入自訂組合包ID"/></td>
-							<td>產品類別：</td><td><input type="text" id="package_type"name="package_type" placeholder="輸入組合包類別"/></td>
-						</tr><tr>
-							<td>組合包名稱：</td><td><input type="text" id="package_name"name="product_name" placeholder="輸入組合包名稱"/></td>
-							<td>售價：</td><td><input type="text" id="package_price" name="price" placeholder="輸入組合包售價"/></td>
-						</tr><tr>
-							<td>條碼(<input id="same1" type="checkbox" style="position:static;transform: scale(0.8);" 
-							onclick="if($('#same1').prop('checked')){$('#package_barcode').val($('#package_c_p_id_').val());}else{$('#package_barcode').val('');}">同ID)：</td><td><input type="text" id="package_barcode" name="barcode" placeholder="輸入條碼"/></td>
-							<td>說明：</td><td><input type="text" name="description" placeholder="輸入組合包說明"/></td>
-						</tr>
-	  		         	  </tbody>
-	  		        	</table>
+					  	<tbody>
+							<tr>
+								<td>自訂組合包ID：</td><td><input type="text" id="package_c_p_id_"name="c_product_id" placeholder="輸入自訂組合包ID"/></td>
+								<td>條碼(<input id="same1" type="checkbox" style="position:static;transform: scale(0.8);" 
+								onclick="if($('#same1').prop('checked')){$('#package_barcode').val($('#package_c_p_id_').val());}else{$('#package_barcode').val('');}">同ID)：</td><td><input type="text" id="package_barcode" name="barcode" placeholder="輸入條碼"/></td>
+							</tr><tr>
+								<td>組合包名稱：</td><td><input type="text" id="package_name"name="product_name" placeholder="輸入組合包名稱"/></td>
+								<td>售價：</td><td><input type="text" id="package_price" name="price" placeholder="輸入售價"/></td>
+							</tr><tr>
+								<td>組合包規格：</td><td><input type="text" id="package_type"name="package_type" placeholder="輸入組合包規格"/></td>
+								<td>說明：</td><td><input type="text" name="description" placeholder="輸入說明"/></td>
+							</tr>
+	         	  		</tbody>
+        			</table>
 				</form>
 			</div>
 			
@@ -762,20 +762,20 @@
 			<div id="dialog-update-package" title="修改產品包" style="display:none;">
 				<form name="update-dialog-form-post" id="dialog-update-package-form" style="display:inline">
 					<table class="form-table">
-					  <tbody>
-						<tr>
-							<td>自訂組合包ID：</td><td><input type="text" id="package_c_p_id_"name="c_product_id" placeholder="修改自訂組合包ID"/></td>
-							<td>產品類別：</td><td><input type="text" id="package_type"name="package_type" placeholder="修改組合包類別"/></td>
-						</tr><tr>
-							<td>組合包名稱：</td><td><input type="text" id="package_name"name="product_name" placeholder="修改組合包名稱"/></td>
-							<td>售價：</td><td><input type="text" id="package_price" name="price" placeholder="修改組合包售價"/></td>
-						</tr><tr>
-							<td>條碼(<input id="same2" type="checkbox" style="position:static;transform: scale(0.8);" 
-							onclick="if($('#same2').prop('checked')){$('#package_barcode').val($('#package_c_p_id_').val());}else{$('#package_barcode').val('');}">同ID)：</td><td><input type="text" id="package_barcode" name="barcode" placeholder="修改條碼"/></td>
-							<td>說明：</td><td><input type="text" name="description" placeholder="修改組合包說明"/></td>							
-						</tr>
-	  		         	  </tbody>
-	  		        	</table>
+				  		<tbody>
+							<tr>
+								<td>自訂組合包ID：</td><td><input type="text" id="package_c_p_id_"name="c_product_id" placeholder="修改自訂組合包ID"/></td>
+								<td>條碼(<input id="same2" type="checkbox" style="position:static;transform: scale(0.8);" 
+								onclick="if($('#same2').prop('checked')){$('#package_barcode').val($('#package_c_p_id_').val());}else{$('#package_barcode').val('');}">同ID)：</td><td><input type="text" id="package_barcode" name="barcode" placeholder="修改條碼"/></td>
+							</tr><tr>
+								<td>組合包名稱：</td><td><input type="text" id="package_name"name="product_name" placeholder="修改組合包名稱"/></td>
+								<td>售價：</td><td><input type="text" id="package_price" name="price" placeholder="修改售價"/></td>
+							</tr><tr>
+								<td>組合包規格：</td><td><input type="text" id="package_type"name="package_type" placeholder="修改組合包規格"/></td>
+								<td>說明：</td><td><input type="text" name="description" placeholder="修改說明"/></td>							
+							</tr>
+  		         	  	</tbody>
+  		        	</table>
 				</form>
 			</div>
 			
@@ -783,15 +783,15 @@
 			<div id="dialog-delete-package-detail" title="是否移除此商品?" style="display:none;"></div>
 			
 			<!--對話窗樣式-新增Detail -->
-			<div id="dialog-insert-package-detail" title="產品包內含" style="display:none;">
+			<div id="dialog-insert-package-detail" title="新增組合包明細" style="display:none;">
 				<form id='dialog-insert-package-detail-form'>
 					<table class="form-table">
 						<tbody>
 							<tr>
-								<td>自訂產品ID：</td><td><input type="text" name="c_product_id" placeholder="輸入商品自定ID"/></td>
-								<td>產品名稱：</td><td><input type="text" name="package_name" placeholder="輸入商品名稱"/></td>
+								<td>自訂產品ID：</td><td><input type="text" name="c_product_id" placeholder="輸入自訂產品ID"/></td>
+								<td>產品名稱：</td><td><input type="text" name="package_name" placeholder="輸入產品名稱"/></td>
 							</tr><tr>
-								<td>數量：</td><td><input type="text" name="quantity" placeholder="輸入產品包內含商品數"/></td>
+								<td>數量：</td><td><input type="text" name="quantity" placeholder="輸入數量"/></td>
 								<td>產品規格：</td><td><input type="text" name="package_desc" placeholder="輸入產品規格"/></td>
 							</tr>
 						</tbody>
@@ -800,15 +800,15 @@
 			</div>
 			
 			<!--對話窗樣式-修改Detail -->
-			<div id="dialog-update-package-detail" title="修改產品包內含" style="display:none;">
+			<div id="dialog-update-package-detail" title="修改產品包明細" style="display:none;">
 				<form id='dialog-update-package-detail-form'>
 					<table class="form-table">
 						<tbody>
 							<tr>
-								<td>自訂產品ID：</td><td><input type="text" name="c_product_id" placeholder="修改商品自定ID"/></td>
-								<td>產品名稱：</td><td><input type="text" name="package_name"placeholder="修改商品自定ID"/></td>
+								<td>自訂產品ID：</td><td><input type="text" name="c_product_id" placeholder="修改自訂產品ID"/></td>
+								<td>產品名稱：</td><td><input type="text" name="package_name"placeholder="修改產品名稱"/></td>
 							</tr><tr>
-								<td>數量：</td><td><input type="text" name="quantity" placeholder="修改產品包內含商品數"/></td>
+								<td>數量：</td><td><input type="text" name="quantity" placeholder="修改數量"/></td>
 								<td>產品規格：</td><td><input type="text" name="package_desc" placeholder="修改產品規格"/></td>
 							</tr>
 						</tbody>
@@ -816,12 +816,11 @@
 				</form>
 			</div>
 			
-			
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
 						<label for="">
-							<span class="block-label">組合包ID/名稱查詢</span>
+							<span class="block-label">自訂組合包ID/組合包名稱查詢</span>
 							<input type="text" id="searh_name" name="searh_name"></input>
 						</label>
 						<button class="btn btn-darkblue" id="searh-name">查詢</button>
@@ -832,7 +831,6 @@
 				</div><!-- /.form-wrap -->
 			</div>
 			
-			<!-- 第一列 -->
 			<div class="row search-result-wrap" align="center">
 				<div id="package-contain" class="ui-widget" style="display:none;">
 					<table id="package" class="result-table" >
@@ -840,8 +838,8 @@
 							<tr>
 								<th>自訂組合包ID</th>
 								<th>組合包名稱</th>
+								<th>組合包規格</th>
 								<th>售價</th>
-								<th>組合包類別</th>
 								<th>條碼</th>
 								<th>備註</th>
 								<th>功能</th>
@@ -861,11 +859,11 @@
 							<tr>
 								<th>自訂產品ID</th>
 								<th style="min-width:100px;">產品名稱</th>
+								<th>產品規格</th>
 								<th style="min-width:70px;">數量</th>
 								<th style="min-width:70px;">單品售價</th>
 								<th style="max-width:100px;width:70px;background-image: none !important;">圖片1</th>
 								<th style="max-width:100px;width:70px;background-image: none !important;">圖片2</th>
-								<th>商品規格</th>
 								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>
