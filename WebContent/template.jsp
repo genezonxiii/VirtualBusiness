@@ -374,15 +374,16 @@ function who(){
 					<li><a href="#" onclick="trans('salereturn.jsp');">銷貨退回管理</a></li>
 					<li><a href="#" onclick="trans('stock.jsp');">庫存管理</a></li>
 					<li><a href="#" onclick="trans('supply.jsp');">供應商管理</a></li>
-					<li><a href="#" onclick="trans('product.jsp');">商品管理</a></li>
-					<li><a href="#" onclick="trans('productpackage.jsp');">商品管理（組合包）</a></li>
-					<li><a href="#" onclick="trans('customer.jsp');">客戶管理</a></li>
+					<li><a href="#" onclick="trans('product.jsp');">產品管理</a></li>
+					<li><a href="#" onclick="trans('productpackage.jsp');">產品管理（組合包）</a></li>
+					<li><a href="#" onclick="trans('productContrast.jsp');">產品對照資料管理</a></li>
 					<li><a href="#" onclick="trans('producttype.jsp');">商品類型管理</a></li>
 					<li><a href="#" onclick="trans('productunit.jsp');">商品單位管理</a></li>
+					<li><a href="#" onclick="trans('customer.jsp');">客戶管理</a></li>
+				</ul>
+				<ul style="top: -100px;left: 321px;height:480px;">
 					<li><a href="#" onclick="trans('accreceive.jsp');">應收帳款管理</a></li>
 					<li><a href="#" onclick="trans('accpay.jsp');">應付帳款管理</a></li>
-				</ul>
-				<ul style="top: -100px;left: 321px;height:520px;">
 					<li><a href="#" onclick="trans('tagprint.jsp');">標籤列印</a></li>
 					<li><a href="#" onclick="trans('group.jsp');" style="position:absolute;bottom:80px;text-align:right;">公司管理</a></li>
 					<li><a href="#" onclick="trans('user.jsp');" style="position:absolute;bottom:40px;text-align:right;">使用者管理</a></li>
@@ -391,7 +392,6 @@ function who(){
 					<li><a href="#" onclick="trans('invoicetrack.jsp');">發票字軌管理</a></li>
 					<li><a href="#" onclick="trans('exchange.jsp');">匯率轉換管理</a></li>
 					<li><a href="#" onclick="trans('membercondition.jsp');">會員分級設定</a></li>
-					<li><a href="#" onclick="trans('productContrast.jsp');">產品對照資料管理</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理
