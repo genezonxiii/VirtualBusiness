@@ -409,7 +409,7 @@ function who(){
 			    	<li><a href="#" onclick="trans('accreceivereport.jsp');">應收帳款報表</a></li>
 			    	<li><a href="#" onclick="trans('accpayreport.jsp');">應付帳款報表</a></li>
 			    	<li><a href="#" onclick="trans('pickingreport.jsp');">揀貨單</a></li>
-			    	<li><a href="#" onclick="trans('deliveryorder.jsp');">出貨單</a></li>
+			    	<li><a href="#" onclick="trans('deliveryorder.jsp');">黑貓出貨單</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-chart.svg" alt="">分析圖表

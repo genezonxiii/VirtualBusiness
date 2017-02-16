@@ -566,6 +566,13 @@
 				$("#dialog-insert-package-detail input[name='c_product_id']").val( product_list[idx].c_product_id );
 				$("#dialog-insert-package-detail input[name='package_name']").val( product_list[idx].product_name );
 				$("#dialog-insert-package-detail input[name='package_desc']").val( product_list[idx].description );
+			},
+			focus: function( event, ui ){
+				event.preventDefault();
+				
+				var idx = product_list.map(function(x) { return x.product_id; }).indexOf(ui.item.value);
+				
+				$("#dialog-insert-package-detail input[name='c_product_id']").val( product_list[idx].c_product_id );
 			}
 		});
 		
@@ -602,12 +609,19 @@
 			change: function( event, ui ){
             	event.preventDefault();
             	
-				var idx = product_list.map(function(x) {return x.package_name; }).indexOf(ui.item.value);
+				var idx = product_list.map(function(x) {return x.product_id; }).indexOf(ui.item.value);
 				
 				$("#dialog-insert-package-detail").attr("value2", product_list[idx].product_id);
 				$("#dialog-insert-package-detail input[name='c_product_id']").val( product_list[idx].c_product_id );
 				$("#dialog-insert-package-detail input[name='package_name']").val( product_list[idx].product_name );
 				$("#dialog-insert-package-detail input[name='package_desc']").val( product_list[idx].description );
+			},
+			focus: function( event, ui ){
+				event.preventDefault();
+				
+				var idx = product_list.map(function(x) { return x.product_id; }).indexOf(ui.item.value);
+				
+				$("#dialog-insert-package-detail input[name='package_name']").val( product_list[idx].product_name );
 			}
 		});
 		
@@ -690,7 +704,7 @@
 				$("#dialog-update-package-detail input[name='package_name']").val( product_list[idx].product_name );
 				$("#dialog-update-package-detail input[name='package_desc']").val( product_list[idx].description );
 			},
-			change: function(event){
+			change: function( event, ui ){
             	event.preventDefault();
             	
 				var idx = product_list.map(function(x) { return x.product_id; }).indexOf(ui.item.value);
@@ -699,6 +713,13 @@
 				$("#dialog-update-package-detail input[name='c_product_id']").val( product_list[idx].c_product_id );
 				$("#dialog-update-package-detail input[name='package_name']").val( product_list[idx].product_name );
 				$("#dialog-update-package-detail input[name='package_desc']").val( product_list[idx].description );
+			},
+			focus: function( event, ui ){
+				event.preventDefault();
+				
+				var idx = product_list.map(function(x) { return x.product_id; }).indexOf(ui.item.value);
+				
+				$("#dialog-update-package-detail input[name='package_name']").val( product_list[idx].product_name );
 			}
 		});
 		
