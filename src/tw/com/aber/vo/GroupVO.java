@@ -1,5 +1,7 @@
 package tw.com.aber.vo;
 
+import java.sql.Date;
+
 public class GroupVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -15,6 +17,7 @@ public class GroupVO implements java.io.Serializable {
 	private String master;
 	private String user_id;
 	private String invoice_path;
+	private Date expired;
 
 	public String getGroup_id() {
 		return group_id;
@@ -102,6 +105,14 @@ public class GroupVO implements java.io.Serializable {
 
 	public void setInvoice_path(String invoice_path) {
 		this.invoice_path = invoice_path;
+	}
+
+	public Date getExpired() {
+		return expired;
+	}
+
+	public void setExpired(Date expired) {
+		this.expired = expired;
 	}
 
 }
