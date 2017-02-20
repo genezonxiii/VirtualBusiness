@@ -165,6 +165,10 @@ function who(){
 		side2.addClass("active");
 		return "公司管理";
 		break;
+	case "groupBackstage.jsp":
+		side2.addClass("active");
+		return "公司後台管理";
+		break;
 	case "customer.jsp":
 		side2.addClass("active");
 		return "客戶管理";
@@ -385,6 +389,7 @@ function who(){
 					<li><a href="#" onclick="trans('accreceive.jsp');">應收帳款管理</a></li>
 					<li><a href="#" onclick="trans('accpay.jsp');">應付帳款管理</a></li>
 					<li><a href="#" onclick="trans('tagprint.jsp');">標籤列印</a></li>
+					<li><a href="#" onclick="trans('groupBackstage.jsp');">公司後台管理</a></li>
 					<li><a href="#" onclick="trans('group.jsp');" style="position:absolute;bottom:80px;text-align:right;">公司管理</a></li>
 					<li><a href="#" onclick="trans('user.jsp');" style="position:absolute;bottom:40px;text-align:right;">使用者管理</a></li>
 					<li><a href="#" onclick="trans('changepassword.jsp');" style="position:absolute;bottom:0px;text-align:right;">使用者密碼管理</a></li>
