@@ -38,6 +38,7 @@
 				actionMap.set("新增","insert");
 				actionMap.set("修改","update");
 				actionMap.set("刪除","delete");
+				actionMap.set("清單","list");
 				
 			var tableThs =
 				"<th colspan='1'>" +
@@ -107,10 +108,12 @@
 					   		var options =
 					   			"<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"+
 								"	<div class='table-function-list' >"+
-								"		<button class='btn-in-table btn-darkblue btn_update' title='修改' id = '" + row.group_id + "'>" +
+								"		<button class='btn-in-table  btn-darkblue btn_update' title='修改' id = '" + row.group_id + "'>" +
 								"		<i class='fa fa-pencil'></i></button>"+
 								"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id = '" + row.group_id + "'>" +
 								"		<i class='fa fa-trash'></i></button>"+
+								"		<button class='btn-in-table btn-green btn_list' title='清單' id = '" + row.group_id + "'>" +
+								"		<i class='fa fa-pencil-square-o'></i></button>"+
 								"	</div>"+
 								"</div>";
 							   
@@ -425,12 +428,33 @@
 						   };
 
 				$(".input-date").datepicker(opt);
-			} 			
+			}
+			
+			function formUtil(url){
+			    var object = this;
+			    object.form = $('<form action="'+url+'" target="output_frame" method="post" style="display:none;"></form>');
+
+			    object.addParameter = function(parameter,value){
+			        $("<input type='hidden' />")
+			         .attr("name", parameter)
+			         .attr("value", value)
+			         .appendTo(object.form);
+			    }
+			    
+			    object.send = function(){
+					$( "body" ).append(object.form);
+			        object.form.submit();
+			    }
+			}			
 		</script>
 		
 		<!-- button listener -->
 		<script>
 			$(function(){
+				
+				mainDiv = $("#mainDiv");
+				iframe = $("#iframeDiv");
+				
 				$("#search-group-backstage").click(function(e) {
 					e.preventDefault();
 					
@@ -485,30 +509,6 @@
 						.dialog("open");
 				});
 				
-				
-				var buttonCount = 0; // only for selectAll button
-				
-				//selectAll
-				$("#group-backstage-table").delegate("button[name='selectAll']", "click", function(e) {
-					e.preventDefault();
-
-					var name = "batchDel-checkbox-group";
-					var group = document.getElementsByName(name);
-					
-					buttonCount++;
-					
-					if(buttonCount%2 === 1){
-						$(group).each(function() {
-						    $(this).prop("checked", true);
-						});				
-					}else{
-						$(group).each(function() {
-						    $(this).prop("checked", false);
-						});
-					}
-
-				});
-				
 				//batch delete
 				$("#group-backstage-table").delegate("button[name='batchDel']", "click", function(e) {
 					e.preventDefault();
@@ -545,6 +545,28 @@
 							.dialog("option","title","刪除資料")
 							.dialog("open");
 					}
+				});
+				
+				//users list
+				$("#group-backstage-table").delegate(".btn_list", "click", function(e) {
+					e.preventDefault();
+
+					mainDiv.hide();//hide parent page
+					
+					//Initialized and dynamically set iframe
+					var iframes = document.querySelectorAll('iframe');
+					for (var i = 0; i < iframes.length; i++) {
+					    iframes[i].parentNode.removeChild(iframes[i]);
+					}
+					$('<iframe id= "groupUserList" scrolling="no" name = "output_frame" frameborder="0" style="width:100%;" ></iframe>').appendTo(iframe);
+					
+					$("#groupUserList").css('height','742');
+					
+					var id = $(this).attr("id");
+					var url = "groupUserList.jsp";
+					var frame = new formUtil(url);
+					frame.addParameter('groupId',id);
+					frame.send();
 				});
 				
 				//update
@@ -590,52 +612,82 @@
 						.data("group_id",group_id)
 						.dialog("option","title","修改資料")
 						.dialog("open");	
+				});
+				
+				var buttonCount = 0; // only for selectAll button
+				
+				//selectAll
+				$("#group-backstage-table").delegate("button[name='selectAll']", "click", function(e) {
+					e.preventDefault();
+
+					var name = "batchDel-checkbox-group";
+					var group = document.getElementsByName(name);
+					
+					buttonCount++;
+					
+					if(buttonCount%2 === 1){
+						$(group).each(function() {
+						    $(this).prop("checked", true);
+						});				
+					}else{
+						$(group).each(function() {
+						    $(this).prop("checked", false);
+						});
+					}
+
 				});				
 			});
-		</script>	
-
+		</script>
 	</head>
-	<body>
+	<body >
 		<div class="content-wrap" >
-			<!-- 查詢 -->
-			<div class="input-field-wrap">
-				<div class="form-wrap">			
-					<div class="form-row">
-						<label for="">
-							<span class="block-label">公司名稱</span>
-							<input type="text" id="search-group-name">
-						</label>
+
+			<div id="mainDiv">
+				<div class="input-field-wrap">
+					<div class="form-wrap">			
+						<div class="form-row">
+							<label for="">
+								<span class="block-label">公司名稱</span>
+								<input type="text" id="search-group-name">
+							</label>
+						</div>
+						<div class="form-row">
+							<label for="">
+								<span class="block-label">統一編號</span>
+								<input type="text" id="search-group-unicode">
+							</label>
+						</div>
+						<div class="form-row">
+							<button class="btn btn-darkblue" id="search-group-backstage">查詢</button>
+							<button class="btn btn-exec btn-wide" id="create-group-backstage">新增</button>
+						</div>										
 					</div>
-					<div class="form-row">
-						<label for="">
-							<span class="block-label">統一編號</span>
-							<input type="text" id="search-group-unicode">
-						</label>
+				</div>
+		
+				<div class="row search-result-wrap" align="center">
+					<div class="ui-widget">
+						<table id="group-backstage-table" class="result-table">
+							<thead>
+								<tr>					
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+								</tr>
+							</tfoot>
+							<tbody>
+							</tbody>
+						</table>
 					</div>
-					<div class="form-row">
-						<button class="btn btn-darkblue" id="search-group-backstage">查詢</button>
-						<button class="btn btn-exec btn-wide" id="create-group-backstage">新增</button>
-					</div>										
 				</div>
 			</div>
-	
-			<div class="row search-result-wrap" align="center" >
-				<div class="ui-widget">
-					<table id="group-backstage-table" class="result-table">
-						<thead>
-							<tr>					
-							</tr>
-						</thead>
-						<tfoot>
-							<tr>
-							</tr>
-						</tfoot>
-						<tbody>
-						</tbody>
-					</table>
-				</div>
-			</div>	
-		</div>
+<!-- 			<div class="input-field-wrap"> -->
+<%-- 			<jsp:include page="groupUserList.jsp" > --%>
+			<div id="iframeDiv">
+ 				<iframe id= "groupUserList" scrolling="no" name = "output_frame" frameborder="0" style="width:100%;" ></iframe> 
+			</div>
+			</div>
+		
 		<!-- 對話窗 -->
 		<div id="dialog-data-process" class="dialog" align="center">
 			<form name="dialog-form-data-process" id="dialog-form-data-process">

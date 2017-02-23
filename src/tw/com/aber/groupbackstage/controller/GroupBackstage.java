@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +48,7 @@ public class GroupBackstage extends HttpServlet {
 
 		logger.debug("action: " + action);
 
-		String[] actions = { "search", "insert", "update", "delete" };
+		String[] actions = { "search", "insert", "update", "delete", "list" };
 
 		int key = Arrays.asList(actions).indexOf(action);
 
@@ -170,6 +171,13 @@ public class GroupBackstage extends HttpServlet {
 			}
 			break;
 		}
+		case 4: {
+			RequestDispatcher failureView = request
+					.getRequestDispatcher("groupUserList.jsp");
+			failureView.forward(request, response);
+			
+			break;
+		}		
 		default: {
 			String user_id = request.getSession().getAttribute("user_id").toString();
 			logger.debug("user_id: " + user_id);

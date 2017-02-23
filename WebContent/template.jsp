@@ -342,7 +342,9 @@ function who(){
 	case "welcome.jsp":
 		return "首頁";
 		break;
-		
+	case "groupUserList.jsp":
+		return "";
+		break;		
 	default:
 		window.location.href = './404.html';
 		return "";
