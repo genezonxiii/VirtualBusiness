@@ -11,6 +11,7 @@ public class UserVO implements java.io.Serializable {
 	private String email;
 	private String password;
 	private String operation;
+	private String privilege;
 	private String message;// for set check message
 
 	public String getMessage() {
@@ -75,5 +76,13 @@ public class UserVO implements java.io.Serializable {
 
 	public void setOperation(String operation) {
 		this.operation = operation;
+	}
+
+	public String getPrivilege() {
+		return privilege;
+	}
+
+	public void setPrivilege(String privilege) {
+		this.privilege = privilege;
 	}
 }
