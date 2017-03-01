@@ -1,7 +1,6 @@
 package tw.com.aber.sale.controller;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -11,7 +10,6 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,16 +17,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.ProductVO;
+import tw.com.aber.vo.SaleDetailVO;
 import tw.com.aber.vo.SaleVO;
 
 public class sale extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LogManager.getLogger(sale.class);
+	
+	private Util util;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		SaleService saleService = null;
@@ -37,9 +44,13 @@ public class sale extends HttpServlet {
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		if ("search".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數-格式檢查 ****************************************/
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
 				String c_product_id = request.getParameter("c_product_id");
-				/*************************** 2.開始查詢資料 ****************************************/
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (c_product_id == null || (c_product_id.trim()).length() == 0) {
 					saleService = new SaleService();
@@ -135,7 +146,9 @@ public class sale extends HttpServlet {
 		}
 		if ("search_dis_date".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數-格式檢查 ****************************************/
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
 				String start_date = request.getParameter("dis_start_date");
 				String end_date = request.getParameter("dis_end_date");
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
@@ -181,7 +194,9 @@ public class sale extends HttpServlet {
 						return;// 程式中斷
 					}
 				}
-				/*************************** 2.開始查詢資料 ****************************************/
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (start_date.trim().length() == 0 & end_date.trim().length() == 0) {
 					saleService = new SaleService();
@@ -222,7 +237,9 @@ public class sale extends HttpServlet {
 		}
 		if ("insert".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 **************************************/
+				/***************************
+				 * 1.接收請求參數
+				 **************************************/
 				String invoice = request.getParameter("invoice");
 				String order_no = request.getParameter("order_no");
 				String cus_id = request.getParameter("cus_id");
@@ -238,7 +255,7 @@ public class sale extends HttpServlet {
 					String quantityStr = request.getParameter("quantity");
 					quantity = Integer.valueOf(quantityStr);
 				} catch (Exception e1) {
-					
+
 					e1.printStackTrace();
 				}
 
@@ -247,7 +264,7 @@ public class sale extends HttpServlet {
 					String priceStr = request.getParameter("price");
 					price = Float.valueOf(priceStr);
 				} catch (Exception e) {
-					
+
 					e.printStackTrace();
 				}
 				// 日期參數處理
@@ -286,7 +303,9 @@ public class sale extends HttpServlet {
 				java.sql.Date sale_date = new java.sql.Date(sale_date_util.getTime());
 
 				String order_source = request.getParameter("order_source");
-				/*************************** 2.處理銷貨單號 ***************************************/
+				/***************************
+				 * 2.處理銷貨單號
+				 ***************************************/
 				String seq_no;
 				saleService = new SaleService();
 				List<SaleVO> list = saleService.getSaleSeqNo(group_id);
@@ -296,11 +315,12 @@ public class sale extends HttpServlet {
 					seq_no = getGenerateSeqNo(list.get(0).getSeq_no());
 				}
 				saleService = new SaleService();
-				if(order_no.length()<1){
-					order_no=seq_no;
+				if (order_no.length() < 1) {
+					order_no = seq_no;
 				}
-				saleService.addSale(seq_no, group_id, order_no, user_id, product_id, product_name, c_product_id,cus_id, name, quantity, price, invoice,
-						invoice_date, trans_list_date, dis_date, memo, sale_date, order_source);
+				saleService.addSale(seq_no, group_id, order_no, user_id, product_id, product_name, c_product_id, cus_id,
+						name, quantity, price, invoice, invoice_date, trans_list_date, dis_date, memo, sale_date,
+						order_source);
 				/***************************
 				 * 3.新增完成,準備轉交(Send the Success view)
 				 ***********/
@@ -319,13 +339,19 @@ public class sale extends HttpServlet {
 		}
 		if ("delete".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String sale_id = request.getParameter("sale_id");
 				String c_product_id = request.getParameter("c_product_id");
-				/*************************** 2.開始刪除資料 ***************************************/
+				/***************************
+				 * 2.開始刪除資料
+				 ***************************************/
 				saleService = new SaleService();
 				saleService.deleteSale(sale_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
+				/***************************
+				 * 3.刪除完成,準備轉交(Send the Success view)
+				 ***********/
 				saleService = new SaleService();
 				SaleVO saleVO = new SaleVO();
 				saleVO.setMessage("驗證通過");
@@ -336,13 +362,15 @@ public class sale extends HttpServlet {
 				response.getWriter().write(jsonStrList);
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				
+
 				e.printStackTrace();
 			}
 		}
 		if ("update".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
 				String sale_id = request.getParameter("sale_id");
 				String seq_no = request.getParameter("seq_no");
 				String invoice = request.getParameter("invoice");
@@ -361,7 +389,7 @@ public class sale extends HttpServlet {
 					String quantityStr = request.getParameter("quantity");
 					quantity = Integer.valueOf(quantityStr);
 				} catch (Exception e1) {
-					
+
 					e1.printStackTrace();
 				}
 
@@ -370,7 +398,7 @@ public class sale extends HttpServlet {
 					String priceStr = request.getParameter("price");
 					price = Float.valueOf(priceStr);
 				} catch (Exception e) {
-					
+
 					e.printStackTrace();
 				}
 				// 日期參數處理
@@ -407,11 +435,16 @@ public class sale extends HttpServlet {
 				String sale_dateStr = request.getParameter("sale_date");
 				java.util.Date sale_date_util = sdf.parse(sale_dateStr);
 				java.sql.Date sale_date = new java.sql.Date(sale_date_util.getTime());
-				/*************************** 2.開始修改資料 ***************************************/
+				/***************************
+				 * 2.開始修改資料
+				 ***************************************/
 				saleService = new SaleService();
-				saleService.updatesale(sale_id, seq_no, group_id, order_no, user_id, product_id, product_name, c_product_id,cus_id, name, quantity, price,
-						invoice, invoice_date, trans_list_date, dis_date, memo, sale_date, order_source);
-				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
+				saleService.updatesale(sale_id, seq_no, group_id, order_no, user_id, product_id, product_name,
+						c_product_id, cus_id, name, quantity, price, invoice, invoice_date, trans_list_date, dis_date,
+						memo, sale_date, order_source);
+				/***************************
+				 * 3.修改完成,準備轉交(Send the Success view)
+				 ***********/
 				saleService = new SaleService();
 				SaleVO saleVO = new SaleVO();
 				saleVO.setMessage("驗證通過");
@@ -422,9 +455,29 @@ public class sale extends HttpServlet {
 				response.getWriter().write(jsonStrList);
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
-				
+
 				e.printStackTrace();
 			}
+		}
+		if ("getSaleDetail".equals(action)) {
+			String sale_id = request.getParameter("sale_id");
+
+			SaleDetailVO saleDetailVO = new SaleDetailVO();
+			saleDetailVO.setSale_id(sale_id);
+
+			saleService = new SaleService();
+
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
+			List<SaleDetailVO> list = saleService.getSaleDetail(saleDetailVO);
+
+			String jsonStr = gson.toJson(list);
+			response.getWriter().write(jsonStr);
+
+			String format = "getSaleDetail Strat\nsale_id: {}\nsearch result json:{}";
+
+			logger.debug(format, sale_id, jsonStr);
+			return;
 		}
 	}
 
@@ -502,9 +555,12 @@ public class sale extends HttpServlet {
 
 		public List<SaleVO> searchAllDB(String group_id);
 
-		public List<SaleVO> searchTransListDateDB(String group_id, String trans_list_start_date, String trans_list_end_date);
+		public List<SaleVO> searchTransListDateDB(String group_id, String trans_list_start_date,
+				String trans_list_end_date);
 
 		public List<SaleVO> searchDisDateDB(String group_id, String dis_start_date, String dis_end_date);
+
+		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO);
 
 	}
 
@@ -516,9 +572,10 @@ public class sale extends HttpServlet {
 			dao = new SaleDAO();
 		}
 
-		public SaleVO addSale(String seq_no, String group_id, String order_no, String user_id, String product_id, String product_name,
-				String c_product_id,String cus_id, String name, Integer quantity, Float price, String invoice, Date invoice_date, Date trans_list_date,
-				Date dis_date, String memo, Date sale_date, String order_source) {
+		public SaleVO addSale(String seq_no, String group_id, String order_no, String user_id, String product_id,
+				String product_name, String c_product_id, String cus_id, String name, Integer quantity, Float price,
+				String invoice, Date invoice_date, Date trans_list_date, Date dis_date, String memo, Date sale_date,
+				String order_source) {
 			SaleVO saleVO = new SaleVO();
 
 			saleVO.setSeq_no(seq_no);
@@ -543,9 +600,10 @@ public class sale extends HttpServlet {
 			return saleVO;
 		}
 
-		public SaleVO updatesale(String sale_id, String seq_no, String group_id, String order_no, String user_id, String product_id,
-				String product_name, String c_product_id,String cus_id, String name, Integer quantity, Float price, String invoice, Date invoice_date,
-				Date trans_list_date, Date dis_date, String memo, Date sale_date, String order_source) {
+		public SaleVO updatesale(String sale_id, String seq_no, String group_id, String order_no, String user_id,
+				String product_id, String product_name, String c_product_id, String cus_id, String name,
+				Integer quantity, Float price, String invoice, Date invoice_date, Date trans_list_date, Date dis_date,
+				String memo, Date sale_date, String order_source) {
 			SaleVO saleVO = new SaleVO();
 			saleVO.setSale_id(sale_id);
 			saleVO.setSeq_no(seq_no);
@@ -586,7 +644,8 @@ public class sale extends HttpServlet {
 			return dao.searchAllDB(group_id);
 		}
 
-		public List<SaleVO> getSearchTransListDateDB(String group_id, String trans_list_start_date, String trans_list_end_date) {
+		public List<SaleVO> getSearchTransListDateDB(String group_id, String trans_list_start_date,
+				String trans_list_end_date) {
 			return dao.searchTransListDateDB(group_id, trans_list_start_date, trans_list_end_date);
 		}
 
@@ -601,11 +660,16 @@ public class sale extends HttpServlet {
 		public List<ProductVO> getSearchProductByName(String group_id, String product_name) {
 			return dao.getProductByName(group_id, product_name);
 		}
+
+		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
+			return dao.getSaleDetail(saleDetailVO);
+		}
 	}
 
 	/*************************** 操作資料庫 ****************************************/
 	class SaleDAO implements sale_interface {
 		// 會使用到的Stored procedure
+		private static final String sp_get_sale_detail = "call sp_get_sale_detail (?)";
 		private static final String sp_selectall_sale = "call sp_selectall_sale (?)";
 		private static final String sp_select_sale_bycproductid = "call sp_select_sale_bycproductid (?,?)";
 		private static final String sp_select_sale_bytranslistdate = "call sp_select_sale_bytranslistdate(?,?,?)";
@@ -625,7 +689,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
-			
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -641,7 +705,7 @@ public class sale extends HttpServlet {
 				pstmt.setString(6, saleVO.getProduct_name());
 				pstmt.setString(7, saleVO.getC_product_id());
 				pstmt.setString(8, saleVO.getCustomer_id());
-				pstmt.setString(9, null );//saleVO.getName());
+				pstmt.setString(9, null);// saleVO.getName());
 				pstmt.setInt(10, saleVO.getQuantity());
 				pstmt.setFloat(11, saleVO.getPrice());
 				pstmt.setString(12, saleVO.getInvoice());
@@ -680,7 +744,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public void updateDB(SaleVO saleVO) {
-			
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -697,7 +761,7 @@ public class sale extends HttpServlet {
 				pstmt.setString(7, saleVO.getCustomer_id());
 				pstmt.setString(8, saleVO.getProduct_name());
 				pstmt.setString(9, saleVO.getC_product_id());
-				pstmt.setString(10,null); //saleVO.getName());
+				pstmt.setString(10, null); // saleVO.getName());
 				pstmt.setInt(11, saleVO.getQuantity());
 				pstmt.setFloat(12, saleVO.getPrice());
 				pstmt.setString(13, saleVO.getInvoice());
@@ -736,7 +800,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public void deleteDB(String sale_id, String user_id) {
-			
+
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -843,7 +907,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public List<SaleVO> searchAllDB(String group_id) {
-			
+
 			List<SaleVO> list = new ArrayList<SaleVO>();
 			SaleVO saleVO = null;
 
@@ -909,8 +973,9 @@ public class sale extends HttpServlet {
 		}
 
 		@Override
-		public List<SaleVO> searchTransListDateDB(String group_id, String trans_list_start_date, String trans_list_end_date) {
-			
+		public List<SaleVO> searchTransListDateDB(String group_id, String trans_list_start_date,
+				String trans_list_end_date) {
+
 			List<SaleVO> list = new ArrayList<SaleVO>();
 			SaleVO saleVO = null;
 
@@ -980,7 +1045,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public List<SaleVO> getNewSaleSeqNo(String group_id) {
-			
+
 			List<SaleVO> list = new ArrayList<SaleVO>();
 			SaleVO saleVO = null;
 
@@ -1033,7 +1098,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public List<SaleVO> searchDisDateDB(String group_id, String dis_start_date, String dis_end_date) {
-			
+
 			List<SaleVO> list = new ArrayList<SaleVO>();
 			SaleVO saleVO = null;
 
@@ -1103,7 +1168,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public List<ProductVO> getProductByName(String group_id, String product_name) {
-			
+
 			List<ProductVO> list = new ArrayList<ProductVO>();
 			ProductVO productVO = null;
 
@@ -1111,7 +1176,7 @@ public class sale extends HttpServlet {
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 
-			try { 
+			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_product_byname);
@@ -1161,7 +1226,7 @@ public class sale extends HttpServlet {
 
 		@Override
 		public List<ProductVO> getProductById(String group_id, String c_product_id) {
-			
+
 			List<ProductVO> list = new ArrayList<ProductVO>();
 			ProductVO productVO = null;
 
@@ -1184,6 +1249,86 @@ public class sale extends HttpServlet {
 					productVO.setPrice(rs.getString("price"));
 					productVO.setCost(rs.getString("cost"));
 					list.add(productVO);
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
+		}
+
+		@Override
+		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
+			List<SaleDetailVO> list = new ArrayList<SaleDetailVO>();
+			SaleDetailVO result = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			util = new Util();
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_sale_detail);
+
+				String sale_id = util.null2str(saleDetailVO.getSale_id());
+
+				pstmt.setString(1, sale_id);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					result = new SaleDetailVO();
+
+					result.setSaleDetail_id(rs.getString("saleDetail_id"));
+					result.setSeq_no(rs.getString("seq_no"));
+					result.setGroup_id(rs.getString("group_id"));
+					result.setOrder_no(rs.getString("order_no"));
+					result.setUser_id(rs.getString("user_id"));
+					result.setProduct_id(rs.getString("product_id"));
+					result.setProduct_name(rs.getString("product_name"));
+					result.setC_product_id(rs.getString("c_product_id"));
+					result.setCustomer_id(rs.getString("customer_id"));
+					result.setName(rs.getString("name"));
+					result.setQuantity(rs.getInt("quantity"));
+					result.setPrice(rs.getFloat("price"));
+					result.setInvoice(rs.getString("invoice"));
+					result.setInvoice_date(rs.getDate("invoice_date"));
+					result.setTrans_list_date(rs.getDate("trans_list_date"));
+					result.setDis_date(rs.getDate("dis_date"));
+					result.setMemo(rs.getString("memo"));
+					result.setSale_date(rs.getDate("sale_date"));
+					result.setOrder_source(rs.getString("order_source"));
+					result.setReturn_date(rs.getDate("return_date"));
+					result.setIsreturn(rs.getInt("isreturn"));
+					result.setDeliveryway(rs.getString("deliveryway"));
+
+					list.add(result);
 				}
 				// Handle any driver errors
 			} catch (SQLException se) {

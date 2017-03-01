@@ -641,7 +641,6 @@
 	</head>
 	<body >
 		<div class="content-wrap" >
-
 			<div id="mainDiv">
 				<div class="input-field-wrap">
 					<div class="form-wrap">			
@@ -681,12 +680,10 @@
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="input-field-wrap"> -->
-<%-- 			<jsp:include page="groupUserList.jsp" > --%>
 			<div id="iframeDiv">
  				<iframe id= "groupUserList" scrolling="no" name = "output_frame" frameborder="0" style="width:100%;" ></iframe> 
 			</div>
-			</div>
+		</div>
 		
 		<!-- 對話窗 -->
 		<div id="dialog-data-process" class="dialog" align="center">

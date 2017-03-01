@@ -123,6 +123,8 @@ function draw_sale(parameter){
 							+ "	<div class='table-function-list'>"
 							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' ><i class='fa fa-pencil'></i></button>"
 							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].sale_id+"'name='"+ json_obj[i].c_product_id+"' val2='"+json_obj[i].order_no+"'><i class='fa fa-trash'></i></button>"
+							+ "		<button class='btn-in-table btn-green btn_list' title='清單' id = '" + json_obj[i].sale_id + "'>" 
+							+ "		<i class='fa fa-pencil-square-o'></i></button>"
 							+ "	</div>"
 							+ "</div></td></tr>";
 						}
@@ -803,6 +805,134 @@ function draw_sale(parameter){
 	});
 </script>
 
+		<!-- for default parameters -->
+		<script>		
+			var dataTableObj; // for set DataTable					
+		</script>
+				
+		<!-- for common method -->
+		<script>
+			function drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns){
+				console.log("drawDataTable start");
+				
+				var table = document.getElementById(tableId);
+				
+				dataTableObj = 
+					$(table).DataTable({
+						dom: dom,
+						destroy: true,
+						language: {"url": "js/dataTables_zh-tw.txt"},
+						ajax: {
+								url : oUrl,
+								dataSrc: "",
+								type : "POST",
+								data : oData
+						},
+				        columnDefs: oColumnDefs
+						,
+						columns: oColumns
+					});	
+			}
+			
+			function rebuildTable(tableId, tableThs){
+				
+				var table = document.getElementById(tableId);
+				
+				$(table).find("thead").find("tr").remove();
+				$(table).find("thead").append($("<tr></tr>").val("").html(tableThs));
+				
+				$(table).find("tfoot").find('tr').remove();
+				$(table).find("tfoot").append($("<tr></tr>").val("").html(tableThs));				
+			}
+			
+			function drawDialog(dialogId, oUrl , oWidth, formId){
+				
+				var dialog = document.getElementById(dialogId);
+				var form = document.getElementById(formId);
+				
+				dataDialog = 
+					$(dialog).dialog({
+						draggable : true,
+						resizable : false,
+						autoOpen : false,
+						modal : true,
+						show : {
+							effect : "blind",
+							duration : 300
+						},
+						hide : {
+							effect : "fade",
+							duration : 300
+						},
+						width : oWidth,
+						close : function() {
+							$(form).trigger("reset");
+						}
+					});
+				
+				return dataDialog;
+			}
+					
+		</script>
+		
+		<!-- button listener -->
+		<script>
+		$(function(){
+			var table = document.getElementById("sales");
+				
+			$(table).delegate(".btn_list", "click", function(e) {
+				e.preventDefault();
+				
+				//declare object and options
+				var sale_id = $(this).attr("id");
+				var dataDialog;				
+				var dialogId = "dialog-sale-detail";
+				var dom = "lfr<t>ip";
+				var oUrl = "sale.do"
+				var oWidth = 1200;
+				var formId = "dialog-form-sale-detail";
+				var tableId = "dialog-sale-detail-table";
+				var tableThs = 	"<th>銷貨單號</th><th>平台訂單號</th><th>產品名稱</th>" +
+								"<th>自訂產品ID</th><th>銷貨數量</th><th>單價</th>" +
+								"<th>發票號碼</th><th>發票日期</th><th>轉單日</th>" +
+								"<th>銷貨/出貨日期</th><th>銷售平台</th><th>備註說明</th>" ;					
+				var oColumnDefs = [];
+				var oColumns = 
+					[
+						{"data": "seq_no" ,"defaultContent":""},
+						{"data": "order_no" ,"defaultContent":""},
+						{"data": "product_name" ,"defaultContent":""},
+						{"data": "c_product_id" ,"defaultContent":""},
+						{"data": "quantity" ,"defaultContent":""},
+						{"data": "price" ,"defaultContent":""},
+						{"data": "invoice" ,"defaultContent":""},
+						{"data": "invoice_date" ,"defaultContent":""},
+						{"data": "trans_list_date" ,"defaultContent":""},
+						{"data": "sale_date" ,"defaultContent":""},
+						{"data": "order_source" ,"defaultContent":""},
+						{"data": "memo" ,"defaultContent":""}
+					];
+				var oData = {
+						"action": "getSaleDetail",
+						"sale_id": sale_id
+					};
+				
+				//call method return dialog object to operate
+				dataDialog = drawDialog(dialogId, oUrl , oWidth, formId);
+				
+				dataDialog
+					.dialog("option","title","銷售資料明細")
+					.dialog("open");
+								
+				drawDialog(dialogId, oUrl , oWidth, formId);
+				
+				//must be initialized to set table
+				rebuildTable(tableId, tableThs);
+				drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns)
+			});
+		});
+		</script>
+	
 <!-- 	<div class="panel-title"> -->
 <!-- 		<h2>銷貨管理</h2> -->
 <!-- 	</div> -->
@@ -984,5 +1114,25 @@ function draw_sale(parameter){
 	</div>
 	</div>
 <div id="warning"  style="display:none;color:#f00;font-size:28px;"></div>
+
+	<!-- 對話窗 -->
+	<div id="dialog-sale-detail" class="dialog" align="center">
+		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
+			<fieldset>
+				<table id="dialog-sale-detail-table" class="result-table">
+					<thead>
+						<tr>				
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+						</tr>
+					</tfoot>
+					<tbody>
+					</tbody>
+				</table>
+			</fieldset>
+		</form>
+	</div>	
 </body>
 </html>
