@@ -412,9 +412,9 @@ function detail(str){
 										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
 										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
-										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
 										+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
+										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
 										+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
 										+ "'class='checkbox_receive_cancel'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";	
 									});
