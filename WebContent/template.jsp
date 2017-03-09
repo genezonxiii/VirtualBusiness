@@ -116,6 +116,10 @@ function who(){
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
 		return "團購轉檔作業";
 		break;
+	case "sfTransfer.jsp":
+		$(".sidenav > ul > li:nth-child(1)").addClass("active");
+		return "順豐轉檔作業";
+		break;
 //####後臺支援系統############################
 	case "purchase.jsp":
 		side2.addClass("active");
@@ -370,6 +374,7 @@ function who(){
 				<ul>
 					<li><a href="#" onclick="trans('upload.jsp');">網購拋轉作業</a></li>
 					<li><a href="#" onclick="trans('groupbuying.jsp');">團購轉檔作業</a></li>
+					<li><a href="#" onclick="trans('sfTransfer.jsp');">順豐轉檔作業</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-support.svg" alt="">後臺支援系統
