@@ -213,6 +213,10 @@ function who(){
 		side2.addClass("active");
 		return "產品對照資料管理";
 		break;
+	case "basicDataImport.jsp":
+		$(".sidenav > ul > li:nth-child(1)").addClass("active");
+		return "基本資料匯入作業";
+		break;
 //####報表管理############################
 	case "salereport.jsp":
 		side3.addClass("active");
@@ -404,6 +408,7 @@ function who(){
 					<li><a href="#" onclick="trans('invoicetrack.jsp');">發票字軌管理</a></li>
 					<li><a href="#" onclick="trans('exchange.jsp');">匯率轉換管理</a></li>
 					<li><a href="#" onclick="trans('membercondition.jsp');">會員分級設定</a></li>
+					<li><a href="#" onclick="trans('basicDataImport.jsp');">基本資料匯入作業</a></li>
 				</ul>
 			</li>
 			<li><img src="images/sidenav-report.svg" alt="">報表管理

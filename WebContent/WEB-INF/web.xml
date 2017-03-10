@@ -57,6 +57,10 @@
 		<param-value>http://192.168.112.164:8090</param-value>
 	</context-param>
 	<context-param>
+		<param-name>basicImport</param-name>
+		<param-value>/data/vbBasicData/</param-value>
+	</context-param>
+	<context-param>
 		<param-name>videopath</param-name>
 		<param-value>/data/video</param-value>
 	</context-param>
@@ -520,6 +524,14 @@
 	<servlet-mapping>
 		<servlet-name>sfTransfer</servlet-name>
 		<url-pattern>/sfTransfer.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>basicDataImport</servlet-name>
+		<servlet-class>tw.com.aber.basicdataimport.controller.BasicDataImport</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>basicDataImport</servlet-name>
+		<url-pattern>/basicDataImport.do</url-pattern>
 	</servlet-mapping>
 	<filter>
 		<filter-name>loginFilter</filter-name>
