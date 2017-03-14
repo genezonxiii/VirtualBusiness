@@ -1,26 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <title>密碼修改</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-<link rel="stylesheet" href="css/styles.css" />
-<link href="<c:url value="css/css.css" />" rel="stylesheet">
-<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
-<link rel="stylesheet" href="css/1.11.4/jquery-ui.css">
+<link rel="stylesheet" href="css/1.12.0/jquery-ui.css">
 </head>
 <body>
 
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 <script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.js"></script>
-<script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/additional-methods.min.js"></script>
-<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script>
 
 	$(function() {
@@ -125,6 +116,7 @@
 </script>
 
 	<jsp:include page="template.jsp" flush="true" />
+	
 	<div class="content-wrap">
 		<div class='bdyplane' style="opacity: 0">
 			<!-- 第一列 -->
