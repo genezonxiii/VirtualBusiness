@@ -469,7 +469,7 @@ h2.page-title {
     height: calc(100vh - 144px);
     overflow-y: scroll;
 /*     overflow: auto; */
-    width: calc(100% - 120px);
+    width: calc(100% - 80px);
 /*     Ben偷加的背景圖屬性 */
 	background-color: #EEF3F9;
 /*     background-image: url('../images/flower.png'); */

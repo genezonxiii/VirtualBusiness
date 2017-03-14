@@ -4,7 +4,7 @@
 
 $(function(){
 
-	//setMenu();
+	setMenu();
 	
 	function setMenu() {
 		$(".sidenav > ul").remove();
