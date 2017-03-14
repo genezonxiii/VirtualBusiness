@@ -149,7 +149,6 @@
 	$(function() {
 		$('body')
 			.keypress(function(e) {
-				e.preventDefault();
 // 				if (e.shiftKey) {
 // 					if (e.which == 41) {
 // 						e.preventDefault();
