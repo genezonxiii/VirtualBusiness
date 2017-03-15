@@ -1,11 +1,13 @@
 package tw.com.aber.basicinfo;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +16,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import tw.com.aber.vo.SupplyVO;
 
 
 public class supply extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	private static final Logger logger = LogManager.getLogger(supply.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -49,6 +57,7 @@ public class supply extends HttpServlet {
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
+					logger.debug(jsonStrList);
 					return;// 程式中斷
 				}
 				/*************************** 其他可能的錯誤處理 **********************************/
@@ -225,7 +234,7 @@ public class supply extends HttpServlet {
 	/*************************** 操作資料庫 ****************************************/
 	class SupplyDAO implements SupplyVO_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_insert_supply = "call sp_insert_supply(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_insert_supply = "call sp_insert_supply(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_selectall_supply = "call sp_selectall_supply (?)";
 		private static final String sp_del_supply = "call sp_del_supply (?,?)";
 		private static final String sp_update_supply = "call sp_update_supply (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -239,29 +248,33 @@ public class supply extends HttpServlet {
 		public void insertDB(SupplyVO supplyVO) {
 			
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
+			String result = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_insert_supply);
+				cs = con.prepareCall(sp_insert_supply);
 
-				pstmt.setString(1, supplyVO.getGroup_id());
-				pstmt.setString(2, supplyVO.getSupply_name());
-				pstmt.setString(3, supplyVO.getSupply_unicode());
-				pstmt.setString(4, supplyVO.getAddress());
-				pstmt.setString(5, supplyVO.getContact());
-				pstmt.setString(6, supplyVO.getPhone());
-				pstmt.setString(7, supplyVO.getExt());
-				pstmt.setString(8, supplyVO.getMobile());
-				pstmt.setString(9, supplyVO.getContact1());
-				pstmt.setString(10, supplyVO.getPhone1());
-				pstmt.setString(11, supplyVO.getExt1());
-				pstmt.setString(12, supplyVO.getMobile1());
-				pstmt.setString(13, supplyVO.getEmail());
-				pstmt.setString(14, supplyVO.getEmail1());
-				pstmt.setString(15, supplyVO.getMemo());
-				pstmt.setString(16, supplyVO.getUser_id());
-				pstmt.executeUpdate();
+				cs.setString(1, supplyVO.getGroup_id());
+				cs.setString(2, supplyVO.getSupply_name());
+				cs.setString(3, supplyVO.getSupply_unicode());
+				cs.setString(4, supplyVO.getAddress());
+				cs.setString(5, supplyVO.getContact());
+				cs.setString(6, supplyVO.getPhone());
+				cs.setString(7, supplyVO.getExt());
+				cs.setString(8, supplyVO.getMobile());
+				cs.setString(9, supplyVO.getContact1());
+				cs.setString(10, supplyVO.getPhone1());
+				cs.setString(11, supplyVO.getExt1());
+				cs.setString(12, supplyVO.getMobile1());
+				cs.setString(13, supplyVO.getEmail());
+				cs.setString(14, supplyVO.getEmail1());
+				cs.setString(15, supplyVO.getMemo());
+				cs.setString(16, supplyVO.getUser_id());
+				cs.registerOutParameter(17, Types.BOOLEAN);
+				cs.execute();
+				
+				result = cs.getString(17);
 
 				// Handle any SQL errors
 			} catch (SQLException se) {
@@ -270,9 +283,9 @@ public class supply extends HttpServlet {
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			} finally {
-				if (pstmt != null) {
+				if (cs != null) {
 					try {
-						pstmt.close();
+						cs.close();
 					} catch (SQLException se) {
 						se.printStackTrace(System.err);
 					}
