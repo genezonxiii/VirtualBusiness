@@ -10,6 +10,7 @@ $(function(){
 		$(".sidenav > ul").remove();
 		
 		var menu = $('#glb_menu').val();
+		console.log(menu);
 		
 		var json_obj = $.parseJSON(menu);
 		
@@ -63,6 +64,7 @@ $(function(){
 		});
 		
 		var privilege = $('#glb_privilege').val();
+		console.log(privilege);
 		setPrivilege(privilege);
 	}
 

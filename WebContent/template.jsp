@@ -1,5 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%
+request.setCharacterEncoding("UTF-8");
+String groupId = (String) request.getSession().getAttribute("group_id"); 
+String userId = (String) request.getSession().getAttribute("user_id"); 
+String userName = (String) request.getSession().getAttribute("user_name"); 
+String menu = (String) request.getSession().getAttribute("menu"); 
+String privilege = (String) request.getSession().getAttribute("privilege");
+%>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -87,6 +95,7 @@
 </style>
 
 	<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+	<script type="text/javascript" src="js/virtual_business/menu.js"></script>
 <!-- 	<script type="text/javascript" src="http://demonstration.abgne.tw/jquery/jquery.easing.1.3.js"></script> -->
 <script type="text/javascript">
 function trans(str){
@@ -362,6 +371,8 @@ function who(){
 </script>
 </head>
 <body>
+<input type="hidden" id="glb_menu" value='<%= menu %>' />
+<input type="hidden" id="glb_privilege" value="<%= privilege %>" />
 
 <div class="page-wrapper" style="" >
 	<div class="header" style="z-index:1;">
