@@ -49,6 +49,9 @@ public class login extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
+		
+		logger.debug("Action:" + action);
+		
 		HttpSession session = request.getSession(true);
 		UserVO message = null;
 		LoginService loginService = null;
