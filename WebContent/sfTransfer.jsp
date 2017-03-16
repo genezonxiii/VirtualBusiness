@@ -73,6 +73,11 @@
 	<script>
 		var fileName;
 		var fileBuffer=[];
+
+		var input = $('<input/>', {
+            type: 'file',
+            multiple: 'multiple',
+        });
 		
 		$(function(){
 			$('#fileDiv').hide();
@@ -104,6 +109,7 @@
 			$('select').on('change', function() {
 				$('#file').val('');
 				$("#download").html("");
+				$('#filesEdit').html('');
 				if(this.value != 0){
 					$('#fileDiv').show();
 				}else{
@@ -113,6 +119,7 @@
 			
 			$('#file').click(function(){
 				$("#download").html("");
+				$('#filesEdit').html('');
 			});	
 			
 			$("#file").on("change", function (event) {
@@ -138,58 +145,59 @@
 										'<li class="fileTitle">' + name + '\n' + size + '</li>' +
 									'</ul>'+
 								'</div>' +
-							'</div>' +								
-							'<div name><ul class="pull-right">'+ 
-								'<li><a class="icon-jfi-trash jFiler-item-trash-action btn_delete"></a></li>' +
-							 '</ul>'+
+							'</div>' +
+							//delete button
+// 							'<div name><ul class="pull-right">'+ 
+// 								'<li><a class="icon-jfi-trash jFiler-item-trash-action btn_delete"></a></li>' +
+// 							 '</ul>'+
 							'</div>' +
 						'</div>';
 					
 
 					
 					$('#filesEdit').append(data);
-				});			  
+				});
+	            input.files = fileBuffer;
 			});
 			
 			//delete
-			$("#filesEdit").delegate(".btn_delete", "click", function(e) {
-				e.preventDefault();
-				var name = $(this).parents(".master").attr("id")
-				$(fileBuffer).each(function( index ,item) {
-					if(item.name == name){
-						fileBuffer.splice(index, 1);
-					}
-				});
-				$(this).parents(".master").remove();
-				console.log('--');
-				console.log(fileBuffer);
-			});	
+// 			$("#filesEdit").delegate(".btn_delete", "click", function(e) {
+// 				e.preventDefault();
+// 				var name = $(this).parents(".master").attr("id")
+// 				$(fileBuffer).each(function( index ,item) {
+// 					if(item.name == name){
+// 						fileBuffer.splice(index, 1);
+// 					}
+// 				});
+// 	            input.files = fileBuffer;
+// 				$(this).parents(".master").remove();
+// 			});	
 		});
 		
 		function upload(){
-			if($('#file').get(0).files.length === 0){
+			console.log('upload start');
+			console.log(input.files);
+			if(input.files.length === 0){
 				$('#message').find("#text").val('').text("請選擇檔案");
 				message_dialog.dialog("open");
 				return false;
 			}
-			var arrays = ($('#file').val().replace(/C:\\fakepath\\/i, '')).split('.');
-			if(arrays[1]!='csv' && arrays[1]!='xls' && arrays[1]!='xlsx'){
-				$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認格式是否正確!");
-				message_dialog.dialog("open");
-				$('#file').val('');
-				return false;
-			}
+// 			var arrays = ($('#file').val().replace(/C:\\fakepath\\/i, '')).split('.');
+// 			if(arrays[1]!='csv' && arrays[1]!='xls' && arrays[1]!='xlsx'){
+// 				$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認格式是否正確!");
+// 				message_dialog.dialog("open");
+// 				$('#file').val('');
+// 				return false;
+// 			}
 			
-			fileName = $('#file').val().replace(/C:\\fakepath\\/i, '');
+// 			fileName = $('#file').val().replace(/C:\\fakepath\\/i, '');
 			var form = document.getElementById("form");
 			var action = "sfTransfer.do"
 				+"?action=upload"
 				+"&type=" + $('#select-type').val()
-				+"&filename=" + fileName;
 			$(form).attr("action",action);
 			return true;
 		}
-		
 		$('#form').ajaxForm(function(result) {
 			if(result=="false"){
 				$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認格式是否正確!");
@@ -201,9 +209,6 @@
 			}
 
 	    });
-		
-
-		
 	</script>
 	</head>
 	<body >

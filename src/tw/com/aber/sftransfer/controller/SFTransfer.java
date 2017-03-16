@@ -3,6 +3,7 @@ package tw.com.aber.sftransfer.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.httpclient.HttpClient;
@@ -59,14 +61,27 @@ public class SFTransfer extends HttpServlet {
 		switch (key) {
 
 		case 0: {
-
+			
+//		    try {
+//		        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+//		        for (FileItem item : items) {
+//		            if (!item.isFormField()){
+//		                String fileName = FilenameUtils.getName(item.getName());
+//		    			logger.debug("\nfileName: {}",fileName);
+//		                InputStream fileContent = item.getInputStream();
+//		                // ... (do your job here)
+//		            }
+//		        }
+//		    } catch (FileUploadException e) {
+//		        throw new ServletException("Cannot parse multipart request.", e);
+//		    }			
+//==============================================================================================================================		
 			String type = request.getParameter("type");
-			String filename = request.getParameter("filename");
-			logger.debug("\ntype: {}\nfilename: {}", type, filename);
+			logger.debug("\ntype: {}", type);
 
 			String conString = "";
 			String ret = "E";
-			conString = putFile(request, response, type, filename);
+			conString = putFile(request, response, type);
 
 			try {
 				TimeUnit.SECONDS.sleep(2);
@@ -123,7 +138,7 @@ public class SFTransfer extends HttpServlet {
 		}
 	}
 
-	protected String putFile(HttpServletRequest request, HttpServletResponse response, String type, String filename)
+	protected String putFile(HttpServletRequest request, HttpServletResponse response, String type)
 			throws ServletException, IOException {
 		String conString = "", ret = "";
 		request.setCharacterEncoding("UTF-8");
@@ -136,8 +151,7 @@ public class SFTransfer extends HttpServlet {
 		String path = "inbound".equals(type) ? "inbound" : "outbound";
 
 		String savePath = getServletConfig().getServletContext().getInitParameter(path) + "/" + group_id;
-		String ext = FilenameUtils.getExtension(filename);
-		String fullPath = savePath + "/" + _uid + "." + ext;
+		
 		File file = null;
 		file = new File(savePath);
 		if (!file.exists()) {
@@ -146,6 +160,7 @@ public class SFTransfer extends HttpServlet {
 
 		int maxFileSize = 5000 * 1024;
 		int maxMemSize = 5000 * 1024;
+		
 		String contentType = request.getContentType();
 		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
 			DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -160,7 +175,10 @@ public class SFTransfer extends HttpServlet {
 				while (i.hasNext()) {
 					FileItem fi = (FileItem) i.next();
 					if (!fi.isFormField()) {
-
+						String fileName = FilenameUtils.getName(fi.getName());
+						String ext = FilenameUtils.getExtension(fileName);
+						String fullPath = savePath + "/" + _uid + "." + ext;
+						
 						conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
 								+ "/sfexpress/urls=" + new String(Base64.encodeBase64String((fullPath).getBytes()))
 								+ "&UsID=" + new String(Base64.encodeBase64String(user_id.getBytes())) + "&lgID="
@@ -171,7 +189,10 @@ public class SFTransfer extends HttpServlet {
 						fi.write(file);
 					}
 				}
-			} catch (Exception ex) {
+			}catch(FileUploadException e){
+				logger.debug("Cannot parse multipart request");
+			}
+			catch (Exception ex) {
 				ret = "E_write_File:" + ex.toString();
 				return ret;
 			}
@@ -182,6 +203,7 @@ public class SFTransfer extends HttpServlet {
 		if (ret.length() > 3) {
 			return ret;
 		}
+		
 		return conString;
 	}
 
