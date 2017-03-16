@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -61,21 +64,22 @@ public class SFTransfer extends HttpServlet {
 		switch (key) {
 
 		case 0: {
-			
-//		    try {
-//		        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-//		        for (FileItem item : items) {
-//		            if (!item.isFormField()){
-//		                String fileName = FilenameUtils.getName(item.getName());
-//		    			logger.debug("\nfileName: {}",fileName);
-//		                InputStream fileContent = item.getInputStream();
-//		                // ... (do your job here)
-//		            }
-//		        }
-//		    } catch (FileUploadException e) {
-//		        throw new ServletException("Cannot parse multipart request.", e);
-//		    }			
-//==============================================================================================================================		
+
+			// try {
+			// List<FileItem> items = new ServletFileUpload(new
+			// DiskFileItemFactory()).parseRequest(request);
+			// for (FileItem item : items) {
+			// if (!item.isFormField()){
+			// String fileName = FilenameUtils.getName(item.getName());
+			// logger.debug("\nfileName: {}",fileName);
+			// InputStream fileContent = item.getInputStream();
+			// // ... (do your job here)
+			// }
+			// }
+			// } catch (FileUploadException e) {
+			// throw new ServletException("Cannot parse multipart request.", e);
+			// }
+			// ==============================================================================================================================
 			String type = request.getParameter("type");
 			logger.debug("\ntype: {}", type);
 
@@ -100,8 +104,7 @@ public class SFTransfer extends HttpServlet {
 			break;
 		}
 		case 1: {
-			String fileName = request.getParameter("fileName");
-			String ext = FilenameUtils.getExtension(fileName);
+			String ext = "xls";
 			String encode_fileName = request.getParameter("downloadName");
 			String[] downloadName = encode_fileName.split("_");
 			String decode_fileName = new String(Base64.decodeBase64(downloadName[1].getBytes()));
@@ -115,8 +118,9 @@ public class SFTransfer extends HttpServlet {
 				fileInput.read(content);
 				response.setContentType("application/octet-stream");
 
-				String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表."+ext : "出庫明細表."+ext;
-				response.setHeader("Content-Disposition", "attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
+				String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表." + ext : "出庫明細表." + ext;
+				response.setHeader("Content-Disposition",
+						"attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
 
 				OutputStream output = response.getOutputStream();
 				output.write(content);
@@ -146,12 +150,17 @@ public class SFTransfer extends HttpServlet {
 
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
-		String _uid = UUID.randomUUID().toString();
 
 		String path = "inbound".equals(type) ? "inbound" : "outbound";
 
-		String savePath = getServletConfig().getServletContext().getInitParameter(path) + "/" + group_id;
-		
+		Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+
+		String folderName = dateFormat.format(date).toString();
+
+		String savePath = getServletConfig().getServletContext().getInitParameter(path) + "/" + group_id + "/"
+				+ folderName;
+
 		File file = null;
 		file = new File(savePath);
 		if (!file.exists()) {
@@ -160,7 +169,7 @@ public class SFTransfer extends HttpServlet {
 
 		int maxFileSize = 5000 * 1024;
 		int maxMemSize = 5000 * 1024;
-		
+
 		String contentType = request.getContentType();
 		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
 			DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -177,22 +186,22 @@ public class SFTransfer extends HttpServlet {
 					if (!fi.isFormField()) {
 						String fileName = FilenameUtils.getName(fi.getName());
 						String ext = FilenameUtils.getExtension(fileName);
+						String _uid = UUID.randomUUID().toString();
 						String fullPath = savePath + "/" + _uid + "." + ext;
-						
-						conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
-								+ "/sfexpress/urls=" + new String(Base64.encodeBase64String((fullPath).getBytes()))
-								+ "&UsID=" + new String(Base64.encodeBase64String(user_id.getBytes())) + "&lgID="
-								+ new String(Base64.encodeBase64String("26".getBytes())) + "&aaID="
-								+ new String(Base64.encodeBase64String(group_id.getBytes()));
-						logger.debug("conString : " + conString);
+						logger.debug("\nfileName:{}\nsavePath:{}", fileName, savePath);
 						file = new File(fullPath);
 						fi.write(file);
 					}
 				}
-			}catch(FileUploadException e){
+				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+						+ "/sfexpress/urls=" + new String(Base64.encodeBase64String((savePath).getBytes()))
+						+ "&UsID=" + new String(Base64.encodeBase64String(user_id.getBytes())) + "&lgID="
+						+ new String(Base64.encodeBase64String("26".getBytes())) + "&aaID="
+						+ new String(Base64.encodeBase64String(group_id.getBytes()));
+				logger.debug("conString : " + conString);
+			} catch (FileUploadException e) {
 				logger.debug("Cannot parse multipart request");
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				ret = "E_write_File:" + ex.toString();
 				return ret;
 			}
@@ -203,7 +212,7 @@ public class SFTransfer extends HttpServlet {
 		if (ret.length() > 3) {
 			return ret;
 		}
-		
+
 		return conString;
 	}
 
