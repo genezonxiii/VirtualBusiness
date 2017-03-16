@@ -28,10 +28,51 @@
 	
 		<!-- Jvascript -->
 		<script src="js/jqueryFiler/jquery.filer.min.js" type="text/javascript"></script>
-		<script src="js/jqueryFiler/custom.js" type="text/javascript"></script>
-
+<!-- 		<script src="js/jqueryFiler/custom.js" type="text/javascript"></script> -->
+	<style>
+		.master {
+				display: inline-block;
+			    margin: 0 auto 25px auto;
+			    padding: 15px;
+			    width: 200px;
+			    color: #97A1A8;
+			    background: #F9FBFE;
+			    border: 2px dashed #C8CBCE;
+			    text-align: center;
+			    -webkit-transition: box-shadow 0.3s,
+			                        border-color 0.3s;
+			    -moz-transition: box-shadow 0.3s,
+			                        border-color 0.3s;
+			    transition: box-shadow 0.3s,
+			                        border-color 0.3s;
+		}
+		.detail{
+		    position: relative;
+		    padding: 10px;
+		    border: 1px solid #e1e1e1;
+		    border-radius: 3px;
+		    background: #fff;
+		    -webkit-box-shadow: 0px 0px 3px rgba(0,0,0,0.06);
+		    -moz-box-shadow: 0px 0px 3px rgba(0,0,0,0.06);
+		    box-shadow: 0px 0px 3px rgba(0,0,0,0.06);		
+		}
+		.jFiler-item-trash-action:hover {
+		    cursor: pointer;
+		    color: #d9534f;
+		}
+		
+		.info{
+		    font-size: 12px;
+		    color: #777;
+		}
+		.fileTitle{
+			margin-top:10px; 
+			float: left;
+		}
+	</style>
 	<script>
 		var fileName;
+		var fileBuffer=[];
 		
 		$(function(){
 			$('#fileDiv').hide();
@@ -72,7 +113,57 @@
 			
 			$('#file').click(function(){
 				$("#download").html("");
+			});	
+			
+			$("#file").on("change", function (event) {
+				var type = '';
+				var name = '';
+				var size = '';
+				var files = event.originalEvent.target.files;
+				Array.prototype.push.apply(fileBuffer, files);
+				console.log(fileBuffer);
+				$(files).each(function( index ,item) {
+					name = item.name;
+					size = Math.floor(((item.size)/1024)*10)/10 + 'KB';
+					type = /[^.]+$/.exec(item.name);
+				  
+					var data = 
+						'<div class="master" id="' + name + '">' +
+							'<div class="detail">' +
+								'<div><img src="./images/file/' + type + '.png"></div>' +
+							'</div>' +
+							'<div class="jFiler-item-assets">' +
+								'<div class="info">' +
+									'<ul >'+ 
+										'<li class="fileTitle">' + name + '\n' + size + '</li>' +
+									'</ul>'+
+								'</div>' +
+							'</div>' +								
+							'<div name><ul class="pull-right">'+ 
+								'<li><a class="icon-jfi-trash jFiler-item-trash-action btn_delete"></a></li>' +
+							 '</ul>'+
+							'</div>' +
+						'</div>';
+					
+
+					
+					$('#filesEdit').append(data);
+				});			  
 			});
+			
+			//delete
+			$("#filesEdit").delegate(".btn_delete", "click", function(e) {
+				e.preventDefault();
+				var name = $(this).parents(".master").attr("id")
+				$(fileBuffer).each(function( index ,item) {
+					if(item.name == name){
+						fileBuffer.splice(index, 1);
+					}
+				});
+				$(this).parents(".master").remove();
+				console.log('--');
+				console.log(fileBuffer);
+			});	
 		});
 		
 		function upload(){
@@ -110,6 +201,9 @@
 			}
 
 	    });
+		
+
+		
 	</script>
 	</head>
 	<body >
@@ -129,12 +223,15 @@
 						<div class='input-field-wrap jFiler-input-choose-btn black'>	
 							<div class="form-row">
 								<form action="" id="form" method="post" enctype="multipart/form-data" style="margin:0px;">
-									<input type="file" id="file" name="file" accept=".csv,.xls,.xlsx" style="width: 300px"/>
+									<input type="file" id="file" name="file" accept=".csv,.xls,.xlsx" style="width: 300px" multiple/>
 									<button class='btn btn-darkblue' id = 'uploadBtn' onclick="return upload();">上傳</button>
 									<span id='download'></span>
 								</form>
 							</div>
+						</div>		
+						<div class="form-row" id ="filesEdit">
 						</div>
+						
 					</div>								
 				</div>
 			</div>
