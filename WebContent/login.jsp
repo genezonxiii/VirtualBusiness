@@ -264,15 +264,15 @@
 			<div class="login-panel">
 				<form>
 					<label for="uninumber"> <span class="block-label">統編</span>
-						<input type="text" id="uninumber" value="11913502"> <!-- 				<span class="error-msg">查無貴公司統編</span> -->
+						<input type="text" id="uninumber" value=""> <!-- 				<span class="error-msg">查無貴公司統編</span> -->
 					</label> 
 					<label for="username"> <span class="block-label">帳號</span>
-						<input type="text" id="username" value="melvinchu@melvin.com">
+						<input type="text" id="username" value="">
 						<!-- <span class="error-msg">長度不能超過10個字</span> -->
 					</label> 
 					
 					<label for="password"> <span class="block-label">密碼</span>
-						<input type="password" id="password" value="1234"> <!-- <span class="error-msg">長度不能超過10個字</span> -->
+						<input type="password" id="password" value=""> <!-- <span class="error-msg">長度不能超過10個字</span> -->
 					</label>
 					<div class="verify-wrap">
 						<label for="verify"> <span class="block-label">認證碼</span>
@@ -303,7 +303,7 @@
 		<!-- /.login-panel-wrap -->
 
 		<div class="login-footer">
-			<p>--北祥股份有限公司--</p>
+			<p>北祥股份有限公司</p>
 			<span>電話：02-2658-1910 | 傳真：02-2658-1920</span>
 		</div>
 		<!-- /.login-footer -->
