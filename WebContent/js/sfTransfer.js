@@ -1,10 +1,10 @@
 		var fileName;
 		var fileBuffer=[];
 
-		var input = $('<input/>', {
-            type: 'file',
-            multiple: 'multiple',
-        });
+//		var input = $('<input/>', {
+//            type: 'file',
+//            multiple: 'multiple',
+//        });
 		
 		$(function(){
 			$('#fileDiv').hide();
@@ -56,7 +56,7 @@
 				var files = event.originalEvent.target.files;
 				Array.prototype.push.apply(fileBuffer, files);
 				console.log(fileBuffer);
-				$(files).each(function( index ,item) {
+				$(fileBuffer).each(function( index ,item) {
 					name = item.name;
 					size = Math.floor(((item.size)/1024)*10)/10 + 'KB';
 					type = /[^.]+$/.exec(item.name);
@@ -79,12 +79,10 @@
 // 							 '</ul>'+
 							'</div>' +
 						'</div>';
-					
-
-					
 					$('#filesEdit').append(data);
 				});
-	            input.files = fileBuffer;
+				//reset array
+				fileBuffer.length = 0;
 			});
 			
 			//delete
@@ -102,9 +100,7 @@
 		});
 		
 		function upload(){
-			console.log('upload start');
-			console.log(input.files);
-			if(input.files.length === 0){
+			if($('#file').get(0).files.length === 0){
 				$('#message').find("#text").val('').text("請選擇檔案");
 				message_dialog.dialog("open");
 				return false;
