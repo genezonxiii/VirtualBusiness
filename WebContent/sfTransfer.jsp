@@ -51,6 +51,7 @@
 									<input type="file" id="file" name="file" accept=".csv,.xls,.xlsx" style="width: 300px" multiple/>
 									<button class='btn btn-darkblue' id = 'uploadBtn' onclick="return upload();">上傳</button>
 									<span id='download'></span>
+									<div id="data"></div>
 								</form>
 							</div>
 						</div>		
@@ -60,8 +61,11 @@
 					</div>								
 				</div>
 			</div>
-		</div>
+		</div>		
 		<div id="message">
+			<div id="text" align="center"></div>
+		</div>		
+		<div id="status">
 			<div id="text" align="center"></div>
 		</div>
 	</body>	

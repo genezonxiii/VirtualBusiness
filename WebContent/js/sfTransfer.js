@@ -8,7 +8,16 @@
 		
 		$(function(){
 			$('#fileDiv').hide();
-			
+
+			status_dialog =
+				$('#status').dialog({
+					draggable : true,
+					resizable : false,
+					autoOpen : false,
+					modal : true,
+					height: 100,
+					width : 200
+					});
 			message_dialog =
 				$('#message').dialog({
 					draggable : true,
@@ -112,16 +121,28 @@
 			$(form).attr("action",action);
 			return true;
 		}
-		$('#form').ajaxForm(function(result) {
-			if(result=="false"){
-				$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認檔案是否正確!");
-				message_dialog.dialog("open");
-				$("#download").html("");
-			}else{
-				$('#message').find("#text").val('').html("轉檔成功!");
-				message_dialog.dialog("open");
-				$("#download").html("");
-				$("#download").append("&nbsp;&nbsp;&nbsp;<a href='./sfTransfer.do?action=download&fileName="+fileName+"&downloadName="+$('#select-type').val()+"_"+result+"'class='btn btn-primary'>檔案下載</a>");
-			}
-
-	    });
+		$('#form').ajaxForm({
+		    beforeSend: function() {
+				$('#status').find("#text").val('').html("轉檔開始!");
+				status_dialog.dialog("open");
+		    },
+		    uploadProgress: function(event, position, total, percentComplete) {
+		    	status_dialog.dialog("close");
+				$('#status').find("#text").val('').html("轉檔進行中!");
+				status_dialog.dialog("open");
+		    },
+		    success: function(result) {
+		    	
+		    	status_dialog.dialog("close");
+		    	if(result=="false"){
+					$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認檔案是否正確!");
+					message_dialog.dialog("open");
+					$("#download").html("");
+		    	}else{
+					$('#message').find("#text").val('').html("轉檔成功!");
+					message_dialog.dialog("open");
+					$("#download").html("");
+					$("#download").append("&nbsp;&nbsp;&nbsp;<a href='./sfTransfer.do?action=download&fileName="+fileName+"&downloadName="+$('#select-type').val()+"_"+result+"'class='btn btn-primary'>檔案下載</a>");
+		    	}
+		    }
+		});	

@@ -118,7 +118,7 @@ public class SFTransfer extends HttpServlet {
 				fileInput.read(content);
 				response.setContentType("application/octet-stream");
 
-				String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表." + ext : "出庫明細表." + ext;
+				String tmp = "inbound".equals(downloadName[0]) ? "�摨急�敦銵�." + ext : "�摨急�敦銵�." + ext;
 				response.setHeader("Content-Disposition",
 						"attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
 
@@ -131,7 +131,7 @@ public class SFTransfer extends HttpServlet {
 				e.printStackTrace();
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().write(
-						"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>找不到檔案</body></html>");
+						"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>�銝瑼��</body></html>");
 			}
 			break;
 		}
