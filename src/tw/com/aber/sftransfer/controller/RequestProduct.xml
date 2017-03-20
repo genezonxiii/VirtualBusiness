@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="ITEM_QUERY_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<ItemQueryRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<SkuNoList>
+				<SkuNo></SkuNo>
+			</SkuNoList>
+		</ItemQueryRequest>
+	</Body>
+</Request>
