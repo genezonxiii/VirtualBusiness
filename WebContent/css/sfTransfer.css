@@ -1,4 +1,4 @@
-﻿.master {
+.master {
 		display: inline-block;
 	    margin: 0 auto 25px auto;
 	    padding: 15px;
@@ -36,5 +36,5 @@
 }
 .fileTitle{
 	margin-top:10px; 
-	float: left;
+	float: center;
 }

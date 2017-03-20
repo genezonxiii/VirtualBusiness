@@ -81,7 +81,7 @@
 							'<div class="jFiler-item-assets">' +
 								'<div class="info">' +
 									'<ul >'+ 
-										'<li class="fileTitle">' + name + '\n' + size + '</li>' +
+										'<li class="fileTitle">' + name + '<br>' + size + '</li>' +
 									'</ul>'+
 								'</div>' +
 							'</div>' +
