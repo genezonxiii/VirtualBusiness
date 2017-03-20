@@ -1,5 +1,7 @@
 package tw.com.aber.sftransfer.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -22,6 +24,18 @@ public class Md5Base64 {
 		} catch (NoSuchAlgorithmException e) {
 			return null;
 		}
+		return encodeStr;
+	}
+	
+	public static String urlEncode(String s) {
+		String encodeStr = "";
+		try {
+			encodeStr = URLEncoder.encode(s, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return encodeStr;
 	}
 
