@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="ASYN_SALE_ORDER_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<SaleOrderRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<SaleOrders>
+				<SaleOrder>
+					<WarehouseCode>571DCF</WarehouseCode>
+					<SfOrderType>30</SfOrderType>
+					<ErpOrder>SI170301007</ErpOrder>
+					<TradeOrderDateTime>2017-03-22 15:00:00</TradeOrderDateTime>
+					<OrderReceiverInfo>
+						<ReceiverCompany>北祥</ReceiverCompany>
+						<ReceiverName>收件人</ReceiverName>
+						<ReceiverZipCode>114</ReceiverZipCode>
+						<ReceiverMobile>0912345678</ReceiverMobile>
+						<ReceiverCountry>台灣</ReceiverCountry>
+						<ReceiverAddress>台北市內湖區文湖街18號</ReceiverAddress>
+						<OrderItems>
+							<OrderItem>
+								<SkuNo>PY3001ASF</SkuNo>
+								<ItemQuantity>1</ItemQuantity>
+							</OrderItem>
+						</OrderItems>
+					</OrderReceiverInfo>
+				</SaleOrder>
+			</SaleOrders>
+		</SaleOrderRequest>
+	</Body>
+</Request>

@@ -6,8 +6,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Md5Base64 {
+	
+	private static final Logger logger = LogManager.getLogger(Md5Base64.class);
+	
 	public static String encode(String s) {
 		if (s == null)
 			return null;
@@ -32,7 +37,6 @@ public class Md5Base64 {
 		try {
 			encodeStr = URLEncoder.encode(s, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -40,8 +44,8 @@ public class Md5Base64 {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(Md5Base64.encode("庄严"));
-		System.out.println(Md5Base64.encode("123456"));
-		System.out.println(Md5Base64.encode("www.zhuangling.com"));
+		logger.debug(Md5Base64.encode("庄严"));
+		logger.debug(Md5Base64.encode("123456"));
+		logger.debug(Md5Base64.encode("www.zhuangling.com"));
 	}
 }

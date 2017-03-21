@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="PURCHASE_ORDER_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<PurchaseOrderRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<PurchaseOrders>
+				<PurchaseOrder>
+					<WarehouseCode>571DCF</WarehouseCode>
+					<ErpOrder>PI170112002</ErpOrder>
+					<ErpOrderType>10</ErpOrderType>
+					<ScheduledReceiptDate>2017-03-22 15:00:00</ScheduledReceiptDate>
+					<VendorCode>WYDGJ</VendorCode>
+					<Items>
+						<Item>
+							<SkuNo>PY3001ASF</SkuNo>
+							<Qty>100</Qty>
+						</Item>
+					</Items>
+				</PurchaseOrder>
+			</PurchaseOrders>
+		</PurchaseOrderRequest>
+	</Body>
+</Request>

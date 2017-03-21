@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="ITEM_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<ItemRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<Items>
+				<Item>
+					<SkuNo>PY3001ASF</SkuNo>
+					<ItemName>Urban Denim寵物床（城市牛仔-橘黑S）</ItemName>
+					<BarCode>
+						<BarCode1>817152011705</BarCode1>
+					</BarCode>
+					<Containers>
+						<Container>
+							<PackUm>CS</PackUm>
+						</Container>
+					</Containers>
+				</Item>
+				<Item>
+					<SkuNo>PY3001AMF</SkuNo>
+					<ItemName>Urban Denim寵物床（城市牛仔-橘黑M）</ItemName>
+					<BarCode>
+						<BarCode1>817152011712</BarCode1>
+					</BarCode>
+					<Containers>
+						<Container>
+							<PackUm>CS</PackUm>
+						</Container>
+					</Containers>
+				</Item>
+			</Items>
+		</ItemRequest>
+	</Body>
+</Request>

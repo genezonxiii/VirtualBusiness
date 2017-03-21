@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="CANCEL_PURCHASE_ORDER_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<CancelPurchaseOrderRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<PurchaseOrders>
+				<PurchaseOrder>
+					<ErpOrder>PI170112002</ErpOrder>
+				</PurchaseOrder>
+			</PurchaseOrders>
+		</CancelPurchaseOrderRequest>
+	</Body>
+</Request>

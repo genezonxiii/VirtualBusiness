@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<SaleOrderOutboundDetailRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<SaleOrders>
+				<SaleOrder>
+					<WarehouseCode>571DCF</WarehouseCode>
+					<ErpOrder>SI170301007</ErpOrder>
+				</SaleOrder>
+			</SaleOrders>
+		</SaleOrderOutboundDetailRequest>
+	</Body>
+</Request>

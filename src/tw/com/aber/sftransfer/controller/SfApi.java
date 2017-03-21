@@ -26,22 +26,242 @@ import org.w3c.dom.Element;
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
 	
-	private static final String xmlData1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-			"<Request service=\"ITEM_QUERY_SERVICE\" lang=\"zh-CN\">" +
-			"<Head>" +
-			"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
-			"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
-			"</Head>" +
-			"<Body>" +
-			"<ItemQueryRequest>" +
-			"<CompanyCode>WYDGJ</CompanyCode>" +
-			"<SkuNoList>" +
-			"<SkuNo>871864006589</SkuNo>" +
-			"</SkuNoList>" +
-			"</ItemQueryRequest>" +
-			"</Body>" +
-			"</Request>";
-	
+	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"ITEM_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<ItemRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<Items>" +
+		"<Item>" +
+		"<SkuNo>PY3001ASF</SkuNo>" +
+		"<ItemName>Urban Denim寵物床（城市牛仔-橘黑S）</ItemName>" +
+		"<BarCode>" +
+		"<BarCode1>817152011705</BarCode1>" +
+		"</BarCode>" +
+		"<Containers>" +
+		"<Container>" +
+		"<PackUm>CS</PackUm>" +
+		"</Container>" +
+		"</Containers>" +
+		"</Item>" +
+		"<Item>" +
+		"<SkuNo>PY3001AMF</SkuNo>" +
+		"<ItemName>Urban Denim寵物床（城市牛仔-橘黑M）</ItemName>" +
+		"<BarCode>" +
+		"<BarCode1>817152011712</BarCode1>" +
+		"</BarCode>" +
+		"<Containers>" +
+		"<Container>" +
+		"<PackUm>CS</PackUm>" +
+		"</Container>" +
+		"</Containers>" +
+		"</Item>" +
+		"</Items>" +
+		"</ItemRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataItemQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"ITEM_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<ItemQueryRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<SkuNoList>" +
+		"<SkuNo>PY3001ASF</SkuNo>" +
+		"</SkuNoList>" +
+		"</ItemQueryRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataPurchaseOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<PurchaseOrderRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<PurchaseOrders>" +
+		"<PurchaseOrder>" +
+		"<WarehouseCode>571DCF</WarehouseCode>" +
+		"<ErpOrder>PI170112002</ErpOrder>" +
+		"<ErpOrderType>10</ErpOrderType>" +
+		"<ScheduledReceiptDate>2017-03-22 15:00:00</ScheduledReceiptDate>" +
+		"<VendorCode>WYDGJ</VendorCode>" +
+		"<Items>" +
+		"<Item>" +
+		"<SkuNo>PY3001ASF</SkuNo>" +
+		"<Qty>100</Qty>" +
+		"</Item>" +
+		"</Items>" +
+		"</PurchaseOrder>" +
+		"</PurchaseOrders>" +
+		"</PurchaseOrderRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataPurchaseOrderInboundQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<PurchaseOrderInboundRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<PurchaseOrders>" +
+		"<PurchaseOrder>" +
+		"<WarehouseCode>571DCF</WarehouseCode>" +
+		"<ErpOrder>PI170112002</ErpOrder>" +
+		"</PurchaseOrder>" +
+		"</PurchaseOrders>" +
+		"</PurchaseOrderInboundRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataCancelPurchaseOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<CancelPurchaseOrderRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<PurchaseOrders>" +
+		"<PurchaseOrder>" +
+		"<ErpOrder>PI170112002</ErpOrder>" +
+		"</PurchaseOrder>" +
+		"</PurchaseOrders>" +
+		"</CancelPurchaseOrderRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataSaleOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"SALE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<SaleOrderRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<SaleOrders>" +
+		"<SaleOrder>" +
+		"<WarehouseCode>571DCF</WarehouseCode>" +
+		"<SfOrderType></SfOrderType>" +
+		"<ErpOrder>SI170301007</ErpOrder>" +
+		"<OrderReceiverInfo>" +
+		"<ReceiverCompany>北祥</ReceiverCompany>" +
+		"<ReceiverName>收件人</ReceiverName>" +
+		"<ReceiverZipCode>114</ReceiverZipCode>" +
+		"<ReceiverMobile>0912345678</ReceiverMobile>" +
+		"<ReceiverCountry>台灣</ReceiverCountry>" +
+		"<ReceiverAddress>台北市內湖區文湖街18號</ReceiverAddress>" +
+		"<OrderItems>" +
+		"<OrderItem>" +
+		"<SkuNo>PY3001ASF</SkuNo>" +
+		"<ItemQuantity>1</ItemQuantity>" +
+		"</OrderItem>" +
+		"</OrderItems>" +
+		"</OrderReceiverInfo>" +
+		"</SaleOrder>" +
+		"</SaleOrders>" +
+		"</SaleOrderRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataSaleOrderStatusQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"SALE_ORDER_STATUS_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<SaleOrderStatusRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<SaleOrders>" +
+		"<SaleOrder>" +
+		"<WarehouseCode>571DCF</WarehouseCode>" +
+		"<ErpOrder>SI170301007</ErpOrder>" +
+		"</SaleOrder>" +
+		"</SaleOrders>" +
+		"</SaleOrderStatusRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataSaleOrderOutboundDetailQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<SaleOrderOutboundDetailRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<SaleOrders>" +
+		"<SaleOrder>" +
+		"<WarehouseCode>571DCF</WarehouseCode>" +
+		"<ErpOrder>SI170301007</ErpOrder>" +
+		"</SaleOrder>" +
+		"</SaleOrders>" +
+		"</SaleOrderOutboundDetailRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataCancelSaleOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"CANCEL_SALE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<CancelSaleOrderRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<SaleOrders>" +
+		"<SaleOrder>" +
+		"<ErpOrder>SI170301007</ErpOrder>" +
+		"</SaleOrder>" +
+		"</SaleOrders>" +
+		"</CancelSaleOrderRequest>" +
+		"</Body>" +
+		"</Request>";
+	private static final String xmlDataAsynSaleOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+		"<Request service=\"ASYN_SALE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Head>" +
+		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
+		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
+		"</Head>" +
+		"<Body>" +
+		"<SaleOrderRequest>" +
+		"<CompanyCode>WYDGJ</CompanyCode>" +
+		"<SaleOrders>" +
+		"<SaleOrder>" +
+		"<WarehouseCode>571DCF</WarehouseCode>" +
+		"<SfOrderType>30</SfOrderType>" +
+		"<ErpOrder>SI170301007</ErpOrder>" +
+		"<TradeOrderDateTime>2017-03-22 15:00:00</TradeOrderDateTime>" +
+		"<OrderReceiverInfo>" +
+		"<ReceiverCompany>北祥</ReceiverCompany>" +
+		"<ReceiverName>收件人</ReceiverName>" +
+		"<ReceiverZipCode>114</ReceiverZipCode>" +
+		"<ReceiverMobile>0912345678</ReceiverMobile>" +
+		"<ReceiverCountry>台灣</ReceiverCountry>" +
+		"<ReceiverAddress>台北市內湖區文湖街18號</ReceiverAddress>" +
+		"<OrderItems>" +
+		"<OrderItem>" +
+		"<SkuNo>PY3001ASF</SkuNo>" +
+		"<ItemQuantity>1</ItemQuantity>" +
+		"</OrderItem>" +
+		"</OrderItems>" +
+		"</OrderReceiverInfo>" +
+		"</SaleOrder>" +
+		"</SaleOrders>" +
+		"</SaleOrderRequest>" +
+		"</Body>" +
+		"</Request>";
+
 	public static void main(String[] args){
 		SfApi api = new SfApi();
 		
@@ -53,8 +273,9 @@ public class SfApi {
 		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
 		String urlParameters = "";
 		
-		String logisticsInterface = xmlData1;
-		String dataDigest = xmlData1 + "123456";
+		String reqXml = xmlDataAsynSaleOrderServiceRequest;
+		String logisticsInterface = reqXml;
+		String dataDigest = reqXml + "123456";
 		
 		Md5Base64 enMd5Base64 = new Md5Base64();
 		dataDigest = enMd5Base64.encode(dataDigest);

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="PURCHASE_ORDER_INBOUND_QUERY_SERVICE" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<PurchaseOrderInboundRequest>
+			<CompanyCode>WYDGJ</CompanyCode>
+			<PurchaseOrders>
+				<PurchaseOrder>
+					<WarehouseCode>571DCF</WarehouseCode>
+					<ErpOrder>PI170112002</ErpOrder>
+				</PurchaseOrder>
+			</PurchaseOrders>
+		</PurchaseOrderInboundRequest>
+	</Body>
+</Request>
