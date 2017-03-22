@@ -130,7 +130,7 @@
 					data : info
 				},
 		        columnDefs: [{
-				    targets:  8 ,
+				    targets:  9 ,
 					render: function ( data, type, row ) {
 						   var tmp =(row.photo==null?
 									   "":(row.photo.length<1)?
@@ -138,7 +138,7 @@
 					  	   return tmp;
 					}
 				},{
-				    targets:  9 ,
+				    targets:  10 ,
 					render: function ( data, type, row ) {
 						   var tmp =(row.photo1==null?
 								   "":(row.photo1.length<1)?
