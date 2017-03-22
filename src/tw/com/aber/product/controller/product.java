@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import tw.com.aber.vo.ProductTypeVO;
@@ -24,6 +27,7 @@ import tw.com.aber.vo.SupplyVO;
 
 public class product extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LogManager.getLogger(product.class);
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -31,6 +35,8 @@ public class product extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		ProductService productService = null;
 		String action = request.getParameter("action");
+		logger.debug("Action:" + action);
+		
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		if ("find_barcode".equals(action)) {
@@ -58,6 +64,7 @@ public class product extends HttpServlet {
 				 * 1.接收請求參數-格式檢查
 				 ****************************************/
 				String product_name = request.getParameter("product_name");
+				logger.debug("product_name:" + product_name);
 				/***************************
 				 * 2.開始查詢資料
 				 ****************************************/
@@ -68,6 +75,7 @@ public class product extends HttpServlet {
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
+					logger.debug("jsonStrList:" + jsonStrList);
 					return;// 程式中斷
 				}
 				// 查詢指定Name 假如廠商名稱輸入不適空白 或是有東西 進入下面
@@ -91,6 +99,7 @@ public class product extends HttpServlet {
 				 * 1.接收請求參數-格式檢查
 				 ****************************************/
 				String supply_name = request.getParameter("supply_name");
+				logger.debug("supply_name:" + supply_name);
 				/***************************
 				 * 2.開始查詢資料
 				 ****************************************/
@@ -101,6 +110,7 @@ public class product extends HttpServlet {
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
+					logger.debug("jsonStrList:" + jsonStrList);
 					return;// 程式中斷
 				}
 				// 查詢指定Name 假如廠商名稱輸入不是空白 或是有東西 進入下面
@@ -110,6 +120,7 @@ public class product extends HttpServlet {
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
+					logger.debug("jsonStrList:" + jsonStrList);
 					return;// 程式中斷
 				}
 				/*************************** 其他可能的錯誤處理 **********************************/
