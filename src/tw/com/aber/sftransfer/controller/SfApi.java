@@ -22,7 +22,6 @@ import tw.com.aber.sf.vo.CancelPurchaseOrderRequest;
 import tw.com.aber.sf.vo.CancelSaleOrderRequest;
 import tw.com.aber.sf.vo.Containers;
 import tw.com.aber.sf.vo.Head;
-import tw.com.aber.sf.vo.Item;
 import tw.com.aber.sf.vo.ItemQueryRequest;
 import tw.com.aber.sf.vo.ItemRequest;
 import tw.com.aber.sf.vo.Items;
@@ -39,6 +38,7 @@ import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
 import tw.com.aber.sf.vo.SaleOrderRequest;
 import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
+import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
 
 public class SfApi {
@@ -298,7 +298,7 @@ public class SfApi {
 	public String genItemService() {
 		String result;
 		
-		List<Item> itemList = new ArrayList<tw.com.aber.sf.vo.Item>();
+		List<SfItem> itemList = new ArrayList<SfItem>();
 		
 		//Containers
 		tw.com.aber.sf.vo.Container container = new tw.com.aber.sf.vo.Container();
@@ -311,7 +311,7 @@ public class SfApi {
 		BarCode barCode = new BarCode();
 		barCode.setBarCode1("817152011705");
 		
-		tw.com.aber.sf.vo.Item item = new tw.com.aber.sf.vo.Item();
+		SfItem item = new SfItem();
 		item.setSkuNo("PY3001ASF");
 		item.setItemName("Urban Denim寵物床（城市牛仔-橘黑S）");
 		item.setBarCode(barCode);
@@ -323,7 +323,7 @@ public class SfApi {
 		BarCode barCode2 = new BarCode();
 		barCode2.setBarCode1("817152011712");
 		
-		tw.com.aber.sf.vo.Item item2 = new tw.com.aber.sf.vo.Item();
+		SfItem item2 = new SfItem();
 		item2.setSkuNo("PY3001AMF");
 		item2.setItemName("Urban Denim寵物床（城市牛仔-橘黑M）");
 		item2.setBarCode(barCode2);
@@ -335,7 +335,7 @@ public class SfApi {
 		BarCode barCode3 = new BarCode();
 		barCode3.setBarCode1("817152011729");
 		
-		tw.com.aber.sf.vo.Item item3 = new tw.com.aber.sf.vo.Item();
+		SfItem item3 = new SfItem();
 		item3.setSkuNo("PY3001ALF");
 		item3.setItemName("Urban Denim寵物床（城市牛仔-橘黑L）");
 		item3.setBarCode(barCode3);
@@ -424,25 +424,25 @@ public class SfApi {
 	public String genPurchaseOrderService() {
 		String result;
 		
-		List<Item> itemList = new ArrayList<tw.com.aber.sf.vo.Item>();
+		List<SfItem> itemList = new ArrayList<SfItem>();
 		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 		
 		//item1
-		Item item = new Item();
+		SfItem item = new SfItem();
 		item.setSkuNo("PY3001ASF");
 		item.setQty("100");
 		
 		itemList.add(item);
 		
 		//item2
-		Item item2 = new Item();
+		SfItem item2 = new SfItem();
 		item2.setSkuNo("PY3001AMF");
 		item2.setQty("110");
 		
 		itemList.add(item2);
 		
 		//item3
-		Item item3 = new Item();
+		SfItem item3 = new SfItem();
 		item3.setSkuNo("PY3001ALF");
 		item3.setQty("120");
 		
@@ -892,7 +892,7 @@ public class SfApi {
 	
 	public static void main(String[] args){
 		SfApi api = new SfApi();		
-		String genXML = api.genCancelSaleOrderService();
+		String genXML = api.genItemService();
 		api.sendXML(genXML);
 	}
 	

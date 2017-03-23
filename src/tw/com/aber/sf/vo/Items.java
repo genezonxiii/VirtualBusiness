@@ -13,13 +13,13 @@ public class Items {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name = "Item")
-    private List<Item> itemList;
+    private List<SfItem> itemList;
 
-	public List<Item> getItemList() {
+	public List<SfItem> getItemList() {
 		return itemList;
 	}
 
-	public void setItemList(List<Item> itemList) {
+	public void setItemList(List<SfItem> itemList) {
 		this.itemList = itemList;
 	}
 

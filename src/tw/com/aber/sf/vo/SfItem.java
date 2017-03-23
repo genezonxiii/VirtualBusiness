@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="Item")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Item {
+public class SfItem {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name = "SkuNo")
