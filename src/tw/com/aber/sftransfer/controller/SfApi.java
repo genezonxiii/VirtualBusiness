@@ -38,6 +38,7 @@ import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
 import tw.com.aber.sf.vo.SaleOrderRequest;
 import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
+import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
 
@@ -301,7 +302,7 @@ public class SfApi {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 		
 		//Containers
-		tw.com.aber.sf.vo.Container container = new tw.com.aber.sf.vo.Container();
+		SfContainer container = new SfContainer();
 		container.setPackUm("CS");
 		
 		Containers containers = new Containers();

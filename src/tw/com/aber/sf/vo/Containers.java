@@ -11,13 +11,13 @@ public class Containers {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name = "Container")
-    private Container container;
+    private SfContainer container;
 
-	public Container getContainer() {
+	public SfContainer getContainer() {
 		return container;
 	}
 
-	public void setContainer(Container container) {
+	public void setContainer(SfContainer container) {
 		this.container = container;
 	}
 

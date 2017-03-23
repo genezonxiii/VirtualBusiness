@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="Container")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Container {
+public class SfContainer {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name = "PackUm")
