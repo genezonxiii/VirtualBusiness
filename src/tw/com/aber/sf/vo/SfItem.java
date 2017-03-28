@@ -14,13 +14,14 @@ public class SfItem {
     private String skuNo;
 	@XmlElement(name = "ItemName")
     private String itemName;
+	@XmlElement(name = "Description")
+    private String description;
 	@XmlElement(name = "Qty")
     private String Qty;
     @XmlElement(name = "BarCode")
     private BarCode barCode;
     @XmlElement(name = "Containers")
     private Containers containers;
-    
 	public String getSkuNo() {
 		return skuNo;
 	}
@@ -32,6 +33,12 @@ public class SfItem {
 	}
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public String getQty() {
 		return Qty;
@@ -55,6 +62,4 @@ public class SfItem {
 		return serialVersionUID;
 	}
     
-    
-
 }

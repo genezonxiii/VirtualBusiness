@@ -43,7 +43,6 @@ public class SFTransfer extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		doPost(request, response);
 	}
 
@@ -56,80 +55,171 @@ public class SFTransfer extends HttpServlet {
 
 		logger.debug("action: " + action);
 
-		String[] actions = { "upload", "download" };
+		String[] actions = { "upload", "download", 
+				"genItemService", 
+				"genItemQueryService", 
+				"genPurchaseOrderService",
+				"genPurchaseOrderInboundQueryService", 
+				"genCancelPurchaseOrderInboundQueryService",
+				"genSaleOrderService",
+				"genSaleOrderOutboundDetailQueryService",
+				"genSaleOrderStatusQueryService",
+				"genCancelSaleOrderService"};
 
 		int key = Arrays.asList(actions).indexOf(action);
 
 		logger.debug("key: " + key);
+		
+		String ws = getServletConfig().getServletContext().getInitParameter("pythonwebservice");
 
 		switch (key) {
-
-		case 0: {
-			String type = request.getParameter("type");
-			logger.debug("\ntype: {}", type);
-
-			String conString = "";
-			String ret = "E";
-			conString = putFile(request, response, type);
-
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (Exception e) {
-				ret = "Sleep error";
-			}
-			if (conString.charAt(0) != 'E') {
-				ret = webService(request, response, conString);
-			} else {
-				ret = conString;
-			}
-			ret = ((ret == null) ? "E" : ret);
-			logger.debug("ret: ", ret);
-			response.getWriter().write(ret);
-
-			break;
-		}
-		case 1: {
-			String ext = ".xls";
-			String encode_fileName = request.getParameter("downloadName");
-			String[] downloadName = encode_fileName.split("_");
-			String decode_fileName = new String(Base64.decodeBase64(downloadName[1].getBytes()));
-			String file_path = "/data/vbSF_output/" + decode_fileName;
-
-			try {
-				FileInputStream fileInput = new FileInputStream(file_path);
-				int i = fileInput.available();
-				byte[] content = new byte[i];
-
-				fileInput.read(content);
-				response.setContentType("application/octet-stream");
-
-				String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表" + ext : "出庫明細表" + ext;
-				response.setHeader("Content-Disposition",
-						"attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
-
-				OutputStream output = null;
+			case 0: {
+				String type = request.getParameter("type");
+				logger.debug("\ntype: {}", type);
+	
+				String conString = "";
+				String ret = "E";
+				conString = putFile(request, response, type);
+	
 				try {
-					output = response.getOutputStream();
-					output.write(content);
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					output.flush();
-					fileInput.close();
-					output.close();
+					TimeUnit.SECONDS.sleep(2);
+				} catch (Exception e) {
+					ret = "Sleep error";
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				response.setCharacterEncoding("UTF-8");
-				response.getWriter().write(
-						"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>�銝瑼��</body></html>");
+				if (conString.charAt(0) != 'E') {
+					ret = webService(request, response, conString);
+				} else {
+					ret = conString;
+				}
+				ret = ((ret == null) ? "E" : ret);
+				logger.debug("ret: ", ret);
+				response.getWriter().write(ret);
+	
+				break;
 			}
-			break;
-		}
-		default: {
-
-			break;
-		}
+			case 1: {
+				String ext = ".xls";
+				String encode_fileName = request.getParameter("downloadName");
+				String[] downloadName = encode_fileName.split("_");
+				String decode_fileName = new String(Base64.decodeBase64(downloadName[1].getBytes()));
+				String file_path = "/data/vbSF_output/" + decode_fileName;
+	
+				try {
+					FileInputStream fileInput = new FileInputStream(file_path);
+					int i = fileInput.available();
+					byte[] content = new byte[i];
+	
+					fileInput.read(content);
+					response.setContentType("application/octet-stream");
+	
+					String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表" + ext : "出庫明細表" + ext;
+					response.setHeader("Content-Disposition",
+							"attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
+	
+					OutputStream output = null;
+					try {
+						output = response.getOutputStream();
+						output.write(content);
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+						output.flush();
+						fileInput.close();
+						output.close();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					response.setCharacterEncoding("UTF-8");
+					response.getWriter().write(
+							"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>�銝瑼��</body></html>");
+				}
+				break;
+			}
+			case 2: {
+				SfApi api = new SfApi();		
+				String genXML = api.genItemService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 3: {
+				SfApi api = new SfApi();		
+				String genXML = api.genItemQueryService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 4: {
+				SfApi api = new SfApi();		
+				String genXML = api.genPurchaseOrderService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 5: {
+				String po = request.getParameter("po");
+				logger.debug("Purchase Order:".concat(po));
+				
+				SfApi api = new SfApi();		
+				String genXML = api.genPurchaseOrderInboundQueryService(po);
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 6: {
+				SfApi api = new SfApi();		
+				String genXML = api.genCancelPurchaseOrderInboundQueryService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 7: {
+				SfApi api = new SfApi();		
+				String genXML = api.genSaleOrderService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 8: {
+				SfApi api = new SfApi();		
+				String genXML = api.genSaleOrderOutboundDetailQueryService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 9: {
+				String so = request.getParameter("so");
+				logger.debug("Purchase Order:".concat(so));
+				
+				SfApi api = new SfApi();		
+				String genXML = api.genSaleOrderStatusQueryService(so);
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write(returnXML);
+				break;
+			}
+			case 10: {
+				SfApi api = new SfApi();		
+				String genXML = api.genCancelSaleOrderService();
+				String returnXML = api.sendXMLbyWS(ws, genXML);
+				response.getWriter().write(genXML);
+				response.getWriter().write(returnXML);
+				break;
+			}
+			default: {
+	
+				break;
+			}
 		}
 	}
 

@@ -14,6 +14,8 @@ public class SaleOrder {
     private String warehouseCode;
 	@XmlElement(name = "SfOrderType")
     private String sfOrderType;
+	@XmlElement(name = "ErpOrderType")
+    private String erpOrderType;
 	@XmlElement(name = "ErpOrder")
     private String erpOrder;
 	@XmlElement(name = "OrderReceiverInfo")
@@ -31,6 +33,12 @@ public class SaleOrder {
 	public void setSfOrderType(String sfOrderType) {
 		this.sfOrderType = sfOrderType;
 	}
+	public String getErpOrderType() {
+		return erpOrderType;
+	}
+	public void setErpOrderType(String erpOrderType) {
+		this.erpOrderType = erpOrderType;
+	}
 	public String getErpOrder() {
 		return erpOrder;
 	}
@@ -46,6 +54,5 @@ public class SaleOrder {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
-    
+	    
 }

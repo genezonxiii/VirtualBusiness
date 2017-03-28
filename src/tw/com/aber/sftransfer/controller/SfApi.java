@@ -4,15 +4,23 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXB;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,8 +53,10 @@ import tw.com.aber.sf.vo.SkuNoList;
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
 	
+	private static final String testOrderType = "采购入库";
+	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"ITEM_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"ITEM_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -84,7 +94,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataItemQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"ITEM_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"ITEM_QUERY_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -99,7 +109,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataPurchaseOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -141,7 +151,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataPurchaseOrderInboundQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -159,7 +169,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataCancelPurchaseOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -176,7 +186,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataSaleOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"SALE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"SALE_ORDER_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -209,7 +219,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataSaleOrderStatusQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"SALE_ORDER_STATUS_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"SALE_ORDER_STATUS_QUERY_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -227,7 +237,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataSaleOrderOutboundDetailQueryServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -245,7 +255,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataCancelSaleOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"CANCEL_SALE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"CANCEL_SALE_ORDER_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -262,7 +272,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 	private static final String xmlDataAsynSaleOrderServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-		"<Request service=\"ASYN_SALE_ORDER_SERVICE\" lang=\"zh-CN\">" +
+		"<Request service=\"ASYN_SALE_ORDER_SERVICE\" lang=\"zh-TW\">" +
 		"<Head>" +
 		"<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>" +
 		"<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>" +
@@ -310,39 +320,21 @@ public class SfApi {
 		
 		//item1
 		BarCode barCode = new BarCode();
-		barCode.setBarCode1("817152011705");
+		barCode.setBarCode1("12345");
 		
 		SfItem item = new SfItem();
 		item.setSkuNo("PY3001ASF");
-		item.setItemName("Urban Denim寵物床（城市牛仔-橘黑S）");
-		item.setBarCode(barCode);
-		item.setContainers(containers);
+		item.setItemName("採購入庫");
+		
+		String itemDescNo = this.genNo();
+		try {
+			String test = new String( "采购入库".getBytes("UTF-8") );
+			item.setDescription( "采购入库".concat(itemDescNo));
+		} catch (UnsupportedEncodingException uee) {
+			logger.error("UnsupportedEncodingException:" + uee.getMessage());
+		}
 		
 		itemList.add(item);
-		
-		//item2
-		BarCode barCode2 = new BarCode();
-		barCode2.setBarCode1("817152011712");
-		
-		SfItem item2 = new SfItem();
-		item2.setSkuNo("PY3001AMF");
-		item2.setItemName("Urban Denim寵物床（城市牛仔-橘黑M）");
-		item2.setBarCode(barCode2);
-		item2.setContainers(containers);
-		
-		itemList.add(item2);
-		
-		//item3
-		BarCode barCode3 = new BarCode();
-		barCode3.setBarCode1("817152011729");
-		
-		SfItem item3 = new SfItem();
-		item3.setSkuNo("PY3001ALF");
-		item3.setItemName("Urban Denim寵物床（城市牛仔-橘黑L）");
-		item3.setBarCode(barCode3);
-		item3.setContainers(containers);
-		
-		itemList.add(item3);
 		
 		Items items = new Items();
 		items.setItemList(itemList);
@@ -361,7 +353,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
         mainXML.setBody(body);
 		
@@ -371,11 +363,7 @@ public class SfApi {
         logger.debug(sw.toString());
         result = sw.toString();
         logger.debug("--- end: output of marshalling ----");
-        logger.debug("--- start: output of unmarshalling ----");
-        
-        Request unmarshalled = JAXB.unmarshal(new StringReader(sw.toString()), Request.class);
-        logger.debug(unmarshalled.getBody().getItemRequest().getItems().getItemList());
-        
+      
         return result;
 	}
 	
@@ -386,10 +374,6 @@ public class SfApi {
 		
 		//item1
 		skuNo.add("PY3001ASF");
-		//item2
-		skuNo.add("PY3001AMF");
-		//item3
-		skuNo.add("PY3001ALF");
 		
 		SkuNoList skuNoList = new SkuNoList();
 		skuNoList.setSkuNo(skuNo);
@@ -408,7 +392,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_QUERY_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
         mainXML.setBody(body);
 		
@@ -430,34 +414,36 @@ public class SfApi {
 		
 		//item1
 		SfItem item = new SfItem();
-		item.setSkuNo("PY3001ASF");
+		item.setSkuNo("1437368316");
 		item.setQty("100");
 		
 		itemList.add(item);
 		
-		//item2
-		SfItem item2 = new SfItem();
-		item2.setSkuNo("PY3001AMF");
-		item2.setQty("110");
-		
-		itemList.add(item2);
-		
-		//item3
-		SfItem item3 = new SfItem();
-		item3.setSkuNo("PY3001ALF");
-		item3.setQty("120");
-		
-		itemList.add(item3);
+//		//item2
+//		SfItem item2 = new SfItem();
+//		item2.setSkuNo("1437368316");
+//		item2.setQty("110");
+//		
+//		itemList.add(item2);
+//		
+//		//item3
+//		SfItem item3 = new SfItem();
+//		item3.setSkuNo("PY3001ALF");
+//		item3.setQty("120");
+//		
+//		itemList.add(item3);
 		
 		Items items = new Items();
 		items.setItemList(itemList);
 		
 		//purchaseOrder1
+		String purInstructNo = this.genNo();
+		
 		PurchaseOrder purchaseOrder = new PurchaseOrder();
 		purchaseOrder.setWarehouseCode("571DCF");
-		purchaseOrder.setErpOrder("PI170112002");
+		purchaseOrder.setErpOrder("PI".concat(purInstructNo).concat("-1"));
 		purchaseOrder.setErpOrderType("10");
-		purchaseOrder.setsFOrderType("10");
+		purchaseOrder.setsFOrderType("采购入库");
 		purchaseOrder.setScheduledReceiptDate("2017-03-25 15:00:00");
 		purchaseOrder.setVendorCode("WYDGJ");
 		purchaseOrder.setItems(items);
@@ -467,9 +453,9 @@ public class SfApi {
 		//purchaseOrder2
 		PurchaseOrder purchaseOrder2 = new PurchaseOrder();
 		purchaseOrder2.setWarehouseCode("571DCF");
-		purchaseOrder2.setErpOrder("PI170323001");
+		purchaseOrder2.setErpOrder("PI".concat(purInstructNo).concat("-2"));
 		purchaseOrder2.setErpOrderType("10");
-		purchaseOrder2.setsFOrderType("10");
+		purchaseOrder2.setsFOrderType("采购入库");
 		purchaseOrder2.setScheduledReceiptDate("2017-03-25 15:00:00");
 		purchaseOrder2.setVendorCode("WYDGJ");
 		purchaseOrder2.setItems(items);
@@ -493,7 +479,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
         mainXML.setBody(body);
 		
@@ -507,22 +493,29 @@ public class SfApi {
         return result;
 	}
 	
-	public String genPurchaseOrderInboundQueryService() {
+	public String genPurchaseOrderInboundQueryService(String po) {
 		String result;
 		
 		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 		
-		//purchaseOrder1
+		//purchaseOrder
 		PurchaseOrder purchaseOrder = new PurchaseOrder();
 		purchaseOrder.setWarehouseCode("571DCF");
-		purchaseOrder.setErpOrder("PI170112002");
+		purchaseOrder.setErpOrder(po);
 		
 		purchaseOrderList.add(purchaseOrder);
+		
+		//purchaseOrder1
+		PurchaseOrder purchaseOrder1 = new PurchaseOrder();
+		purchaseOrder1.setWarehouseCode("571DCF");
+		purchaseOrder1.setErpOrder(po.concat("-1"));
+		
+		purchaseOrderList.add(purchaseOrder1);
 		
 		//purchaseOrder2
 		PurchaseOrder purchaseOrder2 = new PurchaseOrder();
 		purchaseOrder2.setWarehouseCode("571DCF");
-		purchaseOrder2.setErpOrder("PI170323001");
+		purchaseOrder2.setErpOrder(po.concat("-2"));
 		
 		purchaseOrderList.add(purchaseOrder2);
 		
@@ -543,7 +536,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_INBOUND_QUERY_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 	    mainXML.setBody(body);
 		
@@ -591,7 +584,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 	    mainXML.setBody(body);
 		
@@ -637,10 +630,12 @@ public class SfApi {
 		orderReceiverInfo.setReceiverAddress("台北市內湖區文湖街18號");
 		orderReceiverInfo.setOrderItems(orderItems);
 		
+		String saleNo = this.genNo();
+		
 		SaleOrder saleOrder = new SaleOrder();
 		saleOrder.setWarehouseCode("571DCF");
-		saleOrder.setSfOrderType("10");
-		saleOrder.setErpOrder("SI170301007");
+		saleOrder.setSfOrderType("销售订单");
+		saleOrder.setErpOrder("SI".concat(saleNo));
 		saleOrder.setOrderReceiverInfo(orderReceiverInfo);
 		
 		saleOrderList.add(saleOrder);
@@ -662,7 +657,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 	    mainXML.setBody(body);
 		
@@ -676,7 +671,7 @@ public class SfApi {
 	    return result;
 	}
 
-	public String genSaleOrderStatusQueryService() {
+	public String genSaleOrderStatusQueryService(String so) {
 		String result;
 		
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
@@ -684,7 +679,7 @@ public class SfApi {
 		//saleOrder1
 		SaleOrder saleOrder = new SaleOrder();
 		saleOrder.setWarehouseCode("571DCF");
-		saleOrder.setErpOrder("SI170301007");
+		saleOrder.setErpOrder(so);
 
 		saleOrderList.add(saleOrder);
 		
@@ -712,7 +707,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_STATUS_QUERY_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 	    mainXML.setBody(body);
 		
@@ -762,7 +757,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 	    mainXML.setBody(body);
 		
@@ -810,7 +805,7 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN");
+		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 	    mainXML.setBody(body);
 		
@@ -824,7 +819,13 @@ public class SfApi {
 	    return result;
 	}
 
-	public void sendXML(String reqXml) {
+	public String genNo() {
+		Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		return dateFormat.format(date).toString();
+	}
+
+	public String sendXML(String reqXml) {
 		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
 		String urlParameters = "";
 		
@@ -838,6 +839,7 @@ public class SfApi {
 		logger.debug("md5 + Base64:" + dataDigest);
 		dataDigest = enMd5Base64.urlEncode(dataDigest);
 		logger.debug("md5 + Base64 > urlEncode:" + dataDigest);
+		
 		logisticsInterface = enMd5Base64.urlEncode(logisticsInterface);
 		logger.debug("logisticsInterface:" + logisticsInterface);
 		
@@ -845,8 +847,38 @@ public class SfApi {
 		
 		String returnValue = api.executePost(targetURL, urlParameters);
 		logger.debug("returnValue:" + returnValue);
+		return returnValue;
 	}
 
+	public String sendXMLbyWS(String ws, String reqXml) {
+		
+		String conString = 
+				//getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+				ws
+				+ "/sfexpressapi/data="
+				+ new String(Base64.encodeBase64String(reqXml.getBytes()));
+		
+		logger.debug(conString);
+		
+		HttpClient client = new HttpClient();
+		HttpMethod method = null;
+		String ret="";
+		try{
+			method=new GetMethod(conString);
+			client.executeMethod(method);
+			
+			StringWriter writer = new StringWriter();
+			IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
+			ret = writer.toString();
+		}catch(Exception e){
+			return "WebService Error for:"+e.toString();
+		} finally {
+			method.releaseConnection();
+			
+		}
+		return ret;	
+	}
+	
 	public static String executePost(String targetURL, String urlParameters) {
 		HttpURLConnection connection = null;
 
@@ -858,7 +890,7 @@ public class SfApi {
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
 			connection.setRequestProperty("Content-Length", Integer.toString(urlParameters.getBytes().length));
-			connection.setRequestProperty("Content-Language", "zh-CN");
+			connection.setRequestProperty("Content-Language", "zh-TW");
 
 			connection.setUseCaches(false);
 			connection.setDoOutput(true);
@@ -871,8 +903,7 @@ public class SfApi {
 			// Get Response
 			InputStream is = connection.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-			StringBuilder response = new StringBuilder(); // or StringBuffer if
-															// Java version 5+
+			StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
 			String line;
 			while ((line = rd.readLine()) != null) {
 				response.append(line);
@@ -890,11 +921,60 @@ public class SfApi {
 		}
 	}
 
+	public void codeTest(){
+		 try {
+	            
+			// 測試中文轉碼
+			String x = "采购入库";
+
+			System.out.printf("%s:\t%s\n", "String", x);
+
+			System.out.print("BIG5:\t");
+			byte y[] = x.getBytes("big5");
+			for (int i = 0; i < y.length; i++) {
+				System.out.printf("%x ", y[i]);
+			}
+			System.out.println(y);
+
+			System.out.print("UTF-8:\t");
+			byte z[] = x.getBytes("utf-8");
+			for (int i = 0; i < z.length; i++) {
+				System.out.printf("%x ", z[i]);
+			}
+			System.out.println(z);
+
+			String v = new String(y);
+			System.out.println("BIG5:\t".concat(v));
+
+			String w = new String(z);
+			System.out.println("UTF-8:\t".concat(w));
+
+		} catch (java.io.UnsupportedEncodingException e) {
+			System.out.println("Error: UnsupportedEncodingException - ".concat(e.getMessage()));
+			System.exit(1);
+		}
+	}
 	
 	public static void main(String[] args){
 		SfApi api = new SfApi();		
-		String genXML = api.genItemService();
+		String genXML = "";
+		
+		genXML = api.genItemService();
 		api.sendXML(genXML);
+	
+//		genXML = api.genItemQueryService();
+//		api.sendXML(genXML);
+
+//		genXML = api.genPurchaseOrderService();
+//		api.sendXML(genXML);
+		
+//		api.codeTest();
+		
+//		genXML = api.genItemService();
+//		api.sendXMLbyWS(genXML);		
+		
+//		genXML = api.genPurchaseOrderService();
+//		api.sendXMLbyWS("http://192.168.112.164:8090", genXML);
 	}
 	
 }

@@ -14,10 +14,18 @@ public class Md5Base64 {
 	private static final Logger logger = LogManager.getLogger(Md5Base64.class);
 	
 	public static String encode(String s) {
-		if (s == null)
+		if (s == null) {
 			return null;
+		}
 		String encodeStr = "";
-		byte[] utfBytes = s.getBytes();
+		
+		byte[] utfBytes = null;
+		try {
+			utfBytes = s.getBytes("utf8");
+		} catch (UnsupportedEncodingException uee) {
+			logger.error("UnsupportedEncodingException:" + uee.getMessage());
+		}
+		
 		MessageDigest mdTemp;
 		try {
 			mdTemp = MessageDigest.getInstance("MD5");
@@ -26,8 +34,8 @@ public class Md5Base64 {
 			
 			
 			encodeStr = Base64.encodeBase64String(md5Bytes);
-		} catch (NoSuchAlgorithmException e) {
-			return null;
+		} catch (NoSuchAlgorithmException nsae) {
+			logger.error("NoSuchAlgorithmException:" + nsae.getMessage());
 		}
 		return encodeStr;
 	}
@@ -36,8 +44,8 @@ public class Md5Base64 {
 		String encodeStr = "";
 		try {
 			encodeStr = URLEncoder.encode(s, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+		} catch (UnsupportedEncodingException uee) {
+			logger.error("UnsupportedEncodingException:" + uee.getMessage());
 		}
 		
 		return encodeStr;
