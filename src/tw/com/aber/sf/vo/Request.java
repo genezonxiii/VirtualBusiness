@@ -5,9 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="Request")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "head", "body" })
 public class Request {
 	private static final long serialVersionUID = 1L;
 	

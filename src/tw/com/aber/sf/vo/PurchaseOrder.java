@@ -4,9 +4,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="PurchaseOrder")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "warehouseCode", "erpOrder", "erpOrderType", "sFOrderType", "scheduledReceiptDate",
+		"vendorCode", "items"})
 public class PurchaseOrder {
 	private static final long serialVersionUID = 1L;
 	
@@ -24,6 +27,7 @@ public class PurchaseOrder {
     private String vendorCode;
 	@XmlElement(name = "Items")
     private Items items;
+	
 	public String getWarehouseCode() {
 		return warehouseCode;
 	}
