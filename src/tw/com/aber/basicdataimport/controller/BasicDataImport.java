@@ -2,7 +2,9 @@ package tw.com.aber.basicdataimport.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.httpclient.HttpClient;
@@ -46,11 +49,11 @@ public class BasicDataImport extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 
+		transfer(request, response);
+
 		String action = request.getParameter("action");
 
-		logger.debug("action: " + action);
-
-		String[] actions = { "transfer", "download" };
+		String[] actions = { "download" };
 
 		int key = Arrays.asList(actions).indexOf(action);
 
@@ -59,31 +62,6 @@ public class BasicDataImport extends HttpServlet {
 		switch (key) {
 
 		case 0: {
-			String type = request.getParameter("type");
-			String filename = request.getParameter("filename");
-			logger.debug("\ntype: {}\nfilename: {}", type, filename);
-
-			String conString = "";
-			String ret = "E";
-			conString = putFile(request, response, type, filename);
-
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (Exception e) {
-				ret = "Sleep error";
-			}
-			if (conString.charAt(0) != 'E') {
-				ret = webService(request, response, conString);
-			} else {
-				ret = conString;
-			}
-			ret = ((ret == null) ? "E" : ret);
-			logger.debug("ret: ", ret);
-			response.getWriter().write(ret);
-
-			break;
-		}
-		case 1: {
 			String type = request.getParameter("type");
 
 			String file_path = "/data/vbBasicData/template/" + type + ".xls";
@@ -118,6 +96,132 @@ public class BasicDataImport extends HttpServlet {
 			break;
 		}
 		}
+	}
+
+	protected String transfer(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String conString = "", ret = "";
+		String group_id = request.getSession().getAttribute("group_id").toString();
+		String user_id = request.getSession().getAttribute("user_id").toString();
+		String savePath = "";
+		String contentType = request.getContentType();
+
+		int maxFileSize = 5000 * 1024;
+		int maxMemSize = 5000 * 1024;
+
+		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
+			DiskFileItemFactory factory = new DiskFileItemFactory();
+			factory.setSizeThreshold(maxMemSize);
+			ServletFileUpload upload = new ServletFileUpload(factory);
+			upload.setSizeMax(maxFileSize);
+
+			String type = "", folderName = "";
+
+			try {
+				List<?> fileItems = upload.parseRequest(request);
+				Iterator<?> i = fileItems.iterator();
+				while (i.hasNext()) {
+					FileItem fi = (FileItem) i.next();
+					if (fi.getFieldName().equals("type"))
+						type = fi.getString();
+					if (fi.getFieldName().equals("folderName"))
+						folderName = fi.getString();
+				}
+				logger.debug("\n\ntype:{}\nfolderName:{}\n\n", type, folderName);
+				// Requires a new iterator
+				i = fileItems.iterator();
+				while (i.hasNext()) {
+
+					FileItem fi = (FileItem) i.next();
+
+					if (!fi.isFormField() && !fi.getFieldName().equals("action") && !fi.getFieldName().equals("type")
+							&& !fi.getFieldName().equals("folderName")) {
+
+						String fileName = FilenameUtils.getName(fi.getName());
+						String ext = FilenameUtils.getExtension(fileName);
+						String _uid = UUID.randomUUID().toString();
+
+						savePath = getServletConfig().getServletContext().getInitParameter("basicImport") + type + "/"
+								+ group_id;
+
+						String fullPath = savePath + "/" + _uid + "." + ext;
+
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						logger.debug("\nfileName:{}\nsavePath:{}\nfullPath:{}", fileName, savePath, fullPath);
+						InputStream is = fi.getInputStream();
+						FileOutputStream fos = new FileOutputStream(fullPath);
+
+						int len = 0;
+						byte[] buffer = new byte[1024];
+
+						try {
+							while ((len = is.read(buffer)) != -1) {
+								fos.write(buffer, 0, len);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							is.close();
+							fos.flush();
+							fos.close();
+						}
+
+					} else if (!fi.getFieldName().equals("action") && !fi.getFieldName().equals("type")
+							&& !fi.getFieldName().equals("folderName")) {
+
+						String fieldName = fi.getFieldName();
+						String _uid = UUID.randomUUID().toString();
+
+						savePath = getServletConfig().getServletContext().getInitParameter("basicImport") + type + "/"
+								+ group_id;
+						String ext = FilenameUtils.getExtension(fieldName);
+						String fullPath = savePath + "/" + _uid + "." + ext;
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						logger.debug("\nfi:{}", fi);
+						logger.debug("\nfieldName:{}\next:{}\nfullPath:{}", fieldName, ext, fullPath);
+						InputStream is = fi.getInputStream();
+						FileOutputStream fos = new FileOutputStream(fullPath);
+
+						int len = 0;
+						byte[] buffer = new byte[1024];
+
+						try {
+							while ((len = is.read(buffer)) != -1) {
+								fos.write(buffer, 0, len);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							is.close();
+							fos.flush();
+							fos.close();
+						}
+					}
+				}
+				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+						+ "/sfexpress/urls=" + new String(Base64.encodeBase64String((savePath).getBytes())) + "&UsID="
+						+ new String(Base64.encodeBase64String(user_id.getBytes())) + "&lgID="
+						+ new String(Base64.encodeBase64String("26".getBytes())) + "&aaID="
+						+ new String(Base64.encodeBase64String(group_id.getBytes()));
+				logger.debug("conString : " + conString);
+				ret = webService(request, response, conString);
+				response.getWriter().write(ret);
+			} catch (FileUploadException e) {
+				logger.debug("Cannot parse multipart request");
+			} catch (Exception ex) {
+				logger.debug("transfer error : " + ex.toString());
+			}
+		}
+
+		return conString;
 	}
 
 	protected String putFile(HttpServletRequest request, HttpServletResponse response, String type, String filename)

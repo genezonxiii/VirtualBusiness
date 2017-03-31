@@ -5,7 +5,7 @@ var sendCountTime = 0; //實際寄送幾次
 var sendStatus = 0; //寄送狀態，用來判斷是否有檔案失敗 (0:成功)
 function sendFileToServer(formData,status){
 	sendCountTime ++;
-    var uploadURL ="sfTransfer.do"; //Upload URL
+    var uploadURL ="basicDataImport.do"; //Upload URL
     var extraData ={}; //Extra Data.
     var jqXHR=$.ajax({
 	            xhr: function() {
@@ -22,7 +22,7 @@ function sendFileToServer(formData,status){
 		                        status.setProgress(percent);
 
 		                        if((sendCountTime == sendCount) && (percent==100)){
-		            				$('#status').find("#text").val('').html("檔案已上傳完成<br><br>請稍後片刻<br><br>正在進行轉檔作業!");
+		            				$('#status').find("#text").val('').html("檔案已上傳完成<br><br>請稍後片刻<br><br>正在進行匯入作業!");
 		            				status_dialog.dialog("open");
 		                        }
 		                    }, false);
@@ -42,14 +42,14 @@ function sendFileToServer(formData,status){
 			    	}
 			    	if ((sendCountTime == sendCount) && (sendStatus == 0)){
 				    	status_dialog.dialog("close");
-				    	$('#message').find("#text").val('').html("轉檔成功!");
+				    	$('#message').find("#text").val('').html("上傳成功!");
 						message_dialog.dialog("open");
 						$("#download").html("");
-						createDlBtn(result);
+//						createDlBtn(result);
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){
 				    	status_dialog.dialog("close");
 			    		$(btnArea).find('#downloadBtn').remove();
-						$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
+						$('#message').find("#text").val('').html("上傳失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog("open");
 			    	}    
 		        }
@@ -112,6 +112,15 @@ function createStatusbar(obj)
 
 //draw selected files
 function handleFileUpload(files){
+	console.log('>>>>>>>>>>files');
+	console.log(files.length);
+	console.log($('#filesEdit>div').length);
+	if((files.length>1)||($('#filesEdit>div').length > 0)){
+		fileBuffer = fileBuffer[0];
+		$('#message').find("#text").val('').html("只能選擇一筆檔案上傳!");
+		message_dialog.dialog("open");
+		return false;
+	}
 	var master, detail, img, assets, info, ul, li, para, name, size, br;
 	console.log('==================================================');
 	console.log('handleFileUpload start');
@@ -209,13 +218,16 @@ function fileUpload(files,obj){
 	
 	//record send count
 	sendCount = fileBuffer.length;
-	
+
+    var type = $('#select-type').val().replace('Template','');
+    
 	for (var i = 0; i < fileBuffer.length; i++){
 		console.log('第'+(1+i)+'筆');
         var fd = new FormData();
+        
         fd.append('file', files[i]);
         fd.append('action', 'upload');
-        fd.append('type', $('#select-type').val());
+        fd.append('type', type);
         fd.append('folderName', folderName);
         
     	console.log('files['+i+']');
@@ -245,13 +257,18 @@ function setFiles(files){
 	console.log('==================================================\n\n');
 }
 function getFiles(){
+	if(fileBuffer.length>1){
+		$('#message').find("#text").val('').html("只能選擇一筆檔案上傳!");
+		message_dialog.dialog("open");
+		return false;
+	}
 	console.log('==================================================');
 	console.log('getFiles start');
 	var input= document.createElement('INPUT');
 	
 	input.type = "file";
 	input.accept = ".csv,.xls,.xlsx";
-	input.multiple = "multiple";
+	//input.multiple = "multiple";
 	var files = $(input).context.files;
 	
 	console.log('getFiles fileBuffer ↓');
@@ -310,7 +327,7 @@ function createClBtn(){
 	var clearBtn= document.createElement('BUTTON');
 	var text = document.createTextNode('清除');
 	clearBtn.id = "clearBtn";
-	clearBtn.className = "btn btn-exec";
+	clearBtn.className = "btn btn-alert";
 	clearBtn.appendChild(text);
 	
 	$(btnArea).find('#clearBtn').remove();
@@ -327,13 +344,13 @@ function createClBtn(){
 	});
 	return clearBtn;
 }
-//build download button and return this object
-function createDlBtn(result){
+//build the download button, depending on the type and return this object
+function createDlBtn(type){
 	var downloadBtn= document.createElement('A');
-	var text = document.createTextNode('下載');
+	var text = document.createTextNode('範本下載');
 	downloadBtn.id = "downloadBtn";
-	downloadBtn.className = "btn btn-primary";
-	downloadBtn.href = "./sfTransfer.do?action=download&downloadName="+$('#select-type').val()+"_"+result;
+	downloadBtn.className = "btn btn-exec";
+	downloadBtn.href = "./basicDataImport.do?action=download&type=" + type
 	downloadBtn.appendChild(text);
 	
 	$(btnArea).find('#downloadBtn').remove();
@@ -341,7 +358,6 @@ function createDlBtn(result){
 
 	return downloadBtn;
 }
-
 function transDate(str){
 	str = "" + str;
 	if(str.length<2){
@@ -369,6 +385,8 @@ $(document).ready(function(){
 		clearAll();
 		if(this.value != 0){
 			$('#fileDiv').show();
+			var type = $('#select-type').val();
+			createDlBtn(type);
 		}else{
 			$('#fileDiv').hide();
 		}
@@ -407,7 +425,7 @@ $(document).ready(function(){
 	    
 	    fileInput.type = "file";
 	    fileInput.accept = ".csv,.xls,.xlsx";
-	    fileInput.multiple = "multiple";
+	    //fileInput.multiple = "multiple";
 	    
 	    $(fileInput).trigger('click');
 	
