@@ -270,11 +270,12 @@ public class SFTransfer extends HttpServlet {
 				if (content.length() > 100) {
 					content = content.substring(0, 90) + "....";
 				}
-				ret = "Error_Connection: get " + content + " on: " + conString;
+				logger.debug("Error_Connection: get " + content + " on: " + conString);
+				ret = "false";
 			}
 		} catch (Exception e) {
-			ret = e.toString();
-			ret = "Error of call webservice content:" + ret;
+			logger.debug("Error of call webservice content:" + e.toString());
+			ret = "false";
 		}
 		method.releaseConnection();
 		return ret;

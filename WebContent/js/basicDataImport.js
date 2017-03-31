@@ -36,20 +36,21 @@ function sendFileToServer(formData,status){
 		        cache: false,
 		        data: formData,
 		        success: function(result){
+		        	console.log('result: '+result);
 			    	if(result=="false"){
 			        	sendNames += "<p alert='left'>["+formData.get('file').name+"]</p><br>";
 			        	sendStatus ++;
 			    	}
 			    	if ((sendCountTime == sendCount) && (sendStatus == 0)){
 				    	status_dialog.dialog("close");
-				    	$('#message').find("#text").val('').html("上傳成功!");
+				    	$('#message').find("#text").val('').html("匯入成功!");
 						message_dialog.dialog("open");
 						$("#download").html("");
 //						createDlBtn(result);
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){
 				    	status_dialog.dialog("close");
 			    		$(btnArea).find('#downloadBtn').remove();
-						$('#message').find("#text").val('').html("上傳失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
+						$('#message').find("#text").val('').html("匯入失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog("open");
 			    	}    
 		        }

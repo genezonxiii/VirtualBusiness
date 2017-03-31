@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -100,7 +99,7 @@ public class BasicDataImport extends HttpServlet {
 
 	protected String transfer(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String conString = "", ret = "";
+		String conString = "", ret = "", fullPath = "";
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		String savePath = "";
@@ -144,7 +143,7 @@ public class BasicDataImport extends HttpServlet {
 						savePath = getServletConfig().getServletContext().getInitParameter("basicImport") + type + "/"
 								+ group_id;
 
-						String fullPath = savePath + "/" + _uid + "." + ext;
+						fullPath = savePath + "/" + _uid + "." + ext;
 
 						File file = null;
 						file = new File(savePath);
@@ -179,7 +178,7 @@ public class BasicDataImport extends HttpServlet {
 						savePath = getServletConfig().getServletContext().getInitParameter("basicImport") + type + "/"
 								+ group_id;
 						String ext = FilenameUtils.getExtension(fieldName);
-						String fullPath = savePath + "/" + _uid + "." + ext;
+						fullPath = savePath + "/" + _uid + "." + ext;
 						File file = null;
 						file = new File(savePath);
 						if (!file.exists()) {
@@ -207,7 +206,7 @@ public class BasicDataImport extends HttpServlet {
 					}
 				}
 				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
-						+ "/sfexpress/urls=" + new String(Base64.encodeBase64String((savePath).getBytes())) + "&UsID="
+						+ "/import/urls=" + new String(Base64.encodeBase64String((fullPath).getBytes())) + "&UsID="
 						+ new String(Base64.encodeBase64String(user_id.getBytes())) + "&lgID="
 						+ new String(Base64.encodeBase64String("26".getBytes())) + "&aaID="
 						+ new String(Base64.encodeBase64String(group_id.getBytes()));
@@ -314,13 +313,7 @@ public class BasicDataImport extends HttpServlet {
 			logger.debug("isJson: " + isJson);
 			if (isJson == 1) {
 				if ("true".equals(jsonobj.success)) {
-					String[] tmp = jsonobj.download.split("/");
-					int j = 0;
-					while (j < tmp.length) {
-						j++;
-					}
-					j = j > 0 ? j - 1 : j;
-					ret = new String(Base64.encodeBase64String((tmp[j]).getBytes()));
+					ret = "success";
 				} else {
 					ret = "false";
 				}
@@ -328,11 +321,12 @@ public class BasicDataImport extends HttpServlet {
 				if (content.length() > 100) {
 					content = content.substring(0, 90) + "....";
 				}
-				ret = "Error_Connection: get " + content + " on: " + conString;
+				logger.debug("Error_Connection: get " + content + " on: " + conString);
+				ret = "false";
 			}
 		} catch (Exception e) {
-			ret = e.toString();
-			ret = "Error of call webservice content:" + ret;
+			logger.debug("Error of call webservice content:" + e.toString());
+			ret = "false";
 		}
 		method.releaseConnection();
 		return ret;
@@ -353,6 +347,5 @@ class Throwfile {
 
 class Webserviceoutput {
 	String info;
-	String download;
 	String success;
 }
