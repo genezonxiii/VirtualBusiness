@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="OrderService" lang="zh-CN">
+	<Head>
+		<AccessCode>ITCNC1htXV9xuOKrhu24ow==</AccessCode>
+		<Checkword>ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj</Checkword>
+	</Head>
+	<Body>
+		<CompanyCode>WYDGJ</CompanyCode>
+		<Order
+			orderid="OI201703300001"
+			j_company="北祥"
+			j_contact="聯絡人"
+			j_tel="26581910"
+			j_mobile="0912345678"
+			j_province="台灣省"
+			j_city="台北市"
+			j_country="內湖區"
+			j_address="文湖街18號2樓"
+			d_company="順豐速運"
+			d_contact="送貨員"
+			d_tel="26581910"
+			d_mobile="0987654321"
+			d_address="文湖街18號1樓">
+			<Cargo
+				name="手機">
+			</Cargo>
+		</Order>
+	</Body>
+</Request>

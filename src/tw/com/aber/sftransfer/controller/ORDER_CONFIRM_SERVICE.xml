@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request service="OrderConfirmService" lang="zh-CN">
+	<Head>ITCNC1htXV9xuOKrhu24ow==</Head>
+	<Body>
+		<Order
+			orderid="OI201703300001"
+			mailno=""
+			dealtype="1">
+			<Cargo
+				name="手機">
+			</Cargo>
+		</Order>
+		
+	</Body>
+</Request>
