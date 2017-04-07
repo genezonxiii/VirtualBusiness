@@ -1,3 +1,176 @@
+var company_count = 25;
+var company_row_count = 5;
+
+var company_val_arr = [ "yahoo", "rakuten", "momo", "umall", "asap",
+		"yahoomall", "payeasy", "amart", "udn", "etmall", "pchome", "books",
+		"gohappy", "91mai", "treemall", "gomaji", "ibon", "myfone", "17life",
+		"linemart", "babyhome", "friday", "ihergo", "bigbuy", "momomall" ];
+
+var company_pic_arr = [ "yahoo", "rakuten", "momo", "Umall", "ASAP",
+                		"supermall", "payeasy", "AMart", "udn", "EHS", "pchome", "books",
+                		"GoHappy", "91", "treemall", "GOMAJI", "ibon", "myfone", "Life",
+                		"Line_Mart", "babyhome", "friday", "ihergo", "bigbuy", "momomall" ];
+
+var company_text_arr = [ "Yahoo 購物中心", "樂天", "momo", "森森", "ASAP",
+		"Yahoo 超級商城", "PayEasy", "愛買", "UDN", "東森購物", "PCHome", "博客來",
+		"GoHappy", "九易", "國泰", "夠麻吉", "ibon", "myfone", "17life", "Line Mart",
+		"寶貝家庭親子網", "friDay購物", "愛合購", "大買家", "MOMO摩天商城" ];
+
+function init(){
+//	$('#fileDiv').hide();
+	$('#fileDiv').show();
+	buildDialog();
+	buildIconBtns();
+}
+
+//Store the platform in the map
+var platform_map = new Object();
+
+function getPlatformMap(){
+	console.log('==================================================');
+	console.log('getPlatformMap start');
+	platform_map ={};
+	var key = "";
+	var value = "";
+	$.ajax({
+		type : "POST",
+		url : "upload.do",
+		data : {
+			action :"select_way_of_platform"
+		},
+		success : function(result) {	
+			var json_obj = $.parseJSON(result);
+			$.each (json_obj, function (i,item) {
+				key = item.throwfile_platform;
+				value = "<input id='type-radio-"+i+"' type='radio' name='type-radio-group' value='"+item.throwfile_type+"' restrict='"+item.throwfile_fileextension+"'>" +
+						"<label for='type-radio-"+i+"' ><span class='form-label'>"+item.throwfile_name+"</span></label>";
+				if(platform_map[key] != null){
+					value = platform_map[key] + value;
+				}
+				platform_map[key]=value;			
+			});
+			console.log('getPlatformMap end');
+			console.log('==================================================\n\n');
+		}
+	});	
+}
+
+function buildIconBtns(){
+	console.log('==================================================');
+	console.log('buildIconBtns start');
+	var iconBtns = document.getElementById('iconBtns');
+	var detail = document.createElement('DIV');
+	
+	$.ajax({
+		type : "POST",
+		url : "upload.do",
+		data : {
+			action :"select_platform_kind" 
+		},
+		success : function(result) {
+			var json_obj = $.parseJSON(result);
+			$.each (json_obj, function (i,item) {
+					if((i % company_row_count)== 0){
+						detail = document.createElement('DIV');
+					}
+					
+					detail.className = 'ec-radio-group-wrap';
+					
+					var input = document.createElement('INPUT');
+					input.id = 'radio-' + item.throwfile_platform;
+					input.type = 'radio';
+					input.name = 'ec-radio-group';
+					input.value = item.throwfile_platform;
+					input.setAttribute('custom-restrict', item.throwfile_fileextension);
+					
+					var label = document.createElement('LABEL');
+					label.htmlFor = 'radio-' + item.throwfile_platform;
+
+					var img = document.createElement('IMG');
+					img.src = 'images/' + ((item.icon.length>0) ? item.icon : "ec-logos/noname.png") ;
+
+					var span = document.createElement('SPAN');
+					var span_text = document.createTextNode(item.memo);
+					span.appendChild(span_text);
+					
+					detail.appendChild(input);
+					detail.appendChild(label);
+					label.appendChild(img);
+					label.appendChild(span);
+					
+					iconBtns.appendChild(detail);
+			});
+			
+			getPlatformMap();
+			console.log('platform_map ↓');
+			console.log(platform_map);
+			console.log('buildIconBtns end');
+			console.log('==================================================\n\n');
+		}
+	});
+}
+
+function buildDialog(){
+	$("#choose-order-type").dialog({
+		draggable : true,
+		resizable : false,
+		autoOpen : false,
+		height : "auto",
+		width : "auto",
+		modal : true,
+		show : {
+			effect : "blind",
+			duration : 300
+		},
+		hide : {
+			effect : "fade",
+			duration : 300
+		},
+		buttons : [{
+					text : "確定",
+					click : function() {
+						var selectedRadio = $( "#choose-order-type > input[name='type-radio-group']:checked" );
+						if(selectedRadio.length>0){
+							$("#typeImg").remove();
+							
+							var type = selectedRadio.val();
+							var id = $('input[name="ec-radio-group"]:checked').attr("id");
+							var lab = $( "label[for='" + id + "']" );
+							var left = ((lab.offset().left)+ (lab.width()*3/5))+'px';
+							var top = (lab.offset().top)+'px';
+							
+							var img = document.createElement('IMG');
+							img.id = 'typeImg'
+							img.style.position = 'absolute';
+							img.style.left = left;
+							img.style.top = top;
+					    	img.src= './images/' + type + '.png';
+					    	
+					    	var iconBtns = document.getElementById('iconBtns');
+
+					    	iconBtns.appendChild(img);
+							$(this).dialog("close");
+//							$('#fileDiv').show();
+						}else{
+//							$('#fileDiv').hide();
+					    	$('#message').find("#text").val('').html("請選擇訂單類型!");
+							message_dialog.dialog("open");
+						}						
+					}
+				}, {
+					text : "取消",
+					click : function() {
+						$( "input:checked[name='ec-radio-group']" ).prop("checked", false);
+						$("#choose-order-type").dialog("close");
+					}
+				} ],
+		close : function() {
+			if($( "input:checked[name='ordertype']" ).length==0){
+				$( "input:checked[name='ec-radio-group']" ).prop("checked", false);
+			}
+		}
+	});
+}
 var accept= ["csv","xls","xlsx"];
 var sendNames = "";
 var sendCount = 0; //要寄送幾次
@@ -49,7 +222,7 @@ function sendFileToServer(formData,status){
 //						createDlBtn(result);
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){
 				    	status_dialog.dialog("close");
-			    		$(btnArea).find('#downloadBtn').remove();
+//			    		$(btnArea).find('#downloadBtn').remove();
 						$('#message').find("#text").val('').html("匯入失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog("open");
 			    	}    
@@ -283,79 +456,78 @@ function getFiles(){
 }
 function clearFiles(){
 	fileBuffer = [];
-	$(btnArea).find('#downloadBtn').remove();
+//	$(btnArea).find('#downloadBtn').remove();
 }
 function clearAll(){
 	fileBuffer = [];
-	$(btnArea).html('');
 	$('#filesEdit').html('');
 	$('#statusbarDiv').html('');
 }
 var folderName = "";
 //build upload button and return this object
-function createUpBtn(){
-	var uploadBtn= document.createElement('BUTTON');
-	var text = document.createTextNode('上傳');
-	uploadBtn.id = "uploadBtn";
-	uploadBtn.className = "btn btn-darkblue";
-	uploadBtn.appendChild(text);
-	
-	$(btnArea).find('#uploadBtn').remove();
-	$(btnArea).append(uploadBtn);
-	
-	$(uploadBtn).on("click", function (e) {
-    	e.stopPropagation();
-        e.preventDefault();
-        
-        //reset
-        sendNames = "";
-        sendCount = 0;
-        sendCountTime = 0;
-        sendStatus = 0;
-        
-        folderName = getFormatDate();
-        var files = getFiles();
-        var obj = $(".dragandrophandler");
-	    fileUpload(files,obj);
-	});
-	return uploadBtn;
-}
+//function createUpBtn(){
+//	var uploadBtn= document.createElement('BUTTON');
+//	var text = document.createTextNode('上傳');
+//	uploadBtn.id = "uploadBtn";
+//	uploadBtn.className = "btn btn-darkblue";
+//	uploadBtn.appendChild(text);
+//	
+//	$(btnArea).find('#uploadBtn').remove();
+//	$(btnArea).append(uploadBtn);
+//	
+//	$(uploadBtn).on("click", function (e) {
+//    	e.stopPropagation();
+//        e.preventDefault();
+//        
+//        //reset
+//        sendNames = "";
+//        sendCount = 0;
+//        sendCountTime = 0;
+//        sendStatus = 0;
+//        
+//        folderName = getFormatDate();
+//        var files = getFiles();
+//        var obj = $(".dragandrophandler");
+//	    fileUpload(files,obj);
+//	});
+//	return uploadBtn;
+//}
 //build clear button and return this object
-function createClBtn(){
-	var clearBtn= document.createElement('BUTTON');
-	var text = document.createTextNode('清除');
-	clearBtn.id = "clearBtn";
-	clearBtn.className = "btn btn-alert";
-	clearBtn.appendChild(text);
-	
-	$(btnArea).find('#clearBtn').remove();
-	$(btnArea).append(clearBtn);
-	
-	$(clearBtn).on("click", function (e) {
-    	e.stopPropagation();
-        e.preventDefault();
-        clearFiles();
-        var clearArr = ['#filesEdit','#statusbarDiv'];
-        for(var i=0; i<clearArr.length; i++){
-        	$(clearArr[i]).html('');
-        }
-	});
-	return clearBtn;
-}
+//function createClBtn(){
+//	var clearBtn= document.createElement('BUTTON');
+//	var text = document.createTextNode('清除');
+//	clearBtn.id = "clearBtn";
+//	clearBtn.className = "btn btn-alert";
+//	clearBtn.appendChild(text);
+//	
+//	$(btnArea).find('#clearBtn').remove();
+//	$(btnArea).append(clearBtn);
+//	
+//	$(clearBtn).on("click", function (e) {
+//    	e.stopPropagation();
+//        e.preventDefault();
+//        clearFiles();
+//        var clearArr = ['#filesEdit','#statusbarDiv'];
+//        for(var i=0; i<clearArr.length; i++){
+//        	$(clearArr[i]).html('');
+//        }
+//	});
+//	return clearBtn;
+//}
 //build the download button, depending on the type and return this object
-function createDlBtn(type){
-	var downloadBtn= document.createElement('A');
-	var text = document.createTextNode('範本下載');
-	downloadBtn.id = "downloadBtn";
-	downloadBtn.className = "btn btn-exec";
-	downloadBtn.href = "./basicDataImport.do?action=download&type=" + type
-	downloadBtn.appendChild(text);
-	
-	$(btnArea).find('#downloadBtn').remove();
-	$(btnArea).append(downloadBtn);
-
-	return downloadBtn;
-}
+//function createDlBtn(type){
+//	var downloadBtn= document.createElement('A');
+//	var text = document.createTextNode('範本下載');
+//	downloadBtn.id = "downloadBtn";
+//	downloadBtn.className = "btn btn-exec";
+//	downloadBtn.href = "./basicDataImport.do?action=download&type=" + type
+//	downloadBtn.appendChild(text);
+//	
+//	$(btnArea).find('#downloadBtn').remove();
+// 	$(btnArea).append(downloadBtn);
+//
+//	return downloadBtn;
+//}
 function transDate(str){
 	str = "" + str;
 	if(str.length<2){
@@ -375,18 +547,58 @@ function getFormatDate(){
 
 	return year+month+date+hours+minutes+seconds+millisecond;
 }
-$(document).ready(function(){
-	var btnArea = document.getElementById('"btnArea"');
+
+$(document).ready(function() {
+
+	init();
+	
+	$("#iconBtns").delegate(":radio[name='ec-radio-group']", "click", function(e) {
+			var dialog = $("#choose-order-type");
+			var key = $(this).val();
+			var value = platform_map[key];
+			
+			if(value != null){
+				dialog.html(value).dialog('option','title','選擇訂單類型').dialog("open");
+			}else{
+				$("#typeImg").remove();
+				
+				var id = $(this).attr('id');
+				var lab = $( "label[for='" + id + "']" );
+				var left = ((lab.parent().offset().left)+ (lab.width()*3/5))+'px';
+				var top = ( ( ( lab.parent().height() ) - ( lab.parent().offset().top ) )  ) +'px';
+				console.log(lab.parent().offset());
+				var img = document.createElement('IMG');
+				img.id = 'typeImg'
+				img.style.float = 'left';
+				img.style.position = 'relative';
+				img.style.left = left;
+				img.style.bottom = top;
+		    	img.src= './images/general.png';
+		    	
+		    	var iconBtns = document.getElementById('iconBtns');
+
+		    	iconBtns.appendChild(img);
+				$('#fileDiv').show();
+			}
+		});	
 	var obj = $(".dragandrophandler");
 	
-	$('select').on('change', function() {
+//	var radios = $('input[name=ec-radio-group');
+//	for (var i=0; i<radios.length; i++){
+//	   if (radios[i].checked){
+//		   $('#fileDiv').show();
+//	   }else{
+//		   $('#fileDiv').hide();
+//	   }
+//	}
+	$('input[type=radio]').on('change', function() {
 		clearAll();
 		if(this.value != 0){
-			$('#fileDiv').show();
+//			$('#fileDiv').show();
 			var type = $('#select-type').val();
-			createDlBtn(type);
+//			createDlBtn(type);
 		}else{
-			$('#fileDiv').hide();
+//			$('#fileDiv').hide();
 		}
 	});
 	
@@ -406,8 +618,8 @@ $(document).ready(function(){
 	     //$(this).css('border', '2px dotted #0B85A1');
 	     e.preventDefault();
 	     var files = e.originalEvent.dataTransfer.files;
-	     createUpBtn();
-	     createClBtn();
+//	     createUpBtn();
+//	     createClBtn();
 	     console.log('drop files:');
 	     console.log(files);
 	     //need to send dropped files to Server
@@ -436,8 +648,8 @@ $(document).ready(function(){
 			if(fileInput.files.length!=0){
 				files = $(fileInput).context.files;
 				
-				createUpBtn();
-			    createClBtn();
+//				createUpBtn();
+//			    createClBtn();
 	
 			    handleFileUpload(files);
 			    setFiles(files)
@@ -459,5 +671,5 @@ $(document).ready(function(){
 	{
 	    e.stopPropagation();
 	    e.preventDefault();
-	});
+	});	
 });
