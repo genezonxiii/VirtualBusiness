@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>網購拋轉作業作業</title>
+		<title>網購拋轉作業</title>
 		
 		<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
 		<link rel="stylesheet" href="css/buttons.dataTables.min.css"/>
