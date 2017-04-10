@@ -39,8 +39,9 @@
 				<p align="center">Drag & Click Files Here</p>
 				<div class="form-row" id ="filesEdit"></div>
 			</div>
-			<div id='iconBtns'></div>
 			<div class="statusbarDiv" id ="statusbarDiv"></div>
+			<div id="btnArea" align="center"></div>
+			<div id='iconBtns'></div>
 		</div>
 		<div id ="choose-order-type"></div>		
 		<div id="message">

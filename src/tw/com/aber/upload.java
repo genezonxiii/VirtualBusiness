@@ -2,6 +2,7 @@ package tw.com.aber;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,11 +37,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,169 +72,16 @@ public class upload extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
-		// System.out.println(request.getParameter("vender"));
-		// System.out.println(request.getParameter("ordertype"));
 		if ("select_platform_kind".equals(action)) {
 			UploadService service = new UploadService();
 			String jsonStrList = service.getPlatformJson();
 			response.getWriter().write(jsonStrList);
 		} else if ("select_way_of_platform".equals(action)) {
-//			String platform = request.getParameter("platform");
-//			System.out.println("platform: " + platform);
 			UploadService service = new UploadService();
 			String jsonStrList = service.getPlatformWayJson();
 			response.getWriter().write(jsonStrList);
 		} else {
-			if (request.getSession().getAttribute("group_id") == null) {
-				request.setAttribute("action", "no_session");
-				RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-				successView.forward(request, response);
-				return;
-			}
-			if (request.getParameter("vender") == null) {
-				request.setAttribute("action", "no_vender");
-				RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-				successView.forward(request, response);
-				return;
-			}
-			// request.setAttribute("action","succes2s");
-			// RequestDispatcher successView2 =
-			// request.getRequestDispatcher("/upload.jsp");
-			// successView2.forward(request, response);
-			// int mm=0;
-			// if(mm==0)return;
-			// ##########################test####################################
-			// request.setCharacterEncoding("UTF-8");
-			// response.setCharacterEncoding("UTF-8");
-			// String action = request.getParameter("action");
-			// if("test".equals(action)){
-			// String name = request.getParameter("name");
-			// System.out.println("go into:"+action);
-			// try{TimeUnit.SECONDS.sleep(15);}catch(Exception e){}
-			// System.out.println("alive to say hello to:"+name);
-			// response.getWriter().write("I'm back!");
-			// int ii=0;if(ii==0)return;
-			// }
-			// ##########################test####################################
-
-			// try{
-			// String record_log =
-			//
-			// getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-			// String processName
-			//
-			// =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-			// String my_msg =(new SimpleDateFormat("yyyy-MM-dd(E)
-			// HH:mm:ss").format(new Date()))+":\r\n I'm
-			// "+request.getSession().getAttribute("group_id")+" upload "
-			// +file_name+ " with PID = "+
-			// Long.parseLong(processName.split("@")[0])+".\r\n";
-			// FileWriter fw;
-			// try{
-			// fw = new FileWriter(record_log,true);
-			// }catch(FileNotFoundException e){
-			// fw = new FileWriter(record_log,false);
-			// }
-			// fw.write(my_msg);
-			// fw.close();
-			// }catch(Exception e){System.out.println("Error: "+e.toString());}
-
-			// FileWriter fw = new
-			// FileWriter("C:/Users/10506002/Desktop/hello.txt",false);
-			// int temp=0;
-			// String _uid= UUID.randomUUID().toString();
-			// String _group_id = new
-			// String(Base64.encodeBase64String("group_id".getBytes()));
-			// //#######測試叫webservice################
-			// HttpClient client = new HttpClient();
-			// //client.getHostConfiguration().setProxy("192.168.112.171",80);
-			// HttpMethod method=new GetMethod("http://192.168.112.171:8099");
-			// client.executeMethod(method);
-			//
-			// //System.out.println(method.getStatusLine());
-			// System.out.println(method.getResponseBodyAsString());
-			// method.releaseConnection();
-			// int tepp=0;
-			// if(tepp==0)return;
-			// String url = "http://192.168.112.171:8099/";
-			// HttpGet httpRequest = new HttpGet(url);
-			// HttpClient client = HttpClientBuilder.create().build();
-			// HttpResponse httpResponse;
-			// try {
-			// StringBuffer result = new StringBuffer();
-			// httpResponse = client.execute(httpRequest);
-			// String responseString = new
-			// BasicResponseHandler().handleResponse(httpResponse);
-			// System.out.println(responseString);
-			//
-			//
-			// int responseCode = httpResponse.getStatusLine().getStatusCode();
-			// System.out.println("hello"+responseString);
-			// } catch (Exception e) {
-			// e.printStackTrace();
-			// }
-			//
-			//
-			// ########測試叫webservice###############
-			// System.out.println("隨便產生一個uuid: "+_uid+" \n group_id的base64:
-			// "+_group_id+"\n");
-
-			// if(temp==0)return;
-			String conString = "", ret = "E";
-			conString = putFile(request, response);
-
-			try {
-				String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/log.txt";
-				String processName = java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-				String my_msg = (new SimpleDateFormat("yyyy-MM-dd(u)HH:mm:ss").format(new Date())) + ":\r\n I'm "
-						+ request.getSession().getAttribute("user_name") + " upload " + ori_file_name + " as -> "
-						+ file_name + " with PID = " + Long.parseLong(processName.split("@")[0]) + ".\r\n";
-				FileWriter fw;
-				try {
-					fw = new FileWriter(record_log, true);
-				} catch (FileNotFoundException e) {
-					fw = new FileWriter(record_log, false);
-				}
-				fw.write(my_msg);
-				fw.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e.toString());
-			}
-
-			try {
-				TimeUnit.SECONDS.sleep(2);
-			} catch (Exception e) {
-				ret = "Sleep error";
-			}
-			// System.out.println(conString);
-			if (conString.charAt(0) != 'E') {
-				ret = webService(request, response, conString);
-			} else {
-				ret = conString;
-			}
-			ret = ((ret == null) ? "E" : ret);
-			response.getWriter().write(ret);
-			// request.setAttribute("action",ret);
-			// RequestDispatcher successView =
-			// request.getRequestDispatcher("/upload.jsp");
-			// successView.forward(request, response);
-			try {
-				String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/log.txt";
-				String my_msg = " Result as \'" + ret + "\'.At ("
-						+ (new SimpleDateFormat("yyyy-MM-dd(u) HH:mm:ss").format(new Date())) + ")\r\n";
-				FileWriter fw;
-				try {
-					fw = new FileWriter(record_log, true);
-				} catch (FileNotFoundException e) {
-					fw = new FileWriter(record_log, false);
-				}
-				fw.write(my_msg);
-				fw.close();
-			} catch (Exception e) {
-				System.out.println("Error: " + e.toString());
-			}
-			// ############################################################
-
+			transfer(request, response);
 		}
 
 	}
@@ -318,7 +168,7 @@ public class upload extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_select_throwfile_platform_way);
 
-//				pstmt.setString(1, platform);
+				// pstmt.setString(1, platform);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					throwfile = new Throwfile();
@@ -402,129 +252,6 @@ public class upload extends HttpServlet {
 		}
 	}
 
-	protected String putFile(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String conString = "", ret = "";
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		String vender = request.getParameter("vender");
-		String ordertype = request.getParameter("ordertype");
-		String group_id = request.getSession().getAttribute("group_id").toString();
-		String user_id = request.getSession().getAttribute("user_id").toString();
-		user_id = (user_id == null || user_id.length() < 3) ? "UNKNOWN" : user_id;
-		group_id = (group_id == null) ? "UNKNOWN" : group_id;
-		vender = (vender == null) ? "UNKNOWN" : vender;
-		String _uid = UUID.randomUUID().toString();
-		// _uid="454c9c52-cb76-46d3-bf4e-e3ae820c8064";
-		String no_way = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/" + vender + "/"
-				+ ordertype + "/" + group_id + "/" + _uid;
-		new File(getServletConfig().getServletContext().getInitParameter("uploadpath") + "/" + vender).mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("uploadpath") + "/" + vender + "/" + ordertype)
-				.mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("uploadpath") + "/" + vender + "/" + ordertype
-				+ "/" + group_id).mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("uploadpath") + "/fail").mkdir();
-		int maxFileSize = 5000 * 1024;
-		int maxMemSize = 5000 * 1024;
-		String contentType = request.getContentType();
-		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
-			DiskFileItemFactory factory = new DiskFileItemFactory();
-			factory.setSizeThreshold(maxMemSize);
-			String file_over = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/fail";
-			factory.setRepository(new File(file_over));
-			ServletFileUpload upload = new ServletFileUpload(factory);
-			upload.setSizeMax(maxFileSize);
-			try {
-				List fileItems = upload.parseRequest(request);
-				Iterator i = fileItems.iterator();
-				while (i.hasNext()) {
-					FileItem fi = (FileItem) i.next();
-					if (!fi.isFormField()) {
-
-						String fileName = fi.getName();
-						ori_file_name = fi.getName();
-						String[] tmp = fileName.split("\\.");
-						int j = 0;
-						while (j < tmp.length) {
-							j++;
-						}
-						j = j > 0 ? j - 1 : j;
-						String fullname = no_way + "." + tmp[j];
-						// System.out.println("fullname: "+fullname);
-
-						InputStream is = fi.getInputStream();
-						byte[] first = new byte[5];
-						is.read(first, 0, 5);
-						is.close();
-						byte[] bytePDF = new byte[] { 0x25, 0x50, 0x44, 0x46, 0x2D };
-						byte[] byteXLS = new byte[] { (byte) 0xD0, (byte) 0xCF, 0x11, (byte) 0xE0, (byte) 0xA1 };// ,
-																													// (byte)
-																													// 0xB1,
-																													// 0x1A,
-																													// (byte)
-																													// 0xEA};
-						// byte[] byteCSV = new byte[]{0x5B, 0x75, 0x72, 0x6C};
-						byte[] byteXLSX = new byte[] { 0x50, 0x4B, 0x03, 0x04, 0x14 };
-						// System.out.println(Hex.encodeHexString(first));
-						// System.out.println(Arrays.toString(first));
-						if (Arrays.equals(first, bytePDF)) {
-							fullname = no_way + ".pdf";
-						} else if (Arrays.equals(first, byteXLS)) {
-							fullname = no_way + ".xls";
-						} else if (Arrays.equals(first, byteXLSX)) {
-							fullname = no_way + ".xlsx";
-						} else {
-							// System.out.println(fi.getString("UTF-8"));
-							String filecontent_ori = fi.getString("UTF-8");
-							// System.out.println(filecontent_ori);
-							String[] filecontent = filecontent_ori.split(",");
-
-							if (filecontent_ori.contains("text/html;") || filecontent_ori.contains("<html>")) {// filecontent_ori.contains("content='text/html;")){
-								fullname = no_way + ".html";
-							} else {
-								j = 0;
-								while (j < filecontent.length) {
-									// System.out.println(filecontent[j].length()+"
-									// "+filecontent[j]);
-									if (filecontent[j].length() > 120) {
-										break;
-									}
-									j++;
-								}
-								if (j == filecontent.length) {
-									fullname = no_way + ".csv";
-								} else {
-									fullname = no_way + ".txt";
-								}
-							}
-						}
-						conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
-								+ "/upload/urls=" + new String(Base64.encodeBase64String((fullname).getBytes()))
-								+ "&usid=" + new String(Base64.encodeBase64String(user_id.getBytes()));
-						// System.out.println(conString);
-						// fullname = no_way+"."+tmp[j];
-						file_name = fullname;
-						File file;
-						file = new File(fullname);
-						fi.write(file);
-						// System.out.println("success");
-					}
-				}
-			} catch (Exception ex) {
-				// System.out.println("ERROR: "+ ex.toString());
-				ret = "E_write_File:" + ex.toString();
-				return ret;
-			}
-		} else {
-			ret = "E_No one found.";
-			return ret;
-		}
-		if (ret.length() > 3) {
-			return ret;
-		}
-		return conString;
-	}
-
 	protected String webService(HttpServletRequest request, HttpServletResponse response, String conString)
 			throws ServletException, IOException {
 		String ret = "";
@@ -555,6 +282,131 @@ public class upload extends HttpServlet {
 		}
 		method.releaseConnection();
 		return ret;
+	}
+
+	protected String transfer(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String conString = "", ret = "", fullPath = "";
+		String group_id = request.getSession().getAttribute("group_id").toString();
+		String user_id = request.getSession().getAttribute("user_id").toString();
+		String savePath = "";
+		String contentType = request.getContentType();
+
+		int maxFileSize = 5000 * 1024;
+		int maxMemSize = 5000 * 1024;
+
+		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
+			DiskFileItemFactory factory = new DiskFileItemFactory();
+			factory.setSizeThreshold(maxMemSize);
+			ServletFileUpload upload = new ServletFileUpload(factory);
+			upload.setSizeMax(maxFileSize);
+
+			String platform = "", deliveryMethod = "";
+
+			try {
+				List<?> fileItems = upload.parseRequest(request);
+				Iterator<?> i = fileItems.iterator();
+				while (i.hasNext()) {
+					FileItem fi = (FileItem) i.next();
+					if (fi.getFieldName().equals("platform"))
+						platform = fi.getString();
+					if (fi.getFieldName().equals("deliveryMethod"))
+						deliveryMethod = fi.getString();
+				}
+				logger.debug("\n\nplatform:{}\ndeliveryMethod:{}\n\n", platform, deliveryMethod);
+				// Requires a new iterator
+				i = fileItems.iterator();
+				while (i.hasNext()) {
+
+					FileItem fi = (FileItem) i.next();
+
+					if (!fi.isFormField() && !fi.getFieldName().equals("action")
+							&& !fi.getFieldName().equals("platform") && !fi.getFieldName().equals("deliveryMethod")) {
+
+						String fileName = FilenameUtils.getName(fi.getName());
+						String ext = FilenameUtils.getExtension(fileName);
+						String _uid = UUID.randomUUID().toString();
+
+						savePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/"
+								+ platform + "/" + deliveryMethod + "/" + group_id;
+
+						fullPath = savePath + "/" + _uid + "." + ext;
+
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						logger.debug("\nfileName:{}\nsavePath:{}\nfullPath:{}", fileName, savePath, fullPath);
+						InputStream is = fi.getInputStream();
+						FileOutputStream fos = new FileOutputStream(fullPath);
+
+						int len = 0;
+						byte[] buffer = new byte[1024];
+
+						try {
+							while ((len = is.read(buffer)) != -1) {
+								fos.write(buffer, 0, len);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							is.close();
+							fos.flush();
+							fos.close();
+						}
+
+					} else if (!fi.getFieldName().equals("action") && !fi.getFieldName().equals("platform")
+							&& !fi.getFieldName().equals("deliveryMethod")) {
+
+						String fieldName = fi.getFieldName();
+						String _uid = UUID.randomUUID().toString();
+
+						savePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/"
+								+ platform + "/" + deliveryMethod + "/" + group_id;
+
+						String ext = FilenameUtils.getExtension(fieldName);
+						fullPath = savePath + "/" + _uid + "." + ext;
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						logger.debug("\nfi:{}", fi);
+						logger.debug("\nfieldName:{}\next:{}\nfullPath:{}", fieldName, ext, fullPath);
+						InputStream is = fi.getInputStream();
+						FileOutputStream fos = new FileOutputStream(fullPath);
+
+						int len = 0;
+						byte[] buffer = new byte[1024];
+
+						try {
+							while ((len = is.read(buffer)) != -1) {
+								fos.write(buffer, 0, len);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							is.close();
+							fos.flush();
+							fos.close();
+						}
+					}
+				}
+				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+						+ "/upload/urls=" + new String(Base64.encodeBase64String((fullPath).getBytes())) + "&UsID="
+						+ new String(Base64.encodeBase64String(user_id.getBytes()));
+				logger.debug("conString : " + conString);
+				ret = webService(request, response, conString);
+				response.getWriter().write(ret);
+			} catch (FileUploadException e) {
+				logger.debug("Cannot parse multipart request");
+			} catch (Exception ex) {
+				logger.debug("transfer error : " + ex.toString());
+			}
+		}
+
+		return conString;
 	}
 
 	class Throwfile {
