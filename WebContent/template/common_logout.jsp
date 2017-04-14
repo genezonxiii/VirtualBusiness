@@ -12,4 +12,23 @@ $("#logout").click(function(e) {
 		}
 	});
 });
+
+function warningMsg(title, msg) {
+	$("<div/>")
+		.html(msg)
+		.dialog({
+			title: title,
+			draggable : true,
+			resizable : false,
+			autoOpen : true,
+			height : "auto",
+			modal : true,
+			buttons : [{
+				text: "確認", 
+				click: function() { 
+					$(this).dialog("close");
+				}
+			}]
+		});
+}
 </script>
