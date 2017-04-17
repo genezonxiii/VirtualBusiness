@@ -153,7 +153,7 @@ function buildDialog(){
 							var lab = $( "label[for='" + id + "']" );
 //							var left = ((lab.offset().left)+ (lab.width()*3/5))+'px';
 //							var top = (lab.offset().top)+'px';
-							var left =  lab.offset().left - lab.width()*1/2 +"px";
+							var left =  lab.offset().left - lab.width()*1/2.2 +"px";
 							var top = $("#iconBtns").offset().top - lab.offset().top + 400 +'px';
 							var hidden = $('#deliveryMethod');
 							
@@ -591,7 +591,7 @@ $(document).ready(function() {
 				var hidden = $('#deliveryMethod');
 				var id = $(this).attr('id');
 				var lab = $( "label[for='" + id + "']" );
-				var left =  lab.offset().left - lab.width()*1/2 +"px";
+				var left =  lab.offset().left - lab.width()*1/2.2 +"px";
 				var top = $("#iconBtns").offset().top - lab.offset().top + 400 +'px';
 
 				var img = document.createElement('IMG');
