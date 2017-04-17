@@ -240,8 +240,8 @@ function sendFileToServer(formData,status){
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){
 				    	status_dialog.dialog("close");
 //			    		$(btnArea).find('#downloadBtn').remove();
-						$('#message').find("#text").val('').html("匯入失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
-						message_dialog.dialog("open");
+						$('#message').find("#text").val('').html("拋轉失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
+						message_dialog.dialog('option','width','auto').dialog("open");
 			    	}    
 		        }
 		    }); 

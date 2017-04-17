@@ -23,28 +23,28 @@
 		<div class="search-result-wrap" style="margin-bottom: 0px;">
 			<div class="result-table-func-wrap" id='panel'>
 
-				<div class="ec-radio-group-wrap">
-					<input id="radio-01" type="radio" name="ec-radio-group" value="pcone"><label for="radio-01"><img src="images/ec-logos/pcone.png" alt=""><span>松果購物</span></label>
-					<input id="radio-02" type="radio" name="ec-radio-group" value="popular"><label for="radio-02"><img src="images/ec-logos/popular.png" alt=""><span>小P大團購</span></label>
-					<input id="radio-03" type="radio" name="ec-radio-group" value="chinatime"><label for="radio-03"><img src="images/ec-logos/chinatime.png" alt=""><span>中時團購網</span></label>
-					<input id="radio-04" type="radio" name="ec-radio-group" value="sister"><label for="radio-04"><img src="images/ec-logos/sister.png" alt=""><span>姊妹購物網</span></label>
-					<input id="radio-05" type="radio" name="ec-radio-group" value="lifemarket"><label for="radio-05"><img src="images/ec-logos/lifemarket.png" alt=""><span>生活市集</span></label>
-				</div><!-- /.ec-radio-group-wrap -->
+<!-- 				<div class="ec-radio-group-wrap"> -->
+<!-- 					<input id="radio-01" type="radio" name="ec-radio-group" value="pcone"><label for="radio-01"><img src="images/ec-logos/pcone.png" alt=""><span>松果購物</span></label> -->
+<!-- 					<input id="radio-02" type="radio" name="ec-radio-group" value="popular"><label for="radio-02"><img src="images/ec-logos/popular.png" alt=""><span>小P大團購</span></label> -->
+<!-- 					<input id="radio-03" type="radio" name="ec-radio-group" value="chinatime"><label for="radio-03"><img src="images/ec-logos/chinatime.png" alt=""><span>中時團購網</span></label> -->
+<!-- 					<input id="radio-04" type="radio" name="ec-radio-group" value="sister"><label for="radio-04"><img src="images/ec-logos/sister.png" alt=""><span>姊妹購物網</span></label> -->
+<!-- 					<input id="radio-05" type="radio" name="ec-radio-group" value="lifemarket"><label for="radio-05"><img src="images/ec-logos/lifemarket.png" alt=""><span>生活市集</span></label> -->
+<!-- 				</div>/.ec-radio-group-wrap -->
 
-				<div class="ec-radio-group-wrap">
-					<input id="radio-06" type="radio" name="ec-radio-group" value="healthmike"><label for="radio-06"><img src="images/ec-logos/healthmike.png" alt=""><span>健康賣客</span></label>
-					<input id="radio-07" type="radio" name="ec-radio-group" value="delicious"><label for="radio-07"><img src="images/ec-logos/delicious.png" alt=""><span>好吃宅配網</span></label>
-					<input id="radio-08" type="radio" name="ec-radio-group" value="chinaugo"><label for="radio-08"><img src="images/ec-logos/chinaugo.png" alt=""><span>中華優購</span></label>
-					<input id="radio-09" type="radio" name="ec-radio-group" value="ibon"><label for="radio-09"><img src="images/ec-logos/ibon.png" alt=""><span>IBON</span></label>
-					<input id="radio-10" type="radio" name="ec-radio-group" value="17life"><label for="radio-10"><img src="images/ec-logos/Life.png" alt=""><span>17Life</span></label>
-				</div><!-- /.ec-radio-group-wrap -->
-				<div class="ec-radio-group-wrap">
-					<input id="radio-11" type="radio" name="ec-radio-group" value="herbuy"><label for="radio-11"><img src="images/ec-logos/herbuy.png" alt=""><span>好買寶貝</span></label>
-					<input id="radio-12" type="radio" name="ec-radio-group" value="gomaji"><label for="radio-12"><img src="images/ec-logos/GOMAJI.png" alt=""><span>Gomaji</span></label>
-					<input id="radio-13" type="radio" name="ec-radio-group" value="shopline"><label for="radio-13"><img src="images/ec-logos/shopline.png" alt=""><span>Shopline</span></label>
-					<input id="radio-14" type="radio" name="ec-radio-group" value="charmingmall"><label for="radio-14"><img src="images/ec-logos/charmingmall.png" alt=""><span>俏美魔</span></label>
-					<input id="radio-15" type="radio" name="ec-radio-group" value="mintyday"><label for="radio-15"><img src="images/ec-logos/mintyday.png" alt=""><span>清新好日</span></label>
-				</div><!-- /.ec-radio-group-wrap -->
+<!-- 				<div class="ec-radio-group-wrap"> -->
+<!-- 					<input id="radio-06" type="radio" name="ec-radio-group" value="healthmike"><label for="radio-06"><img src="images/ec-logos/healthmike.png" alt=""><span>健康賣客</span></label> -->
+<!-- 					<input id="radio-07" type="radio" name="ec-radio-group" value="delicious"><label for="radio-07"><img src="images/ec-logos/delicious.png" alt=""><span>好吃宅配網</span></label> -->
+<!-- 					<input id="radio-08" type="radio" name="ec-radio-group" value="chinaugo"><label for="radio-08"><img src="images/ec-logos/chinaugo.png" alt=""><span>中華優購</span></label> -->
+<!-- 					<input id="radio-09" type="radio" name="ec-radio-group" value="ibon"><label for="radio-09"><img src="images/ec-logos/ibon.png" alt=""><span>IBON</span></label> -->
+<!-- 					<input id="radio-10" type="radio" name="ec-radio-group" value="17life"><label for="radio-10"><img src="images/ec-logos/Life.png" alt=""><span>17Life</span></label> -->
+<!-- 				</div>/.ec-radio-group-wrap -->
+<!-- 				<div class="ec-radio-group-wrap"> -->
+<!-- 					<input id="radio-11" type="radio" name="ec-radio-group" value="herbuy"><label for="radio-11"><img src="images/ec-logos/herbuy.png" alt=""><span>好買寶貝</span></label> -->
+<!-- 					<input id="radio-12" type="radio" name="ec-radio-group" value="gomaji"><label for="radio-12"><img src="images/ec-logos/GOMAJI.png" alt=""><span>Gomaji</span></label> -->
+<!-- 					<input id="radio-13" type="radio" name="ec-radio-group" value="shopline"><label for="radio-13"><img src="images/ec-logos/shopline.png" alt=""><span>Shopline</span></label> -->
+<!-- 					<input id="radio-14" type="radio" name="ec-radio-group" value="charmingmall"><label for="radio-14"><img src="images/ec-logos/charmingmall.png" alt=""><span>俏美魔</span></label> -->
+<!-- 					<input id="radio-15" type="radio" name="ec-radio-group" value="mintyday"><label for="radio-15"><img src="images/ec-logos/mintyday.png" alt=""><span>清新好日</span></label> -->
+<!-- 				</div>/.ec-radio-group-wrap -->
 				
 				<hr class="hr-gray">
 			</div><!-- /.result-table-func-wrap -->

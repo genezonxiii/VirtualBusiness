@@ -1,9 +1,7 @@
 package tw.com.aber;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -12,8 +10,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 //import org.apache.http.HttpResponse;
 //import org.apache.http.client.ClientProtocolException;
 //import org.apache.http.config.Lookup;
@@ -22,14 +18,10 @@ import java.text.SimpleDateFormat;
 //import org.apache.http.impl.client.BasicResponseHandler;
 //import org.apache.http.impl.client.HttpClientBuilder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -49,10 +41,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-
-import tw.com.aber.groupbackstage.controller.GroupBackstage;
 
 public class upload extends HttpServlet {
 
@@ -254,31 +242,47 @@ public class upload extends HttpServlet {
 
 	protected String webService(HttpServletRequest request, HttpServletResponse response, String conString)
 			throws ServletException, IOException {
-		String ret = "";
+
+		String ret = "false";
 		HttpClient client = new HttpClient();
 		HttpMethod method = new GetMethod(conString);
 		try {
 			client.executeMethod(method);
 		} catch (Exception e) {
-			ret = e.toString();
-			ret = "Error of call webservice:" + ret;
+			logger.debug("Error of call webservice:" + e.getMessage());
+			ret = "false";
 		}
 		try {
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
-			String content = ret = writer.toString();
-			// String content=method.getResponseBodyAsString();
-			if ("success".compareTo(content) == 0 || content.contains("\"success\": true")) {
-				ret = content;
+			String content = writer.toString();
+			int isJson = 0;
+			Webserviceoutput jsonobj = new Webserviceoutput();
+			Gson gson = new Gson();
+			try {
+				jsonobj = gson.fromJson(content, Webserviceoutput.class);
+				isJson = 1;
+			} catch (com.google.gson.JsonSyntaxException ex) {
+				isJson = 0;
+			}
+
+			logger.debug("isJson: " + isJson);
+			if (isJson == 1) {
+				if ("true".equals(jsonobj.success)) {
+					ret = "success";
+				} else {
+					ret = "false";
+				}
 			} else {
 				if (content.length() > 100) {
 					content = content.substring(0, 90) + "....";
 				}
-				ret = "Error_Connection: get " + content + " on: " + conString;
+				logger.debug("Error_Connection: get " + content + " on: " + conString);
+				ret = "false";
 			}
 		} catch (Exception e) {
-			ret = e.toString();
-			ret = "Error of call webservice content:" + ret;
+			logger.debug("Error of call webservice content:" + e.toString());
+			ret = "false";
 		}
 		method.releaseConnection();
 		return ret;
@@ -325,6 +329,11 @@ public class upload extends HttpServlet {
 
 						String fileName = FilenameUtils.getName(fi.getName());
 						String ext = FilenameUtils.getExtension(fileName);
+
+	        			String filecontent_ori= fi.getString("UTF-8");
+						if(filecontent_ori.contains("text/html;")||filecontent_ori.contains("<html>")){
+							ext = "html";
+						}
 						String _uid = UUID.randomUUID().toString();
 
 						savePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/"
@@ -366,6 +375,11 @@ public class upload extends HttpServlet {
 								+ platform + "/" + deliveryMethod + "/" + group_id;
 
 						String ext = FilenameUtils.getExtension(fieldName);
+
+	        			String filecontent_ori= fi.getString("UTF-8");
+						if(filecontent_ori.contains("text/html;")||filecontent_ori.contains("<html>")){
+							ext = "html";
+						}
 						fullPath = savePath + "/" + _uid + "." + ext;
 						File file = null;
 						file = new File(savePath);
@@ -398,6 +412,10 @@ public class upload extends HttpServlet {
 						+ new String(Base64.encodeBase64String(user_id.getBytes()));
 				logger.debug("conString : " + conString);
 				ret = webService(request, response, conString);
+				if("false".equals(ret)){
+					File file = new File(fullPath);
+					file.delete();
+				}
 				response.getWriter().write(ret);
 			} catch (FileUploadException e) {
 				logger.debug("Cannot parse multipart request");
@@ -484,5 +502,8 @@ public class upload extends HttpServlet {
 		}
 
 	}
-
+	class Webserviceoutput {
+		String info;
+		String success;
+	}
 }
