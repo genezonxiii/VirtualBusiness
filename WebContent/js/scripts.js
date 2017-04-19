@@ -140,21 +140,26 @@ function warning_msg_last(str){
 }
 
 function auto_complete(name,tags){
-	$("#"+name).autocomplete({
-    	minLength: 1,
-    	source: tags,
-    	position:  {my: "left top", at: "left bottom", collision: "flipfit"}
-    });
-    $("#"+name).dblclick(function(event){ 
-    	event.preventDefault();
-    	$("#"+name).autocomplete({minLength: 0}); 
-    	
-    	$("#"+name).click(function(){
-        	var eve=jQuery.Event("keydown");
-        	eve.which=40;
-          	$(this).trigger(eve);
-        });
-    });
+	$( "#"+name )
+		.autocomplete({
+	    	minLength: 1,
+	    	source: tags,
+	    	position: {
+	    		my: "left top", 
+	    		at: "left bottom", 
+	    		collision: "flipfit"
+	    	}
+	    })
+	    .dblclick(function(event){ 
+	    	event.preventDefault();
+	    	$("#"+name).autocomplete({minLength: 0}); 
+	    	
+	    	$("#"+name).click(function(){
+	    		var keyEvent = jQuery.Event("keydown");
+	    		keyEvent.keyCode = $.ui.keyCode.ArrowDown;
+	          	$(this).trigger(keyEvent);
+	        });
+	    });
 }
 
 
@@ -165,26 +170,22 @@ function order_source_auto(name) {
       "GoHappy","myfone","森森購物","九易","UDN",
       "17Life", "ASAP", "通用","國泰Tree","Line Mart"
     ];
-    //{label:"", value:""}, {label:"車王電", value:"車王電"}];
-//    var availableTags = [{label:"yahoo", val2:"1"},{label:"超級商城", val2:"2"},{label:"Pchome", val2:"3"},
-//                         {label:"通用", value:"4"},{label:"夠麻吉", value:"5"},{label:"樂天", value:"6"},
-//                         {label:"payeasy", value:"7"},{label:"博客來", value:"8"},{label:"ibon", value:"9"},
-//                         {label:"momo", value:"10"},{label:"愛買", value:"11"},{label:"GoHappy", value:"12"},
-//                         {label:"myfone", value:"13"},{label:"森森購物", value:"14"},{label:"九易", value:"15"},
-//                         {label:"UDN", value:"16"},{label:"17Life", value:"17"},{label:"ASAP", value:"18"},
-//                         {label:"國泰Tree", value:"19"},{label:"Line Mart", value:"20"}
-//                       ];
     
-    $( "#"+name).autocomplete({
-    	minLength: 0,
-    	source: availableTags,
-    	position:  {my: "left top", at: "left bottom", collision: "flipfit"}
-    });
-    $( "#"+name).focus(function(){
-    	var eve=jQuery.Event("keydown");
-    	eve.which=40;
-      	$(this).trigger(eve);
-    });
+    $( "#"+name )
+	    .autocomplete({
+	    	minLength: 0,
+	    	source: availableTags,
+	    	position: {
+	    		my: "left top", 
+	    		at: "left bottom", 
+	    		collision: "flipfit"
+	    	}
+	    })
+	    .focus(function(){
+	    	var e = $.Event("keydown");
+	    	e.which = 40; //ArrowDown
+	      	$(this).trigger(e);
+	    });
 }
 
 function isIE(){
