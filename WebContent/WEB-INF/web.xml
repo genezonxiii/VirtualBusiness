@@ -533,6 +533,18 @@
 		<servlet-name>basicDataImport</servlet-name>
 		<url-pattern>/basicDataImport.do</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>realsale</servlet-name>
+		<servlet-class>tw.com.aber.realsale.controller.realsale</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>realsale</servlet-name>
+		<url-pattern>/realsale.do</url-pattern>
+	</servlet-mapping>
+	
+	
+	
 	<filter>
 		<filter-name>loginFilter</filter-name>
 		<filter-class>tw.com.aber.loginFilter</filter-class>
