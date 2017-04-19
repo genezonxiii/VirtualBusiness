@@ -265,7 +265,7 @@ public class upload extends HttpServlet {
 			logger.debug("isJson: " + isJson);
 			if (isJson == 1) {
 				if ("true".equals(jsonobj.success)) {
-					ret = "success";
+					ret = content;
 				} else {
 					ret = "false";
 				}
@@ -501,5 +501,6 @@ public class upload extends HttpServlet {
 	class Webserviceoutput {
 		String info;
 		String success;
+		String duplicate;
 	}
 }

@@ -1,24 +1,8 @@
 var company_count = 25;
 var company_row_count = 5;
 
-//var company_val_arr = [ "yahoo", "rakuten", "momo", "umall", "asap",
-//		"yahoomall", "payeasy", "amart", "udn", "etmall", "pchome", "books",
-//		"gohappy", "91mai", "treemall", "gomaji", "ibon", "myfone", "17life",
-//		"linemart", "babyhome", "friday", "ihergo", "bigbuy", "momomall" ];
-//
-//var company_pic_arr = [ "yahoo", "rakuten", "momo", "Umall", "ASAP",
-//                		"supermall", "payeasy", "AMart", "udn", "EHS", "pchome", "books",
-//                		"GoHappy", "91", "treemall", "GOMAJI", "ibon", "myfone", "Life",
-//                		"Line_Mart", "babyhome", "friday", "ihergo", "bigbuy", "momomall" ];
-//
-//var company_text_arr = [ "Yahoo 購物中心", "樂天", "momo", "森森", "ASAP",
-//		"Yahoo 超級商城", "PayEasy", "愛買", "UDN", "東森購物", "PCHome", "博客來",
-//		"GoHappy", "九易", "國泰", "夠麻吉", "ibon", "myfone", "17life", "Line Mart",
-//		"寶貝家庭親子網", "friDay購物", "愛合購", "大買家", "MOMO摩天商城" ];
-
 function init(){
 	$('#fileDiv').hide();
-//	$('#fileDiv').show();
 	buildHiddField();
 	buildDialog();
 	buildIconBtns();
@@ -227,22 +211,92 @@ function sendFileToServer(formData,status){
 		        data: formData,
 		        success: function(result){
 		        	console.log('result: '+result);
+		        	
+		        	var duplicate = [];
+		        	
 			    	if(result=="false"){
 			        	sendNames += "<p alert='left'>["+formData.get('file').name+"]</p><br>";
 			        	sendStatus ++;
+			    	}else{
+		            	var json_obj = $.parseJSON(result);
+						$.each(json_obj,function(i, item) {
+				        	console.log('item '+i);
+				        	if(i == 'duplicate'){
+				        		duplicate = item.split(',');
+				        	}
+				        	console.log('duplicate');
+				        	console.log(duplicate);
+						});
 			    	}
-			    	if ((sendCountTime == sendCount) && (sendStatus == 0)){
+			    	
+			    	if ((sendCountTime == sendCount) && (sendStatus == 0)&&(duplicate.length==0)){
 				    	status_dialog.dialog("close");
 				    	$('#message').find("#text").val('').html("匯入成功!");
 						message_dialog.dialog("open");
 						$("#download").html("");
 //						createDlBtn(result);
-			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){
+			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)&&(duplicate.length==0)){
 				    	status_dialog.dialog("close");
 //			    		$(btnArea).find('#downloadBtn').remove();
 						$('#message').find("#text").val('').html("拋轉失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog('option','width','auto').dialog("open");
-			    	}    
+			    	}
+			    	if ((sendCountTime == sendCount) && (duplicate.length!=0)){
+				    	status_dialog.dialog("close");
+				    	
+						var data = document.createElement("DIV");
+							data.style.overflowY = 'auto';
+							data.style.overflowX = 'hidden';
+							data.style.maxHeight = '200px';
+							
+						var title = document.createElement("DIV");						
+						
+						var table = document.createElement("TABLE");
+							table.className = 'duplicate_table'
+								
+						var tr = document.createElement("TR");
+						var br = document.createElement("BR");
+							
+						var td ;
+						var para;
+						var text;
+						
+						for(var i =0; i<duplicate.length; i++){
+							if( i%3 == 0 ){
+								text = document.createTextNode(duplicate[i]);
+								para = document.createElement("P");
+								td = document.createElement("TD");
+								tr = document.createElement("TR");
+							}else{
+								text = document.createTextNode(duplicate[i]);
+								para = document.createElement("P");
+								td = document.createElement("TD");
+							}
+							para.appendChild(text);
+							td.appendChild(para);
+							tr.appendChild(td);
+							table.appendChild(tr);
+						}
+
+						para = document.createElement("P");
+						text = document.createTextNode('拋轉失敗');
+						
+						para.appendChild(text);
+						title.appendChild(para);
+						title.appendChild(br);
+
+						para = document.createElement("P");
+						text = document.createTextNode('資料重複，請確認以下訂單編號↓');
+
+						para.appendChild(text);
+						title.appendChild(para);
+						title.appendChild(br);
+
+						data.appendChild(table);
+						
+						$('#message').find("#text").html('').append(title,data);;
+						message_dialog.dialog('option','width','auto').dialog("open");
+			    	} 
 		        }
 		    }); 
  
