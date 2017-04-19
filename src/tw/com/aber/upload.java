@@ -209,11 +209,9 @@ public class upload extends HttpServlet {
 
 		public String getPlatformJson() {
 			String jsonStrList = "";
-			UploadDao dao = null;
 			Gson gson = null;
 			List<Throwfile> list = null;
 			try {
-				dao = new UploadDao();
 				gson = new Gson();
 				list = dao.searchPlatformDB();
 				jsonStrList = gson.toJson(list);
@@ -225,11 +223,9 @@ public class upload extends HttpServlet {
 
 		public String getPlatformWayJson() {
 			String jsonStrList = "";
-			UploadDao dao = null;
 			Gson gson = null;
 			List<Throwfile> list = null;
 			try {
-				dao = new UploadDao();
 				gson = new Gson();
 				list = dao.searchPlatformWayDB();
 				jsonStrList = gson.toJson(list);
