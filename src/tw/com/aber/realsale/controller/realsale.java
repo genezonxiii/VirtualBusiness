@@ -48,7 +48,6 @@ public class realsale extends HttpServlet {
 				 * 1.接收請求參數-格式檢查
 				 ****************************************/
 				String c_product_id = request.getParameter("c_product_id");
-				logger.info(group_id);
 				/***************************
 				 * 2.開始查詢資料
 				 ****************************************/
