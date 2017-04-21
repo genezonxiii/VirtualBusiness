@@ -1,366 +1,465 @@
 package tw.com.aber;
 
-import org.apache.commons.codec.binary.Hex;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.sql.*;
-import java.text.SimpleDateFormat;
 
-//import org.apache.http.HttpResponse;
-//import org.apache.http.client.ClientProtocolException;
-//import org.apache.http.config.Lookup;
-//import org.apache.http.client.HttpClient;
-//import org.apache.http.client.methods.HttpGet;
-//import org.apache.http.impl.client.BasicResponseHandler;
-//import org.apache.http.impl.client.HttpClientBuilder;
-import java.util.*;
-import java.util.Date;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import org.apache.commons.fileupload.*;
-import org.apache.commons.fileupload.disk.*;
-import org.apache.commons.fileupload.servlet.*;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import tw.com.aber.upload.Throwfile;
+public class groupbuying extends HttpServlet {
 
-import org.apache.commons.codec.binary.Base64;
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LogManager.getLogger(upload.class);
 
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.*;
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.*; 
-import org.apache.commons.codec.binary.Base64;
-import java.util.concurrent.TimeUnit;
-public class groupbuying  extends HttpServlet {
-	public String file_name = "";
-	public String ori_file_name = "";
-	public String public_uuid = "";
-	protected void doGet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doPost(request, response);
 	}
-	
-	protected void doPost(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-		
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		request.setCharacterEncoding("UTF-8");
-	    response.setCharacterEncoding("UTF-8");
-	    String action = request.getParameter("action");
-	    if("select_platform_kind".equals(action)){
-			final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
-					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-			final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
-			final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
-			Connection con = null;
-			Statement statement = null;
-			ResultSet rs = null;
+		response.setCharacterEncoding("UTF-8");
+		String action = request.getParameter("action");
+		if ("select_platform_kind".equals(action)) {
+			UploadService service = new UploadService();
+			String jsonStrList = service.getPlatformJson();
+			response.getWriter().write(jsonStrList);
+		} else if ("select_way_of_platform".equals(action)) {
+			UploadService service = new UploadService();
+			String jsonStrList = service.getPlatformWayJson();
+			response.getWriter().write(jsonStrList);
+		} else if ("download".equals(action)) {
+			String filePath = request.getParameter("file_path");
+			String fileName = request.getParameter("file_name");
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				statement = con.createStatement();
-				String cmd ="SELECT * FROM tb_throwfile WHERE throwfile_type = 'general' and group_buying = 'true' ORDER BY throwfile_id ASC ";
-				rs = statement.executeQuery(cmd);
-				int count=0;
-			    if (rs.last()){count = rs.getRow();}else{count = 0;}
-			    Throwfile[] result=new Throwfile[count];
-			    
-			    rs.beforeFirst();count=0;
-			    while (rs.next()) {
-			    	result[count]= new Throwfile();
-			    	result[count].throwfile_name=rs.getString("throwfile_name");
-			    	result[count].throwfile_id=rs.getString("throwfile_id");
-			    	result[count].throwfile_platform=rs.getString("throwfile_platform");
-			    	result[count].throwfile_type=rs.getString("throwfile_type");
-			    	result[count].icon=rs.getString("icon");
-			    	result[count].memo=rs.getString("memo");
-			    	result[count].reversed=rs.getString("reversed");
-			    	result[count].throwfile_fileextension=rs.getString("throwfile_fileextension");
-			    	count++;
-			    }
-			    Gson gson = new Gson();
-				String jsonStrList = gson.toJson(result);
-				response.getWriter().write(jsonStrList);
-				return;
+				FileInputStream fileInput = new FileInputStream(filePath);
+				int i = fileInput.available();
+				byte[] content = new byte[i];
+				
+				String[] extArr = filePath.split("\\.");
+				String ext = ".";
+				if (filePath.length() > 1)
+					ext += extArr[extArr.length - 1];
+				
+				fileInput.read(content);
+				response.setContentType("application/octet-stream");
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-轉檔-");
+				String today = sdf.format(new Date());
+				String downloadName = today + fileName + ext;
+
+				logger.debug("\ndownload file path: {}\ndownload file name: {}", filePath, downloadName);
+				response.setHeader("Content-Disposition",
+						"attachment;filename=".concat(java.net.URLEncoder.encode(downloadName, "UTF-8")));
+
+				OutputStream output = response.getOutputStream();
+				output.write(content);
+				output.flush();
+				fileInput.close();
+				output.close();
 			} catch (Exception e) {
-				System.out.println(e.toString());
-			} finally {
-				if (rs != null) {try {rs.close();} catch (SQLException se) {se.printStackTrace(System.err);}}if (statement != null) {try {statement.close();} catch (SQLException se) {se.printStackTrace(System.err);}}if (con != null) {try {con.close();} catch (Exception e) {e.printStackTrace(System.err);}}
+				e.printStackTrace();
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(
+						"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>找不到檔案</body></html>");
 			}
-			response.getWriter().write("fail!!!!!");
-			return;
-		}else if("select_way_of_platform".equals(action)){
-			final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
-					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-			final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
-			final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+		} else {
+			transfer(request, response);
+		}
+
+	}
+
+	class GroupbuyingDao {
+		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
+		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
+		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+
+		private static final String sp_select_groupbuying_throwfile_platform = "call sp_select_groupbuying_throwfile_platform ()";
+		private static final String sp_select_groupbuying_throwfile_platform_way = "call sp_select_groupbuying_throwfile_platform_way ()";
+
+		public List<Throwfile> searchPlatformDB() {
+
+			List<Throwfile> list = new ArrayList<Throwfile>();
+			Throwfile throwfile = null;
+
 			Connection con = null;
-			Statement statement = null;
+			PreparedStatement pstmt = null;
 			ResultSet rs = null;
+
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				statement = con.createStatement();
-				String cmd ="SELECT * FROM tb_throwfile WHERE throwfile_platform = '"+request.getParameter("platform")+"' and throwfile_type != 'general' and group_buying = 'true' ORDER BY throwfile_id ASC ";
-				rs = statement.executeQuery(cmd);
-				int count=0;
-			    if (rs.last()){count = rs.getRow();}else{count = 0;}
-			    Throwfile[] result=new Throwfile[count];
-			    rs.beforeFirst();count=0;
-			    while (rs.next()) {
-			    	result[count]= new Throwfile();
-			    	result[count].throwfile_name=rs.getString("throwfile_name");
-			    	result[count].throwfile_id=rs.getString("throwfile_id");
-			    	result[count].throwfile_platform=rs.getString("throwfile_platform");
-			    	result[count].throwfile_type=rs.getString("throwfile_type");
-			    	result[count].memo=rs.getString("memo");
-			    	result[count].reversed=rs.getString("reversed");
-			    	result[count].throwfile_fileextension=rs.getString("throwfile_fileextension");
-			    	count++;
-			    }
-			    Gson gson = new Gson();
-				String jsonStrList = gson.toJson(result);
-				response.getWriter().write(jsonStrList);
-				return;
-			} catch (Exception e) {
-				System.out.println(e.toString());
+				pstmt = con.prepareStatement(sp_select_groupbuying_throwfile_platform);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					throwfile = new Throwfile();
+					throwfile.setThrowfile_name(rs.getString("throwfile_name"));
+					throwfile.setThrowfile_id(rs.getString("throwfile_id"));
+					throwfile.setThrowfile_platform(rs.getString("throwfile_platform"));
+					throwfile.setThrowfile_type(rs.getString("throwfile_type"));
+					throwfile.setMemo(rs.getString("memo"));
+					throwfile.setIcon(rs.getString("icon"));
+					throwfile.setReversed(rs.getString("reversed"));
+					throwfile.setThrowfile_fileextension(rs.getString("throwfile_fileextension"));
+					list.add(throwfile); // Store the row in the list
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			} finally {
-				if (rs != null) {try {rs.close();} catch (SQLException se) {se.printStackTrace(System.err);}}if (statement != null) {try {statement.close();} catch (SQLException se) {se.printStackTrace(System.err);}}if (con != null) {try {con.close();} catch (Exception e) {e.printStackTrace(System.err);}}
-			}
-			response.getWriter().write("fail!!!!!");
-			return;
-		}else{
-			
-			if(request.getSession().getAttribute("group_id")==null){request.setAttribute("action","no_session");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
-			if(request.getParameter("vender")==null){request.setAttribute("action","no_vender");RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");successView.forward(request, response);return;}
-			String conString="",ret="E";
-			conString=putFile(request, response);
-//			System.out.println(conString);
-			try{
-				String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-				String processName =java.lang.management.ManagementFactory.getRuntimeMXBean().getName();
-				String my_msg =(new SimpleDateFormat("yyyy-MM-dd(u) HH:mm:ss").format(new Date()))+":\r\n  I'm "+request.getSession().getAttribute("user_name")+" upload(G) "+ori_file_name+" as -> " +file_name+ " with PID = "+ Long.parseLong(processName.split("@")[0])+".\r\n";
-				FileWriter fw;
-				try{
-					fw = new FileWriter(record_log,true);
-				}catch(FileNotFoundException e){
-					fw = new FileWriter(record_log,false);
+				// Clean up JDBC resources
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
 				}
-				fw.write(my_msg);
-				fw.close();
-			}catch(Exception e){System.out.println("Error: "+e.toString());}
-			
-//			if(conString.length()<1000000)return;
-			
-			try{
-				TimeUnit.SECONDS.sleep(2);
-			}catch(Exception e){
-				ret="Sleep error";
-			}
-			//System.out.println(conString);
-			if(conString.charAt(0)!='E'){
-				ret=webService(request, response,conString);
-			}else{
-				ret=conString;
-			}
-			ret=((ret==null)?"E":ret);
-			response.getWriter().write(ret);
-	//		request.setAttribute("action",ret);
-	//		RequestDispatcher successView = request.getRequestDispatcher("/upload.jsp");
-	//		successView.forward(request, response);
-			try{
-				String record_log = getServletConfig().getServletContext().getInitParameter("uploadpath")+"/log.txt";
-				String my_msg ="  Result as \'"+ret+"\'.At ("+(new SimpleDateFormat("yyyy-MM-dd(u) HH:mm:ss").format(new Date()))+")\r\n";
-				FileWriter fw;
-				try{
-					fw = new FileWriter(record_log,true);
-				}catch(FileNotFoundException e){
-					fw = new FileWriter(record_log,false);
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
 				}
-				fw.write(my_msg);
-				fw.close();
-			}catch(Exception e){System.out.println("Error: "+e.toString());}
-			//############################################################
-			return ;
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
+		}
+
+		public List<Throwfile> searchPlatformWayDB() {
+
+			List<Throwfile> list = new ArrayList<Throwfile>();
+			Throwfile throwfile = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_groupbuying_throwfile_platform_way);
+
+				// pstmt.setString(1, platform);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					throwfile = new Throwfile();
+					throwfile.setThrowfile_name(rs.getString("throwfile_name"));
+					throwfile.setThrowfile_platform(rs.getString("throwfile_platform"));
+					throwfile.setThrowfile_type(rs.getString("throwfile_type"));
+					throwfile.setThrowfile_fileextension(rs.getString("throwfile_fileextension"));
+					list.add(throwfile); // Store the row in the list
+				}
+
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				// Clean up JDBC resources
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
 		}
 	}
-	
-	protected String putFile(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-		String conString="",ret="";
-		request.setCharacterEncoding("UTF-8");
-	    response.setCharacterEncoding("UTF-8");
-	    String vender = request.getParameter("vender");
-	    String ordertype = request.getParameter("ordertype");
-	    String delivertype = request.getParameter("delivertype");
-	    String productcode = request.getParameter("productcode");
-	    
-	    String group_id = request.getSession().getAttribute("group_id").toString();
-	    String user_id = request.getSession().getAttribute("user_id").toString();
-	    user_id =(user_id==null||user_id.length()<3)?"UNKNOWN":user_id;
-	    group_id=(group_id==null)?"UNKNOWN":group_id;
-	    vender  =(vender==null)?"UNKNOWN":vender;
-	    String _uid= UUID.randomUUID().toString();
-	    
-		//_uid="454c9c52-cb76-46d3-bf4e-e3ae820c8064";
-		String no_way = getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/"+vender+"/"+ordertype+"/"+group_id+"/"+_uid;
-		new File(getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/"+vender).mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/"+vender+"/"+ordertype).mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/"+vender+"/"+ordertype+"/"+group_id).mkdir();
-		new File(getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/fail").mkdir();
-		int maxFileSize = 5000 * 1024;
-		int maxMemSize = 5000 * 1024;
-		String contentType = request.getContentType();
-		if (contentType!=null && (contentType.indexOf("multipart/form-data") >= 0)) {
-		      DiskFileItemFactory factory = new DiskFileItemFactory();
-		      factory.setSizeThreshold(maxMemSize);
-		      String file_over=getServletConfig().getServletContext().getInitParameter("groupbuypath")+"/fail";
-		      factory.setRepository(new File(file_over));
-		      ServletFileUpload upload = new ServletFileUpload(factory);
-		      upload.setSizeMax( maxFileSize );
-		      try{
-		         List fileItems = upload.parseRequest(request);
-		         Iterator i = fileItems.iterator();
-		         while ( i.hasNext () ) 
-		         {
-		            FileItem fi = (FileItem)i.next();
-		            if ( !fi.isFormField () ) {
-		            	
-		                String fileName = fi.getName();
-		                ori_file_name=fi.getName();
-		                String[] tmp = fileName.split("\\.");
-		                int j=0;
-		                while(j<tmp.length){j++;}
-		                j=j>0?j-1:j;
-		                String fullname= no_way+"."+tmp[j];
-		                //System.out.println("fullname: "+fullname);
-						//System.out.println(conString);
-		                InputStream is = fi.getInputStream();
-		        		byte[] first = new byte[5] ;
-		        		is.read(first, 0, 5);
-		        		is.close();
-		        		byte[] bytePDF = new byte[]{0x25, 0x50, 0x44, 0x46, 0x2D};
-		        		byte[] byteXLS = new byte[]{(byte) 0xD0, (byte) 0xCF, 0x11, (byte) 0xE0, (byte) 0xA1};//, (byte) 0xB1, 0x1A, (byte) 0xEA};
-//		        		byte[] byteCSV = new byte[]{0x5B, 0x75, 0x72, 0x6C};
-		        		byte[] byteXLSX = new byte[]{0x50, 0x4B, 0x03, 0x04, 0x14};
-//		        		System.out.println("1: "+Hex.encodeHexString(first));
-//		        		System.out.println("2: "+Arrays.toString(first));
-		        		if(Arrays.equals(first, bytePDF)){
-		        			fullname = no_way+".pdf";
-		        		}else if(Arrays.equals(first, byteXLS)){
-		        			fullname = no_way+".xls";
-		        		}else if(Arrays.equals(first, byteXLSX)){
-		        			fullname = no_way+".xlsx";
-		        		}else{
-//		        			System.out.println(fi.getString("UTF-8"));
-		        			String filecontent_ori= fi.getString("UTF-8");
-		        			//System.out.println(filecontent_ori);
-			            	String[] filecontent = filecontent_ori.split(",");
-			            	if(filecontent_ori.contains("text/html;")||filecontent_ori.contains("<html>")){//filecontent_ori.contains("content='text/html;")){
-			            		fullname = no_way+".html";
-			            	}else{
-				            	j=0;
-				            	while(j<filecontent.length){
-//				            		System.out.println(filecontent[j].length()+" "+filecontent[j]);
-				            		if(filecontent[j].length()>80){break;}
-				            		j++;
-				            	}
-				            	if(j==filecontent.length){
-				            		fullname = no_way+".csv";
-				            	}else{
-				            		fullname = no_way+".txt";
-				            	}
-			            	}
-		        		}
-		        		conString=getServletConfig().getServletContext().getInitParameter("pythonwebservice")
-								+"/groupbuy/urls="
-								+new String(Base64.encodeBase64String((fullname).getBytes()))
-								+"&usid="
-								+new String(Base64.encodeBase64String(user_id.getBytes()))
-								+"&tdpl="//+"&delivertype="
-								+new String(Base64.encodeBase64String(delivertype.getBytes()))
-								+"&pdcd="//+"&productcode="
-								+new String(Base64.encodeBase64String(productcode.getBytes()));
-		        		//fullname = no_way+"."+tmp[j];
-		        		
-		                file_name=fullname;
-		                File file ;
-		                file = new File(fullname) ;
-		                fi.write( file ) ;
-		                //System.out.println("success");
-		            }
-		         }
-		      }catch(Exception ex) {
-		    	  //System.out.println("ERROR: "+ ex.toString());
-		          ret="E_write_File:"+ex.toString();
-		          return ret;
-		      }
-		   }else{
-			   ret="E_No one found.";
-			   return ret;
-		   }
-		if(ret.length()>3){return ret;}
-		return conString;
+
+	class UploadService {
+		private GroupbuyingDao dao;
+
+		public UploadService() {
+			dao = new GroupbuyingDao();
+		}
+
+		public String getPlatformJson() {
+			String jsonStrList = "";
+			Gson gson = null;
+			List<Throwfile> list = null;
+			try {
+				gson = new Gson();
+				list = dao.searchPlatformDB();
+				jsonStrList = gson.toJson(list);
+			} catch (Exception e) {
+				logger.debug("getPlatformJson erroe: " + e.getMessage());
+			}
+			return jsonStrList;
+		}
+
+		public String getPlatformWayJson() {
+			String jsonStrList = "";
+			Gson gson = null;
+			List<Throwfile> list = null;
+			try {
+				gson = new Gson();
+				list = dao.searchPlatformWayDB();
+				jsonStrList = gson.toJson(list);
+			} catch (Exception e) {
+				logger.debug("getPlatformWayJson erroe: " + e.getMessage());
+			}
+			return jsonStrList;
+		}
 	}
-	protected String webService(HttpServletRequest request,HttpServletResponse response,String conString) throws ServletException, IOException {
-		//System.out.println("comein");
-		
-		String ret="";
+
+	protected String webService(HttpServletRequest request, HttpServletResponse response, String conString)
+			throws ServletException, IOException {
+
+		String ret = "false";
 		HttpClient client = new HttpClient();
-		HttpMethod method=new GetMethod(conString); 
-		try{
+		HttpMethod method = new GetMethod(conString);
+		try {
 			client.executeMethod(method);
-		}catch(Exception e){
-			ret=e.toString();
-			ret="Error of call webservice:"+ret; 
+		} catch (Exception e) {
+			logger.debug("Error of call webservice:" + e.getMessage());
+			ret = "false";
 		}
-		try{
+		try {
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
-			String content=ret=writer.toString();
-			//String content=method.getResponseBodyAsString();
-//			System.out.println("url: "+conString);
-//			System.out.println("content: "+content);
-			int isJson=0;
+			String content = writer.toString();
+			int isJson = 0;
 			Webserviceoutput jsonobj = new Webserviceoutput();
 			Gson gson = new Gson();
 			try {
-			    jsonobj = gson.fromJson(content, Webserviceoutput.class);
-			    isJson=1;
-			} catch(com.google.gson.JsonSyntaxException ex) { 
-				isJson=0;
+				jsonobj = gson.fromJson(content, Webserviceoutput.class);
+				isJson = 1;
+			} catch (com.google.gson.JsonSyntaxException ex) {
+				isJson = 0;
 			}
-			
-			if( isJson == 1 ){
-				if("true".equals(jsonobj.success)){
-					String[] tmp = jsonobj.download.split("/");
-	                int j=0;
-	                while(j<tmp.length){j++;}
-	                j=j>0?j-1:j;
-					ret=new String(Base64.encodeBase64String((tmp[j]).getBytes()));
-				}else{
-					ret="false";
+
+			logger.debug("isJson: " + isJson);
+			if (isJson == 1) {
+				if ("true".equals(jsonobj.success)) {
+					ret = content;
+				} else {
+					ret = "false";
 				}
-//				System.out.println(new String(Base64.encodeBase64String((jsonobj.download).getBytes())));
-//				ret=gson.toJson(jsonobj);
-//				ret=content;
-			}else{
-				if(content.length()>100){
-					content=content.substring(0,90)+"....";
+			} else {
+				if (content.length() > 100) {
+					content = content.substring(0, 90) + "....";
 				}
-				ret="Error_Connection: get "+content+" on: "+conString;
+				logger.debug("Error_Connection: get " + content + " on: " + conString);
+				ret = "false";
 			}
-		}catch(Exception e){
-			ret=e.toString();
-			ret="Error of call webservice content:"+ret; 
+		} catch (Exception e) {
+			logger.debug("Error of call webservice content:" + e.toString());
+			ret = "false";
 		}
 		method.releaseConnection();
 		return ret;
 	}
+
+	protected String transfer(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String conString = "", ret = "", fullPath = "";
+		String group_id = request.getSession().getAttribute("group_id").toString();
+		String user_id = request.getSession().getAttribute("user_id").toString();
+		String savePath = "";
+		String contentType = request.getContentType();
+
+		int maxFileSize = 5000 * 1024;
+		int maxMemSize = 5000 * 1024;
+
+		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
+			DiskFileItemFactory factory = new DiskFileItemFactory();
+			factory.setSizeThreshold(maxMemSize);
+			ServletFileUpload upload = new ServletFileUpload(factory);
+			upload.setSizeMax(maxFileSize);
+
+			String platform = "", deliveryMethod = "", tdpl = "", pdcd = "";
+
+			try {
+				List<?> fileItems = upload.parseRequest(request);
+				Iterator<?> i = fileItems.iterator();
+				while (i.hasNext()) {
+					FileItem fi = (FileItem) i.next();
+					if (fi.getFieldName().equals("platform"))
+						platform = fi.getString();
+					if (fi.getFieldName().equals("deliveryMethod"))
+						deliveryMethod = fi.getString();
+					if (fi.getFieldName().equals("tdpl"))
+						tdpl = fi.getString();
+					if (fi.getFieldName().equals("pdcd"))
+						pdcd = fi.getString();
+				}
+				logger.debug("\n\nplatform:{}\ndeliveryMethod:{}\n\n", platform, deliveryMethod);
+				// Requires a new iterator
+				i = fileItems.iterator();
+				while (i.hasNext()) {
+
+					FileItem fi = (FileItem) i.next();
+
+					if (!fi.isFormField() && !fi.getFieldName().equals("action")
+							&& !fi.getFieldName().equals("platform") && !fi.getFieldName().equals("deliveryMethod")
+							&& !fi.getFieldName().equals("tdpl") && !fi.getFieldName().equals("pdcd")) {
+
+						String fileName = FilenameUtils.getName(fi.getName());
+						String ext = FilenameUtils.getExtension(fileName);
+
+						String filecontent_ori = fi.getString("UTF-8");
+						if (filecontent_ori.contains("text/html;") || filecontent_ori.contains("<html>")) {
+							ext = "html";
+						}
+						String _uid = UUID.randomUUID().toString();
+
+						savePath = getServletConfig().getServletContext().getInitParameter("groupbuypath") + "/"
+								+ platform + "/" + deliveryMethod + "/" + group_id;
+
+						fullPath = savePath + "/" + _uid + "." + ext;
+
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						logger.debug("\nfileName:{}\nsavePath:{}\nfullPath:{}", fileName, savePath, fullPath);
+						InputStream is = fi.getInputStream();
+						FileOutputStream fos = new FileOutputStream(fullPath);
+
+						int len = 0;
+						byte[] buffer = new byte[1024];
+
+						try {
+							while ((len = is.read(buffer)) != -1) {
+								fos.write(buffer, 0, len);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							is.close();
+							fos.flush();
+							fos.close();
+						}
+
+					} else if (!fi.getFieldName().equals("action") && !fi.getFieldName().equals("platform")
+							&& !fi.getFieldName().equals("deliveryMethod") && !fi.getFieldName().equals("tdpl")
+							&& !fi.getFieldName().equals("pdcd")) {
+
+						String fieldName = fi.getFieldName();
+						String _uid = UUID.randomUUID().toString();
+
+						savePath = getServletConfig().getServletContext().getInitParameter("groupbuypath") + "/"
+								+ platform + "/" + deliveryMethod + "/" + group_id;
+						String ext = FilenameUtils.getExtension(fieldName);
+
+						String filecontent_ori = fi.getString("UTF-8");
+						if (filecontent_ori.contains("text/html;") || filecontent_ori.contains("<html>")) {
+							ext = "html";
+						}
+						fullPath = savePath + "/" + _uid + "." + ext;
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
+						logger.debug("\nfi:{}", fi);
+						logger.debug("\nfieldName:{}\next:{}\nfullPath:{}", fieldName, ext, fullPath);
+						InputStream is = fi.getInputStream();
+						FileOutputStream fos = new FileOutputStream(fullPath);
+
+						int len = 0;
+						byte[] buffer = new byte[1024];
+
+						try {
+							while ((len = is.read(buffer)) != -1) {
+								fos.write(buffer, 0, len);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						} finally {
+							is.close();
+							fos.flush();
+							fos.close();
+						}
+					}
+				}
+				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+						+ "/groupbuy/urls=" + new String(Base64.encodeBase64String((fullPath).getBytes())) + "&usid="
+						+ new String(Base64.encodeBase64String(user_id.getBytes())) + "&tdpl="
+						+ new String(Base64.encodeBase64String(tdpl.getBytes())) + "&pdcd="
+						+ new String(Base64.encodeBase64String(pdcd.getBytes()));
+				logger.debug("conString : " + conString);
+				ret = webService(request, response, conString);
+				if ("false".equals(ret)) {
+					File file = new File(fullPath);
+					file.delete();
+				}
+				response.getWriter().write(ret);
+			} catch (FileUploadException e) {
+				logger.debug("Cannot parse multipart request");
+			} catch (Exception ex) {
+				logger.debug("transfer error : " + ex.toString());
+			}
+		}
+
+		return conString;
+	}
+
 	class Throwfile {
 		String throwfile_id;
 		String throwfile_platform;
@@ -370,10 +469,76 @@ public class groupbuying  extends HttpServlet {
 		String icon;
 		String memo;
 		String reversed;
+
+		public String getThrowfile_id() {
+			return throwfile_id;
+		}
+
+		public void setThrowfile_id(String throwfile_id) {
+			this.throwfile_id = throwfile_id;
+		}
+
+		public String getThrowfile_platform() {
+			return throwfile_platform;
+		}
+
+		public void setThrowfile_platform(String throwfile_platform) {
+			this.throwfile_platform = throwfile_platform;
+		}
+
+		public String getThrowfile_type() {
+			return throwfile_type;
+		}
+
+		public void setThrowfile_type(String throwfile_type) {
+			this.throwfile_type = throwfile_type;
+		}
+
+		public String getThrowfile_name() {
+			return throwfile_name;
+		}
+
+		public void setThrowfile_name(String throwfile_name) {
+			this.throwfile_name = throwfile_name;
+		}
+
+		public String getThrowfile_fileextension() {
+			return throwfile_fileextension;
+		}
+
+		public void setThrowfile_fileextension(String throwfile_fileextension) {
+			this.throwfile_fileextension = throwfile_fileextension;
+		}
+
+		public String getIcon() {
+			return icon;
+		}
+
+		public void setIcon(String icon) {
+			this.icon = icon;
+		}
+
+		public String getMemo() {
+			return memo;
+		}
+
+		public void setMemo(String memo) {
+			this.memo = memo;
+		}
+
+		public String getReversed() {
+			return reversed;
+		}
+
+		public void setReversed(String reversed) {
+			this.reversed = reversed;
+		}
+
 	}
-	class Webserviceoutput{
+
+	class Webserviceoutput {
 		String info;
-		String download;
 		String success;
+		String duplicate;
 	}
 }

@@ -4,6 +4,9 @@
 button.btn {
 	margin-left: 8px;
 }
+#downloadBtn{
+	margin-left: 8px;
+}
 .dragandrophandler {
 	margin: auto;
 	margin-top: 30px;
@@ -128,4 +131,7 @@ button.btn {
 }
 .on_it {
 	background: #d8d8d8 !important;
+}
+#selectDiv{
+  margin-top:40px;
 }

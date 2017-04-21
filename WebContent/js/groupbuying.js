@@ -3,9 +3,11 @@ var company_row_count = 5;
 
 function init(){
 	$('#fileDiv').hide();
+	$('#selectDiv').hide();
 	buildHiddField();
 	buildDialog();
 	buildIconBtns();
+	buildSelect();
 }
 
 function buildHiddField(){
@@ -30,12 +32,11 @@ function getPlatformMap(){
 	var value = "";
 	$.ajax({
 		type : "POST",
-		url : "upload.do",
+		url : "groupbuying.do",
 		data : {
 			action :"select_way_of_platform"
 		},
-		success : function(result) {
-			console.log('result : '+result);
+		success : function(result) {	
 			var json_obj = $.parseJSON(result);
 			$.each (json_obj, function (i,item) {
 				key = item.throwfile_platform;
@@ -68,7 +69,7 @@ function buildIconBtns(){
 	
 	$.ajax({
 		type : "POST",
-		url : "upload.do",
+		url : "groupbuying.do",
 		data : {
 			action :"select_platform_kind" 
 		},
@@ -115,6 +116,49 @@ function buildIconBtns(){
 	});
 }
 
+function buildSelect(){
+	var type_select, code_select, option, para, text;
+	var type_count = 2;
+	var type_values_arr = ['0','2'];
+	var type_texts_arr = ['請選擇轉出格式','黑貓宅急便'];
+	
+	type_select = document.createElement('SELECT');
+	for(var i=0; i<type_count; i++){
+		option = document.createElement('OPTION');
+		option.value = type_values_arr[i];
+		para = document.createElement('P');
+		text = document.createTextNode(type_texts_arr[i]);
+		para.appendChild(text);
+		option.appendChild(para);
+		type_select.appendChild(option);
+	}
+	var code_count = 24;
+	var code_values_arr = ['0','O','A','M','G','D','OG','MG','OS',
+	                       'GS','AS','MS','DS','Y','ME','BW','UBG', 
+	                       'UW','UST','US','USK','YK','GK','LM'];
+	var code_texts_arr = ['請選擇產品代碼','LP28敏立清益生菌(原味)',
+	                      'LP28敏立清益生菌(紅蘋果)','LP28敏立清益生菌(蔓越莓)',
+	                      'LP28敏立清益生菌(青蘋果)','LP28敏立清益生菌(草莓)',
+	                      '金敏立清-多多原味','金敏立清-蔓越莓','欣敏立清多多原味',
+	                      '欣敏立清青蘋果多多','欣敏立清紅蘋果多多','欣敏立清蔓越莓多多',
+	                      '欣敏立清草莓多多','視立清-葉黃素','美立妍','B立威',
+	                      '優必固U!be Good','優必威U!be Well','優比獅壯U!be Stron',
+	                      '口腔益生菌U!be Smil','優比思邁U!be Smile','小兒晶','小兒立','樂敏立清'];
+	
+	code_select = document.createElement('SELECT');
+	for(var i=0; i<code_count; i++){
+		option = document.createElement('OPTION');
+		option.value = code_values_arr[i];
+		para = document.createElement('P');
+		text = document.createTextNode(code_texts_arr[i]);
+		para.appendChild(text);
+		option.appendChild(para);
+		code_select.appendChild(option);
+	}
+
+	$('#selectDiv').html('').append(type_select,code_select);
+}
+
 function buildDialog(){
 	$("#choose-order-type").dialog({
 		draggable : true,
@@ -147,7 +191,7 @@ function buildDialog(){
 //							var left = ((lab.offset().left)+ (lab.width()*3/5))+'px';
 //							var top = (lab.offset().top)+'px';
 							var left =  lab.offset().left - lab.width()*1/2.2 +"px";
-							var top = $("#iconBtns").offset().top - lab.offset().top + 400 +'px';
+							var top = $("#iconBtns").offset().top - lab.offset().top + 240 +'px';
 							var hidden = $('#deliveryMethod');
 							
 							var img = document.createElement('IMG');
@@ -164,9 +208,11 @@ function buildDialog(){
 					    	hidden.val('').val(selectedRadio.val());
 					    	
 							$(this).dialog("close");
+							$('#selectDiv').show();
 							$('#fileDiv').show();
 						}else{
 							$('#fileDiv').hide();
+							$('#selectDiv').hide();
 					    	$('#message').find("#text").val('').html("請選擇訂單類型!");
 							message_dialog.dialog("open");
 						}						
@@ -188,7 +234,7 @@ var sendCountTime = 0; //實際寄送幾次
 var sendStatus = 0; //寄送狀態，用來判斷是否有檔案失敗 (0:成功)
 function sendFileToServer(formData,status){
 	sendCountTime ++;
-    var uploadURL ="upload.do"; //Upload URL
+    var uploadURL ="groupbuying.do"; //Upload URL
     var extraData ={}; //Extra Data.
     var jqXHR=$.ajax({
 	            xhr: function() {
@@ -205,7 +251,7 @@ function sendFileToServer(formData,status){
 		                        status.setProgress(percent);
 
 		                        if((sendCountTime == sendCount) && (percent==100)){
-		            				$('#status').find("#text").val('').html("檔案已上傳完成<br><br>請稍後片刻<br><br>正在進行拋轉作業!");
+		            				$('#status').find("#text").val('').html("檔案已上傳完成<br><br>請稍後片刻<br><br>正在進行轉檔作業!");
 		            				status_dialog.dialog("open");
 		                        }
 		                    }, false);
@@ -243,13 +289,17 @@ function sendFileToServer(formData,status){
 				    	$('#message').find("#text").val('').html("匯入成功!");
 						message_dialog.dialog("open");
 						$("#download").html("");
-//						createDlBtn(result);
+		            	var json_obj = $.parseJSON(result);
+		            	var file_path = json_obj.download;
+		            	var file_name = $('input[name=ec-radio-group]:checked').next('label').find('span').text();
+						createDlBtn(file_path,file_name);
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)&&(duplicate.length==0)){
 				    	status_dialog.dialog("close");
 //			    		$(btnArea).find('#downloadBtn').remove();
-						$('#message').find("#text").val('').html("拋轉失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
+						$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog('option','width','auto').dialog("open");
 			    	}
+			    	
 			    	if ((sendCountTime == sendCount) && (duplicate.length!=0)){
 				    	status_dialog.dialog("close");
 				    	
@@ -288,7 +338,7 @@ function sendFileToServer(formData,status){
 						}
 
 						para = document.createElement("P");
-						text = document.createTextNode('拋轉失敗');
+						text = document.createTextNode('轉檔失敗');
 						
 						para.appendChild(text);
 						title.appendChild(para);
@@ -368,7 +418,7 @@ function createStatusbar(obj)
 function handleFileUpload(files){
 	if((files.length>1)||($('#filesEdit>div').length > 0)){
 		fileBuffer = fileBuffer[0];
-		$('#message').find("#text").val('').html("只能選擇一筆檔案拋轉!");
+		$('#message').find("#text").val('').html("只能選擇一筆檔案轉檔!");
 		message_dialog.dialog("open");
 		return false;
 	}
@@ -440,19 +490,19 @@ function fileUpload(files,obj){
 	$('.statusbarDiv').html('');
 
 	if($('input[name="ec-radio-group"]:checked').length == 0){
-		$('#message').find("#text").val('').html("請選擇平台!<br><br>才能進行拋轉動作!");
+		$('#message').find("#text").val('').html("請選擇平台!<br><br>才能進行轉檔動作!");
 		message_dialog.dialog("open");
 		return false;
 	}
 	if(fileBuffer.length === 0){
-		$('#message').find("#text").val('').html("請選擇檔案!<br><br>才能進行拋轉動作!");
+		$('#message').find("#text").val('').html("請選擇檔案!<br><br>才能進行轉檔動作!");
 		message_dialog.dialog("open");
 		return false;
 	}
 	//判斷副檔名是否存在	 false為不存在
 	var ext_exist = false;
 	var ext;
-	var accept = $('input[name="type-radio-group"]:checked').attr('restrict').split(',');
+	var accept = $('input[name="ec-radio-group"]:checked').attr('custom-restrict').split(',');
 	console.log('accept');
 	console.log(accept);
 	//判斷副檔名是否允許
@@ -467,7 +517,7 @@ function fileUpload(files,obj){
         }
 	}
     if(!ext_exist){
-		$('#message').find("#text").val('').html("格式錯誤<br><br>您選擇拋轉的檔案格式為"+ext+"<br><br>可目前選擇的訂單類型，只允許"+accept+"類型的檔案");
+		$('#message').find("#text").val('').html("格式錯誤<br><br>您選擇轉檔的檔案格式為"+ext+"<br><br>可目前選擇的訂單類型，只允許"+accept+"類型的檔案");
 		message_dialog.dialog( "option", "width", 'auto' ).dialog("open");
 		return false;
     }
@@ -479,6 +529,12 @@ function fileUpload(files,obj){
 	console.log('platform: '+platform);
 	console.log($('input[name="ec-radio-group"]:checked'));
 	var deliveryMethod = $('#deliveryMethod').val();
+	var tdpl, pdcd , selectArr=[];
+	$('#selectDiv select option:selected').each(function(i,item){
+		selectArr[i] = item.value;
+	});
+	tdpl = selectArr[0];
+	pdcd = selectArr[1];
 	
 	for (var i = 0; i < fileBuffer.length; i++){
 		console.log('第'+(1+i)+'筆');
@@ -488,6 +544,8 @@ function fileUpload(files,obj){
         fd.append('action', 'upload');
         fd.append('platform', platform);
         fd.append('deliveryMethod', deliveryMethod);
+        fd.append('tdpl', tdpl);
+        fd.append('pdcd', pdcd);
         
     	console.log('files['+i+']');
     	console.log(files[i]);
@@ -517,7 +575,7 @@ function setFiles(files){
 }
 function getFiles(){
 	if(fileBuffer.length>1){
-		$('#message').find("#text").val('').html("只能選擇一筆檔案拋轉!");
+		$('#message').find("#text").val('').html("只能選擇一筆檔案轉檔!");
 		message_dialog.dialog("open");
 		return false;
 	}
@@ -555,7 +613,7 @@ var folderName = "";
 //build upload button and return this object
 function createUpBtn(){
 	var uploadBtn= document.createElement('BUTTON');
-	var text = document.createTextNode('拋轉');
+	var text = document.createTextNode('轉檔');
 	uploadBtn.id = "uploadBtn";
 	uploadBtn.className = "btn btn-darkblue";
 	uploadBtn.appendChild(text);
@@ -567,6 +625,10 @@ function createUpBtn(){
     	e.stopPropagation();
         e.preventDefault();
         
+        //check type code selected
+	    if(!selectedExist()){
+			return false;
+	    }        
         //reset
         sendNames = "";
         sendCount = 0;
@@ -579,6 +641,20 @@ function createUpBtn(){
 	    fileUpload(files,obj);
 	});
 	return uploadBtn;
+}
+//build download button and return this object
+function createDlBtn(file_path, file_name){
+	var downloadBtn= document.createElement('A');
+	var text = document.createTextNode('下載');
+	downloadBtn.id = "downloadBtn";
+	downloadBtn.className = "btn btn-exec";
+	downloadBtn.href = "./groupbuying.do?action=download&file_path=" + file_path+"&file_name="+file_name;
+	downloadBtn.appendChild(text);
+	
+	$(btnArea).find('#downloadBtn').remove();
+	$(btnArea).append(downloadBtn);
+	
+	return downloadBtn;
 }
 //build clear button and return this object
 function createClBtn(){
@@ -599,23 +675,10 @@ function createClBtn(){
         for(var i=0; i<clearArr.length; i++){
         	$(clearArr[i]).html('');
         }
+        $('#downloadBtn').remove();
 	});
 	return clearBtn;
 }
-//build the download button, depending on the type and return this object
-//function createDlBtn(type){
-//	var downloadBtn= document.createElement('A');
-//	var text = document.createTextNode('範本下載');
-//	downloadBtn.id = "downloadBtn";
-//	downloadBtn.className = "btn btn-exec";
-//	downloadBtn.href = "./basicDataImport.do?action=download&type=" + type
-//	downloadBtn.appendChild(text);
-//	
-//	$(btnArea).find('#downloadBtn').remove();
-// 	$(btnArea).append(downloadBtn);
-//
-//	return downloadBtn;
-//}
 function transDate(str){
 	str = "" + str;
 	if(str.length<2){
@@ -623,6 +686,26 @@ function transDate(str){
 	}
 	return str;
 }
+function selectedExist(){
+    var selected = false;
+    var mes = '';
+    
+    $('#selectDiv select option:selected').each(function(){
+    	if($(this).val() == '0'){
+    		selected = false;
+    		mes += $(this).text()+ '<br>';
+    	}
+	});
+    
+    if((!selected) && mes.length !=0){
+    	$('#message').find("#text").val('').html(mes);
+		message_dialog.dialog("open");
+    }else{
+    	selected = true;
+    }
+    return selected;
+}
+
 function getFormatDate(){
 	var d = new Date();
 	var year = ""+d.getFullYear();
@@ -641,7 +724,7 @@ $(document).ready(function() {
 	init();
 	
 	$("#iconBtns").delegate(":radio[name='ec-radio-group']", "click", function(e) {
-		
+
 			var dialog = $("#choose-order-type");
 			var key = $(this).val();
 			var value = platform_map[key];
@@ -655,7 +738,7 @@ $(document).ready(function() {
 				var id = $(this).attr('id');
 				var lab = $( "label[for='" + id + "']" );
 				var left =  lab.offset().left - lab.width()*1/2.2 +"px";
-				var top = $("#iconBtns").offset().top - lab.offset().top + 400 +'px';
+				var top = $("#iconBtns").offset().top - lab.offset().top + 240 +'px';
 
 				var img = document.createElement('IMG');
 				img.id = 'typeImg'
@@ -670,26 +753,21 @@ $(document).ready(function() {
 		    	
 		    	hidden.val('').val('general');
 				$('#fileDiv').show();
+				$('#selectDiv').show();
 			}
 		});	
 	var obj = $(".dragandrophandler");
-	
-//	var radios = $('input[name=ec-radio-group');
-//	for (var i=0; i<radios.length; i++){
-//	   if (radios[i].checked){
-//		   $('#fileDiv').show();
-//	   }else{
-//		   $('#fileDiv').hide();
-//	   }
-//	}
+
 	$('input[type=radio]').on('change', function() {
 		clearAll();
 		if(this.value != 0){
 			$('#fileDiv').show();
+			$('#selectDiv').show();
 			var type = $('#select-type').val();
 //			createDlBtn(type);
 		}else{
 			$('#fileDiv').hide();
+			$('#selectDiv').hide();
 		}
 	});
 	
@@ -706,22 +784,22 @@ $(document).ready(function() {
 	});
 	obj.on('drop', function (e) 
 	{
-	     //$(this).css('border', '2px dotted #0B85A1');
-	     e.preventDefault();
-	     var files = e.originalEvent.dataTransfer.files;
-	     createUpBtn();
-	     createClBtn();
-	     console.log('drop files:');
-	     console.log(files);
-	     //need to send dropped files to Server
-	     handleFileUpload(files);
-	     setFiles(files);
+		e.preventDefault();
+		
+	    var files = e.originalEvent.dataTransfer.files;
+	    createUpBtn();
+	    createClBtn();
+	    console.log('drop files:');
+	    console.log(files);
+	    //need to send dropped files to Server
+	    handleFileUpload(files);
+	    setFiles(files);
 	});
 	obj.on('click', function (e) 
 	{
 	    e.stopPropagation();
 	    e.preventDefault();
-	
+		
 	    var fileInput= document.createElement('INPUT');
 	    
 	    fileInput.type = "file";

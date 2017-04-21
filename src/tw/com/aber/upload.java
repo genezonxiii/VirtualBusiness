@@ -46,8 +46,6 @@ public class upload extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(upload.class);
-	public String file_name = "";
-	public String ori_file_name = "";
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -81,8 +79,8 @@ public class upload extends HttpServlet {
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
-		private static final String sp_select_throwfile_platform = "call sp_select_throwfile_platform ()";
-		private static final String sp_select_throwfile_platform_way = "call sp_select_throwfile_platform_way ()";
+		private static final String sp_select_upload_throwfile_platform = "call sp_select_upload_throwfile_platform ()";
+		private static final String sp_select_upload_throwfile_platform_way = "call sp_select_upload_throwfile_platform_way ()";
 
 		public List<Throwfile> searchPlatformDB() {
 
@@ -96,7 +94,7 @@ public class upload extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_throwfile_platform);
+				pstmt = con.prepareStatement(sp_select_upload_throwfile_platform);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					throwfile = new Throwfile();
@@ -154,7 +152,7 @@ public class upload extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_throwfile_platform_way);
+				pstmt = con.prepareStatement(sp_select_upload_throwfile_platform_way);
 
 				// pstmt.setString(1, platform);
 				rs = pstmt.executeQuery();
