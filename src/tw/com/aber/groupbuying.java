@@ -2,6 +2,7 @@ package tw.com.aber;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,6 +55,7 @@ public class groupbuying extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
+
 		String action = request.getParameter("action");
 		if ("select_platform_kind".equals(action)) {
 			UploadService service = new UploadService();
@@ -66,16 +68,18 @@ public class groupbuying extends HttpServlet {
 		} else if ("download".equals(action)) {
 			String filePath = request.getParameter("file_path");
 			String fileName = request.getParameter("file_name");
+			FileInputStream fileInput = null;
+			OutputStream output = null;
 			try {
-				FileInputStream fileInput = new FileInputStream(filePath);
+				fileInput = new FileInputStream(filePath);
 				int i = fileInput.available();
 				byte[] content = new byte[i];
-				
+
 				String[] extArr = filePath.split("\\.");
 				String ext = ".";
 				if (filePath.length() > 1)
 					ext += extArr[extArr.length - 1];
-				
+
 				fileInput.read(content);
 				response.setContentType("application/octet-stream");
 
@@ -87,16 +91,17 @@ public class groupbuying extends HttpServlet {
 				response.setHeader("Content-Disposition",
 						"attachment;filename=".concat(java.net.URLEncoder.encode(downloadName, "UTF-8")));
 
-				OutputStream output = response.getOutputStream();
+				output = response.getOutputStream();
 				output.write(content);
-				output.flush();
-				fileInput.close();
-				output.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().write(
 						"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>找不到檔案</body></html>");
+			} finally {
+				output.flush();
+				fileInput.close();
+				output.close();
 			}
 		} else {
 			transfer(request, response);
@@ -321,6 +326,7 @@ public class groupbuying extends HttpServlet {
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		String savePath = "";
 		String contentType = request.getContentType();
+		String _uid = UUID.randomUUID().toString();
 
 		int maxFileSize = 5000 * 1024;
 		int maxMemSize = 5000 * 1024;
@@ -348,15 +354,22 @@ public class groupbuying extends HttpServlet {
 						pdcd = fi.getString();
 				}
 				logger.debug("\n\nplatform:{}\ndeliveryMethod:{}\n\n", platform, deliveryMethod);
+
+				savePath = getServletConfig().getServletContext().getInitParameter("groupbuypath") + "/" + platform
+						+ "/" + deliveryMethod + "/" + group_id;
+
+				File file = null;
+				file = new File(savePath);
+				if (!file.exists()) {
+					file.mkdirs();
+				}
 				// Requires a new iterator
 				i = fileItems.iterator();
 				while (i.hasNext()) {
 
 					FileItem fi = (FileItem) i.next();
 
-					if (!fi.isFormField() && !fi.getFieldName().equals("action")
-							&& !fi.getFieldName().equals("platform") && !fi.getFieldName().equals("deliveryMethod")
-							&& !fi.getFieldName().equals("tdpl") && !fi.getFieldName().equals("pdcd")) {
+					if (!fi.isFormField() && !filter(fi.getFieldName())) {
 
 						String fileName = FilenameUtils.getName(fi.getName());
 						String ext = FilenameUtils.getExtension(fileName);
@@ -365,46 +378,16 @@ public class groupbuying extends HttpServlet {
 						if (filecontent_ori.contains("text/html;") || filecontent_ori.contains("<html>")) {
 							ext = "html";
 						}
-						String _uid = UUID.randomUUID().toString();
-
-						savePath = getServletConfig().getServletContext().getInitParameter("groupbuypath") + "/"
-								+ platform + "/" + deliveryMethod + "/" + group_id;
 
 						fullPath = savePath + "/" + _uid + "." + ext;
 
-						File file = null;
-						file = new File(savePath);
-						if (!file.exists()) {
-							file.mkdirs();
-						}
 						logger.debug("\nfileName:{}\nsavePath:{}\nfullPath:{}", fileName, savePath, fullPath);
-						InputStream is = fi.getInputStream();
-						FileOutputStream fos = new FileOutputStream(fullPath);
 
-						int len = 0;
-						byte[] buffer = new byte[1024];
+						moveTheFile(fi, fullPath);
 
-						try {
-							while ((len = is.read(buffer)) != -1) {
-								fos.write(buffer, 0, len);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							is.close();
-							fos.flush();
-							fos.close();
-						}
-
-					} else if (!fi.getFieldName().equals("action") && !fi.getFieldName().equals("platform")
-							&& !fi.getFieldName().equals("deliveryMethod") && !fi.getFieldName().equals("tdpl")
-							&& !fi.getFieldName().equals("pdcd")) {
+					} else if (!filter(fi.getFieldName())) {
 
 						String fieldName = fi.getFieldName();
-						String _uid = UUID.randomUUID().toString();
-
-						savePath = getServletConfig().getServletContext().getInitParameter("groupbuypath") + "/"
-								+ platform + "/" + deliveryMethod + "/" + group_id;
 						String ext = FilenameUtils.getExtension(fieldName);
 
 						String filecontent_ori = fi.getString("UTF-8");
@@ -412,42 +395,23 @@ public class groupbuying extends HttpServlet {
 							ext = "html";
 						}
 						fullPath = savePath + "/" + _uid + "." + ext;
-						File file = null;
-						file = new File(savePath);
-						if (!file.exists()) {
-							file.mkdirs();
-						}
+
 						logger.debug("\nfi:{}", fi);
 						logger.debug("\nfieldName:{}\next:{}\nfullPath:{}", fieldName, ext, fullPath);
-						InputStream is = fi.getInputStream();
-						FileOutputStream fos = new FileOutputStream(fullPath);
 
-						int len = 0;
-						byte[] buffer = new byte[1024];
-
-						try {
-							while ((len = is.read(buffer)) != -1) {
-								fos.write(buffer, 0, len);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							is.close();
-							fos.flush();
-							fos.close();
-						}
+						moveTheFile(fi, fullPath);
 					}
 				}
-				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
-						+ "/groupbuy/urls=" + new String(Base64.encodeBase64String((fullPath).getBytes())) + "&usid="
-						+ new String(Base64.encodeBase64String(user_id.getBytes())) + "&tdpl="
-						+ new String(Base64.encodeBase64String(tdpl.getBytes())) + "&pdcd="
-						+ new String(Base64.encodeBase64String(pdcd.getBytes()));
+
+				conString = getConString(fullPath, user_id, tdpl, pdcd);
 				logger.debug("conString : " + conString);
+
 				ret = webService(request, response, conString);
+
+				// If the error is returned, delete the file
 				if ("false".equals(ret)) {
-					File file = new File(fullPath);
-					file.delete();
+					File falseFile = new File(fullPath);
+					falseFile.delete();
 				}
 				response.getWriter().write(ret);
 			} catch (FileUploadException e) {
@@ -457,6 +421,52 @@ public class groupbuying extends HttpServlet {
 			}
 		}
 
+		return conString;
+	}
+
+	// 用來判斷 FileItem 排除要利用的參數
+	public boolean filter(String string) {
+		boolean result = false;
+		String[] filterArr = { "action", "platform", "deliveryMethod", "tdpl", "pdcd" };
+		for (String tmp : filterArr) {
+			if (string.equals(tmp)) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	public void moveTheFile(FileItem fi, String fullPath) throws IOException {
+		InputStream is = fi.getInputStream();
+		FileOutputStream fos = new FileOutputStream(fullPath);
+
+		int len = 0;
+		byte[] buffer = new byte[1024];
+
+		try {
+			while ((len = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, len);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			is.close();
+			fos.flush();
+			fos.close();
+		}
+	}
+
+	public String getConString(String fullPath, String user_id, String tdpl, String pdcd) {
+		String conString = "";
+		try {
+			conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice") + "/groupbuy/urls="
+					+ new String(Base64.encodeBase64String((fullPath).getBytes())) + "&usid="
+					+ new String(Base64.encodeBase64String(user_id.getBytes())) + "&tdpl="
+					+ new String(Base64.encodeBase64String(tdpl.getBytes())) + "&pdcd="
+					+ new String(Base64.encodeBase64String(pdcd.getBytes()));
+		} catch (Exception e) {
+			logger.debug("getConString error: ".concat(e.getMessage()));
+		}
 		return conString;
 	}
 
