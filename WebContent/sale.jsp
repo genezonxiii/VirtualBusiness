@@ -16,6 +16,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true"/>
+<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 </head>
 <body>
 	<input type="hidden" id="glb_menu" value='<%= menu %>' />
@@ -42,7 +43,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 									<table class='form-table'>
 										<tr>
 											<td>平台訂單號：</td>
-											<td><input type="text" name="order_no"
+											<td><input type="text" id="insert_order_no" name="order_no"
 												placeholder="輸入訂單號"></td>
 											<td>客戶名字：</td>
 											<td><input type="text" name="name" 
@@ -223,6 +224,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<th>銷/出貨日期</th>
 											<th>銷售平台</th>
 											<th style="background-image: none !important;">註</th>
+											<th>產品唯一碼</th>
 											<th style="background-image: none !important;">功能</th>
 										</tr>
 									</thead>
@@ -241,19 +243,65 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	<div id="warning" style="display: none; color: #f00; font-size: 28px;"></div>
 
 	<!-- 銷貨明細對話窗 -->
-	<div id="dialog-sale-detail" class="dialog" align="center">
+	<div id="dialog-sale-detail" class="dialog" align="center" style="display: none;">
 		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
 			<fieldset>
 				<table id="dialog-sale-detail-table" class="result-table">
-					<thead></thead>
-					<tfoot></tfoot>
+					<thead>
+						<th>銷貨單號</th>
+						<th>平台訂單號</th>
+						<th>產品名稱</th>
+						<th>自訂產品ID</th>
+						<th>銷貨數量</th>
+						<th>單價</th>
+						<th>發票號碼</th>
+						<th>發票日期</th>
+						<th>轉單日</th>
+						<th>銷貨/出貨日期</th>
+						<th>銷售平台</th>
+						<th>備註說明</th>
+					</thead>
 					<tbody></tbody>
 				</table>
 			</fieldset>
 		</form>
 	</div>
 	
+	<!-- 銷貨明細對話窗　新增 -->
+	<div id="dialog-sale-detail-insert" class="dialog" align="center" style="display: none;">
+		<form name="dialog-form-sale-detail-insert" id="dialog-form-sale-detail-insert">
+			<fieldset>
+				<table class='form-table'>
+					<tr>
+						<td>自訂產品ID：</td>
+						<td><input type="text" name="c_product_id" 
+							placeholder="輸入自訂產品ID"></td>
+						<td>產品名稱：</td>
+						<td><input type="text" id="insert_product_name"
+							name="product_name" placeholder="輸入產品名稱"></td>
+					</tr>
+					<tr>
+						<td>銷貨數量：</td>
+						<td><input type="text" name="quantity" 
+							placeholder="輸入銷貨數量"></td>
+						<td>單價：</td>
+						<td><input type="text" name="price"
+							placeholder="輸入單價"></td>
+					</tr>
+					<tr>
+						<td>總金額：</td>
+						<td><input type="text" name="insert_product_price" 
+							placeholder="系統自動產生金額" disabled></td>
+
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
+	
 	<jsp:include page="template/common_js.jsp" flush="true"/>
+	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 
 	<script>
 		var customer_menu = [];
@@ -307,6 +355,10 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				   		var result = row.invoice == null || row.invoice == '' ? "":"號碼：" + row.invoice + "<br>日期：" + row.invoice_date;
 				 		return result;
 					}
+	            },{
+					//產品唯一碼
+	            	targets: -2,
+	            	"visible": false
 	            },{
 	            	//功能
 					targets: -1,
@@ -366,6 +418,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					{"data": "sale_date", "width": "10%", "defaultContent":""},
 					{"data": "order_source", "width": "5%", "defaultContent":""},
 					{"data": "memo", "width": "10%", "defaultContent":""},
+					{"data": "product_id", "defaultContent":""},
 					{"data": null, "width": "10%", "defaultContent":""}
 				];
 			
@@ -628,13 +681,13 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 							text : "新增",
 							click : function() {
 								if ($('#insert-dialog-form-post').valid()) {
-									var cus_id = "";
+									var customer_id = "";
 									for (x in customer_menu) {
 										if (customer_menu[x] == $("#dialog-form-insert input[name='name']").val()) {
-											cus_id = x;
+											customer_id = x;
 										}
 									}
-									if (cus_id.length < 1
+									if (customer_id.length < 1
 											&& $("#dialog-form-insert input[name='name']").val().length > 0) {
 										alert("查無客戶: '"
 												+ $("#dialog-form-insert input[name='name']").val()
@@ -647,9 +700,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										action : "insert",
 										order_no : $insert.find("input[name='order_no']").val(),
 										product_name : $insert.find("input[name='product_name']").val(),
-										product_id : product_id,
+										product_id : $(this).data("product_id"),
 										c_product_id : $insert.find("input[name='c_product_id']").val(),
-										cus_id : cus_id,
+										cus_id : customer_id,
 										name : $insert.find("input[name='name']").val(),
 										quantity : $insert.find("input[name='quantity']").val(),
 										price : $insert.find("input[name='price']").val(),
@@ -752,7 +805,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 												+ "'\n 請先至客戶管理介面新增");
 										return;
 									}
-									
+
 									var $update = $("#dialog-form-update");
 									var tmp = {
 										action : "update",
@@ -843,6 +896,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				
 				var row = $(this).closest("tr");
 			    var data = $("#sales").DataTable().row(row).data();
+			    console.log(data);
 			    
 			    //清空查詢條件
 				$("input[name='search_c_product_id']").val("");
@@ -851,8 +905,8 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				
 				var dialogA = document.getElementById("dialog-form-update");
 				var dialogB = $("#dialog-form-update");
+				$("#insert_order_no").val(data.order_no);
 				
-				console.log(data);
 				$("#dialog-form-update input[name='order_no']").val(data.order_no);
 				$("#dialog-form-update input[name='product_name']").val(data.product_name);
 				$("#dialog-form-update input[name='c_product_id']").val(data.c_product_id);
@@ -874,7 +928,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				console.log( $(dialogA).find("input[name='order_no']") );
 				console.log( $(dialogB).find("input[name='order_no']") );
 
-				update_dialog.dialog("open");
+				update_dialog
+					.data("sale_id", data.sale_id)
+					.data("seq_no", data.seq_no)
+					.data("product_id", data.product_id)
+					.dialog("open");
 			});
 			
 			//處理初始的查詢autocomplete
@@ -998,6 +1056,8 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				$this.find("input[name$=product_price]").val( ui.item.price );
 				
 				product_id = ui.item.product_id;
+				
+				$this.data("product_id", ui.item.product_id);
 			});
 			
 			//處理修改的名稱autocomplete
@@ -1208,157 +1268,168 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		});
 	</script>
 
-	<!-- for default parameters -->
-	<script>
-		var dataTableObj; // for set DataTable
-	</script>
-
-	<!-- for common method -->
-	<script>
-		function drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns) {
-			console.log("drawDataTable start");
-
-			var table = document.getElementById(tableId);
-
-			dataTableObj = $(table).DataTable({
-				dom : dom,
-				destroy : true,
-				language : {
-					"url" : "js/dataTables_zh-tw.txt"
-				},
-				ajax : {
-					url : oUrl,
-					dataSrc : "",
-					type : "POST",
-					data : oData
-				},
-				columnDefs : oColumnDefs,
-				columns : oColumns
-			});
-		}
-
-		function rebuildTable(tableId, tableThs) {
-
-			var table = document.getElementById(tableId);
-
-			$(table).find("thead").find("tr").remove();
-			$(table).find("thead")
-					.append($("<tr></tr>").val("").html(tableThs));
-
-			$(table).find("tfoot").find('tr').remove();
-			$(table).find("tfoot")
-					.append($("<tr></tr>").val("").html(tableThs));
-		}
-
-		function drawDialog(dialogId, oUrl, oWidth, formId) {
-
-			var dialog = document.getElementById(dialogId);
-			var form = document.getElementById(formId);
-
-			dataDialog = $(dialog).dialog({
-				draggable : true,
-				resizable : false,
-				autoOpen : false,
-				modal : true,
-// 				show : {
-// 					effect : "blind",
-// 					duration : 300
-// 				},
-// 				hide : {
-// 					effect : "fade",
-// 					duration : 300
-// 				},
-				width : oWidth,
-				close : function() {
-					$(form).trigger("reset");
-				}
-			});
-
-			return dataDialog;
-		}
-	</script>
-
-	<!-- button listener -->
 	<script>
 		$(function() {
-			var table = document.getElementById("sales");
-
-			$(table).delegate(".btn_list", "click", function(e) {
+			$("#sales").on("click", ".btn_list", function(e) {
 				e.preventDefault();
-				
+					
 				var row = $(this).closest("tr");
 			    var data = $("#sales").DataTable().row(row).data();
 			    
-				//declare object and options
-				var sale_id = data.sale_id;
-				var dataDialog;
-				var dialogId = "dialog-sale-detail";
-				var dom = "lfr<t>ip";
-				var oUrl = "sale.do"
-				var oWidth = 1200;
-				var formId = "dialog-form-sale-detail";
-				var tableId = "dialog-sale-detail-table";
-				var tableThs = "<th>銷貨單號</th><th>平台訂單號</th><th>產品名稱</th>"
-						+ "<th>自訂產品ID</th><th>銷貨數量</th><th>單價</th>"
-						+ "<th>發票號碼</th><th>發票日期</th><th>轉單日</th>"
-						+ "<th>銷貨/出貨日期</th><th>銷售平台</th><th>備註說明</th>";
-				var oColumnDefs = [];
-				var oColumns = [ {
-					"data" : "seq_no",
-					"defaultContent" : ""
-				}, {
-					"data" : "order_no",
-					"defaultContent" : ""
-				}, {
-					"data" : "product_name",
-					"defaultContent" : ""
-				}, {
-					"data" : "c_product_id",
-					"defaultContent" : ""
-				}, {
-					"data" : "quantity",
-					"defaultContent" : ""
-				}, {
-					"data" : "price",
-					"defaultContent" : ""
-				}, {
-					"data" : "invoice",
-					"defaultContent" : ""
-				}, {
-					"data" : "invoice_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "trans_list_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "sale_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "order_source",
-					"defaultContent" : ""
-				}, {
-					"data" : "memo",
-					"defaultContent" : ""
-				} ];
+				var tblDetail = $("#dialog-sale-detail-table").DataTable({
+					dom : "Blfr<t>ip",
+					destroy : true,
+					language : {
+						"url" : "js/dataTables_zh-tw.txt"
+					},
+					ajax : {
+						url : "sale.do",
+						dataSrc : "",
+						type : "POST",
+						data : {
+							"action" : "getSaleDetail",
+							"sale_id" : data.sale_id
+						}
+					},
+					columns : [ 
+						{"data" : "seq_no", "defaultContent" : ""},
+						{"data" : "order_no", "defaultContent" : ""},
+						{"data" : "product_name", "defaultContent" : ""},
+						{"data" : "c_product_id", "defaultContent" : ""},
+						{"data" : "quantity", "defaultContent" : ""},
+						{"data" : "price", "defaultContent" : ""},
+						{"data" : "invoice", "defaultContent" : ""},
+						{"data" : "invoice_date", "defaultContent" : ""},
+						{"data" : "trans_list_date", "defaultContent" : ""},
+						{"data" : "sale_date", "defaultContent" : ""},
+						{"data" : "order_source", "defaultContent" : ""},
+						{"data" : "memo", "defaultContent" : ""}
+					],
+					buttons: [{
+						text: '新增明細', 
+						className: 'fa fa-plus',
+		            	action: function ( e, dt, node, config ) {
+		            		OpenDgDetailInsert();
+		                }
+					}]
+				});
 				
-				var oData = {
-					"action" : "getSaleDetail",
-					"sale_id" : sale_id
-				};
-
-				//call method return dialog object to operate
-				dataDialog = drawDialog(dialogId, oUrl, oWidth, formId);
-
-				dataDialog
-					.dialog("option", "title", "銷售資料明細")
-					.dialog("open");
-
-				drawDialog(dialogId, oUrl, oWidth, formId);
-
-				//must be initialized to set table
-				rebuildTable(tableId, tableThs);
-				drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns)
+				var dgDetail = $("#dialog-sale-detail").dialog({
+					title: "銷售資料明細",
+					draggable : true,
+					resizable : false,
+					modal : true,
+					autoOpen: true,
+	 				show : {
+	 					effect : "blind",
+	 					duration : 500
+	 				},
+//	 				hide : {
+//	 					effect : "fade",
+//	 					duration : 300
+//	 				},
+					width : 1200,
+					close : function() {
+						$("#dialog-form-sale-detail").trigger("reset");
+					}
+				});
+				
+				$("#dialog-sale-detail")
+					.data("sale_id", data.sale_id);
 			});
+			
+			function tblDetail(parameter) {
+				var tblDetail = $("#dialog-sale-detail-table").DataTable({
+					dom : "Blfr<t>ip",
+					destroy : true,
+					language : {
+						"url" : "js/dataTables_zh-tw.txt"
+					},
+					ajax : {
+						url : "sale.do",
+						dataSrc : "",
+						type : "POST",
+						data : parameter
+					},
+					columns : [ 
+						{"data" : "seq_no", "defaultContent" : ""},
+						{"data" : "order_no", "defaultContent" : ""},
+						{"data" : "product_name", "defaultContent" : ""},
+						{"data" : "c_product_id", "defaultContent" : ""},
+						{"data" : "quantity", "defaultContent" : ""},
+						{"data" : "price", "defaultContent" : ""},
+						{"data" : "invoice", "defaultContent" : ""},
+						{"data" : "invoice_date", "defaultContent" : ""},
+						{"data" : "trans_list_date", "defaultContent" : ""},
+						{"data" : "sale_date", "defaultContent" : ""},
+						{"data" : "order_source", "defaultContent" : ""},
+						{"data" : "memo", "defaultContent" : ""}
+					],
+					buttons: [{
+						text: '新增明細', 
+						className: 'fa fa-plus',
+		            	action: function ( e, dt, node, config ) {
+		            		OpenDgDetailInsert();
+		                }
+					}]
+				});
+			}
+			
+			function OpenDgDetailInsert() {
+				var dg_insert_detail = $("#dialog-sale-detail-insert").dialog({
+					draggable : true,
+					resizable : false,
+					autoOpen : true,
+					modal : true,
+					width: 1200,
+					buttons : [{
+						id : "insert",
+						text : "新增",
+						click : function() {
+							insertDetail();
+						}
+					}, {
+						text : "取消",
+						click : function() {
+							
+						}
+					} ]
+				});
+			}
+			
+			function insertDetail() {
+				if ($('#insert-dialog-form-post').valid()) {
+					var customer_id = "";
+
+					console.log($(this).data("sale_id"));
+					
+					var $insert = $("#dialog-sale-detail-insert");
+					var tmp = {
+						action : "insertDetail",
+						sale_id : $("#dialog-sale-detail").data("sale_id"),
+						order_no : $insert.find("input[name='order_no']").val(),
+						product_name : $insert.find("input[name='product_name']").val(),
+						product_id : $(this).data("product_id"),
+						c_product_id : $insert.find("input[name='c_product_id']").val(),
+						quantity : $insert.find("input[name='quantity']").val(),
+						price : $insert.find("input[name='price']").val(),
+						memo : $insert.find("input[name='memo']").val(),
+						sale_date : $insert.find("input[name='sale_date']").val(),
+						order_source : $insert.find("input[name='order_source']").val()
+					};
+					
+					console.log($insert.find("input[name='order_no']").val());
+					console.log($insert.find("input[name='product_name']").val());
+					console.log($insert.find("input[name='c_product_id']").val());
+					console.log($insert.find("input[name='quantity']").val());
+					console.log($insert.find("input[name='price']").val());
+					
+					
+					tblDetail(tmp);
+// 					insert_dialog.dialog("close");
+// 					$("#insert-dialog-form-post").trigger("reset");
+				}
+			}
 		});
 	</script>
 	

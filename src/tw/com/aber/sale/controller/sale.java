@@ -283,6 +283,66 @@ public class sale extends HttpServlet {
 				
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
+			} else if ("insertDetail".equals(action)) {
+				
+				String sale_id = request.getParameter("sale_id");
+				String order_no = request.getParameter("order_no");
+				String product_id = request.getParameter("product_id");
+				String product_name = request.getParameter("product_name");
+				String c_product_id = request.getParameter("c_product_id");
+				Integer quantity = Integer.valueOf(request.getParameter("quantity"));
+
+				Float price = Float.valueOf(request.getParameter("price"));
+				
+				String memo = request.getParameter("memo");
+				String order_source = request.getParameter("order_source");
+				
+				String seq_no;
+				
+				List<SaleVO> saleSeqNoList = saleService.getSaleSeqNo(group_id);
+				if (saleSeqNoList.size() == 0) {
+					seq_no = getThisYearMonthDate() + "0001";
+				} else {
+					seq_no = getGenerateSeqNo(saleSeqNoList.get(0).getSeq_no());
+				}
+				
+				if (order_no != null && order_no.length() < 1) {
+					order_no = seq_no;
+				}
+				
+				logger.debug("seq_no:".concat(seq_no));
+				
+				SaleDetailVO paramVO = new SaleDetailVO();
+
+				paramVO.setSale_id(sale_id);
+				paramVO.setSeq_no(seq_no);
+				paramVO.setGroup_id(group_id);
+				paramVO.setOrder_no(order_no);
+				paramVO.setUser_id(user_id);
+				paramVO.setProduct_id(product_id);
+				paramVO.setProduct_name(product_name);
+				paramVO.setC_product_id(c_product_id);
+				paramVO.setQuantity(quantity);
+				paramVO.setPrice(price);
+				paramVO.setMemo(memo);
+				paramVO.setOrder_source(order_source);
+				
+				logger.debug("sale_id:".concat(util.null2str(sale_id)));
+				logger.debug("order_no:".concat(util.null2str(order_no)));
+				logger.debug("product_id:".concat(util.null2str(product_id)));
+				logger.debug("product_name:".concat(util.null2str(product_name)));
+				logger.debug("c_product_id:".concat(util.null2str(c_product_id)));
+				logger.debug("quantity:".concat(util.null2str(quantity.toString())));
+				logger.debug("price:".concat(util.null2str(price.toString())));
+				logger.debug("memo:".concat(util.null2str(memo)));
+				logger.debug("order_source:".concat(util.null2str(order_source)));
+				
+				saleService.addSaleDetail(paramVO);
+				
+				List<SaleDetailVO> saleDetailList = saleService.getSaleDetail(paramVO);
+				
+				String jsonStrList = gson.toJson(saleDetailList);
+				response.getWriter().write(jsonStrList);
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -367,6 +427,9 @@ public class sale extends HttpServlet {
 		public List<SaleVO> searchDisDateDB(String group_id, String dis_start_date, String dis_end_date);
 
 		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO);
+		
+		public void insertDetailDB(SaleDetailVO paramVO);
+
 
 	}
 
@@ -423,6 +486,12 @@ public class sale extends HttpServlet {
 		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
 			return dao.getSaleDetail(saleDetailVO);
 		}
+
+		public SaleDetailVO addSaleDetail(SaleDetailVO paramVO) {
+			dao.insertDetailDB(paramVO);
+			return paramVO;
+		}
+
 	}
 
 	class SaleDAO implements sale_interface {
@@ -443,7 +512,8 @@ public class sale extends HttpServlet {
 		private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
-
+		private static final String sp_insert_saleDetail = "call sp_insert_saleDetail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		
 		@Override
 		public void insertDB(SaleVO saleVO) {
 			Connection con = null;
@@ -655,6 +725,7 @@ public class sale extends HttpServlet {
 					saleVO.setSale_id(rs.getString("sale_id"));
 					saleVO.setSeq_no(rs.getString("seq_no"));
 					saleVO.setOrder_no(rs.getString("order_no"));
+					saleVO.setProduct_id(rs.getString("product_id"));
 					saleVO.setProduct_name(rs.getString("product_name"));
 					saleVO.setC_product_id(rs.getString("c_product_id"));
 					saleVO.setQuantity(rs.getInt("quantity"));
@@ -1032,5 +1103,56 @@ public class sale extends HttpServlet {
 			}
 			return list;
 		}
+
+		@Override
+		public void insertDetailDB(SaleDetailVO paramVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_insert_saleDetail);
+
+				pstmt.setString(1, paramVO.getSale_id());
+				pstmt.setString(2, paramVO.getSeq_no());
+				pstmt.setString(3, paramVO.getGroup_id());
+				pstmt.setString(4, paramVO.getOrder_no());
+				pstmt.setString(5, paramVO.getUser_id());
+				pstmt.setString(6, paramVO.getProduct_id());
+				pstmt.setString(7, paramVO.getProduct_name());
+				pstmt.setString(8, paramVO.getC_product_id());
+				pstmt.setString(9, paramVO.getCustomer_id());
+				pstmt.setString(10, null); // saleVO.getName()
+				pstmt.setFloat(11, paramVO.getQuantity());
+				pstmt.setFloat(12, paramVO.getPrice());
+				pstmt.setString(13, paramVO.getInvoice());
+				pstmt.setDate(14, paramVO.getInvoice_date());
+				pstmt.setDate(15, paramVO.getTrans_list_date());
+				pstmt.setDate(16, paramVO.getDis_date());
+				pstmt.setString(17, paramVO.getMemo());
+				pstmt.setDate(18, paramVO.getSale_date());
+				pstmt.setString(19, paramVO.getOrder_source());
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
 	}
 }
