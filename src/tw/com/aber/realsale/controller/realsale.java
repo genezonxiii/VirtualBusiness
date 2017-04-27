@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.CustomerVO;
 import tw.com.aber.vo.ProductVO;
+import tw.com.aber.vo.RealSaleDetailVO;
 import tw.com.aber.vo.RealSaleVO;
 import tw.com.aber.vo.SaleDetailVO;
 import tw.com.aber.vo.SaleVO;
@@ -82,21 +83,21 @@ public class realsale extends HttpServlet {
 				String jsonStrList = gson.toJson(realsaleList);
 				logger.info(jsonStrList);
 				response.getWriter().write(jsonStrList);
-			} else if ("getSaleDetail".equals(action)) {
-			// String sale_id = request.getParameter("sale_id");
-			//
-			// logger.debug("sale_id:".concat(sale_id));
-			//
-			// SaleDetailVO saleDetailVO = new SaleDetailVO();
-			// saleDetailVO.setSale_id(sale_id);
-			//
-			// List<SaleDetailVO> saleDetailList =
-			// saleService.getSaleDetail(saleDetailVO);
-			//
-			// String jsonStr = gson.toJson(saleDetailList);
-			// response.getWriter().write(jsonStr);
-			//
-			// logger.debug("result".concat(jsonStr));
+			} else if ("getRealSaleDetail".equals(action)) {
+			 String realsale_id = request.getParameter("realsale_id");
+			
+			 logger.debug("realsale_id:".concat(realsale_id));
+			
+			 RealSaleDetailVO realsaleDetailVO= new RealSaleDetailVO();
+			 realsaleDetailVO.setRealsale_id(realsale_id);			
+			 realsaleDetailVO.setGroup_id(group_id);
+			 
+			 List<RealSaleDetailVO> realsaleDetailList = realsaleService.getRealSaleDetail(realsaleDetailVO);			
+			 String jsonStr = gson.toJson(realsaleDetailList);		
+			 response.getWriter().write(jsonStr);
+			
+			 logger.debug("result".concat(jsonStr));
+			 
 			}else if ("insert".equals(action)) {
 				String order_no = request.getParameter("order_no");
 				String order_source = request.getParameter("order_source");
@@ -218,11 +219,29 @@ public class realsale extends HttpServlet {
 				response.getWriter().write(jsonStrList);
 			} else if ("delete".equals(action)) {
 				String realsale_id = request.getParameter("realsale_id");
-				realsaleService.deleteRealSale(realsale_id,user_id);
+				realsaleService.deleteRealSale(realsale_id,user_id,group_id);
 				realsaleList = realsaleService.getSearchAllDB(group_id);
 				String jsonStrList = gson.toJson(realsaleList);
 				response.getWriter().write(jsonStrList);
-			}
+			} else if ("importData".equals(action)) {
+				String c_import_trans_list_date_begin = request.getParameter("import_trans_list_date_begin");
+				String c_import_trans_list_date_end = request.getParameter("import_trans_list_date_end");				
+				realsaleService.importRealSale(group_id, user_id, c_import_trans_list_date_begin,c_import_trans_list_date_end);
+				realsaleList = realsaleService.getSearchAllDB(group_id);
+				String jsonStrList = gson.toJson(realsaleList);
+				
+				response.getWriter().write(jsonStrList);
+				logger.info(jsonStrList);
+			} else if ("importallocinvData".equals(action)) {
+								
+				realsaleService.importAllocInv(group_id, user_id);
+				realsaleList = realsaleService.getSearchAllDB(group_id);
+				String jsonStrList = gson.toJson(realsaleList);
+				
+				response.getWriter().write(jsonStrList);
+				logger.info(jsonStrList);
+			}			
+			
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
 		}
@@ -288,7 +307,7 @@ public class realsale extends HttpServlet {
 
 		public void updateDB(RealSaleVO RealSaleVO);
 
-		public void deleteDB(String realsale_id,String user_id);
+		public void deleteDB(String realsale_id,String user_id,String group_id);
 
 		public List<RealSaleVO> getNewSaleSeqNo(String group_id);
 
@@ -296,10 +315,14 @@ public class realsale extends HttpServlet {
 		
 		public List<RealSaleVO> searchAllDB(String group_id);
 		
-		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO);
+		public List<RealSaleDetailVO> getRealSaleDetail(RealSaleDetailVO saleRealDetailVO);
 		
 		public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway);
 	
+		public void importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end);
+		
+		public void importAllocInvDB(String group_id,String user_id);
+		
 //		public List<RealSaleVO> searchorder_no(String group_id, String c_order_no_begin, String c_order_no_end);
 
 //		public List<RealSaleVO> searchTransListDateDB(String group_id, String trans_list_date_begin,String trans_list_date_end);
@@ -332,8 +355,8 @@ public class realsale extends HttpServlet {
 			return dao.getNewSaleSeqNo(group_id);
 		}
 
-		public void deleteRealSale(String realsale_id,String user_id) {
-			dao.deleteDB(realsale_id,user_id);
+		public void deleteRealSale(String realsale_id,String user_id,String group_id) {
+			dao.deleteDB(realsale_id,user_id,group_id);
 		}
 		
 		public List<RealSaleVO> getSearchAllDB(String group_id) {
@@ -344,12 +367,20 @@ public class realsale extends HttpServlet {
 			return dao.getCustomerByName(group_id, name);
 		}
 
-		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
-			return dao.getSaleDetail(saleDetailVO);
+		public List<RealSaleDetailVO> getRealSaleDetail(RealSaleDetailVO realsaleDetailVO) {
+			return dao.getRealSaleDetail(realsaleDetailVO);
 		}
 		
 		public List<RealSaleVO> getSearchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway) {
 			return dao.searchMuliDB(group_id,c_order_no_begin,c_order_no_end,c_customerid,c_trans_list_date_begin,c_trans_list_date_end,c_dis_date_begin,c_dis_date_end,c_order_source,c_deliveryway);
+		}
+		
+		public void importRealSale(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
+			dao.importDB(group_id,user_id,trans_list_date_begin,trans_list_date_end);
+		}
+		
+		public void importAllocInv(String group_id,String user_id) {
+			dao.importAllocInvDB(group_id,user_id);
 		}
 		
 //		public List<RealSaleVO> getSearchDB(String group_id, String c_order_no_begin, String c_order_no_end) {
@@ -390,7 +421,7 @@ public class realsale extends HttpServlet {
 		//private static final String sp_select_realsale_byordersource = "call sp_select_realsale_byordersource(?,?)";
 		//private static final String sp_select_realsale_bydeliveryway = "call sp_select_realsale_bydeliveryway(?,?)";
 		// 刪除
-		private static final String sp_del_realsale = "call sp_del_realsale (?,?)";
+		private static final String sp_del_realsale = "call sp_del_realsale (?,?,?)";
 		// 新增
 		private static final String sp_insert_realsale = "call sp_insert_realsale(?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)";
 		private static final String sp_get_customer_byname = "call sp_get_customer_byname (?,?)";
@@ -398,7 +429,10 @@ public class realsale extends HttpServlet {
 		//修改
 		private static final String sp_update_realsale = "call sp_update_realsale (?,?,?,?,?,?,?,?,?,?,?,?)";
 		//明細
-		private static final String sp_get_sale_detail = "call sp_get_sale_detail (?)";
+		private static final String sp_get_realsale_detail = "call sp_get_realsale_detail (?,?)";
+		//匯入
+		private static final String sp_importData_realsale = "call sp_importData_realsale (?,?,?,?)";
+		private static final String sp_importData_alloc_inv = "call sp_importData_alloc_inv (?,?)";
 		
 		@Override
 		public void insertDB(RealSaleVO realSaleVO) {
@@ -488,7 +522,7 @@ public class realsale extends HttpServlet {
 		}
 
 		@Override
-		public void deleteDB(String realsale_id,String user_id) {
+		public void deleteDB(String realsale_id,String user_id,String group_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -497,7 +531,8 @@ public class realsale extends HttpServlet {
 				pstmt = con.prepareStatement(sp_del_realsale);
 				pstmt.setString(1, realsale_id);
 				pstmt.setString(2, user_id);
-
+				pstmt.setString(3, group_id);
+				
 				pstmt.executeUpdate();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -666,9 +701,9 @@ public class realsale extends HttpServlet {
 		}
 
 		@Override
-		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
-			List<SaleDetailVO> list = new ArrayList<SaleDetailVO>();
-			SaleDetailVO result = null;
+		public List<RealSaleDetailVO> getRealSaleDetail(RealSaleDetailVO realsaleDetailVO) {
+			List<RealSaleDetailVO> list = new ArrayList<RealSaleDetailVO>();
+			RealSaleDetailVO result = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -679,37 +714,23 @@ public class realsale extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_sale_detail);
+				pstmt = con.prepareStatement(sp_get_realsale_detail);
 
-				String sale_id = util.null2str(saleDetailVO.getSale_id());
-
-				pstmt.setString(1, sale_id);
+				String group_id = util.null2str(realsaleDetailVO.getGroup_id());
+				String realsale_id = util.null2str(realsaleDetailVO.getRealsale_id());
+				
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, realsale_id);
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					result = new SaleDetailVO();
-
-					result.setSaleDetail_id(rs.getString("saleDetail_id"));
-					result.setSeq_no(rs.getString("seq_no"));
-					result.setGroup_id(rs.getString("group_id"));
+					result = new RealSaleDetailVO();
+					
 					result.setOrder_no(rs.getString("order_no"));
-					result.setUser_id(rs.getString("user_id"));
-					result.setProduct_id(rs.getString("product_id"));
-					result.setProduct_name(rs.getString("product_name"));
 					result.setC_product_id(rs.getString("c_product_id"));
-					result.setCustomer_id(rs.getString("customer_id"));
-					result.setName(rs.getString("name"));
+					result.setProduct_name(rs.getString("product_name"));
 					result.setQuantity(rs.getInt("quantity"));
-					result.setPrice(rs.getFloat("price"));
-					result.setInvoice(rs.getString("invoice"));
-					result.setInvoice_date(rs.getDate("invoice_date"));
-					result.setTrans_list_date(rs.getDate("trans_list_date"));
-					result.setDis_date(rs.getDate("dis_date"));
+					result.setPrice(rs.getFloat("price"));			
 					result.setMemo(rs.getString("memo"));
-					result.setSale_date(rs.getDate("sale_date"));
-					result.setOrder_source(rs.getString("order_source"));
-					result.setReturn_date(rs.getDate("return_date"));
-					result.setIsreturn(rs.getInt("isreturn"));
-					result.setDeliveryway(rs.getString("deliveryway"));
 
 					list.add(result);
 				}
@@ -816,6 +837,73 @@ public class realsale extends HttpServlet {
 			}
 			return list;
 		}
+		
+		@Override
+		public void importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_importData_realsale);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, user_id);
+				pstmt.setString(3, trans_list_date_begin);		
+				pstmt.setString(4, trans_list_date_end);			
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+		
+		@Override
+		public void importAllocInvDB(String group_id,String user_id) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_importData_alloc_inv);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, user_id);						
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+		
 //		@Override
 //		public List<RealSaleVO> searchorder_no(String group_id, String c_order_no_begin, String c_order_no_end) {
 //			List<RealSaleVO> list = new ArrayList<RealSaleVO>();

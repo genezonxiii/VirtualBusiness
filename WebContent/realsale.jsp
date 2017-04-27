@@ -176,6 +176,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<td><button class="btn btn-darkblue" id="search-sale" c_product_id_error="">查詢</button></td>
 						<td><button class="btn btn-exec btn-wide" id="create-sale">新增</button></td>					
 					</tr>
+					<tr>
+						<td>轉單日期區間：</td>
+						<td><input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin"></td>
+						<td><input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end"></td>
+						<td><button class="btn btn-exec btn-wide" id="import_resale">匯入</button></td>
+						<td><button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button></td>	
+					</tr>
+					
 				</table>
 								</div>
 							</div>
@@ -215,7 +223,16 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
 			<fieldset>
 				<table id="dialog-sale-detail-table" class="result-table">
-					<thead></thead>
+					<thead>
+						<tr class="">
+							<th>訂單編號</th>
+							<th>自訂產品編號</th>
+							<th>產品名稱</th>
+							<th>數量</th>
+							<th>單價</th>
+							<th>備註</th>															
+						</tr>
+					</thead>
 					<tfoot></tfoot>
 					<tbody></tbody>
 				</table>
@@ -575,6 +592,28 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				draw_sale(tmp);
 			});
 		
+			//20170426從sale匯入到realsale---------------------------------
+			$("#import_resale").click(function(e) {						
+				e.preventDefault();				
+				var tmp = {
+					action : "importData",				
+					import_trans_list_date_begin : $("#import_trans_list_date_begin").val(),	
+ 					import_trans_list_date_end : $("#import_trans_list_date_end").val()	
+				};
+				draw_sale(tmp);
+			});
+			//------------------------------------------------------------
+			//20170427從realsale匯入到alloc_inv---------------------------------
+			$("#import_alloc_inv").click(function(e) {						
+				e.preventDefault();				
+				var tmp = {
+					action : "importallocinvData"
+				};
+				draw_sale(tmp);
+			});
+			//------------------------------------------------------------
+			
+			
 			//新增Dialog相關設定
 			insert_dialog = $("#dialog-form-insert").dialog({
 				draggable : true,
@@ -1236,67 +1275,67 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 	<!-- button listener -->
 	<script>
-		$(function() {
-			var table = document.getElementById("sales");
-
-			$(table).delegate(".btn_list", "click", function(e) {
-				e.preventDefault();
-				
-				var row = $(this).closest("tr");
-			    var data = $("#sales").DataTable().row(row).data();
-			    
-				//declare object and options
-				var order_no = data.order_no;
-				var dataDialog;
-				var dialogId = "dialog-sale-detail";
-				var dom = "lfr<t>ip";
-				var oUrl = "realsale.do"
-				var oWidth = 1200;
-				var formId = "dialog-form-sale-detail";
-				var tableId = "dialog-sale-detail-table";
-				
-				var tableThs = "<th>訂單編號</th><th>自訂產品編號</th><th>產品名稱</th>"
-						+ "<th>數量</th><th>單價</th><th>備註</th>";
-				var oColumnDefs = [];
-				var oColumns = [ {
-					"data" : "order_no",
-					"defaultContent" : ""
-				}, {
-					"data" : "product_id",
-					"defaultContent" : ""
-				}, {
-					"data" : "product_name",
-					"defaultContent" : ""
-				}, {
-					"data" : "quantity",
-					"defaultContent" : ""
-				}, {
-					"data" : "price",
-					"defaultContent" : ""
-				}, {
-					"data" : "memo",
-					"defaultContent" : ""
-				}];
-				
-				var oData = {
-					"action" : "getSaleDetail",
-					"order_no" : order_no
-				};
-
-				//call method return dialog object to operate
-				dataDialog = drawDialog(dialogId, oUrl, oWidth, formId);
-
-				dataDialog
-					.dialog("option", "title", "銷售資料明細")
-					.dialog("open");
-
-				drawDialog(dialogId, oUrl, oWidth, formId);
-
-				//must be initialized to set table
-				rebuildTable(tableId, tableThs);
-				drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns)
-			});
+	$("#sales").on("click", ".btn_list", function(e) {
+		e.preventDefault();
+			
+		var row = $(this).closest("tr");
+	    var data = $("#sales").DataTable().row(row).data();
+	    
+		var tblDetail = $("#dialog-sale-detail-table").DataTable({
+			dom : "Blfr<t>ip",
+			destroy : true,
+			language : {
+				"url" : "js/dataTables_zh-tw.txt"
+			},
+			ajax : {
+				url : "realsale.do",
+				dataSrc : "",
+				type : "POST",
+				data : {
+					"action" : "getRealSaleDetail",
+					"realsale_id" : data.realsale_id
+				}
+			},
+			columns : [ 				
+				{"data" : "order_no", "defaultContent" : ""},
+				{"data" : "product_name", "defaultContent" : ""},
+				{"data" : "c_product_id", "defaultContent" : ""},
+				{"data" : "quantity", "defaultContent" : ""},
+				{"data" : "price", "defaultContent" : ""},
+				{"data" : "memo", "defaultContent" : ""}
+			],
+			buttons: [{
+				text: '新增明細', 
+				className: 'fa fa-plus',
+            	action: function ( e, dt, node, config ) {
+            		OpenDgDetailInsert();
+                }
+			}]
 		});
+		
+		var dgDetail = $("#dialog-sale-detail").dialog({
+			title: "銷售資料明細",
+			draggable : true,
+			resizable : false,
+			modal : true,
+			autoOpen: true,
+				show : {
+					effect : "blind",
+					duration : 500
+				},
+//				hide : {
+//					effect : "fade",
+//					duration : 300
+//				},
+			width : 1200,
+			close : function() {
+				$("#dialog-form-sale-detail").trigger("reset");
+			}
+		});
+		
+		$("#dialog-sale-detail")
+			.data("sale_id", data.sale_id);
+	});
 	</script>
 	
 </body>
