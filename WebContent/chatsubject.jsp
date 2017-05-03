@@ -152,6 +152,7 @@ function draw_chattopic(parameter){
 		draw_chattopic({"action":"topic_list"});
 	});
 </script>
+<!-- -- -->
 		
 		<div style="margin:80px auto;width:80%;">
 	  		<table id='chattopic' class='result-table'>
