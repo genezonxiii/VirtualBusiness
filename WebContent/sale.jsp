@@ -248,18 +248,29 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			<fieldset>
 				<table id="dialog-sale-detail-table" class="result-table">
 					<thead>
-						<th>銷貨單號</th>
-						<th>平台訂單號</th>
-						<th>產品名稱</th>
-						<th>自訂產品ID</th>
-						<th>銷貨數量</th>
-						<th>單價</th>
-						<th>發票號碼</th>
-						<th>發票日期</th>
-						<th>轉單日</th>
-						<th>銷貨/出貨日期</th>
-						<th>銷售平台</th>
-						<th>備註說明</th>
+						<tr>
+							<th colspan="1">
+								<div style="display:inline">
+									<button class="btn btn-darkblue" name="btn_detail_selectAll">全選</button>
+								</div>
+								<div style="display:inline">
+									<button class="btn btn-darkblue" name="btn_detail_batchDel">批次刪除</button>			
+								</div>
+							</th>
+							<th>銷貨單號</th>
+							<th>平台訂單號</th>
+							<th>產品名稱</th>
+							<th>自訂產品ID</th>
+							<th>銷貨數量</th>
+							<th>單價</th>
+<!-- 							<th>發票號碼</th> -->
+<!-- 							<th>發票日期</th> -->
+<!-- 							<th>轉單日</th> -->
+<!-- 							<th>銷貨/出貨日期</th> -->
+<!-- 							<th>銷售平台</th> -->
+<!-- 							<th>備註說明</th> -->
+							<th>功能</th>
+						</tr>
 					</thead>
 					<tbody></tbody>
 				</table>
@@ -277,8 +288,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<td><input type="text" name="c_product_id" 
 							placeholder="輸入自訂產品ID"></td>
 						<td>產品名稱：</td>
-						<td><input type="text" id="insert_product_name"
-							name="product_name" placeholder="輸入產品名稱"></td>
+						<td><input type="text" name="product_name" placeholder="輸入產品名稱"></td>
 					</tr>
 					<tr>
 						<td>銷貨數量：</td>
@@ -298,11 +308,212 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			</fieldset>
 		</form>
 	</div>
-	
+
+	<!-- 銷貨明細對話窗　修改 -->
+	<div id="dialog-sale-detail-update" class="dialog" align="center" style="display: none;">
+		<form name="dialog-form-sale-detail-update" id="dialog-form-sale-detail-update">
+			<fieldset>
+				<table class='form-table'>
+					<tr>
+						<td>自訂產品ID：</td>
+						<td><input type="text" name="c_product_id" 
+							placeholder="輸入自訂產品ID"></td>
+						<td>產品名稱：</td>
+						<td><input type="text" name="product_name" placeholder="輸入產品名稱"></td>
+					</tr>
+					<tr>
+						<td>銷貨數量：</td>
+						<td><input type="text" name="quantity" 
+							placeholder="輸入銷貨數量"></td>
+						<td>單價：</td>
+						<td><input type="text" name="price"
+							placeholder="輸入單價"></td>
+					</tr>
+					<tr>
+						<td>總金額：</td>
+						<td><input type="text" name="update_product_price" 
+							placeholder="系統自動產生金額" disabled></td>
+
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
+		
 	<jsp:include page="template/common_js.jsp" flush="true"/>
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
+	
+	<!-- global variable -->
+	<script>		
+	var tblDetail; // sale detail data table
+	var lastRowData = null;
+	</script>
+	
+	<!-- common method -->
+	<script>
+	function getProductData(request, response, kind) {
+		$.ajax({
+			url : "sale.do",
+			type : "POST",
+			cache : false,
+			delay : 1500,
+			async: false,
+			data : {
+				action : "search_product_data",
+				identity : kind,
+				term : request.term
+			},
+			success : function(data) {
+				console.log("getProductData By " + kind);
+				console.log(data);
+				var json_obj = $.parseJSON(data);
+				var result = [];
+				
+				if(!json_obj.length){
+		      		result = [ {
+				       	label: '找不到符合資料', 
+				       	value: request.term
+			       	} ];
+		     	} else {
+					result = $.map(json_obj, function(item) {
+						var label = "", value = "";
+						
+						if (kind == "ID") {
+							label = item.c_product_id;
+							value = item.c_product_id;
+						} else if (kind == "NAME") {
+							label = item.product_name;
+							value = item.product_name;
+						}
+						
+						return {
+							label : label,
+							value : value,
+							product_id : item.product_id,
+							product_name : item.product_name,
+							c_product_id : item.c_product_id,
+							price : item.price,
+							cost : item.cost
+						}
+					});
+		     	}
+				
+				return response( result );
+			}
+		});
+	}
+	
+	function buildDetail(names, mode, rowData){
+		var $detail_auto;
+		
+		console.log('buildDetail start');
+		
+		names.forEach(function(name) {
+			var identity;
+			if(name == 'product_name'){
+				identity = 'NAME';
+			}
+			if(name == 'c_product_id'){
+				identity = 'ID';
+			}
 
+			console.log('name: '+name);
+			console.log('identity: '+identity);
+			
+			$detail_auto = $("#dialog-sale-detail-" + mode + " input[name='" + name + "']");
+			
+			console.log('$detail_auto');
+			console.log($detail_auto);
+
+			$detail_auto.autocomplete({
+				minLength : 1,
+				source : function(request, response) {
+					console.log('source identity: '+identity);
+					getProductData(request, response, identity);
+				},
+				change : function(event, ui) {
+					var source = $(this).val();
+					var temp = $(".ui-autocomplete li").map(function() {
+						return $(this).text()
+					});
+					var found = $.inArray(source, temp);
+
+					if (found < 0) {
+						$(this).val('');
+					}
+				}
+			});
+
+			//console.log('$detail_auto');
+			//console.log($detail_auto);
+			
+			$detail_auto.bind('focus', function() {
+				if(identity == 'NAME')
+					$(this).attr("placeholder", "請輸入產品名稱以供查詢");
+				if(identity == 'ID')
+					$(this).attr("placeholder", "請輸入自訂產品ID以供查詢");
+			});
+			
+			$detail_auto.bind('autocompleteselect', function(e, ui) {
+				
+				$this = $(this).closest("div");
+				
+				$this.find("input[name=c_product_id]").val( ui.item.c_product_id );
+				$this.find("input[name=product_name]").val( ui.item.product_name );
+				$this.find("input[name=price]").val( ui.item.price );
+				$this.find("input[name=quantity]").val( "1" );
+				$this.find("input[name$=product_price]").val( ui.item.price );
+				
+				product_id = ui.item.product_id;
+				
+				$this.data("product_id", ui.item.product_id);
+				$this.data("product_name", ui.item.product_name);
+				$this.data("c_product_id", ui.item.c_product_id);
+				$this.data("sale_id", rowData.sale_id);
+				$this.data("seq_no", rowData.seq_no);
+				$this.data("order_no", rowData.order_no);
+				$this.find("input[name=price],input[name=quantity]").change(function() {
+					$this.find("input[name$=product_price]").val( $this.find("input[name=price]").val() * $this.find("input[name=quantity]").val() );
+				});
+			});			
+		});
+		var oRules = {
+				c_product_id : {
+					required : true
+				},
+				product_name : {
+					required : true
+				},
+				price : {
+					required : true,
+					digits : true
+				},
+				quantity : {
+					required : true,
+					number : true,
+					min : 1
+				}
+			};
+			
+		var validator = $( "#dialog-form-sale-detail-" + mode ).validate({
+			rules : oRules
+		});	
+		console.log('buildDetail end');	
+	}
+
+	function sendToServer(parameter) {
+		$.ajax({
+			url: 'sale.do', // url位置
+			type: 'post', // post/get
+			data: parameter, // 輸入的資料
+			error: function (xhr) { }, // 錯誤後執行的函數
+			success: function (response) {
+				tblDetail.ajax.reload();
+			}// 成功後要執行的函數
+		});
+	}
+	</script>
 	<script>
 		var customer_menu = [];
 		var customer_tags = [];
@@ -502,7 +713,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		});
 		
 		$(function() {
-
 			$(".bdyplane").animate({
 				"opacity" : "1"
 			});
@@ -1143,7 +1353,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					action : "search"
 				},
 				success : function(result) {
+					console.log('result: '+ result);
 					var json_obj = $.parseJSON(result);
+					console.log('json_obj: '+ json_obj);
 					console.log("customer list");
 					console.log(result);
 					$.each(json_obj, function(i, item) {
@@ -1214,70 +1426,23 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				$(".content-wrap").prepend($('<h2 class="test page-title">' + $(this).html() + '</h2>'));
 				
 			});
-			
-			function getProductData(request, response, kind) {
-				$.ajax({
-					url : "sale.do",
-					type : "POST",
-					cache : false,
-					delay : 1500,
-					data : {
-						action : "search_product_data",
-						identity : kind,
-						term : request.term
-					},
-					success : function(data) {
-						console.log("getProductData By " + kind);
-						var json_obj = $.parseJSON(data);
-						var result = [];
-						
-						if(!json_obj.length){
-				      		result = [ {
-						       	label: '找不到符合資料', 
-						       	value: request.term
-					       	} ];
-				     	} else {
-							result = $.map(json_obj, function(item) {
-								var label = "", value = "";
-								
-								if (kind == "ID") {
-									label = item.c_product_id;
-									value = item.c_product_id;
-								} else if (kind == "NAME") {
-									label = item.product_name;
-									value = item.product_name;
-								}
-								
-								return {
-									label : label,
-									value : value,
-									product_id : item.product_id,
-									product_name : item.product_name,
-									c_product_id : item.c_product_id,
-									price : item.price,
-									cost : item.cost
-								}
-							});
-				     	}
-						
-						return response( result );
-					}
-				});
-			}
-			
 		});
 	</script>
 
 	<script>
 		$(function() {
+			
+			//sales btn_list click listener
 			$("#sales").on("click", ".btn_list", function(e) {
 				e.preventDefault();
-					
+				
 				var row = $(this).closest("tr");
-			    var data = $("#sales").DataTable().row(row).data();
+			    var rowData = $("#sales").DataTable().row(row).data();
 			    
-				var tblDetail = $("#dialog-sale-detail-table").DataTable({
+				tblDetail = $("#dialog-sale-detail-table").DataTable({
 					dom : "Blfr<t>ip",
+			        scrollY : "200px",
+			        scrollCollapse : true,
 					destroy : true,
 					language : {
 						"url" : "js/dataTables_zh-tw.txt"
@@ -1288,28 +1453,99 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						type : "POST",
 						data : {
 							"action" : "getSaleDetail",
-							"sale_id" : data.sale_id
+							"sale_id" : rowData.sale_id
 						}
 					},
-					columns : [ 
+					columns : [
+						{
+							"width":"190",
+							"left":"50%",
+							"className": "selectBox",
+							"data": null,
+							"defaultContent": ""
+						}, 
 						{"data" : "seq_no", "defaultContent" : ""},
 						{"data" : "order_no", "defaultContent" : ""},
 						{"data" : "product_name", "defaultContent" : ""},
 						{"data" : "c_product_id", "defaultContent" : ""},
 						{"data" : "quantity", "defaultContent" : ""},
 						{"data" : "price", "defaultContent" : ""},
-						{"data" : "invoice", "defaultContent" : ""},
-						{"data" : "invoice_date", "defaultContent" : ""},
-						{"data" : "trans_list_date", "defaultContent" : ""},
-						{"data" : "sale_date", "defaultContent" : ""},
-						{"data" : "order_source", "defaultContent" : ""},
-						{"data" : "memo", "defaultContent" : ""}
+// 						{"data" : "invoice", "defaultContent" : ""},
+// 						{"data" : "invoice_date", "defaultContent" : ""},
+// 						{"data" : "trans_list_date", "defaultContent" : ""},
+// 						{"data" : "sale_date", "defaultContent" : ""},
+// 						{"data" : "order_source", "defaultContent" : ""},
+// 						{"data" : "memo", "defaultContent" : ""},
+						{"data" : null, "defaultContent" : ""}
 					],
+					columnDefs :[
+									{
+										targets: 0,
+										searchable: false,
+										orderable: false,
+										render: function ( data, type, row ) {
+											var saleDetail_id = row.saleDetail_id;
+											
+											var input = document.createElement("INPUT");
+			                        	   		input.type = 'checkbox';
+			                        	   		input.name='checkbox-group-select';
+			                        	   		input.id = saleDetail_id;
+			                        	   		
+											var span = document.createElement("SPAN");
+												span.className = 'form-label';
+			                        	   		
+											var text = document.createTextNode('選取');
+												span.appendChild(text);
+			                        	   		
+											var label = document.createElement("LABEL");
+												label.htmlFor = row.saleDetail_id;
+												label.name='checkbox-group-select';
+												label.style.marginLeft = '40%';
+												label.appendChild(span);
+			                        	   	
+			                        	   	var options = $("<div/>").append(input, label);
+			                        	   
+					                       	return options.html();
+			                           }
+		        					},{
+						            	//功能
+										targets: -1,
+									   	searchable: false,
+									   	orderable: false,
+									   	render: function ( data, type, row ) {
+									   		
+											var options = $("<div/>")
+												.append( $("<div/>", {"class": "table-row-func btn-in-table btn-gray"}) 
+													.append( $("<i/>", {"class": "fa fa-ellipsis-h"}) )
+													.append( 
+														$("<div/>", {"class": "table-function-list"})
+															.append( 
+																$("<button/>", {
+																	"class": "btn-in-table btn-darkblue btn_update",
+																	"title": "修改"
+																})
+																.append( $("<i/>", {"class": "fa fa-pencil"}) )
+															)
+															.append( 
+																$("<button/>", {
+																	"class": "btn-in-table btn-alert btn_delete",
+																	"title": "刪除"
+																})
+																.append( $("<i/>", {"class": "fa fa-trash"}) )
+															)
+													)
+												);
+											
+									 		return options.html();
+									   	}}],					
 					buttons: [{
-						text: '新增明細', 
-						className: 'fa fa-plus',
+						text: '新增明細',
 		            	action: function ( e, dt, node, config ) {
-		            		OpenDgDetailInsert();
+		            		var names = ['product_name', 'c_product_id'];
+		            		var mode = 'insert';
+		            		
+		            		OpenDgDetail('dialog-sale-detail-insert','insert');
+		            		buildDetail( names, mode, rowData );
 		                }
 					}]
 				});
@@ -1324,112 +1560,205 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	 					effect : "blind",
 	 					duration : 500
 	 				},
-//	 				hide : {
-//	 					effect : "fade",
-//	 					duration : 300
-//	 				},
 					width : 1200,
 					close : function() {
 						$("#dialog-form-sale-detail").trigger("reset");
 					}
 				});
 				
-				$("#dialog-sale-detail")
-					.data("sale_id", data.sale_id);
-			});
-			
-			function tblDetail(parameter) {
-				var tblDetail = $("#dialog-sale-detail-table").DataTable({
-					dom : "Blfr<t>ip",
-					destroy : true,
-					language : {
-						"url" : "js/dataTables_zh-tw.txt"
-					},
-					ajax : {
-						url : "sale.do",
-						dataSrc : "",
-						type : "POST",
-						data : parameter
-					},
-					columns : [ 
-						{"data" : "seq_no", "defaultContent" : ""},
-						{"data" : "order_no", "defaultContent" : ""},
-						{"data" : "product_name", "defaultContent" : ""},
-						{"data" : "c_product_id", "defaultContent" : ""},
-						{"data" : "quantity", "defaultContent" : ""},
-						{"data" : "price", "defaultContent" : ""},
-						{"data" : "invoice", "defaultContent" : ""},
-						{"data" : "invoice_date", "defaultContent" : ""},
-						{"data" : "trans_list_date", "defaultContent" : ""},
-						{"data" : "sale_date", "defaultContent" : ""},
-						{"data" : "order_source", "defaultContent" : ""},
-						{"data" : "memo", "defaultContent" : ""}
-					],
-					buttons: [{
-						text: '新增明細', 
-						className: 'fa fa-plus',
-		            	action: function ( e, dt, node, config ) {
-		            		OpenDgDetailInsert();
-		                }
-					}]
+				var $dgDetail = $("#dialog-sale-detail");
+				
+				$dgDetail.data("sale_id", rowData.sale_id);
+				
+				//sale detail btn_detail_selectAll click listener
+				$dgDetail.on("click", "button[name=btn_detail_selectAll]", function(e) {
+					e.preventDefault();
+
+					var name = "checkbox-group-select";
+					var checkboxs = document.getElementsByName(name);
+
+					$(checkboxs).each(function() {
+						$(this).attr('checked')?$(this).prop("checked", false):$(this).prop("checked", true);
+					});
 				});
-			}
-			
-			function OpenDgDetailInsert() {
-				var dg_insert_detail = $("#dialog-sale-detail-insert").dialog({
+				
+				$dgDetail.on("click", "button[name=btn_detail_selectAll]", function(e) {
+					e.preventDefault();
+
+					var name = "checkbox-group-select";
+					var checkboxs = document.getElementsByName(name);
+
+					$(checkboxs).each(function() {
+						$(this).attr('checked')?$(this).prop("checked", false):$(this).prop("checked", true);
+					});
+				});
+			});
+
+			//sale detail btn_update click listener
+			$("#dialog-sale-detail-table").on("click", ".btn_update", function(e) {
+				e.preventDefault();
+
+				var row = $(this).closest("tr");
+			    var rowData = $("#dialog-sale-detail-table").DataTable().row(row).data();
+        		var names = ['product_name', 'c_product_id'];
+        		var mode = 'update';
+        		
+        		lastRowData = rowData;
+				
+				OpenDgDetail('dialog-sale-detail-update','update');
+        		buildDetail( names, mode, rowData );
+				
+			});		
+
+			//sale detail btn_delete click listener
+			$("#dialog-sale-detail-table").on("click", ".btn_delete", function(e) {
+				e.preventDefault();
+
+				var row = $(this).closest("tr");
+			    var rowData = $("#dialog-sale-detail-table").DataTable().row(row).data();
+        		
+        		lastRowData = rowData;
+
+				$('#dialog-confirm').dialog({
 					draggable : true,
 					resizable : false,
 					autoOpen : true,
 					modal : true,
-					width: 1200,
+					width: 'auto',
 					buttons : [{
-						id : "insert",
-						text : "新增",
+						text : '確認刪除此資料',
 						click : function() {
-							insertDetail();
+							deleteDetail(lastRowData);
+							$(this).dialog('close');
 						}
 					}, {
 						text : "取消",
 						click : function() {
-							
+							$(this).dialog('close');
 						}
 					} ]
 				});
+			});
+			
+			function OpenDgDetail(id, action) {
+				var $form = $('#'+ (id.replace('dialog-','dialog-form-')));
+				var actions = ['insert','update','delete'];
+				var text = '';
+				var actionIndex = actions.indexOf(action);
+				switch (actionIndex) {
+				    case 0:
+				    	text = "新增";
+				        break;
+				    case 1:
+				    	text = "修改";
+				    	console.log('lastRowData');
+				    	console.log(lastRowData);
+				    	$form.find("input[name=c_product_id]").val( lastRowData.c_product_id );
+						$form.find("input[name=product_name]").val( lastRowData.product_name );
+						$form.find("input[name=price]").val( lastRowData.price );
+						$form.find("input[name=quantity]").val( lastRowData.quantity );
+						$form.find("input[name$=product_price]").val( lastRowData.price * lastRowData.quantity );
+				        break;
+				    case 2:
+				    	text = "刪除";
+				        break;
+				}
+				
+				var dg_insert_detail = $('#' + id).dialog({
+					draggable : true,
+					resizable : false,
+					autoOpen : true,
+					modal : true,
+					width: 'auto',
+					buttons : [{
+						text : text,
+						click : function() {
+							switch (actionIndex) {
+						    case 0:
+								insertDetail();
+						        break;
+						    case 1:
+						    	updateDetail(lastRowData);
+						        break;
+						    case 2:
+						    	deleteDetail(lastRowData);
+						        break;
+							}
+							
+							if($form.valid()){
+								$form[0].reset();
+								$(this).dialog('close');
+							}
+						}
+					}, {
+						text : "取消",
+						click : function() {
+							$(this).dialog('close');
+						}
+					} ]
+				});	
 			}
 			
 			function insertDetail() {
-				if ($('#insert-dialog-form-post').valid()) {
-					var customer_id = "";
+				var $form = $('#dialog-form-sale-detail-insert');
 
-					console.log($(this).data("sale_id"));
-					
+				if ($form.valid()) {
 					var $insert = $("#dialog-sale-detail-insert");
+
+					console.log($insert.data("sale_id"));
+					
 					var tmp = {
 						action : "insertDetail",
-						sale_id : $("#dialog-sale-detail").data("sale_id"),
-						order_no : $insert.find("input[name='order_no']").val(),
-						product_name : $insert.find("input[name='product_name']").val(),
-						product_id : $(this).data("product_id"),
-						c_product_id : $insert.find("input[name='c_product_id']").val(),
-						quantity : $insert.find("input[name='quantity']").val(),
-						price : $insert.find("input[name='price']").val(),
-						memo : $insert.find("input[name='memo']").val(),
-						sale_date : $insert.find("input[name='sale_date']").val(),
-						order_source : $insert.find("input[name='order_source']").val()
+						sale_id : $insert.data("sale_id"),
+						seq_no : $insert.data("seq_no"),
+						order_no : $insert.data("order_no"),
+						product_id : $insert.data("product_id"),
+						product_name : $insert.data("product_name"),
+						c_product_id : $insert.data("c_product_id"),
+						quantity: $insert.find('input[name=quantity]').val(),
+						price: $insert.find('input[name=price]').val()
 					};
 					
-					console.log($insert.find("input[name='order_no']").val());
-					console.log($insert.find("input[name='product_name']").val());
-					console.log($insert.find("input[name='c_product_id']").val());
-					console.log($insert.find("input[name='quantity']").val());
-					console.log($insert.find("input[name='price']").val());
+					console.log('insert parameter');
+					console.log(tmp);
 					
-					
-					tblDetail(tmp);
-// 					insert_dialog.dialog("close");
-// 					$("#insert-dialog-form-post").trigger("reset");
+					sendToServer(tmp);
 				}
 			}
+			
+			function updateDetail(lastRowData) {
+				var $form = $('#dialog-form-sale-detail-update');
+
+				if ($form.valid()) {
+					
+					var tmp = {
+						action : "updateDetail",
+						saleDetail_id : lastRowData.saleDetail_id,
+						product_name : $form.find('input[name=product_name]').val(),
+						c_product_id : $form.find('input[name=c_product_id]').val(),
+						quantity: $form.find('input[name=quantity]').val(),
+						price: $form.find('input[name=price]').val()
+					};
+
+					console.log('update parameter');
+					console.log(tmp);
+					
+					sendToServer(tmp);
+				}
+			}
+
+			function deleteDetail(lastRowData) {
+					
+				var tmp = {
+					action : "deleteDetail",
+					saleDetail_id : lastRowData.saleDetail_id
+				};
+
+				console.log('delete parameter');
+				console.log(tmp);
+				
+				sendToServer(tmp);
+			}			
 		});
 	</script>
 	
