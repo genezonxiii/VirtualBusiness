@@ -551,15 +551,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				 		return result;
 					}
 	            },{
-					//銷貨對象
-	            	targets: 5,
-					render: function ( data, type, row ) {
-						console.log(row.customer_id);
-						console.log(customer_menu);
-				   		var result = row.customer_id == null || row.customer_id == '' ? "":customer_menu[row.customer_id];
-				 		return result;
-					}
-	            },{
 					//發票 + 發票日期
 	            	targets: 6,
 					render: function ( data, type, row ) {
@@ -623,7 +614,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					{"data": null, "width": "20%", "defaultContent":""},
 					{"data": "quantity", "width": "5%", "defaultContent":""},
 					{"data": "price", "width": "5%", "defaultContent":""},
-					{"data": null, "width": "10%", "defaultContent":""},
+					{"data": "name", "width": "10%", "defaultContent":""},
 					{"data": "invoice", "width": "10%", "defaultContent":""},
 					{"data": "trans_list_date", "width": "10%", "defaultContent":""},
 					{"data": "sale_date", "width": "10%", "defaultContent":""},
@@ -1358,12 +1349,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					console.log('json_obj: '+ json_obj);
 					console.log("customer list");
 					console.log(result);
-					$.each(json_obj, function(i, item) {
-						if (item.name != null) {
-							customer_tags[i] = json_obj[i].name;
-							customer_menu[item.customer_id] = item.name;
-						}
-					});
+					if(json_obj != null){
+						$.each(json_obj, function(i, item) {
+							if (item.name != null) {
+								customer_tags[i] = json_obj[i].name;
+								customer_menu[item.customer_id] = item.name;
+							}
+						});
+					}
 				}
 			});
 			
@@ -1490,6 +1483,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			                        	   		input.type = 'checkbox';
 			                        	   		input.name='checkbox-group-select';
 			                        	   		input.id = saleDetail_id;
+			                        	   		input.setAttribute('data-on','false');
 			                        	   		
 											var span = document.createElement("SPAN");
 												span.className = 'form-label';
@@ -1570,26 +1564,32 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				
 				$dgDetail.data("sale_id", rowData.sale_id);
 				
+				
+				$dgDetail.on("click", "input[name=checkbox-group-select]", function() {
+					if($(this).attr('data-on') == 'false' ){
+						$(this).attr('data-on','true');
+					}else{
+						$(this).attr('data-on','false');
+					}
+				});
 				//sale detail btn_detail_selectAll click listener
 				$dgDetail.on("click", "button[name=btn_detail_selectAll]", function(e) {
 					e.preventDefault();
 
-					var name = "checkbox-group-select";
-					var checkboxs = document.getElementsByName(name);
-
-					$(checkboxs).each(function() {
-						$(this).attr('checked')?$(this).prop("checked", false):$(this).prop("checked", true);
-					});
-				});
-				
-				$dgDetail.on("click", "button[name=btn_detail_selectAll]", function(e) {
-					e.preventDefault();
-
-					var name = "checkbox-group-select";
-					var checkboxs = document.getElementsByName(name);
-
-					$(checkboxs).each(function() {
-						$(this).attr('checked')?$(this).prop("checked", false):$(this).prop("checked", true);
+					var $checkboxs = $dgDetail.find('input[name=checkbox-group-select]');
+					
+					$checkboxs.each(function() {
+						console.log($(this).attr('data-on') == 'false');
+						$(this).attr('data-on') == 'false' ? 
+								function(){alert('5');
+									$(this).prop("checked", false);
+									$(this).removeClass("toggleon");
+								}: function(){
+									$(this).prop("checked", true);
+									$(this).addClass("toggleon");
+								}
+						
+						console.log($(this));
 					});
 				});
 			});
