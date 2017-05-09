@@ -16,6 +16,15 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true"/>
+<style>
+.realsale_table {
+    margin:auto;
+   border-collapse: separate; 
+    border-spacing: 10px 20px; 
+
+    font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4; */
+  }
+  </style>
 </head>
 <body>
 	<input type="hidden" id="glb_menu" value='<%= menu %>' />
@@ -129,7 +138,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<div class="input-field-wrap">
 							<div class="form-wrap">
 								<div class="form-row">
-									<table class='form-table'>
+									<table class='realsale_table'>
 					<tr>
 						<td>訂單編號：</td>
 						<td><input type="text" id="order_no_begin"
@@ -176,13 +185,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<td><button class="btn btn-darkblue" id="search-sale" c_product_id_error="">查詢</button></td>
 						<td><button class="btn btn-exec btn-wide" id="create-sale">新增</button></td>					
 					</tr>
-					<tr>
-						<td>轉單日期區間：</td>
-						<td><input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin"></td>
-						<td><input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end"></td>
-						<td><button class="btn btn-exec btn-wide" id="import_resale">匯入</button></td>
-						<td><button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button></td>	
-					</tr>
+<!-- 					<tr> -->
+<!-- 						<td>轉單日期區間：</td> -->
+<!-- 						<td><input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin"></td> -->
+<!-- 						<td><input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end"></td> -->
+<!-- 						<td><button class="btn btn-exec btn-wide" id="import_resale">匯入</button></td> -->
+<!-- 						<td><button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button></td>	 -->
+<!-- 						<td><button class="btn btn-exec btn-wide" id="action_alloc_inv">執行配庫</button></td>	 -->
+<!-- 					</tr> -->
 					
 				</table>
 								</div>
@@ -612,7 +622,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				draw_sale(tmp);
 			});
 			//------------------------------------------------------------
-			
 			
 			//新增Dialog相關設定
 			insert_dialog = $("#dialog-form-insert").dialog({
