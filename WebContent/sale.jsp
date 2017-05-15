@@ -915,7 +915,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										sale_date : $insert.find("input[name='sale_date']").val(),
 										order_source : $insert.find("input[name='order_source']").val()
 									};
-									
+									console.log(tmp);
 									draw_sale(tmp);
 									insert_dialog.dialog("close");
 									$("#insert-dialog-form-post").trigger("reset");
@@ -1483,7 +1483,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			                        	   		input.type = 'checkbox';
 			                        	   		input.name='checkbox-group-select';
 			                        	   		input.id = saleDetail_id;
-			                        	   		input.setAttribute('data-on','false');
+			                        	   		//input.setAttribute('data-on','false');
 			                        	   		
 											var span = document.createElement("SPAN");
 												span.className = 'form-label';
@@ -1564,33 +1564,77 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				
 				$dgDetail.data("sale_id", rowData.sale_id);
 				
+				var selectCount = 0;
 				
-				$dgDetail.on("click", "input[name=checkbox-group-select]", function() {
-					if($(this).attr('data-on') == 'false' ){
-						$(this).attr('data-on','true');
-					}else{
-						$(this).attr('data-on','false');
+				//sale detail btn_detail_batchDel click listener
+				$dgDetail.on("click", "button[name=btn_detail_batchDel]", function(e) {
+					e.preventDefault();
+					
+					var delArr = '';
+					var $checkboxs = $dgDetail.find('input[name=checkbox-group-select]:checked');
+					
+					console.log($checkboxs);
+					
+					if($checkboxs.length == 0){
+						alert('請至少選擇一筆資料');
+						return false;
 					}
+					
+					$('#dialog-confirm').dialog({
+						draggable : true,
+						resizable : false,
+						autoOpen : true,
+						modal : true,
+						width: 'auto',
+						buttons : [{
+							text : '確認刪除'+ $checkboxs.length +'筆資料',
+							click : function() {
+								$checkboxs.each(function() {
+									delArr += this.id + ',';
+								});
+								delArr.slice(0,-1);
+								
+								var tmp = {
+										action : "deleteDetail",
+										saleDetail_id : delArr
+									};
+
+								console.log('delete parameter');
+								console.log(tmp);
+								
+								sendToServer(tmp);
+								$(this).dialog('close');
+							}
+						}, {
+							text : "取消",
+							click : function() {
+								$(this).dialog('close');
+							}
+						} ]
+					});
 				});
+				
 				//sale detail btn_detail_selectAll click listener
 				$dgDetail.on("click", "button[name=btn_detail_selectAll]", function(e) {
 					e.preventDefault();
 
-					var $checkboxs = $dgDetail.find('input[name=checkbox-group-select]');
+					selectCount++;
+					console.log('selectCount: '+ selectCount);
 					
-					$checkboxs.each(function() {
-						console.log($(this).attr('data-on') == 'false');
-						$(this).attr('data-on') == 'false' ? 
-								function(){alert('5');
-									$(this).prop("checked", false);
-									$(this).removeClass("toggleon");
-								}: function(){
-									$(this).prop("checked", true);
-									$(this).addClass("toggleon");
-								}
-						
-						console.log($(this));
-					});
+					var $checkboxs = $dgDetail.find('input[name=checkbox-group-select]');
+
+					console.log('selectCount % 2 : ' + selectCount % 2);
+					
+					
+					selectCount %2 != 1 ?
+							$checkboxs.each(function() {
+								$(this).prop("checked", false);
+								$(this).removeClass("toggleon");
+							}): 
+							$checkboxs.each(function() {
+								$(this).prop("checked", true);
+								$(this).addClass("toggleon");
+							});
 				});
 			});
 

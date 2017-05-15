@@ -325,13 +325,15 @@ public class sale extends HttpServlet {
 				} else {
 					saleService.addSaleDetail(paramVO);
 				}
-			}else if ("deleteDetail".equals(action)) {
+			} else if ("deleteDetail".equals(action)) {
 				String saleDetail_id = request.getParameter("saleDetail_id");
 
+				for (String id : saleDetail_id.split(",")) {
+
+					saleService.deleteSaleDetail(id);
+				}
 				logger.debug("saleDetail_id:".concat(saleDetail_id));
 
-				saleService.deleteSaleDetail(saleDetail_id);
-				
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -486,7 +488,7 @@ public class sale extends HttpServlet {
 		public void updateSaleDetail(SaleDetailVO paramVO) {
 			dao.updateDetailDB(paramVO);
 		}
-		
+
 		public void deleteSaleDetail(String saleDetail_id) {
 			dao.deleteDetailDB(saleDetail_id);
 		}
@@ -1191,7 +1193,6 @@ public class sale extends HttpServlet {
 			}
 		}
 
-		
 		@Override
 		public void deleteDetailDB(String saleDetail_id) {
 			Connection con = null;
