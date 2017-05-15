@@ -54,6 +54,10 @@ public class ShippingProcess extends HttpServlet {
 				String jsonStrList = gson.toJson(realsaleList);
 				response.getWriter().write(jsonStrList);
 				logger.info(jsonStrList);
+			}else if("importPicking".equals(action)){
+				String order_no_count = request.getParameter("order_no_count");
+				JSONObject responseStr = service.importPicking(group_id, user_id,order_no_count);
+				response.getWriter().write(responseStr.toString());
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -75,6 +79,9 @@ public class ShippingProcess extends HttpServlet {
 		public JSONObject statisticsAlloc(String group_id, String user_id) {
 			return dao.statisticsAlloc(group_id, user_id);
 		}
+		public JSONObject importPicking(String group_id, String user_id, String order_count) {
+			return dao.importPicking(group_id, user_id,order_count);
+		}
 	}
 
 	class ShippingProcessDAO implements ShippingProcess_interface {
@@ -89,11 +96,13 @@ public class ShippingProcess extends HttpServlet {
 		// 查詢
 		private static final String sp_selectall_realsale = "call sp_selectall_realsale(?)";
 		// 配庫
-		private static final String sp_statistics_alloc_inv = "call sp_statistics_alloc_inv(?,?,?)";
+		private static final String sp_statistics_alloc_inv = "call sp_statistics_alloc_inv(?,?,?)";		
+		// 撿貨
+		private static final String sp_importData_picking = "call sp_importData_picking(?,?,?)";
 
 		@Override
 		public JSONObject statisticsAlloc(String group_id, String user_id) {
-
+		
 			Connection con = null;
 			CallableStatement cs = null;
 			ResultSet rs = null;
@@ -227,6 +236,53 @@ public class ShippingProcess extends HttpServlet {
 				}
 			}
 		}
+
+		@Override
+		public JSONObject importPicking(String group_id, String user_id, String order_count) {
+			Connection con = null;
+			CallableStatement cs = null;
+			ResultSet rs = null;
+			String updateCount = null;
+			JSONObject jsonObject = new JSONObject();
+			boolean isSuccess = false;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_importData_picking);
+				cs.setString(1, group_id);
+				cs.setString(2, user_id);
+				cs.setString(3, order_count);
+				isSuccess = cs.execute();
+				jsonObject.put("update_count", updateCount);
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} catch (Exception e) {
+				throw new RuntimeException("Exception. " + e.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (cs != null) {
+						cs.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			isSuccess = true;
+			jsonObject.put("isSuccess", isSuccess);
+			return jsonObject;
+
+		}
 	}
 
 	interface ShippingProcess_interface {
@@ -235,6 +291,8 @@ public class ShippingProcess extends HttpServlet {
 		public List<RealSaleVO> searchAllDB(String group_id);
 
 		public JSONObject statisticsAlloc(String group_id, String user_id);
+		
+		public JSONObject importPicking(String group_id, String user_id,String order_count);
 	}
 
 }

@@ -49,9 +49,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<td><input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end"></td>
 										</tr>
 										<tr>
+											<td>揀貨單訂單數量：</td>
+											<td><input type="text" id="import_order_count" name="import_order_count"></td>
+										</tr>
+										<tr>
 											<td><button class="btn btn-exec btn-wide" id="import_resale">匯入</button></td>
 											<td><button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button></td>	
 											<td><button class="btn btn-exec btn-wide" id="statistics_alloc_inv">執行配庫</button></td>	
+											<td><button class="btn btn-exec btn-wide" id="import_picking">執行揀貨</button></td>	
 										</tr>
 									</table>
 								</div>
@@ -465,7 +470,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
         //20170504 做配庫alloc_inv---------------------------------
         $("#statistics_alloc_inv").click(function(e) {
-
             $.ajax({
                 type: 'POST',
                 url: 'shippingProcess.do',
@@ -480,6 +484,30 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
                 },
             });
+
+        });
+        
+      //20170504 揀貨---------------------------------
+        $("#import_picking").click(function(e) {
+			var import_order_count = $("#import_order_count").val();
+			if(!(import_order_count=="")){
+	            $.ajax({
+	                type: 'POST',
+	                url: 'shippingProcess.do',
+	                data: {
+	                	order_no_count: import_order_count,
+	                    action: "importPicking"
+	                },
+	                success: function(result) {
+	                    var obj = jQuery.parseJSON(result);
+	                    var isSuccess = obj.isSuccess;
+	                    alert("isSuccess:" + isSuccess);
+	
+	                },
+	            });
+			}else{
+				alert("請輸入揀貨單訂單數量");
+			}
 
         });
         //新增Dialog相關設定
