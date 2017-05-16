@@ -2,13 +2,13 @@ button.btn {
 	margin-left: 8px;
 }
 .dragandrophandler {
-	overflow-y:scroll;
 	margin: auto;
+	margin-top: 30px;
     position: relative;
     min-height: 100px;
     max-height: 189px;
     min-width: 100px;
-    max-width: 810px;
+    max-width: 285px;
     width: inherit;
     border-radius: 6px;
 /*     background-color: #FDFDFD; */
@@ -76,7 +76,6 @@ button.btn {
     vertical-align:top
     }
 .detail{
-/*     width: 65px; */
     position: relative;
     padding: 10px;
     border: 1px solid #e1e1e1;
@@ -117,14 +116,4 @@ button.btn {
 }
 #btnArea{
 	margin-top: 30px;
-}
-.dragandrophandler::-webkit-scrollbar{
-	width: 12px;
-	background-color: #F5F5F5;
-}
-
-.dragandrophandler::-webkit-scrollbar-thumb{
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #555;
 }

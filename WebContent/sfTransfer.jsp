@@ -22,14 +22,16 @@
 		<!-- Google Fonts -->
 		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
 	
+		<!-- Jvascript -->
+		<script type="text/javascript" src="js/jqueryFiler/jquery.filer.min.js"></script>
+		<script type="text/javascript" src="js/upload-dialog-common.js"></script>
+		<script type="text/javascript" src="js/sfTransfer.js"></script>
+		
 		<!-- Styles -->
 		<link rel="stylesheet" href="css/jqueryFiler/jquery.filer.css">
 		<link rel="stylesheet" href="css/jqueryFiler/themes/jquery.filer-dragdropbox-theme.css">
 		<link rel="stylesheet" href="css/sfTransfer.css">
-	
-		<!-- Jvascript -->
-		<script src="js/jqueryFiler/jquery.filer.min.js" type="text/javascript"></script>
-		<script src="js/sfTransfer.js" type="text/javascript"></script>
+		
 	</head>
 	<body >
 		<div class="content-wrap" >
@@ -44,21 +46,12 @@
 							</select>
 						</div>
 					</div>
-					<div id ='fileDiv' align="center">	
-						<div class='input-field-wrap jFiler-input-choose-btn black'>	
-							<div class="form-row">
-								<form action="" id="form" method="post" enctype="multipart/form-data" style="margin:0px;">
-									<input type="file" id="file" name="file" accept=".csv,.xls,.xlsx" style="width: 300px" multiple/>
-									<button class='btn btn-darkblue' id = 'uploadBtn' onclick="return upload();">上傳</button>
-									<span id='download'></span>
-									<div id="data"></div>
-								</form>
-							</div>
-						</div>		
-						<div class="form-row" id ="filesEdit">
-						</div>
-						
-					</div>								
+					<div class="dragandrophandler" id="fileDiv">
+						<p align="center">Drag & Click Files Here</p>
+						<div class="form-row" id ="filesEdit"></div>
+					</div>
+					<div id="btnArea" align="center"></div>
+					<div class="statusbarDiv" id ="statusbarDiv"></div>
 				</div>
 			</div>
 		</div>		
