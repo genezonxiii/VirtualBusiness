@@ -1344,18 +1344,25 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					action : "search"
 				},
 				success : function(result) {
-					console.log('result: '+ result);
-					var json_obj = $.parseJSON(result);
-					console.log('json_obj: '+ json_obj);
-					console.log("customer list");
+					console.log('customer search result:');
 					console.log(result);
+					var json_obj = $.parseJSON(result);
+					console.log('json_obj:');
+					console.log(json_obj);
+					console.log('customer_tags:');
+					console.log(customer_tags);
 					if(json_obj != null){
 						$.each(json_obj, function(i, item) {
+							if(item.name == undefined){
+								item.name = '';
+							}
 							if (item.name != null) {
 								customer_tags[i] = json_obj[i].name;
 								customer_menu[item.customer_id] = item.name;
 							}
 						});
+						console.log('customer_tags:');
+						console.log(customer_tags);
 					}
 				}
 			});
