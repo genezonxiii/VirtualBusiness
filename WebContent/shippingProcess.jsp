@@ -42,23 +42,38 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<div class="input-field-wrap">
 							<div class="form-wrap">
 								<div class="form-row">
-									<table class='realsale_table'>
-										<tr>
-											<td>轉單日期區間：</td>
-											<td><input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin"></td>
-											<td><input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end"></td>
-										</tr>
-										<tr>
-											<td>揀貨單訂單數量：</td>
-											<td><input type="text" id="import_order_count" name="import_order_count"></td>
-										</tr>
-										<tr>
-											<td><button class="btn btn-exec btn-wide" id="import_resale">匯入</button></td>
-											<td><button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button></td>	
-											<td><button class="btn btn-exec btn-wide" id="statistics_alloc_inv">執行配庫</button></td>	
-											<td><button class="btn btn-exec btn-wide" id="import_picking">執行揀貨</button></td>	
-										</tr>
-									</table>
+									<label for=""> <span class="block-label">轉單日期區間：</span>
+										<input type="text" class="input-date"
+										id="import_trans_list_date_begin"
+										name="import_trans_list_date_begin">
+										<div class="forward-mark"></div>
+										<input
+										type="text" class="input-date" id="import_trans_list_date_end"
+										name="import_trans_list_date_end">
+									</label>
+									<button class="btn btn-exec btn-wide" id="import_resale">匯入</button>
+								</div>
+								<div class="form-row ">
+									<hr class="hr-gray"></hr>
+								</div>
+								<div class="form-row">
+									<button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button>
+									<button class="btn btn-exec btn-wide" id="statistics_alloc_inv">執行配庫</button>
+								</div>
+								<div class="form-row ">
+									<hr class="hr-gray"></hr>
+								</div>
+								<div class="form-row">
+									<label for=""> <span class="block-label">揀貨單訂單數量：</span>
+										<input type="text" id="import_order_count" name="import_order_count">
+									</label>
+									<button class="btn btn-exec btn-wide" id="import_picking">執行揀貨</button>
+								</div>
+								<div class="form-row ">
+									<hr class="hr-gray"></hr>
+								</div>
+								<div class="form-row">
+									<button class="btn btn-exec btn-wide" id="import_ship">產出出貨單</button>
 								</div>
 							</div>
 						</div>
@@ -509,6 +524,23 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				alert("請輸入揀貨單訂單數量");
 			}
 
+        });
+		
+		      //20170504 揀貨---------------------------------
+        $("#import_ship").click(function(e) {
+	            $.ajax({
+	                type: 'POST',
+	                url: 'shippingProcess.do',
+	                data: {
+	                    action: "importShip"
+	                },
+	                success: function(result) {
+	                    var obj = jQuery.parseJSON(result);
+	                    var isSuccess = obj.isSuccess;
+	                    alert("isSuccess:" + isSuccess);
+	
+	                },
+	            });
         });
         //新增Dialog相關設定
         insert_dialog = $("#dialog-form-insert").dialog({
