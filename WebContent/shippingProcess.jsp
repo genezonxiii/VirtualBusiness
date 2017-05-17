@@ -65,7 +65,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								</div>
 								<div class="form-row">
 									<label for=""> <span class="block-label">揀貨單訂單數量：</span>
-										<input type="text" id="import_order_count" name="import_order_count">
+										<input type="number" id="import_order_count" name="import_order_count" value="5">
 									</label>
 									<button class="btn btn-exec btn-wide" id="import_picking">執行揀貨</button>
 								</div>
@@ -526,7 +526,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
         });
 		
-		      //20170504 揀貨---------------------------------
+		//20170517  出貨---------------------------------
         $("#import_ship").click(function(e) {
 	            $.ajax({
 	                type: 'POST',
