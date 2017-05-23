@@ -34,7 +34,7 @@
 					<div class="input-field-wrap">
 						<div class="form-wrap">
 							<div class="form-row">
-								<form id = "form_master">
+								<form id = "form_date">
 									<label for=""> <span class="block-label">銷售起日</span> <input
 										type="text" name="start_date" class='input-date'>
 									</label>
@@ -74,25 +74,64 @@
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
+	<script>
+	var $dtMaster = null;
+	</script>
 	<script type="text/javascript">
 	$(function(){
-		$('#form_master').on("click", "button", function(e) {
+		$('#form_date').on("click", "button", function(e) {
 			e.preventDefault();
+			var $startDate = $('#form_date input:eq(0)').val();
+			var $endDate = $('#form_date input:eq(1)').val();
+			var errorMes = '';
+			var $mes = $('#message #text');
+			if($endDate != null && $endDate.length != 0 && $startDate != null && $startDate.length != 0){
+				if($startDate.replace(/-/g,"") > $endDate.replace(/-/g,"")){
+					errorMes += "訖日不可小於起日!<br>";
+				}
+			}
+			if($startDate == null || $startDate.length == 0){
+				errorMes += "請選擇起日!<br>";
+			}
+			else if(!dateValidationCheck($startDate)){
+				errorMes += "起日格式不符!<br>";
+			}
+			if($endDate == null || $endDate.length == 0){
+				errorMes += "請選擇訖日!<br>";
+			}
+			else if(!dateValidationCheck($endDate)){
+				errorMes += "訖日格式不符!<br>";
+			}
 
+			if(errorMes.length > 0){
+				$mes.val('').html(errorMes);
+				$('#message')
+					.dialog()
+					.dialog('option', 'title', '警告')
+					.dialog('option', 'width', 'auto')
+					.dialog('option', 'minHeight', 'auto')
+					.dialog("open");
+				return false;
+			}
 			var parameter = {
 				action : "search",
-				startDate : $('#form_master input[name=start_date]').val(),
-				endDate : $('#form_master input[name=end_date]').val()
+				startDate : $startDate,
+				endDate : $endDate
 			};
 			console.log(parameter);
 			drawMasterTable(parameter);
-		});		
+		});
+	    $('#dt_master_ship').on('change', ':checkbox', function() {
+	        $(this).is(":checked")?
+	        	$(this).closest("tr").addClass("selected"):
+	        	$(this).closest("tr").removeClass("selected");
+	    });
 	});
 	</script>
 	<script type="text/javascript">
 	function drawMasterTable(parameter) {
 
-		masterDT = $("#dt_master_ship").DataTable({
+		$dtMaster = $("#dt_master_ship").DataTable({
 			dom : "Blfr<t>ip",
 			//scrollY : "200px",
 			width : 'auto',
@@ -236,10 +275,12 @@
 			}, {
 				text : '發送電文',
 				action : function(e, dt, node, config) {
-					var $dtMaster =  $('#stockmod-master-table');
-					var delArr = '';
+					var $table =  $('#dt_master_ship');
+
+				    var cells = $dtMaster.cells( ).nodes();
+					var noArr = '';
 					
-					var $checkboxs = $dtMaster.find('input[name=checkbox-group-select]:checked');
+					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 					
 					console.log($checkboxs);
 					
@@ -247,25 +288,48 @@
 						alert('請至少選擇一筆資料');
 						return false;
 					}
-					
-					var dialogId = "dialog-data-process";
-					var formId = "dialog-form-data-process";
-					var btnTxt_1 = "批次刪除";
-					var btnTxt_2 = "取消";
-					var oWidth = 'auto';
-					var url = 'stockMod.do';
-
 					$checkboxs.each(function() {
-						delArr += this.id + ',';
+						noArr += this.id + ',';
 					});
-					delArr.slice(0,-1);
+					noArr.slice(0,-1);
 					
-					initDeleteDialog();
-					drawDialog
-						(dialogId, url, oWidth, formId, btnTxt_1, btnTxt_2)
-						.data("stockmodId",delArr)
-						.dialog("option","title","刪除"+ $checkboxs.length +"筆資料")
-						.dialog("open");					
+					$.ajax({
+						url: 'ship.do', 
+						type: 'post',
+						data: {
+							action: 'sendToTelegraph',
+							ship_seq_nos: noArr
+						},
+						error: function (xhr) { },
+						success: function (response) {
+							var $mes = $('#message #text');
+							$mes.val('').html('成功發送');
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '提示訊息')
+								.dialog('option', 'width', 'auto')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}
+					});					
+// 					var dialogId = "dialog-data-process";
+// 					var formId = "dialog-form-data-process";
+// 					var btnTxt_1 = "批次刪除";
+// 					var btnTxt_2 = "取消";
+// 					var oWidth = 'auto';
+// 					var url = 'stockMod.do';
+
+// 					$checkboxs.each(function() {
+// 						delArr += this.id + ',';
+// 					});
+// 					delArr.slice(0,-1);
+					
+// 					initDeleteDialog();
+// 					drawDialog
+// 						(dialogId, url, oWidth, formId, btnTxt_1, btnTxt_2)
+// 						.data("stockmodId",delArr)
+// 						.dialog("option","title","刪除"+ $checkboxs.length +"筆資料")
+// 						.dialog("open");					
 				}
 			}, {
 				text : '新增出貨',
@@ -284,7 +348,32 @@
 				}
 			} ]
 		});
-	};	
+	};
+
+	//驗證日期格式
+	function dateValidationCheck(str) {
+		  var re = new RegExp("^([0-9]{4})[.-]{1}([0-9]{1,2})[.-]{1}([0-9]{1,2})$");
+		  var strDataValue;
+		  var infoValidation = true;
+		  if ((strDataValue = re.exec(str)) != null) {
+		    var i;
+		    i = parseFloat(strDataValue[1]);
+		    if (i <= 0 || i > 9999) { /*年*/
+		      infoValidation = false;
+		    }
+		    i = parseFloat(strDataValue[2]);
+		    if (i <= 0 || i > 12) { /*月*/
+		      infoValidation = false;
+		    }
+		    i = parseFloat(strDataValue[3]);
+		    if (i <= 0 || i > 31) { /*日*/
+		      infoValidation = false;
+		    }
+		  } else {
+		    infoValidation = false;
+		  }
+		  return infoValidation;
+	}	
 	</script>
 </body>
 </html>
