@@ -135,15 +135,15 @@ public class SFTransfer extends HttpServlet {
 				}
 				break;
 			}
-			case 2: {
-				SfApi api = new SfApi();		
-				String genXML = api.genItemService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
-				response.getWriter().write(returnXML);
-				break;
-			}
+//			case 2: {
+//				SfApi api = new SfApi();		
+//				String genXML = api.genItemService();
+//				String returnXML = api.sendXMLbyWS(ws, genXML);
+//				response.getWriter().write(genXML);
+//				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
+//				response.getWriter().write(returnXML);
+//				break;
+//			}
 			case 3: {
 				SfApi api = new SfApi();		
 				String genXML = api.genItemQueryService();
