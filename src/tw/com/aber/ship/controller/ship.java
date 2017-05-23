@@ -20,10 +20,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sale.controller.sale;
+import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.ShipVO;
 
@@ -45,10 +47,11 @@ public class ship extends HttpServlet {
 
 		String groupId = request.getSession().getAttribute("group_id").toString();
 		String userId = request.getSession().getAttribute("user_id").toString();
+		
+		ShipService shipService =null;
 
 		String action = request.getParameter("action");
 		logger.debug("Action:".concat(action));
-
 		List<ShipVO> rows = null;
 		String result = null;
 		ShipService service = null;
@@ -78,7 +81,39 @@ public class ship extends HttpServlet {
 				result = gson.toJson(rows);
 				
 				response.getWriter().write(result);
+			
+			}else if("sendToTelegraph".equals(action)){
+				
+				List<ShipVO> shipVOList = null;
+				
+				try {
+					/***************************
+					 * 1.接收請求參數
+					 ***************************************/
+					String ship_seq_nos = request.getParameter("ship_seq_nos");
+					
+					shipService = new ShipService();
+					
+					
+					ship_seq_nos = ship_seq_nos.replace(",", "','");
+
+					ship_seq_nos="'"+ship_seq_nos+"'";
+					
+					logger.debug("isok"+"group_id:"+groupId+"ship_seq_nos"+ship_seq_nos);
+
+					shipVOList = shipService.getShipByShipSeqNo(groupId, ship_seq_nos);
+
+					SfApi sfapi=new SfApi();
+					
+					//sfapi.(productList);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}
+				
 			}
+				
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
 		}
@@ -94,6 +129,10 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getSearchDB(String groupId, Date startDate, Date endDate) {
 			return dao.searchDB(groupId, startDate, endDate);
 		}
+		
+		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo,String groupId){
+			return dao.getShipByShipSeqNo(shipSeqNo,groupId);
+		}
 	}
 
 	class ShipDAO implements ship_interface {
@@ -103,8 +142,10 @@ public class ship extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
+
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
 
+		private static final String sp_get_ship_by_shipseqno="call db_virtualbusiness.sp_get_ship_by_shipseqno(?,?);";
 		@Override
 		public List<ShipVO> searchDB(String groupId, Date startDate, Date endDate) {
 			List<ShipVO> rows = new ArrayList<ShipVO>();
@@ -163,12 +204,72 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
+		
+		@Override
+		public List<ShipVO> getShipByShipSeqNo(String shipSeqNos,String groupId) {
+
+			List<ShipVO> rows = new ArrayList<ShipVO>();
+			ShipVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_ship_by_shipseqno);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, shipSeqNos);
+			
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new ShipVO();
+					row.setShip_id(rs.getString("ship_id"));
+					row.setShip_seq_no(rs.getString("ship_seq_no"));
+					row.setGroup_id(rs.getString("group_id"));
+					row.setOrder_no(rs.getString("order_no"));
+					row.setUser_id(rs.getString("user_id"));
+					row.setCustomer_id(rs.getString("customer_id"));
+					row.setMemo(rs.getString("memo"));
+					row.setDeliveryway(rs.getString("deliveryway"));
+					row.setTotal_amt(rs.getFloat("total_amt"));
+					row.setDeliver_name(rs.getString("deliver_name"));
+					row.setDeliver_to(rs.getString("deliver_to"));
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+
+		}
 	}
 
 }
 
 interface ship_interface {
-
 	public List<ShipVO> searchDB(String groupId, Date startDate, Date endDate);
+	
+	public List<ShipVO> getShipByShipSeqNo(String shipSeqNos,String groupID);
 
 }
