@@ -12,10 +12,19 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 <html>
 <head>
-<title>銷貨管理</title>
+<title>銷售管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true"/>
+<style>
+.realsale_table {
+    margin:auto;
+   border-collapse: separate; 
+    border-spacing: 10px 20px; 
+
+    font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4; */
+  }
+  </style>
 </head>
 <body>
 	<input type="hidden" id="glb_menu" value='<%= menu %>' />
@@ -25,7 +34,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	 	<jsp:include page="template/common_headfoot.jsp" flush="true"/>
 		
 		<div class="content-wrap">
-			<h2 class="page-title">銷貨管理</h2> 
+			<h2 class="page-title">銷售管理</h2> 
 		
 			<div class='bdyplane' style="opacity: 0">
 				<div class="panel-content">
@@ -41,135 +50,86 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								<fieldset>
 									<table class='form-table'>
 										<tr>
-											<td>平台訂單號：</td>
-											<td><input type="text" name="order_no"
-												placeholder="輸入訂單號"></td>
-											<td>客戶名字：</td>
-											<td><input type="text" name="name" 
-												placeholder="輸入客戶名字"></td>
+											<td>訂單編號：</td>
+											<td><input type="text" name="update_order_no" placeholder="輸入訂單編號"></td>
+											<td>銷售平台：</td>
+											<td><input type="text" name="update_order_source" placeholder="輸入銷售平台"></td>
 										</tr>
 										<tr>
-											<td>自訂產品ID：</td>
-											<td><input type="text" id="update_c_product_id"
-												name="c_product_id" placeholder="輸入自訂產品ID"></td>
-											<td>產品名稱：</td>
-											<td><input type="text" id="update_product_name"
-												name="product_name" placeholder="輸入產品名稱"></td>
-										</tr>
-										<tr>
-											<td>銷貨數量：</td>
-											<td><input type="text" id="update_quantity"
-												name="quantity" placeholder="輸入銷貨數量"></td>
-											<td>單價：</td>
-											<td><input type="text" id="update_price" name="price"
-												placeholder="輸入單價"></td>
-										</tr>
-										<tr>
-											<td>總金額：</td>
-											<td><input type="text" id="update_product_price"
-												name="update_product_price" disabled></td>
-										</tr>
-										<tr>
-											<td>發票號碼：</td>
-											<td><input type="text" name="invoice"
-												placeholder="輸入發票號碼"></td>
-											<td>發票日期：</td>
-											<td><input type="text" name="invoice_date"
-												placeholder="輸入發票日期" class="input-date"></td>
+											<td>客戶姓名：</td>
+											<td>
+											<input type="text" id="update_name" name="update_name" placeholder="輸入客戶姓名">
+											<input type="hidden" id="update_customerid" name="update_customerid" />
+											</td>
+											<td>訂單總額：</td>
+											<td><input type="text" id="update_total_amt" name="update_total_amt" placeholder="輸入訂單總額"></td>
 										</tr>
 										<tr>
 											<td>轉單日：</td>
-											<td><input type="text" name="trans_list_date"
-												placeholder="輸入轉單日" class="input-date"></td>
-											<td>銷貨/出貨日期：</td>
-											<td><input type="text" name="sale_date"
-												placeholder="輸入銷貨/出貨日期" class="input-date"></td>
+											<td><input type="text" id="update_trans_list_date" name="update_trans_list_date" placeholder="輸入轉單日" class="input-date"></td>
+											<td>發票號碼：</td>
+											<td><input type="text" id="update_invoice" name="update_invoice" placeholder="輸入發票號碼"></td>
+										</tr>
+										<tr>
+											<td>銷貨日：</td>
+											<td><input type="text" id="update_sale_date" name="update_sale_date" placeholder="輸入銷貨日" class="input-date"></td>
+											<td>發票日：</td>
+											<td><input type="text" name="update_invoice_date" placeholder="輸入發票日期" class="input-date"></td>
+										</tr>
+										<tr>
+											<td>出貨日：</td>
+											<td><input type="text" name="update_dis_date" placeholder="輸入出貨日期" class="input-date"></td>
 										</tr>
 										<tr>
 											<td>備註說明：</td>
-											<td><input type="text" name="memo" placeholder="輸入備註說明"></td>
-											<td>銷售平台：</td>
-											<td><input type="text" name="order_source"
-												placeholder="輸入銷售平台"></td>
-										</tr>
-										<tr>
-											<td style="display: none">配送日：</td>
-											<td style="display: none"><input type="text"
-												name="dis_date" placeholder="輸入配送日" class="input-date"
-												value="2000-01-01"></td>
-										</tr>
+											<td><input type="text" name="update_memo" placeholder="輸入備註說明"></td>
+										</tr>		
 									</table>
 								</fieldset>
 							</form>
 						</div>
 	
 						<!--對話窗樣式-新增 -->
-						<div id="dialog-form-insert" title="新增銷貨資料">
+						<div id="dialog-form-insert" title="新增銷售資料">
 							<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 								<font color=red style="padding-left: 26px">掃條碼亦可取得商品資料</font>
 								<fieldset>
-									<table class='form-table'>
+									<table class='form-table'>									
 										<tr>
-											<td>銷貨單號：</td>
-											<td><input type="text" name="original_seq_no"
-												disabled="disabled" value="系統自動產生"></td>
-											<td>平台訂單號：</td>
-											<td><input type="text" name="order_no"
-												placeholder="未輸入將代入銷貨單號"></td>
+											<td>訂單編號：</td>
+											<td><input type="text" name="insert_order_no" placeholder="輸入訂單編號"></td>
+											<td>銷售平台：</td>
+											<td><input type="text" name="insert_order_source" placeholder="輸入銷售平台"></td>
 										</tr>
 										<tr>
-											<td>客戶名字：</td>
-											<td><input type="text" name="name" placeholder="輸入客戶名字"></td>
-										</tr>
-										<tr>
-											<td>自訂產品ID：</td>
-											<td><input type="text" id="insert_c_product_id"
-												name="c_product_id" placeholder="輸入自訂產品ID"></td>
-											<td>產品名稱：</td>
-											<td><input type="text" id="insert_product_name"
-												name="product_name" placeholder="輸入產品名稱"></td>
-										</tr>
-										<tr>
-											<td>銷貨數量：</td>
-											<td><input type="text" id="insert_quantity"
-												name="quantity" placeholder="輸入銷貨數量"></td>
-											<td>單價：</td>
-											<td><input type="text" id="insert_price" name="price"
-												placeholder="輸入單價"></td>
-										</tr>
-										<tr>
-											<td>總金額：</td>
-											<td><input type="text" id="insert_product_price"
-												name="insert_product_price" placeholder="系統自動產生金額" disabled></td>
-	
-										</tr>
-										<tr>
-											<td>發票號碼：</td>
-											<td><input type="text" name="invoice"
-												placeholder="輸入發票號碼"></td>
-											<td>發票日期：</td>
-											<td><input type="text" name="invoice_date"
-												placeholder="輸入發票日期" class="input-date"></td>
+											<td>客戶姓名：</td>
+											<td>
+											<input type="text" id="insert_name" name="insert_name" placeholder="輸入客戶姓名">
+											<input type="hidden" id="insert_customerid" name="insert_customerid" />
+											</td>
+											<td>訂單總額：</td>
+											<td><input type="text" id="insert_total_amt" name="insert_total_amt" placeholder="輸入訂單總額"></td>
 										</tr>
 										<tr>
 											<td>轉單日：</td>
-											<td><input type="text" name="trans_list_date"
-												placeholder="輸入轉單日" class="input-date"></td>
-											<td>銷貨/出貨日期：</td>
-											<td><input type="text" name="sale_date"
-												placeholder="輸入銷貨/出貨日期" class="input-date"></td>
+											<td><input type="text" id="insert_trans_list_date" name="insert_trans_list_date" placeholder="輸入轉單日" class="input-date"></td>
+											<td>發票號碼：</td>
+											<td><input type="text" id="insert_invoice" name="insert_invoice" placeholder="輸入發票號碼"></td>
 										</tr>
 										<tr>
-											<td>銷售平台：</td>
-											<td><input type="text" name="order_source"
-												placeholder="輸入銷售平台"></td>
-											<td>備註說明：</td>
-											<td><input type="text" name="memo" placeholder="輸入備註說明"></td>
-											<td style="display: none">配送日：</td>
-											<td style="display: none"><input type="text"
-												name="dis_date" placeholder="輸入配送日" class="input-date"
-												value="2000-01-01"></td>
+											<td>銷貨日：</td>
+											<td><input type="text" id="insert_sale_date" name="insert_sale_date" placeholder="輸入銷貨日" class="input-date"></td>
+											<td>發票日：</td>
+											<td><input type="text" name="insert_invoice_date" placeholder="輸入發票日期" class="input-date"></td>
 										</tr>
+										<tr>
+											<td>出貨日：</td>
+											<td><input type="text" name="insert_dis_date" placeholder="輸入出貨日期" class="input-date"></td>
+										</tr>
+										<tr>
+											<td>備註說明：</td>
+											<td><input type="text" name="insert_memo" placeholder="輸入備註說明"></td>
+										</tr>										
 									</table>
 								</fieldset>
 							</form>
@@ -178,31 +138,63 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<div class="input-field-wrap">
 							<div class="form-wrap">
 								<div class="form-row">
-									<label for=""> <span class="block-label">自訂產品 ID
-											查詢</span> <input type="text" id="search_c_product_id"
-										name="search_c_product_id">
-									</label>
-									<button class="btn btn-darkblue" id="search-sale"
-										c_product_id_error="">查詢</button>
-								</div>
-	
-								<div class="form-row">
-									<form id="trans_list_date_form" name="trans_list_date_form">
-										<label for=""> <span class="block-label">轉單起日</span> <input
-											type="text" class="input-date" id="trans_list_start_date"
-											name="trans_list_start_date">
-										</label>
-										<div class="forward-mark"></div>
-										<label for=""> <span class="block-label">轉單迄日</span> <input
-											type="text" class="input-date" id="trans_list_end_date"
-											name="trans_list_end_date">
-										</label>
-										<button class="btn btn-darkblue" id="searh-trans-list-date">查詢</button>
-									</form>
-								</div>
-	
-								<div class="btn-row">
-									<button class="btn btn-exec btn-wide" id="create-sale">新增銷售資料</button>
+									<table class='realsale_table'>
+					<tr>
+						<td>訂單編號：</td>
+						<td><input type="text" id="order_no_begin"
+							name="order_no_begin"></td>
+						<td><input type="text" id="order_no_end" name="order_no_end"></td>
+					</tr>
+					<tr>
+						<td>客戶姓名：</td>
+						<td>
+						<input type="text" id="name" name="name">
+						<input type="hidden" id="customerid" name="customerid" />
+						</td>
+					</tr>
+					<tr>
+						<td>轉單日期區間：</td>
+						<td><input type="text" class="input-date"
+							id="trans_list_date_begin" name="trans_list_date_begin"></td>
+						<td><input type="text" class="input-date"
+							id="trans_list_date_end" name="trans_list_date_end"></td>
+					</tr>
+					<tr>
+						<td>出貨日期區間：</td>
+						<td><input type="text" class="input-date" id="dis_date_begin"
+							name="dis_date_begin"></td>
+						<td><input type="text" class="input-date" id="dis_date_end"
+							name="dis_date_end"></td>
+					</tr>
+					<tr>
+						<td>訂單來源：</td>
+						<td><input type="text" id="order_source" name="order_source"></td>
+					</tr>
+					<tr>
+						<td>出貨方式：</td>
+						<td>
+						<!-- <input type="text" id="deliveryway" name="deliveryway"> -->
+							<select name="deliveryway" id="deliveryway">
+						    <option value="1">宅配</option>
+						    <option value="2">超取711</option>
+						    <option value="3">超取全家</option>
+						  </select>						  
+						</td>
+					</tr>
+					<tr>
+						<td><button class="btn btn-darkblue" id="search-sale" c_product_id_error="">查詢</button></td>
+						<td><button class="btn btn-exec btn-wide" id="create-sale">新增</button></td>					
+					</tr>
+<!-- 					<tr> -->
+<!-- 						<td>轉單日期區間：</td> -->
+<!-- 						<td><input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin"></td> -->
+<!-- 						<td><input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end"></td> -->
+<!-- 						<td><button class="btn btn-exec btn-wide" id="import_resale">匯入</button></td> -->
+<!-- 						<td><button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button></td>	 -->
+<!-- 						<td><button class="btn btn-exec btn-wide" id="action_alloc_inv">執行配庫</button></td>	 -->
+<!-- 					</tr> -->
+					
+				</table>
 								</div>
 							</div>
 						</div>
@@ -212,17 +204,13 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								<table id="sales" class="result-table">
 									<thead>
 										<tr class="">
-											<th>銷貨單號</th>
-											<th>訂單號</th>
-											<th style="min-width: 120px">產品 ID/名稱</th>
-											<th>數量</th>
-											<th style="min-width: 60px">銷貨金額</th>
-											<th>銷貨對象</th>
-											<th style="min-width: 110px">發票</th>
+											<th>訂單編號</th>
+											<th>客戶姓名</th>
 											<th>轉單日</th>
-											<th>銷/出貨日期</th>
-											<th>銷售平台</th>
-											<th style="background-image: none !important;">註</th>
+											<th>銷貨日</th>
+											<th>出貨日</th>
+											<th>銷貨平台</th>								
+											<th style="background-image: none !important;">備註</th>
 											<th style="background-image: none !important;">功能</th>
 										</tr>
 									</thead>
@@ -245,7 +233,16 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
 			<fieldset>
 				<table id="dialog-sale-detail-table" class="result-table">
-					<thead></thead>
+					<thead>
+						<tr class="">
+							<th>訂單編號</th>
+							<th>自訂產品編號</th>
+							<th>產品名稱</th>
+							<th>數量</th>
+							<th>單價</th>
+							<th>備註</th>															
+						</tr>
+					</thead>
 					<tfoot></tfoot>
 					<tbody></tbody>
 				</table>
@@ -268,46 +265,46 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			console.log('ajax start');
 			
 			var oColumnDefs =
-		        [{
-					//訂單編號 及 出貨單連結
-		        	targets: 1,
-					render: function ( data, type, row ) {
-						var result = $("<div/>") //fake tag
-							.append( 
-								$("<a/>", {
-									"title": "出貨單",
-									"class": "report",
-									"href": "./report.do?sale_id=" + row.sale_id,
-									"target": "_blank"
-								})
-								.text(row.order_no)
-							);
-				 		return result.html();
-					}
-	            },{
-					//自訂產品編號 + 產品名稱
-	            	targets: 2,
-					render: function ( data, type, row ) {
-				   		var result = row.c_product_id + '<br>' + row.product_name;
-				 		return result;
-					}
-	            },{
-					//銷貨對象
-	            	targets: 5,
-					render: function ( data, type, row ) {
-						console.log(row.customer_id);
-						console.log(customer_menu);
-				   		var result = row.customer_id == null || row.customer_id == '' ? "":customer_menu[row.customer_id];
-				 		return result;
-					}
-	            },{
-					//發票 + 發票日期
-	            	targets: 6,
-					render: function ( data, type, row ) {
-				   		var result = row.invoice == null || row.invoice == '' ? "":"號碼：" + row.invoice + "<br>日期：" + row.invoice_date;
-				 		return result;
-					}
-	            },{
+ 		        [{
+// 					//訂單編號 及 出貨單連結
+// 		        	targets: 1,
+// 					render: function ( data, type, row ) {
+// 						var result = $("<div/>") //fake tag
+// 							.append( 
+// 								$("<a/>", {
+// 									"title": "出貨單",
+// 									"class": "report",
+// 									"href": "./report.do?sale_id=" + row.sale_id,
+// 									"target": "_blank"
+// 								})
+// 								.text(row.order_no)
+// 							);
+// 				 		return result.html();
+// 					}
+// 	            },{
+// 					//自訂產品編號 + 產品名稱
+// 	            	targets: 2,
+// 					render: function ( data, type, row ) {
+// 				   		var result = row.c_product_id + '<br>' + row.product_name;
+// 				 		return result;
+// 					}
+// 	            },{
+// 					//銷貨對象
+// 	            	targets: 5,
+// 					render: function ( data, type, row ) {
+// 						console.log(row.customer_id);
+// 						console.log(customer_menu);
+// 				   		var result = row.customer_id == null || row.customer_id == '' ? "":customer_menu[row.customer_id];
+// 				 		return result;
+// 					}
+// 	            },{
+// 					//發票 + 發票日期
+// 	            	targets: 6,
+// 					render: function ( data, type, row ) {
+// 				   		var result = row.invoice == null || row.invoice == '' ? "":"號碼：" + row.invoice + "<br>日期：" + row.invoice_date;
+// 				 		return result;
+// 					}
+// 	            },{
 	            	//功能
 					targets: -1,
 				   	searchable: false,
@@ -321,9 +318,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 									$("<div/>", {"class": "table-function-list"})
 										.append( 
 											$("<button/>", {
-												"id": row.seq_no,
-												"value": row.sale_id,
-												"name": row.c_product_id,
+												"id": row.order_no,
+												"value": row.order_no,
+												"name": row.order_no,
 												"class": "btn-in-table btn-darkblue btn_update",
 												"title": "修改"
 											})
@@ -331,9 +328,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										)
 										.append( 
 											$("<button/>", {
-												"id": row.seq_no,
-												"value": row.sale_id,
-												"name": row.c_product_id,
+												"id": row.order_no,
+												"value": row.order_no,
+												"name": row.order_no,
 												"class": "btn-in-table btn-alert btn_delete",
 												"title": "刪除"
 											})
@@ -354,16 +351,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				}];
 			
 			var oColumns = 
-				[
-					{"data": "seq_no", "width": "10%", "defaultContent":""},
-					{"data": "order_no", "width": "10%", "defaultContent":""},
-					{"data": null, "width": "20%", "defaultContent":""},
-					{"data": "quantity", "width": "5%", "defaultContent":""},
-					{"data": "price", "width": "5%", "defaultContent":""},
-					{"data": null, "width": "10%", "defaultContent":""},
-					{"data": "invoice", "width": "10%", "defaultContent":""},
+				[				
+					{"data": "order_no", "width": "10%", "defaultContent":""},					
+					{"data": "name", "width": "5%", "defaultContent":""},
 					{"data": "trans_list_date", "width": "10%", "defaultContent":""},
 					{"data": "sale_date", "width": "10%", "defaultContent":""},
+					{"data": "dis_date", "width": "10%", "defaultContent":""},
 					{"data": "order_source", "width": "5%", "defaultContent":""},
 					{"data": "memo", "width": "10%", "defaultContent":""},
 					{"data": null, "width": "10%", "defaultContent":""}
@@ -374,7 +367,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				destroy: true,
 				language: {"url": "js/dataTables_zh-tw.txt"},
 				ajax: {
-					url : "sale.do",
+					url : "realsale.do",
 					dataSrc: "",
 					type : "POST",
 					data : parameter
@@ -455,9 +448,21 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			});
 			
 			var uuid = "";
-			var c_product_id = "";
-			var product_id = "";
+			var order_no_begin = "";
+			var order_no_end = "";
 			var seqNo = "";
+			
+			//--新增--
+			var order_no = "";
+			var order_source = "";
+			var name = "";
+			var total_amt = "";
+			var trans_list_date = "";
+			var invoice = "";
+			var sale_date = "";
+			var invoice_date = "";
+			var dis_date = "";
+			var memo = "";
 			
 			//=============自定義validator=============
 			//字符最大長度驗證（一個中文字符長度為2）
@@ -572,39 +577,51 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			});
 			
 			//自訂產品ID查詢相關設定
-			$("#search-sale").click(function(e) {
-				e.preventDefault();
-				
-				if ($("#search-sale").attr("c_product_id_error").length > 0) {
-					var tmp = "查無商品ID: "
-							+ $("#search-sale").attr("c_product_id_error");
+			$("#search-sale").click(function(e) {						
+				e.preventDefault();				
+// 				if ($("#search-sale").attr("c_product_id_error").length > 0) {
+// 					var tmp = "查無商品ID: "
+// 							+ $("#search-sale").attr("c_product_id_error");
 					
-					if (!confirm(tmp)) {
-						return;
-					}
-				}
-
+// 					if (!confirm(tmp)) {
+// 						return;
+// 					}
+// 				}
 				var tmp = {
-					action : "search",
-					c_product_id : $("input[name='search_c_product_id']").val(),
-					trans_list_start_date : $("#trans_list_start_date").val(),
-					trans_list_end_date : $("#trans_list_end_date").val()
+					action : "search",				
+ 					order_no_begin : $("input[name='order_no_begin']").val(),
+ 					order_no_end : $("input[name='order_no_end']").val(),
+ 					trans_list_date_begin : $("#trans_list_date_begin").val(),
+ 					trans_list_date_end : $("#trans_list_date_end").val(),
+ 					dis_date_begin : $("#dis_date_begin").val(),
+ 					dis_date_end : $("#dis_date_end").val(),
+ 					order_source : $("#order_source").val(),
+ 					deliveryway : $("#deliveryway").val(),
+ 					customerid : $("#customerid").val()
 				};
 				draw_sale(tmp);
 			});
-			
-			//轉單日查詢相關設定
-			$("#searh-trans-list-date").click(function(e) {
-				e.preventDefault();
-				if ($("#trans_list_date_form").valid()) {
-					var tmp = {
-						action : "search_trans_list_date",
-						trans_list_start_date : $("#trans_list_start_date").val(),
-						trans_list_end_date : $("#trans_list_end_date").val()
-					};
-					draw_sale(tmp);
-				}
+		
+			//20170426從sale匯入到realsale---------------------------------
+			$("#import_resale").click(function(e) {						
+				e.preventDefault();				
+				var tmp = {
+					action : "importData",				
+					import_trans_list_date_begin : $("#import_trans_list_date_begin").val(),	
+ 					import_trans_list_date_end : $("#import_trans_list_date_end").val()	
+				};
+				draw_sale(tmp);
 			});
+			//------------------------------------------------------------
+			//20170427從realsale匯入到alloc_inv---------------------------------
+			$("#import_alloc_inv").click(function(e) {						
+				e.preventDefault();				
+				var tmp = {
+					action : "importallocinvData"
+				};
+				draw_sale(tmp);
+			});
+			//------------------------------------------------------------
 			
 			//新增Dialog相關設定
 			insert_dialog = $("#dialog-form-insert").dialog({
@@ -627,39 +644,36 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 							id : "insert",
 							text : "新增",
 							click : function() {
+								
 								if ($('#insert-dialog-form-post').valid()) {
-									var cus_id = "";
-									for (x in customer_menu) {
-										if (customer_menu[x] == $("#dialog-form-insert input[name='name']").val()) {
-											cus_id = x;
-										}
-									}
-									if (cus_id.length < 1
-											&& $("#dialog-form-insert input[name='name']").val().length > 0) {
-										alert("查無客戶: '"
-												+ $("#dialog-form-insert input[name='name']").val()
-												+ "'\n 請先至客戶管理介面新增");
-										return;
-									}
-
+// 									var cus_id = "";
+// 									for (x in customer_menu) {
+// 										if (customer_menu[x] == $("#dialog-form-insert input[name='name']").val()) {
+// 											cus_id = x;
+// 										}
+// 									}
+// 									if (cus_id.length < 1
+// 											&& $("#dialog-form-insert input[name='name']").val().length > 0) {
+// 										alert("查無客戶: '"
+// 												+ $("#dialog-form-insert input[name='name']").val()
+// 												+ "'\n 請先至客戶管理介面新增");
+// 										return;
+// 									}
+									
 									var $insert = $("#dialog-form-insert");
 									var tmp = {
 										action : "insert",
-										order_no : $insert.find("input[name='order_no']").val(),
-										product_name : $insert.find("input[name='product_name']").val(),
-										product_id : product_id,
-										c_product_id : $insert.find("input[name='c_product_id']").val(),
-										cus_id : cus_id,
-										name : $insert.find("input[name='name']").val(),
-										quantity : $insert.find("input[name='quantity']").val(),
-										price : $insert.find("input[name='price']").val(),
-										invoice : $insert.find("input[name='invoice']").val(),
-										invoice_date : $insert.find("input[name='invoice_date']").val(),
-										trans_list_date : $insert.find("input[name='trans_list_date']").val(),
-										dis_date : $insert.find("input[name='dis_date']").val(),
-										memo : $insert.find("input[name='memo']").val(),
-										sale_date : $insert.find("input[name='sale_date']").val(),
-										order_source : $insert.find("input[name='order_source']").val()
+										order_no : $insert.find("input[name='insert_order_no']").val(),
+										order_source : $insert.find("input[name='insert_order_source']").val(),
+										name : $insert.find("input[name='insert_name']").val(),
+										total_amt : $insert.find("input[name='insert_total_amt']").val(),
+										trans_list_date : $insert.find("input[name='insert_trans_list_date']").val(),
+										invoice : $insert.find("input[name='insert_invoice']").val(),
+										sale_date : $insert.find("input[name='insert_sale_date']").val(),
+										invoice_date : $insert.find("input[name='insert_invoice_date']").val(),
+										dis_date : $insert.find("input[name='insert_dis_date']").val(),
+										memo : $insert.find("input[name='insert_memo']").val(),
+										customer_id : $insert.find("input[name='insert_customerid']").val()
 									};
 									
 									draw_sale(tmp);
@@ -700,11 +714,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 // 					duration : 300
 // 				},
 				buttons : {
-					"確認刪除" : function() {
+					"確認刪除" : function() {		
 						var tmp = {
 							action : "delete",
-							sale_id : uuid,
-							c_product_id : c_product_id
+							realsale_id : uuid,
+							order_no : order_no
 						//c_product_id是為了刪除後，回傳指定的結果，所需參數
 						};
 						draw_sale(tmp);
@@ -739,40 +753,36 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 							click : function() {
 								if ($('#update-dialog-form-post').valid()) {
 									var cus_id = "";
-									for (x in customer_menu) {
-										if (customer_menu[x] == $("#dialog-form-update input[name='name']").val()) {
-											cus_id = x;
-										}
-									}
+// 									for (x in customer_menu) {
+// 										if (customer_menu[x] == $("#dialog-form-update input[name='name']").val()) {
+// 											cus_id = x;
+// 										}
+// 									}
 
-									if (cus_id.length < 1
-											&& $("#dialog-form-update input[name='name']").val().length > 0) {
-										alert("查無客戶: '"
-												+ $("#dialog-form-update input[name='name']").val()
-												+ "'\n 請先至客戶管理介面新增");
-										return;
-									}
-									
+// 									if (cus_id.length < 1
+// 											&& $("#dialog-form-update input[name='name']").val().length > 0) {
+// 										alert("查無客戶: '"
+// 												+ $("#dialog-form-update input[name='name']").val()
+// 												+ "'\n 請先至客戶管理介面新增");
+// 										return;
+// 									}								
 									var $update = $("#dialog-form-update");
 									var tmp = {
 										action : "update",
-										sale_id : uuid,
-										seq_no : seqNo,
-										order_no : $update.find("input[name='order_no']").val(),
-										product_name : $update.find("input[name='product_name']").val(),
-										product_id : product_id,
-										c_product_id : $update.find("input[name='c_product_id']").val(),
-										cus_id : cus_id,
-										name : $update.find("input[name='name']").val(),
-										quantity : $update.find("input[name='quantity']").val(),
-										price : $update.find("input[name='price']").val(),
-										invoice : $update.find("input[name='invoice']").val(),
-										invoice_date : $update.find("input[name='invoice_date']").val(),
-										trans_list_date : $update.find("input[name='trans_list_date']").val(),
-										dis_date : $update.find("input[name='dis_date']").val(),
-										memo : $update.find("input[name='memo']").val(),
-										sale_date : $update.find("input[name='sale_date']").val(),
-										order_source : $update.find("input[name='order_source']").val()
+										realsale_id : uuid,
+										seq_no : seqNo,									
+										order_no : $update.find("input[name='update_order_no']").val(),
+										order_source : $update.find("input[name='update_order_source']").val(),
+										name : $update.find("input[name='update_name']").val(),
+										total_amt : $update.find("input[name='update_total_amt']").val(),
+										trans_list_date : $update.find("input[name='update_trans_list_date']").val(),
+										invoice : $update.find("input[name='update_invoice']").val(),
+										sale_date : $update.find("input[name='update_sale_date']").val(),
+										invoice_date : $update.find("input[name='update_invoice_date']").val(),
+										dis_date : $update.find("input[name='update_dis_date']").val(),
+										memo : $update.find("input[name='update_memo']").val(),
+										customer_id : $update.find("input[name='update_customerid']").val()
+										
 									};
 									
 									draw_sale(tmp);
@@ -800,24 +810,19 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				
 				var row = $(this).closest("tr");
 			    var data = $("#sales").DataTable().row(row).data();
+			    console.log(data);
 			    
 				$("#dialog-confirm").html("<table class='dialog-table'>"
 					+ "<tr><td>銷貨單號：</td><td><span class='delete_msg'>'"
 					+ data.order_no
-					+ "'</span></td></tr>"
-					+ "<tr><td>交易物品：</td><td><span class='delete_msg'>'"
-					+ data.product_name
-					+ "'</span></td></tr>"
-					+ "<tr><td>銷貨金額：</td><td><span class='delete_msg'>'"
-					+ data.price
-					+ "'</span></td></tr>"
+					+ "'</span></td></tr>"					
 					+ "<tr><td>銷貨日期：</td><td><span class='delete_msg'>'"
 					+ data.sale_date
 					+ "'</span></td></tr>"
 					+ "</table>");
 				
-				uuid = $(this).val();
-				c_product_id = $(this).attr("name");
+				uuid=data.realsale_id;				
+				order_no = $(this).attr("name");
 				confirm_dialog.dialog("open");
 			});
 			
@@ -837,76 +842,60 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			$("#sales").delegate(".btn_update", "click", function(e) {
 				e.preventDefault();
 				
-				new_or_edit = 2;
-				uuid = $(this).val();
-				seqNo = $(this).attr("id");
-				
+				new_or_edit = 2;			
+// 				seqNo = $(this).attr("id");			
 				var row = $(this).closest("tr");
 			    var data = $("#sales").DataTable().row(row).data();
-			    
+			    uuid = data.realsale_id;
 			    //清空查詢條件
-				$("input[name='search_c_product_id']").val("");
-				$("#trans_list_start_date").val("");
-				$("#trans_list_end_date").val("");
+// 				$("input[name='search_c_product_id']").val("");
+// 				$("#trans_list_start_date").val("");
+// 				$("#trans_list_end_date").val("");
 				
 				var dialogA = document.getElementById("dialog-form-update");
 				var dialogB = $("#dialog-form-update");
 				
 				console.log(data);
-				$("#dialog-form-update input[name='order_no']").val(data.order_no);
-				$("#dialog-form-update input[name='product_name']").val(data.product_name);
-				$("#dialog-form-update input[name='c_product_id']").val(data.c_product_id);
-				$("#dialog-form-update input[name='name']").val(customer_menu[data.customer_id]);
-				$("#dialog-form-update input[name='quantity']").val(data.quantity);
-				$("#dialog-form-update input[name='price']").val(data.price);
-				$("#dialog-form-update input[name='update_product_price']").val(data.price);
-				$("#dialog-form-update input[name='invoice']").val(data.invoice);
-				$("#dialog-form-update input[name='invoice_date']").val(data.invoice_date);
-				$("#dialog-form-update input[name='trans_list_date']").val(data.trans_list_date);
-				$("#dialog-form-update input[name='dis_date']").val("1991-06-29");
-				$("#dialog-form-update input[name='memo']").val(data.memo);
-				$("#dialog-form-update input[name='sale_date']").val(data.sale_date);
-				$("#dialog-form-update input[name='order_source']").val(data.order_source);
+				$("#dialog-form-update input[name='update_order_no']").val(data.order_no);
+				$("#dialog-form-update input[name='update_order_source']").val(data.order_source);
+				$("#dialog-form-update input[name='update_customerid']").val(data.customer_id);	
+				$("#dialog-form-update input[name='update_name']").val(data.name);
+				$("#dialog-form-update input[name='update_total_amt']").val(data.total_amt);
+				$("#dialog-form-update input[name='update_trans_list_date']").val(data.trans_list_date);
+				$("#dialog-form-update input[name='update_invoice']").val(data.invoice);
+				$("#dialog-form-update input[name='update_sale_date']").val(data.sale_date);
+				$("#dialog-form-update input[name='update_invoice_date']").val(data.invoice_date);
+				$("#dialog-form-update input[name='update_dis_date']").val(data.dis_date);
+				$("#dialog-form-update input[name='update_memo']").val(data.memo);
 				
-				console.log(dialogA);
-				console.log(dialogB);
-				
-				console.log( $(dialogA).find("input[name='order_no']") );
-				console.log( $(dialogB).find("input[name='order_no']") );
-
 				update_dialog.dialog("open");
 			});
 			
 			//處理初始的查詢autocomplete
-			$("#search_c_product_id").autocomplete({
-				minLength : 1,
+			$("#name").autocomplete({
+				minLength : 1,				
 				source : function(request, response) {
-					getProductData(request, response, "ID");
-				}
-// 				change : function(event, ui) {
-// 					var source = $(this).val();
-// 					var arTemp = $(".ui-autocomplete li").map(function() {
-// 						return $(this).text();
-// 					});
+					getProductData(request, response, "NAME");
+				},
+				change : function(event, ui) {
+					var source = $(this).val();
+					var temp = $(".ui-autocomplete li").map(function() {
+						return $(this).text()
+					});
+					var found = $.inArray(source, temp);
 
-// 					var found = $.inArray(source, arTemp);
-					
-// 					if (found < 0) {
-// 						$("#search-sale").attr("c_product_id_error", $(this).val());
-// 						$(this).val('');
-// 						$(this).attr("placeholder", "請輸入正確的產品ID名稱!");
-// 						setTimeout(function() {
-// 							$("#search-sale").attr("c_product_id_error", "");
-// 						}, 200);
-// 					}
-// 				}
+					if (found < 0) {
+						$(this).val('');
+						$(this).attr("placeholder", "請輸入正確的客戶名稱!");
+					}
+				}
 			});
 // 			.bind('focus', function() {
 // 				$(this).attr("placeholder", "請輸入產品ID以供查詢");
 // 			});
 			
 			//處理新增的名稱autocomplete
-			$("#insert_product_name").autocomplete({
+			$("#insert_name").autocomplete({
 				minLength : 1,
 				source : function(request, response) {
 					getProductData(request, response, "NAME");
@@ -920,22 +909,40 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 					if (found < 0) {
 						$(this).val('');
-						$(this).attr("placeholder", "請輸入正確的產品名稱!");
+						$(this).attr("placeholder", "請輸入正確的客戶名稱!");
+					}
+				}
+			});
+			$("#update_name").autocomplete({
+				minLength : 1,
+				source : function(request, response) {
+					getProductData(request, response, "NAME");
+				},
+				change : function(event, ui) {
+					var source = $(this).val();
+					var temp = $(".ui-autocomplete li").map(function() {
+						return $(this).text()
+					});
+					var found = $.inArray(source, temp);
+
+					if (found < 0) {
+						$(this).val('');
+						$(this).attr("placeholder", "請輸入正確的客戶名稱!");
 					}
 				}
 			});
 			
-			$("#insert_product_name").bind('focus', function() {
-				$(this).attr("placeholder", "請輸入產品名稱以供查詢");
-			});
+// 			$("#insert_name").bind('focus', function() {
+// 				$(this).attr("placeholder", "請輸入客戶名稱以供查詢");
+// 			});
 			
 			//處理新增的自訂ID autocomplete
-			$("#insert_c_product_id").autocomplete({
-				minLength : 1,
-				source : function(request, response) {
-					console.log("source");
-					getProductData(request, response, "ID");
-				}
+// 			$("#insert_c_product_id").autocomplete({
+// 				minLength : 1,
+// 				source : function(request, response) {
+// 					console.log("source");
+// 					getProductData(request, response, "ID");
+// 				}
 // 				change : function(e, ui) {
 // 					console.log("change");
 // 					if (!ui.item) {
@@ -952,7 +959,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 // 							.attr("placeholder", "請輸入正確ID名稱!");
 // 					}
 // 				}
-			});
+//			});
 // 			.blur(function() {
 // 				console.log("blur");
 // 				$.ajax({
@@ -982,42 +989,35 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 // 				});
 // 			});
 			
-			$(["#insert_c_product_id", 
-				"#update_c_product_id",
-				"#insert_product_name",
-				"#update_product_name"
-					].join(",")).bind('autocompleteselect', function(e, ui) {
-				console.log("autocompleteselect");
-				
-				$this = $(this).closest("div");
-				
-				$this.find("input[name=c_product_id]").val( ui.item.c_product_id );
-				$this.find("input[name=product_name]").val( ui.item.product_name );
-				$this.find("input[name=price]").val( ui.item.price );
-				$this.find("input[name=quantity]").val( "1" );
-				$this.find("input[name$=product_price]").val( ui.item.price );
-				
-				product_id = ui.item.product_id;
-			});
-			
 			//處理修改的名稱autocomplete
-			$("#update_product_name").autocomplete({
-				minLength : 1,
-				source : function(request, response) {
-					getProductData(request, response, "NAME");
-				},
-				change : function(event, ui) {
-					var source = $(this).val();
-					var temp = $(".ui-autocomplete li").map(function() {
-						return $(this).text()
-					});
-					var found = $.inArray(source, temp);
+// 			$("#update_product_name").autocomplete({
+// 				minLength : 1,
+// 				source : function(request, response) {
+// 					getProductData(request, response, "NAME");
+// 				},
+// 				change : function(event, ui) {
+// 					var source = $(this).val();
+// 					var temp = $(".ui-autocomplete li").map(function() {
+// 						return $(this).text()
+// 					});
+// 					var found = $.inArray(source, temp);
 
-					if (found < 0) {
-						$(this).val('');
-						$(this).attr("placeholder", "請輸入正確的產品名稱!");
-					}
-				}
+// 					if (found < 0) {
+// 						$(this).val('');
+// 						$(this).attr("placeholder", "請輸入正確的產品名稱!");
+// 					}
+// 				}
+// 			});
+			
+			$(["#search_c_product_id", 
+				"#update_c_product_id", 
+				"#update_product_name",  
+				"#insert_c_product_id", 
+				"#update_product_name"].join(","))
+			.dblclick(function() {
+				$(this).autocomplete({
+					minLength : 0
+				});
 			});
 			
 			$("#update_product_name").bind('focus', function() {
@@ -1025,28 +1025,28 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			});
 			
 			//處理修改的自訂ID autocomplete
-			$("#update_c_product_id").autocomplete({
-				minLength : 1,
-				source : function(request, response) {
-					getProductData(request, response, "ID");
-				},
-				change : function(event, ui) {
-					var source = $(this).val();
-					var temp = $(".ui-autocomplete li").map(function() {
-						return $(this).text()
-					});
-					var found = $.inArray(source, temp);
+// 			$("#update_c_product_id").autocomplete({
+// 				minLength : 1,
+// 				source : function(request, response) {
+// 					getProductData(request, response, "ID");
+// 				},
+// 				change : function(event, ui) {
+// 					var source = $(this).val();
+// 					var temp = $(".ui-autocomplete li").map(function() {
+// 						return $(this).text()
+// 					});
+// 					var found = $.inArray(source, temp);
 
-					if (found < 0) {
-						$(this).val('');
-						$(this).attr("placeholder", "請輸入正確的ID名稱!");
-					}
-				}
-			});
+// 					if (found < 0) {
+// 						$(this).val('');
+// 						$(this).attr("placeholder", "請輸入正確的ID名稱!");
+// 					}
+// 				}
+// 			});
 			
-			$("#update_c_product_id").bind('focus', function() {
-				$(this).attr("placeholder", "請輸入ID名稱以供查詢");
-			});
+// 			$("#update_c_product_id").bind('focus', function() {
+// 				$(this).attr("placeholder", "請輸入ID名稱以供查詢");
+// 			});
 			
 // 			$("#update_quantity").change(function() {
 // 				$("#update_product_price").val(
@@ -1108,8 +1108,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			
 			auto_complete("insert-dialog-form-post input[name='name']", customer_tags);
 			auto_complete("update-dialog-form-post input[name='name']", customer_tags);
-			order_source_auto("insert-dialog-form-post input[name='order_source']");
-			order_source_auto("update-dialog-form-post input[name='order_source']");
+			order_source_auto("insert-dialog-form-post input[name='insert_order_source']");
+			order_source_auto("update-dialog-form-post input[name='update_order_source']");
+			auto_complete("order_source", customer_tags);
+			order_source_auto("order_source");
+			
 			
 			$("#warning").dialog({
 				title : "警告",
@@ -1156,18 +1159,19 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			});
 			
 			function getProductData(request, response, kind) {
+				
 				$.ajax({
-					url : "sale.do",
+					url : "realsale.do",
 					type : "POST",
 					cache : false,
 					delay : 1500,
 					data : {
-						action : "search_product_data",
+						action : "search_custom_data",
 						identity : kind,
 						term : request.term
 					},
 					success : function(data) {
-						console.log("getProductData By " + kind);
+						console.log("getCustomData By " + kind);
 						var json_obj = $.parseJSON(data);
 						var result = [];
 						
@@ -1180,22 +1184,22 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 							result = $.map(json_obj, function(item) {
 								var label = "", value = "";
 								
-								if (kind == "ID") {
-									label = item.c_product_id;
-									value = item.c_product_id;
-								} else if (kind == "NAME") {
-									label = item.product_name;
-									value = item.product_name;
-								}
-								
+								 if (kind == "NAME") {
+										label = item.name;
+										value = item.name;
+										$("#insert_customerid").val(item.customer_id);
+										$("#update_customerid").val(item.customer_id);
+										$("#customerid").val(item.customer_id);
+									}
+
 								return {
 									label : label,
-									value : value,
-									product_id : item.product_id,
-									product_name : item.product_name,
-									c_product_id : item.c_product_id,
-									price : item.price,
-									cost : item.cost
+									value : value
+// 									,product_id : item.product_id,
+// 									product_name : item.product_name,
+// 									c_product_id : item.c_product_id,
+// 									price : item.price,
+// 									cost : item.cost
 								}
 							});
 				     	}
@@ -1280,86 +1284,67 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 	<!-- button listener -->
 	<script>
-		$(function() {
-			var table = document.getElementById("sales");
-
-			$(table).delegate(".btn_list", "click", function(e) {
-				e.preventDefault();
-				
-				var row = $(this).closest("tr");
-			    var data = $("#sales").DataTable().row(row).data();
-			    
-				//declare object and options
-				var sale_id = data.sale_id;
-				var dataDialog;
-				var dialogId = "dialog-sale-detail";
-				var dom = "lfr<t>ip";
-				var oUrl = "sale.do"
-				var oWidth = 1200;
-				var formId = "dialog-form-sale-detail";
-				var tableId = "dialog-sale-detail-table";
-				var tableThs = "<th>銷貨單號</th><th>平台訂單號</th><th>產品名稱</th>"
-						+ "<th>自訂產品ID</th><th>銷貨數量</th><th>單價</th>"
-						+ "<th>發票號碼</th><th>發票日期</th><th>轉單日</th>"
-						+ "<th>銷貨/出貨日期</th><th>銷售平台</th><th>備註說明</th>";
-				var oColumnDefs = [];
-				var oColumns = [ {
-					"data" : "seq_no",
-					"defaultContent" : ""
-				}, {
-					"data" : "order_no",
-					"defaultContent" : ""
-				}, {
-					"data" : "product_name",
-					"defaultContent" : ""
-				}, {
-					"data" : "c_product_id",
-					"defaultContent" : ""
-				}, {
-					"data" : "quantity",
-					"defaultContent" : ""
-				}, {
-					"data" : "price",
-					"defaultContent" : ""
-				}, {
-					"data" : "invoice",
-					"defaultContent" : ""
-				}, {
-					"data" : "invoice_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "trans_list_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "sale_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "order_source",
-					"defaultContent" : ""
-				}, {
-					"data" : "memo",
-					"defaultContent" : ""
-				} ];
-				
-				var oData = {
-					"action" : "getSaleDetail",
-					"sale_id" : sale_id
-				};
-
-				//call method return dialog object to operate
-				dataDialog = drawDialog(dialogId, oUrl, oWidth, formId);
-
-				dataDialog
-					.dialog("option", "title", "銷售資料明細")
-					.dialog("open");
-
-				drawDialog(dialogId, oUrl, oWidth, formId);
-
-				//must be initialized to set table
-				rebuildTable(tableId, tableThs);
-				drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns)
-			});
+	$("#sales").on("click", ".btn_list", function(e) {
+		e.preventDefault();
+			
+		var row = $(this).closest("tr");
+	    var data = $("#sales").DataTable().row(row).data();
+	    
+		var tblDetail = $("#dialog-sale-detail-table").DataTable({
+			dom : "Blfr<t>ip",
+			destroy : true,
+			language : {
+				"url" : "js/dataTables_zh-tw.txt"
+			},
+			ajax : {
+				url : "realsale.do",
+				dataSrc : "",
+				type : "POST",
+				data : {
+					"action" : "getRealSaleDetail",
+					"realsale_id" : data.realsale_id
+				}
+			},
+			columns : [ 				
+				{"data" : "order_no", "defaultContent" : ""},
+				{"data" : "product_name", "defaultContent" : ""},
+				{"data" : "c_product_id", "defaultContent" : ""},
+				{"data" : "quantity", "defaultContent" : ""},
+				{"data" : "price", "defaultContent" : ""},
+				{"data" : "memo", "defaultContent" : ""}
+			],
+			buttons: [{
+				text: '新增明細', 
+				className: 'fa fa-plus',
+            	action: function ( e, dt, node, config ) {
+            		OpenDgDetailInsert();
+                }
+			}]
 		});
+		
+		var dgDetail = $("#dialog-sale-detail").dialog({
+			title: "銷售資料明細",
+			draggable : true,
+			resizable : false,
+			modal : true,
+			autoOpen: true,
+				show : {
+					effect : "blind",
+					duration : 500
+				},
+//				hide : {
+//					effect : "fade",
+//					duration : 300
+//				},
+			width : 1200,
+			close : function() {
+				$("#dialog-form-sale-detail").trigger("reset");
+			}
+		});
+		
+		$("#dialog-sale-detail")
+			.data("sale_id", data.sale_id);
+	});
 	</script>
 	
 </body>

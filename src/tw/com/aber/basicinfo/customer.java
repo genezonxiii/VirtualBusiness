@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.product.controller.product.ProductBean;
 import tw.com.aber.vo.CustomerVO;
 
 
@@ -202,8 +204,11 @@ public class customer extends HttpServlet {
 		private static final String sp_del_customer = "call sp_del_customer(?,?)";
 		private static final String sp_insert_customer = "call sp_insert_customer(?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_update_customer = "call sp_update_customer(?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_selectall_customer = "call sp_selectall_customer(?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+		private final String dbURLtmp = getServletConfig().getServletContext().getInitParameter("dbURLtmp")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
@@ -342,52 +347,67 @@ public class customer extends HttpServlet {
 
 		@Override
 		public List<CustomerVO> searchAllDB(String group_id) {
+			//use database: tmp
 
 			List<CustomerVO> list = new ArrayList<CustomerVO>();
-	
-        	String gidInBase64 = new String(Base64.encodeBase64String(group_id.getBytes()));
-//        	gidInBase64 = new String(Base64.encodeBase64String("cbcc3138-5603-11e6-a532-000d3a800878".getBytes()));
-			String url = wsPath + "/query/group=" + gidInBase64;
-        	HttpGet httpRequest = new HttpGet(url);
-        	HttpClient client = HttpClientBuilder.create().build();
-//        	System.out.println("gid: "+group_id);
-//        	System.out.println("wspath: "+wsPath);
-//        	System.out.println("url: "+url);
-        	
-        	HttpResponse httpResponse;
-        	try {
-        		StringBuffer result = new StringBuffer();
-        		httpResponse = client.execute(httpRequest);
-    			int responseCode = httpResponse.getStatusLine().getStatusCode();
-    
-    	    	if(responseCode==200){
-    	    		BufferedReader rd = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-        	    	String line = "";
-        	    	while ((line = rd.readLine()) != null) {
-        	    		result.append(line);
-        	    	}	
-    	    		Gson gson = new Gson();
-    	    		list = gson.fromJson(result.toString(), List.class);
-    	    	}
-    	    	else{
-    	    		System.out.println("responseCode: " + responseCode);
-    	    		System.out.println("fail to get data");
-    	    	}    	    	
-    		} catch (ClientProtocolException e) {
-    			
-    			e.printStackTrace();
-    		} catch (UnsupportedOperationException e) {
-    			
-    			e.printStackTrace();
-    		} catch (IOException e) {
-    			
-//    			e.printStackTrace();
-    			err="ConnectIOE Error: "+e.toString();
-    		}catch (Exception e){
-    			err="Connect Error: "+e.toString();
-    		}
+			CustomerVO customerVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURLtmp, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_selectall_customer);
+				pstmt.setString(1, group_id);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					customerVO = new CustomerVO();
+					customerVO.setCustomer_id(rs.getString("customer_id"));
+					customerVO.setGroup_id(rs.getString("customer_id"));
+					customerVO.setName(rs.getString("name"));
+					customerVO.setAddress(rs.getString("address"));
+					customerVO.setPhone(rs.getString("phone"));
+					customerVO.setMobile(rs.getString("mobile"));
+					customerVO.setEmail(rs.getString("email"));
+					customerVO.setPost(rs.getString("post"));
+					customerVO.setMemo(rs.getString("memo"));
+					
+					list.add(customerVO); // Store the row in the list
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
 			return list;
 		}
+
 		
 		@Override
 		public CustomerVO getEncodeData(CustomerVO customerVO) {
