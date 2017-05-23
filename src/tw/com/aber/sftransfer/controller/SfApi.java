@@ -318,8 +318,6 @@ public class SfApi {
 			item.setSkuNo(product.getC_product_id());
 			item.setItemName(product.getProduct_name());
 			
-			
-			
 			//Containers
 			SfContainer container = new SfContainer();
 			//先暫時放id 等之後再做查詢
@@ -339,29 +337,8 @@ public class SfApi {
 			itemList.add(item);
 			
 		}
-		
-		
-		
-		
-		String result;
-		
-		
-	
 
-		
-		
-		
-		
-		
-		/*String itemDescNo = this.genNo();
-		try {
-			String test = new String( "采购入库".getBytes("UTF-8") );
-			item.setDescription( "采购入库".concat(itemDescNo));
-		} catch (UnsupportedEncodingException uee) {
-			logger.error("UnsupportedEncodingException:" + uee.getMessage());
-		}*/
-		
-		
+		String result;
 		
 		Items items = new Items();
 		items.setItemList(itemList);
@@ -382,6 +359,47 @@ public class SfApi {
 		
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+        mainXML.setBody(body);
+		
+        StringWriter sw = new StringWriter();
+        JAXB.marshal(mainXML, sw);
+        logger.debug("--- start: output of marshalling ----");
+        logger.debug(sw.toString());
+        result = sw.toString();
+        logger.debug("--- end: output of marshalling ----");
+      
+        return result;
+	}
+	
+	public String genItemQueryService(List<ProductBean> productList) {
+		String result;
+		
+		List<String> skuNo = new ArrayList<String>();
+		
+		for (int i = 0; i < productList.size(); i++) {
+			ProductBean product = productList.get(i);
+			skuNo.add(product.getC_product_id());		
+		}
+		
+		SkuNoList skuNoList = new SkuNoList();
+		skuNoList.setSkuNo(skuNo);
+		
+		ItemQueryRequest itemQueryRequest = new ItemQueryRequest();
+		itemQueryRequest.setCompanyCode("WYDGJ");
+		itemQueryRequest.setSkuNoList(skuNoList);
+		
+		//head, body
+		Head head = new Head();
+		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
+		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+
+		Body body = new Body();
+		body.setItemQueryRequest(itemQueryRequest);
+		
+		Request mainXML = new Request();
+		mainXML.setService("ITEM_QUERY_SERVICE");
 		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
         mainXML.setBody(body);
@@ -994,7 +1012,7 @@ public class SfApi {
 		/*不可發送*/
 		//api.sendXML(genXML);
 	
-//		genXML = api.genItemQueryService();
+		//genXML = api.genItemQueryService();
 //		api.sendXML(genXML);
 
 //		genXML = api.genPurchaseOrderService();

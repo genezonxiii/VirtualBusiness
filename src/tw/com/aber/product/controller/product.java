@@ -282,23 +282,15 @@ public class product extends HttpServlet {
 				 ***************************************/
 				String c_product_ids = request.getParameter("c_product_ids");
 				
-				/*c_product_ids = c_product_ids.replace("~", "','");
+				c_product_ids = c_product_ids.replace("~", "','");
 
-				c_product_ids="'"+c_product_ids+"'";*/
-				
-				c_product_ids =c_product_ids.replace("~", ",");
-				
-//				System.out.println("c_product_ids:"+c_product_ids);
+				c_product_ids="'"+c_product_ids+"'";
+
 				productService = new ProductService();
 				
-				
-				System.out.println("isok"+"group_id:"+group_id+"c_product_ids"+c_product_ids);
+				logger.debug("productService.getProductbyc_Product_id:"+"group_id:"+group_id+"c_product_ids"+c_product_ids);
 				productList = productService.getProductbyc_Product_id(group_id, c_product_ids);
-			
-				
-				System.out.println("isok"+productList.size());
-				
-				
+
 				SfApi sfapi=new SfApi();
 				
 				sfapi.genItemService(productList);
@@ -309,7 +301,42 @@ public class product extends HttpServlet {
 			}
 			
 		}
+		
+		if("get_data_by_c_productc_id".equals(action)){
+			
+			List<ProductBean> productList = null;
+			
+			try {
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
+				String c_product_ids = request.getParameter("c_product_ids");
+				
+				c_product_ids = c_product_ids.replace("~", "','");
+
+				c_product_ids="'"+c_product_ids+"'";
+
+				productService = new ProductService();
+				
+				logger.debug("productService.getProductbyc_Product_id:"+"group_id:"+group_id+"c_product_ids"+c_product_ids);
+				productList = productService.getProductbyc_Product_id(group_id, c_product_ids);
+
+				SfApi sfapi=new SfApi();
+				
+				sfapi.genItemQueryService(productList);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+			
+		}
+		
+		
+		
 	}
+	
+	
 
 	/************************* 對應資料庫表格格式 **************************************/
 	public class ProductBean implements Serializable {
@@ -618,8 +645,6 @@ public class product extends HttpServlet {
 		}
 		
 		public List<ProductBean> getProductbyc_Product_id(String group_id, String c_product_ids){
-			
-			//return dao.searchAllDB(group_id);
 			return dao.getProductbyc_Product_id(group_id,c_product_ids);
 		}
 
@@ -639,12 +664,8 @@ public class product extends HttpServlet {
 		private static final String sp_get_type_byname = "call sp_select_type_byname (?,?)";
 		private static final String sp_get_unit_byname = "call sp_select_unit_byname (?,?)";
 		private static final String sp_check_ProductName = "call sp_check_ProductName (?,?,?)";
-		
-		private static final String sql_selecta_product_c_product_id = 
-				"sp_getProductbyc_Product_id(?,?)";
+		private static final String sp_getProductbyc_Product_id = "call sp_getProductbyc_Product_id(?,?)";
 
-		
-		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -1273,14 +1294,11 @@ public class product extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_insert_product);
+				pstmt = con.prepareStatement(sp_getProductbyc_Product_id);
 				
-				pstmt.setString(1, group_id);
+				pstmt.setString(1, "'"+group_id+"'");
 				pstmt.setString(2,c_product_ids);
 
-				System.out.println("havein2");
-				
-				
 				rs = pstmt.executeQuery();
 				
 				while (rs.next()) {

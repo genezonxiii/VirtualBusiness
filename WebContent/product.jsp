@@ -225,48 +225,46 @@
 							    },
 							    success: function(data) {
 							    	console.log('ok');
-							    	//var json_obj = $.parseJSON(data);
-							    	/*response($.map(json_obj, function (item) {
-							            return {
-							              label: item.supply_name,
-							              value: item.supply_name,
-							              supply_id : item.supply_id,
-							              supply_name : item.supply_name,*/
-							            }
+							     }
 							          }
 							    	
 							    	);
-				    	 
-				    	/* 
-							    },
-							    error: function(XMLHttpRequest, textStatus, errorThrown) {
-							        alert(textStatus);
-							    }
-							});*/
+
+				     }},{
+					     text : '查詢商品訊息',
+					     action : function(data,row) {
+					    	var c_product_ids='';
+					    	 
+					    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
+						    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
+						    		 
+						    		 if(i == (table.rows('.selected').data().length-1)){
+						    			 c_product_ids = c_product_ids + c_product_id;
+						    			 
+						    		 }else{
+						    			 c_product_ids = c_product_ids + c_product_id+'~';
+						    		 }
+					    		 }
+					    	 
+					    	 console.log(c_product_ids);
+					    	 $.ajax({
+								    url : "product.do",
+								    type : "POST",
+								    cache : false,
+								    delay : 1500,
+								    data : {
+								    	action : "get_data_by_c_productc_id",
+								    	c_product_ids : c_product_ids
+						
+								    },
+								    success: function(data) {
+								    	console.log('ok');
 		
-				    	/* for (var i = 0; i < table.rows(.selected).data().length; i++) { 
-				    		 
-				    		 
-				    		 
-				    		 
-				    	       //console.log( table.rows('.selected').data()[i].attributeNameFromYourself);
-				    	       console.log(i);
-				    	    }*/
-				
-				    	 //var data = $("#sales").dataTable().length;
-				    	 
-				    	// for(var i =0;i<)
-				    	 
-				    	//var data = $("#sales").dataTable().row( $(this).parents('tr') ).data();
-				    	//var data = $("#sales").dataTable().row(1).data();
-				    	
-				       /*alert( data[0] +"'s salary is: "+ data[ 5 ] );
-				    	 var data = $("#sales").dataTable()
-				    	    var tr = $(this).closest('tr');
-       						 var row = table.row( tr );*/
-				    	 
-				    	 //alert(data);
-				     }}
+								            }
+								          }
+					    	 );
+								    	
+					     }}
 				    
 		              ]
 			}
@@ -337,10 +335,6 @@
         });
 	    
 	    $(window).scannerDetection('success');
-	    
-	    
-	    
-	    
 
 	        var table = $('#sales').DataTable();
 	     
@@ -357,9 +351,6 @@
 	            }
 	            
 	            thisRow.toggleClass('selected');
-	    
-	          
-	         
 	        } );
 	     
 
