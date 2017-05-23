@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,7 +29,7 @@ import tw.com.aber.util.Util;
 import tw.com.aber.vo.ShipVO;
 
 public class ship extends HttpServlet {
-	
+
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(sale.class);
 
@@ -48,8 +47,8 @@ public class ship extends HttpServlet {
 
 		String groupId = request.getSession().getAttribute("group_id").toString();
 		String userId = request.getSession().getAttribute("user_id").toString();
-		
-		ShipService shipService =null;
+
+		ShipService shipService = null;
 
 		String action = request.getParameter("action");
 		logger.debug("Action:".concat(action));
@@ -77,44 +76,43 @@ public class ship extends HttpServlet {
 				}
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				service = new ShipService();
-				
+
 				rows = service.getSearchDB(groupId, startDate, endDate);
 				result = gson.toJson(rows);
-				
+
 				response.getWriter().write(result);
-			
-			}else if("sendToTelegraph".equals(action)){
-				
+
+			} else if ("sendToTelegraph".equals(action)) {
+
 				List<ShipVO> shipVOList = null;
-				
+
 				try {
 					/***************************
 					 * 1.接收請求參數
 					 ***************************************/
 					String ship_seq_nos = request.getParameter("ship_seq_nos");
-					
+
 					shipService = new ShipService();
-					
-					
+
 					ship_seq_nos = ship_seq_nos.replace(",", "','");
 
-					ship_seq_nos="'"+ship_seq_nos+"'";
-					
-					logger.debug("isok"+"group_id:"+groupId+"ship_seq_nos"+ship_seq_nos);
+					ship_seq_nos = "'" + ship_seq_nos + "'";
+
+					logger.debug("isok" + "group_id:" + groupId + "ship_seq_nos" + ship_seq_nos);
 
 					shipVOList = shipService.getShipByShipSeqNo(groupId, ship_seq_nos);
 
-					SfApi sfapi=new SfApi();
-					
-					//sfapi.(productList);
-					
+					SfApi sfapi = new SfApi();
+
+					// sfapi.(productList);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());
 				}
-				
+
 			}
-				
+
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
 		}
@@ -130,9 +128,9 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getSearchDB(String groupId, Date startDate, Date endDate) {
 			return dao.searchDB(groupId, startDate, endDate);
 		}
-		
-		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo,String groupId){
-			return dao.getShipByShipSeqNo(shipSeqNo,groupId);
+
+		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
+			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 		}
 	}
 
@@ -143,10 +141,10 @@ public class ship extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
-
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
 
-		private static final String sp_get_ship_by_shipseqno="call db_virtualbusiness.sp_get_ship_by_shipseqno(?,?);";
+		private static final String sp_get_ship_by_shipseqno = "call db_virtualbusiness.sp_get_ship_by_shipseqno(?,?);";
+
 		@Override
 		public List<ShipVO> searchDB(String groupId, Date startDate, Date endDate) {
 			List<ShipVO> rows = new ArrayList<ShipVO>();
@@ -205,9 +203,9 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
-		
+
 		@Override
-		public List<ShipVO> getShipByShipSeqNo(String shipSeqNos,String groupId) {
+		public List<ShipVO> getShipByShipSeqNo(String shipSeqNos, String groupId) {
 
 			List<ShipVO> rows = new ArrayList<ShipVO>();
 			ShipVO row = null;
@@ -222,7 +220,6 @@ public class ship extends HttpServlet {
 
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, shipSeqNos);
-			
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -270,7 +267,7 @@ public class ship extends HttpServlet {
 
 interface ship_interface {
 	public List<ShipVO> searchDB(String groupId, Date startDate, Date endDate);
-	
-	public List<ShipVO> getShipByShipSeqNo(String shipSeqNos,String groupID);
+
+	public List<ShipVO> getShipByShipSeqNo(String shipSeqNos, String groupID);
 
 }

@@ -34,7 +34,7 @@
 					<div class="input-field-wrap">
 						<div class="form-wrap">
 							<div class="form-row">
-								<form>
+								<form id = "form_master">
 									<label for=""> <span class="block-label">銷售起日</span> <input
 										type="text" name="start_date" class='input-date'>
 									</label>
@@ -75,9 +75,24 @@
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<script type="text/javascript">
+	$(function(){
+		$('#form_master').on("click", "button", function(e) {
+			e.preventDefault();
+
+			var parameter = {
+				action : "search",
+				startDate : $('#form_master input[name=start_date]').val(),
+				endDate : $('#form_master input[name=end_date]').val()
+			};
+			console.log(parameter);
+			drawMasterTable(parameter);
+		});		
+	});
+	</script>
+	<script type="text/javascript">
 	function drawMasterTable(parameter) {
 
-		masterDT = $("#stockmod-master-table").DataTable({
+		masterDT = $("#dt_master_ship").DataTable({
 			dom : "Blfr<t>ip",
 			//scrollY : "200px",
 			width : 'auto',
@@ -88,12 +103,16 @@
 				"emptyTable" : "查無資料",
 			},
 			ajax : {
-				url : "stockMod.do",
+				url : "ship.do",
 				dataSrc : "",
 				type : "POST",
 				data : parameter
 			},
-			columns : [ {
+			columns : [{
+				"title" : "批次請求",
+				"data" : null,
+				"defaultContent" : ""
+			},{
 				"title" : "出貨流水編號",
 				"data" : "ship_seq_no",
 				"defaultContent" : ""
@@ -129,23 +148,18 @@
 				"title" : "功能",
 				"data" : null,
 				"defaultContent" : ""
-			}, {
-				"title" : "批次刪除",
-				"data" : null,
-				"defaultContent" : ""
 			} ],
 			columnDefs : [ {
-				targets : -1,
+				targets : 0,
 				searchable : false,
 				orderable : false,
 				render : function(data, type, row) {
-					var stockmod_id = row.stockmod_id;
+					var ship_seq_no = row.ship_seq_no;
 
 					var input = document.createElement("INPUT");
 					input.type = 'checkbox';
 					input.name = 'checkbox-group-select';
-					input.id = stockmod_id;
-					//input.setAttribute('data-on','false');
+					input.id = ship_seq_no;
 
 					var span = document.createElement("SPAN");
 					span.className = 'form-label';
@@ -154,9 +168,9 @@
 					span.appendChild(text);
 
 					var label = document.createElement("LABEL");
-					label.htmlFor = row.stockmod_id;
+					label.htmlFor = ship_seq_no;
 					label.name = 'checkbox-group-select';
-					label.style.marginLeft = '40%';
+					label.style.marginLeft = '20%';
 					label.appendChild(span);
 
 					var options = $("<div/>").append(input, label);
@@ -165,7 +179,7 @@
 				}
 			}, {
 				//功能
-				targets : 8,
+				targets : 9,
 				searchable : false,
 				orderable : false,
 				render : function(data, type, row) {
@@ -220,7 +234,7 @@
 							});						
 				}
 			}, {
-				text : '批次刪除',
+				text : '發送電文',
 				action : function(e, dt, node, config) {
 					var $dtMaster =  $('#stockmod-master-table');
 					var delArr = '';
@@ -254,7 +268,7 @@
 						.dialog("open");					
 				}
 			}, {
-				text : '新增儲位異動',
+				text : '新增出貨',
 				action : function(e, dt, node, config) {
 					var dialogId = "dialog-data-process";
 					var formId = "dialog-form-data-process";

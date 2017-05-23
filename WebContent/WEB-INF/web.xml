@@ -550,7 +550,14 @@
 		<servlet-name>ShippingProcess</servlet-name>
 		<url-pattern>/shippingProcess.do</url-pattern>
 	</servlet-mapping>	
-	
+	<servlet>
+		<servlet-name>ship</servlet-name>
+		<servlet-class>tw.com.aber.ship.controller.ship</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ship</servlet-name>
+		<url-pattern>/ship.do</url-pattern>
+	</servlet-mapping>		
 	
 	
 	<filter>
