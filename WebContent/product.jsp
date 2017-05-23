@@ -94,13 +94,18 @@
 	<script src="js/photo/jquery.fileupload-validate.js"></script>
 	   
 	<script type="text/javascript" src="js/jquery-1.11.4.js"></script>
-	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+
 	<script type="text/javascript" src="js/photo/jquery-ui.js"></script>
 	<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="js/additional-methods.min.js"></script>
 	<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 	<script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+	
+	<!-- data table buttons -->
+	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 
 	<script>
 	var c_product_id_tags=[];
@@ -121,8 +126,8 @@
 			
 			table = 
 			$("#sales").DataTable({
+				dom : "lfrB<t>ip",
 				"language": {"url": "js/dataTables_zh-tw.txt"},
-				"order": [],
 				ajax: {
 					dataSrc: "",
 					type : "POST",
@@ -130,7 +135,7 @@
 					data : info
 				},
 		        columnDefs: [{
-				    targets:  8 ,
+				    targets:  10 ,
 					render: function ( data, type, row ) {
 						   var tmp =(row.photo==null?
 									   "":(row.photo.length<1)?
@@ -138,13 +143,23 @@
 					  	   return tmp;
 					}
 				},{
-				    targets:  9 ,
+				    targets:  11,
 					render: function ( data, type, row ) {
 						   var tmp =(row.photo1==null?
 								   "":(row.photo1.length<1)?
 										   "無圖片":"<img src=./image.do?picname="+row.photo1+" style='max-width:100px;max-height:100px'>");
 				  	       return tmp;
 					}
+				},{
+					targets: 0,
+					searchable: false,
+					orderable: false,
+					render: function ( data, type, row ) {
+						   var html =	"<input type='checkbox'   id = '" + row.product_id +"' style='position: static' >";
+					   			
+					  		return html;
+					}
+								
 				},{
 					targets: -1,
 					searchable: false,
@@ -165,7 +180,8 @@
 					}
 								
 				}],
-				columns: [
+				columns: [  
+				          {"data": null ,"defaultContent":""},
 				          {"data": "c_product_id" ,"defaultContent":""},
 				          {"data": "supply_name" ,"defaultContent":""},
 				          {"data": "product_name" ,"defaultContent":""},
@@ -179,8 +195,84 @@
 				          {"data": "photo1" ,"defaultContent":""},
 				          {"data": "barcode" ,"defaultContent":""},
 				          {"data": null ,"defaultContent":""},
-				]							
-			});
+				],
+				buttons : [ {
+				     text : '發送商品訊息',
+				     action : function(data,row) {
+				    	var c_product_ids='';
+				    	 
+				    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
+					    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
+					    		 
+					    		 if(i == (table.rows('.selected').data().length-1)){
+					    			 c_product_ids = c_product_ids + c_product_id;
+					    			 
+					    		 }else{
+					    			 c_product_ids = c_product_ids + c_product_id+'~';
+					    		 }
+				    		 }
+				    	 
+				    	 console.log(c_product_ids);
+				    	 $.ajax({
+							    url : "product.do",
+							    type : "POST",
+							    cache : false,
+							    delay : 1500,
+							    data : {
+							    	action : "send_data_by_c_productc_id",
+							    	c_product_ids : c_product_ids
+					
+							    },
+							    success: function(data) {
+							    	console.log('ok');
+							    	//var json_obj = $.parseJSON(data);
+							    	/*response($.map(json_obj, function (item) {
+							            return {
+							              label: item.supply_name,
+							              value: item.supply_name,
+							              supply_id : item.supply_id,
+							              supply_name : item.supply_name,*/
+							            }
+							          }
+							    	
+							    	);
+				    	 
+				    	/* 
+							    },
+							    error: function(XMLHttpRequest, textStatus, errorThrown) {
+							        alert(textStatus);
+							    }
+							});*/
+		
+				    	/* for (var i = 0; i < table.rows(.selected).data().length; i++) { 
+				    		 
+				    		 
+				    		 
+				    		 
+				    	       //console.log( table.rows('.selected').data()[i].attributeNameFromYourself);
+				    	       console.log(i);
+				    	    }*/
+				
+				    	 //var data = $("#sales").dataTable().length;
+				    	 
+				    	// for(var i =0;i<)
+				    	 
+				    	//var data = $("#sales").dataTable().row( $(this).parents('tr') ).data();
+				    	//var data = $("#sales").dataTable().row(1).data();
+				    	
+				       /*alert( data[0] +"'s salary is: "+ data[ 5 ] );
+				    	 var data = $("#sales").dataTable()
+				    	    var tr = $(this).closest('tr');
+       						 var row = table.row( tr );*/
+				    	 
+				    	 //alert(data);
+				     }}
+				    
+		              ]
+			}
+			
+			
+			);
 			
 			tooltip('btn_update');
 			tooltip('btn_delete');
@@ -245,6 +337,33 @@
         });
 	    
 	    $(window).scannerDetection('success');
+	    
+	    
+	    
+	    
+
+	        var table = $('#sales').DataTable();
+	     
+	        $('#sales').on( 'click', '.sorting_1', function () {
+	            var thisRow=$(this).parents('tr')
+	            var rowCheckBox = $(this).parent().find('input:checkbox:first')
+	            
+	            if(thisRow.hasClass("selected")){
+	           	 	rowCheckBox.prop("checked", false);
+	            	//console.log('true'+thisRow.hasClass("selected"));
+	            }else{
+	            	rowCheckBox.prop("checked", true);
+	            	//console.log('else'+thisRow.hasClass("selected"));
+	            }
+	            
+	            thisRow.toggleClass('selected');
+	    
+	          
+	         
+	        } );
+	     
+
+	    
 	});
 	
 	
@@ -1602,11 +1721,13 @@
 					</div>
 				</div>
 			</div>
+			
 			<div class="row search-result-wrap" align="center">
 				<div id="sales-contain" class="ui-widget" style="display:none;">
 					<table id="sales" class="result-table" >
 						<thead>
 							<tr>
+								<th>選項</th>
 								<th>自訂產品ID</th>
 								<th>供應商名稱</th>
 								<th style="min-width:100px;">產品名稱</th>

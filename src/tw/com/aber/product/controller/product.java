@@ -2,6 +2,7 @@ package tw.com.aber.product.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Array;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.vo.ProductTypeVO;
 import tw.com.aber.vo.SupplyVO;
 
@@ -258,6 +260,44 @@ public class product extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		
+		if("send_data_by_c_productc_id".equals(action)){
+			
+			List<ProductBean> productList = null;
+			
+			try {
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
+				String c_product_ids = request.getParameter("c_product_ids");
+				
+				/*c_product_ids = c_product_ids.replace("~", "','");
+
+				c_product_ids="'"+c_product_ids+"'";*/
+				
+				c_product_ids =c_product_ids.replace("~", ",");
+				
+//				System.out.println("c_product_ids:"+c_product_ids);
+				productService = new ProductService();
+				
+				
+				System.out.println("isok"+"group_id:"+group_id+"c_product_ids"+c_product_ids);
+				productList = productService.getProductbyc_Product_id(group_id, c_product_ids);
+			
+				
+				System.out.println("isok"+productList.size());
+				
+				
+				SfApi sfapi=new SfApi();
+				
+				sfapi.genItemService(productList);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+			
+		}
 	}
 
 	/************************* 對應資料庫表格格式 **************************************/
@@ -462,6 +502,8 @@ public class product extends HttpServlet {
 		public List<ProductBean> getsearchBarcode(String group_id, String barcode);
 
 		public String is_duplicate(String group_id, String product_name);
+		
+		public List<ProductBean> getProductbyc_Product_id(String group_id, String c_product_ids);
 	}
 
 	/*************************** 處理業務邏輯 ****************************************/
@@ -471,6 +513,7 @@ public class product extends HttpServlet {
 		public ProductService() {
 			dao = new ProductDAO();
 		}
+
 
 		public ProductBean addProduct(String group_id, String c_product_id, String product_name, String supply_id,
 				String supply_name, String type_id, String unit_id, Float cost, Float price, int current_stock,
@@ -562,6 +605,12 @@ public class product extends HttpServlet {
 		public String is_duplicate(String group_id, String product_name) {
 			return dao.is_duplicate(group_id, product_name);
 		}
+		
+		public List<ProductBean> getProductbyc_Product_id(String group_id, String c_product_ids){
+			
+			//return dao.searchAllDB(group_id);
+			return dao.getProductbyc_Product_id(group_id,c_product_ids);
+		}
 
 	}
 
@@ -579,7 +628,12 @@ public class product extends HttpServlet {
 		private static final String sp_get_type_byname = "call sp_select_type_byname (?,?)";
 		private static final String sp_get_unit_byname = "call sp_select_unit_byname (?,?)";
 		private static final String sp_check_ProductName = "call sp_check_ProductName (?,?,?)";
+		
+		private static final String sql_selecta_product_c_product_id = 
+				"sp_getProductbyc_Product_id(?,?)";
 
+		
+		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -1193,6 +1247,80 @@ public class product extends HttpServlet {
 			} else {
 				return "false";
 			}
+		}
+		
+		public List<ProductBean> getProductbyc_Product_id(String group_id,String c_product_ids){
+			
+		System.out.println(c_product_ids);
+			List<ProductBean> list = new ArrayList<ProductBean>();
+			ProductBean productBean = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_insert_product);
+				
+				pstmt.setString(1, group_id);
+				pstmt.setString(2,c_product_ids);
+
+				System.out.println("havein2");
+				
+				
+				rs = pstmt.executeQuery();
+				
+				while (rs.next()) {
+					productBean = new ProductBean();
+					productBean.setProduct_id(rs.getString("product_id"));
+					productBean.setGroup_id(rs.getString("group_id"));
+					productBean.setC_product_id(rs.getString("c_product_id"));
+					productBean.setProduct_name(rs.getString("product_name"));
+					productBean.setSupply_id(rs.getString("supply_id"));
+					productBean.setSupply_name(rs.getString("supply_name"));
+					productBean.setType_id(rs.getString("type_id"));
+					productBean.setUnit_id(rs.getString("unit_id"));
+					productBean.setCost(rs.getFloat("cost"));
+					productBean.setPrice(rs.getFloat("price"));
+					productBean.setKeep_stock(rs.getInt("keep_stock"));
+					productBean.setPhoto(rs.getString("photo"));
+					productBean.setPhoto1(rs.getString("photo1"));
+					productBean.setDescription(rs.getString("description"));
+					productBean.setBarcode(rs.getString("barcode"));
+					list.add(productBean);
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
 		}
 	}
 }

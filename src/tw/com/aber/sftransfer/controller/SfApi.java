@@ -24,6 +24,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import tw.com.aber.product.controller.product.ProductBean;
 import tw.com.aber.sf.vo.BarCode;
 import tw.com.aber.sf.vo.Body;
 import tw.com.aber.sf.vo.CancelPurchaseOrderRequest;
@@ -306,40 +307,68 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 
-	public String genItemService() {
-		String result;
+	public String genItemService(List<ProductBean> productList) {
 		
 		List<SfItem> itemList = new ArrayList<SfItem>();
 		
-		//Containers
-		SfContainer container = new SfContainer();
-		container.setPackUm("CS");
+		for (int i = 0; i < productList.size(); i++) {
+			ProductBean product = productList.get(i);
+			
+			SfItem item = new SfItem();
+			item.setSkuNo(product.getC_product_id());
+			item.setItemName(product.getProduct_name());
+			
+			
+			
+			//Containers
+			SfContainer container = new SfContainer();
+			//先暫時放id 等之後再做查詢
+			container.setPackUm("CS");
+			//product.getUnit_id()
+			
+			Containers containers = new Containers();
+			containers.setContainer(container);
+			
+			//item1
+			BarCode barCode = new BarCode();
+			barCode.setBarCode1(product.getBarcode());
+			
+			item.setBarCode(barCode);
+			item.setContainers(containers);
+			
+			itemList.add(item);
+			
+		}
 		
-		Containers containers = new Containers();
-		containers.setContainer(container);
 		
-		//item1
-		BarCode barCode = new BarCode();
-		barCode.setBarCode1("12345");
 		
-		SfItem item = new SfItem();
-		item.setSkuNo("PY3001ASF");
-		item.setItemName("採購入庫");
 		
-		String itemDescNo = this.genNo();
+		String result;
+		
+		
+	
+
+		
+		
+		
+		
+		
+		/*String itemDescNo = this.genNo();
 		try {
 			String test = new String( "采购入库".getBytes("UTF-8") );
 			item.setDescription( "采购入库".concat(itemDescNo));
 		} catch (UnsupportedEncodingException uee) {
 			logger.error("UnsupportedEncodingException:" + uee.getMessage());
-		}
+		}*/
 		
-		itemList.add(item);
+		
 		
 		Items items = new Items();
 		items.setItemList(itemList);
 		
 		ItemRequest itemRequest = new ItemRequest();
+		
+		//不確定是否要改
 		itemRequest.setCompanyCode("WYDGJ");
 		itemRequest.setItems(items);
 		
@@ -957,10 +986,13 @@ public class SfApi {
 	
 	public static void main(String[] args){
 		SfApi api = new SfApi();		
-		String genXML = "";
+//		String genXML = "";
+//		
+//		genXML = api.genItemService();
 		
-		genXML = api.genItemService();
-		api.sendXML(genXML);
+		
+		/*不可發送*/
+		//api.sendXML(genXML);
 	
 //		genXML = api.genItemQueryService();
 //		api.sendXML(genXML);
