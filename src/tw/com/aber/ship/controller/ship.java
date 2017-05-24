@@ -93,16 +93,16 @@ public class ship extends HttpServlet {
 					String ship_seq_nos = request.getParameter("ship_seq_nos");
 
 					shipService = new ShipService();
-					ship_seq_nos="201705170057,201705160060,201705170054";
 					ship_seq_nos = ship_seq_nos.replace(",", "','");
 
 					ship_seq_nos = "'" + ship_seq_nos + "'";
 
-					logger.debug("isok" + "group_id:" + groupId + "ship_seq_nos" + ship_seq_nos);
+					logger.debug("isok111" + "group_id:" + groupId + "ship_seq_nos" + ship_seq_nos);
 
-					shipVOList = shipService.getShipByShipSeqNo("'"+groupId+"'", ship_seq_nos);
+					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos,"'"+groupId+"'");
 
 					SfApi sfapi = new SfApi();
+					
 
 					// sfapi.(productList);
 
@@ -143,7 +143,7 @@ public class ship extends HttpServlet {
 
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
 
-		private static final String sp_get_ship_by_shipseqno = "call db_virtualbusiness.sp_get_ship_by_shipseqno(?,?);";
+		private static final String sp_get_ship_by_shipseqno = "call db_virtualbusiness.sp_get_ship_by_shipseqno(?,?)";
 
 		@Override
 		public List<ShipVO> searchDB(String groupId, Date startDate, Date endDate) {
@@ -218,6 +218,7 @@ public class ship extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_ship_by_shipseqno);
 
+				logger.debug("groupId:"+groupId+"shipSeqNos:"+shipSeqNos);
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, shipSeqNos);
 
