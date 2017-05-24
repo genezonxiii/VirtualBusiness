@@ -21,7 +21,7 @@ public class ShipVO implements Serializable {
 	private String deliver_name;
 	private String deliver_to;
 	private Date v_sale_date; // tb_realsale
-	private List<ShipDeatil> shipDeatil;
+	private List<ShipDetail> shipDetail;
 
 	public String getShip_id() {
 		return ship_id;
@@ -127,12 +127,12 @@ public class ShipVO implements Serializable {
 		this.v_sale_date = v_sale_date;
 	}
 
-	public List<ShipDeatil> getShipDeatil() {
-		return shipDeatil;
+	public List<ShipDetail> getShipDeatil() {
+		return shipDetail;
 	}
 
-	public void setShipDeatil(List<ShipDeatil> shipDeatil) {
-		this.shipDeatil = shipDeatil;
+	public void setShipDeatil(List<ShipDetail> shipDeatil) {
+		this.shipDetail = shipDeatil;
 	}
 
 }

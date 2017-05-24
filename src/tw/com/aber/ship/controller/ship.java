@@ -26,6 +26,7 @@ import com.google.gson.GsonBuilder;
 import tw.com.aber.sale.controller.sale;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
 
 public class ship extends HttpServlet {
@@ -218,12 +219,14 @@ public class ship extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_ship_by_shipseqno);
 
-				logger.debug("groupId:"+groupId+"shipSeqNos:"+shipSeqNos);
+				logger.debug("getShipByShipSeqNo groupId:"+groupId+"shipSeqNos:"+shipSeqNos);
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, shipSeqNos);
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
+					List<ShipDetail> shipDetailList= new ArrayList<ShipDetail>();
+					
 					row = new ShipVO();
 					row.setShip_id(rs.getString("ship_id"));
 					row.setShip_seq_no(rs.getString("ship_seq_no"));
