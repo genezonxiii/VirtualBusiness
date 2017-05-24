@@ -291,8 +291,7 @@
 					$checkboxs.each(function() {
 						noArr += this.id + ',';
 					});
-					noArr.slice(0,-1);
-					
+					noArr = noArr.slice(0,-1);
 					$.ajax({
 						url: 'ship.do', 
 						type: 'post',
@@ -311,7 +310,8 @@
 								.dialog('option', 'minHeight', 'auto')
 								.dialog("open");
 						}
-					});					
+					});		
+					console.log(noArr);			
 // 					var dialogId = "dialog-data-process";
 // 					var formId = "dialog-form-data-process";
 // 					var btnTxt_1 = "批次刪除";
@@ -373,7 +373,7 @@
 		    infoValidation = false;
 		  }
 		  return infoValidation;
-	}	
+	}
 	</script>
 </body>
 </html>
