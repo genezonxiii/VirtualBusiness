@@ -50,6 +50,7 @@ import tw.com.aber.sf.vo.SaleOrders;
 import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
+import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
 
 public class SfApi {
@@ -723,58 +724,43 @@ public class SfApi {
 	
 	//new
 	public String genSaleOrderService(List<ShipVO> shipList) {
-		
-
-		List<OrderItem> orderItemList = new ArrayList<OrderItem>();
-		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
-		List<SfItem> itemList = new ArrayList<SfItem>();
-
-		for (int i = 0; i < shipList.size(); i++) {
-			ShipVO shipVO = shipList.get(i);
-			
-			SfItem item = new SfItem();
-			//item.setSkuNo(skuNo);
-			
-		}
-		
 		String result;
 		
-		
-		//item1
-		OrderItem orderItem = new OrderItem();
-		orderItem.setSkuNo("PY3001ASF");
-		orderItem.setItemQuantity("1");
-		
-		orderItemList.add(orderItem);
-		
-		//item2
-		OrderItem orderItem2 = new OrderItem();
-		orderItem2.setSkuNo("PY3001AMF");
-		orderItem2.setItemQuantity("1");
-		
-		orderItemList.add(orderItem2);
-		
+		List<OrderItem> orderItemList =null; 
+		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
 		OrderItems orderItems = new OrderItems();
-		orderItems.setOrderItem(orderItemList);
+	
+		for (int i = 0; i < shipList.size(); i++) {
+			ShipVO shipVO = shipList.get(i);
+			List<ShipDetail> shipDetailList = shipVO.getShipDeatil();
+
+			orderItemList = new ArrayList<OrderItem>();
+			for(int j = 0;j<shipDetailList.size();j++){
+				ShipDetail shipDetail = shipDetailList.get(j);
+				//item1
+				OrderItem orderItem = new OrderItem();
+				orderItem.setSkuNo(shipDetail.getC_product_id());
+				orderItem.setItemQuantity(shipDetail.getQuantity().toString());
+				orderItemList.add(orderItem);
+			}
+			orderItems.setOrderItem(orderItemList);
+			OrderReceiverInfo orderReceiverInfo = new OrderReceiverInfo();
+			orderReceiverInfo.setReceiverCompany("個人");
+			orderReceiverInfo.setReceiverName(shipVO.getName());
+			orderReceiverInfo.setReceiverZipCode("");//郵遞區號暫不填待資料完整
+			orderReceiverInfo.setReceiverMobile("");//電話號碼暫不填待資料完整
+			orderReceiverInfo.setReceiverCountry("台灣");//國家暫填台灣 之後會改
+			orderReceiverInfo.setReceiverAddress(shipVO.getDeliver_to());
+			orderReceiverInfo.setOrderItems(orderItems);
+			
+			SaleOrder saleOrder = new SaleOrder();
+			saleOrder.setWarehouseCode("571DCF");/*由順豐提供 資料未定*/
+			saleOrder.setSfOrderType("销售订单");
+			saleOrder.setErpOrder(shipVO.getOrder_no());
+			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
+			saleOrderList.add(saleOrder);
+		}
 		
-		OrderReceiverInfo orderReceiverInfo = new OrderReceiverInfo();
-		orderReceiverInfo.setReceiverCompany("北祥");
-		orderReceiverInfo.setReceiverName("收件人");
-		orderReceiverInfo.setReceiverZipCode("114");
-		orderReceiverInfo.setReceiverMobile("0912345678");
-		orderReceiverInfo.setReceiverCountry("台灣");
-		orderReceiverInfo.setReceiverAddress("台北市內湖區文湖街18號");
-		orderReceiverInfo.setOrderItems(orderItems);
-		
-		String saleNo = this.genNo();
-		
-		SaleOrder saleOrder = new SaleOrder();
-		saleOrder.setWarehouseCode("571DCF");
-		saleOrder.setSfOrderType("销售订单");
-		saleOrder.setErpOrder("SI".concat(saleNo));
-		saleOrder.setOrderReceiverInfo(orderReceiverInfo);
-		
-		saleOrderList.add(saleOrder);
 		
 		SaleOrders saleOrders = new SaleOrders();
 		saleOrders.setSaleOrder(saleOrderList);
