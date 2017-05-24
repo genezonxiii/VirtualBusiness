@@ -183,10 +183,6 @@
 				"title" : "收件地點",
 				"data" : "deliver_to",
 				"defaultContent" : ""
-			}, {
-				"title" : "功能",
-				"data" : null,
-				"defaultContent" : ""
 			} ],
 			columnDefs : [ {
 				targets : 0,
@@ -213,39 +209,6 @@
 					label.appendChild(span);
 
 					var options = $("<div/>").append(input, label);
-
-					return options.html();
-				}
-			}, {
-				//功能
-				targets : 9,
-				searchable : false,
-				orderable : false,
-				render : function(data, type, row) {
-
-					var options = $("<div/>").append($("<div/>", {
-						"class" : "table-row-func btn-in-table btn-gray"
-					}).append($("<i/>", {
-						"class" : "fa fa-ellipsis-h"
-					})).append($("<div/>", {
-						"class" : "table-function-list"
-					}).append($("<button/>", {
-						"class" : "btn-in-table btn-darkblue btn_update",
-						"title" : "修改"
-					}).append($("<i/>", {
-						"class" : "fa fa-pencil"
-					}))).append($("<button/>", {
-						"class": "btn-in-table btn-green btn_list",
-						"title": "清單"
-					}).append( $("<i/>", {
-						"class": "fa fa-pencil-square-o"
-					}))).append($("<button/>", {
-						"class" : "btn-in-table btn-alert btn_delete",
-						"title" : "刪除",
-						"name" : row.stockmod_id
-					}).append($("<i/>", {
-						"class" : "fa fa-trash"
-					})))));
 
 					return options.html();
 				}
@@ -311,40 +274,7 @@
 								.dialog("open");
 						}
 					});		
-					console.log(noArr);			
-// 					var dialogId = "dialog-data-process";
-// 					var formId = "dialog-form-data-process";
-// 					var btnTxt_1 = "批次刪除";
-// 					var btnTxt_2 = "取消";
-// 					var oWidth = 'auto';
-// 					var url = 'stockMod.do';
-
-// 					$checkboxs.each(function() {
-// 						delArr += this.id + ',';
-// 					});
-// 					delArr.slice(0,-1);
-					
-// 					initDeleteDialog();
-// 					drawDialog
-// 						(dialogId, url, oWidth, formId, btnTxt_1, btnTxt_2)
-// 						.data("stockmodId",delArr)
-// 						.dialog("option","title","刪除"+ $checkboxs.length +"筆資料")
-// 						.dialog("open");					
-				}
-			}, {
-				text : '新增出貨',
-				action : function(e, dt, node, config) {
-					var dialogId = "dialog-data-process";
-					var formId = "dialog-form-data-process";
-					var btnTxt_1 = "新增儲位異動";
-					var btnTxt_2 = "取消";
-					var oWidth = 'auto';
-					var oUrl = 'stockMod.do';
-
-					initDialog();
-					drawDialog(dialogId, oUrl, oWidth, formId, btnTxt_1, btnTxt_2)
-						.dialog("option","title",btnTxt_1)
-						.dialog('open');
+					console.log(noArr);				
 				}
 			} ]
 		});

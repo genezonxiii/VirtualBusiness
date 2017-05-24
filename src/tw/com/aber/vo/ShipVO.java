@@ -2,6 +2,7 @@ package tw.com.aber.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 public class ShipVO implements Serializable {
 
@@ -19,7 +20,8 @@ public class ShipVO implements Serializable {
 	private Float total_amt;
 	private String deliver_name;
 	private String deliver_to;
-	private Date sale_date;
+	private Date v_sale_date; // tb_realsale
+	private List<ShipDeatil> shipDeatil;
 
 	public String getShip_id() {
 		return ship_id;
@@ -117,12 +119,20 @@ public class ShipVO implements Serializable {
 		this.deliver_to = deliver_to;
 	}
 
-	public Date getSale_date() {
-		return sale_date;
+	public Date getV_sale_date() {
+		return v_sale_date;
 	}
 
-	public void setSale_date(Date sale_date) {
-		this.sale_date = sale_date;
+	public void setV_sale_date(Date v_sale_date) {
+		this.v_sale_date = v_sale_date;
+	}
+
+	public List<ShipDeatil> getShipDeatil() {
+		return shipDeatil;
+	}
+
+	public void setShipDeatil(List<ShipDeatil> shipDeatil) {
+		this.shipDeatil = shipDeatil;
 	}
 
 }
