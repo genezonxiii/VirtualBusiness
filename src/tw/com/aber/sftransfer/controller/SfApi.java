@@ -50,6 +50,7 @@ import tw.com.aber.sf.vo.SaleOrders;
 import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
+import tw.com.aber.vo.ShipVO;
 
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
@@ -540,6 +541,8 @@ public class SfApi {
         return result;
 	}
 	
+
+	
 	public String genPurchaseOrderInboundQueryService(String po) {
 		String result;
 		
@@ -650,6 +653,92 @@ public class SfApi {
 		
 		List<OrderItem> orderItemList = new ArrayList<OrderItem>();
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
+		
+		//item1
+		OrderItem orderItem = new OrderItem();
+		orderItem.setSkuNo("PY3001ASF");
+		orderItem.setItemQuantity("1");
+		
+		orderItemList.add(orderItem);
+		
+		//item2
+		OrderItem orderItem2 = new OrderItem();
+		orderItem2.setSkuNo("PY3001AMF");
+		orderItem2.setItemQuantity("1");
+		
+		orderItemList.add(orderItem2);
+		
+		OrderItems orderItems = new OrderItems();
+		orderItems.setOrderItem(orderItemList);
+		
+		OrderReceiverInfo orderReceiverInfo = new OrderReceiverInfo();
+		orderReceiverInfo.setReceiverCompany("北祥");
+		orderReceiverInfo.setReceiverName("收件人");
+		orderReceiverInfo.setReceiverZipCode("114");
+		orderReceiverInfo.setReceiverMobile("0912345678");
+		orderReceiverInfo.setReceiverCountry("台灣");
+		orderReceiverInfo.setReceiverAddress("台北市內湖區文湖街18號");
+		orderReceiverInfo.setOrderItems(orderItems);
+		
+		String saleNo = this.genNo();
+		
+		SaleOrder saleOrder = new SaleOrder();
+		saleOrder.setWarehouseCode("571DCF");
+		saleOrder.setSfOrderType("销售订单");
+		saleOrder.setErpOrder("SI".concat(saleNo));
+		saleOrder.setOrderReceiverInfo(orderReceiverInfo);
+		
+		saleOrderList.add(saleOrder);
+		
+		SaleOrders saleOrders = new SaleOrders();
+		saleOrders.setSaleOrder(saleOrderList);
+		
+		SaleOrderRequest saleOrderRequest = new SaleOrderRequest();
+		saleOrderRequest.setCompanyCode("WYDGJ");
+		saleOrderRequest.setSaleOrders(saleOrders);
+		
+		//head, body
+		Head head = new Head();
+		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
+		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+	
+		Body body = new Body();
+		body.setSaleOrderRequest(saleOrderRequest);
+		
+		Request mainXML = new Request();
+		mainXML.setService("SALE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+	    mainXML.setBody(body);
+		
+	    StringWriter sw = new StringWriter();
+	    JAXB.marshal(mainXML, sw);
+	    logger.debug("--- start: output of marshalling ----");
+	    logger.debug(sw.toString());
+	    result = sw.toString();
+	    logger.debug("--- end: output of marshalling ----");
+	    
+	    return result;
+	}
+	
+	//new
+	public String genSaleOrderService(List<ShipVO> shipList) {
+		
+
+		List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
+		List<SfItem> itemList = new ArrayList<SfItem>();
+
+		for (int i = 0; i < shipList.size(); i++) {
+			ShipVO shipVO = shipList.get(i);
+			
+			SfItem item = new SfItem();
+			//item.setSkuNo(skuNo);
+			
+		}
+		
+		String result;
+		
 		
 		//item1
 		OrderItem orderItem = new OrderItem();
