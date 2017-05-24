@@ -34,6 +34,14 @@
 					<div class="input-field-wrap">
 						<div class="form-wrap">
 							<div class="form-row">
+								<form id = "form_no">
+									<label for=""> <span class="block-label">訂單編號</span> <input
+										type="text" name="order_no">
+									</label>
+									<button class="btn btn-darkblue">查詢</button>
+								</form>
+							</div>
+							<div class="form-row">
 								<form id = "form_date">
 									<label for=""> <span class="block-label">銷售起日</span> <input
 										type="text" name="start_date" class='input-date'>
@@ -75,10 +83,39 @@
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<script>
-	var $dtMaster = null;
+	var $dtMaster = null; //主要datatable
+	var selectCount = 0; //全選按鈕計算用
 	</script>
 	<script type="text/javascript">
 	$(function(){
+		$('#form_no').on("click", "button", function(e) {
+			e.preventDefault();
+			
+			var errorMes = '';
+			var $mes = $('#message #text');
+			var $orderNo = $('#form_no input[name=order_no]').val();
+			console.log($.trim($orderNo).length);
+			if($.trim($orderNo).length == 0){
+				errorMes += "請輸入訂單編號!";
+			}
+
+			if(errorMes.length > 0){
+				$mes.val('').html(errorMes);
+				$('#message')
+					.dialog()
+					.dialog('option', 'title', '警告')
+					.dialog('option', 'width', 'auto')
+					.dialog('option', 'minHeight', 'auto')
+					.dialog("open");
+				return false;
+			}
+			var parameter = {
+				action : "searchByOrderNo",
+				orderNo : $orderNo
+			};
+			console.log(parameter);
+			drawMasterTable(parameter);
+		});		
 		$('#form_date').on("click", "button", function(e) {
 			e.preventDefault();
 			var $startDate = $('#form_date input:eq(0)').val();
@@ -114,7 +151,7 @@
 				return false;
 			}
 			var parameter = {
-				action : "search",
+				action : "searchBySaleDate",
 				startDate : $startDate,
 				endDate : $endDate
 			};
@@ -218,21 +255,19 @@
 				action : function(e, dt, node, config) {
 
 					selectCount++;
-					console.log('selectCount: '+ selectCount);
-					var $dtMaster =  $('#stockmod-master-table');
-					var $checkboxs = $dtMaster.find('input[name=checkbox-group-select]');
-
-					console.log('selectCount % 2 : ' + selectCount % 2);
-					
+					var $table =  $('#dt_master_ship');
+					var $checkboxs = $table.find('input[name=checkbox-group-select]');
 					
 					selectCount %2 != 1 ?
 							$checkboxs.each(function() {
 								$(this).prop("checked", false);
 								$(this).removeClass("toggleon");
+					        	$(this).closest("tr").removeClass("selected");
 							}): 
 							$checkboxs.each(function() {
 								$(this).prop("checked", true);
 								$(this).addClass("toggleon");
+								$(this).closest("tr").addClass("selected");
 							});						
 				}
 			}, {
