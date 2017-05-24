@@ -176,7 +176,7 @@ public class ship extends HttpServlet {
 					row.setTotal_amt(rs.getFloat("total_amt"));
 					row.setDeliver_name(rs.getString("deliver_name"));
 					row.setDeliver_to(rs.getString("deliver_to"));
-					row.setSale_date(rs.getDate("sale_date"));
+					row.setV_sale_date(rs.getDate("sale_date"));
 
 					rows.add(row);
 				}
