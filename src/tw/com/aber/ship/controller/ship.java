@@ -93,14 +93,14 @@ public class ship extends HttpServlet {
 					String ship_seq_nos = request.getParameter("ship_seq_nos");
 
 					shipService = new ShipService();
-
+					ship_seq_nos="201705170057,201705160060,201705170054";
 					ship_seq_nos = ship_seq_nos.replace(",", "','");
 
 					ship_seq_nos = "'" + ship_seq_nos + "'";
 
 					logger.debug("isok" + "group_id:" + groupId + "ship_seq_nos" + ship_seq_nos);
 
-					shipVOList = shipService.getShipByShipSeqNo(groupId, ship_seq_nos);
+					shipVOList = shipService.getShipByShipSeqNo("'"+groupId+"'", ship_seq_nos);
 
 					SfApi sfapi = new SfApi();
 
