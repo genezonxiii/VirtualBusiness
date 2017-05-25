@@ -125,6 +125,36 @@ public class ship extends HttpServlet {
 					System.out.println(e.getMessage());
 				}
 
+			}else if("sendToCancelSaleOrderService".equals(action)){
+				
+				List<ShipVO> shipVOList = null;
+				try {
+					/***************************
+					 * 1.接收請求參數
+					 ***************************************/
+					String ship_seq_nos = request.getParameter("ship_seq_nos");
+
+					shipService = new ShipService();
+					ship_seq_nos = ship_seq_nos.replace(",", "','");
+
+					ship_seq_nos = "'" + ship_seq_nos + "'";
+
+					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
+
+					SfApi sfapi = new SfApi();
+					logger.debug("ship_seq_nos ="+ship_seq_nos );
+					sfapi.genCancelSaleOrderService(shipVOList,groupId);
+
+					// sfapi.(productList);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}
+
+			
+				
+				
 			}
 
 		} catch (Exception e) {
