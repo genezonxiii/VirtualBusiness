@@ -112,11 +112,11 @@ public class ship extends HttpServlet {
 
 					ship_seq_nos = "'" + ship_seq_nos + "'";
 
-					logger.debug("isok111" + "group_id:" + groupId + "ship_seq_nos" + ship_seq_nos);
-
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
 					SfApi sfapi = new SfApi();
+					logger.debug("havein sfapi = new SfApi();");
+					sfapi.genSaleOrderService(shipVOList,groupId);
 
 					// sfapi.(productList);
 
@@ -132,7 +132,7 @@ public class ship extends HttpServlet {
 		}
 	}
 
-	class ShipService {
+	public class ShipService {
 		private ship_interface dao;
 
 		public ShipService() {
@@ -225,12 +225,19 @@ public class ship extends HttpServlet {
 		@Override
 		public List<ShipVO> getShipByShipSeqNo(String shipSeqNos, String groupId) {
 
-			List<ShipVO> rows = new ArrayList<ShipVO>();
-			ShipVO row = null;
+			List<ShipVO> shipVOList = new ArrayList<ShipVO>();
+			ShipVO shipVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
+			
+			List<ShipDetail> shipDetailList = null;
+			ShipDetail shipDetail = null;
+			
+			String ship_id_Record = null;
+			String ship_id_now ="";
+			
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
@@ -242,21 +249,55 @@ public class ship extends HttpServlet {
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					List<ShipDetail> shipDetailList = new ArrayList<ShipDetail>();
+					
+					//sp 為ship sd 為shipDetail
+					shipDetail = new ShipDetail();
+					shipDetail.setC_product_id(rs.getString("sd_c_product_id"));
+					shipDetail.setDeliveryway(rs.getString("sd_deliveryway"));
+					shipDetail.setGroup_id(rs.getString("sd_group_id"));
+					shipDetail.setMemo(rs.getString("sd_memo"));
+					shipDetail.setPrice(rs.getString("sd_price"));
+					shipDetail.setProduct_id(rs.getString("sd_product_id"));
+					shipDetail.setProduct_name(rs.getString("sd_product_name"));
+					
+					String sd_quantity = rs.getString("sd_quantity");
+					
+					if (!(sd_quantity == null || "".equals(sd_quantity))){
+						shipDetail.setQuantity(Integer.parseInt(sd_quantity));
+					}
+					shipDetail.setShip_id(rs.getString("sd_ship_id"));
+					shipDetail.setShipDetail_id(rs.getString("sd_shipDetail_id"));
+					shipDetail.setUser_id(rs.getString("sd_user_id"));
 
-					row = new ShipVO();
-					row.setShip_id(rs.getString("ship_id"));
-					row.setShip_seq_no(rs.getString("ship_seq_no"));
-					row.setGroup_id(rs.getString("group_id"));
-					row.setOrder_no(rs.getString("order_no"));
-					row.setUser_id(rs.getString("user_id"));
-					row.setCustomer_id(rs.getString("customer_id"));
-					row.setMemo(rs.getString("memo"));
-					row.setDeliveryway(rs.getString("deliveryway"));
-					row.setTotal_amt(rs.getFloat("total_amt"));
-					row.setDeliver_name(rs.getString("deliver_name"));
-					row.setDeliver_to(rs.getString("deliver_to"));
-					rows.add(row);
+					//如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
+					//所以要新增出貨明細
+					logger.debug("ship_id_now:"+ship_id_now);
+					logger.debug("ship_id_Record:"+ship_id_Record);
+					ship_id_now = rs.getString("sp_ship_id");
+					if((!ship_id_now.equals(ship_id_Record))||rs.isFirst()){
+						shipDetailList = new ArrayList<ShipDetail>();
+						
+						//並且紀錄出貨明細
+						shipVO = new ShipVO();
+						shipVO.setShip_id(rs.getString("sp_ship_id"));
+
+						shipVO.setShip_seq_no(rs.getString("sp_ship_seq_no"));
+						shipVO.setGroup_id(rs.getString("sp_group_id"));
+						shipVO.setOrder_no(rs.getString("sp_order_no"));
+						shipVO.setUser_id(rs.getString("sp_user_id"));
+						shipVO.setCustomer_id(rs.getString("sp_customer_id"));
+						shipVO.setMemo(rs.getString("sp_memo"));
+						shipVO.setDeliveryway(rs.getString("sp_deliveryway"));
+						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
+						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
+						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
+						shipVO.setShipDeatil(shipDetailList);
+						shipVOList.add(shipVO);
+						
+						ship_id_Record = ship_id_now;
+					}
+
+					shipDetailList.add(shipDetail);
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -279,7 +320,7 @@ public class ship extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
-			return rows;
+			return shipVOList;
 
 		}
 
