@@ -39,7 +39,18 @@
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
 <script type="text/javascript" src="js/scripts.js"></script>
+
+<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
+<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 <script>
+$(document).ready(function($) {
+
+	
+	
+	
+	
+});
 function draw_purchase(parameter){
 	$("#purchases_contain_row").css({"opacity":"0"});
 	warning_msg("---讀取中請稍候---");
@@ -86,6 +97,7 @@ function draw_purchase(parameter){
 							}
 							result_table 
 							+= "<tr>"
+							+ "<td>"+"<input type='checkbox' id='"+json_obj[i].seq_no+"box' style='position: static' >"+"</td>"
 							+ "<td name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+ "</td>"
 							+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 							+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
@@ -102,11 +114,87 @@ function draw_purchase(parameter){
 						}
 					});
 				}
-				$("#purchases").dataTable().fnDestroy();
+				var table = $("#purchases").dataTable().fnDestroy();
+				
+				
+				
+				
 				if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 					$("#purchases_contain_row").hide();
 					$("#purchases tbody").html(result_table);
 					$("#purchases").dataTable({
+						dom : "lfrB<t>ip",
+						buttons : [ {
+						     text : '入庫單接口',
+						     action : function(data,row) {
+						    	var pk_ids='';
+						    	 
+						    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
+							    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
+							    		 
+							    		 if(i == (table.rows('.selected').data().length-1)){
+							    			 c_product_ids = c_product_ids + c_product_id;
+							    			 
+							    		 }else{
+							    			 c_product_ids = c_product_ids + c_product_id+'~';
+							    		 }
+						    		 }
+						    	 
+						    	 console.log(c_product_ids);
+						    	 $.ajax({
+									    url : "product.do",
+									    type : "POST",
+									    cache : false,
+									    delay : 1500,
+									    data : {
+									    	action : "send_data_by_c_productc_id",
+									    	c_product_ids : c_product_ids
+							
+									    },
+									    success: function(data) {
+									    	console.log('ok');
+									     }
+									          }
+									    	
+									    	);
+
+						     }},{
+							     text : '入庫單接口',
+							     action : function(data,row) {
+							    	/*var c_product_ids='';
+							    	 
+							    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
+								    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
+								    		 
+								    		 if(i == (table.rows('.selected').data().length-1)){
+								    			 c_product_ids = c_product_ids + c_product_id;
+								    			 
+								    		 }else{
+								    			 c_product_ids = c_product_ids + c_product_id+'~';
+								    		 }
+							    		 }*/
+							    	 
+							    	 console.log(c_product_ids);
+							    	 $.ajax({
+											    url : "product.do",
+											    type : "POST",
+											    cache : false,
+											    delay : 1500,
+											    data : {
+											    	action : "get_data_by_c_productc_id",
+											    	c_product_ids : c_product_ids
+									
+											    },
+											    success: function(data) {
+											    	console.log('ok');
+											    }
+										    }
+							    	 	  );
+										    	
+							     }}
+						    
+				              ],
+						
 						  autoWidth: false,
 						  scrollX:  true,
 				          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
@@ -1254,6 +1342,7 @@ function draw_purchase_detail(parameter){
 					<table id="purchases" class="result-table">
 						<thead>
 							<tr>
+								<th>批次請求</th>
 								<th>進貨單號</th>
 								<th>進貨日期</th>
 								<th style="background-image: none !important;">進貨發票號碼</th>

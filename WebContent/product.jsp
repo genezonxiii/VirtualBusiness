@@ -67,7 +67,7 @@
 	<link href="<c:url value="css/css.css" />" rel="stylesheet">
 	<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
 <%-- 	<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet"> --%>
-	
+	<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 	
 	<script src="js/photo/jquery.min.js"></script>
 	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
@@ -106,7 +106,7 @@
 	<!-- data table buttons -->
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
-
+	<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 	<script>
 	var c_product_id_tags=[];
 	var product_name_tags=[];
