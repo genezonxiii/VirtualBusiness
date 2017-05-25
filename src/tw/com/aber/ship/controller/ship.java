@@ -32,7 +32,7 @@ import tw.com.aber.vo.ShipVO;
 public class ship extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(sale.class);
+	private static final Logger logger = LogManager.getLogger(ship.class);
 
 	private Util util = new Util();
 
