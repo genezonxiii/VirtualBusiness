@@ -20,6 +20,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.vo.PackageVO;
+import tw.com.aber.vo.ShipVO;
+
 public class productpackage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -219,11 +222,72 @@ public class productpackage extends HttpServlet {
 		private static final String sp_update_package_master = "call sp_update_package_master(?,?,?,?,?,?,?);";
 		private static final String sp_delete_package_master = "call sp_delete_package_master(?);";
 
+		private static final String sp_get_all_package_info = "call sp_get_all_package_info(?,?)";
+		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
+		public PackageVO getAllPackageInfo(String groupId, String packageIds){
+			PackageVO packageVO = new PackageVO();
+			List<tw.com.aber.vo.ProductPackageVO> rows = new ArrayList<tw.com.aber.vo.ProductPackageVO>();
+			ShipVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_all_package_info);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, packageIds);
+
+				rs = pstmt.executeQuery();
+//				while (rs.next()) {
+//					row = new ShipVO();
+//					row.setShip_id(rs.getString("ship_id"));
+//					row.setShip_seq_no(rs.getString("ship_seq_no"));
+//					row.setGroup_id(rs.getString("group_id"));
+//					row.setOrder_no(rs.getString("order_no"));
+//					row.setUser_id(rs.getString("user_id"));
+//					row.setCustomer_id(rs.getString("customer_id"));
+//					row.setMemo(rs.getString("memo"));
+//					row.setDeliveryway(rs.getString("deliveryway"));
+//					row.setTotal_amt(rs.getFloat("total_amt"));
+//					row.setDeliver_name(rs.getString("deliver_name"));
+//					row.setDeliver_to(rs.getString("deliver_to"));
+//					row.setV_sale_date(rs.getDate("sale_date"));
+//
+//					rows.add(row);
+//				}
+				packageVO.setProductPackageList(rows);
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return packageVO;		
+		}
 		public void deletepackagesdetail(String package_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
