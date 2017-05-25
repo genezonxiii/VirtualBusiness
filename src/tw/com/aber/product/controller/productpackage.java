@@ -20,7 +20,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.vo.PackageVO;
+import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
 
 public class productpackage extends HttpServlet {
@@ -60,8 +62,6 @@ public class productpackage extends HttpServlet {
 			word = word == null ? "" : word;
 			ProductVO[] parents = dao.searchpackages(group_id, word);
 			Gson gson = new Gson();
-			logger.debug("------------------------------");
-			logger.debug(gson.toJson(parents));
 			response.getWriter().write(gson.toJson(parents));
 			return;
 		} else if ("insert".equals(action)) {
@@ -163,7 +163,13 @@ public class productpackage extends HttpServlet {
 			Gson gson = new Gson();
 			response.getWriter().write(gson.toJson(parents));
 		} else if ("sendToTelegraph".equals(action)) {
-			String package_ids = request.getParameter("package_ids");
+			String packageIds = request.getParameter("package_ids");
+			//packageIds = "'f45d98e3-3ef3-4ff5-8b1d-d71f8864327d','c550aeda-84c4-421a-b41d-1a5c32c99835'";
+			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
+			//logger.debug(new Gson().toJson(packageVOList));
+			//response.getWriter().write(new Gson().toJson(packageVOList));
+			SfApi sfApi = new SfApi();
+			sfApi.genBomService(packageVOList, group_id);
 		}
 		return;
 	}
@@ -223,17 +229,21 @@ public class productpackage extends HttpServlet {
 		private static final String sp_delete_package_master = "call sp_delete_package_master(?);";
 
 		private static final String sp_get_all_package_info = "call sp_get_all_package_info(?,?)";
-		
+
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
-		public PackageVO getAllPackageInfo(String groupId, String packageIds){
-			PackageVO packageVO = new PackageVO();
-			List<tw.com.aber.vo.ProductPackageVO> rows = new ArrayList<tw.com.aber.vo.ProductPackageVO>();
-			ShipVO row = null;
+		public List<tw.com.aber.vo.PackageVO> getAllPackageInfo(String groupId, String packageIds) {
+			PackageVO packageVO = null;
+
+			List<tw.com.aber.vo.PackageVO> packageVOList = new ArrayList<tw.com.aber.vo.PackageVO>();
+			List<tw.com.aber.vo.PackageVO> masterList = null;
+			List<tw.com.aber.vo.ProductPackageVO> detailList = null;
+			tw.com.aber.vo.ProductPackageVO productPackageVO = null;
+			tw.com.aber.vo.ProductVO productVO = null;
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -247,24 +257,33 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(2, packageIds);
 
 				rs = pstmt.executeQuery();
-//				while (rs.next()) {
-//					row = new ShipVO();
-//					row.setShip_id(rs.getString("ship_id"));
-//					row.setShip_seq_no(rs.getString("ship_seq_no"));
-//					row.setGroup_id(rs.getString("group_id"));
-//					row.setOrder_no(rs.getString("order_no"));
-//					row.setUser_id(rs.getString("user_id"));
-//					row.setCustomer_id(rs.getString("customer_id"));
-//					row.setMemo(rs.getString("memo"));
-//					row.setDeliveryway(rs.getString("deliveryway"));
-//					row.setTotal_amt(rs.getFloat("total_amt"));
-//					row.setDeliver_name(rs.getString("deliver_name"));
-//					row.setDeliver_to(rs.getString("deliver_to"));
-//					row.setV_sale_date(rs.getDate("sale_date"));
-//
-//					rows.add(row);
-//				}
-				packageVO.setProductPackageList(rows);
+				String bomId = "", bomId_now = "";
+
+				while (rs.next()) {
+					productVO = new tw.com.aber.vo.ProductVO();
+					productVO.setC_product_id(rs.getString("itemSkuNo"));
+
+					productPackageVO = new tw.com.aber.vo.ProductPackageVO();
+					productPackageVO.setProductVO(productVO);
+					productPackageVO.setQuantity(rs.getString("itemQuantity"));
+
+					bomId_now = rs.getString("bomId");
+
+					if ((!bomId_now.equals(bomId))) {
+						detailList = new ArrayList<tw.com.aber.vo.ProductPackageVO>();
+
+						packageVO = new PackageVO();
+						packageVO.setC_package_id(rs.getString("bomSkuNo"));
+						packageVO.setProductPackageList(detailList);
+
+						packageVOList.add(packageVO);
+
+						bomId = bomId_now;
+					}
+
+					detailList.add(productPackageVO);
+				}
+
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -286,8 +305,9 @@ public class productpackage extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
-			return packageVO;		
+			return packageVOList;
 		}
+
 		public void deletepackagesdetail(String package_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;

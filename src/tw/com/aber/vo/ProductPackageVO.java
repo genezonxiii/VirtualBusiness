@@ -12,6 +12,16 @@ public class ProductPackageVO implements Serializable {
 	private String quantity;
 	private String package_desc;
 
+	private ProductVO productVO;
+
+	public ProductVO getProductVO() {
+		return productVO;
+	}
+
+	public void setProductVO(ProductVO productVO) {
+		this.productVO = productVO;
+	}
+
 	public String getPackage_id() {
 		return package_id;
 	}
