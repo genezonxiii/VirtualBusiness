@@ -32,7 +32,7 @@ import tw.com.aber.vo.ShipVO;
 public class ship extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(sale.class);
+	private static final Logger logger = LogManager.getLogger(ship.class);
 
 	private Util util = new Util();
 
@@ -112,12 +112,11 @@ public class ship extends HttpServlet {
 
 					ship_seq_nos = "'" + ship_seq_nos + "'";
 
-					logger.debug("isok111" + "group_id:" + groupId + "ship_seq_nos" + ship_seq_nos);
-
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
 					SfApi sfapi = new SfApi();
-					sfapi.genSaleOrderService(shipVOList);
+					logger.debug("havein sfapi = new SfApi();");
+					sfapi.genSaleOrderService(shipVOList,groupId);
 
 					// sfapi.(productList);
 
@@ -133,7 +132,7 @@ public class ship extends HttpServlet {
 		}
 	}
 
-	class ShipService {
+	public class ShipService {
 		private ship_interface dao;
 
 		public ShipService() {
@@ -237,7 +236,7 @@ public class ship extends HttpServlet {
 			ShipDetail shipDetail = null;
 			
 			String ship_id_Record = null;
-			String ship_id_now =null;
+			String ship_id_now ="";
 			
 			try {
 				Class.forName(jdbcDriver);
@@ -250,50 +249,8 @@ public class ship extends HttpServlet {
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
+					
 					//sp 為ship sd 為shipDetail
-					if(rs.first()){
-						ship_id_Record = rs.getString("sp_ship_id");
-						shipVO = new ShipVO();
-						shipVO.setShip_id(rs.getString("sp_ship_id"));
-						ship_id_now = rs.getString("sp_ship_id");
-						
-						shipVO.setShip_seq_no(rs.getString("sp_ship_seq_no"));
-						shipVO.setGroup_id(rs.getString("sp_group_id"));
-						shipVO.setOrder_no(rs.getString("sp_order_no"));
-						shipVO.setUser_id(rs.getString("sp_user_id"));
-						shipVO.setCustomer_id(rs.getString("sp_customer_id"));
-						shipVO.setMemo(rs.getString("sp_memo"));
-						shipVO.setDeliveryway(rs.getString("sp_deliveryway"));
-						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
-						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
-						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
-					}
-					
-					
-					
-					//如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
-					//所以要新增出貨明細
-					if(!ship_id_now.equals(ship_id_Record)){
-						ship_id_Record = ship_id_now;
-						shipDetailList = new ArrayList<ShipDetail>();
-						
-						//並且紀錄出貨明細
-						shipVO = new ShipVO();
-						shipVO.setShip_id(rs.getString("sp_ship_id"));
-						ship_id_now = rs.getString("sp_ship_id");
-						
-						shipVO.setShip_seq_no(rs.getString("sp_ship_seq_no"));
-						shipVO.setGroup_id(rs.getString("sp_group_id"));
-						shipVO.setOrder_no(rs.getString("sp_order_no"));
-						shipVO.setUser_id(rs.getString("sp_user_id"));
-						shipVO.setCustomer_id(rs.getString("sp_customer_id"));
-						shipVO.setMemo(rs.getString("sp_memo"));
-						shipVO.setDeliveryway(rs.getString("sp_deliveryway"));
-						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
-						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
-						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
-					}
-					
 					shipDetail = new ShipDetail();
 					shipDetail.setC_product_id(rs.getString("sd_c_product_id"));
 					shipDetail.setDeliveryway(rs.getString("sd_deliveryway"));
@@ -305,16 +262,42 @@ public class ship extends HttpServlet {
 					
 					String sd_quantity = rs.getString("sd_quantity");
 					
-					if (!(sd_quantity==null || "".equals(sd_quantity))){
+					if (!(sd_quantity == null || "".equals(sd_quantity))){
 						shipDetail.setQuantity(Integer.parseInt(sd_quantity));
 					}
 					shipDetail.setShip_id(rs.getString("sd_ship_id"));
 					shipDetail.setShipDetail_id(rs.getString("sd_shipDetail_id"));
 					shipDetail.setUser_id(rs.getString("sd_user_id"));
 
-					shipVO.setShipDeatil(shipDetailList);
+					//如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
+					//所以要新增出貨明細
+					logger.debug("ship_id_now:"+ship_id_now);
+					logger.debug("ship_id_Record:"+ship_id_Record);
+					ship_id_now = rs.getString("sp_ship_id");
+					if((!ship_id_now.equals(ship_id_Record))||rs.isFirst()){
+						shipDetailList = new ArrayList<ShipDetail>();
+						
+						//並且紀錄出貨明細
+						shipVO = new ShipVO();
+						shipVO.setShip_id(rs.getString("sp_ship_id"));
 
-					shipVOList.add(shipVO);
+						shipVO.setShip_seq_no(rs.getString("sp_ship_seq_no"));
+						shipVO.setGroup_id(rs.getString("sp_group_id"));
+						shipVO.setOrder_no(rs.getString("sp_order_no"));
+						shipVO.setUser_id(rs.getString("sp_user_id"));
+						shipVO.setCustomer_id(rs.getString("sp_customer_id"));
+						shipVO.setMemo(rs.getString("sp_memo"));
+						shipVO.setDeliveryway(rs.getString("sp_deliveryway"));
+						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
+						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
+						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
+						shipVO.setShipDeatil(shipDetailList);
+						shipVOList.add(shipVO);
+						
+						ship_id_Record = ship_id_now;
+					}
+
+					shipDetailList.add(shipDetail);
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());

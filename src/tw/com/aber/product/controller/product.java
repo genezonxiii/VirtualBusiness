@@ -272,6 +272,7 @@ public class product extends HttpServlet {
 			}
 		}
 		
+		//獲得發送訊息電文
 		if("send_data_by_c_productc_id".equals(action)){
 			
 			List<ProductBean> productList = null;
@@ -293,7 +294,7 @@ public class product extends HttpServlet {
 
 				SfApi sfapi=new SfApi();
 				
-				sfapi.genItemService(productList);
+				sfapi.genItemService(productList,group_id);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -302,6 +303,7 @@ public class product extends HttpServlet {
 			
 		}
 		
+		//獲得產品訊息電文
 		if("get_data_by_c_productc_id".equals(action)){
 			
 			List<ProductBean> productList = null;
@@ -323,7 +325,7 @@ public class product extends HttpServlet {
 
 				SfApi sfapi=new SfApi();
 				
-				sfapi.genItemQueryService(productList);
+				sfapi.genItemQueryService(productList,group_id);
 				
 			} catch (Exception e) {
 				e.printStackTrace();

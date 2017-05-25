@@ -50,8 +50,11 @@ import tw.com.aber.sf.vo.SaleOrders;
 import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
+import tw.com.aber.sftransfer.controller.ValueService.ValueService_Service;
+import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
+import tw.com.aber.vo.WarehouseVO;
 
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
@@ -309,7 +312,7 @@ public class SfApi {
 		"</Body>" +
 		"</Request>";
 
-	public String genItemService(List<ProductBean> productList) {
+	public String genItemService(List<ProductBean> productList,String groudId) {
 		
 		List<SfItem> itemList = new ArrayList<SfItem>();
 		
@@ -347,14 +350,20 @@ public class SfApi {
 		
 		ItemRequest itemRequest = new ItemRequest();
 		
+		ValueService valueService = new ValueService();
+		
+		ValueService_Service valueService_Service = valueService.new ValueService_Service();
+		
+		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+
 		//不確定是否要改
-		itemRequest.setCompanyCode("WYDGJ");
+		itemRequest.setCompanyCode(groupSfVo.getCompany_code());
 		itemRequest.setItems(items);
 		
 		//head, body
 		Head head = new Head();
-		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
-		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
 
 		Body body = new Body();
 		body.setItemRequest(itemRequest);
@@ -375,8 +384,13 @@ public class SfApi {
         return result;
 	}
 	
-	public String genItemQueryService(List<ProductBean> productList) {
+	public String genItemQueryService(List<ProductBean> productList,String groudId) {
 		String result;
+		
+		ValueService valueService = new ValueService();
+		ValueService_Service valueService_Service = valueService.new ValueService_Service();
+		
+		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
 		
 		List<String> skuNo = new ArrayList<String>();
 		
@@ -389,13 +403,13 @@ public class SfApi {
 		skuNoList.setSkuNo(skuNo);
 		
 		ItemQueryRequest itemQueryRequest = new ItemQueryRequest();
-		itemQueryRequest.setCompanyCode("WYDGJ");
+		itemQueryRequest.setCompanyCode(groupSfVo.getCompany_code());
 		itemQueryRequest.setSkuNoList(skuNoList);
 		
 		//head, body
 		Head head = new Head();
-		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
-		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
 
 		Body body = new Body();
 		body.setItemQueryRequest(itemQueryRequest);
@@ -723,24 +737,35 @@ public class SfApi {
 	}
 	
 	//new
-	public String genSaleOrderService(List<ShipVO> shipList) {
+	public String genSaleOrderService(List<ShipVO> shipList,String groudId) {
 		String result;
+		
+		ValueService valueService = new ValueService();
+		ValueService_Service valueService_Service = valueService.new ValueService_Service();
+		
+		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+		WarehouseVO  warehouseVoByGroudId =valueService_Service.getWarehouseVoByGroudId(groudId);
+
+		
+		logger.debug("genSaleOrderService:"+shipList.size() );
 		
 		List<OrderItem> orderItemList =null; 
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
 		OrderItems orderItems = new OrderItems();
 	
 		for (int i = 0; i < shipList.size(); i++) {
+			logger.debug("i:" +i);
 			ShipVO shipVO = shipList.get(i);
 			List<ShipDetail> shipDetailList = shipVO.getShipDeatil();
 
 			orderItemList = new ArrayList<OrderItem>();
 			for(int j = 0;j<shipDetailList.size();j++){
 				ShipDetail shipDetail = shipDetailList.get(j);
+				logger.debug("shipDetail:"+shipDetail+shipDetail.getQuantity());
 				//item1
 				OrderItem orderItem = new OrderItem();
 				orderItem.setSkuNo(shipDetail.getC_product_id());
-				orderItem.setItemQuantity(shipDetail.getQuantity().toString());
+				orderItem.setItemQuantity((shipDetail.getQuantity() == null ? null:shipDetail.getQuantity().toString()));
 				orderItemList.add(orderItem);
 			}
 			orderItems.setOrderItem(orderItemList);
@@ -754,7 +779,7 @@ public class SfApi {
 			orderReceiverInfo.setOrderItems(orderItems);
 			
 			SaleOrder saleOrder = new SaleOrder();
-			saleOrder.setWarehouseCode("571DCF");/*由順豐提供 資料未定*/
+			saleOrder.setWarehouseCode(warehouseVoByGroudId.getWarehouse_code());/*由順豐提供 資料未定*/
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
@@ -766,13 +791,13 @@ public class SfApi {
 		saleOrders.setSaleOrder(saleOrderList);
 		
 		SaleOrderRequest saleOrderRequest = new SaleOrderRequest();
-		saleOrderRequest.setCompanyCode("WYDGJ");
+		saleOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
 		saleOrderRequest.setSaleOrders(saleOrders);
 		
 		//head, body
 		Head head = new Head();
-		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
-		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
 	
 		Body body = new Body();
 		body.setSaleOrderRequest(saleOrderRequest);
