@@ -63,11 +63,13 @@
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
 <script type="text/javascript" src="js/jquery.scannerdetection.js"></script>
-
+<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <script>
 	var product_list = [];
 	var information;
-	
+	var selectCount = 0;
+	var $dtMaster = null;
 	function draw_product_package(info){
 		warning_msg("---讀取中請稍候---");
 		$.ajax({
@@ -82,8 +84,31 @@
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
 						if(i<json_obj.length){
+							console.log(json_obj);
+							var package_id = json_obj[i].product_id;
+
+							var input = document.createElement("INPUT");
+							input.type = 'checkbox';
+							input.name = 'checkbox-group-select';
+							input.id = package_id;
+
+							var span = document.createElement("SPAN");
+							span.className = 'form-label';
+
+							var text = document.createTextNode('選取');
+							span.appendChild(text);
+
+							var label = document.createElement("LABEL");
+							label.htmlFor = package_id;
+							label.name = 'checkbox-group-select';
+							label.style.marginLeft = '10%';
+							label.appendChild(span);
+
+							var options = $("<div/>").append(input, label);
+							
 							result_table 
 							+= "<tr>"
+							+ "<td>"+ options.html() +"</td>"
 							+ "<td name='c_package_id' value='"+ json_obj[i].c_product_id +"'>"+ json_obj[i].c_product_id+ "</td>"
 							+ "<td name='package_name' value='"+ json_obj[i].product_name +"'>"+ json_obj[i].product_name+ "</td>"
 							+ "<td name='type' value='"+ json_obj[i].type_id +"'>"+ json_obj[i].type_id+ "</td>"
@@ -105,11 +130,76 @@
 				if(json_obj.length>0){
 					$("#package-contain").show();
 					$("#package tbody").html(result_table);
-					$("#package").dataTable({
+					$dtMaster = $("#package").dataTable({
+						dom : "Blfr<t>ip",
 						autoWidth: false,
 						scrollX:  true,
 						scrollY:"300px",
-						"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
+						"language": {"url": "js/dataTables_zh-tw.txt"},"order": [],
+						buttons : [ {
+							text : '全選',
+							action : function(e, dt, node, config) {
+
+								selectCount++;
+								var $table =  $('#package');
+								var $checkboxs = $table.find('input[name=checkbox-group-select]');
+								
+								selectCount %2 != 1 ?
+										$checkboxs.each(function() {
+											$(this).prop("checked", false);
+											$(this).removeClass("toggleon");
+								        	$(this).closest("tr").removeClass("selected");
+										}): 
+										$checkboxs.each(function() {
+											$(this).prop("checked", true);
+											$(this).addClass("toggleon");
+											$(this).closest("tr").addClass("selected");
+										});						
+							}
+						}, {
+							text : '發送電文',
+							action : function(e, dt, node, config) {
+								var $table =  $('#package');
+
+							    var cells = $dtMaster.fnGetNodes();
+								var idArr = '';
+								
+								var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+								
+								
+								if($checkboxs.length == 0){
+									alert('請至少選擇一筆資料');
+									return false;
+								}
+								$checkboxs.each(function() {
+									idArr += this.id + ',';
+								});
+								idArr = idArr.slice(0,-1);
+								idArr = idArr.replace(/,/g,"','");
+								idArr = "'" + idArr + "'";
+								
+								$.ajax({
+									url: 'productpackage.do', 
+									type: 'post',
+									data: {
+										action: 'sendToTelegraph',
+										package_ids: idArr
+									},
+									error: function (xhr) { },
+									success: function (response) {
+										var $mes = $('#message #text');
+										$mes.val('').html('成功發送');
+										$('#message')
+											.dialog()
+											.dialog('option', 'title', '提示訊息')
+											.dialog('option', 'width', 'auto')
+											.dialog('option', 'minHeight', 'auto')
+											.dialog("open");
+									}
+								});		
+								console.log('idArr: '+ idArr);		
+							}
+						} ]});
 					tooltip('btn_update');
 					tooltip('btn_delete');
 					tooltip('btn_detail');
@@ -228,7 +318,12 @@
 				package_desc: {}
 			}
 		});
-		
+
+	    $('#package').on('change', ':checkbox', function() {
+	        $(this).is(":checked")?
+	        	$(this).closest("tr").addClass("selected"):
+	        	$(this).closest("tr").removeClass("selected");
+	    });		
 		//新增Package Dialog
 		$("#dialog-insert-package").dialog({
 			draggable : true, resizable : false, autoOpen : false,
@@ -857,6 +952,7 @@
 					<table id="package" class="result-table" >
 						<thead>
 							<tr>
+								<th>批次請求</th>
 								<th>自訂組合包ID</th>
 								<th>組合包名稱</th>
 								<th>組合包規格</th>

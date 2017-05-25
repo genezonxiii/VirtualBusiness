@@ -20,11 +20,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.vo.PackageVO;
+import tw.com.aber.vo.ShipVO;
+
 public class productpackage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-	private static final Logger logger = LogManager.getLogger(productpackage.class);
 
+	private static final Logger logger = LogManager.getLogger(productpackage.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -47,17 +49,19 @@ public class productpackage extends HttpServlet {
 		String action = request.getParameter("action");
 		ProductPackageDAO dao = new ProductPackageDAO();
 		List<ProductPackageVO> list = new ArrayList<ProductPackageVO>();
-		
+
 		logger.debug("Action: " + action);
 
 		if ("search".equals(action)) {
 			String word = request.getParameter("word");
-			
+
 			logger.debug("word: " + word);
-			
+
 			word = word == null ? "" : word;
 			ProductVO[] parents = dao.searchpackages(group_id, word);
 			Gson gson = new Gson();
+			logger.debug("------------------------------");
+			logger.debug(gson.toJson(parents));
 			response.getWriter().write(gson.toJson(parents));
 			return;
 		} else if ("insert".equals(action)) {
@@ -68,7 +72,7 @@ public class productpackage extends HttpServlet {
 			String package_type = request.getParameter("package_type");
 			String barcode = request.getParameter("barcode");
 			String description = request.getParameter("description");
-			
+
 			logger.debug("c_package_id:" + c_package_id);
 			logger.debug("supply_name:" + supply_name);
 			logger.debug("package_name:" + package_name);
@@ -76,7 +80,7 @@ public class productpackage extends HttpServlet {
 			logger.debug("package_type:" + package_type);
 			logger.debug("barcode:" + barcode);
 			logger.debug("description:" + description);
-			
+
 			dao.insertpackages(group_id, c_package_id, package_name, supply_name, price, package_type, barcode,
 					description, user_id);
 			ProductVO[] parents = dao.searchpackages(group_id, "");
@@ -91,7 +95,7 @@ public class productpackage extends HttpServlet {
 			String package_type = request.getParameter("package_type");
 			String barcode = request.getParameter("barcode");
 			String description = request.getParameter("description");
-			
+
 			logger.debug("package_id:" + package_id);
 			logger.debug("c_package_id:" + c_package_id);
 			logger.debug("supply_name:" + supply_name);
@@ -100,7 +104,7 @@ public class productpackage extends HttpServlet {
 			logger.debug("package_type:" + package_type);
 			logger.debug("barcode:" + barcode);
 			logger.debug("description:" + description);
-			
+
 			dao.updatepackages(package_id, group_id, c_package_id, package_name, supply_name, price, package_type,
 					barcode, description, user_id);
 			ProductVO[] parents = dao.searchpackages(group_id, "");
@@ -129,7 +133,7 @@ public class productpackage extends HttpServlet {
 			logger.debug("product_id:" + product_id);
 			logger.debug("quantity:" + quantity);
 			logger.debug("package_desc:" + package_desc);
-			
+
 			dao.insertpackagesdetail(package_id, product_id, quantity, package_desc);
 			ProductVO[] parents = dao.searchpackagesdetail(package_id);
 			Gson gson = new Gson();
@@ -158,6 +162,8 @@ public class productpackage extends HttpServlet {
 			ProductVO[] parents = dao.searchpackagesdetail(parent_id);
 			Gson gson = new Gson();
 			response.getWriter().write(gson.toJson(parents));
+		} else if ("sendToTelegraph".equals(action)) {
+			String package_ids = request.getParameter("package_ids");
 		}
 		return;
 	}
@@ -210,17 +216,78 @@ public class productpackage extends HttpServlet {
 		private static final String sp_delete_package = "call sp_del_product (?,?)";
 		private static final String sp_delete_package2 = "call sp_del_package (?)";
 		private static final String sp_delete_package_detail = "call sp_del_package_detail (?)";
-		
+
 		private static final String sp_get_package_master = "call sp_get_package_master(?,?,?);";
 		private static final String sp_insert_package_master = "call sp_insert_package_master(?,?,?,?,?,?,?);";
 		private static final String sp_update_package_master = "call sp_update_package_master(?,?,?,?,?,?,?);";
 		private static final String sp_delete_package_master = "call sp_delete_package_master(?);";
 
+		private static final String sp_get_all_package_info = "call sp_get_all_package_info(?,?)";
+		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
+		public PackageVO getAllPackageInfo(String groupId, String packageIds){
+			PackageVO packageVO = new PackageVO();
+			List<tw.com.aber.vo.ProductPackageVO> rows = new ArrayList<tw.com.aber.vo.ProductPackageVO>();
+			ShipVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_all_package_info);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, packageIds);
+
+				rs = pstmt.executeQuery();
+//				while (rs.next()) {
+//					row = new ShipVO();
+//					row.setShip_id(rs.getString("ship_id"));
+//					row.setShip_seq_no(rs.getString("ship_seq_no"));
+//					row.setGroup_id(rs.getString("group_id"));
+//					row.setOrder_no(rs.getString("order_no"));
+//					row.setUser_id(rs.getString("user_id"));
+//					row.setCustomer_id(rs.getString("customer_id"));
+//					row.setMemo(rs.getString("memo"));
+//					row.setDeliveryway(rs.getString("deliveryway"));
+//					row.setTotal_amt(rs.getFloat("total_amt"));
+//					row.setDeliver_name(rs.getString("deliver_name"));
+//					row.setDeliver_to(rs.getString("deliver_to"));
+//					row.setV_sale_date(rs.getDate("sale_date"));
+//
+//					rows.add(row);
+//				}
+				packageVO.setProductPackageList(rows);
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return packageVO;		
+		}
 		public void deletepackagesdetail(String package_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -303,21 +370,21 @@ public class productpackage extends HttpServlet {
 				while (rs.next()) {
 					packages[i] = new ProductVO();
 					packages[i].product_id = rs.getString("product_id");
-//					packages[i].group_id = rs.getString("group_id");
+					// packages[i].group_id = rs.getString("group_id");
 					packages[i].c_product_id = rs.getString("c_product_id");
 					packages[i].product_name = rs.getString("product_name");
-//					packages[i].supply_id = rs.getString("supply_id");
-//					packages[i].supply_name = rs.getString("supply_name");
-//					packages[i].type_id = rs.getString("type_id");
-//					packages[i].unit_id = rs.getString("unit_id");
-//					packages[i].cost = rs.getString("cost");
+					// packages[i].supply_id = rs.getString("supply_id");
+					// packages[i].supply_name = rs.getString("supply_name");
+					// packages[i].type_id = rs.getString("type_id");
+					// packages[i].unit_id = rs.getString("unit_id");
+					// packages[i].cost = rs.getString("cost");
 					packages[i].price = rs.getString("price");
-//					packages[i].keep_stock = rs.getString("keep_stock");
+					// packages[i].keep_stock = rs.getString("keep_stock");
 					packages[i].photo = rs.getString("photo");
 					packages[i].photo1 = rs.getString("photo1");
-//					packages[i].description = rs.getString("description");
-//					packages[i].barcode = rs.getString("barcode");
-//					packages[i].ispackage = rs.getString("package");
+					// packages[i].description = rs.getString("description");
+					// packages[i].barcode = rs.getString("barcode");
+					// packages[i].ispackage = rs.getString("package");
 
 					packages[i].package_id = rs.getString("package_id");
 					packages[i].parent_id = rs.getString("parent_id");
@@ -343,15 +410,16 @@ public class productpackage extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_delete_package_master);
 				pstmt.setString(1, package_id);
-				
+
 				pstmt.executeQuery();
-//
-//				con = null;
-//				pstmt = null;
-//				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-//				pstmt = con.prepareStatement(sp_delete_package2);
-//				pstmt.setString(1, package_id);
-//				pstmt.executeQuery();
+				//
+				// con = null;
+				// pstmt = null;
+				// con = DriverManager.getConnection(dbURL, dbUserName,
+				// dbPassword);
+				// pstmt = con.prepareStatement(sp_delete_package2);
+				// pstmt.setString(1, package_id);
+				// pstmt.executeQuery();
 			} catch (SQLException se) {
 				System.out.println("ERROR WITH: " + se);
 			} catch (ClassNotFoundException cnfe) {
@@ -437,12 +505,12 @@ public class productpackage extends HttpServlet {
 					packages[i] = new ProductVO();
 					packages[i].product_id = rs.getString("package_id");
 					packages[i].group_id = rs.getString("group_id");
-					packages[i].c_product_id = rs.getString("c_package_id") == null? "":rs.getString("c_package_id");
+					packages[i].c_product_id = rs.getString("c_package_id") == null ? "" : rs.getString("c_package_id");
 					packages[i].product_name = rs.getString("package_name");
 					packages[i].type_id = rs.getString("package_spec");
 					packages[i].price = rs.getString("amount");
-					packages[i].description = rs.getString("description") == null? "":rs.getString("description");
-					packages[i].barcode = rs.getString("barcode") == null? "":rs.getString("barcode");
+					packages[i].description = rs.getString("description") == null ? "" : rs.getString("description");
+					packages[i].barcode = rs.getString("barcode") == null ? "" : rs.getString("barcode");
 					i++;
 				}
 			} catch (SQLException se) {
