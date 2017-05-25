@@ -27,6 +27,9 @@ import org.apache.logging.log4j.Logger;
 import tw.com.aber.product.controller.product.ProductBean;
 import tw.com.aber.sf.vo.BarCode;
 import tw.com.aber.sf.vo.Body;
+import tw.com.aber.sf.vo.Bom;
+import tw.com.aber.sf.vo.BomRequest;
+import tw.com.aber.sf.vo.Boms;
 import tw.com.aber.sf.vo.CancelPurchaseOrderRequest;
 import tw.com.aber.sf.vo.CancelSaleOrderRequest;
 import tw.com.aber.sf.vo.Containers;
@@ -47,6 +50,8 @@ import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
 import tw.com.aber.sf.vo.SaleOrderRequest;
 import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
+import tw.com.aber.sf.vo.SfBomItem;
+import tw.com.aber.sf.vo.SfBomItems;
 import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
@@ -816,6 +821,66 @@ public class SfApi {
 	    logger.debug("--- end: output of marshalling ----");
 	    
 	    return result;
+	}
+	
+	public String genBomService() {
+		String result = "";
+		String companyCode = "WYDGJ";
+
+		SfBomItem item1 = new SfBomItem();
+		item1.setSequence("123");
+		item1.setSkuNo("4713227024013");
+		item1.setQuantity("1");
+
+		SfBomItem item2 = new SfBomItem();
+		item2.setSequence("124");
+		item2.setSkuNo("4713227024013");
+		item2.setQuantity("1");
+
+		List<SfBomItem> itemList = new ArrayList<SfBomItem>();
+		itemList.add(item1);
+		itemList.add(item2);
+
+		SfBomItems items = new SfBomItems();
+		items.setItemList(itemList);
+
+		Bom bom = new Bom();
+		bom.setItems(items);
+		bom.setSkuNo("WM0E1m3");
+		List<Bom> bomList = new ArrayList<Bom>();
+
+		bomList.add(bom);
+
+		Boms boms = new Boms();
+		boms.setBomList(bomList);
+
+		BomRequest bomRequest = new BomRequest();
+
+		bomRequest.setCompanyCode(companyCode);
+		bomRequest.setBoms(boms);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode("接入編碼");
+		head.setCheckword("驗證碼");
+
+		Body body = new Body();
+		body.setBomRequest(bomRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("BOM_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
 	}
 
 	public String genSaleOrderStatusQueryService(String so) {

@@ -85,7 +85,7 @@ public class ValueService extends HttpServlet {
 				warehouseVO.setGroup_id(rs.getString("group_id"));
 				warehouseVO.setSf_warehouse_code(rs.getString("sf_warehouse_code"));
 				warehouseVO.setWarehouse_id(rs.getString("warehouse_id"));
-				warehouseVO.setWarehouse_locate(rs.getString("warehouse_locate"));
+				warehouseVO.setWarehouse_locate(rs.getString("warehosue_locate"));
 				warehouseVO.setWarehouse_name(rs.getString("warehouse_name"));
 				warehouseVO.setWarehouse_code(rs.getString("warehouse_code"));
 			}
