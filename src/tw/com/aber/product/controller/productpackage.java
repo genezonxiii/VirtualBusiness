@@ -164,6 +164,7 @@ public class productpackage extends HttpServlet {
 			response.getWriter().write(gson.toJson(parents));
 		} else if ("sendToTelegraph".equals(action)) {
 			String packageIds = request.getParameter("package_ids");
+			//測試假資料
 			//packageIds = "'f45d98e3-3ef3-4ff5-8b1d-d71f8864327d','c550aeda-84c4-421a-b41d-1a5c32c99835'";
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
 			//logger.debug(new Gson().toJson(packageVOList));

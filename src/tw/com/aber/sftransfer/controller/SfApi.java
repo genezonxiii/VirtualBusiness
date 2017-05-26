@@ -683,7 +683,6 @@ public class SfApi {
 		String companyCode = groupSfVo.getCompany_code();
 		String accessCode = groupSfVo.getAccess_code();
 		String checkword = groupSfVo.getCheck_word();
-
 		for (PackageVO packageVO : packageVOList) {
 			bom = new Bom();
 			boms = new Boms();
@@ -692,7 +691,8 @@ public class SfApi {
 			List<ProductPackageVO> packageVOs = packageVO.getProductPackageList();
 			for (ProductPackageVO productPackageVO : packageVOs) {
 				item = new SfBomItem();
-				String sequence = "123";
+				int sequenceNum = packageVOs.indexOf(productPackageVO) + 1;
+				String sequence = String.valueOf(sequenceNum);
 				String itemSkuNo = productPackageVO.getProductVO().getC_product_id();
 				String quantity = productPackageVO.getQuantity();
 				item.setSequence(sequence);
