@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.xml.bind.JAXB;
 
 import org.apache.commons.codec.binary.Base64;
@@ -23,6 +24,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mortbay.jetty.servlet.Context;
 
 import tw.com.aber.product.controller.product.ProductBean;
 import tw.com.aber.purchase.controller.purchase;
@@ -67,7 +69,6 @@ import tw.com.aber.vo.WarehouseVO;
 
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
-
 	private static final String testOrderType = "采购入库";
 	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -163,7 +164,7 @@ public class SfApi {
 			+ "</OrderItem>" + "</OrderItems>" + "</OrderReceiverInfo>" + "</SaleOrder>" + "</SaleOrders>"
 			+ "</SaleOrderRequest>" + "</Body>" + "</Request>";
 
-	public String genItemService(List<ProductBean> productList, String groudId) {
+	public String genItemService(List<ProductBean> productList,ValueService valueService) {
 
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
@@ -201,11 +202,7 @@ public class SfApi {
 
 		ItemRequest itemRequest = new ItemRequest();
 
-		ValueService valueService = new ValueService();
-
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		// 不確定是否要改
 		itemRequest.setCompanyCode(groupSfVo.getCompany_code());
@@ -235,13 +232,12 @@ public class SfApi {
 		return result;
 	}
 
-	public String genItemQueryService(List<ProductBean> productList, String groudId) {
+	public String genItemQueryService(List<ProductBean> productList,ValueService valueService) {
 		String result;
 
-		ValueService valueService = new ValueService();
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
 
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		List<String> skuNo = new ArrayList<String>();
 
@@ -407,18 +403,11 @@ public class SfApi {
 		return result;
 	}
 	
-	public String genPurchaseOrderService(List<PurchaseVO> purchaseList,String group_id) {
+	public String genPurchaseOrderService(List<PurchaseVO> purchaseList,ValueService valueService) {
 		String result;
-
-		// 實體化valueService
-		ValueService valueService = new ValueService();
-
-		// 實體化valueService的內部類別
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-
-		// 使用內部類別的function
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(group_id);
-		WarehouseVO warehouseVO = valueService_Service.getWarehouseVoByGroudId(group_id);
+		
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+		WarehouseVO warehouseVO = valueService.getWarehouseVO();
 		
 		List<PurchaseOrder> purchaseOrderList = null;
 		
@@ -605,17 +594,10 @@ public class SfApi {
 		return result;
 	}
 	
-	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList,String group_id) {
+	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList,ValueService valueService) {
 		String result;
-		
-		// 實體化valueService
-		ValueService valueService = new ValueService();
 
-		// 實體化valueService的內部類別
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-
-		// 使用內部類別的function
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(group_id);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 	
 		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 
@@ -734,18 +716,13 @@ public class SfApi {
 	}
 
 	// new
-	public String genSaleOrderService(List<ShipVO> shipList, String groudId) {
+	public String genSaleOrderService(List<ShipVO> shipList,ValueService valueService) {
 		String result;
 		
-		//實體化valueService
-		ValueService valueService = new ValueService();
-		
-		//實體化valueService的內部類別
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-		
+
 		//使用內部類別的function
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
-		WarehouseVO warehouseVoByGroudId = valueService_Service.getWarehouseVoByGroudId(groudId);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+		WarehouseVO warehouseVo = valueService.getWarehouseVO();
 
 		logger.debug("genSaleOrderService:" + shipList.size());
 
@@ -780,8 +757,7 @@ public class SfApi {
 			orderReceiverInfo.setOrderItems(orderItems);
 
 			SaleOrder saleOrder = new SaleOrder();
-			saleOrder.setWarehouseCode(
-					warehouseVoByGroudId.getWarehouse_code());/* 由順豐提供 資料未定 */
+			saleOrder.setWarehouseCode(warehouseVo.getWarehouse_code());/* 由順豐提供 資料未定 */
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
@@ -820,17 +796,13 @@ public class SfApi {
 	}
 
 	// new
-	public String genCancelSaleOrderService(List<ShipVO> shipList, String groudId) {
+	public String genCancelSaleOrderService(List<ShipVO> shipList,ValueService valueService) {
 		String result;
 
-		//實體化valueService
-		ValueService valueService = new ValueService();
 		
-		//實體化valueService的內部類別
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
 		
 		//使用內部類別的function
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 		
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
 

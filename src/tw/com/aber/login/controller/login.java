@@ -26,6 +26,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.sftransfer.controller.ValueService;
+import tw.com.aber.sftransfer.controller.ValueService.ValueService_Service;
 import tw.com.aber.vo.MenuVO;
 import tw.com.aber.vo.UserVO;
 
@@ -100,6 +102,10 @@ public class login extends HttpServlet {
 						session.setAttribute("user_name", list.get(0).getUser_name());
 						session.setAttribute("privilege", list.get(0).getPrivilege());
 						
+						UserVO userVO = list.get(0);
+						ValueService valueService = new ValueService(this.getServletConfig().getServletContext(),userVO);
+						session.setAttribute("valueService", valueService);
+
 						String menuListStr = loginService.getMenuListToString();
 						session.setAttribute("menu", menuListStr);
 						
@@ -155,6 +161,7 @@ public class login extends HttpServlet {
 			session.setAttribute("user_id", null);
 			session.setAttribute("group_id", null);
 			session.setAttribute("user_name", null);
+			session.setAttribute("valueService", null);
 		}
 	}
 

@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.ship.controller.ship;
 import tw.com.aber.ship.controller.ship.ShipService;
 import tw.com.aber.vo.ProductVO;
@@ -457,8 +459,10 @@ public class purchase extends HttpServlet {
 
 				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
 						purchase_ids);
+				
+				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
 
-				sfapi.genPurchaseOrderService(purchaseList, group_id);
+				sfapi.genPurchaseOrderService(purchaseList, valueService);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -479,8 +483,9 @@ public class purchase extends HttpServlet {
 
 				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
 						purchase_ids);
+				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
 
-				sfapi.genCancelPurchaseOrderInboundQueryService(purchaseList, group_id);
+				sfapi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

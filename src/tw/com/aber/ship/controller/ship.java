@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sale.controller.sale;
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
@@ -116,7 +117,10 @@ public class ship extends HttpServlet {
 
 					SfApi sfapi = new SfApi();
 					logger.debug("havein sfapi = new SfApi();");
-					sfapi.genSaleOrderService(shipVOList,groupId);
+					
+					ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+
+					sfapi.genSaleOrderService(shipVOList,valueService);
 
 					// sfapi.(productList);
 
@@ -142,8 +146,11 @@ public class ship extends HttpServlet {
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
 					SfApi sfapi = new SfApi();
-					logger.debug("ship_seq_nos ="+ship_seq_nos );
-					sfapi.genCancelSaleOrderService(shipVOList,groupId);
+					logger.debug("ship_seq_nos =" + ship_seq_nos);
+
+					ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+
+					sfapi.genCancelSaleOrderService(shipVOList, valueService);
 
 					// sfapi.(productList);
 
