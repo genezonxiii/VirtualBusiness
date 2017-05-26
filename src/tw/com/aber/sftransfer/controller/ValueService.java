@@ -162,18 +162,14 @@ public class ValueService extends HttpServlet {
 		}
 		return groupSfVO;
 	}
-	  
-	  
+
   }
   
   public class ValueService_Service{
 	  public ValueService_interFace dao;
 
 		public ValueService_Service() {
-			logger.debug("dao have new:"+getServletConfig());
-			
 			dao = new ValueServiceDAO();
-			logger.debug("dao");
 		}
 		
 		public WarehouseVO getWarehouseVoByGroudId(String groudId){
@@ -184,8 +180,5 @@ public class ValueService extends HttpServlet {
 			return dao.getGroupSfVoByGroupId(groudId);
 		}
   }
-  
- 
-	
 
 }

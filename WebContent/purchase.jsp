@@ -44,13 +44,8 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <link rel="stylesheet" href="css/buttons.dataTables.min.css">
 <script>
-$(document).ready(function($) {
-
-	
-	
-	
-	
-});
+var $dtMaster = null;
+var selectCount = 0;
 function draw_purchase(parameter){
 	$("#purchases_contain_row").css({"opacity":"0"});
 	warning_msg("---讀取中請稍候---");
@@ -95,9 +90,30 @@ function draw_purchase(parameter){
 							if(json_obj[i].amount==null){
 								json_obj[i].amount="";
 							}
+							
+							var purchase_id = json_obj[i].purchase_id;
+							var input = document.createElement("INPUT");
+							input.type = 'checkbox';
+							input.name = 'checkbox-group-select';
+							input.id = purchase_id;
+							
+							var span = document.createElement("SPAN");
+							span.className = 'form-label';
+
+							var text = document.createTextNode('選取');
+							span.appendChild(text);
+
+							var label = document.createElement("LABEL");
+							label.htmlFor = purchase_id;
+							label.name = 'checkbox-group-select';
+							label.style.marginLeft = '10%';
+							label.appendChild(span);
+							
+							var options = $("<div/>").append(input, label);
+							
 							result_table 
 							+= "<tr>"
-							+ "<td>"+"<input type='checkbox' id='"+json_obj[i].seq_no+"box' style='position: static' >"+"</td>"
+							+ "<td>"+ options.html() +"</td>"
 							+ "<td name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+ "</td>"
 							+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
 							+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
@@ -115,85 +131,120 @@ function draw_purchase(parameter){
 					});
 				}
 				var table = $("#purchases").dataTable().fnDestroy();
-				
-				
-				
-				
+
 				if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
 					$("#purchases_contain_row").hide();
 					$("#purchases tbody").html(result_table);
-					$("#purchases").dataTable({
+					$dtMaster = $("#purchases").dataTable({
 						dom : "lfrB<t>ip",
-						buttons : [ {
-						     text : '入庫單接口',
-						     action : function(data,row) {
-						    	var pk_ids='';
-						    	 
-						    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
-							    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
-							    		 
-							    		 if(i == (table.rows('.selected').data().length-1)){
-							    			 c_product_ids = c_product_ids + c_product_id;
-							    			 
-							    		 }else{
-							    			 c_product_ids = c_product_ids + c_product_id+'~';
-							    		 }
-						    		 }
-						    	 
-						    	 console.log(c_product_ids);
-						    	 $.ajax({
-									    url : "product.do",
-									    type : "POST",
-									    cache : false,
-									    delay : 1500,
-									    data : {
-									    	action : "send_data_by_c_productc_id",
-									    	c_product_ids : c_product_ids
-							
-									    },
-									    success: function(data) {
-									    	console.log('ok');
-									     }
-									          }
-									    	
-									    	);
+						buttons : [{
+							text : '入庫接口',
+							action : function(e, dt, node, config) {
+								var $table =  $('#purchase');
 
-						     }},{
-							     text : '入庫單接口',
-							     action : function(data,row) {
-							    	/*var c_product_ids='';
-							    	 
-							    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
-								    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
-								    		 
-								    		 if(i == (table.rows('.selected').data().length-1)){
-								    			 c_product_ids = c_product_ids + c_product_id;
-								    			 
-								    		 }else{
-								    			 c_product_ids = c_product_ids + c_product_id+'~';
-								    		 }
-							    		 }*/
-							    	 
-							    	 console.log(c_product_ids);
-							    	 $.ajax({
-											    url : "product.do",
-											    type : "POST",
-											    cache : false,
-											    delay : 1500,
-											    data : {
-											    	action : "get_data_by_c_productc_id",
-											    	c_product_ids : c_product_ids
-									
-											    },
-											    success: function(data) {
-											    	console.log('ok');
-											    }
-										    }
-							    	 	  );
-										    	
-							     }}
-						    
-				              ],
+							    var cells = $dtMaster.fnGetNodes();
+								var idArr = '';
+								
+								var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+								
+								
+								if($checkboxs.length == 0){
+									alert('請至少選擇一筆資料');
+									return false;
+								}
+								$checkboxs.each(function() {
+									idArr += this.id + ',';
+								});
+								idArr = idArr.slice(0,-1);
+								idArr = idArr.replace(/,/g,"','");
+								idArr = "'" + idArr + "'";
+								
+								$.ajax({
+									url: 'purchase.do', 
+									type: 'post',
+									data: {
+										action: 'purchaseOrderService',
+										purchase_ids: idArr
+									},
+									error: function (xhr) { },
+									success: function (response) {
+										var $mes = $('#message #text');
+										$mes.val('').html('成功發送');
+										$('#message')
+											.dialog()
+											.dialog('option', 'title', '提示訊息')
+											.dialog('option', 'width', 'auto')
+											.dialog('option', 'minHeight', 'auto')
+											.dialog("open");
+									}
+								});		
+								console.log('idArr: '+ idArr);		
+							}
+						},{
+							text : '入庫取消接口',
+							action : function(e, dt, node, config) {
+								var $table =  $('#purchase');
+
+							    var cells = $dtMaster.fnGetNodes();
+								var idArr = '';
+								
+								var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+								
+								
+								if($checkboxs.length == 0){
+									alert('請至少選擇一筆資料');
+									return false;
+								}
+								$checkboxs.each(function() {
+									idArr += this.id + ',';
+								});
+								idArr = idArr.slice(0,-1);
+								idArr = idArr.replace(/,/g,"','");
+								idArr = "'" + idArr + "'";
+								
+								$.ajax({
+									url: 'purchase.do', 
+									type: 'post',
+									data: {
+										action: 'cancelPurchaseOrderService',
+										purchase_ids: idArr
+									},
+									error: function (xhr) { },
+									success: function (response) {
+										var $mes = $('#message #text');
+										$mes.val('').html('成功發送');
+										$('#message')
+											.dialog()
+											.dialog('option', 'title', '提示訊息')
+											.dialog('option', 'width', 'auto')
+											.dialog('option', 'minHeight', 'auto')
+											.dialog("open");
+									}
+								});		
+								console.log('idArr: '+ idArr);		
+							}
+							},{
+										text : '全選',
+										action : function(e, dt, node, config) {
+
+											selectCount++;
+											var $table =  $('#purchases');
+											var $checkboxs = $table.find('input[name=checkbox-group-select]');
+											
+											selectCount %2 != 1 ?
+													$checkboxs.each(function() {
+														$(this).prop("checked", false);
+														$(this).removeClass("toggleon");
+											        	$(this).closest("tr").removeClass("selected");
+													}): 
+													$checkboxs.each(function() {
+														$(this).prop("checked", true);
+														$(this).addClass("toggleon");
+														$(this).closest("tr").addClass("selected");
+													});						
+										}
+									}
+						   		],
 						
 						  autoWidth: false,
 						  scrollX:  true,

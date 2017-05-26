@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import tw.com.aber.product.controller.product.ProductBean;
+import tw.com.aber.purchase.controller.purchase;
 import tw.com.aber.sf.vo.BarCode;
 import tw.com.aber.sf.vo.Body;
 import tw.com.aber.sf.vo.Bom;
@@ -56,7 +57,10 @@ import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
 import tw.com.aber.sftransfer.controller.ValueService.ValueService_Service;
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupSfVO;
+import tw.com.aber.vo.PurchaseDetailVO;
+import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
 import tw.com.aber.vo.WarehouseVO;
@@ -402,6 +406,99 @@ public class SfApi {
 
 		return result;
 	}
+	
+	public String genPurchaseOrderService(List<PurchaseVO> purchaseList,String group_id) {
+		String result;
+
+		// 實體化valueService
+		ValueService valueService = new ValueService();
+
+		// 實體化valueService的內部類別
+		ValueService_Service valueService_Service = valueService.new ValueService_Service();
+
+		// 使用內部類別的function
+		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(group_id);
+		WarehouseVO warehouseVO = valueService_Service.getWarehouseVoByGroudId(group_id);
+		
+		List<PurchaseOrder> purchaseOrderList = null;
+		
+		PurchaseOrders purchaseOrders = null;
+		
+		Items items = new Items();
+		for (int i = 0; i < purchaseList.size(); i++) {
+			
+			List<PurchaseDetailVO> purchaseDetailList = purchaseList.get(i).getPurchaseDetailList();
+			
+			 purchaseOrderList = new ArrayList<PurchaseOrder>();
+			
+			List<SfItem> itemList = new ArrayList<SfItem>();
+			
+			PurchaseOrder purchaseOrder = new PurchaseOrder();
+			
+			PurchaseVO purchaseVO = new PurchaseVO();
+			if (purchaseDetailList != null) {
+				for (int j = 0; j < purchaseDetailList.size(); j++) {
+
+					PurchaseDetailVO purchaseDetailVO = purchaseDetailList.get(j);
+					SfItem item = new SfItem();
+
+					item.setSkuNo(purchaseDetailVO.getC_product_id());
+					
+					logger.debug("purchaseDetailVO.getQuantity():"+purchaseDetailVO.getQuantity());
+					item.setQty(
+							purchaseDetailVO.getQuantity() == null ? null : purchaseDetailVO.getQuantity().toString());
+					itemList.add(item);
+				}
+			}
+			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
+			
+			Util util =new Util();
+			//待確認
+			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
+			purchaseOrder.setErpOrderType("10");
+			purchaseOrder.setsFOrderType("采购入库");
+			
+			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			logger.debug("Date():"+date);
+			purchaseOrder.setScheduledReceiptDate(date);
+			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
+			purchaseOrder.setItems(items);
+
+			purchaseOrderList.add(purchaseOrder);
+			items.setItemList(itemList);
+		}
+		
+		 purchaseOrders = new PurchaseOrders();
+		 purchaseOrders.setPurchaseOrder(purchaseOrderList);
+		
+		PurchaseOrderRequest purchaseOrderRequest = new PurchaseOrderRequest();
+		purchaseOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
+		purchaseOrderRequest.setPurchaseOrders(purchaseOrders);
+		
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
+
+		Body body = new Body();
+		body.setPurchaseOrderRequest(purchaseOrderRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("PURCHASE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
 
 	public String genPurchaseOrderInboundQueryService(String po) {
 		String result;
@@ -488,6 +585,61 @@ public class SfApi {
 		Head head = new Head();
 		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
 		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+
+		Body body = new Body();
+		body.setCancelPurchaseOrderRequest(cancelPurchaseOrderRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+	
+	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList,String group_id) {
+		String result;
+		
+		// 實體化valueService
+		ValueService valueService = new ValueService();
+
+		// 實體化valueService的內部類別
+		ValueService_Service valueService_Service = valueService.new ValueService_Service();
+
+		// 使用內部類別的function
+		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(group_id);
+	
+		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
+
+		for (int i = 0; i < purchaseList.size(); i++) {
+			PurchaseOrder purchaseOrder = new PurchaseOrder();
+			
+			PurchaseVO purchaseVO = purchaseList.get(i);
+
+			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
+			
+			purchaseOrderList.add(purchaseOrder);
+
+		}
+		PurchaseOrders purchaseOrders = new PurchaseOrders();
+		purchaseOrders.setPurchaseOrder(purchaseOrderList);
+
+		CancelPurchaseOrderRequest cancelPurchaseOrderRequest = new CancelPurchaseOrderRequest();
+		cancelPurchaseOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
+		cancelPurchaseOrderRequest.setPurchaseOrders(purchaseOrders);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
 
 		Body body = new Body();
 		body.setCancelPurchaseOrderRequest(cancelPurchaseOrderRequest);

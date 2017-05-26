@@ -1,5 +1,7 @@
 package tw.com.aber.vo;
 
+import java.util.List;
+
 public class PurchaseVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -15,6 +17,7 @@ public class PurchaseVO implements java.io.Serializable {
 	private Boolean isreturn;
 	private Float amount;
 	private String supply_id;
+	private List<PurchaseDetailVO> purchaseDetailList;
 	private String message;// 此參數用來存放錯誤訊息
 
 	public String getMessage() {
@@ -120,4 +123,13 @@ public class PurchaseVO implements java.io.Serializable {
 	public void setIsreturn(Boolean isreturn) {
 		this.isreturn = isreturn;
 	}
+
+	public List<PurchaseDetailVO> getPurchaseDetailList() {
+		return purchaseDetailList;
+	}
+
+	public void setPurchaseDetailList(List<PurchaseDetailVO> purchaseDetailList) {
+		this.purchaseDetailList = purchaseDetailList;
+	}
+	
 }
