@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.vo.PackageVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
@@ -165,12 +166,13 @@ public class productpackage extends HttpServlet {
 		} else if ("sendToTelegraph".equals(action)) {
 			String packageIds = request.getParameter("package_ids");
 			//測試假資料
-			//packageIds = "'f45d98e3-3ef3-4ff5-8b1d-d71f8864327d','c550aeda-84c4-421a-b41d-1a5c32c99835'";
+//			packageIds = "'f45d98e3-3ef3-4ff5-8b1d-d71f8864327d','c550aeda-84c4-421a-b41d-1a5c32c99835'";
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
 			//logger.debug(new Gson().toJson(packageVOList));
 			//response.getWriter().write(new Gson().toJson(packageVOList));
+			ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
 			SfApi sfApi = new SfApi();
-			sfApi.genBomService(packageVOList, group_id);
+			sfApi.genBomService(packageVOList, valueService);
 		}
 		return;
 	}
@@ -241,7 +243,6 @@ public class productpackage extends HttpServlet {
 			PackageVO packageVO = null;
 
 			List<tw.com.aber.vo.PackageVO> packageVOList = new ArrayList<tw.com.aber.vo.PackageVO>();
-			List<tw.com.aber.vo.PackageVO> masterList = null;
 			List<tw.com.aber.vo.ProductPackageVO> detailList = null;
 			tw.com.aber.vo.ProductPackageVO productPackageVO = null;
 			tw.com.aber.vo.ProductVO productVO = null;

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -37,8 +38,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
+import org.mortbay.jetty.servlet.Context;
 
 import tw.com.aber.product.controller.product.ProductBean;
+import tw.com.aber.purchase.controller.purchase;
 import tw.com.aber.sf.vo.BarCode;
 import tw.com.aber.sf.vo.Body;
 import tw.com.aber.sf.vo.Bom;
@@ -71,9 +74,12 @@ import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
 import tw.com.aber.sftransfer.controller.ValueService.ValueService_Service;
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.PackageVO;
 import tw.com.aber.vo.ProductPackageVO;
+import tw.com.aber.vo.PurchaseDetailVO;
+import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
 import tw.com.aber.vo.WarehouseVO;
@@ -88,6 +94,7 @@ public class SfApi {
 			+ "<PackUm>盒</PackUm>" + "</Container>" + "</Containers>" + "</Item>" + "<Item>" + "<SkuNo>FE0577</SkuNo>"
 			+ "<ItemName>防水外套(紫色)</ItemName>" + "<Containers>" + "<Container>" + "<PackUm>套</PackUm>" + "</Container>"
 			+ "</Containers>" + "</Item>" + "</Items>" + "</ItemResponse>" + "</Body>" + "</Response>";
+
 	private static final String testOrderType = "采购入库";
 	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -183,8 +190,7 @@ public class SfApi {
 			+ "</OrderItem>" + "</OrderItems>" + "</OrderReceiverInfo>" + "</SaleOrder>" + "</SaleOrders>"
 			+ "</SaleOrderRequest>" + "</Body>" + "</Request>";
 
-	public String genItemService(List<ProductBean> productList, String groudId) {
-
+	public String genItemService(List<ProductBean> productList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
 		for (int i = 0; i < productList.size(); i++) {
@@ -221,11 +227,7 @@ public class SfApi {
 
 		ItemRequest itemRequest = new ItemRequest();
 
-		ValueService valueService = new ValueService();
-
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		// 不確定是否要改
 		itemRequest.setCompanyCode(groupSfVo.getCompany_code());
@@ -255,13 +257,10 @@ public class SfApi {
 		return result;
 	}
 
-	public String genItemQueryService(List<ProductBean> productList, String groudId) {
+	public String genItemQueryService(List<ProductBean> productList, ValueService valueService) {
 		String result;
 
-		ValueService valueService = new ValueService();
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		List<String> skuNo = new ArrayList<String>();
 
@@ -427,6 +426,91 @@ public class SfApi {
 		return result;
 	}
 
+	public String genPurchaseOrderService(List<PurchaseVO> purchaseList, ValueService valueService) {
+		String result;
+
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+		WarehouseVO warehouseVO = valueService.getWarehouseVO();
+
+		List<PurchaseOrder> purchaseOrderList = null;
+
+		PurchaseOrders purchaseOrders = null;
+
+		Items items = new Items();
+		for (int i = 0; i < purchaseList.size(); i++) {
+
+			List<PurchaseDetailVO> purchaseDetailList = purchaseList.get(i).getPurchaseDetailList();
+
+			purchaseOrderList = new ArrayList<PurchaseOrder>();
+
+			List<SfItem> itemList = new ArrayList<SfItem>();
+
+			PurchaseOrder purchaseOrder = new PurchaseOrder();
+
+			PurchaseVO purchaseVO = new PurchaseVO();
+			if (purchaseDetailList != null) {
+				for (int j = 0; j < purchaseDetailList.size(); j++) {
+
+					PurchaseDetailVO purchaseDetailVO = purchaseDetailList.get(j);
+					SfItem item = new SfItem();
+
+					item.setSkuNo(purchaseDetailVO.getC_product_id());
+
+					logger.debug("purchaseDetailVO.getQuantity():" + purchaseDetailVO.getQuantity());
+					item.setQty(
+							purchaseDetailVO.getQuantity() == null ? null : purchaseDetailVO.getQuantity().toString());
+					itemList.add(item);
+				}
+			}
+			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
+
+			Util util = new Util();
+			// 待確認
+			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
+			purchaseOrder.setErpOrderType("10");
+			purchaseOrder.setsFOrderType("采购入库");
+
+			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			logger.debug("Date():" + date);
+			purchaseOrder.setScheduledReceiptDate(date);
+			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
+			purchaseOrder.setItems(items);
+
+			purchaseOrderList.add(purchaseOrder);
+			items.setItemList(itemList);
+		}
+
+		purchaseOrders = new PurchaseOrders();
+		purchaseOrders.setPurchaseOrder(purchaseOrderList);
+
+		PurchaseOrderRequest purchaseOrderRequest = new PurchaseOrderRequest();
+		purchaseOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
+		purchaseOrderRequest.setPurchaseOrders(purchaseOrders);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
+
+		Body body = new Body();
+		body.setPurchaseOrderRequest(purchaseOrderRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("PURCHASE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+
 	public String genPurchaseOrderInboundQueryService(String po) {
 		String result;
 
@@ -532,6 +616,54 @@ public class SfApi {
 		return result;
 	}
 
+	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
+		String result;
+
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+
+		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
+
+		for (int i = 0; i < purchaseList.size(); i++) {
+			PurchaseOrder purchaseOrder = new PurchaseOrder();
+
+			PurchaseVO purchaseVO = purchaseList.get(i);
+
+			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
+
+			purchaseOrderList.add(purchaseOrder);
+
+		}
+		PurchaseOrders purchaseOrders = new PurchaseOrders();
+		purchaseOrders.setPurchaseOrder(purchaseOrderList);
+
+		CancelPurchaseOrderRequest cancelPurchaseOrderRequest = new CancelPurchaseOrderRequest();
+		cancelPurchaseOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
+		cancelPurchaseOrderRequest.setPurchaseOrders(purchaseOrders);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
+
+		Body body = new Body();
+		body.setCancelPurchaseOrderRequest(cancelPurchaseOrderRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+
 	public String genSaleOrderService() {
 		String result;
 
@@ -605,15 +737,12 @@ public class SfApi {
 		return result;
 	}
 
-	// new
-	public String genSaleOrderService(List<ShipVO> shipList, String groudId) {
+	public String genSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
-		ValueService valueService = new ValueService();
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
-
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
-		WarehouseVO warehouseVoByGroudId = valueService_Service.getWarehouseVoByGroudId(groudId);
+		// 使用內部類別的function
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+		WarehouseVO warehouseVo = valueService.getWarehouseVO();
 
 		logger.debug("genSaleOrderService:" + shipList.size());
 
@@ -648,8 +777,9 @@ public class SfApi {
 			orderReceiverInfo.setOrderItems(orderItems);
 
 			SaleOrder saleOrder = new SaleOrder();
+
 			saleOrder.setWarehouseCode(
-					warehouseVoByGroudId.getWarehouse_code());/* 由順豐提供 資料未定 */
+					warehouseVo.getWarehouse_code());/* 由順豐提供 資料未定 */
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
@@ -687,7 +817,56 @@ public class SfApi {
 		return result;
 	}
 
-	public String genBomService(List<PackageVO> packageVOList, String groudId) {
+	public String genCancelSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
+		String result;
+
+		// 使用內部類別的function
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+
+		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
+
+		for (int i = 0; i < shipList.size(); i++) {
+			logger.debug("i:" + i);
+
+			SaleOrder saleOrder = new SaleOrder();
+
+			String erpOrder = shipList.get(i).getOrder_no();
+			saleOrder.setErpOrder(erpOrder);
+			saleOrderList.add(saleOrder);
+		}
+
+		SaleOrders saleOrders = new SaleOrders();
+		saleOrders.setSaleOrder(saleOrderList);
+
+		CancelSaleOrderRequest cancelSaleOrderRequest = new CancelSaleOrderRequest();
+		cancelSaleOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
+		cancelSaleOrderRequest.setSaleOrders(saleOrders);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
+
+		Body body = new Body();
+		body.setCancelSaleOrderRequest(cancelSaleOrderRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+
+	public String genBomService(List<PackageVO> packageVOList, ValueService valueService) {
 		String result = "";
 		SfBomItem item = null;
 		SfBomItems items = null;
@@ -697,10 +876,8 @@ public class SfApi {
 		List<SfBomItem> itemList = null;
 		List<Bom> bomList = new ArrayList<Bom>();
 
-		ValueService valueService = new ValueService();
-		ValueService_Service valueService_Service = valueService.new ValueService_Service();
 
-		GroupSfVO groupSfVo = valueService_Service.getGroupSfVoByGroupId(groudId);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		String companyCode = groupSfVo.getCompany_code();
 		String accessCode = groupSfVo.getAccess_code();
@@ -939,6 +1116,7 @@ public class SfApi {
 	public String sendXMLbyWS(String ws, String reqXml) {
 
 		String conString =
+
 				// getServletConfig().getServletContext().getInitParameter("pythonwebservice")
 				ws + "/sfexpressapi/data=" + new String(Base64.encodeBase64String(reqXml.getBytes()));
 
@@ -1048,8 +1226,11 @@ public class SfApi {
 		// StringReader reader = new StringReader(xmlString);
 		// response = (Response) unmarshaller.unmarshal(reader);
 		response = JAXB.unmarshal(new StringReader(xmlString), Response.class);
-		
-		logger.debug("\n\n{}\n", new Gson().toJson(response));
+
+		logger.debug("\n\nJson格式:\n\n{}\n", new Gson().toJson(response));
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(response, sw);
+		logger.debug("\n\nXML格式:\n\n{}\n",sw.toString());
 		return response;
 	}
 
@@ -1076,5 +1257,4 @@ public class SfApi {
 		// genXML = api.genPurchaseOrderService();
 		// api.sendXMLbyWS("http://192.168.112.164:8090", genXML);
 	}
-
 }

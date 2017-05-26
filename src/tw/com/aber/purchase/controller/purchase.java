@@ -17,17 +17,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.ValueService;
+import tw.com.aber.ship.controller.ship;
+import tw.com.aber.ship.controller.ship.ShipService;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
+import tw.com.aber.vo.ShipDetail;
+import tw.com.aber.vo.ShipVO;
 import tw.com.aber.vo.SupplyVO;
 
 public class purchase extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LogManager.getLogger(ship.class);
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -432,6 +443,55 @@ public class purchase extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+
+		if ("purchaseOrderService".equals(action)) {
+			try {
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
+				SfApi sfapi = new SfApi();
+
+				String purchase_ids = request.getParameter("purchase_ids");
+
+				purchaseService = new PurchaseService();
+
+				logger.debug("ship_seq_nos =" + purchase_ids + ",   group_id =" + group_id);
+
+				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
+						purchase_ids);
+				
+				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+
+				sfapi.genPurchaseOrderService(purchaseList, valueService);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		if ("cancelPurchaseOrderService".equals(action)) {
+			try {
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
+				SfApi sfapi = new SfApi();
+
+				String purchase_ids = request.getParameter("purchase_ids");
+
+				purchaseService = new PurchaseService();
+
+				logger.debug("ship_seq_nos =" + purchase_ids + ",   group_id =" + group_id);
+
+				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
+						purchase_ids);
+				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+
+				sfapi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
 	}
 
 	// 處理傳過來的日期格式，變為數字
@@ -518,6 +578,8 @@ public class purchase extends HttpServlet {
 		public List<ProductVO> getProductByName(String group_id, String product_name);
 
 		public List<ProductVO> getProductById(String group_id, String c_product_id);
+		
+		public List<PurchaseVO> getPurchasesByPurchaseIDs(String group_id,String purchase_ids);
 	}
 
 	class PurchaseService {
@@ -565,6 +627,10 @@ public class purchase extends HttpServlet {
 
 		public List<ProductVO> getSearchProductByName(String group_id, String product_name) {
 			return dao.getProductByName(group_id, product_name);
+		}
+		
+		public List<PurchaseVO> getPurchasesByPurchaseIDs(String group_id,String pruchase_id){
+			return dao.getPurchasesByPurchaseIDs(group_id, pruchase_id);
 		}
 
 		public PurchaseVO addPurchase(String seq_no, String group_id, String user_id, String supply_id, String memo,
@@ -651,6 +717,7 @@ public class purchase extends HttpServlet {
 		private static final String sp_insert_purchaseDetail = "call sp_insert_purchaseDetail(?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
+		private static final String sp_get_purchases_by_purchase_ids = "call sp_get_purchases_by_purchase_ids(?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -1398,6 +1465,121 @@ public class purchase extends HttpServlet {
 					}
 				}
 			}
+		}
+
+		@Override
+		public List<PurchaseVO> getPurchasesByPurchaseIDs(String group_id, String purchase_ids) {
+
+			List<PurchaseVO> purchaseVOList = new ArrayList<PurchaseVO>();
+			List<PurchaseDetailVO> purchaseDetailList = null;
+			
+			PurchaseVO purchaseVO = null;
+			PurchaseDetailVO purchaseDetailVO = null;
+			String purchase_id_now = null;
+			String purchase_id_Record = null;
+			
+			
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_purchases_by_purchase_ids);
+				logger.debug("group_id:"+group_id+"purchase_ids:"+purchase_ids);
+				pstmt.setString(1, group_id);
+			
+				pstmt.setString(2, purchase_ids);
+				rs = pstmt.executeQuery();
+			
+				while (rs.next()) {
+					
+					purchaseDetailVO = new PurchaseDetailVO();
+					
+//					System.out.println("sql="+ rs.getString("sqlStr"));
+//					
+//					logger.debug("pd_c_product_id:"+rs.getString("pd_c_product_id"));
+					purchaseDetailVO.setC_product_id(rs.getString("pd_c_product_id"));
+					purchaseDetailVO.setGroup_id(rs.getString("pd_group_id"));
+					purchaseDetailVO.setIsreturn(rs.getBoolean("pd_isreturn"));
+					purchaseDetailVO.setMemo(rs.getString("pd_memo"));
+					purchaseDetailVO.setProduct_id(rs.getString("pd_product_id"));
+					purchaseDetailVO.setProduct_name(rs.getString("pd_product_name"));
+					purchaseDetailVO.setPurchase_id(rs.getString("pd_purchase_id"));
+					purchaseDetailVO.setPurchaseDetail_id(rs.getString("pd_purchaseDetail_id"));
+					
+					String pd_quantity = rs.getString("pd_quantity");
+				
+					if (!(pd_quantity == null || "".equals(pd_quantity))){
+						purchaseDetailVO.setQuantity(Integer.parseInt(pd_quantity));
+					}else{
+						purchaseDetailVO.setQuantity(0);
+					}
+					
+					purchaseDetailVO.setReturn_date(rs.getDate("pd_return_date"));
+					purchaseDetailVO.setUser_id(rs.getString("pd_user_id"));
+					purchaseDetailVO.setCost(rs.getFloat("pd_cost"));
+					
+					purchase_id_now = rs.getString("p_purchase_id");
+					if((!purchase_id_now.equals(purchase_id_Record))||rs.isFirst()){
+						purchaseDetailList = new ArrayList<PurchaseDetailVO>();
+
+						purchaseVO = new PurchaseVO();
+						
+						purchaseVO.setPurchase_id(rs.getString("p_purchase_id"));
+						purchaseVO.setSeq_no(rs.getString("p_seq_no"));
+						purchaseVO.setGroup_id(rs.getString("p_group_id"));
+						purchaseVO.setUser_id(rs.getString("p_user_id"));
+						purchaseVO.setSupply_id(rs.getString("p_supply_id"));
+						purchaseVO.setMemo(rs.getString("p_memo"));
+						purchaseVO.setPurchase_date(rs.getDate("p_purchase_date"));
+						purchaseVO.setInvoice(rs.getString("p_invoice"));
+						purchaseVO.setInvoice_type(rs.getString("p_invoice_type"));
+						purchaseVO.setAmount(rs.getFloat("p_amount"));
+						purchaseVO.setReturn_date(rs.getDate("p_return_date"));
+						purchaseVO.setIsreturn(rs.getBoolean("p_isreturn"));
+						purchaseVO.setPurchaseDetailList(purchaseDetailList);
+						
+						purchaseVOList.add(purchaseVO); // Store the row in the list
+						purchase_id_Record = purchase_id_now;
+					}
+					
+					purchaseDetailList.add(purchaseDetailVO);
+
+				}
+				
+				
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return purchaseVOList;
 		}
 	}
 }

@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,38 +27,68 @@ import com.google.gson.GsonBuilder;
 import tw.com.aber.ship.controller.ship.ShipService;
 import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.ShipVO;
+import tw.com.aber.vo.UserVO;
 import tw.com.aber.vo.WarehouseVO;
 
-public class ValueService extends HttpServlet {
+public class ValueService {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(ValueService.class);
+	private ServletContext servletContext;
+
+	private GroupSfVO groupSfVO = null;
+	private WarehouseVO warehouseVO = null;
+	private UserVO userVO= null;
 	
-//	public class ValueService{
-//		super.init(config);
-//	}
+	
+	public ServletContext getServletContext() {
+		return servletContext;
+	}
+
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+
+	public GroupSfVO getGroupSfVO() {
+		return groupSfVO;
+	}
+
+	public void setGroupSfVO(GroupSfVO groupSfVO) {
+		this.groupSfVO = groupSfVO;
+	}
+
+	public WarehouseVO getWarehouseVO() {
+		return warehouseVO;
+	}
+
+	public void setWarehouseVO(WarehouseVO warehouseVO) {
+		this.warehouseVO = warehouseVO;
+	}
+
+	
+	public ValueService(ServletContext servletContext,UserVO userVO) {
+		this.servletContext = servletContext;
+		this.userVO = userVO;
+		ValueService_Service valueService_Service = new ValueService_Service();
+		this.groupSfVO = valueService_Service.getGroupSfVoByGroupId(userVO.getGroup_id());
+		this.warehouseVO = valueService_Service.getWarehouseVoByGroudId(userVO.getGroup_id());
+	}
+	
 	
   interface	ValueService_interFace{
 	  public WarehouseVO getWarehouseVoByGroudId(String groudId);
 	  public GroupSfVO getGroupSfVoByGroupId(String groudId);
   }
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doPost(request, response);
-	}
-  
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-	
-	}
-  
+
   class ValueServiceDAO implements ValueService_interFace{
 	  
-	  	private final String dbURL = "jdbc:mysql://192.168.112.164/db_virtualbusiness"
+	  
+		private final String dbURL = servletContext.getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-		private final String dbUserName = "root";
-		private final String dbPassword = "admin123";
-		private final String jdbcDriver = "com.mysql.jdbc.Driver";
+		private final String dbUserName = servletContext.getInitParameter("dbUserName");
+		private final String dbPassword = servletContext.getInitParameter("dbPassword");
+		private final String jdbcDriver = servletContext.getInitParameter("jdbcDriver");
+
 	  
 		private static final String sp_get_warehouse_by_groudId = "call sp_get_warehouse_by_groudId(?)";
 		private static final String sp_get_groupsf_by_groupId = "call sp_get_groupsf_by_groupId (?)";
@@ -162,18 +193,14 @@ public class ValueService extends HttpServlet {
 		}
 		return groupSfVO;
 	}
-	  
-	  
+
   }
   
   public class ValueService_Service{
 	  public ValueService_interFace dao;
 
 		public ValueService_Service() {
-			logger.debug("dao have new:"+getServletConfig());
-			
 			dao = new ValueServiceDAO();
-			logger.debug("dao");
 		}
 		
 		public WarehouseVO getWarehouseVoByGroudId(String groudId){
@@ -184,8 +211,5 @@ public class ValueService extends HttpServlet {
 			return dao.getGroupSfVoByGroupId(groudId);
 		}
   }
-  
- 
-	
 
 }

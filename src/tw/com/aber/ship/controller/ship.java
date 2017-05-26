@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sale.controller.sale;
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
@@ -116,7 +117,10 @@ public class ship extends HttpServlet {
 
 					SfApi sfapi = new SfApi();
 					logger.debug("havein sfapi = new SfApi();");
-					sfapi.genSaleOrderService(shipVOList,groupId);
+					
+					ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+
+					sfapi.genSaleOrderService(shipVOList,valueService);
 
 					// sfapi.(productList);
 
@@ -125,6 +129,39 @@ public class ship extends HttpServlet {
 					System.out.println(e.getMessage());
 				}
 
+			}else if("sendToCancelSaleOrderService".equals(action)){
+				
+				List<ShipVO> shipVOList = null;
+				try {
+					/***************************
+					 * 1.接收請求參數
+					 ***************************************/
+					String ship_seq_nos = request.getParameter("ship_seq_nos");
+
+					shipService = new ShipService();
+					ship_seq_nos = ship_seq_nos.replace(",", "','");
+
+					ship_seq_nos = "'" + ship_seq_nos + "'";
+
+					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
+
+					SfApi sfapi = new SfApi();
+					logger.debug("ship_seq_nos =" + ship_seq_nos);
+
+					ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+
+					sfapi.genCancelSaleOrderService(shipVOList, valueService);
+
+					// sfapi.(productList);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}
+
+			
+				
+				
 			}
 
 		} catch (Exception e) {
