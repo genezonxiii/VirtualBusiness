@@ -2,10 +2,14 @@ package tw.com.aber.sftransfer.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -15,6 +19,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
@@ -23,6 +35,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 import tw.com.aber.product.controller.product.ProductBean;
 import tw.com.aber.sf.vo.BarCode;
@@ -45,6 +59,7 @@ import tw.com.aber.sf.vo.PurchaseOrderInboundRequest;
 import tw.com.aber.sf.vo.PurchaseOrderRequest;
 import tw.com.aber.sf.vo.PurchaseOrders;
 import tw.com.aber.sf.vo.Request;
+import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
 import tw.com.aber.sf.vo.SaleOrderRequest;
@@ -66,6 +81,13 @@ import tw.com.aber.vo.WarehouseVO;
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
 
+	private static final String ITEM_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_QUERY_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body>" + "<ItemResponse>"
+			+ "<CompanyCode>WYDGJ</CompanyCode>" + "<Result>1</Result>" + "<Items>" + "<Item>"
+			+ "<SkuNo>F18M291</SkuNo>" + "<ItemName>時尚編織懶人鞋</ItemName>" + "<Containers>" + "<Container>"
+			+ "<PackUm>盒</PackUm>" + "</Container>" + "</Containers>" + "</Item>" + "<Item>" + "<SkuNo>FE0577</SkuNo>"
+			+ "<ItemName>防水外套(紫色)</ItemName>" + "<Containers>" + "<Container>" + "<PackUm>套</PackUm>" + "</Container>"
+			+ "</Containers>" + "</Item>" + "</Items>" + "</ItemResponse>" + "</Body>" + "</Response>";
 	private static final String testOrderType = "采购入库";
 	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -732,60 +754,6 @@ public class SfApi {
 		logger.debug(sw.toString());
 		result = sw.toString();
 		logger.debug("--- end: output of marshalling ----");
-
-		// SfBomItem item1 = new SfBomItem();
-		// item1.setSequence("123");
-		// item1.setSkuNo("4713227024013");
-		// item1.setQuantity("1");
-		//
-		// SfBomItem item2 = new SfBomItem();
-		// item2.setSequence("124");
-		// item2.setSkuNo("4713227024013");
-		// item2.setQuantity("1");
-		//
-		// List<SfBomItem> itemList = new ArrayList<SfBomItem>();
-		// itemList.add(item1);
-		// itemList.add(item2);
-		//
-		// SfBomItems items = new SfBomItems();
-		// items.setItemList(itemList);
-		//
-		// Bom bom = new Bom();
-		// bom.setItems(items);
-		// bom.setSkuNo("WM0E1m3");
-		// List<Bom> bomList = new ArrayList<Bom>();
-		//
-		// bomList.add(bom);
-		//
-		// Boms boms = new Boms();
-		// boms.setBomList(bomList);
-		//
-		// BomRequest bomRequest = new BomRequest();
-		//
-		// bomRequest.setCompanyCode(companyCode);
-		// bomRequest.setBoms(boms);
-		//
-		// // head, body
-		// Head head = new Head();
-		// head.setAccessCode("接入編碼");
-		// head.setCheckword("驗證碼");
-		//
-		// Body body = new Body();
-		// body.setBomRequest(bomRequest);
-		//
-		// Request mainXML = new Request();
-		// mainXML.setService("BOM_SERVICE");
-		// mainXML.setLang("zh-TW");
-		// mainXML.setHead(head);
-		// mainXML.setBody(body);
-		//
-		// StringWriter sw = new StringWriter();
-		// JAXB.marshal(mainXML, sw);
-		// logger.debug("--- start: output of marshalling ----");
-		// logger.debug(sw.toString());
-		// result = sw.toString();
-		// logger.debug("--- end: output of marshalling ----");
-
 		return result;
 	}
 
@@ -1072,11 +1040,24 @@ public class SfApi {
 		}
 	}
 
+	public Response getItemQueryServiceResponseObj(String xmlString) {
+		Response response = null;
+		// JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
+		// Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		//
+		// StringReader reader = new StringReader(xmlString);
+		// response = (Response) unmarshaller.unmarshal(reader);
+		response = JAXB.unmarshal(new StringReader(xmlString), Response.class);
+		
+		logger.debug("\n\n{}\n", new Gson().toJson(response));
+		return response;
+	}
+
 	public static void main(String[] args) {
 		SfApi api = new SfApi();
-		// String genXML = "";
-		//
-		// genXML = api.genItemService();
+		String genXML = "";
+		Response response = api.getItemQueryServiceResponseObj(ITEM_QUERY_SERVICE_RESPONSE);
+		// genXML = api.getItemQueryServiceResponseObj("");
 
 		/* 不可發送 */
 		// api.sendXML(genXML);

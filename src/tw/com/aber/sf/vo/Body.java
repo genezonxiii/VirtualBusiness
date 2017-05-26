@@ -31,6 +31,10 @@ public class Body {
 	@XmlElement(name = "BomRequest")
 	private BomRequest bomRequest;
 
+	//Response
+	@XmlElement(name = "ItemResponse")
+	private ItemResponse ItemResponse;
+	
 	public BomRequest getBomRequest() {
 		return bomRequest;
 	}
