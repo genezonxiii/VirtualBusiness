@@ -152,6 +152,11 @@ function draw_purchase(parameter){
 									alert('請至少選擇一筆資料');
 									return false;
 								}
+								if($checkboxs.length > 20){
+									alert('最多選擇二十筆資料');
+									return false;
+								}
+								
 								$checkboxs.each(function() {
 									idArr += this.id + ',';
 								});
@@ -190,7 +195,10 @@ function draw_purchase(parameter){
 								
 								var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 								
-								
+								if($checkboxs.length > 20){
+									alert('最多選擇二十筆資料');
+									return false;
+								}
 								if($checkboxs.length == 0){
 									alert('請至少選擇一筆資料');
 									return false;

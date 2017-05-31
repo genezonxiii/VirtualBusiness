@@ -114,7 +114,7 @@
 	var scan_exist=0;
 	var information;
 	var table;
-	
+	var $dtMaster = null;
 	function draw_product(info){
 		$("#sales-contain").css({"opacity":"0"});
 		$("#packages-contain").css({"opacity":"0"});
@@ -124,7 +124,7 @@
 		
 			$("#sales-contain").show();
 			
-			table = 
+			$dtMaster = 
 			$("#sales").DataTable({
 				dom : "lfrB<t>ip",
 				"language": {"url": "js/dataTables_zh-tw.txt"},
@@ -155,9 +155,26 @@
 					searchable: false,
 					orderable: false,
 					render: function ( data, type, row ) {
-						   var html =	"<input type='checkbox'   id = '" + row.product_id +"' style='position: static' >";
-					   			
-					  		return html;
+						var product_id = row.c_product_id;
+						var input = document.createElement("INPUT");
+						input.type = 'checkbox';
+						input.name = 'checkbox-group-select';
+						input.id = product_id;
+						
+						var span = document.createElement("SPAN");
+						span.className = 'form-label';
+
+						var text = document.createTextNode('選取');
+						span.appendChild(text);
+
+						var label = document.createElement("LABEL");
+						label.htmlFor = product_id;
+						label.name = 'checkbox-group-select';
+						label.style.marginLeft = '10%';
+						label.appendChild(span);
+						
+						var options = $("<div/>").append(input, label);
+					  	return options.html();
 					}
 								
 				},{
@@ -200,18 +217,26 @@
 				     text : '發送商品訊息',
 				     action : function(data,row) {
 				    	var c_product_ids='';
-				    	 
-				    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
-					    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
-					    		 
-					    		 if(i == (table.rows('.selected').data().length-1)){
-					    			 c_product_ids = c_product_ids + c_product_id;
-					    			 
-					    		 }else{
-					    			 c_product_ids = c_product_ids + c_product_id+'~';
-					    		 }
-				    		 }
-				    	 
+
+				    	var cells = $dtMaster.cells( ).nodes();
+						
+							
+						var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+							
+							
+						if($checkboxs.length == 0){
+							alert('請至少選擇一筆資料');
+							return false;
+						}
+						if($checkboxs.length > 20){
+							alert('最多選擇二十筆資料');
+							return false;
+						}
+							
+						$checkboxs.each(function() {
+							c_product_ids += this.id + '~';
+						});
+						c_product_ids = c_product_ids.slice(0,-1);
 				    	 console.log(c_product_ids);
 				    	 $.ajax({
 							    url : "product.do",
@@ -226,25 +251,32 @@
 							    success: function(data) {
 							    	console.log('ok');
 							     }
-							          }
-							    	
-							    	);
+							  });
 
 				     }},{
 					     text : '查詢商品訊息',
 					     action : function(data,row) {
-					    	var c_product_ids='';
-					    	 
-					    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
-						    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
-						    		 
-						    		 if(i == (table.rows('.selected').data().length-1)){
-						    			 c_product_ids = c_product_ids + c_product_id;
-						    			 
-						    		 }else{
-						    			 c_product_ids = c_product_ids + c_product_id+'~';
-						    		 }
-					    		 }
+					    	 var c_product_ids='';
+
+						    var cells = $dtMaster.cells( ).nodes();
+								
+									
+							var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+									
+									
+							if($checkboxs.length == 0){
+								alert('請至少選擇一筆資料');
+								return false;
+							}
+							if($checkboxs.length > 20){
+								alert('最多選擇二十筆資料');
+								return false;
+							}
+									
+							$checkboxs.each(function() {
+								c_product_ids += this.id + '~';
+							});
+							c_product_ids = c_product_ids.slice(0,-1);
 					    	 
 					    	 console.log(c_product_ids);
 					    	 $.ajax({
@@ -338,7 +370,7 @@
 
 	        var table = $('#sales').DataTable();
 	     
-	        $('#sales').on( 'click', '.sorting_1', function () {
+	      /*  $('#sales').on( 'click', '.sorting_1', function () {
 	            var thisRow=$(this).parents('tr')
 	            var rowCheckBox = $(this).parent().find('input:checkbox:first')
 	            
@@ -351,7 +383,7 @@
 	            }
 	            
 	            thisRow.toggleClass('selected');
-	        } );
+	        } );*/
 	     
 
 	    
