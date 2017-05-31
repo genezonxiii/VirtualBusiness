@@ -3,9 +3,9 @@ package tw.com.aber.sf.vo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlValue;
 
 @XmlRootElement(name = "Response")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -14,7 +14,7 @@ public class Error {
 	private static final long serialVersionUID = 1L;
 	@XmlAttribute
 	protected String code;
-	@XmlElement(name = "Error")
+	@XmlValue
 	private String error;
 
 	public String getCode() {

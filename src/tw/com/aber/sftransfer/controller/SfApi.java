@@ -87,6 +87,14 @@ import tw.com.aber.vo.WarehouseVO;
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
 
+	// 商品接口響應 - 系統正常
+	private static final String ITEM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><ItemResponse>" + "<Items>"
+			+ "<Item><SkuNo>F18M291</SkuNo><Result>1</Result><Note>成功</Note></Item>"
+			+ "<Item><SkuNo>FE0577</SkuNo><Result>2</Result><Note>失敗</Note></Item>" + "</Items>"
+			+ "</ItemResponse></Body>" + "</Response>";
+
+	// 商品查詢接口響應 - 系統正常
 	private static final String ITEM_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"ITEM_QUERY_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body>" + "<ItemResponse>"
 			+ "<CompanyCode>WYDGJ</CompanyCode>" + "<Result>1</Result>" + "<Items>" + "<Item>"
@@ -95,6 +103,30 @@ public class SfApi {
 			+ "<ItemName>防水外套(紫色)</ItemName>" + "<Containers>" + "<Container>" + "<PackUm>套</PackUm>" + "</Container>"
 			+ "</Containers>" + "</Item>" + "</Items>" + "</ItemResponse>" + "</Body>" + "</Response>";
 
+	// 商品變更推送接口響應 - 系統正常
+	private static final String IITEM_CHANGE_PUSH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_CHANGE_PUSH_SERVICE\">" + "<Head>OK</Head>" + "<Body><ItemChangePushResponse>"
+			+ "<Result>1</Result><Note>測試備註</Note>" + "</ItemChangePushResponse></Body></Response>";
+
+	// BOM(組合商品)接口響應 - 系統正常
+	private static final String BOM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"BOM_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><BomResponse>" + "<Boms>"
+			+ "<Bom><Item>F18M291</Item><Result>1</Result><Note>成功</Note></Bom>"
+			+ "<Bom><Item>FE0577</Item><Result>2</Result><Note>失敗</Note></Bom>" + "</Boms>" + "</BomResponse></Body>"
+			+ "</Response>";
+
+	// 供應商接口響應 - 系統正常
+	private static final String VENDOR_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"VENDOR_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><VendorResponse>" + "<Vendors>"
+			+ "<Vendor><VendorCode>F18M291</VendorCode><Result>1</Result><Note>成功</Note></Vendor>"
+			+ "<Vendor><VendorCode>FE0577</VendorCode><Result>2</Result><Note>失敗</Note></Vendor>" + "</Vendors>" + "</VendorResponse></Body>"
+			+ "</Response>";
+	
+	// 接口響應 - 系統異常
+	private static final String ITEM_QUERY_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_SERVICE\">" + "<Head>ERR</Head>"
+			+ "<Error code=\"01234\">系統異常(測試錯誤訊息)</Error></Response>";
+	
 	private static final String testOrderType = "采购入库";
 	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -876,7 +908,6 @@ public class SfApi {
 		List<SfBomItem> itemList = null;
 		List<Bom> bomList = new ArrayList<Bom>();
 
-
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		String companyCode = groupSfVo.getCompany_code();
@@ -1218,6 +1249,11 @@ public class SfApi {
 		}
 	}
 
+	/**
+	 * @param xmlString
+	 *            The string to be processed
+	 * @return returns a response object
+	 */
 	public Response getItemQueryServiceResponseObj(String xmlString) {
 		Response response = null;
 		// JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
@@ -1230,14 +1266,16 @@ public class SfApi {
 		logger.debug("\n\nJson格式:\n\n{}\n", new Gson().toJson(response));
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(response, sw);
-		logger.debug("\n\nXML格式:\n\n{}\n",sw.toString());
+		logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
 		return response;
 	}
 
 	public static void main(String[] args) {
 		SfApi api = new SfApi();
 		String genXML = "";
-		Response response = api.getItemQueryServiceResponseObj(ITEM_QUERY_SERVICE_RESPONSE);
+
+		Response response = api.getItemQueryServiceResponseObj(VENDOR_SERVICE_RESPONSE);
+
 		// genXML = api.getItemQueryServiceResponseObj("");
 
 		/* 不可發送 */

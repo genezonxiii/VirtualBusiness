@@ -31,10 +31,48 @@ public class Body {
 	@XmlElement(name = "BomRequest")
 	private BomRequest bomRequest;
 
-	//Response
+	// Response
 	@XmlElement(name = "ItemResponse")
 	private ItemResponse ItemResponse;
-	
+	@XmlElement(name = "ItemChangePushResponse")
+	private ItemChangePushResponse itemChangePushResponse;
+	@XmlElement(name = "BomResponse")
+	private BomResponse bomResponse;
+	@XmlElement(name = "VendorResponse")
+	private VendorResponse vendorResponse;
+
+	public VendorResponse getVendorResponse() {
+		return vendorResponse;
+	}
+
+	public void setVendorResponse(VendorResponse vendorResponse) {
+		this.vendorResponse = vendorResponse;
+	}
+
+	public BomResponse getBomResponse() {
+		return bomResponse;
+	}
+
+	public void setBomResponse(BomResponse bomResponse) {
+		this.bomResponse = bomResponse;
+	}
+
+	public ItemResponse getItemResponse() {
+		return ItemResponse;
+	}
+
+	public void setItemResponse(ItemResponse itemResponse) {
+		ItemResponse = itemResponse;
+	}
+
+	public ItemChangePushResponse getItemChangePushResponse() {
+		return itemChangePushResponse;
+	}
+
+	public void setItemChangePushResponse(ItemChangePushResponse itemChangePushResponse) {
+		this.itemChangePushResponse = itemChangePushResponse;
+	}
+
 	public BomRequest getBomRequest() {
 		return bomRequest;
 	}
