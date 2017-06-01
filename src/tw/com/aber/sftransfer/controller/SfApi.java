@@ -303,6 +303,56 @@ public class SfApi {
 			+ "</RTInventorys>" 
 			+ "</RTInventoryQueryResponse></Body>"
 			+ "</Response>";
+
+	// 出庫單狀態查詢接口響應 - 系統正常
+	private static final String SALE_ORDER_STATUS_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_STATUS_QUERY_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><SaleOrderStatusResponse>"
+			+ "<SaleOrders>"
+				+ "<SaleOrder>"
+					+ "<Result>1</Result><Note>成功</Note>"
+					+ "<ErpOrder>S0001</ErpOrder>"
+					+ "<Header>"
+						+ "<ErpOrder>S0001</ErpOrder>"
+					+ "</Header>"
+					+ "<Steps>"
+						+ "<Step>"
+							+ "<Result>1</Result>"
+						+ "</Step>"
+						+ "<Step>"
+							+ "<Result>2</Result>"
+						+ "</Step>"
+					+ "</Steps>"
+				+ "</SaleOrder>"
+				+ "<SaleOrder>"
+					+ "<Result>2</Result><Note>失敗</Note>"
+					+ "<ErpOrder>S0002</ErpOrder>"
+					+ "<Header>"
+						+ "<ErpOrder>S0002</ErpOrder>"
+					+ "</Header>"
+					+ "<Steps>"
+						+ "<Step>"
+							+ "<Result>2</Result>"
+						+ "</Step>"
+						+ "<Step>"
+							+ "<Result>1</Result>"
+						+ "</Step>"
+					+ "</Steps>"
+				+ "</SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</SaleOrderStatusResponse></Body>"
+			+ "</Response>";
+	
+	// 出庫單異步接口響應 - 系統正常
+	private static final String ASYN_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ASYN_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
+			+ "<Body><SaleOrderResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></SaleOrder>"
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</SaleOrderResponse></Body>"
+			+ "</Response>";
 	
 	// 接口響應 - 系統異常
 	private static final String ITEM_QUERY_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -1456,7 +1506,7 @@ public class SfApi {
 		SfApi api = new SfApi();
 		String genXML = "";
 
-		Response response = api.getItemQueryServiceResponseObj(RT_INVENTORY_QUERY_SERVICE_RESPONSE);
+		Response response = api.getItemQueryServiceResponseObj(ASYN_ORDER_SERVICE_RESPONSE);
 
 		// genXML = api.getItemQueryServiceResponseObj("");
 
