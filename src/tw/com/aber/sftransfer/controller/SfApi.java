@@ -2,10 +2,14 @@ package tw.com.aber.sftransfer.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -16,6 +20,14 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
@@ -24,6 +36,8 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 import org.mortbay.jetty.servlet.Context;
 
 import tw.com.aber.product.controller.product.ProductBean;
@@ -48,8 +62,10 @@ import tw.com.aber.sf.vo.PurchaseOrderInboundRequest;
 import tw.com.aber.sf.vo.PurchaseOrderRequest;
 import tw.com.aber.sf.vo.PurchaseOrders;
 import tw.com.aber.sf.vo.Request;
+import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
+import tw.com.aber.sf.vo.SaleOrderOutboundDetailResponse;
 import tw.com.aber.sf.vo.SaleOrderRequest;
 import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
@@ -61,6 +77,8 @@ import tw.com.aber.sf.vo.SkuNoList;
 import tw.com.aber.sftransfer.controller.ValueService.ValueService_Service;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupSfVO;
+import tw.com.aber.vo.PackageVO;
+import tw.com.aber.vo.ProductPackageVO;
 import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.ShipDetail;
@@ -70,6 +88,228 @@ import tw.com.aber.vo.WarehouseVO;
 
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
+
+	// 商品接口響應 - 系統正常
+	private static final String ITEM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><ItemResponse>" + "<Items>"
+			+ "<Item><SkuNo>F18M291</SkuNo><Result>1</Result><Note>成功</Note></Item>"
+			+ "<Item><SkuNo>FE0577</SkuNo><Result>2</Result><Note>失敗</Note></Item>" + "</Items>"
+			+ "</ItemResponse></Body>" + "</Response>";
+
+	// 商品查詢接口響應 - 系統正常
+	private static final String ITEM_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_QUERY_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body>" + "<ItemResponse>"
+			+ "<CompanyCode>WYDGJ</CompanyCode>" + "<Result>1</Result>" + "<Items>" + "<Item>"
+			+ "<SkuNo>F18M291</SkuNo>" + "<ItemName>時尚編織懶人鞋</ItemName>" + "<Containers>" + "<Container>"
+			+ "<PackUm>盒</PackUm>" + "</Container>" + "</Containers>" + "</Item>" + "<Item>" + "<SkuNo>FE0577</SkuNo>"
+			+ "<ItemName>防水外套(紫色)</ItemName>" + "<Containers>" + "<Container>" + "<PackUm>套</PackUm>" + "</Container>"
+			+ "</Containers>" + "</Item>" + "</Items>" + "</ItemResponse>" + "</Body>" + "</Response>";
+
+	// 商品變更推送接口響應 - 系統正常
+	private static final String IITEM_CHANGE_PUSH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_CHANGE_PUSH_SERVICE\">" + "<Head>OK</Head>" + "<Body><ItemChangePushResponse>"
+			+ "<Result>1</Result><Note>測試備註</Note>" + "</ItemChangePushResponse></Body></Response>";
+
+	// BOM(組合商品)接口響應 - 系統正常
+	private static final String BOM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"BOM_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><BomResponse>" + "<Boms>"
+			+ "<Bom><Item>F18M291</Item><Result>1</Result><Note>成功</Note></Bom>"
+			+ "<Bom><Item>FE0577</Item><Result>2</Result><Note>失敗</Note></Bom>" + "</Boms>" + "</BomResponse></Body>"
+			+ "</Response>";
+
+	// 供應商接口響應 - 系統正常
+	private static final String VENDOR_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"VENDOR_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><VendorResponse>" + "<Vendors>"
+			+ "<Vendor><VendorCode>F18M291</VendorCode><Result>1</Result><Note>成功</Note></Vendor>"
+			+ "<Vendor><VendorCode>FE0577</VendorCode><Result>2</Result><Note>失敗</Note></Vendor>" + "</Vendors>" + "</VendorResponse></Body>"
+			+ "</Response>";
+
+	// 入庫單接口響應 - 系統正常
+	private static final String PURCHASE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" + "<Head>OK|PART</Head>" + "<Body><PurchaseOrderResponse>" + "<PurchaseOrders>"
+			+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><ReceiptId>F000001</ReceiptId><Result>1</Result><Note>成功</Note></PurchaseOrder>"
+			+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><ReceiptId>F000002</ReceiptId><Result>2</Result><Note>失敗</Note></PurchaseOrder>" 
+			+ "</PurchaseOrders>" + "</PurchaseOrderResponse></Body>"
+			+ "</Response>";
+
+	// 入庫單取消接口響應 - 系統正常
+	private static final String CANCEL_PURCHASE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" 
+			+ "<Head>OK</Head>" 
+			+ "<Body>"
+			+ "<CancelPurchaseOrderResponse>" 
+				+ "<PurchaseOrders>"
+					+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></PurchaseOrder>"
+					+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><Result>2</Result><Note>失敗</Note></PurchaseOrder>" 
+				+ "</PurchaseOrders>" 
+			+ "</CancelPurchaseOrderResponse>"
+			+ "</Body>"
+			+ "</Response>";
+
+	// 入庫單明細推送接口響應 - 系統正常
+	private static final String PURCHASE_ORDER_INBOUND_PUSH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"PURCHASE_ORDER_INBOUND_PUSH_SERVICE\" lang=\"zh-CN\">" + "<Head>OK</Head>" + "<Body><PurchaseOrderInboundResponse>" + 
+			"<Result>1</Result><Note>成功</Note></PurchaseOrderInboundResponse></Body>"
+			+ "</Response>";
+	
+	// 入庫單明細查詢接口響應 - 系統正常
+	private static final String PURCHASE_ORDER_INBOUND_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-CN\">" 
+				+ "<Head>OK</Head>" 
+				+ "<Body><PurchaseOrderInboundResponse>"
+				+ "<PurchaseOrders>"
+					+ "<PurchaseOrder>"
+						+ "<Result>1</Result>"
+						+ "<Note>成功</Note>"
+						+ "<Header>"
+							+ "<WarehouseCode>F0001</WarehouseCode>"
+							+ "<ErpOrder>F18M291</ErpOrder>"
+							+ "<ReceiptId>F19DD21</ReceiptId>"
+							+ "<ErpOrderType>S</ErpOrderType>"
+							+ "<CloseDate>2017-05-31</CloseDate>"
+						+ "</Header>"
+						+ "<Items>"
+							+ "<Item>"
+								+ "<SkuNo>PD0001</SkuNo>"
+							+ "</Item>"
+							+ "<Item>"
+								+ "<SkuNo>PD0002</SkuNo>"
+							+ "</Item>"
+						+ "</Items>"
+					+ "</PurchaseOrder>"
+					+ "<PurchaseOrder>"
+						+ "<Result>2</Result>"
+						+ "<Note>失敗</Note>"
+					+ "</PurchaseOrder>"
+				+ "</PurchaseOrders>"
+			+ "</PurchaseOrderInboundResponse></Body>"
+			+ "</Response>";
+
+	// 出庫單接口響應 - 系統正常
+	private static final String SALE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
+			+ "<Body><SaleOrderResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><ShipmentId>OUT001</ShipmentId><Result>1</Result><Note>成功</Note></SaleOrder>"
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><ShipmentId>OUT002</ShipmentId><Result>2</Result><Note>失敗</Note></SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</SaleOrderResponse></Body>"
+			+ "</Response>";
+
+	// 出庫單取消接口響應 - 系統正常
+	private static final String CANCEL_SALE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"CANCEL_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
+			+ "<Body><CancelSaleOrderResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></SaleOrder>"
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</CancelSaleOrderResponse></Body>"
+			+ "</Response>";
+
+	// 出庫單明細推送接口響應 - 系統正常
+	private static final String SALE_ORDER_OUTBOUND_DETAIL_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><SaleOrderOutboundDetailResponse>" 
+			+ "<Result>1</Result><Note>成功</Note>"
+			+ "</SaleOrderOutboundDetailResponse></Body>"
+			+ "</Response>";
+	
+	// 出庫單明細查詢接口響應 - 系統正常
+	private static final String SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><SaleOrderOutboundDetailResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder>"
+			+ "<Result>1</Result><ErpOrder>F18M291</ErpOrder><Note>成功</Note>"
+				+ "<Header>"
+				+ "<WarehouseCode>F0001</WarehouseCode>"
+				+ "<ErpOrder>F18M291</ErpOrder>"
+				+ "<ShipmentId>F19DD21</ShipmentId>"
+				+ "</Header>"
+			+ "</SaleOrder>"
+			+ "<SaleOrder>"
+			+ "<Result>2</Result><ErpOrder>F18M292</ErpOrder><Note>失敗</Note>"
+				+ "<Header>"
+				+ "<WarehouseCode>F0002</WarehouseCode>"
+				+ "<ErpOrder>F18M292</ErpOrder>"
+				+ "<ShipmentId>F19DD22</ShipmentId>"
+				+ "</Header>"
+			+ "</SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</SaleOrderOutboundDetailResponse></Body>"
+			+ "</Response>";
+
+	// 實時庫存查詢接口響應 - 系統正常
+	private static final String RT_INVENTORY_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"RT_INVENTORY_QUERY_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><RTInventoryQueryResponse>" 
+			+ "<CompanyCode>PSC</CompanyCode>"
+			+ "<WarehouseCode>A0001</WarehouseCode>"
+			+ "<RTInventorys>"
+				+ "<RTInventory>"
+				+ "<Result>1</Result><Note>成功</Note>"
+					+ "<Header>"
+						+ "<SkuNo>S0001</SkuNo>"
+						+ "<InventoryStatus>10</InventoryStatus>"
+						+ "<TotalQty>184</TotalQty>"
+						+ "<OnHandQty>52</OnHandQty>"
+						+ "<AvailableQty>40</AvailableQty>"
+						+ "<InTransitQty>132</InTransitQty>"
+					+ "</Header>"
+					+ "<Subs>"
+						+ "<Sub>"
+							+ "<WarehouseCode>F0001</WarehouseCode>"
+							+ "<TotalQty>85</TotalQty>"
+							+ "<OnHandQty>26</OnHandQty>"
+							+ "<AvailableQty>25</AvailableQty>"
+							+ "<InTransitQty>40</InTransitQty>"
+						+ "</Sub>"
+						+ "<Sub>"
+							+ "<WarehouseCode>F0002</WarehouseCode>"
+							+ "<TotalQty>99</TotalQty>"
+							+ "<OnHandQty>26</OnHandQty>"
+							+ "<AvailableQty>15</AvailableQty>"
+							+ "<InTransitQty>82</InTransitQty>"
+						+ "</Sub>"
+					+ "</Subs>"
+				+ "</RTInventory>"
+				+ "<RTInventory>"
+					+ "<Result>2</Result><Note>失敗</Note>"
+					+ "<Header>"
+						+ "<SkuNo>S0002</SkuNo>"
+						+ "<InventoryStatus>10</InventoryStatus>"
+						+ "<TotalQty>368</TotalQty>"
+						+ "<OnHandQty>104</OnHandQty>"
+						+ "<AvailableQty>80</AvailableQty>"
+						+ "<InTransitQty>264</InTransitQty>"
+					+ "</Header>"
+					+ "<Subs>"
+						+ "<Sub>"
+							+ "<WarehouseCode>K0001</WarehouseCode>"
+							+ "<TotalQty>170</TotalQty>"
+							+ "<OnHandQty>52</OnHandQty>"
+							+ "<AvailableQty>50</AvailableQty>"
+							+ "<InTransitQty>80</InTransitQty>"
+						+ "</Sub>"
+						+ "<Sub>"
+							+ "<WarehouseCode>K0002</WarehouseCode>"
+							+ "<TotalQty>198</TotalQty>"
+							+ "<OnHandQty>52</OnHandQty>"
+							+ "<AvailableQty>30</AvailableQty>"
+							+ "<InTransitQty>164</InTransitQty>"
+						+ "</Sub>"
+					+ "</Subs>"
+				+ "</RTInventory>"
+			+ "</RTInventorys>" 
+			+ "</RTInventoryQueryResponse></Body>"
+			+ "</Response>";
+	
+	// 接口響應 - 系統異常
+	private static final String ITEM_QUERY_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"ITEM_SERVICE\">" + "<Head>ERR</Head>"
+			+ "<Error code=\"01234\">系統異常(測試錯誤訊息)</Error></Response>";
+	
 	private static final String testOrderType = "采购入库";
 	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -165,8 +405,7 @@ public class SfApi {
 			+ "</OrderItem>" + "</OrderItems>" + "</OrderReceiverInfo>" + "</SaleOrder>" + "</SaleOrders>"
 			+ "</SaleOrderRequest>" + "</Body>" + "</Request>";
 
-	public String genItemService(List<ProductBean> productList,ValueService valueService) {
-
+	public String genItemService(List<ProductBean> productList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
 		for (int i = 0; i < productList.size(); i++) {
@@ -233,7 +472,7 @@ public class SfApi {
 		return result;
 	}
 
-	public String genItemQueryService(List<ProductBean> productList,ValueService valueService) {
+	public String genItemQueryService(List<ProductBean> productList, ValueService valueService) {
 		String result;
 
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
@@ -401,28 +640,28 @@ public class SfApi {
 
 		return result;
 	}
-	
-	public String genPurchaseOrderService(List<PurchaseVO> purchaseList,ValueService valueService) {
+
+	public String genPurchaseOrderService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
-		
+
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 		WarehouseVO warehouseVO = valueService.getWarehouseVO();
-		
+
 		List<PurchaseOrder> purchaseOrderList = null;
-		
+
 		PurchaseOrders purchaseOrders = null;
-		
+
 		Items items = new Items();
 		for (int i = 0; i < purchaseList.size(); i++) {
-			
+
 			List<PurchaseDetailVO> purchaseDetailList = purchaseList.get(i).getPurchaseDetailList();
-			
-			 purchaseOrderList = new ArrayList<PurchaseOrder>();
-			
+
+			purchaseOrderList = new ArrayList<PurchaseOrder>();
+
 			List<SfItem> itemList = new ArrayList<SfItem>();
-			
+
 			PurchaseOrder purchaseOrder = new PurchaseOrder();
-			
+
 			PurchaseVO purchaseVO = new PurchaseVO();
 			if (purchaseDetailList != null) {
 				for (int j = 0; j < purchaseDetailList.size(); j++) {
@@ -431,23 +670,22 @@ public class SfApi {
 					SfItem item = new SfItem();
 
 					item.setSkuNo(purchaseDetailVO.getC_product_id());
-					
-					logger.debug("purchaseDetailVO.getQuantity():"+purchaseDetailVO.getQuantity());
+
+					logger.debug("purchaseDetailVO.getQuantity():" + purchaseDetailVO.getQuantity());
 					item.setQty(
 							purchaseDetailVO.getQuantity() == null ? null : purchaseDetailVO.getQuantity().toString());
 					itemList.add(item);
 				}
 			}
 			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
-			
-			Util util =new Util();
-			//待確認
+
+			Util util = new Util();
+			// 待確認
 			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
 			purchaseOrder.setErpOrderType("10");
 			purchaseOrder.setsFOrderType("采购入库");
-			
-			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
+			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			purchaseOrder.setScheduledReceiptDate(date);
 			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
 			purchaseOrder.setItems(items);
@@ -455,14 +693,13 @@ public class SfApi {
 			purchaseOrderList.add(purchaseOrder);
 			items.setItemList(itemList);
 		}
-		
-		 purchaseOrders = new PurchaseOrders();
-		 purchaseOrders.setPurchaseOrder(purchaseOrderList);
-		
+
+		purchaseOrders = new PurchaseOrders();
+		purchaseOrders.setPurchaseOrder(purchaseOrderList);
+
 		PurchaseOrderRequest purchaseOrderRequest = new PurchaseOrderRequest();
 		purchaseOrderRequest.setCompanyCode(groupSfVo.getCompany_code());
 		purchaseOrderRequest.setPurchaseOrders(purchaseOrders);
-		
 
 		// head, body
 		Head head = new Head();
@@ -592,21 +829,21 @@ public class SfApi {
 
 		return result;
 	}
-	
-	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList,ValueService valueService) {
+
+	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
-	
+
 		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 
 		for (int i = 0; i < purchaseList.size(); i++) {
 			PurchaseOrder purchaseOrder = new PurchaseOrder();
-			
+
 			PurchaseVO purchaseVO = purchaseList.get(i);
 
 			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
-			
+
 			purchaseOrderList.add(purchaseOrder);
 
 		}
@@ -715,12 +952,10 @@ public class SfApi {
 		return result;
 	}
 
-	// new
-	public String genSaleOrderService(List<ShipVO> shipList,ValueService valueService) {
+	public String genSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
-		
 
-		//使用內部類別的function
+		// 使用內部類別的function
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 		WarehouseVO warehouseVo = valueService.getWarehouseVO();
 
@@ -757,7 +992,9 @@ public class SfApi {
 			orderReceiverInfo.setOrderItems(orderItems);
 
 			SaleOrder saleOrder = new SaleOrder();
-			saleOrder.setWarehouseCode(warehouseVo.getWarehouse_code());/* 由順豐提供 資料未定 */
+
+			saleOrder.setWarehouseCode(
+					warehouseVo.getWarehouse_code());/* 由順豐提供 資料未定 */
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
@@ -795,20 +1032,18 @@ public class SfApi {
 		return result;
 	}
 
-	// new
-	public String genCancelSaleOrderService(List<ShipVO> shipList,ValueService valueService) {
+	public String genCancelSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
-		//使用內部類別的function
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
-		
+
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
 
 		for (int i = 0; i < shipList.size(); i++) {
 			logger.debug("i:" + i);
-			
+
 			SaleOrder saleOrder = new SaleOrder();
-			
+
 			String erpOrder = shipList.get(i).getOrder_no();
 			saleOrder.setErpOrder(erpOrder);
 			saleOrderList.add(saleOrder);
@@ -845,37 +1080,45 @@ public class SfApi {
 		return result;
 	}
 
-	public String genBomService() {
+	public String genBomService(List<PackageVO> packageVOList, ValueService valueService) {
 		String result = "";
-		String companyCode = "WYDGJ";
+		SfBomItem item = null;
+		SfBomItems items = null;
+		Bom bom = null;
+		Boms boms = null;
 
-		SfBomItem item1 = new SfBomItem();
-		item1.setSequence("123");
-		item1.setSkuNo("4713227024013");
-		item1.setQuantity("1");
-
-		SfBomItem item2 = new SfBomItem();
-		item2.setSequence("124");
-		item2.setSkuNo("4713227024013");
-		item2.setQuantity("1");
-
-		List<SfBomItem> itemList = new ArrayList<SfBomItem>();
-		itemList.add(item1);
-		itemList.add(item2);
-
-		SfBomItems items = new SfBomItems();
-		items.setItemList(itemList);
-
-		Bom bom = new Bom();
-		bom.setItems(items);
-		bom.setSkuNo("WM0E1m3");
+		List<SfBomItem> itemList = null;
 		List<Bom> bomList = new ArrayList<Bom>();
 
-		bomList.add(bom);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
-		Boms boms = new Boms();
-		boms.setBomList(bomList);
-
+		String companyCode = groupSfVo.getCompany_code();
+		String accessCode = groupSfVo.getAccess_code();
+		String checkword = groupSfVo.getCheck_word();
+		for (PackageVO packageVO : packageVOList) {
+			bom = new Bom();
+			boms = new Boms();
+			items = new SfBomItems();
+			itemList = new ArrayList<SfBomItem>();
+			List<ProductPackageVO> packageVOs = packageVO.getProductPackageList();
+			for (ProductPackageVO productPackageVO : packageVOs) {
+				item = new SfBomItem();
+				int sequenceNum = packageVOs.indexOf(productPackageVO) + 1;
+				String sequence = String.valueOf(sequenceNum);
+				String itemSkuNo = productPackageVO.getProductVO().getC_product_id();
+				String quantity = productPackageVO.getQuantity();
+				item.setSequence(sequence);
+				item.setSkuNo(itemSkuNo);
+				item.setQuantity(quantity);
+				itemList.add(item);
+			}
+			items.setItemList(itemList);
+			String bomSkuNo = packageVO.getC_package_id();
+			bom.setSkuNo(bomSkuNo);
+			bom.setItems(items);
+			bomList.add(bom);
+			boms.setBomList(bomList);
+		}
 		BomRequest bomRequest = new BomRequest();
 
 		bomRequest.setCompanyCode(companyCode);
@@ -883,8 +1126,8 @@ public class SfApi {
 
 		// head, body
 		Head head = new Head();
-		head.setAccessCode("接入編碼");
-		head.setCheckword("驗證碼");
+		head.setAccessCode(accessCode);
+		head.setCheckword(checkword);
 
 		Body body = new Body();
 		body.setBomRequest(bomRequest);
@@ -901,7 +1144,6 @@ public class SfApi {
 		logger.debug(sw.toString());
 		result = sw.toString();
 		logger.debug("--- end: output of marshalling ----");
-
 		return result;
 	}
 
@@ -1100,8 +1342,9 @@ public class SfApi {
 	public String sendXMLbyWS(String ws, String reqXml) {
 
 		String conString =
-		// getServletConfig().getServletContext().getInitParameter("pythonwebservice")
-		ws + "/sfexpressapi/data=" + new String(Base64.encodeBase64String(reqXml.getBytes()));
+
+				// getServletConfig().getServletContext().getInitParameter("pythonwebservice")
+				ws + "/sfexpressapi/data=" + new String(Base64.encodeBase64String(reqXml.getBytes()));
 
 		logger.debug(conString);
 
@@ -1201,11 +1444,34 @@ public class SfApi {
 		}
 	}
 
+	/**
+	 * @param xmlString
+	 *            The string to be processed
+	 * @return returns a response object
+	 */
+	public Response getItemQueryServiceResponseObj(String xmlString) {
+		Response response = null;
+		// JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
+		// Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+		//
+		// StringReader reader = new StringReader(xmlString);
+		// response = (Response) unmarshaller.unmarshal(reader);
+		response = JAXB.unmarshal(new StringReader(xmlString), Response.class);
+
+		logger.debug("\n\nJson格式:\n\n{}\n", new Gson().toJson(response));
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(response, sw);
+		logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+		return response;
+	}
+
 	public static void main(String[] args) {
 		SfApi api = new SfApi();
-		// String genXML = "";
-		//
-		// genXML = api.genItemService();
+		String genXML = "";
+
+		Response response = api.getItemQueryServiceResponseObj(RT_INVENTORY_QUERY_SERVICE_RESPONSE);
+
+		// genXML = api.getItemQueryServiceResponseObj("");
 
 		/* 不可發送 */
 		// api.sendXML(genXML);
@@ -1224,5 +1490,4 @@ public class SfApi {
 		// genXML = api.genPurchaseOrderService();
 		// api.sendXMLbyWS("http://192.168.112.164:8090", genXML);
 	}
-
 }

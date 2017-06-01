@@ -6,30 +6,25 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-@XmlRootElement(name = "Bom")
+@XmlRootElement(name="ItemResponse")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "item", "result", "note", "skuNo", "items" })
-public class Bom {
+@XmlType(propOrder = { "companyCode","result", "items" })
+public class ItemResponse {
 	private static final long serialVersionUID = 1L;
 
-	@XmlElement(name = "Item")
-	private String item;
+	@XmlElement(name = "companyCode")
+	private String companyCode;
 	@XmlElement(name = "Result")
 	private String result;
-	@XmlElement(name = "Note")
-	private String note;
-
-	@XmlElement(name = "SkuNo")
-	private String skuNo;
 	@XmlElement(name = "Items")
-	private SfBomItems items;
+	private Items items;
 
-	public String getItem() {
-		return item;
+	public String getCompanyCode() {
+		return companyCode;
 	}
 
-	public void setItem(String item) {
-		this.item = item;
+	public void setCompanyCode(String companyCode) {
+		this.companyCode = companyCode;
 	}
 
 	public String getResult() {
@@ -40,27 +35,11 @@ public class Bom {
 		this.result = result;
 	}
 
-	public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	public String getSkuNo() {
-		return skuNo;
-	}
-
-	public void setSkuNo(String skuNo) {
-		this.skuNo = skuNo;
-	}
-
-	public SfBomItems getItems() {
+	public Items getItems() {
 		return items;
 	}
 
-	public void setItems(SfBomItems items) {
+	public void setItems(Items items) {
 		this.items = items;
 	}
 

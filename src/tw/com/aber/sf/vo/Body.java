@@ -31,6 +31,110 @@ public class Body {
 	@XmlElement(name = "BomRequest")
 	private BomRequest bomRequest;
 
+	// Response
+	@XmlElement(name = "ItemResponse")
+	private ItemResponse ItemResponse;
+	@XmlElement(name = "ItemChangePushResponse")
+	private ItemChangePushResponse itemChangePushResponse;
+	@XmlElement(name = "BomResponse")
+	private BomResponse bomResponse;
+	@XmlElement(name = "VendorResponse")
+	private VendorResponse vendorResponse;
+	@XmlElement(name = "PurchaseOrderResponse")
+	private PurchaseOrderResponse purchaseOrderResponse;
+	@XmlElement(name = "CancelPurchaseOrderResponse")
+	private CancelPurchaseOrderResponse cancelPurchaseOrderResponse;
+	@XmlElement(name = "PurchaseOrderInboundResponse")
+	private PurchaseOrderInboundResponse purchaseOrderInboundResponse;
+	@XmlElement(name = "SaleOrderResponse")
+	private SaleOrderResponse saleOrderResponse;
+	@XmlElement(name = "CancelSaleOrderResponse")
+	private CancelSaleOrderResponse cancelSaleOrderResponse;
+	@XmlElement(name = "SaleOrderOutboundDetailResponse")
+	private SaleOrderOutboundDetailResponse saleOrderOutboundDetailResponse;
+	@XmlElement(name = "RTInventoryQueryResponse")
+	private RTInventoryQueryResponse rtInventoryQueryResponse;
+
+	public SaleOrderOutboundDetailResponse getSaleOrderOutboundDetailResponse() {
+		return saleOrderOutboundDetailResponse;
+	}
+
+	public void setSaleOrderOutboundDetailResponse(SaleOrderOutboundDetailResponse saleOrderOutboundDetailResponse) {
+		this.saleOrderOutboundDetailResponse = saleOrderOutboundDetailResponse;
+	}
+
+	public CancelPurchaseOrderResponse getCancelPurchaseOrderResponse() {
+		return cancelPurchaseOrderResponse;
+	}
+
+	public void setCancelPurchaseOrderResponse(CancelPurchaseOrderResponse cancelPurchaseOrderResponse) {
+		this.cancelPurchaseOrderResponse = cancelPurchaseOrderResponse;
+	}
+
+	public PurchaseOrderInboundResponse getPurchaseOrderInboundResponse() {
+		return purchaseOrderInboundResponse;
+	}
+
+	public void setPurchaseOrderInboundResponse(PurchaseOrderInboundResponse purchaseOrderInboundResponse) {
+		this.purchaseOrderInboundResponse = purchaseOrderInboundResponse;
+	}
+
+	public SaleOrderResponse getSaleOrderResponse() {
+		return saleOrderResponse;
+	}
+
+	public void setSaleOrderResponse(SaleOrderResponse saleOrderResponse) {
+		this.saleOrderResponse = saleOrderResponse;
+	}
+
+	public CancelSaleOrderResponse getCancelSaleOrderResponse() {
+		return cancelSaleOrderResponse;
+	}
+
+	public void setCancelSaleOrderResponse(CancelSaleOrderResponse cancelSaleOrderResponse) {
+		this.cancelSaleOrderResponse = cancelSaleOrderResponse;
+	}
+
+	public PurchaseOrderResponse getPurchaseOrderResponse() {
+		return purchaseOrderResponse;
+	}
+
+	public void setPurchaseOrderResponse(PurchaseOrderResponse purchaseOrderResponse) {
+		this.purchaseOrderResponse = purchaseOrderResponse;
+	}
+
+	public VendorResponse getVendorResponse() {
+		return vendorResponse;
+	}
+
+	public void setVendorResponse(VendorResponse vendorResponse) {
+		this.vendorResponse = vendorResponse;
+	}
+
+	public BomResponse getBomResponse() {
+		return bomResponse;
+	}
+
+	public void setBomResponse(BomResponse bomResponse) {
+		this.bomResponse = bomResponse;
+	}
+
+	public ItemResponse getItemResponse() {
+		return ItemResponse;
+	}
+
+	public void setItemResponse(ItemResponse itemResponse) {
+		ItemResponse = itemResponse;
+	}
+
+	public ItemChangePushResponse getItemChangePushResponse() {
+		return itemChangePushResponse;
+	}
+
+	public void setItemChangePushResponse(ItemChangePushResponse itemChangePushResponse) {
+		this.itemChangePushResponse = itemChangePushResponse;
+	}
+
 	public BomRequest getBomRequest() {
 		return bomRequest;
 	}
