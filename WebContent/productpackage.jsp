@@ -171,6 +171,11 @@
 									alert('請至少選擇一筆資料');
 									return false;
 								}
+								if($checkboxs.length > 20){
+									alert('最多選擇二十筆資料');
+									return false;
+								}
+								
 								$checkboxs.each(function() {
 									idArr += this.id + ',';
 								});

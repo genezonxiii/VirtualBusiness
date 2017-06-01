@@ -65,6 +65,7 @@ import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
+import tw.com.aber.vo.StockNewVO;
 import tw.com.aber.vo.WarehouseVO;
 
 public class SfApi {
@@ -234,8 +235,6 @@ public class SfApi {
 
 	public String genItemQueryService(List<ProductBean> productList,ValueService valueService) {
 		String result;
-
-
 
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
@@ -448,11 +447,11 @@ public class SfApi {
 			purchaseOrder.setsFOrderType("采购入库");
 			
 			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-			logger.debug("Date():"+date);
+
 			purchaseOrder.setScheduledReceiptDate(date);
 			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
 			purchaseOrder.setItems(items);
-
+			
 			purchaseOrderList.add(purchaseOrder);
 			items.setItemList(itemList);
 		}
@@ -611,6 +610,7 @@ public class SfApi {
 			purchaseOrderList.add(purchaseOrder);
 
 		}
+		
 		PurchaseOrders purchaseOrders = new PurchaseOrders();
 		purchaseOrders.setPurchaseOrder(purchaseOrderList);
 
@@ -799,8 +799,6 @@ public class SfApi {
 	public String genCancelSaleOrderService(List<ShipVO> shipList,ValueService valueService) {
 		String result;
 
-		
-		
 		//使用內部類別的function
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 		
@@ -1053,6 +1051,19 @@ public class SfApi {
 		logger.debug("--- end: output of marshalling ----");
 
 		return result;
+	}
+	
+	public String genRtInventoryQueryService(List<StockNewVO> stockNewVOList,ValueService valueService){
+		String result;
+		
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(valueService.getGroupSfVO().getAccess_code());
+		head.setCheckword(valueService.getGroupSfVO().getCheck_word());
+		Body body = new Body();
+		//body(cancelSaleOrderRequest);
+		
+		return null;
 	}
 
 	public String genNo() {
