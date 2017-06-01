@@ -50,6 +50,18 @@ public class Body {
 	private SaleOrderResponse saleOrderResponse;
 	@XmlElement(name = "CancelSaleOrderResponse")
 	private CancelSaleOrderResponse cancelSaleOrderResponse;
+	@XmlElement(name = "SaleOrderOutboundDetailResponse")
+	private SaleOrderOutboundDetailResponse saleOrderOutboundDetailResponse;
+	@XmlElement(name = "RTInventoryQueryResponse")
+	private RTInventoryQueryResponse rtInventoryQueryResponse;
+
+	public SaleOrderOutboundDetailResponse getSaleOrderOutboundDetailResponse() {
+		return saleOrderOutboundDetailResponse;
+	}
+
+	public void setSaleOrderOutboundDetailResponse(SaleOrderOutboundDetailResponse saleOrderOutboundDetailResponse) {
+		this.saleOrderOutboundDetailResponse = saleOrderOutboundDetailResponse;
+	}
 
 	public CancelPurchaseOrderResponse getCancelPurchaseOrderResponse() {
 		return cancelPurchaseOrderResponse;

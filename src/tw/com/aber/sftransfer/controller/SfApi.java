@@ -65,6 +65,7 @@ import tw.com.aber.sf.vo.Request;
 import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
+import tw.com.aber.sf.vo.SaleOrderOutboundDetailResponse;
 import tw.com.aber.sf.vo.SaleOrderRequest;
 import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
@@ -203,6 +204,104 @@ public class SfApi {
 			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>"
 			+ "</SaleOrders>" 
 			+ "</CancelSaleOrderResponse></Body>"
+			+ "</Response>";
+
+	// 出庫單明細推送接口響應 - 系統正常
+	private static final String SALE_ORDER_OUTBOUND_DETAIL_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><SaleOrderOutboundDetailResponse>" 
+			+ "<Result>1</Result><Note>成功</Note>"
+			+ "</SaleOrderOutboundDetailResponse></Body>"
+			+ "</Response>";
+	
+	// 出庫單明細查詢接口響應 - 系統正常
+	private static final String SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><SaleOrderOutboundDetailResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder>"
+			+ "<Result>1</Result><ErpOrder>F18M291</ErpOrder><Note>成功</Note>"
+				+ "<Header>"
+				+ "<WarehouseCode>F0001</WarehouseCode>"
+				+ "<ErpOrder>F18M291</ErpOrder>"
+				+ "<ShipmentId>F19DD21</ShipmentId>"
+				+ "</Header>"
+			+ "</SaleOrder>"
+			+ "<SaleOrder>"
+			+ "<Result>2</Result><ErpOrder>F18M292</ErpOrder><Note>失敗</Note>"
+				+ "<Header>"
+				+ "<WarehouseCode>F0002</WarehouseCode>"
+				+ "<ErpOrder>F18M292</ErpOrder>"
+				+ "<ShipmentId>F19DD22</ShipmentId>"
+				+ "</Header>"
+			+ "</SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</SaleOrderOutboundDetailResponse></Body>"
+			+ "</Response>";
+
+	// 實時庫存查詢接口響應 - 系統正常
+	private static final String RT_INVENTORY_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"RT_INVENTORY_QUERY_SERVICE\">" + "<Head>OK</Head>" 
+			+ "<Body><RTInventoryQueryResponse>" 
+			+ "<CompanyCode>PSC</CompanyCode>"
+			+ "<WarehouseCode>A0001</WarehouseCode>"
+			+ "<RTInventorys>"
+				+ "<RTInventory>"
+				+ "<Result>1</Result><Note>成功</Note>"
+					+ "<Header>"
+						+ "<SkuNo>S0001</SkuNo>"
+						+ "<InventoryStatus>10</InventoryStatus>"
+						+ "<TotalQty>184</TotalQty>"
+						+ "<OnHandQty>52</OnHandQty>"
+						+ "<AvailableQty>40</AvailableQty>"
+						+ "<InTransitQty>132</InTransitQty>"
+					+ "</Header>"
+					+ "<Subs>"
+						+ "<Sub>"
+							+ "<WarehouseCode>F0001</WarehouseCode>"
+							+ "<TotalQty>85</TotalQty>"
+							+ "<OnHandQty>26</OnHandQty>"
+							+ "<AvailableQty>25</AvailableQty>"
+							+ "<InTransitQty>40</InTransitQty>"
+						+ "</Sub>"
+						+ "<Sub>"
+							+ "<WarehouseCode>F0002</WarehouseCode>"
+							+ "<TotalQty>99</TotalQty>"
+							+ "<OnHandQty>26</OnHandQty>"
+							+ "<AvailableQty>15</AvailableQty>"
+							+ "<InTransitQty>82</InTransitQty>"
+						+ "</Sub>"
+					+ "</Subs>"
+				+ "</RTInventory>"
+				+ "<RTInventory>"
+					+ "<Result>2</Result><Note>失敗</Note>"
+					+ "<Header>"
+						+ "<SkuNo>S0002</SkuNo>"
+						+ "<InventoryStatus>10</InventoryStatus>"
+						+ "<TotalQty>368</TotalQty>"
+						+ "<OnHandQty>104</OnHandQty>"
+						+ "<AvailableQty>80</AvailableQty>"
+						+ "<InTransitQty>264</InTransitQty>"
+					+ "</Header>"
+					+ "<Subs>"
+						+ "<Sub>"
+							+ "<WarehouseCode>K0001</WarehouseCode>"
+							+ "<TotalQty>170</TotalQty>"
+							+ "<OnHandQty>52</OnHandQty>"
+							+ "<AvailableQty>50</AvailableQty>"
+							+ "<InTransitQty>80</InTransitQty>"
+						+ "</Sub>"
+						+ "<Sub>"
+							+ "<WarehouseCode>K0002</WarehouseCode>"
+							+ "<TotalQty>198</TotalQty>"
+							+ "<OnHandQty>52</OnHandQty>"
+							+ "<AvailableQty>30</AvailableQty>"
+							+ "<InTransitQty>164</InTransitQty>"
+						+ "</Sub>"
+					+ "</Subs>"
+				+ "</RTInventory>"
+			+ "</RTInventorys>" 
+			+ "</RTInventoryQueryResponse></Body>"
 			+ "</Response>";
 	
 	// 接口響應 - 系統異常
@@ -1357,7 +1456,7 @@ public class SfApi {
 		SfApi api = new SfApi();
 		String genXML = "";
 
-		Response response = api.getItemQueryServiceResponseObj(CANCEL_SALE_ORDER_SERVICE_RESPONSE);
+		Response response = api.getItemQueryServiceResponseObj(RT_INVENTORY_QUERY_SERVICE_RESPONSE);
 
 		// genXML = api.getItemQueryServiceResponseObj("");
 
