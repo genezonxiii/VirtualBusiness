@@ -121,6 +121,89 @@ public class SfApi {
 			+ "<Vendor><VendorCode>F18M291</VendorCode><Result>1</Result><Note>成功</Note></Vendor>"
 			+ "<Vendor><VendorCode>FE0577</VendorCode><Result>2</Result><Note>失敗</Note></Vendor>" + "</Vendors>" + "</VendorResponse></Body>"
 			+ "</Response>";
+
+	// 入庫單接口響應 - 系統正常
+	private static final String PURCHASE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" + "<Head>OK|PART</Head>" + "<Body><PurchaseOrderResponse>" + "<PurchaseOrders>"
+			+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><ReceiptId>F000001</ReceiptId><Result>1</Result><Note>成功</Note></PurchaseOrder>"
+			+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><ReceiptId>F000002</ReceiptId><Result>2</Result><Note>失敗</Note></PurchaseOrder>" 
+			+ "</PurchaseOrders>" + "</PurchaseOrderResponse></Body>"
+			+ "</Response>";
+
+	// 入庫單取消接口響應 - 系統正常
+	private static final String CANCEL_PURCHASE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" 
+			+ "<Head>OK</Head>" 
+			+ "<Body>"
+			+ "<CancelPurchaseOrderResponse>" 
+				+ "<PurchaseOrders>"
+					+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></PurchaseOrder>"
+					+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><Result>2</Result><Note>失敗</Note></PurchaseOrder>" 
+				+ "</PurchaseOrders>" 
+			+ "</CancelPurchaseOrderResponse>"
+			+ "</Body>"
+			+ "</Response>";
+
+	// 入庫單明細推送接口響應 - 系統正常
+	private static final String PURCHASE_ORDER_INBOUND_PUSH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"PURCHASE_ORDER_INBOUND_PUSH_SERVICE\" lang=\"zh-CN\">" + "<Head>OK</Head>" + "<Body><PurchaseOrderInboundResponse>" + 
+			"<Result>1</Result><Note>成功</Note></PurchaseOrderInboundResponse></Body>"
+			+ "</Response>";
+	
+	// 入庫單明細查詢接口響應 - 系統正常
+	private static final String PURCHASE_ORDER_INBOUND_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-CN\">" 
+				+ "<Head>OK</Head>" 
+				+ "<Body><PurchaseOrderInboundResponse>"
+				+ "<PurchaseOrders>"
+					+ "<PurchaseOrder>"
+						+ "<Result>1</Result>"
+						+ "<Note>成功</Note>"
+						+ "<Header>"
+							+ "<WarehouseCode>F0001</WarehouseCode>"
+							+ "<ErpOrder>F18M291</ErpOrder>"
+							+ "<ReceiptId>F19DD21</ReceiptId>"
+							+ "<ErpOrderType>S</ErpOrderType>"
+							+ "<CloseDate>2017-05-31</CloseDate>"
+						+ "</Header>"
+						+ "<Items>"
+							+ "<Item>"
+								+ "<SkuNo>PD0001</SkuNo>"
+							+ "</Item>"
+							+ "<Item>"
+								+ "<SkuNo>PD0002</SkuNo>"
+							+ "</Item>"
+						+ "</Items>"
+					+ "</PurchaseOrder>"
+					+ "<PurchaseOrder>"
+						+ "<Result>2</Result>"
+						+ "<Note>失敗</Note>"
+					+ "</PurchaseOrder>"
+				+ "</PurchaseOrders>"
+			+ "</PurchaseOrderInboundResponse></Body>"
+			+ "</Response>";
+
+	// 出庫單接口響應 - 系統正常
+	private static final String SALE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
+			+ "<Body><SaleOrderResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><ShipmentId>OUT001</ShipmentId><Result>1</Result><Note>成功</Note></SaleOrder>"
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><ShipmentId>OUT002</ShipmentId><Result>2</Result><Note>失敗</Note></SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</SaleOrderResponse></Body>"
+			+ "</Response>";
+
+	// 出庫單取消接口響應 - 系統正常
+	private static final String CANCEL_SALE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"CANCEL_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
+			+ "<Body><CancelSaleOrderResponse>" 
+			+ "<SaleOrders>"
+			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></SaleOrder>"
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>"
+			+ "</SaleOrders>" 
+			+ "</CancelSaleOrderResponse></Body>"
+			+ "</Response>";
 	
 	// 接口響應 - 系統異常
 	private static final String ITEM_QUERY_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -1274,7 +1357,7 @@ public class SfApi {
 		SfApi api = new SfApi();
 		String genXML = "";
 
-		Response response = api.getItemQueryServiceResponseObj(VENDOR_SERVICE_RESPONSE);
+		Response response = api.getItemQueryServiceResponseObj(CANCEL_SALE_ORDER_SERVICE_RESPONSE);
 
 		// genXML = api.getItemQueryServiceResponseObj("");
 

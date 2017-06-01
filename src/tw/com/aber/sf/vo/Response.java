@@ -14,14 +14,23 @@ public class Response {
 	private static final long serialVersionUID = 1L;
 
 	@XmlAttribute
-	protected String service;
-
+	private String service;
+	@XmlAttribute
+	private String lang;
 	@XmlElement(name = "Head")
 	private String head;
 	@XmlElement(name = "Error")
 	private Error error;
 	@XmlElement(name = "Body")
 	private Body body;
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
 
 	public Error getError() {
 		return error;

@@ -40,6 +40,56 @@ public class Body {
 	private BomResponse bomResponse;
 	@XmlElement(name = "VendorResponse")
 	private VendorResponse vendorResponse;
+	@XmlElement(name = "PurchaseOrderResponse")
+	private PurchaseOrderResponse purchaseOrderResponse;
+	@XmlElement(name = "CancelPurchaseOrderResponse")
+	private CancelPurchaseOrderResponse cancelPurchaseOrderResponse;
+	@XmlElement(name = "PurchaseOrderInboundResponse")
+	private PurchaseOrderInboundResponse purchaseOrderInboundResponse;
+	@XmlElement(name = "SaleOrderResponse")
+	private SaleOrderResponse saleOrderResponse;
+	@XmlElement(name = "CancelSaleOrderResponse")
+	private CancelSaleOrderResponse cancelSaleOrderResponse;
+
+	public CancelPurchaseOrderResponse getCancelPurchaseOrderResponse() {
+		return cancelPurchaseOrderResponse;
+	}
+
+	public void setCancelPurchaseOrderResponse(CancelPurchaseOrderResponse cancelPurchaseOrderResponse) {
+		this.cancelPurchaseOrderResponse = cancelPurchaseOrderResponse;
+	}
+
+	public PurchaseOrderInboundResponse getPurchaseOrderInboundResponse() {
+		return purchaseOrderInboundResponse;
+	}
+
+	public void setPurchaseOrderInboundResponse(PurchaseOrderInboundResponse purchaseOrderInboundResponse) {
+		this.purchaseOrderInboundResponse = purchaseOrderInboundResponse;
+	}
+
+	public SaleOrderResponse getSaleOrderResponse() {
+		return saleOrderResponse;
+	}
+
+	public void setSaleOrderResponse(SaleOrderResponse saleOrderResponse) {
+		this.saleOrderResponse = saleOrderResponse;
+	}
+
+	public CancelSaleOrderResponse getCancelSaleOrderResponse() {
+		return cancelSaleOrderResponse;
+	}
+
+	public void setCancelSaleOrderResponse(CancelSaleOrderResponse cancelSaleOrderResponse) {
+		this.cancelSaleOrderResponse = cancelSaleOrderResponse;
+	}
+
+	public PurchaseOrderResponse getPurchaseOrderResponse() {
+		return purchaseOrderResponse;
+	}
+
+	public void setPurchaseOrderResponse(PurchaseOrderResponse purchaseOrderResponse) {
+		this.purchaseOrderResponse = purchaseOrderResponse;
+	}
 
 	public VendorResponse getVendorResponse() {
 		return vendorResponse;

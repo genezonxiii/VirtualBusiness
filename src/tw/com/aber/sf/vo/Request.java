@@ -14,9 +14,9 @@ public class Request {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlAttribute
-	protected String service;
+	private String service;
 	@XmlAttribute
-	protected String lang;
+	private String lang;
 	
 	@XmlElement(name = "Head")
     private Head head;
