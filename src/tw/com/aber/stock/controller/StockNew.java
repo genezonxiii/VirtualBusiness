@@ -20,10 +20,13 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.vo.LocationVO;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.StockNewVO;
+import tw.com.aber.vo.UserVO;
 import tw.com.aber.vo.WarehouseVO;
 
 public class StockNew extends HttpServlet{
@@ -67,14 +70,27 @@ public class StockNew extends HttpServlet{
 			
 		}
 		
-		if("rtInventoryQueryService".equals(action)){
+		if ("rtInventoryQueryService".equals(action)) {
 			String stock_ids = request.getParameter("stock_ids");
+			String inventory_status = request.getParameter("inventory_status");
 			StockNewService stockNewService = new StockNewService();
+
+			List<StockNewVO> stockNewList = stockNewService.getStockNewListByStockIDs("'" + group_id + "'", stock_ids);
+			SfApi sfapi = new SfApi();
+
+			ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+			if (valueService == null) {
+				 UserVO userVO = new UserVO();
+				 userVO.setGroup_id(group_id);
+				 valueService = new ValueService(this.getServletConfig().getServletContext(),userVO);
+			}
 			
-			List<StockNewVO> stockNewList = stockNewService.getStockNewListByStockIDs("'"+group_id+"'", stock_ids);
-		
+			logger.debug("stockNewList.size():"+stockNewList.size());
+			logger.debug("valueService:"+valueService);
+			logger.debug("inventory_status:"+inventory_status);
 			
-			
+			sfapi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
+
 		}
 
 	}

@@ -61,6 +61,9 @@ import tw.com.aber.sf.vo.PurchaseOrder;
 import tw.com.aber.sf.vo.PurchaseOrderInboundRequest;
 import tw.com.aber.sf.vo.PurchaseOrderRequest;
 import tw.com.aber.sf.vo.PurchaseOrders;
+import tw.com.aber.sf.vo.RTInventory;
+import tw.com.aber.sf.vo.RTInventoryQueryRequest;
+import tw.com.aber.sf.vo.RTInventorys;
 import tw.com.aber.sf.vo.Request;
 import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.SaleOrder;
@@ -1295,17 +1298,53 @@ public class SfApi {
 		return result;
 	}
 	
-	public String genRtInventoryQueryService(List<StockNewVO> stockNewVOList,ValueService valueService){
+	public String genRtInventoryQueryService(List<StockNewVO> stockNewVOList, ValueService valueService,
+			String InventoryStatus) {
 		String result;
+		List<RTInventory> rtInventoryList = new ArrayList<RTInventory>();
+		GroupSfVO groupSfVO = valueService.getGroupSfVO();
+		WarehouseVO warehouseVO = valueService.getWarehouseVO();
 		
 		// head, body
 		Head head = new Head();
-		head.setAccessCode(valueService.getGroupSfVO().getAccess_code());
-		head.setCheckword(valueService.getGroupSfVO().getCheck_word());
+		head.setAccessCode(groupSfVO.getAccess_code());
+		head.setCheckword(groupSfVO.getCheck_word());
 		Body body = new Body();
-		//body(cancelSaleOrderRequest);
-		
-		return null;
+		RTInventoryQueryRequest rtInventoryQueryRequest = new RTInventoryQueryRequest();
+		rtInventoryQueryRequest.setCompanyCode(groupSfVO.getCompany_code());
+		rtInventoryQueryRequest.setWarehouseCode(warehouseVO.getWarehouse_code());
+		rtInventoryQueryRequest.setInventoryStatus(InventoryStatus);
+
+		RTInventorys rtInventorys = new RTInventorys();
+
+		for (int i = 0; i < stockNewVOList.size(); i++) {
+			StockNewVO stockNewVO = stockNewVOList.get(i);
+			RTInventory rtInventory = new RTInventory();
+			if (stockNewVO != null && stockNewVO.getProductVO() != null) {
+				rtInventory.setSkuNo(stockNewVO.getProductVO().getC_product_id());
+				rtInventory.setNote("test");
+				rtInventoryList.add(rtInventory);
+			}
+		}
+		rtInventorys.setRtiList(rtInventoryList);
+		rtInventoryQueryRequest.setRtInventorys(rtInventorys);
+
+		body.setRtInventoryQueryRequest(rtInventoryQueryRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("RT_INVENTORY_QUERY_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
 	}
 
 	public String genNo() {

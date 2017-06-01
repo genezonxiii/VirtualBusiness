@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "RTInventory")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "result", "note", "header", "subs" })
+@XmlType(propOrder = { "result", "note","skuNo", "header", "subs" })
 public class RTInventory {
 	private static final long serialVersionUID = 1L;
 
@@ -16,10 +16,20 @@ public class RTInventory {
 	private String result;
 	@XmlElement(name = "Note")
 	private String note;
+	@XmlElement(name = "SkuNo")
+	private String skuNo;
 	@XmlElement(name = "Header")
 	private Header header;
 	@XmlElement(name = "Subs")
 	private Subs subs;
+
+	public String getSkuNo() {
+		return skuNo;
+	}
+
+	public void setSkuNo(String skuNo) {
+		this.skuNo = skuNo;
+	}
 
 	public String getResult() {
 		return result;

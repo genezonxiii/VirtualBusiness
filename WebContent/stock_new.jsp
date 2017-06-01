@@ -53,6 +53,15 @@
 									<button class="btn btn-darkblue">查詢</button>
 								</form>
 							</div>
+							<div class="form-row">
+								<form id = "form_status">
+									<select id='inventory_status'>
+										<option value="0">請選擇庫存狀態</option>
+										<option value="10">正品</option>
+										<option value="20">殘品</option>
+									</select>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -280,7 +289,7 @@
 					var noArr = '';
 					
 					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-					
+					var inventory_status_val = $("#inventory_status").val();
 					console.log($checkboxs);
 					
 					if($checkboxs.length == 0){
@@ -291,7 +300,11 @@
 						alert('最多選擇二十筆資料');
 						return false;
 					}
-					
+		
+					if(inventory_status_val == '0'){
+						alert('請選擇庫存狀態');
+						return false;
+					}
 					
 					$checkboxs.each(function() {
 						noArr += this.id + ',';
@@ -305,7 +318,8 @@
 						type: 'post',
 						data: {
 							action: 'rtInventoryQueryService',
-							stock_ids: noArr
+							stock_ids: noArr,
+							inventory_status : inventory_status_val
 						},
 						error: function (xhr) { },
 						success: function (response) {
@@ -351,6 +365,7 @@
 						data: {
 							action: '',
 							stock_ids: noArr
+							
 						},
 						error: function (xhr) { },
 						success: function (response) {
