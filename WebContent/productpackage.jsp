@@ -96,14 +96,11 @@
 
 							var span = document.createElement("SPAN");
 							span.className = 'form-label';
-
-							var text = document.createTextNode('選取');
-							span.appendChild(text);
-
+							
 							var label = document.createElement("LABEL");
 							label.htmlFor = package_id;
 							label.name = 'checkbox-group-select';
-							label.style.marginLeft = '10%';
+							label.style.marginLeft = '35%';
 							label.appendChild(span);
 
 							var options = $("<div/>").append(input, label);
@@ -137,7 +134,6 @@
 						lengthChange: false,
 						pageLength: 20,
 						autoWidth: false,
-						scrollX:  true,
 						scrollY:"300px",
 						"language": {"url": "js/dataTables_zh-tw.txt"},"order": [],
 						initComplete: function(settings, json) {

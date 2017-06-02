@@ -108,6 +108,15 @@
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 	<script>
+	
+	$(function(){
+	    $('#sales').on('change', ':checkbox', function() {
+	        $(this).is(":checked")?
+	        	$(this).closest("tr").addClass("selected"):
+	        	$(this).closest("tr").removeClass("selected");
+	    });	
+	});
+	
 	var c_product_id_tags=[];
 	var product_name_tags=[];
 	var new_or_edit=0;
@@ -127,10 +136,17 @@
 			
 			$dtMaster = 
 				$("#sales").DataTable({
-			        dom: "lfrB<t>ip",
+					dom : "frB<t>ip",
+					lengthChange: false,
+					pageLength: 20,
+					scrollY:"250px",
 			        "language": {
 			            "url": "js/dataTables_zh-tw.txt"
 			        },
+			        initComplete: function(settings, json) {
+					    $('div .dt-buttons').css({'float': 'left','margin-left':'10px'});
+					    $('div .dt-buttons a').css('margin-left','10px');
+					},
 			        ajax: {
 			            dataSrc: "",
 			            type: "POST",
@@ -166,9 +182,6 @@
 
 			                var span = document.createElement("SPAN");
 			                span.className = 'form-label';
-
-			                var text = document.createTextNode('選取');
-			                span.appendChild(text);
 
 			                var label = document.createElement("LABEL");
 			                label.htmlFor = product_id;
