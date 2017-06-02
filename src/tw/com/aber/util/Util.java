@@ -47,24 +47,20 @@ public class Util {
 	/**
 	 * @param request HttpServletRequest
 	 * @param response HttpServletResponse
-	 * @return  Is null from  session group_id,user_id?
+
 	 */
-	public boolean ConfirmLoginAgain(HttpServletRequest request, HttpServletResponse response) {
+	public void ConfirmLoginAgain(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (request.getSession().getAttribute("group_id") == null
 					|| request.getSession().getAttribute("user_id") == null) {
 				
 				logger.debug("group_id,user_id is null from session");
-				request.getRequestDispatcher("www.yahoo.com.tw");
 				// 導到登入畫面
-				//response.sendRedirect("./login.jsp");
-				//response.sendRedirect("www.yahoo.com.tw");
-				return true;
+				response.sendRedirect("./login.jsp");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return false;
 	}
 	
 	/**

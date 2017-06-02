@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sale.controller.sale;
+import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
@@ -35,8 +36,6 @@ public class ship extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(ship.class);
 
-	private Util util = new Util();
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
@@ -46,9 +45,13 @@ public class ship extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
+		
+		Util util =new Util();
+		
+		util.ConfirmLoginAgain(request, response);
 
-		String groupId = request.getSession().getAttribute("group_id").toString();
-		String userId = request.getSession().getAttribute("user_id").toString();
+		String groupId = (String)request.getSession().getAttribute("group_id");
+		String userId = (String)request.getSession().getAttribute("user_id");
 
 		ShipService shipService = null;
 
@@ -115,18 +118,18 @@ public class ship extends HttpServlet {
 
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
-					SfApi sfapi = new SfApi();
-					logger.debug("havein sfapi = new SfApi();");
+					SfApi sfApi = new SfApi();
 					
-					ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
-
-					sfapi.genSaleOrderService(shipVOList,valueService);
-
-					// sfapi.(productList);
+					ValueService valueService = util.getValueService(request, response);
+					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
+					String resXml = sfApi.sendXML(reqXml);
+					
+					logger.debug(resXml);
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					System.out.println(e.getMessage());
+					logger.debug(e.getMessage());
 				}
 
 			}else if("sendToCancelSaleOrderService".equals(action)){
@@ -145,15 +148,15 @@ public class ship extends HttpServlet {
 
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
-					SfApi sfapi = new SfApi();
+					SfApi sfApi = new SfApi();
 					logger.debug("ship_seq_nos =" + ship_seq_nos);
 
-					ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
-
-					sfapi.genCancelSaleOrderService(shipVOList, valueService);
-
-					// sfapi.(productList);
-
+					ValueService valueService = util.getValueService(request, response);
+	
+					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
+					String resXml = sfApi.sendXML(reqXml);
+					
+					logger.debug(resXml);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());

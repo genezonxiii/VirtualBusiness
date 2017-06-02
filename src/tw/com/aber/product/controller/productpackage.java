@@ -20,8 +20,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.PackageVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
@@ -40,14 +42,15 @@ public class productpackage extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		if (request.getSession().getAttribute("group_id") == null) {
-			System.out.println("no_session");
-			return;
-		}
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		String group_id = request.getSession().getAttribute("group_id").toString();
-		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		Util util = new Util();
+		util.ConfirmLoginAgain(request, response);
+		
+		String group_id =(String) request.getSession().getAttribute("group_id");
+		String user_id = (String)request.getSession().getAttribute("user_id");
+		
 		group_id = (group_id == null || group_id.length() < 3) ? "UNKNOWN" : group_id;
 		String action = request.getParameter("action");
 		ProductPackageDAO dao = new ProductPackageDAO();
@@ -170,9 +173,12 @@ public class productpackage extends HttpServlet {
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
 			//logger.debug(new Gson().toJson(packageVOList));
 			//response.getWriter().write(new Gson().toJson(packageVOList));
-			ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
+			
+			ValueService valueService = util.getValueService(request, response);
 			SfApi sfApi = new SfApi();
-			sfApi.genBomService(packageVOList, valueService);
+			String reqXml = sfApi.genBomService(packageVOList, valueService);
+			String resXml = sfApi.sendXML(reqXml);
+			logger.debug(resXml);
 		}
 		return;
 	}

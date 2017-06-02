@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.ProductTypeVO;
 import tw.com.aber.vo.SupplyVO;
 
@@ -36,6 +37,11 @@ public class product extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
+		
+		Util util = new Util();
+		
+		util.ConfirmLoginAgain(request, response);
+		
 		ProductService productService = null;
 		String action = request.getParameter("action");
 		logger.debug("Action:" + action);
@@ -294,11 +300,12 @@ public class product extends HttpServlet {
 				
 				productList = productService.getProductbyc_Product_id(group_id, c_product_ids);
 
-				SfApi sfapi=new SfApi();
+				SfApi sfApi=new SfApi();
 				
-				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
-
-				sfapi.genItemService(productList,valueService);
+				ValueService valueService = util.getValueService(request, response);
+				String reqXml = sfApi.genItemService(productList, valueService);
+				String resXml = sfApi.sendXML(reqXml);
+				logger.debug("resXml: "+resXml);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -324,12 +331,17 @@ public class product extends HttpServlet {
 
 				productService = new ProductService();
 				
-				logger.debug("productService.getProductbyc_Product_id:"+"group_id:"+group_id+"c_product_ids"+c_product_ids);
+				logger.debug("productService.getProductbyc_Product_id:" + "group_id:" + group_id + "c_product_ids"
+						+ c_product_ids);
 				productList = productService.getProductbyc_Product_id(group_id, c_product_ids);
 
-				SfApi sfapi=new SfApi();
-				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
-				sfapi.genItemQueryService(productList,valueService);
+				SfApi sfApi = new SfApi();
+
+				ValueService valueService = util.getValueService(request, response);
+				String reqXml = sfApi.genItemQueryService(productList, valueService);
+				String resXml = sfApi.sendXML(reqXml);
+
+				logger.debug("resXml: " + resXml);
 				
 			} catch (Exception e) {
 				e.printStackTrace();

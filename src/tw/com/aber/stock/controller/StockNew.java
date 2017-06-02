@@ -9,10 +9,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
@@ -34,23 +37,24 @@ public class StockNew extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(StockNew.class);
+	
+//	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+//			throws ServletException, IOException {
+//		response.sendRedirect("./login.jsp");
+//	}
+	
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		Util util =new Util();
 		String responseStr = null;
 		Gson gson = null;
+		Util util =new Util();
 		
-	
-		boolean isTimeOut = util.ConfirmLoginAgain(request, response);
-//		if(isTimeOut){
-//			request.getRequestDispatcher("www.yahoo.com.tw");
-//			return;
-//		}
-		
+		util.ConfirmLoginAgain(request, response);
+
 		String action = request.getParameter("action");
 		String group_id = (String) request.getSession().getAttribute("group_id");
 		String user_id = (String) request.getSession().getAttribute("user_id");
@@ -84,32 +88,23 @@ public class StockNew extends HttpServlet{
 		
 		if ("rtInventoryQueryService".equals(action)) {
 			
-			
-//			if(true){
-//				logger.debug("response.sendRedirect");
-//				request.getSession().removeAttribute("group_id");
-//				request.getSession().removeAttribute("user_id");
-//				 ((HttpServletResponse) response).sendRedirect("./login.jsp");
-//				 
-//				return;
-//			}
-		
-			
 			String stock_ids = request.getParameter("stock_ids");
 			String inventory_status = request.getParameter("inventory_status");
 			StockNewService stockNewService = new StockNewService();
 
 			List<StockNewVO> stockNewList = stockNewService.getStockNewListByStockIDs("'" + group_id + "'", stock_ids);
-			SfApi sfapi = new SfApi();
+			SfApi sfApi = new SfApi();
 
 			ValueService valueService = util.getValueService(request, response);
 
 			logger.debug("stockNewList.size():"+stockNewList.size());
 			logger.debug("valueService:"+valueService);
 			logger.debug("inventory_status:"+inventory_status);
-			
-			sfapi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
 
+			String reqXml = sfApi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
+			String resXml = sfApi.sendXML(reqXml);
+			
+			logger.debug(resXml);
 		}
 
 	}

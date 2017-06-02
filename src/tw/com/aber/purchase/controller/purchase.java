@@ -25,10 +25,12 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.ship.controller.ship;
 import tw.com.aber.ship.controller.ship.ShipService;
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
@@ -46,8 +48,13 @@ public class purchase extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PurchaseService purchaseService = null;
 		String action = request.getParameter("action");
-		String group_id = request.getSession().getAttribute("group_id").toString();
-		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		Util util =new Util();
+		
+		util.ConfirmLoginAgain(request, response);
+		
+		String group_id = (String)request.getSession().getAttribute("group_id");
+		String user_id = (String)request.getSession().getAttribute("user_id");
 		if ("get_supply_name".equals(action)) {
 
 			String supply_id = request.getParameter("supply_id");
@@ -449,7 +456,7 @@ public class purchase extends HttpServlet {
 				/***************************
 				 * 1.接收請求參數
 				 ***************************************/
-				SfApi sfapi = new SfApi();
+				SfApi sfApi = new SfApi();
 
 				String purchase_ids = request.getParameter("purchase_ids");
 
@@ -459,10 +466,13 @@ public class purchase extends HttpServlet {
 
 				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
 						purchase_ids);
-				
-				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
 
-				sfapi.genPurchaseOrderService(purchaseList, valueService);
+				ValueService valueService = util.getValueService(request, response);
+
+				String reqXml = sfApi.genPurchaseOrderService(purchaseList, valueService);
+				String resXml = sfApi.sendXML(reqXml);
+				
+				logger.debug(resXml);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -473,7 +483,7 @@ public class purchase extends HttpServlet {
 				/***************************
 				 * 1.接收請求參數
 				 ***************************************/
-				SfApi sfapi = new SfApi();
+				SfApi sfApi = new SfApi();
 
 				String purchase_ids = request.getParameter("purchase_ids");
 
@@ -483,9 +493,12 @@ public class purchase extends HttpServlet {
 
 				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
 						purchase_ids);
-				ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
-
-				sfapi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
+				ValueService valueService = util.getValueService(request, response);
+				String reqXml =sfApi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
+				String resXml = sfApi.sendXML(reqXml);
+				
+				logger.debug("resXml =" + resXml);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
