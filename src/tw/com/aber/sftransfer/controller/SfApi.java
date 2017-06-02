@@ -1322,7 +1322,6 @@ public class SfApi {
 			RTInventory rtInventory = new RTInventory();
 			if (stockNewVO != null && stockNewVO.getProductVO() != null) {
 				rtInventory.setSkuNo(stockNewVO.getProductVO().getC_product_id());
-				rtInventory.setNote("test");
 				rtInventoryList.add(rtInventory);
 			}
 		}

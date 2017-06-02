@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
+import tw.com.aber.util.Util;
 import tw.com.aber.vo.LocationVO;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.PurchaseVO;
@@ -39,10 +40,21 @@ public class StockNew extends HttpServlet{
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
+		Util util =new Util();
 		String responseStr = null;
 		Gson gson = null;
+		
+	
+		boolean isTimeOut = util.ConfirmLoginAgain(request, response);
+//		if(isTimeOut){
+//			request.getRequestDispatcher("www.yahoo.com.tw");
+//			return;
+//		}
+		
 		String action = request.getParameter("action");
-		String group_id = request.getSession().getAttribute("group_id").toString();
+		String group_id = (String) request.getSession().getAttribute("group_id");
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		
 
 		if ("getStockNewListBySupplyName".equals(action)) {
 			String supply_name = request.getParameter("supply_name");
@@ -71,6 +83,18 @@ public class StockNew extends HttpServlet{
 		}
 		
 		if ("rtInventoryQueryService".equals(action)) {
+			
+			
+//			if(true){
+//				logger.debug("response.sendRedirect");
+//				request.getSession().removeAttribute("group_id");
+//				request.getSession().removeAttribute("user_id");
+//				 ((HttpServletResponse) response).sendRedirect("./login.jsp");
+//				 
+//				return;
+//			}
+		
+			
 			String stock_ids = request.getParameter("stock_ids");
 			String inventory_status = request.getParameter("inventory_status");
 			StockNewService stockNewService = new StockNewService();
@@ -78,13 +102,8 @@ public class StockNew extends HttpServlet{
 			List<StockNewVO> stockNewList = stockNewService.getStockNewListByStockIDs("'" + group_id + "'", stock_ids);
 			SfApi sfapi = new SfApi();
 
-			ValueService valueService = (ValueService) request.getSession().getAttribute("valueService");
-			if (valueService == null) {
-				 UserVO userVO = new UserVO();
-				 userVO.setGroup_id(group_id);
-				 valueService = new ValueService(this.getServletConfig().getServletContext(),userVO);
-			}
-			
+			ValueService valueService = util.getValueService(request, response);
+
 			logger.debug("stockNewList.size():"+stockNewList.size());
 			logger.debug("valueService:"+valueService);
 			logger.debug("inventory_status:"+inventory_status);
@@ -118,8 +137,6 @@ public class StockNew extends HttpServlet{
 
 		@Override
 		public List<StockNewVO> getStockNewListBySupplyName(String group_id,String supplyName) {
-			
-			logger.debug("inininininninninininin");
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;

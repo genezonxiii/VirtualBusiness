@@ -169,7 +169,7 @@
 	function drawMasterTable(parameter) {
 
 		$dtMaster = $("#dt_master_ship").DataTable({
-			dom : "Blfr<t>ip",
+			dom : "lfrB<t>ip",
 			//scrollY : "200px",
 			width : 'auto',
 			scrollCollapse : true,
