@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="css/photo/jquery.fileupload.css">
 <link rel="stylesheet" href="css/styles.css" />
 <link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
+<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 <link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
 <style type="text/css">
 	.warning_msg{
@@ -131,7 +132,7 @@
 					$("#package-contain").show();
 					$("#package tbody").html(result_table);
 					$dtMaster = $("#package").dataTable({
-						dom : "Blfr<t>ip",
+						dom : "lfrB<t>ip",
 						autoWidth: false,
 						scrollX:  true,
 						scrollY:"300px",
@@ -171,6 +172,11 @@
 									alert('請至少選擇一筆資料');
 									return false;
 								}
+								if($checkboxs.length > 20){
+									alert('最多選擇二十筆資料');
+									return false;
+								}
+								
 								$checkboxs.each(function() {
 									idArr += this.id + ',';
 								});

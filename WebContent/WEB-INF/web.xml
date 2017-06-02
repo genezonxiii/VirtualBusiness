@@ -557,7 +557,15 @@
 	<servlet-mapping>
 		<servlet-name>ship</servlet-name>
 		<url-pattern>/ship.do</url-pattern>
-	</servlet-mapping>		
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>StockNew</servlet-name>
+		<servlet-class>tw.com.aber.stock.controller.StockNew</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StockNew</servlet-name>
+		<url-pattern>/StockNew.do</url-pattern>
+	</servlet-mapping>			
 	
 	
 	<filter>

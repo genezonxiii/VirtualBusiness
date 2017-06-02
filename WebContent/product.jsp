@@ -114,7 +114,8 @@
 	var scan_exist=0;
 	var information;
 	var table;
-	
+	var $dtMaster = null;
+	var selectCount = 0; //全選按鈕計算用
 	function draw_product(info){
 		$("#sales-contain").css({"opacity":"0"});
 		$("#packages-contain").css({"opacity":"0"});
@@ -124,152 +125,256 @@
 		
 			$("#sales-contain").show();
 			
-			table = 
-			$("#sales").DataTable({
-				dom : "lfrB<t>ip",
-				"language": {"url": "js/dataTables_zh-tw.txt"},
-				ajax: {
-					dataSrc: "",
-					type : "POST",
-					url : "product.do",
-					data : info
-				},
-		        columnDefs: [{
-				    targets:  10 ,
-					render: function ( data, type, row ) {
-						   var tmp =(row.photo==null?
-									   "":(row.photo.length<1)?
-											   "無圖片":"<img src=./image.do?picname="+row.photo+" style='max-width:100px;max-height:100px'>");
-					  	   return tmp;
-					}
-				},{
-				    targets:  11,
-					render: function ( data, type, row ) {
-						   var tmp =(row.photo1==null?
-								   "":(row.photo1.length<1)?
-										   "無圖片":"<img src=./image.do?picname="+row.photo1+" style='max-width:100px;max-height:100px'>");
-				  	       return tmp;
-					}
-				},{
-					targets: 0,
-					searchable: false,
-					orderable: false,
-					render: function ( data, type, row ) {
-						   var html =	"<input type='checkbox'   id = '" + row.product_id +"' style='position: static' >";
-					   			
-					  		return html;
-					}
-								
-				},{
-					targets: -1,
-					searchable: false,
-					orderable: false,
-					render: function ( data, type, row ) {
-						   var ch =
-					   				"<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"+
-									"	<div class='table-function-list' >"+
-									"		<button class='btn-in-table btn-darkblue btn_update' title='修改' id = '" + row.product_id +
-											"'value='"+ row.product_id +"'>" +
-									"<i class='fa fa-pencil'></i></button>"+
-									"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id = '" + row.product_id +
-											"'value='"+ row.product_id +"'>" +
-									"<i class='fa fa-trash'></i></button>"+
-									"	</div>"+
-									"</div>";
-					  		return ch;
-					}
-								
-				}],
-				columns: [  
-				          {"data": null ,"defaultContent":""},
-				          {"data": "c_product_id" ,"defaultContent":""},
-				          {"data": "supply_name" ,"defaultContent":""},
-				          {"data": "product_name" ,"defaultContent":""},
-				          {"data": "description" ,"defaultContent":""},
-				          {"data": "type_id" ,"defaultContent":""},
-				          {"data": "unit_id" ,"defaultContent":""},
-				          {"data": "cost" ,"defaultContent":""},
-				          {"data": "price" ,"defaultContent":""},
-				          {"data": "keep_stock" ,"defaultContent":""},
-				          {"data": "photo" ,"defaultContent":""},
-				          {"data": "photo1" ,"defaultContent":""},
-				          {"data": "barcode" ,"defaultContent":""},
-				          {"data": null ,"defaultContent":""},
-				],
-				buttons : [ {
-				     text : '發送商品訊息',
-				     action : function(data,row) {
-				    	var c_product_ids='';
-				    	 
-				    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
-					    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
-					    		 
-					    		 if(i == (table.rows('.selected').data().length-1)){
-					    			 c_product_ids = c_product_ids + c_product_id;
-					    			 
-					    		 }else{
-					    			 c_product_ids = c_product_ids + c_product_id+'~';
-					    		 }
-				    		 }
-				    	 
-				    	 console.log(c_product_ids);
-				    	 $.ajax({
-							    url : "product.do",
-							    type : "POST",
-							    cache : false,
-							    delay : 1500,
-							    data : {
-							    	action : "send_data_by_c_productc_id",
-							    	c_product_ids : c_product_ids
-					
-							    },
-							    success: function(data) {
-							    	console.log('ok');
-							     }
-							          }
-							    	
-							    	);
+			$dtMaster = 
+				$("#sales").DataTable({
+			        dom: "lfrB<t>ip",
+			        "language": {
+			            "url": "js/dataTables_zh-tw.txt"
+			        },
+			        ajax: {
+			            dataSrc: "",
+			            type: "POST",
+			            url: "product.do",
+			            data: info
+			        },
+			        columnDefs: [{
+			            targets: 10,
+			            render: function(data, type, row) {
+			                var tmp = (row.photo == null ?
+			                    "" : (row.photo.length < 1) ?
+			                    "無圖片" : "<img src=./image.do?picname=" + row.photo + " style='max-width:100px;max-height:100px'>");
+			                return tmp;
+			            }
+			        }, {
+			            targets: 11,
+			            render: function(data, type, row) {
+			                var tmp = (row.photo1 == null ?
+			                    "" : (row.photo1.length < 1) ?
+			                    "無圖片" : "<img src=./image.do?picname=" + row.photo1 + " style='max-width:100px;max-height:100px'>");
+			                return tmp;
+			            }
+			        }, {
+			            targets: 0,
+			            searchable: false,
+			            orderable: false,
+			            render: function(data, type, row) {
+			                var product_id = row.c_product_id;
+			                var input = document.createElement("INPUT");
+			                input.type = 'checkbox';
+			                input.name = 'checkbox-group-select';
+			                input.id = product_id;
 
-				     }},{
-					     text : '查詢商品訊息',
-					     action : function(data,row) {
-					    	var c_product_ids='';
-					    	 
-					    	 for (var i = 0; i < table.rows('.selected').data().length; i++) {
-						    		 var c_product_id=table.rows('.selected').data()[i].c_product_id;
-						    		 
-						    		 if(i == (table.rows('.selected').data().length-1)){
-						    			 c_product_ids = c_product_ids + c_product_id;
-						    			 
-						    		 }else{
-						    			 c_product_ids = c_product_ids + c_product_id+'~';
-						    		 }
-					    		 }
-					    	 
-					    	 console.log(c_product_ids);
-					    	 $.ajax({
-								    url : "product.do",
-								    type : "POST",
-								    cache : false,
-								    delay : 1500,
-								    data : {
-								    	action : "get_data_by_c_productc_id",
-								    	c_product_ids : c_product_ids
-						
-								    },
-								    success: function(data) {
-								    	console.log('ok');
-		
-								            }
-								          }
-					    	 );
-								    	
-					     }}
-				    
-		              ]
-			}
-			
-			
+			                var span = document.createElement("SPAN");
+			                span.className = 'form-label';
+
+			                var text = document.createTextNode('選取');
+			                span.appendChild(text);
+
+			                var label = document.createElement("LABEL");
+			                label.htmlFor = product_id;
+			                label.name = 'checkbox-group-select';
+			                label.style.marginLeft = '10%';
+			                label.appendChild(span);
+
+			                var options = $("<div/>").append(input, label);
+			                return options.html();
+			            }
+
+			        }, {
+			            targets: -1,
+			            searchable: false,
+			            orderable: false,
+			            render: function(data, type, row) {
+			                var ch =
+			                    "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>" +
+			                    "	<div class='table-function-list' >" +
+			                    "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id = '" + row.product_id +
+			                    "'value='" + row.product_id + "'>" +
+			                    "<i class='fa fa-pencil'></i></button>" +
+			                    "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id = '" + row.product_id +
+			                    "'value='" + row.product_id + "'>" +
+			                    "<i class='fa fa-trash'></i></button>" +
+			                    "	</div>" +
+			                    "</div>";
+			                return ch;
+			            }
+
+			        }],
+			        columns: [{
+			                "data": null,
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "c_product_id",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "supply_name",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "product_name",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "description",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "type_id",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "unit_id",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "cost",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "price",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "keep_stock",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "photo",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "photo1",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": "barcode",
+			                "defaultContent": ""
+			            },
+			            {
+			                "data": null,
+			                "defaultContent": ""
+			            },
+			        ],
+			        buttons: [{
+			                text: '全選',
+			                action: function(e, dt, node, config) {
+
+			                    selectCount++;
+			                    var $table = $('#sales');
+			                    var $checkboxs = $table.find('input[name=checkbox-group-select]');
+
+			                    selectCount % 2 != 1 ?
+			                        $checkboxs.each(function() {
+			                            $(this).prop("checked", false);
+			                            $(this).removeClass("toggleon");
+			                            $(this).closest("tr").removeClass("selected");
+			                        }) :
+			                        $checkboxs.each(function() {
+			                            $(this).prop("checked", true);
+			                            $(this).addClass("toggleon");
+			                            $(this).closest("tr").addClass("selected");
+			                        });
+			                }
+			            }, {
+			                text: '發送商品訊息',
+			                action: function(data, row) {
+			                    var c_product_ids = '';
+
+			                    var cells = $dtMaster.cells().nodes();
+
+
+			                    var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+
+			                    if ($checkboxs.length == 0) {
+			                        alert('請至少選擇一筆資料');
+			                        return false;
+			                    }
+			                    if ($checkboxs.length > 20) {
+			                        alert('最多選擇二十筆資料');
+			                        return false;
+			                    }
+
+			                    $checkboxs.each(function() {
+			                        c_product_ids += this.id + '~';
+			                    });
+			                    c_product_ids = c_product_ids.slice(0, -1);
+			                    console.log(c_product_ids);
+			                    $.ajax({
+			                        url: "product.do",
+			                        type: "POST",
+			                        cache: false,
+			                        delay: 1500,
+			                        data: {
+			                            action: "send_data_by_c_productc_id",
+			                            c_product_ids: c_product_ids
+
+			                        },
+			                        error: function(xhr) {},
+			                        success: function(response) {
+			                            var $mes = $('#message #text');
+			                            $mes.val('').html('成功發送');
+			                            $('#message')
+			                                .dialog()
+			                                .dialog('option', 'title', '提示訊息')
+			                                .dialog('option', 'width', 'auto')
+			                                .dialog('option', 'minHeight', 'auto')
+			                                .dialog("open");
+			                        }
+			                    });
+
+			                }
+			            }, {
+			                text: '查詢商品訊息',
+			                action: function(data, row) {
+			                    var c_product_ids = '';
+
+			                    var cells = $dtMaster.cells().nodes();
+
+
+			                    var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+
+			                    if ($checkboxs.length == 0) {
+			                        alert('請至少選擇一筆資料');
+			                        return false;
+			                    }
+			                    if ($checkboxs.length > 20) {
+			                        alert('最多選擇二十筆資料');
+			                        return false;
+			                    }
+
+			                    $checkboxs.each(function() {
+			                        c_product_ids += this.id + '~';
+			                    });
+			                    c_product_ids = c_product_ids.slice(0, -1);
+
+			                    console.log(c_product_ids);
+			                    $.ajax({
+			                        url: "product.do",
+			                        type: "POST",
+			                        cache: false,
+			                        delay: 1500,
+			                        data: {
+			                            action: "get_data_by_c_productc_id",
+			                            c_product_ids: c_product_ids
+
+			                        },
+			                        success: function(data) {
+			                            console.log('ok');
+
+			                        }
+			                    });
+
+			                }
+			            }
+
+			        ]
+			    }
+
+
 			);
 			
 			tooltip('btn_update');
@@ -338,7 +443,7 @@
 
 	        var table = $('#sales').DataTable();
 	     
-	        $('#sales').on( 'click', '.sorting_1', function () {
+	      /*  $('#sales').on( 'click', '.sorting_1', function () {
 	            var thisRow=$(this).parents('tr')
 	            var rowCheckBox = $(this).parent().find('input:checkbox:first')
 	            
@@ -351,7 +456,7 @@
 	            }
 	            
 	            thisRow.toggleClass('selected');
-	        } );
+	        } );*/
 	     
 
 	    

@@ -12,7 +12,7 @@
 
 <html>
 <head>
-<title>儲位異動管理</title>
+<title>庫存管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon"
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
@@ -27,7 +27,7 @@
 		<jsp:include page="template/common_headfoot.jsp" flush="true" />
 
 		<div class="content-wrap">
-			<h2 class="page-title">出貨管理</h2>
+			<h2 class="page-title">庫存管理</h2>
 
 			<div class="panel-content">
 				<div class="datalistWrap">
@@ -35,22 +35,31 @@
 						<div class="form-wrap">
 							<div class="form-row">
 								<form id = "form_no">
-									<label for=""> <span class="block-label">訂單編號</span> <input
-										type="text" name="order_no">
+									<label for=""> <span class="block-label">供應商名稱查詢</span> <input
+										type="text" name="supply_name">
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
 								</form>
 							</div>
 							<div class="form-row">
 								<form id = "form_date">
-									<label for=""> <span class="block-label">銷售起日</span> <input
+									<label for=""> <span class="block-label">進貨起日</span> <input
 										type="text" name="start_date" class='input-date'>
 									</label>
 									<div class='forward-mark'></div>
-									<label for=""> <span class="block-label">銷售迄日</span> <input
+									<label for=""> <span class="block-label">進貨迄日</span> <input
 										type="text" name="end_date" class='input-date'>
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
+								</form>
+							</div>
+							<div class="form-row">
+								<form id = "form_status">
+									<select id='inventory_status'>
+										<option value="0">請選擇庫存狀態</option>
+										<option value="10">正品</option>
+										<option value="20">殘品</option>
+									</select>
 								</form>
 							</div>
 						</div>
@@ -60,7 +69,7 @@
 			<div class="panel-content">
 				<div class="datalistWrap">
 					<div class="row search-result-wrap">
-						<table id="dt_master_ship" class="result-table"></table>
+						<table id="dt_master_stock_new" class="result-table"></table>
 					</div>
 				</div>
 			</div>
@@ -93,10 +102,10 @@
 			
 			var errorMes = '';
 			var $mes = $('#message #text');
-			var $orderNo = $('#form_no input[name=order_no]').val();
-			console.log($.trim($orderNo).length);
-			if($.trim($orderNo).length == 0){
-				errorMes += "請輸入訂單編號!";
+			var $supply_name = $('#form_no input[name=supply_name]').val();
+			console.log($.trim($supply_name).length);
+			if($.trim($supply_name).length == 0){
+				errorMes += "請輸入供應商名稱!";
 			}
 
 			if(errorMes.length > 0){
@@ -110,12 +119,13 @@
 				return false;
 			}
 			var parameter = {
-				action : "searchByOrderNo",
-				orderNo : $orderNo
+				action : "getStockNewListBySupplyName",
+				supply_name : $supply_name
 			};
 			console.log(parameter);
 			drawMasterTable(parameter);
-		});		
+		});
+		
 		$('#form_date').on("click", "button", function(e) {
 			e.preventDefault();
 			var $startDate = $('#form_date input:eq(0)').val();
@@ -151,14 +161,14 @@
 				return false;
 			}
 			var parameter = {
-				action : "searchBySaleDate",
+				action : "getStockNewListByStockTime",
 				startDate : $startDate,
 				endDate : $endDate
 			};
 			console.log(parameter);
 			drawMasterTable(parameter);
 		});
-	    $('#dt_master_ship').on('change', ':checkbox', function() {
+	    $('#dt_master_stock_new').on('change', ':checkbox', function() {
 	        $(this).is(":checked")?
 	        	$(this).closest("tr").addClass("selected"):
 	        	$(this).closest("tr").removeClass("selected");
@@ -168,9 +178,9 @@
 	<script type="text/javascript">
 	function drawMasterTable(parameter) {
 
-		$dtMaster = $("#dt_master_ship").DataTable({
+		console.log("parameter: "+parameter);
+		$dtMaster = $("#dt_master_stock_new").DataTable({
 			dom : "lfrB<t>ip",
-			//scrollY : "200px",
 			width : 'auto',
 			scrollCollapse : true,
 			destroy : true,
@@ -179,7 +189,7 @@
 				"emptyTable" : "查無資料",
 			},
 			ajax : {
-				url : "ship.do",
+				url : "StockNew.do",
 				dataSrc : "",
 				type : "POST",
 				data : parameter
@@ -189,36 +199,36 @@
 				"data" : null,
 				"defaultContent" : ""
 			},{
-				"title" : "出貨流水編號",
-				"data" : "ship_seq_no",
+				"title" : "產品流水編號",
+				"data" : "productVO.c_product_id",
 				"defaultContent" : ""
 			}, {
-				"title" : "訂單編號",
-				"data" : "order_no",
+				"title" : "產品名稱",
+				"data" : "productVO.product_name",
 				"defaultContent" : ""
 			}, {
-				"title" : "客戶姓名",
-				"data" : "name",
+				"title" : "供應商名稱",
+				"data" : "productVO.supply_name",
 				"defaultContent" : ""
 			}, {
 				"title" : "備註",
 				"data" : "memo",
 				"defaultContent" : ""
-			}, {
-				"title" : "出貨方式",
-				"data" : "deliveryway",
+			},{
+				"title" : "庫存量",
+				"data" : "quantity",
 				"defaultContent" : ""
-			}, {
-				"title" : "訂單總額",
-				"data" : "total_amt",
+			},{
+				"title" : "倉庫代號",
+				"data" : "locationVO.warehouseVO.warehouse_code",
 				"defaultContent" : ""
-			}, {
-				"title" : "收件人姓名",
-				"data" : "deliver_name",
+			},{
+				"title" : "儲位代碼",
+				"data" : "locationVO.location_code",
 				"defaultContent" : ""
-			}, {
-				"title" : "收件地點",
-				"data" : "deliver_to",
+			},{
+				"title" : "有效日期",
+				"data" : "valid_date",
 				"defaultContent" : ""
 			} ],
 			columnDefs : [ {
@@ -226,12 +236,12 @@
 				searchable : false,
 				orderable : false,
 				render : function(data, type, row) {
-					var ship_seq_no = row.ship_seq_no;
+					var stock_id = row.stock_id;
 
 					var input = document.createElement("INPUT");
 					input.type = 'checkbox';
 					input.name = 'checkbox-group-select';
-					input.id = ship_seq_no;
+					input.id = stock_id;
 
 					var span = document.createElement("SPAN");
 					span.className = 'form-label';
@@ -240,7 +250,7 @@
 					span.appendChild(text);
 
 					var label = document.createElement("LABEL");
-					label.htmlFor = ship_seq_no;
+					label.htmlFor = stock_id;
 					label.name = 'checkbox-group-select';
 					label.style.marginLeft = '20%';
 					label.appendChild(span);
@@ -255,7 +265,7 @@
 				action : function(e, dt, node, config) {
 
 					selectCount++;
-					var $table =  $('#dt_master_ship');
+					var $table =  $('#dt_master_stock_new');
 					var $checkboxs = $table.find('input[name=checkbox-group-select]');
 					
 					selectCount %2 != 1 ?
@@ -273,13 +283,13 @@
 			}, {
 				text : '發送電文',
 				action : function(e, dt, node, config) {
-					var $table =  $('#dt_master_ship');
+					var $table =  $('#dt_master_stock_new');
 
 				    var cells = $dtMaster.cells( ).nodes();
 					var noArr = '';
 					
 					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-					
+					var inventory_status_val = $("#inventory_status").val();
 					console.log($checkboxs);
 					
 					if($checkboxs.length == 0){
@@ -290,63 +300,26 @@
 						alert('最多選擇二十筆資料');
 						return false;
 					}
-					
+		
+					if(inventory_status_val == '0'){
+						alert('請選擇庫存狀態');
+						return false;
+					}
 					
 					$checkboxs.each(function() {
 						noArr += this.id + ',';
 					});
 					noArr = noArr.slice(0,-1);
+					noArr = noArr.replace(/,/g,"','");
+					noArr = "'" + noArr + "'";
+					
 					$.ajax({
-						url: 'ship.do', 
+						url: 'StockNew.do', 
 						type: 'post',
 						data: {
-							action: 'sendToTelegraph',
-							ship_seq_nos: noArr
-						},
-						error: function (xhr) { },
-						success: function (response) {
-							var $mes = $('#message #text');
-							$mes.val('').html('成功發送');
-							$('#message')
-								.dialog()
-								.dialog('option', 'title', '提示訊息')
-								.dialog('option', 'width', 'auto')
-								.dialog('option', 'minHeight', 'auto')
-								.dialog("open");
-						}
-					});		
-					console.log(noArr);				
-				}
-			},{
-				text : '發送取消電文',
-				action : function(e, dt, node, config) {
-					var $table =  $('#dt_master_ship');
-
-				    var cells = $dtMaster.cells( ).nodes();
-					var noArr = '';
-					
-					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-					
-					console.log($checkboxs);
-					
-					if($checkboxs.length == 0){
-						alert('請至少選擇一筆資料');
-						return false;
-					}
-					if($checkboxs.length > 20){
-						alert('最多選擇二十筆資料');
-						return false;
-					}
-					$checkboxs.each(function() {
-						noArr += this.id + ',';
-					});
-					noArr = noArr.slice(0,-1);
-					$.ajax({
-						url: 'ship.do', 
-						type: 'post',
-						data: {
-							action: 'sendToCancelSaleOrderService',
-							ship_seq_nos: noArr
+							action: 'rtInventoryQueryService',
+							stock_ids: noArr,
+							inventory_status : inventory_status_val
 						},
 						error: function (xhr) { },
 						success: function (response) {
@@ -363,8 +336,6 @@
 					console.log(noArr);				
 				}
 			}
-			
-			
 			]
 		});
 	};

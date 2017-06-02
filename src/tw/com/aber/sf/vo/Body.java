@@ -30,6 +30,9 @@ public class Body {
 	private CancelSaleOrderRequest cancelSaleOrderRequest;
 	@XmlElement(name = "BomRequest")
 	private BomRequest bomRequest;
+	@XmlElement(name = "RTInventoryQueryRequest")
+	private RTInventoryQueryRequest rtInventoryQueryRequest;
+	
 
 	// Response
 	@XmlElement(name = "ItemResponse")
@@ -71,6 +74,15 @@ public class Body {
 
 	public void setSaleOrderStatusResponse(SaleOrderStatusResponse saleOrderStatusResponse) {
 		this.saleOrderStatusResponse = saleOrderStatusResponse;
+	}
+
+
+	public RTInventoryQueryRequest getRtInventoryQueryRequest() {
+		return rtInventoryQueryRequest;
+	}
+
+	public void setRtInventoryQueryRequest(RTInventoryQueryRequest rtInventoryQueryRequest) {
+		this.rtInventoryQueryRequest = rtInventoryQueryRequest;
 	}
 
 	public SaleOrderOutboundDetailResponse getSaleOrderOutboundDetailResponse() {

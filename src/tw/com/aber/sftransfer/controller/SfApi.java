@@ -61,6 +61,9 @@ import tw.com.aber.sf.vo.PurchaseOrder;
 import tw.com.aber.sf.vo.PurchaseOrderInboundRequest;
 import tw.com.aber.sf.vo.PurchaseOrderRequest;
 import tw.com.aber.sf.vo.PurchaseOrders;
+import tw.com.aber.sf.vo.RTInventory;
+import tw.com.aber.sf.vo.RTInventoryQueryRequest;
+import tw.com.aber.sf.vo.RTInventorys;
 import tw.com.aber.sf.vo.Request;
 import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.SaleOrder;
@@ -83,6 +86,7 @@ import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
+import tw.com.aber.vo.StockNewVO;
 import tw.com.aber.vo.WarehouseVO;
 
 public class SfApi {
@@ -735,11 +739,10 @@ public class SfApi {
 			purchaseOrder.setsFOrderType("采购入库");
 
 			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-			logger.debug("Date():" + date);
 			purchaseOrder.setScheduledReceiptDate(date);
 			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
 			purchaseOrder.setItems(items);
-
+			
 			purchaseOrderList.add(purchaseOrder);
 			items.setItemList(itemList);
 		}
@@ -897,6 +900,7 @@ public class SfApi {
 			purchaseOrderList.add(purchaseOrder);
 
 		}
+		
 		PurchaseOrders purchaseOrders = new PurchaseOrders();
 		purchaseOrders.setPurchaseOrder(purchaseOrderList);
 
@@ -1084,7 +1088,6 @@ public class SfApi {
 	public String genCancelSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
-		// 使用內部類別的function
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
@@ -1331,6 +1334,54 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+	
+	public String genRtInventoryQueryService(List<StockNewVO> stockNewVOList, ValueService valueService,
+			String InventoryStatus) {
+		String result;
+		List<RTInventory> rtInventoryList = new ArrayList<RTInventory>();
+		GroupSfVO groupSfVO = valueService.getGroupSfVO();
+		WarehouseVO warehouseVO = valueService.getWarehouseVO();
+		
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVO.getAccess_code());
+		head.setCheckword(groupSfVO.getCheck_word());
+		Body body = new Body();
+		RTInventoryQueryRequest rtInventoryQueryRequest = new RTInventoryQueryRequest();
+		rtInventoryQueryRequest.setCompanyCode(groupSfVO.getCompany_code());
+		rtInventoryQueryRequest.setWarehouseCode(warehouseVO.getWarehouse_code());
+		rtInventoryQueryRequest.setInventoryStatus(InventoryStatus);
+
+		RTInventorys rtInventorys = new RTInventorys();
+
+		for (int i = 0; i < stockNewVOList.size(); i++) {
+			StockNewVO stockNewVO = stockNewVOList.get(i);
+			RTInventory rtInventory = new RTInventory();
+			if (stockNewVO != null && stockNewVO.getProductVO() != null) {
+				rtInventory.setSkuNo(stockNewVO.getProductVO().getC_product_id());
+				rtInventoryList.add(rtInventory);
+			}
+		}
+		rtInventorys.setRtiList(rtInventoryList);
+		rtInventoryQueryRequest.setRtInventorys(rtInventorys);
+
+		body.setRtInventoryQueryRequest(rtInventoryQueryRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("RT_INVENTORY_QUERY_SERVICE");
 		mainXML.setLang("zh-TW");
 		mainXML.setHead(head);
 		mainXML.setBody(body);

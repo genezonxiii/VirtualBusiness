@@ -9,6 +9,15 @@ public class ProductVO implements java.io.Serializable {
 	private String c_product_id;
 	private String price;
 	private String cost;
+	private String supply_name;
+
+	public String getSupply_name() {
+		return supply_name;
+	}
+
+	public void setSupply_name(String supply_name) {
+		this.supply_name = supply_name;
+	}
 
 	public String getProduct_id() {
 		return product_id;
