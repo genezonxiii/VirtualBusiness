@@ -22,6 +22,7 @@
  		padding-top:0px ! important; 
 		top:20px;
 	}
+}
 </style>
 </head>
 <body>
@@ -95,14 +96,11 @@
 
 							var span = document.createElement("SPAN");
 							span.className = 'form-label';
-
-							var text = document.createTextNode('選取');
-							span.appendChild(text);
-
+							
 							var label = document.createElement("LABEL");
 							label.htmlFor = package_id;
 							label.name = 'checkbox-group-select';
-							label.style.marginLeft = '10%';
+							label.style.marginLeft = '35%';
 							label.appendChild(span);
 
 							var options = $("<div/>").append(input, label);
@@ -132,11 +130,16 @@
 					$("#package-contain").show();
 					$("#package tbody").html(result_table);
 					$dtMaster = $("#package").dataTable({
-						dom : "lfrB<t>ip",
+						dom : "frB<t>ip",
+						lengthChange: false,
+						pageLength: 20,
 						autoWidth: false,
-						scrollX:  true,
 						scrollY:"300px",
 						"language": {"url": "js/dataTables_zh-tw.txt"},"order": [],
+						initComplete: function(settings, json) {
+						    $('div .dt-buttons').css({'float': 'left','margin-left':'10px'});
+						    $('div .dt-buttons a').css('margin-left','10px');
+						},
 						buttons : [ {
 							text : '全選',
 							action : function(e, dt, node, config) {

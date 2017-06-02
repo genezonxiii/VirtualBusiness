@@ -44,6 +44,15 @@
 <script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 <link rel="stylesheet" href="css/buttons.dataTables.min.css">
 <script>
+
+$(function(){
+    $('#purchases').on('change', ':checkbox', function() {
+        $(this).is(":checked")?
+            $(this).closest("tr").addClass("selected"):
+            $(this).closest("tr").removeClass("selected");
+    });     
+});
+
 var $dtMaster = null;
 var selectCount = 0;
 function draw_purchase(parameter){
@@ -100,13 +109,10 @@ function draw_purchase(parameter){
 							var span = document.createElement("SPAN");
 							span.className = 'form-label';
 
-							var text = document.createTextNode('選取');
-							span.appendChild(text);
-
 							var label = document.createElement("LABEL");
 							label.htmlFor = purchase_id;
 							label.name = 'checkbox-group-select';
-							label.style.marginLeft = '10%';
+							label.style.marginLeft = '35%';
 							label.appendChild(span);
 							
 							var options = $("<div/>").append(input, label);
@@ -136,7 +142,14 @@ function draw_purchase(parameter){
 					$("#purchases_contain_row").hide();
 					$("#purchases tbody").html(result_table);
 					$dtMaster = $("#purchases").dataTable({
-						dom : "lfrB<t>ip",
+						dom : "frB<t>ip",
+						lengthChange: false,
+						pageLength: 20,
+						scrollY:"260px",
+						initComplete: function(settings, json) {
+						    $('div .dt-buttons').css({'float': 'left','margin-left':'10px'});
+						    $('div .dt-buttons a').css('margin-left','10px');
+						},
 						buttons : [{
 							text : '入庫接口',
 							action : function(e, dt, node, config) {

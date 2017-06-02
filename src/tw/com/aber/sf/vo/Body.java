@@ -57,6 +57,24 @@ public class Body {
 	private SaleOrderOutboundDetailResponse saleOrderOutboundDetailResponse;
 	@XmlElement(name = "RTInventoryQueryResponse")
 	private RTInventoryQueryResponse rtInventoryQueryResponse;
+	@XmlElement(name = "SaleOrderStatusResponse")
+	private SaleOrderStatusResponse saleOrderStatusResponse;
+	
+	public RTInventoryQueryResponse getRtInventoryQueryResponse() {
+		return rtInventoryQueryResponse;
+	}
+
+	public void setRtInventoryQueryResponse(RTInventoryQueryResponse rtInventoryQueryResponse) {
+		this.rtInventoryQueryResponse = rtInventoryQueryResponse;
+	}
+
+	public SaleOrderStatusResponse getSaleOrderStatusResponse() {
+		return saleOrderStatusResponse;
+	}
+
+	public void setSaleOrderStatusResponse(SaleOrderStatusResponse saleOrderStatusResponse) {
+		this.saleOrderStatusResponse = saleOrderStatusResponse;
+	}
 
 
 	public RTInventoryQueryRequest getRtInventoryQueryRequest() {

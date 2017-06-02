@@ -169,14 +169,20 @@
 	function drawMasterTable(parameter) {
 
 		$dtMaster = $("#dt_master_ship").DataTable({
-			dom : "lfrB<t>ip",
-			//scrollY : "200px",
+			dom : "frB<t>ip",
+			lengthChange: false,
+			pageLength: 20,
+			scrollY:"290px",
 			width : 'auto',
 			scrollCollapse : true,
 			destroy : true,
 			language : {
 				"url" : "js/dataTables_zh-tw.txt",
 				"emptyTable" : "查無資料",
+			},
+			initComplete: function(settings, json) {
+			    $('div .dt-buttons').css({'float': 'left','margin-left':'10px'});
+			    $('div .dt-buttons a').css('margin-left','10px');
 			},
 			ajax : {
 				url : "ship.do",
@@ -236,13 +242,10 @@
 					var span = document.createElement("SPAN");
 					span.className = 'form-label';
 
-					var text = document.createTextNode('選取');
-					span.appendChild(text);
-
 					var label = document.createElement("LABEL");
 					label.htmlFor = ship_seq_no;
 					label.name = 'checkbox-group-select';
-					label.style.marginLeft = '20%';
+					label.style.marginLeft = '35%';
 					label.appendChild(span);
 
 					var options = $("<div/>").append(input, label);

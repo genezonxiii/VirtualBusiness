@@ -179,6 +179,7 @@ public class productpackage extends HttpServlet {
 			String reqXml = sfApi.genBomService(packageVOList, valueService);
 			String resXml = sfApi.sendXML(reqXml);
 			logger.debug(resXml);
+			Response resObj = sfApi.getItemQueryServiceResponseObj(resXml);
 		}
 		return;
 	}
