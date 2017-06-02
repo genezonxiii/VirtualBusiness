@@ -1537,14 +1537,14 @@ public class SfApi {
 	 *            The string to be processed
 	 * @return returns a response object
 	 */
-	public Response getItemQueryServiceResponseObj(String xmlString) {
+	public Response getItemQueryServiceResponseObj(String resXml) {
 		Response response = null;
 		// JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
 		// Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		//
 		// StringReader reader = new StringReader(xmlString);
 		// response = (Response) unmarshaller.unmarshal(reader);
-		response = JAXB.unmarshal(new StringReader(xmlString), Response.class);
+		response = JAXB.unmarshal(new StringReader(resXml), Response.class);
 
 		logger.debug("\n\nJson格式:\n\n{}\n", new Gson().toJson(response));
 		StringWriter sw = new StringWriter();
