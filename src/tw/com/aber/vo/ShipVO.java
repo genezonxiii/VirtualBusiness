@@ -21,6 +21,8 @@ public class ShipVO implements Serializable {
 	private String deliver_name;
 	private String deliver_to;
 	private Date v_sale_date; // tb_realsale
+	private String v_c_product_id;// tb_realsale
+	private String v_product_name;// tb_realsale
 	private List<ShipDetail> shipDetail;
 
 	public String getShip_id() {
@@ -133,6 +135,30 @@ public class ShipVO implements Serializable {
 
 	public void setShipDeatil(List<ShipDetail> shipDeatil) {
 		this.shipDetail = shipDeatil;
+	}
+
+	public String getV_c_product_id() {
+		return v_c_product_id;
+	}
+
+	public void setV_c_product_id(String v_c_product_id) {
+		this.v_c_product_id = v_c_product_id;
+	}
+
+	public String getV_product_name() {
+		return v_product_name;
+	}
+
+	public void setV_product_name(String v_product_name) {
+		this.v_product_name = v_product_name;
+	}
+
+	public List<ShipDetail> getShipDetail() {
+		return shipDetail;
+	}
+
+	public void setShipDetail(List<ShipDetail> shipDetail) {
+		this.shipDetail = shipDetail;
 	}
 
 }

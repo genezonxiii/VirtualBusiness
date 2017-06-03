@@ -305,7 +305,6 @@ public class product extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml = sfApi.genItemService(productList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
-				logger.debug("resXml: "+resXml);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
