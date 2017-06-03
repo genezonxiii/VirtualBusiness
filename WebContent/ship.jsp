@@ -194,13 +194,17 @@
 				"title" : "批次請求",
 				"data" : null,
 				"defaultContent" : ""
-			},{
-				"title" : "出貨流水編號",
-				"data" : "ship_seq_no",
-				"defaultContent" : ""
 			}, {
 				"title" : "訂單編號",
 				"data" : "order_no",
+				"defaultContent" : ""
+			},{
+				"title" : "產品編號",
+				"data" : "v_c_product_id",
+				"defaultContent" : ""
+			}, {
+				"title" : "產品名稱",
+				"data" : "v_product_name",
 				"defaultContent" : ""
 			}, {
 				"title" : "客戶姓名",

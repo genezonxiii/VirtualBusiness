@@ -84,7 +84,6 @@ public class ship extends HttpServlet {
 
 				rows = service.getSearchShipBySaleDate(groupId, startDate, endDate);
 				result = gson.toJson(rows);
-
 				response.getWriter().write(result);
 
 			} else if ("searchByOrderNo".equals(action)) {
@@ -229,6 +228,8 @@ public class ship extends HttpServlet {
 					row.setDeliver_name(rs.getString("deliver_name"));
 					row.setDeliver_to(rs.getString("deliver_to"));
 					row.setV_sale_date(rs.getDate("sale_date"));
+					row.setV_c_product_id(rs.getString("c_product_id"));
+					row.setV_product_name(rs.getString("product_name"));
 
 					rows.add(row);
 				}
@@ -392,6 +393,8 @@ public class ship extends HttpServlet {
 					row.setDeliver_name(rs.getString("deliver_name"));
 					row.setDeliver_to(rs.getString("deliver_to"));
 					row.setV_sale_date(rs.getDate("sale_date"));
+					row.setV_c_product_id(rs.getString("c_product_id"));
+					row.setV_product_name(rs.getString("product_name"));
 
 					rows.add(row);
 				}

@@ -2,7 +2,6 @@ package tw.com.aber.product.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Array;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,8 +22,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import tw.com.aber.sf.vo.Response;
-import tw.com.aber.sf.vo.ResponseFail;
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
@@ -309,6 +306,7 @@ public class product extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml = sfApi.genItemService(productList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
+				
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
