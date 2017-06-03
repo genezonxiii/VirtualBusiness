@@ -50,17 +50,18 @@ public class Util {
 
 	 */
 	public void ConfirmLoginAgain(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			if (request.getSession().getAttribute("group_id") == null
-					|| request.getSession().getAttribute("user_id") == null) {
-				
-				logger.debug("group_id,user_id is null from session");
-				// 導到登入畫面
-				response.sendRedirect("./login.jsp");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		//xxx 暫且擱置
+//		try {
+//			if (request.getSession().getAttribute("group_id") == null
+//					|| request.getSession().getAttribute("user_id") == null) {
+//				
+//				logger.debug("group_id,user_id is null from session");
+//				// 導到登入畫面
+//				response.sendRedirect("./login.jsp");
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**

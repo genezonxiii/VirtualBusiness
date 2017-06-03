@@ -123,10 +123,6 @@ public class ship extends HttpServlet {
 					ValueService valueService = util.getValueService(request, response);
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
-					
-					logger.debug(resXml);
-					
-
 				} catch (Exception e) {
 					e.printStackTrace();
 					logger.debug(e.getMessage());
@@ -155,8 +151,6 @@ public class ship extends HttpServlet {
 	
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
-					
-					logger.debug(resXml);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());

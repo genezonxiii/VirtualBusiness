@@ -471,8 +471,6 @@ public class purchase extends HttpServlet {
 
 				String reqXml = sfApi.genPurchaseOrderService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
-				
-				logger.debug(resXml);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -103,8 +103,6 @@ public class StockNew extends HttpServlet{
 
 			String reqXml = sfApi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
 			String resXml = sfApi.sendXML(reqXml);
-			
-			logger.debug(resXml);
 		}
 
 	}
