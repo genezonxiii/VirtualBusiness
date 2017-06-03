@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sf.vo.Response;
+import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.ship.controller.ship;
@@ -471,6 +472,10 @@ public class purchase extends HttpServlet {
 
 				String reqXml = sfApi.genPurchaseOrderService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
+				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -494,7 +499,10 @@ public class purchase extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml =sfApi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
-				
+				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
 				logger.debug("resXml =" + resXml);
 				
 			} catch (Exception e) {
