@@ -51,10 +51,6 @@ public class ship extends HttpServlet {
 
 		Util util = new Util();
 
-		HttpSession session = request.getSession(true);
-		session.setAttribute("user_id", null);
-		session.setAttribute("group_id", null);
-
 		String groupId = (String) request.getSession().getAttribute("group_id");
 		String userId = (String) request.getSession().getAttribute("user_id");
 
