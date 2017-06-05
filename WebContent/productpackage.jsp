@@ -208,7 +208,56 @@
 								});		
 								console.log('idArr: '+ idArr);		
 							}
-						} ]});
+						},{
+							text : '發送產品資訊電文',
+							action : function(e, dt, node, config) {
+								var $table =  $('#package');
+
+							    var cells = $dtMaster.fnGetNodes();
+								var idArr = '';
+								
+								var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+								
+								
+								if($checkboxs.length == 0){
+									alert('請至少選擇一筆資料');
+									return false;
+								}
+								if($checkboxs.length > 20){
+									alert('最多選擇二十筆資料');
+									return false;
+								}
+								
+								$checkboxs.each(function() {
+									idArr += this.id + ',';
+								});
+								idArr = idArr.slice(0,-1);
+								idArr = idArr.replace(/,/g,"','");
+								idArr = "'" + idArr + "'";
+								
+								$.ajax({
+									url: 'productpackage.do', 
+									type: 'post',
+									data: {
+										action: 'sendItemService',
+										package_ids: idArr
+									},
+									error: function (xhr) { },
+									success: function (response) {
+										var $mes = $('#message #text');
+										$mes.val('').html('成功發送');
+										$('#message')
+											.dialog()
+											.dialog('option', 'title', '提示訊息')
+											.dialog('option', 'width', 'auto')
+											.dialog('option', 'minHeight', 'auto')
+											.dialog("open");
+									}
+								});		
+								console.log('idArr: '+ idArr);		
+							}
+						}
+						]});
 					tooltip('btn_update');
 					tooltip('btn_delete');
 					tooltip('btn_detail');

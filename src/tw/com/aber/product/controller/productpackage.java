@@ -179,7 +179,19 @@ public class productpackage extends HttpServlet {
 			String reqXml = sfApi.genBomService(packageVOList, valueService);
 			String resXml = sfApi.sendXML(reqXml);
 			Response resObj = sfApi.getItemQueryServiceResponseObj(resXml);
+		} else if ("sendItemService".equals(action)) {
+			String packageIds = request.getParameter("package_ids");
+			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
+
+			ValueService valueService = util.getValueService(request, response);
+			SfApi sfApi = new SfApi();
+		
+			String reqXml = sfApi.genItemServiceForPackage(packageVOList, valueService);
+			String resXml = sfApi.sendXML(reqXml);
+			Response resObj = sfApi.getItemQueryServiceResponseObj(resXml);
 		}
+			
+			
 		return;
 	}
 
@@ -283,7 +295,8 @@ public class productpackage extends HttpServlet {
 						packageVO = new PackageVO();
 						packageVO.setC_package_id(rs.getString("bomSkuNo"));
 						packageVO.setProductPackageList(detailList);
-
+						packageVO.setBarcode(rs.getString("barcode"));
+						packageVO.setPackage_name(rs.getString("package_name"));
 						packageVOList.add(packageVO);
 
 						bomId = bomId_now;

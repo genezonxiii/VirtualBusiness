@@ -524,6 +524,73 @@ public class SfApi {
 
 		return result;
 	}
+	
+	public String genItemServiceForPackage(List<tw.com.aber.vo.PackageVO> packageVOList, ValueService valueService) {
+		List<SfItem> itemList = new ArrayList<SfItem>();
+
+		for (int i = 0; i < packageVOList.size(); i++) {
+			tw.com.aber.vo.PackageVO packageVO = packageVOList.get(i);
+
+			SfItem item = new SfItem();
+			item.setSkuNo(packageVO.getC_package_id());
+			item.setItemName(packageVO.getPackage_name());
+
+			// Containers
+			SfContainer container = new SfContainer();
+			// 先暫時放id 等之後再做查詢
+			container.setPackUm("CS");
+			// product.getUnit_id()
+
+			Containers containers = new Containers();
+			containers.setContainer(container);
+
+			// item1
+			BarCode barCode = new BarCode();
+			barCode.setBarCode1(packageVO.getBarcode());
+
+			item.setBarCode(barCode);
+			item.setContainers(containers);
+
+			item.setBomAction("Y");
+			itemList.add(item);
+
+		}
+
+		String result;
+
+		Items items = new Items();
+		items.setItemList(itemList);
+
+		ItemRequest itemRequest = new ItemRequest();
+
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+
+		itemRequest.setCompanyCode(groupSfVo.getCompany_code());
+		itemRequest.setItems(items);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
+
+		Body body = new Body();
+		body.setItemRequest(itemRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("ITEM_SERVICE");
+		mainXML.setLang("zh-TW");
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
 
 	public String genItemQueryService(List<ProductBean> productList, ValueService valueService) {
 		String result;
@@ -706,8 +773,8 @@ public class SfApi {
 
 		Items items = new Items();
 		for (int i = 0; i < purchaseList.size(); i++) {
-
-			List<PurchaseDetailVO> purchaseDetailList = purchaseList.get(i).getPurchaseDetailList();
+			PurchaseVO purchaseVO = purchaseList.get(i);
+			List<PurchaseDetailVO> purchaseDetailList = purchaseVO.getPurchaseDetailList();
 
 			purchaseOrderList = new ArrayList<PurchaseOrder>();
 
@@ -715,7 +782,6 @@ public class SfApi {
 
 			PurchaseOrder purchaseOrder = new PurchaseOrder();
 
-			PurchaseVO purchaseVO = new PurchaseVO();
 			if (purchaseDetailList != null) {
 				for (int j = 0; j < purchaseDetailList.size(); j++) {
 
