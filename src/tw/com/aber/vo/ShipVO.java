@@ -20,6 +20,7 @@ public class ShipVO implements Serializable {
 	private Float total_amt;
 	private String deliver_name;
 	private String deliver_to;
+	private String realsale_id;
 	private Date v_sale_date; // tb_realsale
 	private String v_c_product_id;// tb_realsale
 	private String v_product_name;// tb_realsale
@@ -161,4 +162,13 @@ public class ShipVO implements Serializable {
 		this.shipDetail = shipDetail;
 	}
 
+	public String getRealsale_id() {
+		return realsale_id;
+	}
+
+	public void setRealsale_id(String realsale_id) {
+		this.realsale_id = realsale_id;
+	}
+	
+	
 }

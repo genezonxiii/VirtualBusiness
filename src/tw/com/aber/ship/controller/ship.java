@@ -227,6 +227,7 @@ public class ship extends HttpServlet {
 					row.setTotal_amt(rs.getFloat("total_amt"));
 					row.setDeliver_name(rs.getString("deliver_name"));
 					row.setDeliver_to(rs.getString("deliver_to"));
+					row.setRealsale_id(rs.getString("realsale_id"));
 					row.setV_sale_date(rs.getDate("sale_date"));
 					row.setV_c_product_id(rs.getString("c_product_id"));
 					row.setV_product_name(rs.getString("product_name"));
@@ -392,6 +393,7 @@ public class ship extends HttpServlet {
 					row.setTotal_amt(rs.getFloat("total_amt"));
 					row.setDeliver_name(rs.getString("deliver_name"));
 					row.setDeliver_to(rs.getString("deliver_to"));
+					row.setRealsale_id(rs.getString("realsale_id"));
 					row.setV_sale_date(rs.getDate("sale_date"));
 					row.setV_c_product_id(rs.getString("c_product_id"));
 					row.setV_product_name(rs.getString("product_name"));
