@@ -2,14 +2,10 @@ package tw.com.aber.sftransfer.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -18,16 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpClient;
@@ -38,10 +25,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
-import org.mortbay.jetty.servlet.Context;
 
 import tw.com.aber.product.controller.product.ProductBean;
-import tw.com.aber.purchase.controller.purchase;
 import tw.com.aber.sf.vo.BarCode;
 import tw.com.aber.sf.vo.Body;
 import tw.com.aber.sf.vo.Bom;
@@ -68,7 +53,6 @@ import tw.com.aber.sf.vo.Request;
 import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
-import tw.com.aber.sf.vo.SaleOrderOutboundDetailResponse;
 import tw.com.aber.sf.vo.SaleOrderRequest;
 import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
@@ -77,7 +61,6 @@ import tw.com.aber.sf.vo.SfBomItems;
 import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
-import tw.com.aber.sftransfer.controller.ValueService.ValueService_Service;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.PackageVO;
@@ -511,7 +494,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -578,7 +561,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -621,7 +604,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_QUERY_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -660,7 +643,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_QUERY_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -747,7 +730,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -830,7 +813,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -887,7 +870,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_INBOUND_QUERY_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -935,7 +918,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -984,7 +967,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1057,7 +1040,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1137,7 +1120,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1185,7 +1168,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1253,7 +1236,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("BOM_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1302,7 +1285,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_STATUS_QUERY_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1352,7 +1335,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1400,7 +1383,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1448,7 +1431,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("RT_INVENTORY_QUERY_SERVICE");
-		mainXML.setLang("zh-TW");
+		mainXML.setLang("zh-CN"); 
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1529,8 +1512,8 @@ public class SfApi {
 			URL url = new URL(targetURL);
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+			
 			connection.setRequestProperty("Content-Length", Integer.toString(urlParameters.getBytes().length));
 			connection.setRequestProperty("Content-Language", "zh-TW");
 
@@ -1544,7 +1527,7 @@ public class SfApi {
 
 			// Get Response
 			InputStream is = connection.getInputStream();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, "utf-8"));
 			StringBuilder response = new StringBuilder(); // or StringBuffer if
 															// Java version 5+
 			String line;
