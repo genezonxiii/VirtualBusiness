@@ -12,10 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +27,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sale.controller.sale;
 import tw.com.aber.sf.vo.Response;
+import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
@@ -45,13 +48,15 @@ public class ship extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		
-		Util util =new Util();
-		
-		util.ConfirmLoginAgain(request, response);
 
-		String groupId = (String)request.getSession().getAttribute("group_id");
-		String userId = (String)request.getSession().getAttribute("user_id");
+		Util util = new Util();
+
+		HttpSession session = request.getSession(true);
+		session.setAttribute("user_id", null);
+		session.setAttribute("group_id", null);
+
+		String groupId = (String) request.getSession().getAttribute("group_id");
+		String userId = (String) request.getSession().getAttribute("user_id");
 
 		ShipService shipService = null;
 
@@ -88,14 +93,14 @@ public class ship extends HttpServlet {
 
 			} else if ("searchByOrderNo".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
-				
+
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				service = new ShipService();
 				shipVO = new ShipVO();
-				
+
 				shipVO.setGroup_id(groupId);
 				shipVO.setOrder_no(orderNo);
-				
+
 				rows = service.getSearchShipByOrderNo(shipVO);
 				result = gson.toJson(rows);
 
@@ -118,17 +123,21 @@ public class ship extends HttpServlet {
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
 					SfApi sfApi = new SfApi();
-					
+
 					ValueService valueService = util.getValueService(request, response);
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+					logger.debug("執行結果: " + result);
+					response.getWriter().write(result);
 				} catch (Exception e) {
 					e.printStackTrace();
 					logger.debug(e.getMessage());
 				}
 
-			}else if("sendToCancelSaleOrderService".equals(action)){
-				
+			} else if ("sendToCancelSaleOrderService".equals(action)) {
+
 				List<ShipVO> shipVOList = null;
 				try {
 					/***************************
@@ -147,17 +156,18 @@ public class ship extends HttpServlet {
 					logger.debug("ship_seq_nos =" + ship_seq_nos);
 
 					ValueService valueService = util.getValueService(request, response);
-	
+
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+					logger.debug("執行結果: " + result);
+					response.getWriter().write(result);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());
 				}
 
-			
-				
-				
 			}
 
 		} catch (Exception e) {
@@ -179,7 +189,7 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getSearchShipByOrderNo(ShipVO shipVO) {
 			return dao.searchShipByOrderNo(shipVO);
 		}
-		
+
 		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
 			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 		}
@@ -266,13 +276,13 @@ public class ship extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
-			
+
 			List<ShipDetail> shipDetailList = null;
 			ShipDetail shipDetail = null;
-			
+
 			String ship_id_Record = null;
-			String ship_id_now ="";
-			
+			String ship_id_now = "";
+
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
@@ -284,8 +294,8 @@ public class ship extends HttpServlet {
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					
-					//sp 為ship sd 為shipDetail
+
+					// sp 為ship sd 為shipDetail
 					shipDetail = new ShipDetail();
 					shipDetail.setC_product_id(rs.getString("sd_c_product_id"));
 					shipDetail.setDeliveryway(rs.getString("sd_deliveryway"));
@@ -294,25 +304,25 @@ public class ship extends HttpServlet {
 					shipDetail.setPrice(rs.getString("sd_price"));
 					shipDetail.setProduct_id(rs.getString("sd_product_id"));
 					shipDetail.setProduct_name(rs.getString("sd_product_name"));
-					
+
 					String sd_quantity = rs.getString("sd_quantity");
-					
-					if (!(sd_quantity == null || "".equals(sd_quantity))){
+
+					if (!(sd_quantity == null || "".equals(sd_quantity))) {
 						shipDetail.setQuantity(Integer.parseInt(sd_quantity));
 					}
 					shipDetail.setShip_id(rs.getString("sd_ship_id"));
 					shipDetail.setShipDetail_id(rs.getString("sd_shipDetail_id"));
 					shipDetail.setUser_id(rs.getString("sd_user_id"));
 
-					//如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
-					//所以要新增出貨明細
-					logger.debug("ship_id_now:"+ship_id_now);
-					logger.debug("ship_id_Record:"+ship_id_Record);
+					// 如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
+					// 所以要新增出貨明細
+					logger.debug("ship_id_now:" + ship_id_now);
+					logger.debug("ship_id_Record:" + ship_id_Record);
 					ship_id_now = rs.getString("sp_ship_id");
-					if((!ship_id_now.equals(ship_id_Record))||rs.isFirst()){
+					if ((!ship_id_now.equals(ship_id_Record)) || rs.isFirst()) {
 						shipDetailList = new ArrayList<ShipDetail>();
-						
-						//並且紀錄出貨明細
+
+						// 並且紀錄出貨明細
 						shipVO = new ShipVO();
 						shipVO.setShip_id(rs.getString("sp_ship_id"));
 
@@ -328,7 +338,7 @@ public class ship extends HttpServlet {
 						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
 						shipVO.setShipDeatil(shipDetailList);
 						shipVOList.add(shipVO);
-						
+
 						ship_id_Record = ship_id_now;
 					}
 
