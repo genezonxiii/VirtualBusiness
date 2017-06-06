@@ -273,6 +273,8 @@ public class ship extends HttpServlet {
 			
 			String ship_id_Record = null;
 			String ship_id_now ="";
+			String order_no_Record = null;
+			String order_no_now ="";
 			
 			try {
 				Class.forName(jdbcDriver);
@@ -307,10 +309,14 @@ public class ship extends HttpServlet {
 
 					//如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
 					//所以要新增出貨明細
-					logger.debug("ship_id_now:"+ship_id_now);
-					logger.debug("ship_id_Record:"+ship_id_Record);
+					logger.debug("order_no_now:"+order_no_now);
+					logger.debug("order_no_Record:"+order_no_Record);
+					logger.debug("order_no_Record:"+shipDetail.getC_product_id());
+					logger.debug("order_no_Record:"+shipDetail.getProduct_name());
+					
 					ship_id_now = rs.getString("sp_ship_id");
-					if((!ship_id_now.equals(ship_id_Record))||rs.isFirst()){
+					order_no_now = rs.getString("sp_order_no");
+					if((!order_no_now.equals(order_no_Record))||rs.isFirst()){
 						shipDetailList = new ArrayList<ShipDetail>();
 						
 						//並且紀錄出貨明細
@@ -334,6 +340,7 @@ public class ship extends HttpServlet {
 						shipVOList.add(shipVO);
 						
 						ship_id_Record = ship_id_now;
+						order_no_Record = order_no_now;
 					}
 
 					shipDetailList.add(shipDetail);
@@ -360,7 +367,6 @@ public class ship extends HttpServlet {
 				}
 			}
 			return shipVOList;
-
 		}
 
 		@Override
