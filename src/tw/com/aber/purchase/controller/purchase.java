@@ -40,7 +40,7 @@ import tw.com.aber.vo.SupplyVO;
 
 public class purchase extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(ship.class);
+	private static final Logger logger = LogManager.getLogger(purchase.class);
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -48,6 +48,7 @@ public class purchase extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PurchaseService purchaseService = null;
 		String action = request.getParameter("action");
+		logger.debug("Action:" + action);
 		
 		Util util =new Util();
 		
@@ -500,9 +501,31 @@ public class purchase extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		if ("PurchaseOrderQueryService".equals(action)) {
+			try {
+				/***************************
+				 * 1.接收請求參數
+				 ***************************************/
+				SfApi sfApi = new SfApi();
+
+				String purchase_ids = request.getParameter("purchase_ids");
+
+				purchaseService = new PurchaseService();
+
+				logger.debug("ship_seq_nos =" + purchase_ids + ", group_id =" + group_id);
+
+				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
+						purchase_ids);
+				ValueService valueService = util.getValueService(request, response);
+				String reqXml =sfApi.genPurchaseOrderInboundQueryService(purchaseList, valueService);
+				String resXml = sfApi.sendXML(reqXml);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		}
-		
+
 	}
 
 	// 處理傳過來的日期格式，變為數字

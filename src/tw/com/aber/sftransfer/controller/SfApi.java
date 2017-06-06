@@ -827,43 +827,35 @@ public class SfApi {
 		return result;
 	}
 
-	public String genPurchaseOrderInboundQueryService(String po) {
+
+	public String genPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
 		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 
-		// purchaseOrder
-		PurchaseOrder purchaseOrder = new PurchaseOrder();
-		purchaseOrder.setWarehouseCode("571DCF");
-		purchaseOrder.setErpOrder(po);
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+		WarehouseVO warehouseVO = valueService.getWarehouseVO();
 
-		purchaseOrderList.add(purchaseOrder);
-
-		// purchaseOrder1
-		PurchaseOrder purchaseOrder1 = new PurchaseOrder();
-		purchaseOrder1.setWarehouseCode("571DCF");
-		purchaseOrder1.setErpOrder(po.concat("-1"));
-
-		purchaseOrderList.add(purchaseOrder1);
-
-		// purchaseOrder2
-		PurchaseOrder purchaseOrder2 = new PurchaseOrder();
-		purchaseOrder2.setWarehouseCode("571DCF");
-		purchaseOrder2.setErpOrder(po.concat("-2"));
-
-		purchaseOrderList.add(purchaseOrder2);
+		for (int i = 0; i < purchaseList.size(); i++) {
+			PurchaseVO purchaseVO = purchaseList.get(i);
+			
+			PurchaseOrder purchaseOrder = new PurchaseOrder();
+			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
+			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
+			purchaseOrderList.add(purchaseOrder);
+		}
 
 		PurchaseOrders purchaseOrders = new PurchaseOrders();
 		purchaseOrders.setPurchaseOrder(purchaseOrderList);
 
 		PurchaseOrderInboundRequest purchaseOrderInboundRequest = new PurchaseOrderInboundRequest();
-		purchaseOrderInboundRequest.setCompanyCode("WYDGJ");
+		purchaseOrderInboundRequest.setCompanyCode(groupSfVo.getCompany_code());
 		purchaseOrderInboundRequest.setPurchaseOrders(purchaseOrders);
 
 		// head, body
 		Head head = new Head();
-		head.setAccessCode("ITCNC1htXV9xuOKrhu24ow==");
-		head.setCheckword("ANU2VHvV5eqsr2PJHu2znWmWtz2CdIvj");
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
 
 		Body body = new Body();
 		body.setPurchaseOrderInboundRequest(purchaseOrderInboundRequest);
