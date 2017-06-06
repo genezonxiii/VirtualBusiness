@@ -437,7 +437,7 @@ public class sale extends HttpServlet {
 		private static final String sp_select_sale_bycproductid = "call sp_select_sale_bycproductid (?,?)";
 		private static final String sp_select_sale_bytranslistdate = "call sp_select_sale_bytranslistdate(?,?,?)";
 		private static final String sp_select_sale_bydisdate = "call sp_select_sale_bydisdate(?,?,?)";
-		private static final String sp_get_sale_newseqno = "call sp_get_sale_seqno(?)";
+		private static final String sp_get_sale_newseqno = "call sp_get_sale_newseqno(?)";
 		private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		private static final String sp_del_sale = "call sp_del_sale (?,?)";
 		private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
