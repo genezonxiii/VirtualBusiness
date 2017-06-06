@@ -248,7 +248,7 @@
 									var table = document.createElement('table');
 									supplys.forEach(function(value, key, fullArray){
 										var tr = document.createElement('tr');
-										var text = document.createTextNode(value+'.'+key);
+										var text = document.createTextNode(key);
 										tr.appendChild(text);
 										table.appendChild(tr);
 									});
@@ -271,7 +271,7 @@
 										}									
 									});
 									jsonList = JSON.stringify(allocInvs);
-									console.log(jsonString);
+									console.log(jsonList);
 									$.ajax({
 										url: 'allocInv.do',
 									 	type: 'post',

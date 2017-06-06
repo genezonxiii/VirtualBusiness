@@ -1,6 +1,7 @@
 package tw.com.aber.allocinv.controller;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import tw.com.aber.basicdataimport.controller.BasicDataImport;
 import tw.com.aber.vo.AllocInvVo;
@@ -72,6 +74,16 @@ public class allocInv extends HttpServlet {
 			logger.debug(jsonStr);
 
 			response.getWriter().write(jsonStr);
+		} else if ("doPurchases".equals(action)) {
+			service = new AllocInvService();
+			String seqNo = service.getPurchaseSeqNo(groupId);
+			String jsonList = request.getParameter("jsonList");
+			
+			Type type = new TypeToken<List<AllocInvVo>>() {}.getType();
+
+			new Gson().fromJson(接的東西, type);
+
+			logger.debug("\n{}\n{}\n", seqNo, jsonList);
 		}
 	}
 
@@ -82,12 +94,16 @@ public class allocInv extends HttpServlet {
 			dao = new AllocInvDao();
 		}
 
-		public List<AllocInvVo> getAllData(String group_id) {
-			return dao.getAllData(group_id);
+		public List<AllocInvVo> getAllData(String groupId) {
+			return dao.getAllData(groupId);
 		}
 
-		public List<AllocInvVo> getGroupData(String group_id) {
-			return dao.getGroupData(group_id);
+		public List<AllocInvVo> getGroupData(String groupId) {
+			return dao.getGroupData(groupId);
+		}
+
+		public String getPurchaseSeqNo(String groupId) {
+			return dao.getPurchaseSeqNo(groupId);
 		}
 	}
 
@@ -101,7 +117,7 @@ public class allocInv extends HttpServlet {
 		private static final String sp_select_all_alloc_inv = "call sp_select_all_alloc_inv (?)";
 		private static final String sp_select_group_alloc_inv = "call sp_select_group_alloc_inv (?)";
 		private static final String sp_insert_allocinv_to_purchase = "call sp_insert_allocinv_to_purchase (?,?,?,?,?)";
-		private static final String sp_get_purchase_newseqno = "call sp_get_purchase_newseqno (?)";
+		private static final String sp_get_purchase_newseqno = "call sp_get_purchase_newseqno (?,?)";
 
 		@Override
 		public List<AllocInvVo> getAllData(String group_id) {
@@ -253,11 +269,45 @@ public class allocInv extends HttpServlet {
 			return result;
 		}
 
-		
 		@Override
-		public String getPurchaseSeqNo(String group_id) {
-			// TODO Auto-generated method stub
-			return null;
+		public String getPurchaseSeqNo(String groupId) {
+			Connection con = null;
+			CallableStatement cs = null;
+			String result = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_get_purchase_newseqno);
+
+				cs.setString(1, groupId);
+				cs.registerOutParameter(2, Types.VARCHAR);
+				cs.execute();
+
+				result = cs.getString(2);
+
+				// Handle any SQL errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return result;
 		}
 
 	}
