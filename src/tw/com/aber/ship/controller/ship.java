@@ -194,7 +194,7 @@ public class ship extends HttpServlet {
 
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
 		private static final String sp_select_ship_by_order_no = "call sp_select_ship_by_order_no (?,?)";
-		private static final String sp_get_ship_by_shipseqno = "call db_virtualbusiness.sp_get_ship_by_shipseqno(?,?)";
+		private static final String sp_get_ship_by_shipseqno = "call sp_get_ship_by_shipseqno(?,?)";
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -327,7 +327,10 @@ public class ship extends HttpServlet {
 						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
 						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
 						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
-						shipVO.setShipDeatil(shipDetailList);
+						shipVO.setV_deliver_mobile(rs.getString("se_deliver_mobile"));
+						shipVO.setV_deliver_name(rs.getString("se_deliver_name"));
+						shipVO.setV_deliver_phone(rs.getString("se_deliver_phone"));
+						shipVO.setShipDetail(shipDetailList);
 						shipVOList.add(shipVO);
 						
 						ship_id_Record = ship_id_now;

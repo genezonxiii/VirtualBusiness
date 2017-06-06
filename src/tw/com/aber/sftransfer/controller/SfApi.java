@@ -466,6 +466,10 @@ public class SfApi {
 
 			item.setBarCode(barCode);
 			item.setContainers(containers);
+			//xxx
+			item.setSerialNumTrackInbound("N");
+			item.setSerialNumTrackInventory("N");
+			item.setSerialNumTrackOutbound("N");
 
 			itemList.add(item);
 
@@ -530,7 +534,12 @@ public class SfApi {
 			// item1
 			BarCode barCode = new BarCode();
 			barCode.setBarCode1(packageVO.getBarcode());
-
+			
+			
+			//xxx
+			item.setSerialNumTrackInbound("N");
+			item.setSerialNumTrackInventory("N");
+			item.setSerialNumTrackOutbound("N");
 			item.setBarCode(barCode);
 			item.setContainers(containers);
 
@@ -1062,7 +1071,7 @@ public class SfApi {
 		for (int i = 0; i < shipList.size(); i++) {
 			logger.debug("i:" + i);
 			ShipVO shipVO = shipList.get(i);
-			List<ShipDetail> shipDetailList = shipVO.getShipDeatil();
+			List<ShipDetail> shipDetailList = shipVO.getShipDetail();
 
 			orderItemList = new ArrayList<OrderItem>();
 			for (int j = 0; j < shipDetailList.size(); j++) {
@@ -1078,9 +1087,14 @@ public class SfApi {
 			orderItems.setOrderItem(orderItemList);
 			OrderReceiverInfo orderReceiverInfo = new OrderReceiverInfo();
 			orderReceiverInfo.setReceiverCompany("個人");
-			orderReceiverInfo.setReceiverName(shipVO.getName());
-			orderReceiverInfo.setReceiverZipCode("");// 郵遞區號暫不填待資料完整
-			orderReceiverInfo.setReceiverMobile("");// 電話號碼暫不填待資料完整
+			orderReceiverInfo.setReceiverName(shipVO.getV_deliver_name());
+			orderReceiverInfo.setReceiverZipCode("512");// 郵遞區號暫不填待資料完整
+			if (shipVO.getV_deliver_mobile() != null) {
+				orderReceiverInfo.setReceiverMobile(shipVO.getV_deliver_mobile());//手機號碼
+			}
+			if (shipVO.getV_deliver_phone() != null) {
+				orderReceiverInfo.setReceiverPhone(shipVO.getV_deliver_phone());// 電話號碼
+			}
 			orderReceiverInfo.setReceiverCountry("台灣");// 國家暫填台灣 之後會改
 			orderReceiverInfo.setReceiverAddress(shipVO.getDeliver_to());
 			orderReceiverInfo.setOrderItems(orderItems);

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="OrderReceiverInfo")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "receiverCompany", "receiverName", "receiverZipCode", "receiverMobile", "receiverCountry",
+@XmlType(propOrder = { "receiverCompany", "receiverName", "receiverZipCode", "receiverMobile","receiverPhone", "receiverCountry",
 		"receiverAddress", "orderItems"})
 public class OrderReceiverInfo {
 	private static final long serialVersionUID = 1L;
@@ -23,6 +23,8 @@ public class OrderReceiverInfo {
     private String receiverZipCode;
 	@XmlElement(name = "ReceiverMobile")
     private String receiverMobile;
+	@XmlElement(name = "ReceiverPhone")
+    private String receiverPhone;
 	@XmlElement(name = "ReceiverCountry")
     private String receiverCountry;
 	@XmlElement(name = "ReceiverAddress")
@@ -54,6 +56,12 @@ public class OrderReceiverInfo {
 	public void setReceiverMobile(String receiverMobile) {
 		this.receiverMobile = receiverMobile;
 	}
+	public String getReceiverPhone() {
+		return receiverPhone;
+	}
+	public void setReceiverPhone(String receiverPhone) {
+		this.receiverPhone = receiverPhone;
+	}
 	public String getReceiverCountry() {
 		return receiverCountry;
 	}
@@ -72,9 +80,6 @@ public class OrderReceiverInfo {
 	public void setOrderItems(OrderItems orderItems) {
 		this.orderItems = orderItems;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-    
+	
+	
 }
