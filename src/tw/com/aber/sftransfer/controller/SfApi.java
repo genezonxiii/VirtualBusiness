@@ -39,6 +39,7 @@ import tw.com.aber.sf.vo.Head;
 import tw.com.aber.sf.vo.ItemQueryRequest;
 import tw.com.aber.sf.vo.ItemRequest;
 import tw.com.aber.sf.vo.Items;
+import tw.com.aber.sf.vo.OrderCarrier;
 import tw.com.aber.sf.vo.OrderItem;
 import tw.com.aber.sf.vo.OrderItems;
 import tw.com.aber.sf.vo.OrderReceiverInfo;
@@ -836,7 +837,6 @@ public class SfApi {
 		return result;
 	}
 
-
 	public String genPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -1012,7 +1012,7 @@ public class SfApi {
 		orderReceiverInfo.setReceiverMobile("0912345678");
 		orderReceiverInfo.setReceiverCountry("台灣");
 		orderReceiverInfo.setReceiverAddress("台北市內湖區文湖街18號");
-		orderReceiverInfo.setOrderItems(orderItems);
+		
 
 		String saleNo = this.genNo();
 
@@ -1021,7 +1021,8 @@ public class SfApi {
 		saleOrder.setSfOrderType("销售订单");
 		saleOrder.setErpOrder("SI".concat(saleNo));
 		saleOrder.setOrderReceiverInfo(orderReceiverInfo);
-
+		saleOrder.setOrderItems(orderItems);
+		
 		saleOrderList.add(saleOrder);
 
 		SaleOrders saleOrders = new SaleOrders();
@@ -1066,9 +1067,9 @@ public class SfApi {
 
 		List<OrderItem> orderItemList = null;
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
-		OrderItems orderItems = new OrderItems();
 
 		for (int i = 0; i < shipList.size(); i++) {
+			OrderItems orderItems = new OrderItems();
 			logger.debug("i:" + i);
 			ShipVO shipVO = shipList.get(i);
 			List<ShipDetail> shipDetailList = shipVO.getShipDetail();
@@ -1080,8 +1081,7 @@ public class SfApi {
 				// item1
 				OrderItem orderItem = new OrderItem();
 				orderItem.setSkuNo(shipDetail.getC_product_id());
-				orderItem.setItemQuantity(
-						(shipDetail.getQuantity() == null ? null : shipDetail.getQuantity().toString()));
+				orderItem.setItemQuantity(shipDetail.getQuantity().toString());
 				orderItemList.add(orderItem);
 			}
 			orderItems.setOrderItem(orderItemList);
@@ -1097,15 +1097,23 @@ public class SfApi {
 			}
 			orderReceiverInfo.setReceiverCountry("台灣");// 國家暫填台灣 之後會改
 			orderReceiverInfo.setReceiverAddress(shipVO.getDeliver_to());
-			orderReceiverInfo.setOrderItems(orderItems);
 
 			SaleOrder saleOrder = new SaleOrder();
-
-			saleOrder.setWarehouseCode(
-					warehouseVo.getWarehouse_code());/* 由順豐提供 資料未定 */
+			OrderCarrier orderCarrier = new OrderCarrier();
+			
+			//xxx 暫定寫死
+			orderCarrier.setCarrier("CP");
+			orderCarrier.setCarrierProduct("2");
+			orderCarrier.setMonthlyAccount(groupSfVo.getMonthly_account());
+			orderCarrier.setPaymentOfcharge("寄付");
+			
+			saleOrder.setOrderCarrier(orderCarrier);
+			saleOrder.setWarehouseCode(warehouseVo.getSf_warehouse_code());/* 由順豐提供 資料未定 */
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
+			saleOrder.setOrderItems(orderItems);
+	
 			saleOrderList.add(saleOrder);
 		}
 
@@ -1186,6 +1194,50 @@ public class SfApi {
 		logger.debug("--- end: output of marshalling ----");
 
 		return result;
+	}
+	public String genSaleOrderOutboundDetailQueryService(List<ShipVO> shipList, ValueService valueService) {
+		String result;
+		WarehouseVO warehouseVO = valueService.getWarehouseVO();
+		GroupSfVO groupSfVO = valueService.getGroupSfVO();
+		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
+		for (int i = 0; i < shipList.size(); i++) {
+			SaleOrder saleOrder = new SaleOrder();
+
+			String erpOrder = shipList.get(i).getOrder_no();
+			saleOrder.setErpOrder(erpOrder);
+			saleOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
+			saleOrderList.add(saleOrder);
+		}
+
+		SaleOrders saleOrders = new SaleOrders();
+		saleOrders.setSaleOrder(saleOrderList);
+
+		SaleOrderOutboundDetailRequest saleOrderOutboundDetailRequest = new SaleOrderOutboundDetailRequest();
+		saleOrderOutboundDetailRequest.setCompanyCode(groupSfVO.getCompany_code());
+		saleOrderOutboundDetailRequest.setSaleOrders(saleOrders);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVO.getAccess_code());
+		head.setCheckword(groupSfVO.getCheck_word());
+
+		Body body = new Body();
+		body.setSaleOrderOutboundDetailRequest(saleOrderOutboundDetailRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE");
+		mainXML.setLang("zh-CN"); 
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+		return result;
+	
 	}
 
 	public String genBomService(List<PackageVO> packageVOList, ValueService valueService) {
@@ -1304,7 +1356,7 @@ public class SfApi {
 
 		return result;
 	}
-
+	
 	public String genSaleOrderOutboundDetailQueryService() {
 		String result;
 
@@ -1417,7 +1469,7 @@ public class SfApi {
 		Body body = new Body();
 		RTInventoryQueryRequest rtInventoryQueryRequest = new RTInventoryQueryRequest();
 		rtInventoryQueryRequest.setCompanyCode(groupSfVO.getCompany_code());
-		rtInventoryQueryRequest.setWarehouseCode(warehouseVO.getWarehouse_code());
+		rtInventoryQueryRequest.setWarehouseCode(warehouseVO.getSf_warehouse_code());
 		rtInventoryQueryRequest.setInventoryStatus(InventoryStatus);
 
 		RTInventorys rtInventorys = new RTInventorys();

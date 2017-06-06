@@ -88,14 +88,14 @@ public class ship extends HttpServlet {
 
 			} else if ("searchByOrderNo".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
-				
+
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				service = new ShipService();
 				shipVO = new ShipVO();
-				
+
 				shipVO.setGroup_id(groupId);
 				shipVO.setOrder_no(orderNo);
-				
+
 				rows = service.getSearchShipByOrderNo(shipVO);
 				result = gson.toJson(rows);
 
@@ -118,7 +118,7 @@ public class ship extends HttpServlet {
 					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
 
 					SfApi sfApi = new SfApi();
-					
+
 					ValueService valueService = util.getValueService(request, response);
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
@@ -127,8 +127,8 @@ public class ship extends HttpServlet {
 					logger.debug(e.getMessage());
 				}
 
-			}else if("sendToCancelSaleOrderService".equals(action)){
-				
+			} else if ("sendToCancelSaleOrderService".equals(action)) {
+
 				List<ShipVO> shipVOList = null;
 				try {
 					/***************************
@@ -147,7 +147,7 @@ public class ship extends HttpServlet {
 					logger.debug("ship_seq_nos =" + ship_seq_nos);
 
 					ValueService valueService = util.getValueService(request, response);
-	
+
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
 				} catch (Exception e) {
@@ -155,9 +155,30 @@ public class ship extends HttpServlet {
 					System.out.println(e.getMessage());
 				}
 
-			
-				
-				
+			} else if ("saleOrderOutboundDetailQueryService".equals(action)) {
+				List<ShipVO> shipVOList = null;
+				try {
+					String ship_seq_nos = request.getParameter("ship_seq_nos");
+
+					shipService = new ShipService();
+					ship_seq_nos = ship_seq_nos.replace(",", "','");
+
+					ship_seq_nos = "'" + ship_seq_nos + "'";
+
+					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
+
+					SfApi sfApi = new SfApi();
+					logger.debug("ship_seq_nos =" + ship_seq_nos);
+
+					ValueService valueService = util.getValueService(request, response);
+
+					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
+					String resXml = sfApi.sendXML(reqXml);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println(e.getMessage());
+				}
 			}
 
 		} catch (Exception e) {

@@ -432,6 +432,53 @@
 		                });
 		                console.log(noArr);
 		            }
+		        },{
+		            text: '發送明細電文',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
+
+		                var cells = $dtMaster.cells().nodes();
+		                var noArr = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+		                console.log($checkboxs);
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                if ($checkboxs.length > 20) {
+		                    alert('最多選擇二十筆資料');
+		                    return false;
+		                }
+
+
+		                $checkboxs.each(function() {
+		                    noArr += this.id + ',';
+		                });
+		                noArr = noArr.slice(0, -1);
+		                $.ajax({
+		                    url: 'ship.do',
+		                    type: 'post',
+		                    data: {
+		                        action: 'saleOrderOutboundDetailQueryService',
+		                        ship_seq_nos: noArr
+		                    },
+		                    error: function(xhr) {},
+		                    success: function(response) {
+		                        var $mes = $('#message #text');
+		                        $mes.val('').html('成功發送');
+		                        $('#message')
+		                            .dialog()
+		                            .dialog('option', 'title', '提示訊息')
+		                            .dialog('option', 'width', 'auto')
+		                            .dialog('option', 'minHeight', 'auto')
+		                            .dialog("open");
+		                    }
+		                });
+		                console.log(noArr);
+		            }
 		        }
 
 

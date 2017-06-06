@@ -340,8 +340,6 @@ public class product extends HttpServlet {
 				String reqXml = sfApi.genItemQueryService(productList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
 
-				logger.debug("resXml: " + resXml);
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(e.getMessage());
