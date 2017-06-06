@@ -61,7 +61,7 @@ public class allocInv extends HttpServlet {
 			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			jsonStr = gson.toJson(list);
 			logger.debug(jsonStr);
-			
+
 			response.getWriter().write(jsonStr);
 		} else if ("getGroup".equals(action)) {
 			service = new AllocInvService();
@@ -100,8 +100,9 @@ public class allocInv extends HttpServlet {
 
 		private static final String sp_select_all_alloc_inv = "call sp_select_all_alloc_inv (?)";
 		private static final String sp_select_group_alloc_inv = "call sp_select_group_alloc_inv (?)";
-		private static final String sp_insert_allocinv_to_purchase= "call sp_insert_allocinv_to_purchase (?,?,?,?,?)";
-		
+		private static final String sp_insert_allocinv_to_purchase = "call sp_insert_allocinv_to_purchase (?,?,?,?,?)";
+		private static final String sp_get_purchase_newseqno = "call sp_get_purchase_newseqno (?)";
+
 		@Override
 		public List<AllocInvVo> getAllData(String group_id) {
 			List<AllocInvVo> list = new ArrayList<AllocInvVo>();
@@ -224,7 +225,7 @@ public class allocInv extends HttpServlet {
 				cs.setString(4, purchaseVO.getSupply_id());
 				cs.registerOutParameter(5, Types.CHAR);
 				cs.execute();
-				
+
 				result = cs.getString(5);
 
 				// Handle any SQL errors
@@ -252,11 +253,21 @@ public class allocInv extends HttpServlet {
 			return result;
 		}
 
+		
+		@Override
+		public String getPurchaseSeqNo(String group_id) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 }
 
 interface allocInv_interface {
+	public String getPurchaseSeqNo(String group_id);
+
 	public String doPurchase(PurchaseVO purchaseVO);
+
 	public List<AllocInvVo> getAllData(String group_id);
 
 	public List<AllocInvVo> getGroupData(String group_id);
