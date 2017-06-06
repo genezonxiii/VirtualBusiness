@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "SaleOrders")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder", "orderReceiverInfo", "shipmentId",
+@XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder", "orderReceiverInfo", "orderItems", "shipmentId",
 		"result", "note", "header", "items", "containers", "steps" })
 public class SaleOrder {
 	private static final long serialVersionUID = 1L;
@@ -23,6 +23,8 @@ public class SaleOrder {
 	private String erpOrder;
 	@XmlElement(name = "OrderReceiverInfo")
 	private OrderReceiverInfo orderReceiverInfo;
+	@XmlElement(name = "OrderItems")
+    private OrderItems orderItems;
 
 	@XmlElement(name = "ShipmentId")
 	private String shipmentId;
@@ -139,6 +141,13 @@ public class SaleOrder {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public OrderItems getOrderItems() {
+		return orderItems;
+	}
+	
+	public void setOrderItems(OrderItems orderItems) {
+		this.orderItems = orderItems;
 	}
 
 }

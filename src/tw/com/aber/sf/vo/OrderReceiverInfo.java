@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name="OrderReceiverInfo")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "receiverCompany", "receiverName", "receiverZipCode", "receiverMobile","receiverPhone", "receiverCountry",
-		"receiverAddress", "orderItems"})
+		"receiverAddress"})
 public class OrderReceiverInfo {
 	private static final long serialVersionUID = 1L;
 	
@@ -29,8 +29,6 @@ public class OrderReceiverInfo {
     private String receiverCountry;
 	@XmlElement(name = "ReceiverAddress")
     private String receiverAddress;
-	@XmlElement(name = "OrderItems")
-    private OrderItems orderItems;
 	
 	public String getReceiverCompany() {
 		return receiverCompany;
@@ -73,12 +71,6 @@ public class OrderReceiverInfo {
 	}
 	public void setReceiverAddress(String receiverAddress) {
 		this.receiverAddress = receiverAddress;
-	}
-	public OrderItems getOrderItems() {
-		return orderItems;
-	}
-	public void setOrderItems(OrderItems orderItems) {
-		this.orderItems = orderItems;
 	}
 	
 	
