@@ -1095,7 +1095,8 @@ public class SfApi {
 			if (shipVO.getV_deliver_phone() != null) {
 				orderReceiverInfo.setReceiverPhone(shipVO.getV_deliver_phone());// 電話號碼
 			}
-			orderReceiverInfo.setReceiverCountry("台灣");// 國家暫填台灣 之後會改
+			orderReceiverInfo.setReceiverCountry("中国");
+			orderReceiverInfo.setReceiverProvince("台灣");
 			orderReceiverInfo.setReceiverAddress(shipVO.getDeliver_to());
 
 			SaleOrder saleOrder = new SaleOrder();
@@ -1103,7 +1104,7 @@ public class SfApi {
 			
 			//xxx 暫定寫死
 			orderCarrier.setCarrier("CP");
-			orderCarrier.setCarrierProduct("2");
+			orderCarrier.setCarrierProduct("1");
 			orderCarrier.setMonthlyAccount(groupSfVo.getMonthly_account());
 			orderCarrier.setPaymentOfcharge("寄付");
 			
