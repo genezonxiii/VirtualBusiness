@@ -52,6 +52,8 @@ import tw.com.aber.sf.vo.RTInventoryQueryRequest;
 import tw.com.aber.sf.vo.RTInventorys;
 import tw.com.aber.sf.vo.Request;
 import tw.com.aber.sf.vo.Response;
+import tw.com.aber.sf.vo.ResponseFail;
+import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
 import tw.com.aber.sf.vo.SaleOrderRequest;
@@ -108,245 +110,121 @@ public class SfApi {
 	private static final String VENDOR_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"VENDOR_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><VendorResponse>" + "<Vendors>"
 			+ "<Vendor><VendorCode>F18M291</VendorCode><Result>1</Result><Note>成功</Note></Vendor>"
-			+ "<Vendor><VendorCode>FE0577</VendorCode><Result>2</Result><Note>失敗</Note></Vendor>" + "</Vendors>" + "</VendorResponse></Body>"
-			+ "</Response>";
+			+ "<Vendor><VendorCode>FE0577</VendorCode><Result>2</Result><Note>失敗</Note></Vendor>" + "</Vendors>"
+			+ "</VendorResponse></Body>" + "</Response>";
 
 	// 入庫單接口響應 - 系統正常
 	private static final String PURCHASE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" + "<Head>OK|PART</Head>" + "<Body><PurchaseOrderResponse>" + "<PurchaseOrders>"
+			+ "<Response service=\"PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" + "<Head>OK|PART</Head>"
+			+ "<Body><PurchaseOrderResponse>" + "<PurchaseOrders>"
 			+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><ReceiptId>F000001</ReceiptId><Result>1</Result><Note>成功</Note></PurchaseOrder>"
-			+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><ReceiptId>F000002</ReceiptId><Result>2</Result><Note>失敗</Note></PurchaseOrder>" 
-			+ "</PurchaseOrders>" + "</PurchaseOrderResponse></Body>"
-			+ "</Response>";
+			+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><ReceiptId>F000002</ReceiptId><Result>2</Result><Note>失敗</Note></PurchaseOrder>"
+			+ "</PurchaseOrders>" + "</PurchaseOrderResponse></Body>" + "</Response>";
 
 	// 入庫單取消接口響應 - 系統正常
 	private static final String CANCEL_PURCHASE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" 
-			+ "<Head>OK</Head>" 
-			+ "<Body>"
-			+ "<CancelPurchaseOrderResponse>" 
-				+ "<PurchaseOrders>"
-					+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></PurchaseOrder>"
-					+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><Result>2</Result><Note>失敗</Note></PurchaseOrder>" 
-				+ "</PurchaseOrders>" 
-			+ "</CancelPurchaseOrderResponse>"
-			+ "</Body>"
-			+ "</Response>";
+			+ "<Response service=\"CANCEL_PURCHASE_ORDER_SERVICE\" lang=\"zh-CN\">" + "<Head>OK</Head>" + "<Body>"
+			+ "<CancelPurchaseOrderResponse>" + "<PurchaseOrders>"
+			+ "<PurchaseOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></PurchaseOrder>"
+			+ "<PurchaseOrder><ErpOrder>FE0577</ErpOrder><Result>2</Result><Note>失敗</Note></PurchaseOrder>"
+			+ "</PurchaseOrders>" + "</CancelPurchaseOrderResponse>" + "</Body>" + "</Response>";
 
 	// 入庫單明細推送接口響應 - 系統正常
 	private static final String PURCHASE_ORDER_INBOUND_PUSH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"PURCHASE_ORDER_INBOUND_PUSH_SERVICE\" lang=\"zh-CN\">" + "<Head>OK</Head>" + "<Body><PurchaseOrderInboundResponse>" + 
-			"<Result>1</Result><Note>成功</Note></PurchaseOrderInboundResponse></Body>"
-			+ "</Response>";
-	
+			+ "<Response service=\"PURCHASE_ORDER_INBOUND_PUSH_SERVICE\" lang=\"zh-CN\">" + "<Head>OK</Head>"
+			+ "<Body><PurchaseOrderInboundResponse>"
+			+ "<Result>1</Result><Note>成功</Note></PurchaseOrderInboundResponse></Body>" + "</Response>";
+
 	// 入庫單明細查詢接口響應 - 系統正常
 	private static final String PURCHASE_ORDER_INBOUND_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-CN\">" 
-				+ "<Head>OK</Head>" 
-				+ "<Body><PurchaseOrderInboundResponse>"
-				+ "<PurchaseOrders>"
-					+ "<PurchaseOrder>"
-						+ "<Result>1</Result>"
-						+ "<Note>成功</Note>"
-						+ "<Header>"
-							+ "<WarehouseCode>F0001</WarehouseCode>"
-							+ "<ErpOrder>F18M291</ErpOrder>"
-							+ "<ReceiptId>F19DD21</ReceiptId>"
-							+ "<ErpOrderType>S</ErpOrderType>"
-							+ "<CloseDate>2017-05-31</CloseDate>"
-						+ "</Header>"
-						+ "<Items>"
-							+ "<Item>"
-								+ "<SkuNo>PD0001</SkuNo>"
-							+ "</Item>"
-							+ "<Item>"
-								+ "<SkuNo>PD0002</SkuNo>"
-							+ "</Item>"
-						+ "</Items>"
-					+ "</PurchaseOrder>"
-					+ "<PurchaseOrder>"
-						+ "<Result>2</Result>"
-						+ "<Note>失敗</Note>"
-					+ "</PurchaseOrder>"
-				+ "</PurchaseOrders>"
-			+ "</PurchaseOrderInboundResponse></Body>"
-			+ "</Response>";
+			+ "<Response service=\"PURCHASE_ORDER_INBOUND_QUERY_SERVICE\" lang=\"zh-CN\">" + "<Head>OK</Head>"
+			+ "<Body><PurchaseOrderInboundResponse>" + "<PurchaseOrders>" + "<PurchaseOrder>" + "<Result>1</Result>"
+			+ "<Note>成功</Note>" + "<Header>" + "<WarehouseCode>F0001</WarehouseCode>" + "<ErpOrder>F18M291</ErpOrder>"
+			+ "<ReceiptId>F19DD21</ReceiptId>" + "<ErpOrderType>S</ErpOrderType>" + "<CloseDate>2017-05-31</CloseDate>"
+			+ "</Header>" + "<Items>" + "<Item>" + "<SkuNo>PD0001</SkuNo>" + "</Item>" + "<Item>"
+			+ "<SkuNo>PD0002</SkuNo>" + "</Item>" + "</Items>" + "</PurchaseOrder>" + "<PurchaseOrder>"
+			+ "<Result>2</Result>" + "<Note>失敗</Note>" + "</PurchaseOrder>" + "</PurchaseOrders>"
+			+ "</PurchaseOrderInboundResponse></Body>" + "</Response>";
 
 	// 出庫單接口響應 - 系統正常
 	private static final String SALE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
-			+ "<Body><SaleOrderResponse>" 
+			+ "<Response service=\"SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><SaleOrderResponse>"
 			+ "<SaleOrders>"
 			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><ShipmentId>OUT001</ShipmentId><Result>1</Result><Note>成功</Note></SaleOrder>"
 			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><ShipmentId>OUT002</ShipmentId><Result>2</Result><Note>失敗</Note></SaleOrder>"
-			+ "</SaleOrders>" 
-			+ "</SaleOrderResponse></Body>"
-			+ "</Response>";
+			+ "</SaleOrders>" + "</SaleOrderResponse></Body>" + "</Response>";
 
 	// 出庫單取消接口響應 - 系統正常
 	private static final String CANCEL_SALE_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"CANCEL_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
-			+ "<Body><CancelSaleOrderResponse>" 
-			+ "<SaleOrders>"
+			+ "<Response service=\"CANCEL_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>"
+			+ "<Body><CancelSaleOrderResponse>" + "<SaleOrders>"
 			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></SaleOrder>"
-			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>"
-			+ "</SaleOrders>" 
-			+ "</CancelSaleOrderResponse></Body>"
-			+ "</Response>";
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>" + "</SaleOrders>"
+			+ "</CancelSaleOrderResponse></Body>" + "</Response>";
 
 	// 出庫單明細推送接口響應 - 系統正常
 	private static final String SALE_ORDER_OUTBOUND_DETAIL_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_SERVICE\">" + "<Head>OK</Head>" 
-			+ "<Body><SaleOrderOutboundDetailResponse>" 
-			+ "<Result>1</Result><Note>成功</Note>"
-			+ "</SaleOrderOutboundDetailResponse></Body>"
-			+ "</Response>";
-	
+			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_SERVICE\">" + "<Head>OK</Head>"
+			+ "<Body><SaleOrderOutboundDetailResponse>" + "<Result>1</Result><Note>成功</Note>"
+			+ "</SaleOrderOutboundDetailResponse></Body>" + "</Response>";
+
 	// 出庫單明細查詢接口響應 - 系統正常
 	private static final String SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\">" + "<Head>OK</Head>" 
-			+ "<Body><SaleOrderOutboundDetailResponse>" 
-			+ "<SaleOrders>"
-			+ "<SaleOrder>"
-			+ "<Result>1</Result><ErpOrder>F18M291</ErpOrder><Note>成功</Note>"
-				+ "<Header>"
-				+ "<WarehouseCode>F0001</WarehouseCode>"
-				+ "<ErpOrder>F18M291</ErpOrder>"
-				+ "<ShipmentId>F19DD21</ShipmentId>"
-				+ "</Header>"
-			+ "</SaleOrder>"
-			+ "<SaleOrder>"
-			+ "<Result>2</Result><ErpOrder>F18M292</ErpOrder><Note>失敗</Note>"
-				+ "<Header>"
-				+ "<WarehouseCode>F0002</WarehouseCode>"
-				+ "<ErpOrder>F18M292</ErpOrder>"
-				+ "<ShipmentId>F19DD22</ShipmentId>"
-				+ "</Header>"
-			+ "</SaleOrder>"
-			+ "</SaleOrders>" 
-			+ "</SaleOrderOutboundDetailResponse></Body>"
-			+ "</Response>";
+			+ "<Response service=\"SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE\">" + "<Head>OK</Head>"
+			+ "<Body><SaleOrderOutboundDetailResponse>" + "<SaleOrders>" + "<SaleOrder>"
+			+ "<Result>1</Result><ErpOrder>F18M291</ErpOrder><Note>成功</Note>" + "<Header>"
+			+ "<WarehouseCode>F0001</WarehouseCode>" + "<ErpOrder>F18M291</ErpOrder>"
+			+ "<ShipmentId>F19DD21</ShipmentId>" + "</Header>" + "</SaleOrder>" + "<SaleOrder>"
+			+ "<Result>2</Result><ErpOrder>F18M292</ErpOrder><Note>失敗</Note>" + "<Header>"
+			+ "<WarehouseCode>F0002</WarehouseCode>" + "<ErpOrder>F18M292</ErpOrder>"
+			+ "<ShipmentId>F19DD22</ShipmentId>" + "</Header>" + "</SaleOrder>" + "</SaleOrders>"
+			+ "</SaleOrderOutboundDetailResponse></Body>" + "</Response>";
 
 	// 實時庫存查詢接口響應 - 系統正常
 	private static final String RT_INVENTORY_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"RT_INVENTORY_QUERY_SERVICE\">" + "<Head>OK</Head>" 
-			+ "<Body><RTInventoryQueryResponse>" 
-			+ "<CompanyCode>PSC</CompanyCode>"
-			+ "<WarehouseCode>A0001</WarehouseCode>"
-			+ "<RTInventorys>"
-				+ "<RTInventory>"
-				+ "<Result>1</Result><Note>成功</Note>"
-					+ "<Header>"
-						+ "<SkuNo>S0001</SkuNo>"
-						+ "<InventoryStatus>10</InventoryStatus>"
-						+ "<TotalQty>184</TotalQty>"
-						+ "<OnHandQty>52</OnHandQty>"
-						+ "<AvailableQty>40</AvailableQty>"
-						+ "<InTransitQty>132</InTransitQty>"
-					+ "</Header>"
-					+ "<Subs>"
-						+ "<Sub>"
-							+ "<WarehouseCode>F0001</WarehouseCode>"
-							+ "<TotalQty>85</TotalQty>"
-							+ "<OnHandQty>26</OnHandQty>"
-							+ "<AvailableQty>25</AvailableQty>"
-							+ "<InTransitQty>40</InTransitQty>"
-						+ "</Sub>"
-						+ "<Sub>"
-							+ "<WarehouseCode>F0002</WarehouseCode>"
-							+ "<TotalQty>99</TotalQty>"
-							+ "<OnHandQty>26</OnHandQty>"
-							+ "<AvailableQty>15</AvailableQty>"
-							+ "<InTransitQty>82</InTransitQty>"
-						+ "</Sub>"
-					+ "</Subs>"
-				+ "</RTInventory>"
-				+ "<RTInventory>"
-					+ "<Result>2</Result><Note>失敗</Note>"
-					+ "<Header>"
-						+ "<SkuNo>S0002</SkuNo>"
-						+ "<InventoryStatus>10</InventoryStatus>"
-						+ "<TotalQty>368</TotalQty>"
-						+ "<OnHandQty>104</OnHandQty>"
-						+ "<AvailableQty>80</AvailableQty>"
-						+ "<InTransitQty>264</InTransitQty>"
-					+ "</Header>"
-					+ "<Subs>"
-						+ "<Sub>"
-							+ "<WarehouseCode>K0001</WarehouseCode>"
-							+ "<TotalQty>170</TotalQty>"
-							+ "<OnHandQty>52</OnHandQty>"
-							+ "<AvailableQty>50</AvailableQty>"
-							+ "<InTransitQty>80</InTransitQty>"
-						+ "</Sub>"
-						+ "<Sub>"
-							+ "<WarehouseCode>K0002</WarehouseCode>"
-							+ "<TotalQty>198</TotalQty>"
-							+ "<OnHandQty>52</OnHandQty>"
-							+ "<AvailableQty>30</AvailableQty>"
-							+ "<InTransitQty>164</InTransitQty>"
-						+ "</Sub>"
-					+ "</Subs>"
-				+ "</RTInventory>"
-			+ "</RTInventorys>" 
-			+ "</RTInventoryQueryResponse></Body>"
+			+ "<Response service=\"RT_INVENTORY_QUERY_SERVICE\">" + "<Head>OK</Head>"
+			+ "<Body><RTInventoryQueryResponse>" + "<CompanyCode>PSC</CompanyCode>"
+			+ "<WarehouseCode>A0001</WarehouseCode>" + "<RTInventorys>" + "<RTInventory>"
+			+ "<Result>1</Result><Note>成功</Note>" + "<Header>" + "<SkuNo>S0001</SkuNo>"
+			+ "<InventoryStatus>10</InventoryStatus>" + "<TotalQty>184</TotalQty>" + "<OnHandQty>52</OnHandQty>"
+			+ "<AvailableQty>40</AvailableQty>" + "<InTransitQty>132</InTransitQty>" + "</Header>" + "<Subs>" + "<Sub>"
+			+ "<WarehouseCode>F0001</WarehouseCode>" + "<TotalQty>85</TotalQty>" + "<OnHandQty>26</OnHandQty>"
+			+ "<AvailableQty>25</AvailableQty>" + "<InTransitQty>40</InTransitQty>" + "</Sub>" + "<Sub>"
+			+ "<WarehouseCode>F0002</WarehouseCode>" + "<TotalQty>99</TotalQty>" + "<OnHandQty>26</OnHandQty>"
+			+ "<AvailableQty>15</AvailableQty>" + "<InTransitQty>82</InTransitQty>" + "</Sub>" + "</Subs>"
+			+ "</RTInventory>" + "<RTInventory>" + "<Result>2</Result><Note>失敗</Note>" + "<Header>"
+			+ "<SkuNo>S0002</SkuNo>" + "<InventoryStatus>10</InventoryStatus>" + "<TotalQty>368</TotalQty>"
+			+ "<OnHandQty>104</OnHandQty>" + "<AvailableQty>80</AvailableQty>" + "<InTransitQty>264</InTransitQty>"
+			+ "</Header>" + "<Subs>" + "<Sub>" + "<WarehouseCode>K0001</WarehouseCode>" + "<TotalQty>170</TotalQty>"
+			+ "<OnHandQty>52</OnHandQty>" + "<AvailableQty>50</AvailableQty>" + "<InTransitQty>80</InTransitQty>"
+			+ "</Sub>" + "<Sub>" + "<WarehouseCode>K0002</WarehouseCode>" + "<TotalQty>198</TotalQty>"
+			+ "<OnHandQty>52</OnHandQty>" + "<AvailableQty>30</AvailableQty>" + "<InTransitQty>164</InTransitQty>"
+			+ "</Sub>" + "</Subs>" + "</RTInventory>" + "</RTInventorys>" + "</RTInventoryQueryResponse></Body>"
 			+ "</Response>";
 
 	// 出庫單狀態查詢接口響應 - 系統正常
 	private static final String SALE_ORDER_STATUS_QUERY_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"SALE_ORDER_STATUS_QUERY_SERVICE\">" + "<Head>OK</Head>" 
-			+ "<Body><SaleOrderStatusResponse>"
-			+ "<SaleOrders>"
-				+ "<SaleOrder>"
-					+ "<Result>1</Result><Note>成功</Note>"
-					+ "<ErpOrder>S0001</ErpOrder>"
-					+ "<Header>"
-						+ "<ErpOrder>S0001</ErpOrder>"
-					+ "</Header>"
-					+ "<Steps>"
-						+ "<Step>"
-							+ "<Result>1</Result>"
-						+ "</Step>"
-						+ "<Step>"
-							+ "<Result>2</Result>"
-						+ "</Step>"
-					+ "</Steps>"
-				+ "</SaleOrder>"
-				+ "<SaleOrder>"
-					+ "<Result>2</Result><Note>失敗</Note>"
-					+ "<ErpOrder>S0002</ErpOrder>"
-					+ "<Header>"
-						+ "<ErpOrder>S0002</ErpOrder>"
-					+ "</Header>"
-					+ "<Steps>"
-						+ "<Step>"
-							+ "<Result>2</Result>"
-						+ "</Step>"
-						+ "<Step>"
-							+ "<Result>1</Result>"
-						+ "</Step>"
-					+ "</Steps>"
-				+ "</SaleOrder>"
-			+ "</SaleOrders>" 
-			+ "</SaleOrderStatusResponse></Body>"
-			+ "</Response>";
-	
+			+ "<Response service=\"SALE_ORDER_STATUS_QUERY_SERVICE\">" + "<Head>OK</Head>"
+			+ "<Body><SaleOrderStatusResponse>" + "<SaleOrders>" + "<SaleOrder>" + "<Result>1</Result><Note>成功</Note>"
+			+ "<ErpOrder>S0001</ErpOrder>" + "<Header>" + "<ErpOrder>S0001</ErpOrder>" + "</Header>" + "<Steps>"
+			+ "<Step>" + "<Result>1</Result>" + "</Step>" + "<Step>" + "<Result>2</Result>" + "</Step>" + "</Steps>"
+			+ "</SaleOrder>" + "<SaleOrder>" + "<Result>2</Result><Note>失敗</Note>" + "<ErpOrder>S0002</ErpOrder>"
+			+ "<Header>" + "<ErpOrder>S0002</ErpOrder>" + "</Header>" + "<Steps>" + "<Step>" + "<Result>2</Result>"
+			+ "</Step>" + "<Step>" + "<Result>1</Result>" + "</Step>" + "</Steps>" + "</SaleOrder>" + "</SaleOrders>"
+			+ "</SaleOrderStatusResponse></Body>" + "</Response>";
+
 	// 出庫單異步接口響應 - 系統正常
 	private static final String ASYN_ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-			+ "<Response service=\"ASYN_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" 
-			+ "<Body><SaleOrderResponse>" 
-			+ "<SaleOrders>"
-			+ "<SaleOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></SaleOrder>"
-			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>"
-			+ "</SaleOrders>" 
-			+ "</SaleOrderResponse></Body>"
-			+ "</Response>";
-	
+			+ "<Response service=\"ASYN_SALE_ORDER_SERVICE\">" + "<Head>OK|PART</Head>" + "<Body><SaleOrderResponse>"
+			+ "<SaleOrders>" + "<SaleOrder><ErpOrder>F18M291</ErpOrder><Result>1</Result><Note>成功</Note></SaleOrder>"
+			+ "<SaleOrder><ErpOrder>F18M292</ErpOrder><Result>2</Result><Note>失敗</Note></SaleOrder>" + "</SaleOrders>"
+			+ "</SaleOrderResponse></Body>" + "</Response>";
+
 	// 接口響應 - 系統異常
 	private static final String ITEM_QUERY_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"ITEM_SERVICE\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"01234\">系統異常(測試錯誤訊息)</Error></Response>";
-	
+
 	private static final String testOrderType = "采购入库";
 	private static final String testOrderType1 = "采购入库 \u91c7\u8d2d\u5165\u5e93 générale 誠哥有無份投佢";
 	private static final String xmlDataItemServiceRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -801,7 +679,7 @@ public class SfApi {
 			purchaseOrder.setScheduledReceiptDate(date);
 			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
 			purchaseOrder.setItems(items);
-			
+
 			purchaseOrderList.add(purchaseOrder);
 			items.setItemList(itemList);
 		}
@@ -950,7 +828,7 @@ public class SfApi {
 			purchaseOrderList.add(purchaseOrder);
 
 		}
-		
+
 		PurchaseOrders purchaseOrders = new PurchaseOrders();
 		purchaseOrders.setPurchaseOrder(purchaseOrderList);
 
@@ -1455,14 +1333,14 @@ public class SfApi {
 
 		return result;
 	}
-	
+
 	public String genRtInventoryQueryService(List<StockNewVO> stockNewVOList, ValueService valueService,
 			String InventoryStatus) {
 		String result;
 		List<RTInventory> rtInventoryList = new ArrayList<RTInventory>();
 		GroupSfVO groupSfVO = valueService.getGroupSfVO();
 		WarehouseVO warehouseVO = valueService.getWarehouseVO();
-		
+
 		// head, body
 		Head head = new Head();
 		head.setAccessCode(groupSfVO.getAccess_code());
@@ -1641,31 +1519,94 @@ public class SfApi {
 	}
 
 	/**
+	 * @param responseUtil
+	 *           
+	 * @return whether the return is successful
+	 */
+	public boolean isTelegraph(ResponseUtil responseUtil) {
+		boolean result = false;
+
+		if (responseUtil != null && responseUtil.getResponse() != null) {
+			result = "OK".equals(responseUtil.getResponse().getHead()) ? true : false;
+		}
+		return result;
+	}
+
+	/**
+	 * @param xmlString
+	 *            The string to be processed
+	 * @return returns a responseUtil object
+	 */
+	public ResponseUtil getResponseUtilObj(String resXml) {
+		ResponseUtil responseUtil = null;
+		Response response = null;
+		ResponseFail responseFail = null;
+		StringWriter sw = new StringWriter();
+		try {
+			response = JAXB.unmarshal(new StringReader(resXml), Response.class);
+			responseUtil = new ResponseUtil();
+			String jsonStr = new Gson().toJson(response);
+			if (jsonStr.length() == 2) {
+				responseFail = JAXB.unmarshal(new StringReader(resXml), ResponseFail.class);
+				responseFail = getErrResponseObj(resXml);
+				JAXB.marshal(responseFail, sw);
+				responseUtil.setResponseFail(responseFail);
+			} else {
+				JAXB.marshal(response, sw);
+				responseUtil.setResponse(response);
+			}
+		} catch (Exception e) {
+			logger.debug("\n\ngetResponseObj err:{}\n", e.getMessage());
+		}
+		return responseUtil;
+	}
+
+	/**
 	 * @param xmlString
 	 *            The string to be processed
 	 * @return returns a response object
 	 */
-	public Response getItemQueryServiceResponseObj(String resXml) {
+	public Response getResponseObj(String resXml) {
 		Response response = null;
-		// JAXBContext jaxbContext = JAXBContext.newInstance(Response.class);
-		// Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		//
-		// StringReader reader = new StringReader(xmlString);
-		// response = (Response) unmarshaller.unmarshal(reader);
-		response = JAXB.unmarshal(new StringReader(resXml), Response.class);
-
-		logger.debug("\n\nJson格式:\n\n{}\n", new Gson().toJson(response));
-		StringWriter sw = new StringWriter();
-		JAXB.marshal(response, sw);
-		logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+		try {
+			response = JAXB.unmarshal(new StringReader(resXml), Response.class);
+			String jsonStr = new Gson().toJson(response);
+			logger.debug("\n\nJson格式:\n\n{}\n", jsonStr);
+			StringWriter sw = new StringWriter();
+			JAXB.marshal(response, sw);
+			logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+		} catch (Exception e) {
+			logger.debug("\n\ngetResponseObj err:{}\n", e.getMessage());
+		}
 		return response;
+	}
+
+	/**
+	 * @param xmlString
+	 *            The string to be processed
+	 * @return returns a responseFail object
+	 */
+	public ResponseFail getErrResponseObj(String resXml) {
+		ResponseFail responseFail = null;
+		try {
+			responseFail = JAXB.unmarshal(new StringReader(resXml), ResponseFail.class);
+
+			logger.debug("\n\nJson格式:\n\n{}\n", new Gson().toJson(responseFail));
+			StringWriter sw = new StringWriter();
+			JAXB.marshal(responseFail, sw);
+			logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+		} catch (Exception e) {
+			logger.debug("\n\ngetErrResponseObj err:{}\n", e.getMessage());
+		}
+		return responseFail;
 	}
 
 	public static void main(String[] args) {
 		SfApi api = new SfApi();
 		String genXML = "";
 
-		Response response = api.getItemQueryServiceResponseObj(ASYN_ORDER_SERVICE_RESPONSE);
+		ResponseUtil response = api.getResponseUtilObj(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><responseFail><reasoncode>1101</reasoncode><remark>蝟餌??????秤????撘虜</remark></responseFail>");
 
 		// genXML = api.getItemQueryServiceResponseObj("");
 

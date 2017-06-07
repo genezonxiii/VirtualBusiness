@@ -187,7 +187,7 @@ function draw_purchase(parameter){
 									error: function (xhr) { },
 									success: function (response) {
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送');
+										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')
@@ -233,7 +233,7 @@ function draw_purchase(parameter){
 									error: function (xhr) { },
 									success: function (response) {
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送');
+										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')
@@ -1500,5 +1500,8 @@ function draw_purchase_detail(parameter){
 	</div>
 	</div>
 <div id="warning"></div>
+<div id="message" align="center">
+	<div id="text"></div>
+</div>
 </body>
 </html>

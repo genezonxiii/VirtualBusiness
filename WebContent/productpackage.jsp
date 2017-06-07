@@ -197,7 +197,7 @@
 									error: function (xhr) { },
 									success: function (response) {
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送');
+										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')
@@ -1051,5 +1051,8 @@
 	</div>
 	
 	<div id="warning" style="display:none;"></div>
+	<div id="message" align="center">
+		<div id="text"></div>
+	</div>
 </body>
 </html>

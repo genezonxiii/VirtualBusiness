@@ -12,10 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +27,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sale.controller.sale;
 import tw.com.aber.sf.vo.Response;
+import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
@@ -50,8 +53,8 @@ public class ship extends HttpServlet {
 		
 		util.ConfirmLoginAgain(request, response);
 
-		String groupId = (String)request.getSession().getAttribute("group_id");
-		String userId = (String)request.getSession().getAttribute("user_id");
+		String groupId = (String) request.getSession().getAttribute("group_id");
+		String userId = (String) request.getSession().getAttribute("user_id");
 
 		ShipService shipService = null;
 
@@ -122,6 +125,10 @@ public class ship extends HttpServlet {
 					ValueService valueService = util.getValueService(request, response);
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+					logger.debug("執行結果: " + result);
+					response.getWriter().write(result);
 				} catch (Exception e) {
 					e.printStackTrace();
 					logger.debug(e.getMessage());
@@ -150,6 +157,10 @@ public class ship extends HttpServlet {
 
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+					logger.debug("執行結果: " + result);
+					response.getWriter().write(result);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());

@@ -328,7 +328,7 @@
 			                        error: function(xhr) {},
 			                        success: function(response) {
 			                            var $mes = $('#message #text');
-			                            $mes.val('').html('成功發送');
+			                            $mes.val('').html('成功發送<br><br>執行結果為: '+response);
 			                            $('#message')
 			                                .dialog()
 			                                .dialog('option', 'title', '提示訊息')
@@ -375,9 +375,15 @@
 			                            c_product_ids: c_product_ids
 
 			                        },
-			                        success: function(data) {
-			                            console.log('ok');
-
+			                        success: function(response) {
+			                            var $mes = $('#message #text');
+			                            $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                            $('#message')
+			                                .dialog()
+			                                .dialog('option', 'title', '提示訊息')
+			                                .dialog('option', 'width', 'auto')
+			                                .dialog('option', 'minHeight', 'auto')
+			                                .dialog("open");
 			                        }
 			                    });
 
@@ -1875,5 +1881,8 @@
 				 Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;">
 	</div>
 
+	<div id="message" align="center">
+		<div id="text"></div>
+	</div>
 </body>
 </html>

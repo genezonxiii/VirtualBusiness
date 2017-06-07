@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import tw.com.aber.sf.vo.Response;
+import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
@@ -168,17 +169,17 @@ public class productpackage extends HttpServlet {
 			response.getWriter().write(gson.toJson(parents));
 		} else if ("sendToTelegraph".equals(action)) {
 			String packageIds = request.getParameter("package_ids");
-			//測試假資料
-//			packageIds = "'f45d98e3-3ef3-4ff5-8b1d-d71f8864327d','c550aeda-84c4-421a-b41d-1a5c32c99835'";
+			
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
-			//logger.debug(new Gson().toJson(packageVOList));
-			//response.getWriter().write(new Gson().toJson(packageVOList));
 			
 			ValueService valueService = util.getValueService(request, response);
 			SfApi sfApi = new SfApi();
 			String reqXml = sfApi.genBomService(packageVOList, valueService);
 			String resXml = sfApi.sendXML(reqXml);
-			Response resObj = sfApi.getItemQueryServiceResponseObj(resXml);
+			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+			logger.debug("執行結果: " + result);
+			response.getWriter().write(result);
 		} else if ("sendItemService".equals(action)) {
 			String packageIds = request.getParameter("package_ids");
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
@@ -188,7 +189,10 @@ public class productpackage extends HttpServlet {
 		
 			String reqXml = sfApi.genItemServiceForPackage(packageVOList, valueService);
 			String resXml = sfApi.sendXML(reqXml);
-			Response resObj = sfApi.getItemQueryServiceResponseObj(resXml);
+			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+			logger.debug("執行結果: " + result);
+			response.getWriter().write(result);
 		}
 			
 			

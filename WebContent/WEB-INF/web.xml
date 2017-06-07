@@ -24,7 +24,7 @@
 	</context-param>
 	<context-param>
 		<param-name>dbURL</param-name>
-<!--  		<param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value> -->
+		<!-- <param-value>jdbc:mysql://10.0.0.4/db_virtualbusiness</param-value> -->
 		<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
 	</context-param>
 	<context-param>
@@ -33,27 +33,27 @@
 	</context-param>
 	<context-param>
 		<param-name>dbPassword</param-name>
-<!--  		<param-value>Admin@csi1008!</param-value> -->
+		<!-- <param-value>Admin@csi1008!</param-value> -->
 		<param-value>admin123</param-value>
 	</context-param>
 	<context-param>
 		<param-name>email</param-name>
-<!--  		<param-value>pscaber@cloud.pershing.com.tw</param-value> -->
+		<!-- <param-value>pscaber@cloud.pershing.com.tw</param-value> -->
 		<param-value>10506002@pershing.com.tw</param-value>
 	</context-param>
 	<context-param>
 		<param-name>emailpwd</param-name>
-<!--  		<param-value>==AMzgDMucmbph2cyVGU</param-value> -->
+		<!-- <param-value>==AMzgDMucmbph2cyVGU</param-value> -->
 		<param-value>ykTNycTNjhnW</param-value>
 	</context-param>
 	<context-param>
 		<param-name>smtphost</param-name>
-<!-- 		<param-value>cloud-pershing-com-tw.mail.protection.outlook.com</param-value> -->
+		<!-- <param-value>cloud-pershing-com-tw.mail.protection.outlook.com</param-value> -->
 		<param-value>mail.pershing.com.tw</param-value>
 	</context-param>
 	<context-param>
 		<param-name>pythonwebservice</param-name>
-<!-- 		<param-value>http://127.0.0.1:8090</param-value>  -->
+		<!-- <param-value>http://127.0.0.1:8090</param-value> -->
 		<param-value>http://192.168.112.164:8090</param-value>
 	</context-param>
 	<context-param>
@@ -66,7 +66,7 @@
 	</context-param>
 	<context-param>
 		<param-name>videourl</param-name>
-<!-- 		<param-value>http://www.a-ber.com.tw/video</param-value>  -->
+		<!-- <param-value>http://www.a-ber.com.tw/video</param-value> -->
 		<param-value>http://192.168.112.164/video</param-value>
 	</context-param>
 	<context-param>
@@ -533,7 +533,7 @@
 		<servlet-name>basicDataImport</servlet-name>
 		<url-pattern>/basicDataImport.do</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>realsale</servlet-name>
 		<servlet-class>tw.com.aber.realsale.controller.realsale</servlet-class>
@@ -549,7 +549,7 @@
 	<servlet-mapping>
 		<servlet-name>ShippingProcess</servlet-name>
 		<url-pattern>/shippingProcess.do</url-pattern>
-	</servlet-mapping>	
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>ship</servlet-name>
 		<servlet-class>tw.com.aber.ship.controller.ship</servlet-class>
@@ -574,7 +574,6 @@
 		<servlet-name>Pick</servlet-name>
 		<url-pattern>/Pick.do</url-pattern>
 	</servlet-mapping>			
-	
 	
 	<filter>
 		<filter-name>loginFilter</filter-name>
