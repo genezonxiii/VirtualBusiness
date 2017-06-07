@@ -93,6 +93,7 @@
 		<param-name>photopath</param-name>
 		<param-value>/data/productpic</param-value>
 	</context-param>
+
 	<servlet>
 		<servlet-name>productunit</servlet-name>
 		<servlet-class>tw.com.aber.productunit.controller.productunit</servlet-class>
@@ -574,7 +575,15 @@
 		<servlet-name>Pick</servlet-name>
 		<url-pattern>/Pick.do</url-pattern>
 	</servlet-mapping>			
-	
+	<servlet>
+		<servlet-name>allocInv</servlet-name>
+		<servlet-class>tw.com.aber.allocinv.controller.allocInv</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>allocInv</servlet-name>
+		<url-pattern>/allocInv.do</url-pattern>
+	</servlet-mapping>
+
 	<filter>
 		<filter-name>loginFilter</filter-name>
 		<filter-class>tw.com.aber.loginFilter</filter-class>
