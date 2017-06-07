@@ -163,6 +163,19 @@ function draw_customer(parameter){
 			insert_dialog.dialog("open");
 		});
 		
+		//查詢
+			$('#select_date').click(function(e) {
+				e.preventDefault();
+				console.log("select_date");
+				var $custome_name = $('input[name=custome_name]').val();
+				var parameter = {
+					action : "getCustomerVOByName",
+					custome_name : $custome_name
+				};
+				console.log(parameter);
+				draw_customer(parameter);
+			});	
+
 		// "新增" Dialog相關設定
 		insert_dialog = $("#dialog-form-insert").dialog({
 			draggable : true, resizable : false, autoOpen : false,
@@ -394,7 +407,17 @@ function draw_customer(parameter){
 				</form>
 			</div>	
 			<!-- 第一列 -->
+			
 			<div class="input-field-wrap">
+			
+				<div class="form-wrap">
+					<div class="form-row">
+						<label for=""> <span class="block-label">客戶姓名</span> <input
+							type="text" name="custome_name">
+						</label>
+						<button class="btn btn-darkblue" id="select_date">查詢</button>
+					</div>
+				</div>
 				<div class="form-wrap">
 					<div class="btn-row">
 						<button class="btn btn-exec btn-wide" id="create-customer">新增客戶資料</button>

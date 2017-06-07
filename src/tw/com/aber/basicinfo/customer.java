@@ -60,6 +60,27 @@ public class customer extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		if ("getCustomerVOByName".equals(action)) {
+			try {
+				/*************************** 開始查詢資料 ****************************************/
+				String custome_name = request.getParameter("custome_name");
+				customerService = new CustomerService();
+				CustomerVO customerVO = new CustomerVO();
+				customerVO.setName(custome_name);
+				List<CustomerVO> list = customerService.getCustomerVOByName(group_id, customerVO);
+				Gson gson = new Gson();
+				String jsonStrList = gson.toJson(list);
+				if(err.length()>3){
+					response.getWriter().write(err);
+				}else{
+					response.getWriter().write(jsonStrList);
+				}
+				return;// 程式中斷				
+				/*************************** 其他可能的錯誤處理 **********************************/
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if ("insert".equals(action)) {
 			try {
 				String name = request.getParameter("name");
@@ -141,6 +162,8 @@ public class customer extends HttpServlet {
 		
 		public void updateDB(CustomerVO customerVO, String user_id);
 		
+		public List<CustomerVO> getCustomerVOByName(String group_id,CustomerVO customerVO);
+		
 		public CustomerVO getEncodeData(CustomerVO customerVO);
 	}
 
@@ -198,6 +221,10 @@ public class customer extends HttpServlet {
 			customerVO.setMobile(mobile);
 			return dao.getEncodeData(customerVO);
 		}
+		
+		public List<CustomerVO> getCustomerVOByName(String group_id,CustomerVO customerVO){
+			return dao.getCustomerVOByName(group_id, customerVO);
+		}
 	}
 
 	class CustomerDAO implements Customer_interface {
@@ -205,14 +232,16 @@ public class customer extends HttpServlet {
 		private static final String sp_insert_customer = "call sp_insert_customer(?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_update_customer = "call sp_update_customer(?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_selectall_customer = "call sp_selectall_customer(?)";
+		private static final String sp_get_customervo_by_name = "call sp_get_customervo_by_name(?,?)";
+		
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
-				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-		private final String dbURLtmp = getServletConfig().getServletContext().getInitParameter("dbURLtmp")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		private final String wsPath = getServletConfig().getServletContext().getInitParameter("pythonwebservice");
+		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
+
 //		private final String wsPath = "http://abers1.eastasia.cloudapp.azure.com:8090";
 
 		@Override
@@ -221,7 +250,7 @@ public class customer extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_del_customer);
 				pstmt.setString(1, customer_id);
@@ -257,7 +286,7 @@ public class customer extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_insert_customer);
 
@@ -303,7 +332,7 @@ public class customer extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_customer);
 
@@ -357,8 +386,8 @@ public class customer extends HttpServlet {
 			ResultSet rs = null;
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				con = DriverManager.getConnection(dbURLtmp, dbUserName, dbPassword);
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_selectall_customer);
 				pstmt.setString(1, group_id);
 				rs = pstmt.executeQuery();
@@ -453,6 +482,69 @@ public class customer extends HttpServlet {
     			e.printStackTrace();
     		}	
         	return voFromJson;
+		}
+		@Override
+		public List<CustomerVO> getCustomerVOByName(String group_id, CustomerVO customer) {
+			//use database: tmp
+
+			List<CustomerVO> list = new ArrayList<CustomerVO>();
+			CustomerVO customerVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_customervo_by_name);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, customer.getName());
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					customerVO = new CustomerVO();
+					customerVO.setCustomer_id(rs.getString("customer_id"));
+					customerVO.setGroup_id(rs.getString("customer_id"));
+					customerVO.setName(rs.getString("name"));
+					customerVO.setAddress(rs.getString("address"));
+					customerVO.setPhone(rs.getString("phone"));
+					customerVO.setMobile(rs.getString("mobile"));
+					customerVO.setEmail(rs.getString("email"));
+					customerVO.setPost(rs.getString("post"));
+					customerVO.setMemo(rs.getString("memo"));
+					
+					list.add(customerVO); // Store the row in the list
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
 		}
 	}
 }

@@ -12,7 +12,7 @@
 
 <html>
 <head>
-<title>儲位異動管理</title>
+<title>揀貨管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon"
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
@@ -27,7 +27,7 @@
 		<jsp:include page="template/common_headfoot.jsp" flush="true" />
 
 		<div class="content-wrap">
-			<h2 class="page-title">出貨管理</h2>
+			<h2 class="page-title">揀貨管理</h2>
 
 			<div class="panel-content">
 				<div class="datalistWrap">
@@ -43,11 +43,11 @@
 							</div>
 							<div class="form-row">
 								<form id = "form_date">
-									<label for=""> <span class="block-label">銷售起日</span> <input
+									<label for=""> <span class="block-label">揀貨起日</span> <input
 										type="text" name="start_date" class='input-date'>
 									</label>
 									<div class='forward-mark'></div>
-									<label for=""> <span class="block-label">銷售迄日</span> <input
+									<label for=""> <span class="block-label">揀貨迄日</span> <input
 										type="text" name="end_date" class='input-date'>
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
@@ -60,7 +60,7 @@
 			<div class="panel-content">
 				<div class="datalistWrap">
 					<div class="row search-result-wrap">
-						<table id="dt_master_ship" class="result-table"></table>
+						<table id="dt_master" class="result-table"></table>
 					</div>
 				</div>
 			</div>
@@ -78,7 +78,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- 銷貨明細對話窗-->
+	<!-- 揀貨明細對話窗-->
 	<div id="dialog-sale-detail" class="dialog" align="center">
 		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
 			<fieldset>
@@ -89,8 +89,7 @@
 							<th>自訂產品編號</th>
 							<th>產品名稱</th>
 							<th>數量</th>
-							<th>單價</th>
-							<th>備註</th>															
+							<th>儲位代碼</th>				
 						</tr>
 					</thead>
 					<tfoot></tfoot>
@@ -131,7 +130,7 @@
 				return false;
 			}
 			var parameter = {
-				action : "searchByOrderNo",
+				action : "searchPickByOrderNo",
 				orderNo : $orderNo
 			};
 			console.log(parameter);
@@ -172,14 +171,14 @@
 				return false;
 			}
 			var parameter = {
-				action : "searchBySaleDate",
+				action : "searchPickByPickTimeDate",
 				startDate : $startDate,
 				endDate : $endDate
 			};
 			console.log(parameter);
 			drawMasterTable(parameter);
 		});
-	    $('#dt_master_ship').on('change', ':checkbox', function() {
+	    $('#dt_master').on('change', ':checkbox', function() {
 	        $(this).is(":checked")?
 	        	$(this).closest("tr").addClass("selected"):
 	        	$(this).closest("tr").removeClass("selected");
@@ -189,7 +188,7 @@
 	<script type="text/javascript">
 	function drawMasterTable(parameter) {
 
-		$dtMaster = $("#dt_master_ship").DataTable({
+		$dtMaster = $("#dt_master").DataTable({
 		    dom: "frB<t>ip",
 		    lengthChange: false,
 		    pageLength: 20,
@@ -209,7 +208,7 @@
 		        $('div .dt-buttons a').css('margin-left', '10px');
 		    },
 		    ajax: {
-		        url: "ship.do",
+		        url: "Pick.do",
 		        dataSrc: "",
 		        type: "POST",
 		        data: parameter
@@ -218,41 +217,13 @@
 		        "title": "批次請求",
 		        "data": null,
 		        "defaultContent": ""
-		    }, {
-		        "title": "訂單編號",
-		        "data": "order_no",
+		    },{
+		        "title": "揀貨編號",
+		        "data": "pick_no",
 		        "defaultContent": ""
 		    }, {
-		        "title": "產品編號",
-		        "data": "v_c_product_id",
-		        "defaultContent": ""
-		    }, {
-		        "title": "產品名稱",
-		        "data": "v_product_name",
-		        "defaultContent": ""
-		    }, {
-		        "title": "客戶姓名",
-		        "data": "name",
-		        "defaultContent": ""
-		    }, {
-		        "title": "備註",
-		        "data": "memo",
-		        "defaultContent": ""
-		    }, {
-		        "title": "出貨方式",
-		        "data": "deliveryway",
-		        "defaultContent": ""
-		    }, {
-		        "title": "訂單總額",
-		        "data": "total_amt",
-		        "defaultContent": ""
-		    }, {
-		        "title": "收件人姓名",
-		        "data": "deliver_name",
-		        "defaultContent": ""
-		    }, {
-		        "title": "收件地點",
-		        "data": "deliver_to",
+		        "title": "產生揀貨時間",
+		        "data": "pick_time",
 		        "defaultContent": ""
 		    }, {
 		        "title": "功能",
@@ -264,18 +235,19 @@
 		        searchable: false,
 		        orderable: false,
 		        render: function(data, type, row) {
-		            var ship_seq_no = row.ship_seq_no;
+		        	//alert(row.pick_no);
+		            var pick_no = row.pick_no;
 
 		            var input = document.createElement("INPUT");
 		            input.type = 'checkbox';
 		            input.name = 'checkbox-group-select';
-		            input.id = ship_seq_no;
+		            input.id = pick_no;
 
 		            var span = document.createElement("SPAN");
 		            span.className = 'form-label';
 
 		            var label = document.createElement("LABEL");
-		            label.htmlFor = ship_seq_no;
+		            label.htmlFor = pick_no;
 		            label.name = 'checkbox-group-select';
 		            label.style.marginLeft = '35%';
 		            label.appendChild(span);
@@ -303,9 +275,6 @@
 		                        })
 		                        .append(
 		                            $("<button/>", {
-		                                "id": row.seq_no,
-		                                "value": row.sale_id,
-		                                "name": row.c_product_id,
 		                                "class": "btn-in-table btn-green btn_list",
 		                                "title": "清單"
 		                            })
@@ -325,7 +294,7 @@
 		            action: function(e, dt, node, config) {
 
 		                selectCount++;
-		                var $table = $('#dt_master_ship');
+		                var $table = $('#dt_master');
 		                var $checkboxs = $table.find('input[name=checkbox-group-select]');
 
 		                selectCount % 2 != 1 ?
@@ -340,148 +309,7 @@
 		                        $(this).closest("tr").addClass("selected");
 		                    });
 		            }
-		        }, {
-		            text: '發送電文',
-		            action: function(e, dt, node, config) {
-		                var $table = $('#dt_master_ship');
-
-		                var cells = $dtMaster.cells().nodes();
-		                var noArr = '';
-
-		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-		                console.log($checkboxs);
-
-		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
-		                    return false;
-		                }
-
-
-		                $checkboxs.each(function() {
-		                    noArr += this.id + ',';
-		                });
-		                noArr = noArr.slice(0, -1);
-		                $.ajax({
-		                    url: 'ship.do',
-		                    type: 'post',
-		                    data: {
-		                        action: 'sendToTelegraph',
-		                        ship_seq_nos: noArr
-		                    },
-		                    error: function(xhr) {},
-		                    success: function(response) {
-		                        var $mes = $('#message #text');
-		                        $mes.val('').html('成功發送');
-		                        $('#message')
-		                            .dialog()
-		                            .dialog('option', 'title', '提示訊息')
-		                            .dialog('option', 'width', 'auto')
-		                            .dialog('option', 'minHeight', 'auto')
-		                            .dialog("open");
-		                    }
-		                });
-		                console.log(noArr);
-		            }
-		        }, {
-		            text: '發送取消電文',
-		            action: function(e, dt, node, config) {
-		                var $table = $('#dt_master_ship');
-
-		                var cells = $dtMaster.cells().nodes();
-		                var noArr = '';
-
-		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-		                console.log($checkboxs);
-
-		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
-		                    return false;
-		                }
-		                $checkboxs.each(function() {
-		                    noArr += this.id + ',';
-		                });
-		                noArr = noArr.slice(0, -1);
-		                $.ajax({
-		                    url: 'ship.do',
-		                    type: 'post',
-		                    data: {
-		                        action: 'sendToCancelSaleOrderService',
-		                        ship_seq_nos: noArr
-		                    },
-		                    error: function(xhr) {},
-		                    success: function(response) {
-		                        var $mes = $('#message #text');
-		                        $mes.val('').html('成功發送');
-		                        $('#message')
-		                            .dialog()
-		                            .dialog('option', 'title', '提示訊息')
-		                            .dialog('option', 'width', 'auto')
-		                            .dialog('option', 'minHeight', 'auto')
-		                            .dialog("open");
-		                    }
-		                });
-		                console.log(noArr);
-		            }
-		        },{
-		            text: '發送明細電文',
-		            action: function(e, dt, node, config) {
-		                var $table = $('#dt_master_ship');
-
-		                var cells = $dtMaster.cells().nodes();
-		                var noArr = '';
-
-		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-		                console.log($checkboxs);
-
-		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
-		                    return false;
-		                }
-
-
-		                $checkboxs.each(function() {
-		                    noArr += this.id + ',';
-		                });
-		                noArr = noArr.slice(0, -1);
-		                $.ajax({
-		                    url: 'ship.do',
-		                    type: 'post',
-		                    data: {
-		                        action: 'saleOrderOutboundDetailQueryService',
-		                        ship_seq_nos: noArr
-		                    },
-		                    error: function(xhr) {},
-		                    success: function(response) {
-		                        var $mes = $('#message #text');
-		                        $mes.val('').html('成功發送');
-		                        $('#message')
-		                            .dialog()
-		                            .dialog('option', 'title', '提示訊息')
-		                            .dialog('option', 'width', 'auto')
-		                            .dialog('option', 'minHeight', 'auto')
-		                            .dialog("open");
-		                    }
-		                });
-		                console.log(noArr);
-		            }
 		        }
-
-
 		    ]
 		});
 		};
@@ -514,11 +342,11 @@
 	
 	
 	
-	$("#dt_master_ship").on("click", ".btn_list", function(e) {
+	$("#dt_master").on("click", ".btn_list", function(e) {
 		e.preventDefault();
 
 		var row = $(this).closest("tr");
-	    var data = $("#dt_master_ship").DataTable().row(row).data();
+	    var data = $("#dt_master").DataTable().row(row).data();
 	    var tblDetail = $("#dialog-sale-detail-table").DataTable({
 			dom : "lfr<t>ip",
 			destroy : true,
@@ -526,21 +354,20 @@
 				"url" : "js/dataTables_zh-tw.txt"
 			},
 			ajax : {
-				url : "realsale.do",
+				url : "Pick.do",
 				dataSrc : "",
 				type : "POST",
 				data : {
-					"action" : "getRealSaleDetail",
-					"realsale_id" : data.realsale_id
+					"action" : "getDetail",
+					"pick_id" : data.pick_id
 				}
 			},
 			columns : [ 				
 				{"data" : "order_no", "defaultContent" : ""},
 				{"data" : "c_product_id", "defaultContent" : ""},
-				{"data" : "product_name", "defaultContent" : ""},
+				{"data" : "v_product_name", "defaultContent" : ""},
 				{"data" : "quantity", "defaultContent" : ""},
-				{"data" : "price", "defaultContent" : ""},
-				{"data" : "memo", "defaultContent" : ""}
+				{"data" : "v_location_code", "defaultContent" : ""},
 			]})
 			
 			$("#dialog-sale-detail").dialog({

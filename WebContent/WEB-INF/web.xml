@@ -565,6 +565,14 @@
 	<servlet-mapping>
 		<servlet-name>StockNew</servlet-name>
 		<url-pattern>/StockNew.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Pick</servlet-name>
+		<servlet-class>tw.com.aber.pick.controller.Pick</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Pick</servlet-name>
+		<url-pattern>/Pick.do</url-pattern>
 	</servlet-mapping>			
 	
 	
