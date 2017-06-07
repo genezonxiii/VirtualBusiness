@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 
 import tw.com.aber.basicdataimport.controller.BasicDataImport;
 import tw.com.aber.vo.AllocInvVo;
+import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.SaleVO;
 
@@ -78,12 +79,36 @@ public class allocInv extends HttpServlet {
 			service = new AllocInvService();
 			String seqNo = service.getPurchaseSeqNo(groupId);
 			String jsonList = request.getParameter("jsonList");
-			
-			Type type = new TypeToken<List<AllocInvVo>>() {}.getType();
 
-			new Gson().fromJson(接的東西, type);
+			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			Type type = new TypeToken<List<AllocInvVo>>() {
+			}.getType();
+			List<AllocInvVo> allocInvVos = gson.fromJson(jsonList, type);
 
-			logger.debug("\n{}\n{}\n", seqNo, jsonList);
+			String supplyId = allocInvVos.get(0).getSupply_id();
+
+			PurchaseVO purchaseVO = new PurchaseVO();
+			purchaseVO.setSeq_no(seqNo);
+			purchaseVO.setGroup_id(groupId);
+			purchaseVO.setUser_id(userId);
+			purchaseVO.setSupply_id(supplyId);
+
+			String purchaseId = service.addPurchase(purchaseVO);
+			logger.debug("purchaseId: " + purchaseId);
+			List<PurchaseDetailVO> purchaseDetailVOs = new ArrayList<PurchaseDetailVO>();
+			for (AllocInvVo allocInvVo : allocInvVos) {
+				PurchaseDetailVO purchaseDetailVO = new PurchaseDetailVO();
+				purchaseDetailVO.setPurchase_id(purchaseId);
+				purchaseDetailVO.setGroup_id(groupId);
+				purchaseDetailVO.setUser_id(userId);
+				purchaseDetailVO.setProduct_id(allocInvVo.getProduct_id());
+				purchaseDetailVO.setC_product_id(allocInvVo.getC_product_id());
+				purchaseDetailVO.setProduct_name(allocInvVo.getProduct_name());
+				purchaseDetailVO.setQuantity((int) (allocInvVo.getQuantity() - allocInvVo.getAlloc_qty()));
+
+				purchaseDetailVOs.add(purchaseDetailVO);
+			}
+			service.addPurchaseDetail(purchaseDetailVOs);
 		}
 	}
 
@@ -105,6 +130,14 @@ public class allocInv extends HttpServlet {
 		public String getPurchaseSeqNo(String groupId) {
 			return dao.getPurchaseSeqNo(groupId);
 		}
+
+		public String addPurchase(PurchaseVO purchaseVO) {
+			return dao.doPurchase(purchaseVO);
+		}
+
+		public void addPurchaseDetail(List<PurchaseDetailVO> purchaseDetailVOs) {
+			dao.doPurchaseDetail(purchaseDetailVOs);
+		}
 	}
 
 	class AllocInvDao implements allocInv_interface {
@@ -117,6 +150,7 @@ public class allocInv extends HttpServlet {
 		private static final String sp_select_all_alloc_inv = "call sp_select_all_alloc_inv (?)";
 		private static final String sp_select_group_alloc_inv = "call sp_select_group_alloc_inv (?)";
 		private static final String sp_insert_allocinv_to_purchase = "call sp_insert_allocinv_to_purchase (?,?,?,?,?)";
+		private static final String sp_insert_allocinv_to_purchase_detail = "call sp_insert_allocinv_to_purchase_detail(?)";
 		private static final String sp_get_purchase_newseqno = "call sp_get_purchase_newseqno (?,?)";
 
 		@Override
@@ -310,6 +344,55 @@ public class allocInv extends HttpServlet {
 			return result;
 		}
 
+		@Override
+		public void doPurchaseDetail(List<PurchaseDetailVO> purchaseDetailVOs) {
+
+			String sql = "VALUES";
+
+			for (PurchaseDetailVO purchaseDetailVO : purchaseDetailVOs) {
+				sql = sql.concat("(UUID(),'").concat(purchaseDetailVO.getPurchase_id() + "','")
+						.concat(purchaseDetailVO.getGroup_id() + "','").concat(purchaseDetailVO.getUser_id() + "','")
+						.concat(purchaseDetailVO.getProduct_id() + "','")
+						.concat(purchaseDetailVO.getC_product_id() + "','")
+						.concat(purchaseDetailVO.getProduct_name() + "','")
+						.concat(purchaseDetailVO.getQuantity() + "',").concat("0,NULL,NULL,false),");
+			}
+			sql = sql.substring(0, sql.length() - 1);
+			Connection con = null;
+			CallableStatement cs = null;
+			try {
+				Class.forName(jdbcDriver);
+				logger.debug("\nsql: {}",sql);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				 cs = con.prepareCall(sp_insert_allocinv_to_purchase_detail);
+				
+				 cs.setString(1, sql);
+				 cs.execute();
+
+				// Handle any SQL errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
 	}
 }
 
@@ -317,6 +400,8 @@ interface allocInv_interface {
 	public String getPurchaseSeqNo(String group_id);
 
 	public String doPurchase(PurchaseVO purchaseVO);
+
+	public void doPurchaseDetail(List<PurchaseDetailVO> purchaseDetailVOs);
 
 	public List<AllocInvVo> getAllData(String group_id);
 
