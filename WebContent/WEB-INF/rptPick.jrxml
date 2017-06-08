@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptPickReport" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8bbac5f4-e692-4b87-b2af-d676f6e98d1a">
+	<property name="ireport.zoom" value="2.853116706110005"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_group_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["cbcc3138-5603-11e6-a532-000d3a800878"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_pick_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[call sp_rpt_pick_main($P{p_group_id}, $P{p_pick_id});]]>
+	</queryString>
+	<field name="pick_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pick_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pick_time" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="group_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="group_unicode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="group_by_pick_no" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{pick_no}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+	</group>
+	<pageHeader>
+		<band height="115">
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="643" y="35" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[列印日期：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="702" y="35" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="75" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[揀貨日期：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="75" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").format($F{pick_time})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="95" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[製單人員：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="95" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="97fd276e-4622-4a69-8362-e576e420541d" x="0" y="0" width="802" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="標楷體" size="24" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[揀貨單]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="55" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[揀貨編號：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="55" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pick_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="35" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{group_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="35" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[公司名稱：]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="55">
+			<subreport>
+				<reportElement uuid="c26cdefc-36a8-401c-8524-3d16fcaa2f89" x="0" y="0" width="291" height="55"/>
+				<subreportParameter name="p_pick_id">
+					<subreportParameterExpression><![CDATA[$F{pick_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["rptPickDetail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

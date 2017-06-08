@@ -98,6 +98,11 @@
 			</fieldset>
 		</form>
 	</div> 
+	
+	<!-- 報表 對話窗 -->
+	<div id="dialog_report" class="dialog" align="center">
+		<iframe src="" frameborder="0" id="dialog_report_iframe" width="850" height="450"></iframe>
+	</div>
 
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
@@ -235,9 +240,8 @@
 		        searchable: false,
 		        orderable: false,
 		        render: function(data, type, row) {
-		        	//alert(row.pick_no);
+		        	
 		            var pick_no = row.pick_no;
-
 		            var input = document.createElement("INPUT");
 		            input.type = 'checkbox';
 		            input.name = 'checkbox-group-select';
@@ -256,7 +260,7 @@
 
 		            return options.html();
 		        }
-		    }, {
+		    },{
 		        //功能
 		        targets: -1,
 		        searchable: false,
@@ -281,7 +285,18 @@
 		                            .append($("<i/>", {
 		                                "class": "fa fa-pencil-square-o"
 		                            }))
-		                        )
+		                        ).append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-darkblue btn_pick_report_list",
+											"title": "產生揀貨單"
+									}).append( $("<i/>", {"class": "fa fa fa-file-pdf-o"}) )
+								).append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-alert btn_ship_report_list",
+											"title": "產生出貨單"
+									}).append( $("<i/>", {"class": "fa fa fa-file-pdf-o"}) )
+								)
+									
 
 		                    )
 		                );
@@ -338,7 +353,19 @@
 		  }
 		  return infoValidation;
 	}
+	$("#dt_master").on("click", ".btn_pick_report_list", function(e) {
+		e.preventDefault();
+		var row = $(this).closest("tr");
+	    var data = $("#dt_master").DataTable().row(row).data();
+		open_pick_report(data.pick_id);
+	})
 	
+	$("#dt_master").on("click", ".btn_ship_report_list", function(e) {
+		e.preventDefault();
+		var row = $(this).closest("tr");
+	    var data = $("#dt_master").DataTable().row(row).data();
+	    open_ship_report(data.pick_no);
+	})
 	
 	
 	
@@ -389,6 +416,39 @@
 			$("#dialog-sale-detail")
 				.data("sale_id", data.sale_id);
 		})
+		
+		function open_pick_report(id){
+			open_report("pick_id",id)
+		}
+		function open_ship_report(id){
+			open_report("pick_no",id)
+		}
+	
+	function open_report(key,value){
+		var iframUrl="./report.do?"+key+"="+value;
+		$("#dialog_report_iframe").attr("src",iframUrl );
+		 $("#dialog_report").dialog({
+				draggable : true,
+				resizable : false,
+				autoOpen : false,
+				height : "600",
+				width : "900",
+				modal : true, 
+				closeOnEscape: false,
+			    open: function(event, ui) {
+			        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+			    },
+				buttons : [{
+						text : "關閉",
+						click : function() {
+							$("#dialog_report").dialog("close");
+						}
+						}]
+		 })
+		 $("#dialog_report").dialog("open"); 	
+	}
+	
+		
 	</script>
 	
 </body>

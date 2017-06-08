@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -34,7 +36,7 @@ public class Report extends HttpServlet {
 		if (request.getSession().getAttribute("group_id") == null) {
 			return;
 		}
-		HashMap hm = null;
+		HashMap<String, Object> hm = null;
 
 		String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -62,7 +64,7 @@ public class Report extends HttpServlet {
 				Class.forName("com.mysql.jdbc.Driver");
 				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 
-				hm = new HashMap();
+				hm = new HashMap<String, Object>();
 				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
 				hm.put("p_dis_date", request.getParameter("dis_date"));
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
@@ -96,7 +98,7 @@ public class Report extends HttpServlet {
 				Class.forName("com.mysql.jdbc.Driver");
 				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 
-				hm = new HashMap();
+				hm = new HashMap<String, Object>();
 				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
 				hm.put("p_sale_id", request.getParameter("sale_id"));
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
@@ -117,7 +119,85 @@ public class Report extends HttpServlet {
 				fileIn.close();
 				out.flush();
 				out.close();
-			} else if (request.getParameter("date") != null) {
+			} else if (request.getParameter("pick_id") != null) {
+				String reportName = "rptPick";
+				String reportDetailName = "rptPickDetail";
+
+				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
+				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
+				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
+
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				
+				String pick_id = request.getParameter("pick_id");
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
+				hm.put("p_pick_id", pick_id);
+				
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+
+				response.setContentType("APPLICATION/PDF");
+				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+				response.setHeader("Content-Disposition", disHeader);
+
+				File file = new File(pdfFileName);
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+
+				fileIn.close();
+				out.flush();
+				out.close();
+			} else if (request.getParameter("pick_no") != null) {
+				String reportName = "rptShip";
+				String reportDetailName = "rptShipDetail";
+
+				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
+				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
+				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
+
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id",request.getSession().getAttribute("group_id"));
+				hm.put("p_pick_no",request.getParameter("pick_no"));
+				
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+
+				response.setContentType("APPLICATION/PDF");
+				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+				response.setHeader("Content-Disposition", disHeader);
+
+				File file = new File(pdfFileName);
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+
+				fileIn.close();
+				out.flush();
+				out.close();
+			}else if (request.getParameter("date") != null) {
 				String date = request.getParameter("date");
 				Connection con = null;
 				PreparedStatement pstmt = null;
