@@ -31,7 +31,7 @@ import tw.com.aber.vo.SaleVO;
 public class sale extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(sale.class);
-	
+
 	private Util util = new Util();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -41,73 +41,73 @@ public class sale extends HttpServlet {
 
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
-		
+
 		SaleService saleService = new SaleService();
 		List<SaleVO> saleList = null;
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		
+
 		String action = request.getParameter("action");
 		logger.debug("Action:".concat(action));
-		
-		try{
+
+		try {
 			if ("search".equals(action)) {
 				String c_product_id = request.getParameter("c_product_id");
-				
+
 				logger.debug("c_product_id:".concat(c_product_id));
-				
+
 				if (c_product_id == null || (c_product_id.trim()).length() == 0) {
 					saleList = saleService.getSearchAllDB(group_id);
 				} else {
 					saleList = saleService.getSearchDB(group_id, c_product_id);
 				}
-				
+
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
 			} else if ("search_trans_list_date".equals(action)) {
 				String start_date = request.getParameter("trans_list_start_date");
 				String end_date = request.getParameter("trans_list_end_date");
-				
+
 				logger.debug("start_date:".concat(start_date));
 				logger.debug("end_date:".concat(end_date));
-				
+
 				if (start_date.trim().length() == 0 && end_date.trim().length() == 0) {
 					saleList = saleService.getSearchAllDB(group_id);
 				} else if (start_date.trim().length() > 0 && end_date.trim().length() > 0) {
 					saleList = saleService.getSearchTransListDateDB(group_id, start_date, end_date);
 				}
-				
+
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
 			} else if ("search_product_data".equals(action)) {
 				String term = request.getParameter("term");
 				String identity = request.getParameter("identity");
-				
+
 				logger.debug("term:".concat(term));
 				logger.debug("identity:".concat(identity));
-				
+
 				List<ProductVO> productList = null;
-				
+
 				if ("ID".equals(identity)) {
 					productList = saleService.getSearchProductById(group_id, term);
 				} else if ("NAME".equals(identity)) {
 					productList = saleService.getSearchProductByName(group_id, term);
 				}
-				
+
 				String jsonStrList = gson.toJson(productList);
 				response.getWriter().write(jsonStrList);
 			} else if ("getSaleDetail".equals(action)) {
 				String sale_id = request.getParameter("sale_id");
-				
+
 				logger.debug("sale_id:".concat(sale_id));
-	
+
 				SaleDetailVO saleDetailVO = new SaleDetailVO();
 				saleDetailVO.setSale_id(sale_id);
-	
+
 				List<SaleDetailVO> saleDetailList = saleService.getSaleDetail(saleDetailVO);
-	
+
 				String jsonStr = gson.toJson(saleDetailList);
 				response.getWriter().write(jsonStr);
-	
+
 				logger.debug("result".concat(jsonStr));
 			} else if ("insert".equals(action)) {
 				String invoice = request.getParameter("invoice");
@@ -120,39 +120,38 @@ public class sale extends HttpServlet {
 				Integer quantity = Integer.valueOf(request.getParameter("quantity"));
 
 				Float price = Float.valueOf(request.getParameter("price"));
-				
+
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				Date invoice_date = request.getParameter("invoice_date") == null
-						|| request.getParameter("invoice_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("invoice_date") ).getTime());
+						|| request.getParameter("invoice_date").equals("") ? null
+								: new Date(sdf.parse(request.getParameter("invoice_date")).getTime());
 				Date trans_list_date = request.getParameter("trans_list_date") == null
-						|| request.getParameter("trans_list_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("trans_list_date") ).getTime());
-				Date dis_date = request.getParameter("dis_date") == null
-						|| request.getParameter("dis_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("dis_date") ).getTime());
+						|| request.getParameter("trans_list_date").equals("") ? null
+								: new Date(sdf.parse(request.getParameter("trans_list_date")).getTime());
+				Date dis_date = request.getParameter("dis_date") == null || request.getParameter("dis_date").equals("")
+						? null : new Date(sdf.parse(request.getParameter("dis_date")).getTime());
 				Date sale_date = request.getParameter("sale_date") == null
-						|| request.getParameter("sale_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("sale_date") ).getTime());
-				
+						|| request.getParameter("sale_date").equals("") ? null
+								: new Date(sdf.parse(request.getParameter("sale_date")).getTime());
+
 				String memo = request.getParameter("memo");
 				String order_source = request.getParameter("order_source");
-				
+
 				String seq_no;
-				
+
 				List<SaleVO> saleSeqNoList = saleService.getSaleSeqNo(group_id);
 				if (saleSeqNoList.size() == 0) {
 					seq_no = getThisYearMonthDate() + "0001";
 				} else {
 					seq_no = getGenerateSeqNo(saleSeqNoList.get(0).getSeq_no());
 				}
-				
+
 				if (order_no.length() < 1) {
 					order_no = seq_no;
 				}
-				
+
 				logger.debug("seq_no:".concat(seq_no));
-				
+
 				SaleVO saleVO = new SaleVO();
 
 				saleVO.setSeq_no(seq_no);
@@ -173,7 +172,7 @@ public class sale extends HttpServlet {
 				saleVO.setMemo(memo);
 				saleVO.setSale_date(sale_date);
 				saleVO.setOrder_source(order_source);
-				
+
 				logger.debug("order_no:".concat(order_no));
 				logger.debug("product_id:".concat(product_id));
 				logger.debug("product_name:".concat(product_name));
@@ -183,16 +182,16 @@ public class sale extends HttpServlet {
 				logger.debug("invoice:".concat(invoice));
 				logger.debug("quantity:".concat(quantity.toString()));
 				logger.debug("price:".concat(price.toString()));
-				logger.debug("invoice_date:".concat(invoice_date == null? "":invoice_date.toString()));
-				logger.debug("trans_list_date:".concat(trans_list_date == null? "":trans_list_date.toString()));
-				logger.debug("sale_date:".concat(sale_date == null? "":sale_date.toString()));
+				logger.debug("invoice_date:".concat(invoice_date == null ? "" : invoice_date.toString()));
+				logger.debug("trans_list_date:".concat(trans_list_date == null ? "" : trans_list_date.toString()));
+				logger.debug("sale_date:".concat(sale_date == null ? "" : sale_date.toString()));
 				logger.debug("memo:".concat(memo));
 				logger.debug("order_source:".concat(order_source));
-				
+
 				saleService.addSale(saleVO);
-				
+
 				saleList = saleService.getSearchAllDB(group_id);
-				
+
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
 			} else if ("update".equals(action)) {
@@ -205,29 +204,28 @@ public class sale extends HttpServlet {
 				String product_id = request.getParameter("product_id");
 				String product_name = request.getParameter("product_name");
 				String c_product_id = request.getParameter("c_product_id");
-				
+
 				Integer quantity = Integer.valueOf(request.getParameter("quantity"));
 
 				Float price = Float.valueOf(request.getParameter("price"));
-				
+
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				Date invoice_date = request.getParameter("invoice_date") == null
-						|| request.getParameter("invoice_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("invoice_date") ).getTime());
+						|| request.getParameter("invoice_date").equals("") ? null
+								: new Date(sdf.parse(request.getParameter("invoice_date")).getTime());
 				Date trans_list_date = request.getParameter("trans_list_date") == null
-						|| request.getParameter("trans_list_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("trans_list_date") ).getTime());
-				Date dis_date = request.getParameter("dis_date") == null
-						|| request.getParameter("dis_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("dis_date") ).getTime());
+						|| request.getParameter("trans_list_date").equals("") ? null
+								: new Date(sdf.parse(request.getParameter("trans_list_date")).getTime());
+				Date dis_date = request.getParameter("dis_date") == null || request.getParameter("dis_date").equals("")
+						? null : new Date(sdf.parse(request.getParameter("dis_date")).getTime());
 				Date sale_date = request.getParameter("sale_date") == null
-						|| request.getParameter("sale_date").equals("")? 
-						null: new Date(sdf.parse( request.getParameter("sale_date") ).getTime());
+						|| request.getParameter("sale_date").equals("") ? null
+								: new Date(sdf.parse(request.getParameter("sale_date")).getTime());
 				String memo = request.getParameter("memo");
 				String order_source = request.getParameter("order_source");
-				
+
 				SaleVO saleVO = new SaleVO();
-				
+
 				saleVO.setSale_id(sale_id);
 				saleVO.setSeq_no(seq_no);
 				saleVO.setGroup_id(group_id);
@@ -247,7 +245,7 @@ public class sale extends HttpServlet {
 				saleVO.setMemo(memo);
 				saleVO.setSale_date(sale_date);
 				saleVO.setOrder_source(order_source);
-				
+
 				logger.debug("sale_id:".concat(sale_id));
 				logger.debug("order_no:".concat(order_no));
 				logger.debug("product_id:".concat(product_id));
@@ -258,14 +256,14 @@ public class sale extends HttpServlet {
 				logger.debug("invoice:".concat(invoice));
 				logger.debug("quantity:".concat(quantity.toString()));
 				logger.debug("price:".concat(price.toString()));
-				logger.debug("invoice_date:".concat(invoice_date == null? "":invoice_date.toString()));
-				logger.debug("trans_list_date:".concat(trans_list_date == null? "":trans_list_date.toString()));
-				logger.debug("sale_date:".concat(sale_date == null? "":sale_date.toString()));
+				logger.debug("invoice_date:".concat(invoice_date == null ? "" : invoice_date.toString()));
+				logger.debug("trans_list_date:".concat(trans_list_date == null ? "" : trans_list_date.toString()));
+				logger.debug("sale_date:".concat(sale_date == null ? "" : sale_date.toString()));
 				logger.debug("memo:".concat(memo));
 				logger.debug("order_source:".concat(order_source));
-				
+
 				saleService.updateSale(saleVO);
-				
+
 				saleList = saleService.getSearchAllDB(group_id);
 
 				String jsonStrList = gson.toJson(saleList);
@@ -273,16 +271,69 @@ public class sale extends HttpServlet {
 			} else if ("delete".equals(action)) {
 				String sale_id = request.getParameter("sale_id");
 				String c_product_id = request.getParameter("c_product_id");
-				
+
 				logger.debug("sale_id:".concat(sale_id));
 				logger.debug("c_product_id:".concat(c_product_id));
-				
+
 				saleService.deleteSale(sale_id, user_id);
-				
+
 				saleList = saleService.getSearchAllDB(group_id);
-				
+
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
+			} else if ("insertDetail".equals(action) || "updateDetail".equals(action)) {
+
+				String sale_id = request.getParameter("sale_id");
+				String seq_no = request.getParameter("seq_no");
+				String order_no = request.getParameter("order_no");
+				String product_id = request.getParameter("product_id");
+				String product_name = request.getParameter("product_name");
+				String c_product_id = request.getParameter("c_product_id");
+				Integer quantity = Integer.valueOf(request.getParameter("quantity"));
+				Float price = Float.valueOf(request.getParameter("price"));
+
+				SaleDetailVO paramVO = new SaleDetailVO();
+
+				paramVO.setSale_id(sale_id);
+				paramVO.setSeq_no(seq_no);
+				paramVO.setGroup_id(group_id);
+				paramVO.setOrder_no(order_no);
+				paramVO.setUser_id(user_id);
+				paramVO.setProduct_id(product_id);
+				paramVO.setProduct_name(product_name);
+				paramVO.setC_product_id(c_product_id);
+				paramVO.setQuantity(quantity);
+				paramVO.setPrice(price);
+
+				logger.debug("sale_id:".concat(util.null2str(sale_id)));
+				logger.debug("seq_no:".concat(util.null2str(seq_no)));
+				logger.debug("group_id:".concat(util.null2str(group_id)));
+				logger.debug("order_no:".concat(util.null2str(order_no)));
+				logger.debug("user_id:".concat(util.null2str(user_id)));
+				logger.debug("product_id:".concat(util.null2str(product_id)));
+				logger.debug("product_name:".concat(util.null2str(product_name)));
+				logger.debug("c_product_id:".concat(util.null2str(c_product_id)));
+				logger.debug("quantity:".concat(util.null2str(quantity.toString())));
+				logger.debug("price:".concat(util.null2str(price.toString())));
+
+				if ("updateDetail".equals(action)) {
+					String saleDetail_id = request.getParameter("saleDetail_id");
+					paramVO.setSaleDetail_id(saleDetail_id);
+					logger.debug("saleDetail_id:".concat(util.null2str(saleDetail_id)));
+
+					saleService.updateSaleDetail(paramVO);
+				} else {
+					saleService.addSaleDetail(paramVO);
+				}
+			} else if ("deleteDetail".equals(action)) {
+				String saleDetail_id = request.getParameter("saleDetail_id");
+
+				for (String id : saleDetail_id.split(",")) {
+
+					saleService.deleteSaleDetail(id);
+				}
+				logger.debug("saleDetail_id:".concat(saleDetail_id));
+
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -368,6 +419,12 @@ public class sale extends HttpServlet {
 
 		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO);
 
+		public void insertDetailDB(SaleDetailVO paramVO);
+
+		public void updateDetailDB(SaleDetailVO paramVO);
+
+		public void deleteDetailDB(String saleDetail_id);
+
 	}
 
 	class SaleService {
@@ -423,9 +480,22 @@ public class sale extends HttpServlet {
 		public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
 			return dao.getSaleDetail(saleDetailVO);
 		}
+
+		public void addSaleDetail(SaleDetailVO paramVO) {
+			dao.insertDetailDB(paramVO);
+		}
+
+		public void updateSaleDetail(SaleDetailVO paramVO) {
+			dao.updateDetailDB(paramVO);
+		}
+
+		public void deleteSaleDetail(String saleDetail_id) {
+			dao.deleteDetailDB(saleDetail_id);
+		}
 	}
 
 	class SaleDAO implements sale_interface {
+		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -443,13 +513,16 @@ public class sale extends HttpServlet {
 		private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
+		private static final String sp_insert_saleDetail = "call sp_insert_saleDetail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		private static final String sp_update_saleDetail = "call sp_update_saleDetail(?, ?, ?, ?, ?)";
+		private static final String sp_del_saleDetail = "call sp_del_saleDetail(?)";
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_insert_sale);
 
@@ -498,7 +571,7 @@ public class sale extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_sale);
 
@@ -548,7 +621,7 @@ public class sale extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_del_sale);
 				pstmt.setString(1, sale_id);
@@ -584,7 +657,7 @@ public class sale extends HttpServlet {
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_select_sale_bycproductid);
 
@@ -645,7 +718,7 @@ public class sale extends HttpServlet {
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_selectall_sale);
 				pstmt.setString(1, group_id);
@@ -655,6 +728,7 @@ public class sale extends HttpServlet {
 					saleVO.setSale_id(rs.getString("sale_id"));
 					saleVO.setSeq_no(rs.getString("seq_no"));
 					saleVO.setOrder_no(rs.getString("order_no"));
+					saleVO.setProduct_id(rs.getString("product_id"));
 					saleVO.setProduct_name(rs.getString("product_name"));
 					saleVO.setC_product_id(rs.getString("c_product_id"));
 					saleVO.setQuantity(rs.getInt("quantity"));
@@ -705,7 +779,7 @@ public class sale extends HttpServlet {
 			ResultSet rs = null;
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_select_sale_bytranslistdate);
 				pstmt.setString(1, group_id);
@@ -730,8 +804,8 @@ public class sale extends HttpServlet {
 					saleVO.setOrder_source(rs.getString("order_source"));
 					saleVO.setCustomer_id(rs.getString("customer_id"));
 					saleVO.setName(rs.getString("name"));
-					
-					list.add(saleVO); 
+
+					list.add(saleVO);
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -767,7 +841,7 @@ public class sale extends HttpServlet {
 			ResultSet rs = null;
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_sale_newseqno);
 				pstmt.setString(1, group_id);
@@ -811,7 +885,7 @@ public class sale extends HttpServlet {
 			ResultSet rs = null;
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_select_sale_bydisdate);
 				pstmt.setString(1, group_id);
@@ -836,7 +910,7 @@ public class sale extends HttpServlet {
 					saleVO.setOrder_source(rs.getString("order_source"));
 					saleVO.setCustomer_id(rs.getString("customer_id"));
 					saleVO.setName(rs.getString("name"));
-					
+
 					list.add(saleVO);
 				}
 			} catch (SQLException se) {
@@ -873,7 +947,7 @@ public class sale extends HttpServlet {
 			ResultSet rs = null;
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_product_byname);
 				pstmt.setString(1, group_id);
@@ -922,7 +996,7 @@ public class sale extends HttpServlet {
 			ResultSet rs = null;
 
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_product_byid);
 				pstmt.setString(1, group_id);
@@ -971,9 +1045,9 @@ public class sale extends HttpServlet {
 			ResultSet rs = null;
 
 			util = new Util();
-			
+
 			try {
-				Class.forName("com.mysql.jdbc.Driver");
+				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_sale_detail);
 
@@ -1032,5 +1106,123 @@ public class sale extends HttpServlet {
 			}
 			return list;
 		}
+
+		@Override
+		public void insertDetailDB(SaleDetailVO paramVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_insert_saleDetail);
+
+				pstmt.setString(1, paramVO.getSale_id());
+				pstmt.setString(2, paramVO.getSeq_no());
+				pstmt.setString(3, paramVO.getGroup_id());
+				pstmt.setString(4, paramVO.getOrder_no());
+				pstmt.setString(5, paramVO.getUser_id());
+				pstmt.setString(6, paramVO.getProduct_id());
+				pstmt.setString(7, paramVO.getProduct_name());
+				pstmt.setString(8, paramVO.getC_product_id());
+				pstmt.setString(9, null);// customer_id
+				pstmt.setString(10, null); // name
+				pstmt.setFloat(11, paramVO.getQuantity());
+				pstmt.setFloat(12, paramVO.getPrice());
+				pstmt.setString(13, null);// invoice
+				pstmt.setDate(14, null);// Invoice_date
+				pstmt.setDate(15, null);// Trans_list_date
+				pstmt.setDate(16, null);// Dis_date
+				pstmt.setString(17, null);// Memo
+				pstmt.setDate(18, null);// Sale_date
+				pstmt.setString(19, null);// Order_source
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
+		@Override
+		public void updateDetailDB(SaleDetailVO paramVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_update_saleDetail);
+
+				pstmt.setString(1, paramVO.getSaleDetail_id());
+				pstmt.setString(2, paramVO.getProduct_name());
+				pstmt.setString(3, paramVO.getC_product_id());
+				pstmt.setFloat(4, paramVO.getQuantity());
+				pstmt.setFloat(5, paramVO.getPrice());
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
+		@Override
+		public void deleteDetailDB(String saleDetail_id) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_del_saleDetail);
+				pstmt.setString(1, saleDetail_id);
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
 	}
 }

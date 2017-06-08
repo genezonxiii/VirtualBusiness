@@ -28,6 +28,11 @@
 		<param-value>jdbc:mysql://192.168.112.164/db_virtualbusiness</param-value>
 	</context-param>
 	<context-param>
+		<param-name>dbURLtmp</param-name>
+		<param-value>jdbc:mysql://192.168.112.164/tmp</param-value>
+<!-- 		<param-value>jdbc:mysql://127.0.0.1/tmp</param-value> -->
+	</context-param>
+	<context-param>
 		<param-name>dbUserName</param-name>
 		<param-value>root</param-value>
 	</context-param>
@@ -35,6 +40,7 @@
 		<param-name>dbPassword</param-name>
 		<!-- <param-value>Admin@csi1008!</param-value> -->
 		<param-value>admin123</param-value>
+<!-- 		<param-value>root</param-value> -->
 	</context-param>
 	<context-param>
 		<param-name>email</param-name>
@@ -534,7 +540,6 @@
 		<servlet-name>basicDataImport</servlet-name>
 		<url-pattern>/basicDataImport.do</url-pattern>
 	</servlet-mapping>
-
 	<servlet>
 		<servlet-name>realsale</servlet-name>
 		<servlet-class>tw.com.aber.realsale.controller.realsale</servlet-class>
@@ -583,6 +588,14 @@
 		<servlet-name>allocInv</servlet-name>
 		<url-pattern>/allocInv.do</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>stockMod</servlet-name>
+		<servlet-class>tw.com.aber.stockmod.controller.stockMod</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>stockMod</servlet-name>
+		<url-pattern>/stockMod.do</url-pattern>
+	</servlet-mapping>	
 
 	<filter>
 		<filter-name>loginFilter</filter-name>

@@ -55,16 +55,7 @@ public class SFTransfer extends HttpServlet {
 
 		logger.debug("action: " + action);
 
-		String[] actions = { "upload", "download", 
-				"genItemService", 
-				"genItemQueryService", 
-				"genPurchaseOrderService",
-				"genPurchaseOrderInboundQueryService", 
-				"genCancelPurchaseOrderInboundQueryService",
-				"genSaleOrderService",
-				"genSaleOrderOutboundDetailQueryService",
-				"genSaleOrderStatusQueryService",
-				"genCancelSaleOrderService"};
+		String[] actions = { "upload", "download"};
 
 		int key = Arrays.asList(actions).indexOf(action);
 
@@ -133,87 +124,6 @@ public class SFTransfer extends HttpServlet {
 					response.getWriter().write(
 							"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>�銝瑼��</body></html>");
 				}
-				break;
-			}
-//			case 2: {
-//				SfApi api = new SfApi();		
-//				String genXML = api.genItemService();
-//				String returnXML = api.sendXMLbyWS(ws, genXML);
-//				response.getWriter().write(genXML);
-//				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
-//				response.getWriter().write(returnXML);
-//				break;
-//			}
-			case 3: {
-				SfApi api = new SfApi();		
-				String genXML = api.genItemQueryService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 4: {
-				SfApi api = new SfApi();		
-				String genXML = api.genPurchaseOrderService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n");
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 5: {
-				String po = request.getParameter("po");
-				logger.debug("Purchase Order:".concat(po));
-				
-				SfApi api = new SfApi();		
-				String genXML = api.genPurchaseOrderInboundQueryService(po);
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 6: {
-				SfApi api = new SfApi();		
-				String genXML = api.genCancelPurchaseOrderInboundQueryService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 7: {
-				SfApi api = new SfApi();		
-				String genXML = api.genSaleOrderService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 8: {
-				SfApi api = new SfApi();		
-				String genXML = api.genSaleOrderOutboundDetailQueryService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 9: {
-				String so = request.getParameter("so");
-				logger.debug("Purchase Order:".concat(so));
-				
-				SfApi api = new SfApi();		
-				String genXML = api.genSaleOrderStatusQueryService(so);
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write(returnXML);
-				break;
-			}
-			case 10: {
-				SfApi api = new SfApi();		
-				String genXML = api.genCancelSaleOrderService();
-				String returnXML = api.sendXMLbyWS(ws, genXML);
-				response.getWriter().write(genXML);
-				response.getWriter().write(returnXML);
 				break;
 			}
 			default: {
