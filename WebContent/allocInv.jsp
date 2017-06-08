@@ -227,7 +227,7 @@
 										});						
 							}
 						},{
-							text : '轉單',
+							text : '批次轉單(採購單)',
 							action : function(e, dt, node, config) {
 								var supplys = new Map();
 								var $table =  $('#dg_alloc_inv_info').find('table');
@@ -256,7 +256,7 @@
 									$mes.val('').html(message).append(table);
 									$('#message')
 										.dialog()
-										.dialog('option', 'title', '警告訊息(採購單不允許多筆供應商)')
+										.dialog('option', 'title', '警告訊息(只允許同一間供應商)')
 										.dialog('option', 'width', '322.6px')
 										.dialog('option', 'minHeight', 'auto')
 										.dialog("open");
