@@ -8,7 +8,8 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Body")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "order", "orderConfirm", "orderResponse", "orderConfirmResponse", "extra" })
+@XmlType(propOrder = { "order", "orderConfirm", "orderResponse", "orderConfirmResponse", "orderSearch", "routeRequest",
+		"routeResponse", "extra" })
 public class Body {
 	private static final long serialVersionUID = 1L;
 
@@ -22,6 +23,36 @@ public class Body {
 	private OrderResponse orderResponse;
 	@XmlElement(name = "OrderConfirmResponse")
 	private OrderConfirmResponse orderConfirmResponse;
+	@XmlElement(name = "OrderSearch")
+	private OrderSearch orderSearch;
+	@XmlElement(name = "RouteRequest")
+	private RouteRequest routeRequest;
+	@XmlElement(name = "RouteResponse")
+	public RouteResponse routeResponse;
+
+	public RouteResponse getRouteResponse() {
+		return routeResponse;
+	}
+
+	public void setRouteResponse(RouteResponse routeResponse) {
+		this.routeResponse = routeResponse;
+	}
+
+	public RouteRequest getRouteRequest() {
+		return routeRequest;
+	}
+
+	public void setRouteRequest(RouteRequest routeRequest) {
+		this.routeRequest = routeRequest;
+	}
+
+	public OrderSearch getOrderSearch() {
+		return orderSearch;
+	}
+
+	public void setOrderSearch(OrderSearch orderSearch) {
+		this.orderSearch = orderSearch;
+	}
 
 	public OrderConfirm getOrderConfirm() {
 		return orderConfirm;

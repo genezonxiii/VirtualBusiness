@@ -21,6 +21,7 @@ import tw.com.aber.sf.delivery.vo.OrderConfirmOption;
 import tw.com.aber.sf.delivery.vo.OrderSearch;
 import tw.com.aber.sf.delivery.vo.Request;
 import tw.com.aber.sf.delivery.vo.Response;
+import tw.com.aber.sf.delivery.vo.RouteRequest;
 
 public class SfDeliveryApi {
 	private static final Logger logger = LogManager.getLogger(SfDeliveryApi.class);
@@ -44,7 +45,7 @@ public class SfDeliveryApi {
 			+ "<Response service=\"OrderConfirmService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
 	// 訂單結果查詢接口響應 - 訂單處理成功
-	private static final String ORDER_SEARCH_SERVICERESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	private static final String ORDER_SEARCH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderSearchService\">" + "<Head>OK</Head>" + "<Body>"
 			+ "<OrderResponse orderId=\"TEST201706090006\" mailno=\"444003078089\" orgincode=\"755\" destcode=\"010\" filter_result=\"2\"/>"
 			+ "</Body>" + "</Response>";
@@ -52,7 +53,18 @@ public class SfDeliveryApi {
 	private static final String ORDER_SEARCH_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderSearchService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
-	
+	// 路由查詢接口響應 - 路由查詢成功
+	private static final String ROUTE_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"RouteService\">" + "<Head>OK</Head>" + "<Body>"
+			+ "<RouteResponse mailno=\"444003077898\">"
+			+ "<Route accept_time =\"2017-06-09 18:09:26\" accept_address =\"深圳\" remark =\"已收件\" opcode =\"50\"/>"
+			+ "<Route accept_time =\"2017-06-10 18:09:26\" remark =\"此件签单返还的单号为123638813180\" opcode =\"922\"/>"
+			+ "</RouteResponse>" + "</Body>" + "</Response>";
+	// 路由查詢接口響應 - 路由查詢失敗
+	private static final String ROUTE_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+			+ "<Response service=\"RouteService\">" + "<Head>ERR</Head>"
+			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
+
 	public String genOrderService() {
 		String result = "";
 		Cargo cargo1 = new Cargo();
@@ -162,6 +174,54 @@ public class SfDeliveryApi {
 		return result;
 	}
 
+	public String genOrderSearchService() {
+		String result = "";
+		OrderSearch orderSearch = new OrderSearch();
+		orderSearch.setOrderId("TS201706090009");
+		Body body = new Body();
+		body.setOrderSearch(orderSearch);
+
+		Request request = new Request();
+		request.setService("OrderSearchService");
+		request.setLang("zh-CN");
+		request.setHead("BSPdevelop");
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+
+	public String genRouteService() {
+		String result = "";
+		RouteRequest routeRequest = new RouteRequest();
+		routeRequest.setTracking_type("1");
+		routeRequest.setMethod_type("1");
+		routeRequest.setTracking_number("444003077898");
+		Body body = new Body();
+		body.setRouteRequest(routeRequest);
+
+		Request request = new Request();
+		request.setService("RouteService");
+		request.setLang("zh-CN");
+		request.setHead("BSPdevelop");
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+
 	public Response getResponseObj(String resXml) {
 		Response response = null;
 		try {
@@ -177,42 +237,24 @@ public class SfDeliveryApi {
 		return response;
 	}
 
-	public String genOrderSearchService() {
-
-		OrderSearch orderSearch = new OrderSearch();
-		orderSearch.setOrderId("TS201706090009");
-		Body body = new Body();
-		body.setOrder(order);
-		body.setExtra(extra);
-
-		Request request = new Request();
-		request.setService("OrderService");
-		request.setLang("zh-CN");
-		request.setHead("BSPdevelop");
-		request.setBody(body);
-
-		StringWriter sw = new StringWriter();
-		JAXB.marshal(request, sw);
-		logger.debug("--- start: output of marshalling ----");
-		logger.debug(sw.toString());
-		result = sw.toString();
-		logger.debug("--- end: output of marshalling ----");
-
-		return result;
-	}
 	public static void main(String[] args) {
 		SfDeliveryApi api = new SfDeliveryApi();
-		
+
 		// api.genOrderService();
 		// api.getResponseObj(ORDER_SERVICE_RESPONSE);
 		// api.getResponseObj(ORDER_SERVICE_ERR_RESPONSE);
-		
-		api.genOrderConfirmService();
-		api.getResponseObj(ORDER_CONFIRM_SERVICE_RESPONSE);
-		api.getResponseObj(ORDER_CONFIRM_SERVICE_ERR_RESPONSE);
-		
-		api.
-		api.getResponseObj(ORDER_SEARCH_SERVICERESPONSE);
+
+		// api.genOrderConfirmService();
+		// api.getResponseObj(ORDER_CONFIRM_SERVICE_RESPONSE);
+		// api.getResponseObj(ORDER_CONFIRM_SERVICE_ERR_RESPONSE);
+
+		// api.genOrderSearchService();
+		// api.getResponseObj(ORDER_SEARCH_SERVICE_RESPONSE);
+		// api.getResponseObj(ORDER_SEARCH_SERVICE_ERR_RESPONSE);
+
+		api.genRouteService();
+		api.getResponseObj(ROUTE_SERVICE_RESPONSE);
+		api.getResponseObj(ROUTE_SERVICE_ERR_RESPONSE);
 
 	}
 }
