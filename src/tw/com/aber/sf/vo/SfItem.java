@@ -8,7 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Item")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "skuNo", "result", "note", "itemName", "description", "qty","serialNumTrackInbound" ,"serialNumTrackOutbound","serialNumTrackInventory","barCode", "containers","bomAction" })
+@XmlType(propOrder = { "skuNo", "result", "note", "itemName", "description", "qty", 
+		"barCode", "containers", "qtymin", "serialNumTrackInbound", 
+		"serialNumTrackOutbound","serialNumTrackInventory", "bomAction" })
 public class SfItem {
 	private static final long serialVersionUID = 1L;
 
@@ -28,6 +30,8 @@ public class SfItem {
 	private BarCode barCode;
 	@XmlElement(name = "Containers")
 	private Containers containers;
+	@XmlElement(name = "Qtymin")
+	private String qtymin;
 	@XmlElement(name = "SerialNumTrackInbound")
 	private String serialNumTrackInbound;
 	@XmlElement(name = "SerialNumTrackOutbound")
@@ -109,6 +113,12 @@ public class SfItem {
 	}
 	public void setBomAction(String bomAction) {
 		this.bomAction = bomAction;
+	}
+	public String getQtymin() {
+		return qtymin;
+	}
+	public void setQtymin(String qtymin) {
+		this.qtymin = qtymin;
 	}
 
 	

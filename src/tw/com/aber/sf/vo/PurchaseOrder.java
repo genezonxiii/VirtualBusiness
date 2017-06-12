@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "PurchaseOrder")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "result", "warehouseCode", "erpOrder", "note", "header", "erpOrderType", "sFOrderType",
-		"scheduledReceiptDate", "vendorCode", "items", "receiptId" })
+		"orderDate", "scheduledReceiptDate", "vendorCode", "items", "receiptId" })
 public class PurchaseOrder {
 	private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,8 @@ public class PurchaseOrder {
 	private String erpOrderType;
 	@XmlElement(name = "SFOrderType")
 	private String sFOrderType;
+	@XmlElement(name = "OrderDate")
+	private String orderDate;
 	@XmlElement(name = "ScheduledReceiptDate")
 	private String scheduledReceiptDate;
 	@XmlElement(name = "VendorCode")
@@ -127,6 +129,14 @@ public class PurchaseOrder {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
 	}
 
 }

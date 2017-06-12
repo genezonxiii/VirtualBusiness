@@ -10,14 +10,22 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="OrderReceiverInfo")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "skuNo", "itemQuantity" })
+@XmlType(propOrder = { "skuNo", "itemName", "itemQuantity", "bomAction", "isPresent", "inventoryStatus" })
 public class OrderItem {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name = "SkuNo")
     private String skuNo;
+	@XmlElement(name = "ItemName")
+    private String itemName;
 	@XmlElement(name = "ItemQuantity")
     private String itemQuantity;
+	@XmlElement(name = "BomAction")
+    private String bomAction;
+	@XmlElement(name = "IsPresent")
+    private String isPresent;
+	@XmlElement(name = "InventoryStatus")
+    private String inventoryStatus;
 	
 	public String getSkuNo() {
 		return skuNo;
@@ -33,5 +41,23 @@ public class OrderItem {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getItemName() {
+		return itemName;
+	}
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	public String getBomAction() {
+		return bomAction;
+	}
+	public void setBomAction(String bomAction) {
+		this.bomAction = bomAction;
+	}
+	public String getInventoryStatus() {
+		return inventoryStatus;
+	}
+	public void setInventoryStatus(String inventoryStatus) {
+		this.inventoryStatus = inventoryStatus;
 	}
 }

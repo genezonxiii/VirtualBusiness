@@ -344,6 +344,7 @@ public class SfApi {
 			barCode.setBarCode1(product.getBarcode());
 
 			item.setBarCode(barCode);
+			item.setQtymin(String.valueOf( product.getKeep_stock() )); 
 			item.setContainers(containers);
 			//xxx
 			item.setSerialNumTrackInbound("N");

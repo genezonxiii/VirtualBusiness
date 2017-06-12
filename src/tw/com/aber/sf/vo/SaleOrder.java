@@ -8,8 +8,11 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "SaleOrders")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder","orderCarrier", "orderReceiverInfo", "orderItems", "shipmentId",
+@XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder", 
+		"tradeOrder", "orgErpOrder", "orgTradeOrder", "orderCarrier", 
+		"orderReceiverInfo", "orderItems", "shipmentId",
 		"result", "note", "header", "items", "containers", "steps" })
+
 public class SaleOrder {
 	private static final long serialVersionUID = 1L;
 
@@ -21,6 +24,12 @@ public class SaleOrder {
 	private String erpOrderType;
 	@XmlElement(name = "ErpOrder")
 	private String erpOrder;
+	@XmlElement(name = "TradeOrder")
+	private String tradeOrder;
+	@XmlElement(name = "OrgErpOrder")
+	private String orgErpOrder;
+	@XmlElement(name = "OrgTradeOrder")
+	private String orgTradeOrder;
 	@XmlElement(name = "OrderCarrier")
 	private OrderCarrier orderCarrier;
 	@XmlElement(name = "OrderReceiverInfo")

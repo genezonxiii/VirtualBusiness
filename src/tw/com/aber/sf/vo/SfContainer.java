@@ -8,12 +8,14 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="Container")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "packUm" })
+@XmlType(propOrder = { "packUm", "umDescr" })
 public class SfContainer {
 	private static final long serialVersionUID = 1L;
 	
 	@XmlElement(name = "PackUm")
     private String packUm;
+	@XmlElement(name = "UmDescr")
+    private String umDescr;
 
 	public String getPackUm() {
 		return packUm;
@@ -25,6 +27,14 @@ public class SfContainer {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getUmDescr() {
+		return umDescr;
+	}
+
+	public void setUmDescr(String umDescr) {
+		this.umDescr = umDescr;
 	}
 
 }
