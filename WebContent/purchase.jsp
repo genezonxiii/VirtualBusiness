@@ -151,7 +151,7 @@ function draw_purchase(parameter){
 						    $('div .dt-buttons a').css('margin-left','10px');
 						},
 						buttons : [{
-							text : '入庫接口',
+							text : '順豐入庫',
 							action : function(e, dt, node, config) {
 								var $table =  $('#purchase');
 
@@ -199,7 +199,7 @@ function draw_purchase(parameter){
 								console.log('idArr: '+ idArr);		
 							}
 						},{
-							text : '入庫取消接口',
+							text : '順豐入庫取消',
 							action : function(e, dt, node, config) {
 								var $table =  $('#purchase');
 
@@ -245,7 +245,7 @@ function draw_purchase(parameter){
 								console.log('idArr: '+ idArr);		
 							}
 						},{
-							text : '入庫明細查詢接口',
+							text : '順豐入庫明細查詢',
 							action : function(e, dt, node, config) {
 								var $table =  $('#purchase');
 

@@ -341,7 +341,7 @@
 		                    });
 		            }
 		        }, {
-		            text: '發送電文',
+		            text: '順豐出庫',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
@@ -388,7 +388,7 @@
 		                console.log(noArr);
 		            }
 		        }, {
-		            text: '發送取消電文',
+		            text: '順豐取消出庫',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
@@ -433,7 +433,7 @@
 		                console.log(noArr);
 		            }
 		        },{
-		            text: '發送明細電文',
+		            text: '順豐出庫明細查詢',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
@@ -448,8 +448,8 @@
 		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
+		                if ($checkboxs.length > 3) {
+		                    alert('最多選擇三筆資料');
 		                    return false;
 		                }
 

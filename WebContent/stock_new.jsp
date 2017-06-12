@@ -43,11 +43,11 @@
 							</div>
 							<div class="form-row">
 								<form id = "form_date">
-									<label for=""> <span class="block-label">進貨起日</span> <input
+									<label for=""> <span class="block-label">入庫起日</span> <input
 										type="text" name="start_date" class='input-date'>
 									</label>
 									<div class='forward-mark'></div>
-									<label for=""> <span class="block-label">進貨迄日</span> <input
+									<label for=""> <span class="block-label">入庫迄日</span> <input
 										type="text" name="end_date" class='input-date'>
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
@@ -285,7 +285,7 @@
 							});						
 				}
 			}, {
-				text : '發送電文',
+				text : '順風庫存查詢',
 				action : function(e, dt, node, config) {
 					var $table =  $('#dt_master_stock_new');
 

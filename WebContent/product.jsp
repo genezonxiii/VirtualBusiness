@@ -291,7 +291,7 @@
 			                        });
 			                }
 			            }, {
-			                text: '發送商品訊息',
+			                text: '順豐商品',
 			                action: function(data, row) {
 			                    var c_product_ids = '';
 
@@ -340,7 +340,7 @@
 
 			                }
 			            }, {
-			                text: '查詢商品訊息',
+			                text: '順豐商品查詢',
 			                action: function(data, row) {
 			                    var c_product_ids = '';
 
@@ -354,8 +354,8 @@
 			                        alert('請至少選擇一筆資料');
 			                        return false;
 			                    }
-			                    if ($checkboxs.length > 20) {
-			                        alert('最多選擇二十筆資料');
+			                    if ($checkboxs.length > 11) {
+			                        alert('最多選擇十一筆資料');
 			                        return false;
 			                    }
 
@@ -459,26 +459,7 @@
         });
 	    
 	    $(window).scannerDetection('success');
-
 	        var table = $('#sales').DataTable();
-	     
-	      /*  $('#sales').on( 'click', '.sorting_1', function () {
-	            var thisRow=$(this).parents('tr')
-	            var rowCheckBox = $(this).parent().find('input:checkbox:first')
-	            
-	            if(thisRow.hasClass("selected")){
-	           	 	rowCheckBox.prop("checked", false);
-	            	//console.log('true'+thisRow.hasClass("selected"));
-	            }else{
-	            	rowCheckBox.prop("checked", true);
-	            	//console.log('else'+thisRow.hasClass("selected"));
-	            }
-	            
-	            thisRow.toggleClass('selected');
-	        } );*/
-	     
-
-	    
 	});
 	
 	

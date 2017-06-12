@@ -24,6 +24,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
     font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4; */
   }
+  
+  input[type="number"]{
+    background: #efefef;
+    border: 1px solid #999;
+    font-size: 16px;
+    padding: 5px;
+    font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
+    }
   </style>
 </head>
 <body>
@@ -51,29 +59,29 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										type="text" class="input-date" id="import_trans_list_date_end"
 										name="import_trans_list_date_end">
 									</label>
-									<button class="btn btn-exec btn-wide" id="import_resale">匯入</button>
+									<button class="btn btn-exec btn-wide" id="import_resale">轉入銷貨</button>
 								</div>
 								<div class="form-row ">
 									<hr class="hr-gray"></hr>
 								</div>
 								<div class="form-row">
-									<button class="btn btn-exec btn-wide" id="import_alloc_inv">匯入配庫</button>
+									<button class="btn btn-exec btn-wide" id="import_alloc_inv">轉入待出庫</button>
 									<button class="btn btn-exec btn-wide" id="statistics_alloc_inv">執行配庫</button>
 								</div>
 								<div class="form-row ">
 									<hr class="hr-gray"></hr>
 								</div>
 								<div class="form-row">
-									<label for=""> <span class="block-label">揀貨單訂單數量：</span>
-										<input type="number" id="import_order_count" name="import_order_count" value="5">
+									<label for=""> <span class="block-label">合併訂單數量：</span>
+										<input type="number" id="import_order_count" name="import_order_count" class="ui-autocomplete-input" value="5">
 									</label>
-									<button class="btn btn-exec btn-wide" id="import_picking">執行揀貨</button>
+									<button class="btn btn-exec btn-wide" id="import_picking">轉入揀貨單</button>
 								</div>
 								<div class="form-row ">
 									<hr class="hr-gray"></hr>
 								</div>
 								<div class="form-row">
-									<button class="btn btn-exec btn-wide" id="import_ship">產出出貨單</button>
+									<button class="btn btn-exec btn-wide" id="import_ship">轉入出庫</button>
 								</div>
 							</div>
 						</div>

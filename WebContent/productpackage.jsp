@@ -160,8 +160,56 @@
 											$(this).closest("tr").addClass("selected");
 										});						
 							}
+						},{
+							text : '順豐商品',
+							action : function(e, dt, node, config) {
+								var $table =  $('#package');
+
+							    var cells = $dtMaster.fnGetNodes();
+								var idArr = '';
+								
+								var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+								
+								
+								if($checkboxs.length == 0){
+									alert('請至少選擇一筆資料');
+									return false;
+								}
+								if($checkboxs.length > 20){
+									alert('最多選擇二十筆資料');
+									return false;
+								}
+								
+								$checkboxs.each(function() {
+									idArr += this.id + ',';
+								});
+								idArr = idArr.slice(0,-1);
+								idArr = idArr.replace(/,/g,"','");
+								idArr = "'" + idArr + "'";
+								
+								$.ajax({
+									url: 'productpackage.do', 
+									type: 'post',
+									data: {
+										action: 'sendItemService',
+										package_ids: idArr
+									},
+									error: function (xhr) { },
+									success: function (response) {
+										var $mes = $('#message #text');
+										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
+										$('#message')
+											.dialog()
+											.dialog('option', 'title', '提示訊息')
+											.dialog('option', 'width', 'auto')
+											.dialog('option', 'minHeight', 'auto')
+											.dialog("open");
+									}
+								});		
+								console.log('idArr: '+ idArr);		
+							}
 						}, {
-							text : '發送電文',
+							text : '順豐組合商品',
 							action : function(e, dt, node, config) {
 								var $table =  $('#package');
 
@@ -208,8 +256,8 @@
 								});		
 								console.log('idArr: '+ idArr);		
 							}
-						},{
-							text : '發送產品資訊電文',
+						}, {
+							text : '順豐商品查詢',
 							action : function(e, dt, node, config) {
 								var $table =  $('#package');
 
@@ -223,29 +271,28 @@
 									alert('請至少選擇一筆資料');
 									return false;
 								}
-								if($checkboxs.length > 20){
-									alert('最多選擇二十筆資料');
+								if($checkboxs.length > 11){
+									alert('最多選擇十一筆資料');
 									return false;
 								}
 								
 								$checkboxs.each(function() {
-									idArr += this.id + ',';
+									idArr += this.id + '~';
 								});
 								idArr = idArr.slice(0,-1);
-								idArr = idArr.replace(/,/g,"','");
-								idArr = "'" + idArr + "'";
+				
 								
 								$.ajax({
 									url: 'productpackage.do', 
 									type: 'post',
 									data: {
-										action: 'sendItemService',
-										package_ids: idArr
+										action: 'get_data_by_c_productc_id',
+										c_product_ids: idArr
 									},
 									error: function (xhr) { },
 									success: function (response) {
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送');
+										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')

@@ -506,6 +506,49 @@ public class SfApi {
 
 		return result;
 	}
+	
+	public String genItemQueryService(String [] arr_C_product_id, ValueService valueService) {
+		String result;
+
+		GroupSfVO groupSfVo = valueService.getGroupSfVO();
+
+		List<String> skuNo = new ArrayList<String>();
+
+		for (int i = 0; i < arr_C_product_id.length; i++) {
+			
+			skuNo.add(arr_C_product_id[i]);
+		}
+
+		SkuNoList skuNoList = new SkuNoList();
+		skuNoList.setSkuNo(skuNo);
+
+		ItemQueryRequest itemQueryRequest = new ItemQueryRequest();
+		itemQueryRequest.setCompanyCode(groupSfVo.getCompany_code());
+		itemQueryRequest.setSkuNoList(skuNoList);
+
+		// head, body
+		Head head = new Head();
+		head.setAccessCode(groupSfVo.getAccess_code());
+		head.setCheckword(groupSfVo.getCheck_word());
+
+		Body body = new Body();
+		body.setItemQueryRequest(itemQueryRequest);
+
+		Request mainXML = new Request();
+		mainXML.setService("ITEM_QUERY_SERVICE");
+		mainXML.setLang("zh-CN"); 
+		mainXML.setHead(head);
+		mainXML.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(mainXML, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
 
 	public String genItemQueryService() {
 		String result;

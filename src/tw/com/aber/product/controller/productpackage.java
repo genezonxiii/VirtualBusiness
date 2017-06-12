@@ -20,14 +20,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.PackageVO;
-import tw.com.aber.vo.ShipDetail;
-import tw.com.aber.vo.ShipVO;
 
 public class productpackage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -167,6 +164,7 @@ public class productpackage extends HttpServlet {
 			ProductVO[] parents = dao.searchpackagesdetail(parent_id);
 			Gson gson = new Gson();
 			response.getWriter().write(gson.toJson(parents));
+			
 		} else if ("sendToTelegraph".equals(action)) {
 			String packageIds = request.getParameter("package_ids");
 			
@@ -178,6 +176,7 @@ public class productpackage extends HttpServlet {
 			String resXml = sfApi.sendXML(reqXml);
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+
 			logger.debug("執行結果: " + result);
 			response.getWriter().write(result);
 		} else if ("sendItemService".equals(action)) {
@@ -193,6 +192,26 @@ public class productpackage extends HttpServlet {
 			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 			logger.debug("執行結果: " + result);
 			response.getWriter().write(result);
+		}else if ("get_data_by_c_productc_id".equals(action)) {
+			try {
+				String c_product_ids = request.getParameter("c_product_ids");
+				String arr_c_product_id[]=c_product_ids.split("~");
+				
+				SfApi sfApi = new SfApi();
+
+				ValueService valueService = util.getValueService(request, response);
+				String reqXml = sfApi.genItemQueryService(arr_c_product_id, valueService);
+				String resXml = sfApi.sendXML(reqXml);
+
+				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println(e.getMessage());
+			}
+
 		}
 			
 			

@@ -9,7 +9,7 @@ public class StockModDetailVO implements Serializable {
 	private String stockmodDetail_id;
 	private String stockmod_id;
 	private String product_id;
-	private String quantity;
+	private Integer quantity;
 	private String location_id;
 	private String memo;
 
@@ -58,12 +58,11 @@ public class StockModDetailVO implements Serializable {
 	public void setProduct_id(String product_id) {
 		this.product_id = product_id;
 	}
-
-	public String getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(String quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 

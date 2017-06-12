@@ -141,19 +141,16 @@ public class stockMod extends HttpServlet {
 			stockModService = new StockModService();
 			stockModVO = new StockModVO();
 
-			String[] delArr = request.getParameter("stockmodId").split(",");
-			if (delArr.length > 0) {
-				for (String id : delArr) {
-					stockModVO.setStockmod_id(id);
-					stockModVO.setCreate_user(userId);
-					stockModService.deleteDB(stockModVO);
-				}
-			} else {
-				String stockmodId = request.getParameter("stockmodId");
-				stockModVO.setStockmod_id(stockmodId);
-				stockModVO.setCreate_user(userId);
-				stockModService.deleteDB(stockModVO);
-			}
+			String stockmodId = request.getParameter("stockmodId");
+			logger.debug("stockmodId:"+ stockmodId);
+			
+			stockmodId = stockmodId.replace(",", "','");
+
+			stockmodId = "'" + stockmodId + "'";
+			
+			logger.debug("stockmodId:"+ stockmodId);
+			
+			stockModService.deleteDB(stockmodId, userId);
 
 		} else if ("updateStockMod".equals(action)) {
 			stockModService = new StockModService();
@@ -230,7 +227,52 @@ public class stockMod extends HttpServlet {
 
 			jsonStr = gson.toJson(rows);
 			response.getWriter().write(jsonStr);
+		}else if ("insertStockModDetail".equals(action)){
+			String stockmodId = request.getParameter("stockmodId");
+			String location_id = request.getParameter("locationInfo_id");
+			String product_id = request.getParameter("product_id");
+			String quantityStr = request.getParameter("quantity");
+			String memo = request.getParameter("memo");
+
+			if (isInteger(quantityStr)){
+
+			logger.debug("stockmodId:"+stockmodId);
+			logger.debug("location_id:"+location_id);
+			logger.debug("product_id:"+product_id);
+			logger.debug("quantity:"+(quantityStr));
+			logger.debug("memo:"+memo);
+			
+			stockModService = new StockModService();
+			stockModDetailVO = new StockModDetailVO();
+			
+			stockModDetailVO.setStockmod_id(stockmodId);
+			stockModDetailVO.setLocation_id(location_id);
+			stockModDetailVO.setProduct_id(product_id);
+			stockModDetailVO.setMemo(memo);
+			stockModDetailVO.setQuantity(Integer.valueOf(quantityStr));
+			
+			String msg = stockModService.insertStockModDetail(stockModDetailVO);
+			 
+			response.getWriter().write(msg);
+			}else{
+				response.getWriter().write("數量資料錯誤");
+			}
+			
+		} else if ("deleteStockModDetail".equals(action)) {
+			stockModService = new StockModService();
+			stockModDetailVO = new StockModDetailVO();
+
+			String stockmodDetailIds = request.getParameter("stockmodDetail_ids");
+			logger.debug("stockmodDetailIds:"+stockmodDetailIds);
+			stockmodDetailIds = stockmodDetailIds.replace("~", "','");
+
+			stockmodDetailIds = "'" + stockmodDetailIds + "'";
+
+			String msg = stockModService.deleteStockModByStockmodDetailId(stockmodDetailIds);
+			response.getWriter().write(msg);
 		}
+
+		
 
 	}
 
@@ -303,6 +345,10 @@ public class stockMod extends HttpServlet {
 		public List<LocationVO> getDetailLocationInfoDB(LocationVO locationVO);
 
 		public List<StockModVO> searchDBByDate(StockModVO stockModVO);
+		
+		public String insertStockModDetail(StockModDetailVO stockModDetailVO);
+		
+		public String deleteStockModByStockmodDetailId(String stockmodDetailIds);
 
 		public String searchModType();
 
@@ -312,7 +358,7 @@ public class stockMod extends HttpServlet {
 
 		public void updateDB(StockModVO stockModVO);
 
-		public void deleteDB(StockModVO stockModVO);
+		public void deleteDB(String stockmodId,String userId);
 
 	}
 
@@ -360,8 +406,16 @@ public class stockMod extends HttpServlet {
 			dao.updateDB(stockModVO);
 		}
 
-		public void deleteDB(StockModVO stockModVO) {
-			dao.deleteDB(stockModVO);
+		public void deleteDB(String stockmodId,String userId) {
+			dao.deleteDB( stockmodId, userId);
+		}
+		
+		public String insertStockModDetail(StockModDetailVO stockModDetailVO){
+			return dao.insertStockModDetail(stockModDetailVO);
+		}
+		
+		public String deleteStockModByStockmodDetailId(String stockmodDetailIds){
+			return dao.deleteStockModByStockmodDetailId(stockmodDetailIds);
 		}
 	}
 
@@ -383,6 +437,9 @@ public class stockMod extends HttpServlet {
 		private static final String sp_select_all_stock_mod_detail_by_stockmod_id = "call sp_select_all_stock_mod_detail_by_stockmod_id (?,?)";
 		private static final String sp_get_stock_new_pdid_with_pdname = "call sp_get_stock_new_pdid_with_pdname (?)";
 		private static final String sp_get_stock_new_location_info= "call sp_get_stock_new_location_info (?)";
+		private static final String sp_insert_stockmod_detail= "call sp_insert_stockmod_detail (?,?,?,?,?)";
+		private static final String sp_delete_stockmod_detail= "call sp_delete_stockmod_detail (?)";
+
 		
 		@Override
 		public List<StockModVO> searchDB(StockModVO stockModVO) {
@@ -711,20 +768,20 @@ public class stockMod extends HttpServlet {
 		}
 
 		@Override
-		public void deleteDB(StockModVO stockModVO) {
+		public void deleteDB(String stockmodId,String userId) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
+			ResultSet rs = null;
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_del_stock_mod);
-				String stockmodId = stockModVO.getStockmod_id();
-				String userId = stockModVO.getCreate_user();
-
+		
 				pstmt.setString(1, stockmodId);
 				pstmt.setString(2, userId);
 
-				pstmt.executeUpdate();
+				rs = pstmt.executeQuery();
+	
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -828,7 +885,7 @@ public class stockMod extends HttpServlet {
 					row.setStockmodDetail_id(rs.getString("stockmodDetail_id"));
 					row.setStockmod_id(rs.getString("stockmod_id"));
 					row.setProduct_name(rs.getString("product_name"));
-					row.setQuantity(rs.getString("quantity"));
+					row.setQuantity(rs.getInt("quantity"));
 					row.setLocation_code(rs.getString("location_code"));
 					row.setLocation_desc(rs.getString("location_desc"));
 					row.setMemo(rs.getString("memo"));
@@ -954,6 +1011,98 @@ public class stockMod extends HttpServlet {
 			}
 			return rows;
 		}
+		
+		@Override
+		public String deleteStockModByStockmodDetailId(String stockmodDetail_ids) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			
 
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareCall(sp_delete_stockmod_detail);
+
+			
+				pstmt.setString(1, stockmodDetail_ids);
+				pstmt.execute();
+
+				
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return "刪除成功";
+		}
+		
+		@Override
+		public String insertStockModDetail(StockModDetailVO stockModDetailVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareCall(sp_insert_stockmod_detail);
+
+				String stockmod_id = stockModDetailVO.getStockmod_id();
+				String location_id = stockModDetailVO.getLocation_id();
+				String memo = stockModDetailVO.getMemo();
+				String product_id = stockModDetailVO.getProduct_id();
+				Integer quantity = stockModDetailVO.getQuantity();
+
+				pstmt.setString(1, memo);
+				pstmt.setString(2, stockmod_id);
+				pstmt.setString(3, product_id);
+				pstmt.setInt(4, quantity);
+				pstmt.setString(5, location_id);
+			
+				pstmt.execute();
+
+				
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return "新增成功";
+		}
+
+	}
+	public boolean isInteger(String str) {
+	    try {
+	        Integer.parseInt(str);
+	        return true;
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
 	}
 }
