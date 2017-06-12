@@ -143,7 +143,6 @@ public class stockMod extends HttpServlet {
 
 			String stockmodId = request.getParameter("stockmodId");
 			logger.debug("stockmodId:"+ stockmodId);
-			
 			stockmodId = stockmodId.replace(",", "','");
 
 			stockmodId = "'" + stockmodId + "'";
@@ -781,7 +780,7 @@ public class stockMod extends HttpServlet {
 				pstmt.setString(2, userId);
 
 				rs = pstmt.executeQuery();
-	
+				
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {

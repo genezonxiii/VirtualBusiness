@@ -75,6 +75,7 @@
 			<div id="message" align="center">
 				<div id="text"></div>
 			</div>
+			<input type="hidden" id="hidStockModId" value="">
 		</div>
 	</div>
 	<jsp:include page="template/common_js.jsp" flush="true" />
@@ -92,6 +93,9 @@
 		actionMap.set("修改儲位異動","updateStockMod");
 		actionMap.set("刪除儲位主單","deleteStockMod");
 		actionMap.set("批次刪除","deleteStockMod");
+		actionMap.set("新增儲位異動明細","insertStockModDetail");
+		actionMap.set("刪除儲位異動明細","deleteStockModDetail");
+		actionMap.set("明細批次刪除","deleteStockModDetail");
 		actionMap.set("清單","list");	
 		
 		$(function() {
@@ -299,13 +303,33 @@
 			    var data = masterDT.row(row).data();
 				var stockmod_id = data.stockmod_id;
 				
+				$('#hidStockModId').val(stockmod_id);
 				var parameter = {
 					action : "searchDetailById",
 					stockmodId : stockmod_id
 				};
 				console.log(parameter);
 				drawDetailTable(parameter);
-			});			
+			});
+			$("#stockmod-detail-table").delegate(".btn_delete_detail", "click", function(e) {
+				e.preventDefault();
+				var stockmodDetail_id = $(this).attr("name");
+				var dialogId = "dialog-data-process";
+				var formId = "dialog-form-data-process";
+				var btnTxt_1 = "刪除儲位異動明細";
+				var btnTxt_2 = "取消";
+				var oWidth = 'auto';
+				var url = 'stockMod.do';
+				initDeleteDialog();
+				drawDialog
+					(dialogId, url, oWidth, formId, btnTxt_1, btnTxt_2)
+					.data("stockmodDetail_ids",stockmodDetail_id)
+					.dialog("option","title",btnTxt_1)
+					.dialog('open');
+			});
+			
+			
+			
 		});
 	</script>
 	<script>
@@ -320,11 +344,6 @@
 					+ "<td><label>"
 					+ "<input type='text' name='stockmod_time' class='input-date'>"
 					+ "</label></td>";
-
-// 			var ref_id = "<td>&nbsp;參考來源代碼&nbsp;</td>"
-// 					+ "<td>"
-// 					+ "<input type='text' name='ref_id' placeholder='請填寫參考來源代碼'>"
-// 					+ "</td>";
 
 			var stockmod_type = "<td>&nbsp;儲位異動型態&nbsp;</td>";
 					
@@ -467,6 +486,61 @@
 								}
 							});							
 						}
+						if(action == 'deleteStockModDetail'){
+							$.ajax({
+								url: 'stockMod.do', 
+								type: 'post',
+								data: {
+									action : action,
+									stockmodDetail_ids : $(this).data('stockmodDetail_ids')
+								},
+								error: function (xhr) { }, 
+								success: function (response) {
+									dataDialog.dialog('close');
+									$mes.val('').html('').append(
+										$('<p></p>').val('').html(response)
+									);
+									$('#message')
+										.dialog()
+										.dialog('option', 'title', '通知訊息')
+										.dialog("open");
+
+									detailDT.ajax.reload();
+								}
+							});							
+						}
+						
+						
+						if(action=="insertStockModDetail"){	
+							$.ajax({
+								url: 'stockMod.do', 
+								type: 'post',
+								data: {
+									action : action,
+									stockmodId : $('#hidStockModId').val(),
+									locationInfo_id : $form.find('select[name="locationInfo_id"]').val(),
+									product_id : $form.find('select[name="product_id"]').val(),
+									quantity : $form.find('input[name="quantity"]').val(),
+									memo : $form.find('input[name="memo"]').val()
+								},
+								error: function (xhr) { }, 
+								success: function (response) {
+									dataDialog.dialog('close');
+									$mes.val('').html('').append(
+										$('<p></p>').val('').html(response)
+									);
+									$('#message')
+										.dialog()
+										.dialog('option', 'title', '執行結果')
+										.dialog("open");
+									
+									detailDT.ajax.reload();
+								}
+							});
+						
+							
+						}
+						
 					}
 				}, {
 					text : btnTxt_2,
@@ -487,14 +561,22 @@
 
 			masterDT = $("#stockmod-master-table").DataTable({
 				dom : "Blfr<t>ip",
-				//scrollY : "200px",
+			    scrollY: "290px",
 				width : 'auto',
+				lengthChange: false,
 				scrollCollapse : true,
 				destroy : true,
 				language : {
 					"url" : "js/dataTables_zh-tw.txt",
 					"emptyTable" : "查無資料",
 				},
+				initComplete: function(settings, json) {
+			        $('div .dt-buttons').css({
+			            'float': 'left',
+			            'margin-left': '10px'
+			        });
+			        $('div .dt-buttons a').css('margin-left', '10px');
+			    },
 				ajax : {
 					url : "stockMod.do",
 					dataSrc : "",
@@ -502,6 +584,10 @@
 					data : parameter
 				},
 				columns : [ {
+					"title" : "勾選",
+					"data" : null,
+					"defaultContent" : ""
+				},{
 					"title" : "儲位異動編號",
 					"data" : "stockmod_no",
 					"defaultContent" : ""
@@ -510,11 +596,6 @@
 					"data" : "stockmod_time",
 					"defaultContent" : ""
 				}
-// 				, {
-// 					"title" : "參考來源代碼",
-// 					"data" : "ref_id",
-// 					"defaultContent" : ""
-// 				}
 				, {
 					"title" : "儲位異動型態",
 					"data" : "stockmod_type",
@@ -528,34 +609,13 @@
 					"data" : "memo",
 					"defaultContent" : ""
 				}
-// 				, {
-// 					"title" : "建立使用者代碼",
-// 					"data" : "create_user",
-// 					"defaultContent" : ""
-// 				}, {
-// 					"title" : "建立時間",
-// 					"data" : "create_time",
-// 					"defaultContent" : ""
-// 				}, {
-// 					"title" : "處理使用者代碼",
-// 					"data" : "process_user",
-// 					"defaultContent" : ""
-// 				}, {
-// 					"title" : "處理時間",
-// 					"data" : "process_time",
-// 					"defaultContent" : ""
-// 				}
 				, {
 					"title" : "功能",
 					"data" : null,
 					"defaultContent" : ""
-				}, {
-					"title" : "批次刪除",
-					"data" : null,
-					"defaultContent" : ""
 				} ],
 				columnDefs : [ {
-					targets : -1,
+					targets : 0,
 					searchable : false,
 					orderable : false,
 					render : function(data, type, row) {
@@ -565,13 +625,9 @@
 						input.type = 'checkbox';
 						input.name = 'checkbox-group-select';
 						input.id = stockmod_id;
-						//input.setAttribute('data-on','false');
-
+						
 						var span = document.createElement("SPAN");
 						span.className = 'form-label';
-
-						var text = document.createTextNode('選取');
-						span.appendChild(text);
 
 						var label = document.createElement("LABEL");
 						label.htmlFor = row.stockmod_id;
@@ -585,7 +641,7 @@
 					}
 				}, {
 					//功能
-					targets : 5,
+					targets : -1,
 					searchable : false,
 					orderable : false,
 					render : function(data, type, row) {
@@ -660,11 +716,14 @@
 						var btnTxt_2 = "取消";
 						var oWidth = 'auto';
 						var url = 'stockMod.do';
-
+						
 						$checkboxs.each(function() {
 							delArr += this.id + ',';
 						});
-						delArr.slice(0,-1);
+						
+						delArr = delArr.slice(0,-1);
+						
+						console.log("delArr:"+delArr);
 						
 						initDeleteDialog();
 						drawDialog
@@ -694,11 +753,12 @@
 		function drawDetailTable(parameter) {
 
 			detailDT = $("#stockmod-detail-table").DataTable({
-				dom : "Blfr<t>ip",
-				//scrollY : "200px",
+				dom : "frB<t>ip",
+				scrollY : "290px",
 				width : 'auto',
 				scrollCollapse : true,
 				destroy : true,
+				pageLength: 20,
 				language : {
 					"url" : "js/dataTables_zh-tw.txt",
 					"emptyTable" : "查無資料",
@@ -709,7 +769,18 @@
 					type : "POST",
 					data : parameter
 				},
+				initComplete: function(settings, json) {
+			        $('div .dt-buttons').css({
+			            'float': 'left',
+			            'margin-left': '10px'
+			        });
+			        $('div .dt-buttons a').css('margin-left', '10px');
+			    },
 				columns : [ {
+					"title" : "勾選",
+					"data" : null,
+					"defaultContent" : ""
+				},{
 					"title" : "產品名稱",
 					"data" : "product_name",
 					"defaultContent" : ""
@@ -733,13 +804,9 @@
 					"title" : "功能",
 					"data" : null,
 					"defaultContent" : ""
-				}, {
-					"title" : "批次刪除",
-					"data" : null,
-					"defaultContent" : ""
 				} ],
 				columnDefs : [ {
-					targets : -1,
+					targets : 0,
 					searchable : false,
 					orderable : false,
 					render : function(data, type, row) {
@@ -749,16 +816,12 @@
 						input.type = 'checkbox';
 						input.name = 'checkbox-group-select';
 						input.id = stockmodDetail_id;
-						//input.setAttribute('data-on','false');
 
 						var span = document.createElement("SPAN");
 						span.className = 'form-label';
 
-						var text = document.createTextNode('選取');
-						span.appendChild(text);
-
 						var label = document.createElement("LABEL");
-						label.htmlFor = row.stockmod_id;
+						label.htmlFor = stockmodDetail_id;
 						label.name = 'checkbox-group-select';
 						label.style.marginLeft = '40%';
 						label.appendChild(span);
@@ -769,7 +832,7 @@
 					}
 				}, {
 					//功能
-					targets : 5,
+					targets : -1,
 					searchable : false,
 					orderable : false,
 					render : function(data, type, row) {
@@ -781,19 +844,9 @@
 						})).append($("<div/>", {
 							"class" : "table-function-list"
 						}).append($("<button/>", {
-							"class" : "btn-in-table btn-darkblue btn_update",
-							"title" : "修改"
-						}).append($("<i/>", {
-							"class" : "fa fa-pencil"
-						}))).append($("<button/>", {
-							"class": "btn-in-table btn-green btn_list",
-							"title": "清單"
-						}).append( $("<i/>", {
-							"class": "fa fa-pencil-square-o"
-						}))).append($("<button/>", {
-							"class" : "btn-in-table btn-alert btn_delete",
+							"class" : "btn-in-table btn-alert btn_delete_detail",
 							"title" : "刪除",
-							"name" : row.stockmod_id
+							"name" : row.stockmodDetail_id
 						}).append($("<i/>", {
 							"class" : "fa fa-trash"
 						})))));
@@ -807,7 +860,7 @@
 
 						selectCount++;
 						console.log('selectCount: '+ selectCount);
-						var $dtMaster =  $('#stockmod-master-table');
+						var $dtMaster =  $('#stockmod-detail-table');
 						var $checkboxs = $dtMaster.find('input[name=checkbox-group-select]');
 
 						console.log('selectCount % 2 : ' + selectCount % 2);
@@ -826,7 +879,7 @@
 				}, {
 					text : '批次刪除',
 					action : function(e, dt, node, config) {
-						var $dtMaster =  $('#stockmod-master-table');
+						var $dtMaster =  $('#stockmod-detail-table');
 						var delArr = '';
 						
 						var $checkboxs = $dtMaster.find('input[name=checkbox-group-select]:checked');
@@ -840,20 +893,20 @@
 						
 						var dialogId = "dialog-data-process";
 						var formId = "dialog-form-data-process";
-						var btnTxt_1 = "批次刪除";
+						var btnTxt_1 = "明細批次刪除";
 						var btnTxt_2 = "取消";
 						var oWidth = 'auto';
 						var url = 'stockMod.do';
 
 						$checkboxs.each(function() {
-							delArr += this.id + ',';
+							delArr += this.id + '~';
 						});
 						delArr.slice(0,-1);
 						
 						initDeleteDialog();
 						drawDialog
 							(dialogId, url, oWidth, formId, btnTxt_1, btnTxt_2)
-							.data("stockmodId",delArr)
+							.data("stockmodDetail_ids",delArr)
 							.dialog("option","title","刪除"+ $checkboxs.length +"筆資料")
 							.dialog("open");					
 					}
