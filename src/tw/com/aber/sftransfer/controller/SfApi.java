@@ -351,10 +351,10 @@ public class SfApi {
 			item.setBarCode(barCode);
 			item.setQtymin(String.valueOf( product.getKeep_stock() )); 
 			item.setContainers(containers);
-			//xxx
-			item.setSerialNumTrackInbound("N");
-			item.setSerialNumTrackInventory("N");
-			item.setSerialNumTrackOutbound("N");
+			//要求掃描序列號
+			item.setSerialNumTrackInbound("Y");
+			item.setSerialNumTrackInventory("Y");
+			item.setSerialNumTrackOutbound("Y");
 
 			itemList.add(item);
 
@@ -735,9 +735,16 @@ public class SfApi {
 
 					item.setSkuNo(purchaseDetailVO.getC_product_id());
 
-					logger.debug("purchaseDetailVO.getQuantity():" + purchaseDetailVO.getQuantity());
-					item.setQty(
-							purchaseDetailVO.getQuantity() == null ? null : purchaseDetailVO.getQuantity().toString());
+					item.setQty(purchaseDetailVO.getQuantity() == null ?
+							null : purchaseDetailVO.getQuantity().toString());
+					//入庫暫定為正品
+					item.setInventoryStatus("10");
+					item.setLot(purchaseVO.getSeq_no());
+					
+					logger.debug("purchaseDetailVO");
+					logger.debug("c_product_id:" + purchaseDetailVO.getQuantity());
+					logger.debug("quantity:" + purchaseDetailVO.getQuantity());
+					
 					itemList.add(item);
 				}
 			}

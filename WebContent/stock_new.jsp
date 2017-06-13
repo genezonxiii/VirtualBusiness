@@ -285,7 +285,7 @@
 							});						
 				}
 			}, {
-				text : '順風庫存查詢',
+				text : '順豐庫存查詢',
 				action : function(e, dt, node, config) {
 					var $table =  $('#dt_master_stock_new');
 

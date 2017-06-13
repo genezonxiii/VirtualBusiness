@@ -151,6 +151,26 @@ function draw_purchase(parameter){
 						    $('div .dt-buttons a').css('margin-left','10px');
 						},
 						buttons : [{
+							text : '全選',
+							action : function(e, dt, node, config) {
+
+								selectCount++;
+								var $table =  $('#purchases');
+								var $checkboxs = $table.find('input[name=checkbox-group-select]');
+								
+								selectCount %2 != 1 ?
+										$checkboxs.each(function() {
+											$(this).prop("checked", false);
+											$(this).removeClass("toggleon");
+								        	$(this).closest("tr").removeClass("selected");
+										}): 
+										$checkboxs.each(function() {
+											$(this).prop("checked", true);
+											$(this).addClass("toggleon");
+											$(this).closest("tr").addClass("selected");
+										});						
+							}
+						},{
 							text : '順豐入庫',
 							action : function(e, dt, node, config) {
 								var $table =  $('#purchase');
@@ -290,26 +310,6 @@ function draw_purchase(parameter){
 								});		
 								console.log('idArr: '+ idArr);		
 							}
-							},{
-										text : '全選',
-										action : function(e, dt, node, config) {
-
-											selectCount++;
-											var $table =  $('#purchases');
-											var $checkboxs = $table.find('input[name=checkbox-group-select]');
-											
-											selectCount %2 != 1 ?
-													$checkboxs.each(function() {
-														$(this).prop("checked", false);
-														$(this).removeClass("toggleon");
-											        	$(this).closest("tr").removeClass("selected");
-													}): 
-													$checkboxs.each(function() {
-														$(this).prop("checked", true);
-														$(this).addClass("toggleon");
-														$(this).closest("tr").addClass("selected");
-													});						
-										}
 									}
 						   		],
 						
