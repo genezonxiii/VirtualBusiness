@@ -320,6 +320,11 @@ public class SfApi {
 			+ "</OrderItem>" + "</OrderItems>" + "</OrderReceiverInfo>" + "</SaleOrder>" + "</SaleOrders>"
 			+ "</SaleOrderRequest>" + "</Body>" + "</Request>";
 
+	
+	/******************
+	 *  	商品接口
+	 * 
+	 * ***************/
 	public String genItemService(List<ProductBean> productList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
@@ -392,6 +397,10 @@ public class SfApi {
 		return result;
 	}
 	
+	/******************
+	 *  商品接口(組合包)
+	 * 
+	 ******************/
 	public String genItemServiceForPackage(List<tw.com.aber.vo.PackageVO> packageVOList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
@@ -464,6 +473,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 		商品查詢接口
+	 * 
+	 **********************/
 	public String genItemQueryService(List<ProductBean> productList, ValueService valueService) {
 		String result;
 
@@ -507,6 +520,10 @@ public class SfApi {
 		return result;
 	}
 	
+	/**********************
+	 * 	商品查詢接口(組合包)
+	 * 
+	 **********************/
 	public String genItemQueryService(String [] arr_C_product_id, ValueService valueService) {
 		String result;
 
@@ -550,6 +567,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 	商品查詢接口(初版)
+	 * 
+	 **********************/	
 	public String genItemQueryService() {
 		String result;
 
@@ -589,6 +610,11 @@ public class SfApi {
 		return result;
 	}
 
+	
+	/**********************
+	 * 	入庫單接口(初版)
+	 * 
+	 **********************/	
 	public String genPurchaseOrderService() {
 		String result;
 
@@ -675,7 +701,11 @@ public class SfApi {
 
 		return result;
 	}
-
+	
+	/**********************
+	 * 	入庫單接口
+	 * 
+	 **********************/	
 	public String genPurchaseOrderService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -759,6 +789,11 @@ public class SfApi {
 		return result;
 	}
 
+	
+	/**********************
+	 * 	入庫單明細查詢接口
+	 * 
+	 **********************/	
 	public String genPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -807,6 +842,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 	入庫取消接口(初版)
+	 * 
+	 **********************/	
 	public String genCancelPurchaseOrderInboundQueryService() {
 		String result;
 
@@ -855,6 +894,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 	入庫取消接口
+	 * 
+	 **********************/	
 	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -904,6 +947,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 	出庫單接口(初版)
+	 * 
+	 **********************/	
 	public String genSaleOrderService() {
 		String result;
 
@@ -978,6 +1025,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 	出庫單接口
+	 * 
+	 **********************/	
 	public String genSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
@@ -1071,6 +1122,10 @@ public class SfApi {
 		return result;
 	}
 
+	/**********************
+	 * 	出庫單取消接口
+	 * 
+	 **********************/
 	public String genCancelSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
@@ -1568,6 +1623,7 @@ public class SfApi {
 	 * @return whether the return is successful
 	 */
 	public boolean isTelegraph(ResponseUtil responseUtil) {
+		
 		boolean result = false;
 
 		if (responseUtil != null && responseUtil.getResponse() != null) {
