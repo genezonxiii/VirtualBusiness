@@ -388,7 +388,7 @@
 		                console.log(noArr);
 		            }
 		        }, {
-		            text: '順豐取消出庫',
+		            text: '順豐出庫取消',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
