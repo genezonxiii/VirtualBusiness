@@ -9,9 +9,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "SaleOrders")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder", 
-		"tradeOrder", "orgErpOrder", "orgTradeOrder", "orderCarrier", 
-		"orderReceiverInfo", "orderItems", "shipmentId",
-		"result", "note", "header", "items", "containers", "steps" })
+		"tradeOrderDateTime", "shopName", "tradeOrder", "fromFlag", "orgErpOrder", 
+		"orgTradeOrder", "orderCarrier", "orderReceiverInfo", "orderSenderInfo", 
+		"orderItems", "shipmentId","result", "note", "header", "items", 
+		"containers", "steps" })
 
 public class SaleOrder {
 	private static final long serialVersionUID = 1L;
@@ -24,8 +25,14 @@ public class SaleOrder {
 	private String erpOrderType;
 	@XmlElement(name = "ErpOrder")
 	private String erpOrder;
+	@XmlElement(name = "TradeOrderDateTime")
+	private String tradeOrderDateTime;
+	@XmlElement(name = "ShopName")
+	private String shopName;
 	@XmlElement(name = "TradeOrder")
 	private String tradeOrder;
+	@XmlElement(name = "FromFlag")
+	private String fromFlag;
 	@XmlElement(name = "OrgErpOrder")
 	private String orgErpOrder;
 	@XmlElement(name = "OrgTradeOrder")
@@ -34,9 +41,10 @@ public class SaleOrder {
 	private OrderCarrier orderCarrier;
 	@XmlElement(name = "OrderReceiverInfo")
 	private OrderReceiverInfo orderReceiverInfo;
+	@XmlElement(name = "OrderSenderInfo")
+	private OrderSenderInfo orderSenderInfo;
 	@XmlElement(name = "OrderItems")
     private OrderItems orderItems;
-	
 
 	@XmlElement(name = "ShipmentId")
 	private String shipmentId;
@@ -169,6 +177,61 @@ public class SaleOrder {
 	public void setOrderCarrier(OrderCarrier orderCarrier) {
 		this.orderCarrier = orderCarrier;
 	}
-	
+
+	public String getTradeOrder() {
+		return tradeOrder;
+	}
+
+	public void setTradeOrder(String tradeOrder) {
+		this.tradeOrder = tradeOrder;
+	}
+
+	public String getFromFlag() {
+		return fromFlag;
+	}
+
+	public void setFromFlag(String fromFlag) {
+		this.fromFlag = fromFlag;
+	}
+
+	public String getOrgErpOrder() {
+		return orgErpOrder;
+	}
+
+	public void setOrgErpOrder(String orgErpOrder) {
+		this.orgErpOrder = orgErpOrder;
+	}
+
+	public String getOrgTradeOrder() {
+		return orgTradeOrder;
+	}
+
+	public void setOrgTradeOrder(String orgTradeOrder) {
+		this.orgTradeOrder = orgTradeOrder;
+	}
+
+	public OrderSenderInfo getOrderSenderInfo() {
+		return orderSenderInfo;
+	}
+
+	public void setOrderSenderInfo(OrderSenderInfo orderSenderInfo) {
+		this.orderSenderInfo = orderSenderInfo;
+	}
+
+	public String getTradeOrderDateTime() {
+		return tradeOrderDateTime;
+	}
+
+	public void setTradeOrderDateTime(String tradeOrderDateTime) {
+		this.tradeOrderDateTime = tradeOrderDateTime;
+	}
+
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
 
 }
