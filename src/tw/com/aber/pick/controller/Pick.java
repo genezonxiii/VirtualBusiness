@@ -23,7 +23,6 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tw.com.aber.ship.controller.ship.ShipService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.PickDetailVO;
 import tw.com.aber.vo.PickVO;
@@ -58,6 +57,9 @@ public class Pick extends HttpServlet {
 				List<PickVO> pickVOList = new ArrayList<PickVO>();
 				String startStr = request.getParameter("startDate");
 				String endStr = request.getParameter("endDate");
+				
+				logger.debug("startDate:".concat(startStr));
+				logger.debug("endDate:".concat(endStr));
 
 				java.util.Date date = null;
 				Date startDate = null, endDate = null;
@@ -71,7 +73,6 @@ public class Pick extends HttpServlet {
 					logger.error("search date convert :".concat(e.getMessage()));
 				}
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-			
 
 				pickVOList = pickService.searchPickByPickTimeDate(groupId, startDate, endDate);
 				result = gson.toJson(pickVOList);
@@ -79,10 +80,7 @@ public class Pick extends HttpServlet {
 				logger.debug("result:" +result);
 				
 				response.getWriter().write(result);
-
-			}
-			
-			if("searchPickByOrderNo".equals(action)){
+			} else if("searchPickByOrderNo".equals(action)){
 
 				List<PickVO> pickVOList = new ArrayList<PickVO>();
 				String orderNo = request.getParameter("orderNo");
@@ -94,11 +92,11 @@ public class Pick extends HttpServlet {
 				logger.debug("result:" +result);
 				
 				response.getWriter().write(result);
-			}
-			
-			if("getDetail".equals(action)){
+			} else if("getDetail".equals(action)){
 				List<PickDetailVO> pickDetailVOList = new ArrayList<PickDetailVO>();
 				String pick_id = request.getParameter("pick_id");
+				
+				logger.debug("pick_id:" + pick_id);
 				
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				pickDetailVOList = pickService.searchPickDetailByPickId(groupId, pick_id);
@@ -107,9 +105,7 @@ public class Pick extends HttpServlet {
 				logger.debug("result:" +result);
 				
 				response.getWriter().write(result);
-				
 			}
-
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
 		}	
@@ -132,8 +128,6 @@ public class Pick extends HttpServlet {
 		public List<PickDetailVO> searchPickDetailByPickId(String groupId,String pickId) {
 			return dao.searchPickDetailByPickId(groupId, pickId);
 		}
-
-
 	}
 	
 	class PickDAO implements pick_interface {
@@ -146,7 +140,6 @@ public class Pick extends HttpServlet {
 		private static final String sp_select_pick_by_pick_Time = "call sp_select_pick_by_pick_Time (?,?,?)";
 		private static final String sp_select_pick_by_order_no = "call sp_select_pick_by_order_no (?,?)";
 		private static final String sp_select_pick_detail_by_pick_id = "call sp_select_pick_detail_by_pick_id (?,?)";
-
 
 		@Override
 		public List<PickVO> searchPickByPickTimeDate(String groupId, Date startDate, Date endDate) {
@@ -214,7 +207,6 @@ public class Pick extends HttpServlet {
 
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, orderNo);
-			
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
@@ -265,8 +257,7 @@ public class Pick extends HttpServlet {
 
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, pickId);
-			
-
+				
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					pickDetailVO = new PickDetailVO();
@@ -306,7 +297,6 @@ public class Pick extends HttpServlet {
 			}
 			return pickDetailVOList;
 		}
-
 	}
 	
 	interface pick_interface {
@@ -315,8 +305,5 @@ public class Pick extends HttpServlet {
 		public List<PickDetailVO> searchPickDetailByPickId(String groupId, String pickId);
 
 		public List<PickVO> searchPickByOrderNo(String groupId, String OrderNo);
-
-
 	}
-
 }
