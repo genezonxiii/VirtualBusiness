@@ -1,7 +1,13 @@
 package tw.com.aber.sftransfer.controller;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +33,7 @@ public class SfDeliveryApi {
 	private static final Logger logger = LogManager.getLogger(SfDeliveryApi.class);
 
 	// 下訂單(含篩選)接口響應 - 訂單處理成功
-	private static final String ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderService\">" + "<Head>OK</Head>" + "<Body>"
 			+ "<OrderResponse orderId=\"TEST201706090001\" mailno=\"444003409873\" orgincode=\"SIN01D\" destcode=\"852\" filter_result=\"2\"/>"
 			+ "</Body>" + "</Response>";
@@ -65,6 +71,28 @@ public class SfDeliveryApi {
 			+ "<Response service=\"RouteService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
 
+	public String genOrderService(Order order) {
+		String result = "";
+		Body body = new Body();
+		body.setOrder(order);
+
+		Request request = new Request();
+		request.setService("OrderService");
+		request.setLang("zh-CN");
+		request.setHead("BSPdevelop");
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+
+	// 測試用
 	public String genOrderService() {
 		String result = "";
 		Cargo cargo1 = new Cargo();
@@ -138,6 +166,7 @@ public class SfDeliveryApi {
 		return result;
 	}
 
+	// 測試用
 	public String genOrderConfirmService() {
 		String result = "";
 		OrderConfirmOption option = new OrderConfirmOption();
@@ -174,6 +203,7 @@ public class SfDeliveryApi {
 		return result;
 	}
 
+	// 測試用
 	public String genOrderSearchService() {
 		String result = "";
 		OrderSearch orderSearch = new OrderSearch();
@@ -197,6 +227,7 @@ public class SfDeliveryApi {
 		return result;
 	}
 
+	// 測試用
 	public String genRouteService() {
 		String result = "";
 		RouteRequest routeRequest = new RouteRequest();
@@ -235,6 +266,89 @@ public class SfDeliveryApi {
 			logger.debug("\n\ngetResponseObj err:{}\n", e.getMessage());
 		}
 		return response;
+	}
+
+	public boolean isTelegraph(Response response) {
+		boolean result = false;
+
+		try {
+			if (response != null && response.getHead() != null) {
+				result = "OK".equals(response.getHead()) ? true : false;
+			}
+		} catch (Exception e) {
+			logger.debug("isTelegraph: {}", e.getMessage());
+			result = false;
+		}
+		return result;
+	}
+
+	public String sendXML(String reqXml) {
+		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
+//		String targetURL = "http://192.168.112.164:8088/sfdelivery/";
+		String urlParameters = "";
+
+		SfDeliveryApi api = new SfDeliveryApi();
+
+		String logisticsInterface = reqXml;
+		String dataDigest = reqXml + "123456";
+
+		Md5Base64 enMd5Base64 = new Md5Base64();
+		dataDigest = enMd5Base64.encode(dataDigest);
+		logger.debug("md5 + Base64:" + dataDigest);
+		dataDigest = enMd5Base64.urlEncode(dataDigest);
+		logger.debug("md5 + Base64 > urlEncode:" + dataDigest);
+
+		logisticsInterface = enMd5Base64.urlEncode(logisticsInterface);
+		logger.debug("logisticsInterface:" + logisticsInterface);
+
+		urlParameters = "logistics_interface=" + logisticsInterface + "&data_digest=" + dataDigest;
+
+		String returnValue = api.executePost(targetURL, urlParameters);
+		logger.debug("returnValue:" + returnValue);
+		return returnValue;
+	}
+
+	public String executePost(String targetURL, String urlParameters) {
+		HttpURLConnection connection = null;
+
+		try {
+			// Create connection
+			URL url = new URL(targetURL);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+			connection.setRequestProperty("Content-Length", Integer.toString(urlParameters.getBytes().length));
+			connection.setRequestProperty("Content-Language", "zh-TW");
+
+			connection.setUseCaches(false);
+			connection.setDoOutput(true);
+
+			// Send request
+			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.close();
+
+			// Get Response
+			InputStream is = connection.getInputStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, "utf-8"));
+			StringBuilder response = new StringBuilder(); // or StringBuffer if
+															// Java version 5+
+			String line;
+			while ((line = rd.readLine()) != null) {
+				response.append(line);
+				response.append('\r');
+			}
+			rd.close();
+			return response.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}
 	}
 
 	public static void main(String[] args) {
