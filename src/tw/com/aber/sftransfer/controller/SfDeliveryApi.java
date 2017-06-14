@@ -292,13 +292,13 @@ public class SfDeliveryApi {
 		String logisticsInterface = reqXml;
 		String dataDigest = reqXml + "123456";
 
-		Md5Base64 enMd5Base64 = new Md5Base64();
-		dataDigest = enMd5Base64.encode(dataDigest);
+//		Md5Base64 enMd5Base64 = new Md5Base64();
+		dataDigest = Md5Base64.encode(dataDigest);
 		logger.debug("md5 + Base64:" + dataDigest);
-		dataDigest = enMd5Base64.urlEncode(dataDigest);
+		dataDigest = Md5Base64.urlEncode(dataDigest);
 		logger.debug("md5 + Base64 > urlEncode:" + dataDigest);
 
-		logisticsInterface = enMd5Base64.urlEncode(logisticsInterface);
+		logisticsInterface = Md5Base64.urlEncode(logisticsInterface);
 		logger.debug("logisticsInterface:" + logisticsInterface);
 
 		urlParameters = "logistics_interface=" + logisticsInterface + "&data_digest=" + dataDigest;
