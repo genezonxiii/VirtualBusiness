@@ -54,6 +54,8 @@ public class stockMod extends HttpServlet {
 		String action = request.getParameter("action");
 		String groupId = request.getSession().getAttribute("group_id").toString();
 		String userId = request.getSession().getAttribute("user_id").toString();
+		
+		logger.debug("Action:" + action);
 
 		if ("searchByNo".equals(action)) {
 			try {
@@ -61,6 +63,8 @@ public class stockMod extends HttpServlet {
 				stockModVO = new StockModVO();
 
 				String stockmodNo = request.getParameter("stockmodNo");
+				
+				logger.debug("stockmodNo:" + stockmodNo);
 
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
@@ -85,6 +89,9 @@ public class stockMod extends HttpServlet {
 
 				String startDate = request.getParameter("startDate");
 				String endDate = request.getParameter("endDate");
+				
+				logger.debug("startDate:" + startDate);
+				logger.debug("endDate:" + endDate);
 
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
@@ -142,7 +149,9 @@ public class stockMod extends HttpServlet {
 			stockModVO = new StockModVO();
 
 			String stockmodId = request.getParameter("stockmodId");
+			
 			logger.debug("stockmodId:"+ stockmodId);
+			
 			stockmodId = stockmodId.replace(",", "','");
 
 			stockmodId = "'" + stockmodId + "'";
@@ -191,6 +200,8 @@ public class stockMod extends HttpServlet {
 			stockModService = new StockModService();
 
 			String stockmodId = request.getParameter("stockmodId");
+			
+			logger.debug("stockmodId:" + stockmodId);
 
 			stockModDetailVO = new StockModDetailVO();
 			stockModDetailVO.setGroup_id(groupId);
