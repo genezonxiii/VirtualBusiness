@@ -258,7 +258,7 @@ public class SfDeliveryApi {
 		try {
 			response = JAXB.unmarshal(new StringReader(resXml), Response.class);
 			String jsonStr = new Gson().toJson(response);
-			logger.debug("\n\nJson格式:\n\n{}\n", jsonStr);
+			logger.debug("\n\n[Response]\n\nJson格式:\n\n{}\n", jsonStr);
 			StringWriter sw = new StringWriter();
 			JAXB.marshal(response, sw);
 			logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
@@ -284,7 +284,7 @@ public class SfDeliveryApi {
 
 	public String sendXML(String reqXml) {
 		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
-//		String targetURL = "http://192.168.112.164:8088/sfdelivery/";
+		// String targetURL = "http://192.168.112.164:8088/sfdelivery/";
 		String urlParameters = "";
 
 		SfDeliveryApi api = new SfDeliveryApi();
@@ -292,7 +292,7 @@ public class SfDeliveryApi {
 		String logisticsInterface = reqXml;
 		String dataDigest = reqXml + "123456";
 
-//		Md5Base64 enMd5Base64 = new Md5Base64();
+		// Md5Base64 enMd5Base64 = new Md5Base64();
 		dataDigest = Md5Base64.encode(dataDigest);
 		logger.debug("md5 + Base64:" + dataDigest);
 		dataDigest = Md5Base64.urlEncode(dataDigest);
@@ -366,9 +366,9 @@ public class SfDeliveryApi {
 		// api.getResponseObj(ORDER_SEARCH_SERVICE_RESPONSE);
 		// api.getResponseObj(ORDER_SEARCH_SERVICE_ERR_RESPONSE);
 
-		api.genRouteService();
-		api.getResponseObj(ROUTE_SERVICE_RESPONSE);
-		api.getResponseObj(ROUTE_SERVICE_ERR_RESPONSE);
+		// api.genRouteService();
+		// api.getResponseObj(ROUTE_SERVICE_RESPONSE);
+		// api.getResponseObj(ROUTE_SERVICE_ERR_RESPONSE);
 
 	}
 }

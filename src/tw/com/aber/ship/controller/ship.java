@@ -563,12 +563,13 @@ public class ship extends HttpServlet {
 				request.setLang("zh-CN");
 				request.setBody(body);
 
+				String rqJsonStr = new Gson().toJson(request);
+				logger.debug("\n\n[Request]\n\nJson格式:\n\n{}\n", rqJsonStr);
+				
 				StringWriter sw = new StringWriter();
 				JAXB.marshal(request, sw);
-				logger.debug("--- start: output of marshalling ----");
-				logger.debug(sw.toString());
+				logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
 				result = sw.toString();
-				logger.debug("--- end: output of marshalling ----");
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
