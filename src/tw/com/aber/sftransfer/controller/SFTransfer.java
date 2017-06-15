@@ -7,14 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,6 +39,7 @@ public class SFTransfer extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+
 		doPost(request, response);
 	}
 
@@ -50,131 +47,108 @@ public class SFTransfer extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-
 		String action = request.getParameter("action");
 
-		logger.debug("action: " + action);
+		upload(request, response);
 
-		String[] actions = { "upload", "download"};
+		String[] actions = { "download" };
 
 		int key = Arrays.asList(actions).indexOf(action);
 
 		logger.debug("key: " + key);
-		
-		String ws = getServletConfig().getServletContext().getInitParameter("pythonwebservice");
 
 		switch (key) {
-			case 0: {
-				String type = request.getParameter("type");
-				logger.debug("\ntype: {}", type);
-	
-				String conString = "";
-				String ret = "E";
-				conString = putFile(request, response, type);
-	
+
+		case 0: {
+			String ext = ".xls";
+			String encode_fileName = request.getParameter("downloadName");
+			String[] downloadName = encode_fileName.split("_");
+			String decode_fileName = new String(Base64.decodeBase64(downloadName[1].getBytes()));
+			String file_path = "/data/vbSF_output/" + decode_fileName;
+
+			try {
+				FileInputStream fileInput = new FileInputStream(file_path);
+				int i = fileInput.available();
+				byte[] content = new byte[i];
+
+				fileInput.read(content);
+				response.setContentType("application/octet-stream");
+
+				String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表" + ext : "出庫明細表" + ext;
+				response.setHeader("Content-Disposition",
+						"attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
+
+				OutputStream output = null;
 				try {
-					TimeUnit.SECONDS.sleep(2);
-				} catch (Exception e) {
-					ret = "Sleep error";
-				}
-				if (conString.charAt(0) != 'E') {
-					ret = webService(request, response, conString);
-				} else {
-					ret = conString;
-				}
-				ret = ((ret == null) ? "E" : ret);
-				logger.debug("ret: ", ret);
-				response.getWriter().write(ret);
-	
-				break;
-			}
-			case 1: {
-				String ext = ".xls";
-				String encode_fileName = request.getParameter("downloadName");
-				String[] downloadName = encode_fileName.split("_");
-				String decode_fileName = new String(Base64.decodeBase64(downloadName[1].getBytes()));
-				String file_path = "/data/vbSF_output/" + decode_fileName;
-	
-				try {
-					FileInputStream fileInput = new FileInputStream(file_path);
-					int i = fileInput.available();
-					byte[] content = new byte[i];
-	
-					fileInput.read(content);
-					response.setContentType("application/octet-stream");
-	
-					String tmp = "inbound".equals(downloadName[0]) ? "入庫明細表" + ext : "出庫明細表" + ext;
-					response.setHeader("Content-Disposition",
-							"attachment;filename=".concat(java.net.URLEncoder.encode(tmp, "UTF-8")));
-	
-					OutputStream output = null;
-					try {
-						output = response.getOutputStream();
-						output.write(content);
-					} catch (IOException e) {
-						e.printStackTrace();
-					} finally {
-						output.flush();
-						fileInput.close();
-						output.close();
-					}
-				} catch (Exception e) {
+					output = response.getOutputStream();
+					output.write(content);
+				} catch (IOException e) {
 					e.printStackTrace();
-					response.setCharacterEncoding("UTF-8");
-					response.getWriter().write(
-							"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>�銝瑼��</body></html>");
+				} finally {
+					output.flush();
+					fileInput.close();
+					output.close();
 				}
-				break;
+			} catch (Exception e) {
+				e.printStackTrace();
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(
+						"<html><head><title>one white html</title><meta charset='UTF-8'></head><body style='text-align:center;font-size:48px;color:red;'><br>�銝瑼��</body></html>");
 			}
-			default: {
-	
-				break;
-			}
+			break;
+		}
+		default: {
+
+			break;
+		}
 		}
 	}
 
-	protected String putFile(HttpServletRequest request, HttpServletResponse response, String type)
+	protected String upload(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		String conString = "", ret = "";
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
-		String path = "inbound".equals(type) ? "inbound" : "outbound";
 
-		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
-		String folderName = dateFormat.format(date).toString();
-
-		String savePath = getServletConfig().getServletContext().getInitParameter(path) + "/" + group_id + "/"
-				+ folderName;
-
-		File file = null;
-		file = new File(savePath);
-		if (!file.exists()) {
-			file.mkdirs();
-		}
-		logger.debug("\nsavePath is exists:{}", (!file.exists()));
 		int maxFileSize = 5000 * 1024;
 		int maxMemSize = 5000 * 1024;
-
+		String savePath = "";
 		String contentType = request.getContentType();
 		if (contentType != null && (contentType.indexOf("multipart/form-data") >= 0)) {
 			DiskFileItemFactory factory = new DiskFileItemFactory();
 			factory.setSizeThreshold(maxMemSize);
-			String file_over = getServletConfig().getServletContext().getInitParameter(path) + "/fail";
-			factory.setRepository(new File(file_over));
 			ServletFileUpload upload = new ServletFileUpload(factory);
 			upload.setSizeMax(maxFileSize);
+
+			String type = "", folderName = "";
+
 			try {
 				List<?> fileItems = upload.parseRequest(request);
 				Iterator<?> i = fileItems.iterator();
 				while (i.hasNext()) {
 					FileItem fi = (FileItem) i.next();
-					logger.debug("\nisFormField:{}", fi.isFormField());
-					if (!fi.isFormField()) {
+					if (fi.getFieldName().equals("type"))
+						type = fi.getString();
+					if (fi.getFieldName().equals("folderName"))
+						folderName = fi.getString();
+				}
+				logger.debug("\n\ntype:{}\nfolderName:{}\n\n", type, folderName);
+				// Requires a new iterator
+				i = fileItems.iterator();
+				while (i.hasNext()) {
+
+					FileItem fi = (FileItem) i.next();
+
+					if (!fi.isFormField() && !fi.getFieldName().equals("action") && !fi.getFieldName().equals("type")
+							&& !fi.getFieldName().equals("folderName")) {
+						String path = "inbound".equals(type) ? "inbound" : "outbound";
+						savePath = getServletConfig().getServletContext().getInitParameter(path) + "/" + group_id + "/"
+								+ folderName;
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
 						String fileName = FilenameUtils.getName(fi.getName());
 						String ext = FilenameUtils.getExtension(fileName);
 						String _uid = UUID.randomUUID().toString();
@@ -197,7 +171,18 @@ public class SFTransfer extends HttpServlet {
 							fos.flush();
 							fos.close();
 						}
-					} else {
+
+					} else if (!fi.getFieldName().equals("action") && !fi.getFieldName().equals("type")
+							&& !fi.getFieldName().equals("folderName")) {
+
+						String path = "inbound".equals(type) ? "inbound" : "outbound";
+						savePath = getServletConfig().getServletContext().getInitParameter(path) + "/" + group_id + "/"
+								+ folderName;
+						File file = null;
+						file = new File(savePath);
+						if (!file.exists()) {
+							file.mkdirs();
+						}
 						logger.debug("\nfi:{}", fi);
 						String fieldName = fi.getFieldName();
 						String ext = FilenameUtils.getExtension(fieldName);
@@ -229,18 +214,14 @@ public class SFTransfer extends HttpServlet {
 						+ new String(Base64.encodeBase64String("26".getBytes())) + "&aaID="
 						+ new String(Base64.encodeBase64String(group_id.getBytes()));
 				logger.debug("conString : " + conString);
+				ret = webService(request, response, conString);
+				response.getWriter().write(ret);
 			} catch (FileUploadException e) {
 				logger.debug("Cannot parse multipart request");
 			} catch (Exception ex) {
 				ret = "E_write_File:" + ex.toString();
 				return ret;
 			}
-		} else {
-			ret = "E_No one found.";
-			return ret;
-		}
-		if (ret.length() > 3) {
-			return ret;
 		}
 
 		return conString;
@@ -289,11 +270,12 @@ public class SFTransfer extends HttpServlet {
 				if (content.length() > 100) {
 					content = content.substring(0, 90) + "....";
 				}
-				ret = "Error_Connection: get " + content + " on: " + conString;
+				logger.debug("Error_Connection: get " + content + " on: " + conString);
+				ret = "false";
 			}
 		} catch (Exception e) {
-			ret = e.toString();
-			ret = "Error of call webservice content:" + ret;
+			logger.debug("Error of call webservice content:" + e.toString());
+			ret = "false";
 		}
 		method.releaseConnection();
 		return ret;

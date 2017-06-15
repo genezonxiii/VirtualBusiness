@@ -217,7 +217,7 @@ function fileUpload(files,obj){
         fd.append('action', 'upload');
         fd.append('type', $('#select-type').val());
         fd.append('folderName', folderName);
-        
+
     	console.log('files['+i+']');
     	console.log(files[i]);
         var status = new createStatusbar(obj); //Using this we can set progress.
@@ -335,7 +335,7 @@ function createDlBtn(result){
 	downloadBtn.className = "btn btn-primary";
 	downloadBtn.href = "./sfTransfer.do?action=download&downloadName="+$('#select-type').val()+"_"+result;
 	downloadBtn.appendChild(text);
-	
+	downloadBtn.style.marginLeft = "8px";
 	$(btnArea).find('#downloadBtn').remove();
 	$(btnArea).append(downloadBtn);
 
