@@ -12,7 +12,7 @@
 
 <html>
 <head>
-<title>儲位異動管理</title>
+<title>出貨管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon"
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
@@ -86,8 +86,8 @@
 					<thead>
 						<tr class="">
 							<th>訂單編號</th>
-							<th>自訂產品編號</th>
-							<th>產品名稱</th>
+							<th>自訂商品編號</th>
+							<th>商品名稱</th>
 							<th>數量</th>
 							<th>單價</th>
 							<th>備註</th>															
@@ -223,11 +223,11 @@
 		        "data": "order_no",
 		        "defaultContent": ""
 		    }, {
-		        "title": "產品編號",
+		        "title": "商品編號",
 		        "data": "v_c_product_id",
 		        "defaultContent": ""
 		    }, {
-		        "title": "產品名稱",
+		        "title": "商品名稱",
 		        "data": "v_product_name",
 		        "defaultContent": ""
 		    }, {

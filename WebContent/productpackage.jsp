@@ -375,7 +375,7 @@
 				if(json_obj.length==0){
 					$("#package-detail tbody").html('');
 					$("#package_detail_contain_row").hide();
-					warning_msg("該產品包無物品");
+					warning_msg("該商品包無物品");
 				}
 			}
 		});
@@ -959,7 +959,7 @@
 			</div>
 			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-insert-package" title="新增產品包" style="display:none;">
+			<div id="dialog-insert-package" title="新增商品包" style="display:none;">
 				<form name="insert-dialog-form-post" id="dialog-insert-package-form" style="display:inline">
 					<table class="form-table">
 					  	<tbody>
@@ -980,7 +980,7 @@
 			</div>
 			
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-update-package" title="修改產品包" style="display:none;">
+			<div id="dialog-update-package" title="修改商品包" style="display:none;">
 				<form name="update-dialog-form-post" id="dialog-update-package-form" style="display:inline">
 					<table class="form-table">
 				  		<tbody>
@@ -1009,11 +1009,11 @@
 					<table class="form-table">
 						<tbody>
 							<tr>
-								<td>自訂產品ID：</td><td><input type="text" name="c_product_id" placeholder="輸入自訂產品ID"/></td>
-								<td>產品名稱：</td><td><input type="text" name="package_name" placeholder="輸入產品名稱"/></td>
+								<td>自訂商品ID：</td><td><input type="text" name="c_product_id" placeholder="輸入自訂商品ID"/></td>
+								<td>商品名稱：</td><td><input type="text" name="package_name" placeholder="輸入商品名稱"/></td>
 							</tr><tr>
 								<td>數量：</td><td><input type="text" name="quantity" placeholder="輸入數量"/></td>
-								<td>產品規格：</td><td><input type="text" name="package_desc" placeholder="輸入產品規格"/></td>
+								<td>商品規格：</td><td><input type="text" name="package_desc" placeholder="輸入商品規格"/></td>
 							</tr>
 						</tbody>
 					</table>
@@ -1021,16 +1021,16 @@
 			</div>
 			
 			<!--對話窗樣式-修改Detail -->
-			<div id="dialog-update-package-detail" title="修改產品包明細" style="display:none;">
+			<div id="dialog-update-package-detail" title="修改商品包明細" style="display:none;">
 				<form id='dialog-update-package-detail-form'>
 					<table class="form-table">
 						<tbody>
 							<tr>
-								<td>自訂產品ID：</td><td><input type="text" name="c_product_id" placeholder="修改自訂產品ID"/></td>
-								<td>產品名稱：</td><td><input type="text" name="package_name"placeholder="修改產品名稱"/></td>
+								<td>自訂商品ID：</td><td><input type="text" name="c_product_id" placeholder="修改自訂商品ID"/></td>
+								<td>商品名稱：</td><td><input type="text" name="package_name"placeholder="修改商品名稱"/></td>
 							</tr><tr>
 								<td>數量：</td><td><input type="text" name="quantity" placeholder="修改數量"/></td>
-								<td>產品規格：</td><td><input type="text" name="package_desc" placeholder="修改產品規格"/></td>
+								<td>商品規格：</td><td><input type="text" name="package_desc" placeholder="修改商品規格"/></td>
 							</tr>
 						</tbody>
 					</table>
@@ -1079,9 +1079,9 @@
 					<table id="package-detail" class="result-table">
 						<thead>
 							<tr>
-								<th>自訂產品ID</th>
-								<th style="min-width:100px;">產品名稱</th>
-								<th>產品規格</th>
+								<th>自訂商品ID</th>
+								<th style="min-width:100px;">商品名稱</th>
+								<th>商品規格</th>
 								<th style="min-width:70px;">數量</th>
 								<th style="min-width:70px;">單品售價</th>
 								<th style="max-width:100px;width:70px;background-image: none !important;">圖片1</th>

@@ -12,7 +12,7 @@
 
 <html>
 <head>
-<title>儲位異動管理</title>
+<title>待出庫管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon"
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
@@ -112,11 +112,11 @@
 				"data" : "supply_name",
 				"defaultContent" : ""
 			}, {
-				"title" : "產品名稱",
+				"title" : "商品名稱",
 				"data" : "product_name",
 				"defaultContent" : ""
 			},{
-				"title" : "自訂產品編號",
+				"title" : "自訂商品編號",
 				"data" : "c_product_id",
 				"defaultContent" : ""
 			}, {
@@ -165,11 +165,11 @@
 							"data" : "supply_name",
 							"defaultContent" : ""
 						}, {
-							"title" : "產品名稱",
+							"title" : "商品名稱",
 							"data" : "product_name",
 							"defaultContent" : ""
 						},{
-							"title" : "自訂產品編號",
+							"title" : "自訂商品編號",
 							"data" : "c_product_id",
 							"defaultContent" : ""
 						}, {

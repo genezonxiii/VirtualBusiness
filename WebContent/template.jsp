@@ -132,19 +132,19 @@ function who(){
 //####後臺支援系統############################
 	case "purchase.jsp":
 		side2.addClass("active");
-		return "進貨管理";
+		return "採購管理";
 		break;
 	case "purchreturn.jsp":
 		side2.addClass("active");
-		return "進貨退回管理";
+		return "採購退回管理";
 		break;
 	case "sale.jsp":
 		side2.addClass("active");
-		return "銷貨管理";
+		return "訂單管理";
 		break;
 	case "salereturn.jsp":
 		side2.addClass("active");
-		return "銷貨退回管理";
+		return "訂單退回管理";
 		break;
 	case "stock.jsp":
 		side2.addClass("active");
@@ -220,7 +220,7 @@ function who(){
 		break;
 	case "productContrast.jsp":
 		side2.addClass("active");
-		return "產品對照資料管理";
+		return "商品對照資料管理";
 		break;
 	case "basicDataImport.jsp":
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");

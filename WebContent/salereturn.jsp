@@ -618,13 +618,13 @@
 	    	        if(found < 0) {
 	    	        	$("#searh_salereturn").attr("c_product_id_error",$(this).val());
 	    	            $(this).val('');
-	    	            $(this).attr("placeholder","請輸入正確的產品ID名稱!");
+	    	            $(this).attr("placeholder","請輸入正確的商品ID名稱!");
 	    	            setTimeout(function(){$("#searh_salereturn").attr("c_product_id_error","");}, 200);  
 	    	        }
 	    	    }     
 	         });
-	       $("#searh_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入產品ID以供查詢"); } ); 
-		//自訂產品ID查詢相關設定
+	       $("#searh_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入商品ID以供查詢"); } ); 
+		//自訂商品ID查詢相關設定
 		$("#searh_salereturn").click(function(e) {
 			e.preventDefault();
 // 			alert($("#searh_salereturn").attr("c_product_id_error"));
@@ -1097,7 +1097,7 @@
 			<div class="form-wrap">
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">自訂產品 ID 查詢</span>
+						<span class="block-label">自訂商品 ID 查詢</span>
 						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
 					</label>
 					<button class="btn btn-darkblue" id="searh_salereturn" c_product_id_error="">查詢</button>
@@ -1139,7 +1139,7 @@
 <!-- 						<thead> -->
 <!-- 							<tr> -->
 <!-- 								<td> -->
-<!-- 									<input type="text" id="searh_c_product_id" name="searh_c_product_id" placeholder="請輸入自訂產品ID查詢"> -->
+<!-- 									<input type="text" id="searh_c_product_id" name="searh_c_product_id" placeholder="請輸入自訂商品ID查詢"> -->
 <!-- 								</td> -->
 <!-- 								<th> -->
 <!-- 									&nbsp;&nbsp;<button id="searh_salereturn">查詢</button> -->
@@ -1210,8 +1210,8 @@
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th style="min-width:60px">產品名稱</th>
-								<th>自訂產品ID</th>
+								<th style="min-width:60px">商品名稱</th>
+								<th>自訂商品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>
@@ -1288,8 +1288,8 @@
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th style="min-width:60px">產品名稱</th>
-								<th>自訂產品ID</th>
+								<th style="min-width:60px">商品名稱</th>
+								<th>自訂商品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>

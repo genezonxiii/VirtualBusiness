@@ -109,19 +109,19 @@ function who(){
 //####後臺支援系統############################
 	case "purchase.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
-		return "進貨管理";
+		return "採購管理";
 		break;
 	case "purchreturn.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
-		return "進貨退回管理";
+		return "採購退回管理";
 		break;
 	case "sale.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
-		return "銷貨管理";
+		return "訂單管理";
 		break;
 	case "salereturn.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");
-		return "銷貨退回管理";
+		return "訂單退回管理";
 		break;
 	case "stock.jsp":
 		$(".sidenav > ul > li:nth-child(2)").addClass("active");

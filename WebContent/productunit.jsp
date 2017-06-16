@@ -261,12 +261,12 @@ function draw_productunit(parameter){
 			<div id="dialog-confirm" title="是否刪除此單位?" style="display:none;">
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改產品單位" style="display:none;">
+			<div id="dialog-form-update" title="修改商品單位" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>修改產品單位：</td>
+								<td>修改商品單位：</td>
 								<td><input type="text" name="unit_name" placeholder="修改商品單位名稱"></td>
 							</tr>
 						</table>
@@ -274,12 +274,12 @@ function draw_productunit(parameter){
 				</form>
 			</div>			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品單位" style="display:none;">
+			<div id="dialog-form-insert" title="新增商品單位" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>產品單位：</td>
+								<td>商品單位：</td>
 								<td><input type="text" name="unit_name"  placeholder="輸入商品單位名稱"></td>
 							</tr>
 						</table>
@@ -307,7 +307,7 @@ function draw_productunit(parameter){
 					<table id="products2" class="result-table">
 						<thead>
 							<tr>
-								<th>產品單位</th>
+								<th>商品單位</th>
 								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>

@@ -50,7 +50,7 @@ public class accreceive extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					detail+="<tr><td>訂單號：</td><td><span class='delete_msg'>"+rs.getString("order_no")+"</span></td></tr>";
-					detail+="<tr><td>產品名稱：</td><td><span class='delete_msg'>"+rs.getString("product_name")+"</span></td></tr>";
+					detail+="<tr><td>商品名稱：</td><td><span class='delete_msg'>"+rs.getString("product_name")+"</span></td></tr>";
 					detail+="<tr><td>價格：</td><td><span class='delete_msg'>"+rs.getString("price")+"</span></td></tr>";
 					detail+="<tr><td>平台：</td><td><span class='delete_msg'>"+rs.getString("order_source")+"</span></td></tr>";
 				}

@@ -13,7 +13,7 @@
 <style type="text/css">
 .dataTables_wrapper .dt-buttons {float:right;}
 </style>
-<title>進貨退回</title>
+<title>採購退回</title>
 <meta charset="utf-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 

@@ -12,7 +12,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 <html>
 <head>
-<title>銷貨管理</title>
+<title>訂單管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true"/>
@@ -25,7 +25,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	 	<jsp:include page="template/common_headfoot.jsp" flush="true"/>
 		
 		<div class="content-wrap">
-			<h2 class="page-title">銷貨管理</h2> 
+			<h2 class="page-title">訂單管理</h2> 
 		
 			<div class='bdyplane' style="opacity: 0">
 				<div class="panel-content">
@@ -49,12 +49,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 												placeholder="輸入客戶名字"></td>
 										</tr>
 										<tr>
-											<td>自訂產品ID：</td>
+											<td>自訂商品ID：</td>
 											<td><input type="text" id="update_c_product_id"
-												name="c_product_id" placeholder="輸入自訂產品ID"></td>
-											<td>產品名稱：</td>
+												name="c_product_id" placeholder="輸入自訂商品ID"></td>
+											<td>商品名稱：</td>
 											<td><input type="text" id="update_product_name"
-												name="product_name" placeholder="輸入產品名稱"></td>
+												name="product_name" placeholder="輸入商品名稱"></td>
 										</tr>
 										<tr>
 											<td>銷貨數量：</td>
@@ -122,12 +122,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<td><input type="text" name="name" placeholder="輸入客戶名字"></td>
 										</tr>
 										<tr>
-											<td>自訂產品ID：</td>
+											<td>自訂商品ID：</td>
 											<td><input type="text" id="insert_c_product_id"
-												name="c_product_id" placeholder="輸入自訂產品ID"></td>
-											<td>產品名稱：</td>
+												name="c_product_id" placeholder="輸入自訂商品ID"></td>
+											<td>商品名稱：</td>
 											<td><input type="text" id="insert_product_name"
-												name="product_name" placeholder="輸入產品名稱"></td>
+												name="product_name" placeholder="輸入商品名稱"></td>
 										</tr>
 										<tr>
 											<td>銷貨數量：</td>
@@ -178,7 +178,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<div class="input-field-wrap">
 							<div class="form-wrap">
 								<div class="form-row">
-									<label for=""> <span class="block-label">自訂產品 ID
+									<label for=""> <span class="block-label">自訂商品 ID
 											查詢</span> <input type="text" id="search_c_product_id"
 										name="search_c_product_id">
 									</label>
@@ -214,7 +214,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										<tr class="">
 											<th>銷貨單號</th>
 											<th>訂單號</th>
-											<th style="min-width: 120px">產品 ID/名稱</th>
+											<th style="min-width: 120px">商品 ID/名稱</th>
 											<th>數量</th>
 											<th style="min-width: 60px">銷貨金額</th>
 											<th>銷貨對象</th>
@@ -311,7 +311,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				 		return result.html();
 					}
 	            },{
-					//自訂產品編號 + 產品名稱
+					//自訂商品編號 + 商品名稱
 	            	targets: 2,
 					render: function ( data, type, row ) {
 				   		var result = row.c_product_id + '<br>' + row.product_name;
@@ -461,7 +461,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 							}
 						});
 						if (json_obj.length == 0) {
-							$("#warning").html("<h3>該條碼無產品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
+							$("#warning").html("<h3>該條碼無商品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
 							$("#warning").dialog("open");
 						}
 					}
@@ -597,7 +597,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				rules : oRules
 			});
 			
-			//自訂產品ID查詢相關設定
+			//自訂商品ID查詢相關設定
 			$("#search-sale").click(function(e) {
 				e.preventDefault();
 				
@@ -920,7 +920,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 // 					if (found < 0) {
 // 						$("#search-sale").attr("c_product_id_error", $(this).val());
 // 						$(this).val('');
-// 						$(this).attr("placeholder", "請輸入正確的產品ID名稱!");
+// 						$(this).attr("placeholder", "請輸入正確的商品ID名稱!");
 // 						setTimeout(function() {
 // 							$("#search-sale").attr("c_product_id_error", "");
 // 						}, 200);
@@ -928,7 +928,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 // 				}
 			});
 // 			.bind('focus', function() {
-// 				$(this).attr("placeholder", "請輸入產品ID以供查詢");
+// 				$(this).attr("placeholder", "請輸入商品ID以供查詢");
 // 			});
 			
 			//處理新增的名稱autocomplete
@@ -946,13 +946,13 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 					if (found < 0) {
 						$(this).val('');
-						$(this).attr("placeholder", "請輸入正確的產品名稱!");
+						$(this).attr("placeholder", "請輸入正確的商品名稱!");
 					}
 				}
 			});
 			
 			$("#insert_product_name").bind('focus', function() {
-				$(this).attr("placeholder", "請輸入產品名稱以供查詢");
+				$(this).attr("placeholder", "請輸入商品名稱以供查詢");
 			});
 			
 			//處理新增的自訂ID autocomplete
@@ -967,7 +967,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 // 					if (!ui.item) {
 // 						$(this)
 // 							.val("")
-// 							.attr("placeholder", "請輸入正確產品ID名稱!");
+// 							.attr("placeholder", "請輸入正確商品ID名稱!");
 // 					}
 // 				},
 // 				response : function(e, ui) {
@@ -1041,13 +1041,13 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 					if (found < 0) {
 						$(this).val('');
-						$(this).attr("placeholder", "請輸入正確的產品名稱!");
+						$(this).attr("placeholder", "請輸入正確的商品名稱!");
 					}
 				}
 			});
 			
 			$("#update_product_name").bind('focus', function() {
-				$(this).attr("placeholder", "請輸入產品名稱以供查詢");
+				$(this).attr("placeholder", "請輸入商品名稱以供查詢");
 			});
 			
 			//處理修改的自訂ID autocomplete
@@ -1176,7 +1176,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			$('.sidenav').delegate('a', 'click', function(){
 				console.log( $(this).html() );
 
-				$(".content-wrap > .page-title").html( $(this).html() + "test" );
+				$(".content-wrap > .page-title").html( $(this).html() );
 				$(".content-wrap").prepend($('<h2 class="test page-title">' + $(this).html() + '</h2>'));
 				
 			});
@@ -1324,8 +1324,8 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				var oWidth = 1200;
 				var formId = "dialog-form-sale-detail";
 				var tableId = "dialog-sale-detail-table";
-				var tableThs = "<th>銷貨單號</th><th>平台訂單號</th><th>產品名稱</th>"
-						+ "<th>自訂產品ID</th><th>銷貨數量</th><th>單價</th>"
+				var tableThs = "<th>銷貨單號</th><th>平台訂單號</th><th>商品名稱</th>"
+						+ "<th>自訂商品ID</th><th>銷貨數量</th><th>單價</th>"
 						+ "<th>發票號碼</th><th>發票日期</th><th>轉單日</th>"
 						+ "<th>銷貨/出貨日期</th><th>銷售平台</th><th>備註說明</th>";
 				var oColumnDefs = [];

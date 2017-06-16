@@ -83,7 +83,7 @@
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<script>
 	var modType;//stock mod 異動型態
-	var productInfo;// stock detail 產品 select物件
+	var productInfo;// stock detail 商品 select物件
 	var locationInfo;// stock detail 儲位代碼 select物件
 	var masterDT = null;
 	var detailDT = null;
@@ -128,7 +128,7 @@
 					modType = select;
 				}
 			});
-			//儲位異動明細 產品資訊
+			//儲位異動明細 商品資訊
 			$.ajax({
 				url : 'stockMod.do',
 				type : 'post',
@@ -371,7 +371,7 @@
 					+ "<input type='text' name='quantity'>"
 					+ "</label></td>";
 
-			var product = "<td>&nbsp;產品&nbsp;</td>";
+			var product = "<td>&nbsp;商品&nbsp;</td>";
 					
 			var memo = "<td>&nbsp;備忘&nbsp;</td>" + "<td>"
 					+ "<input type='text' name='memo' placeholder='請填寫備忘'>"
@@ -781,7 +781,7 @@
 					"data" : null,
 					"defaultContent" : ""
 				},{
-					"title" : "產品名稱",
+					"title" : "商品名稱",
 					"data" : "product_name",
 					"defaultContent" : ""
 				}, {

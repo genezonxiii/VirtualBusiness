@@ -71,7 +71,7 @@ function draw_sale(parameter){
 							}
 						});
 						if(json_obj.length==0){
-							$("#warning").html("<h3>該條碼無產品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
+							$("#warning").html("<h3>該條碼無商品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
 							$("#warning").dialog("open");
 						}
 		            }
@@ -238,7 +238,7 @@ function draw_sale(parameter){
 				}
 			}
 		});		
-		//自訂產品ID查詢相關設定
+		//自訂商品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -1135,11 +1135,11 @@ function draw_sale(parameter){
     	
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","請輸入正確的產品ID名稱!");
+    	            $(this).attr("placeholder","請輸入正確的商品ID名稱!");
     	        }
     	    }     
          });
-       $("#searh_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入產品ID以供查詢"); } );
+       $("#searh_c_product_id").bind('focus', function(){ $(this).attr("placeholder","請輸入商品ID以供查詢"); } );
 		//處理新增的名稱autocomplete
        $("#insert_product_name").autocomplete({
             minLength: 2,
@@ -1177,11 +1177,11 @@ function draw_sale(parameter){
     	
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","請輸入正確的產品名稱!");
+    	            $(this).attr("placeholder","請輸入正確的商品名稱!");
     	        }
     	    }     
          });
-       $("#insert_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入產品名稱以供查詢"); } );
+       $("#insert_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入商品名稱以供查詢"); } );
        $('#insert_product_name').bind('autocompleteselect', function (e, ui) {
        		$("#insert_c_product_id").val(ui.item.c_product_id);
        		$("#insert_price").val(ui.item.price);
@@ -1222,7 +1222,7 @@ function draw_sale(parameter){
             change: function(e, ui) {
            	 if (!ui.item) {
            		 $(this).val("");
-                    $(this).attr("placeholder","請輸入正確產品ID名稱!");
+                    $(this).attr("placeholder","請輸入正確商品ID名稱!");
                 }
            },
             response: function(e, ui) {
@@ -1299,11 +1299,11 @@ function draw_sale(parameter){
     	
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","請輸入正確的產品名稱!");
+    	            $(this).attr("placeholder","請輸入正確的商品名稱!");
     	        }
     	    }     
          });
-       $("#update_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入產品名稱以供查詢"); } );
+       $("#update_product_name").bind('focus', function(){ $(this).attr("placeholder","請輸入商品名稱以供查詢"); } );
        $('#update_product_name').bind('autocompleteselect', function (e, ui) {
        		$("#update_c_product_id").val(ui.item.c_product_id);
        		$("#update_price").val(ui.item.price);
@@ -1421,10 +1421,10 @@ function draw_sale(parameter){
 								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
 							</tr>
 							<tr>
-								<td><p>自訂產品ID</p></td>
-								<td><input type="text" id="update_c_product_id" name="c_product_id"  placeholder="輸入自訂產品ID"></td>
-								<td><p>產品名稱</p></td>
-								<td><input type="text" id="update_product_name" name="product_name"  placeholder="輸入產品名稱"></td>
+								<td><p>自訂商品ID</p></td>
+								<td><input type="text" id="update_c_product_id" name="c_product_id"  placeholder="輸入自訂商品ID"></td>
+								<td><p>商品名稱</p></td>
+								<td><input type="text" id="update_product_name" name="product_name"  placeholder="輸入商品名稱"></td>
 							</tr>
 							<tr>
 								<td><p>銷貨數量</p></td>
@@ -1479,10 +1479,10 @@ function draw_sale(parameter){
 								<td><input type="text" name="name"  placeholder="輸入客戶名字"></td>
 							</tr>
 							<tr>
-								<td><p>自訂產品ID</p></td>
-								<td><input type="text" id="insert_c_product_id" name="c_product_id"  placeholder="輸入自訂產品ID"></td>
-								<td><p>產品名稱</p></td>
-								<td><input type="text" id="insert_product_name" name="product_name"  placeholder="輸入產品名稱"></td>
+								<td><p>自訂商品ID</p></td>
+								<td><input type="text" id="insert_c_product_id" name="c_product_id"  placeholder="輸入自訂商品ID"></td>
+								<td><p>商品名稱</p></td>
+								<td><input type="text" id="insert_product_name" name="product_name"  placeholder="輸入商品名稱"></td>
 							</tr>
 							<tr>
 								<td><p>銷貨數量</p></td>
@@ -1523,7 +1523,7 @@ function draw_sale(parameter){
 			<div class="form-wrap">
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">自訂產品 ID 查詢</span>
+						<span class="block-label">自訂商品 ID 查詢</span>
 						<input type="text" id="searh_c_product_id" name="searh_c_product_id">
 					</label>
 					<button class="btn btn-darkblue" id="searh-sale">查詢</button>
@@ -1554,8 +1554,8 @@ function draw_sale(parameter){
 							<tr class="ui-widget-header">
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th style="min-width:120px">產品名稱</th>
-								<th>自訂產品ID</th>
+								<th style="min-width:120px">商品名稱</th>
+								<th>自訂商品ID</th>
 								<th>銷貨數量</th>
 								<th style="min-width:80px">銷貨金額</th>
 								<th>發票號碼</th>

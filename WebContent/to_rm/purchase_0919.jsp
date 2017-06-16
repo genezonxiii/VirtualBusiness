@@ -179,7 +179,7 @@ function draw_purchase_detail(parameter){
 				    		}
 						}
 						if(json_obj.length==0){
-							$("#warning").html("<h3>該條碼無產品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
+							$("#warning").html("<h3>該條碼無商品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
 							$("#warning").dialog("open");
 						}
 		            }
@@ -1508,11 +1508,11 @@ function draw_purchase_detail(parameter){
     	        var found = $.inArray(source, temp);
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","輸入正確的自訂產品ID名稱!");
+    	            $(this).attr("placeholder","輸入正確的自訂商品ID名稱!");
     	        }
     	    }     
          });
-  		$("#update_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂產品ID名稱以供查詢"); } );
+  		$("#update_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂商品ID名稱以供查詢"); } );
 	    $('#update_detail_c_product_id').bind('autocompleteselect', function (e, ui) {
 	    	product_id = ui.item.product_id;
 	    	product_name = ui.item.product_name;
@@ -1558,11 +1558,11 @@ function draw_purchase_detail(parameter){
     	
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","輸入正確的產品名稱!");
+    	            $(this).attr("placeholder","輸入正確的商品名稱!");
     	        }
     	    }     
          });
-  		$("#update_detail_product_name").bind('focus', function(){ $(this).attr("placeholder","輸入產品名稱以供查詢"); } );
+  		$("#update_detail_product_name").bind('focus', function(){ $(this).attr("placeholder","輸入商品名稱以供查詢"); } );
 	    $('#update_detail_product_name').bind('autocompleteselect', function (e, ui) {
 	    	product_id = ui.item.product_id;
 	    	product_name = ui.item.product_name;
@@ -1610,11 +1610,11 @@ function draw_purchase_detail(parameter){
     	
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","輸入正確的自訂產品ID名稱!");
+    	            $(this).attr("placeholder","輸入正確的自訂商品ID名稱!");
     	        }
     	    }     
          });
-  		$("#insert_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂產品ID名稱以供查詢"); } );
+  		$("#insert_detail_c_product_id").bind('focus', function(){ $(this).attr("placeholder","輸入自訂商品ID名稱以供查詢"); } );
 	    $('#insert_detail_c_product_id').bind('autocompleteselect', function (e, ui) {
 	    	product_id = ui.item.product_id;
 	    	product_name = ui.item.product_name;
@@ -1660,11 +1660,11 @@ function draw_purchase_detail(parameter){
     	
     	        if(found < 0) {
     	            $(this).val('');
-    	            $(this).attr("placeholder","輸入正確的產品名稱!");
+    	            $(this).attr("placeholder","輸入正確的商品名稱!");
     	        }
     	    }
          });
-  		$("#insert_detail_product_name").bind('focus', function(){ $(this).attr("placeholder","輸入產品名稱以供查詢"); } );
+  		$("#insert_detail_product_name").bind('focus', function(){ $(this).attr("placeholder","輸入商品名稱以供查詢"); } );
 	    $('#insert_detail_product_name').bind('autocompleteselect', function (e, ui) {
 	    	product_id = ui.item.product_id;
 	    	product_name = ui.item.product_name;
@@ -1807,10 +1807,10 @@ function draw_purchase_detail(parameter){
 					<fieldset>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
-								<td><p>自訂產品名稱</p></td>
-								<td><input type="text" id="update_detail_c_product_id"name="update_detail_c_product_id"  placeholder="輸入自訂產品ID"></td>
-								<td><p>產品名稱</p></td>
-								<td><input type="text" id="update_detail_product_name"name="update_detail_product_name" placeholder="輸入產品名稱"></td>
+								<td><p>自訂商品名稱</p></td>
+								<td><input type="text" id="update_detail_c_product_id"name="update_detail_c_product_id"  placeholder="輸入自訂商品ID"></td>
+								<td><p>商品名稱</p></td>
+								<td><input type="text" id="update_detail_product_name"name="update_detail_product_name" placeholder="輸入商品名稱"></td>
 							</tr>
 							<tr>
 								<td><p>進貨數量</p></td>
@@ -1866,10 +1866,10 @@ function draw_purchase_detail(parameter){
 						<font color=red style="padding-left:26px">掃條碼亦可取得商品資料</font>
 						<table style="border-collapse: separate;border-spacing: 10px 20px;">
 							<tr>
-								<td><p>自訂產品ID名稱</p></td>
-								<td><input type="text" id="insert_detail_c_product_id"name="insert_detail_c_product_id"  placeholder="輸入自訂產品ID名稱以供查詢"></td>
-								<td><p>產品名稱</p></td>
-								<td><input type="text" id="insert_detail_product_name"name="insert_detail_product_name" placeholder="輸入產品名稱以供查詢"></td>
+								<td><p>自訂商品ID名稱</p></td>
+								<td><input type="text" id="insert_detail_c_product_id"name="insert_detail_c_product_id"  placeholder="輸入自訂商品ID名稱以供查詢"></td>
+								<td><p>商品名稱</p></td>
+								<td><input type="text" id="insert_detail_product_name"name="insert_detail_product_name" placeholder="輸入商品名稱以供查詢"></td>
 							</tr>
 							<tr>
 								<td><p>進貨數量</p></td>
@@ -1951,8 +1951,8 @@ function draw_purchase_detail(parameter){
 					<table id="purchase-detail-table" class="ui-widget ui-widget-content result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>自訂產品ID</th>
-								<th>產品名稱</th>
+								<th>自訂商品ID</th>
+								<th>商品名稱</th>
 								<th>進貨數量</th>
 								<th>進貨單價</th>
 								<th>備註說明 </th>
@@ -1967,7 +1967,7 @@ function draw_purchase_detail(parameter){
 <!-- 			<table id="fake" class="result-table" style="position:absolute;top:10%;left:80%;width:1px;opacity:0;display:none;"> -->
 <!-- 				<thead> -->
 <!-- 					<tr> -->
-<!-- 						<th>自訂產品ID</th><th>產品名稱</th><th>進貨數量</th><th>進貨價格</th><th>備註說明 </th><th>功能</th> -->
+<!-- 						<th>自訂商品ID</th><th>商品名稱</th><th>進貨數量</th><th>進貨價格</th><th>備註說明 </th><th>功能</th> -->
 <!-- 					</tr> -->
 <!-- 				</thead> -->
 <!-- 				<tbody> -->

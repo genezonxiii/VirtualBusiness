@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>	
-	<title>產品對照資料管理</title>
+	<title>商品對照資料管理</title>
 	
 	<style>
 		.custom-combobox {
@@ -423,7 +423,7 @@
 		//select_dialog
 		select_dialog =
 			$("#dialog-form-select").dialog({
-				title : "產品/組合包選擇",
+				title : "商品/組合包選擇",
 				draggable : true,
 				resizable : false,
 				autoOpen : false,
@@ -485,7 +485,7 @@
 				"<td>" +
 				"<section>" +
 					"<input id='radio-1' type='radio' name='radio-group-type' value='PRD'>" +
-					"<label for='radio-1'><span class='form-label'>產品</span></label>" +
+					"<label for='radio-1'><span class='form-label'>商品</span></label>" +
 					
 					"<input id='radio-2' type='radio' name='radio-group-type' value='PKG'>" +
 					"<label for='radio-2'><span class='form-label'>組合包</span></label>" +
@@ -493,27 +493,27 @@
 				"</td>";
 
 			var prodName =  
-				"<td>產品名稱</td>"+ 
+				"<td>商品名稱</td>"+ 
 				"<td>"+ 
 						"<input type='text' title='' id='dialog_product_product_name' name='dialog_product_product_name' placeholder='請選擇類別' disabled>"+
 				"</td>";
 			
 			var prodSpec =  
-				"<td>產品規格</td>"+ 
+				"<td>商品規格</td>"+ 
 				"<td>"+ 
 						"<input type='text' title='' id='dialog_product_product_desc' name='dialog_product_product_desc' placeholder='請選擇類別' disabled>"+
 				"</td>";		
 				
 			var conPlatName =  
-				"<td>平台用產品名稱</td>"+ 
+				"<td>平台用商品名稱</td>"+ 
 				"<td>"+ 
-						"<input type='text' id='dialog_contrast_platform_name' name='dialog_contrast_platform_name' placeholder='輸入平台用產品名稱'>"+
+						"<input type='text' id='dialog_contrast_platform_name' name='dialog_contrast_platform_name' placeholder='輸入平台用商品名稱'>"+
 				"</td>";
 
 			var specPlatName =  
-				"<td>平台用產品規格</td>"+ 
+				"<td>平台用商品規格</td>"+ 
 				"<td>"+ 
-						"<input type='text' id='contrast_spec_platform_name' name='contrast_spec_platform_name' placeholder='輸入平台用產品規格'>"+
+						"<input type='text' id='contrast_spec_platform_name' name='contrast_spec_platform_name' placeholder='輸入平台用商品規格'>"+
 				"</td>";
 					
 			var platName =  
@@ -853,7 +853,7 @@
 			<div class="form-wrap">			
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">產品名稱</span>
+						<span class="block-label">商品名稱</span>
 		 				<select id="search-product-product-name">
 		 					<option value=""></option>
 		 				</select>
@@ -861,7 +861,7 @@
 				</div>
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">平台用產品名稱</span>
+						<span class="block-label">平台用商品名稱</span>
 		 				<select id="search-contrast-platform-name">
 		 					<option value=""></option>
 		 				</select>
@@ -895,12 +895,12 @@
 									<button class="btn btn-darkblue" id="batchDel_head">批次刪除</button>			
 								</div>
 							</th>						
-							<th>產品名稱</th>
-							<th>產品規格</th>
-							<th>產品類別</th>
+							<th>商品名稱</th>
+							<th>商品規格</th>
+							<th>商品類別</th>
 							<th>平台名稱</th>
-							<th>平台用產品名稱</th>
-							<th>平台用產品規格</th>
+							<th>平台用商品名稱</th>
+							<th>平台用商品規格</th>
 							<th>應收金額</th>
 							<th>platformId</th>
 							<th>productId</th>
@@ -917,12 +917,12 @@
 									<button class="btn btn-darkblue" id="batchDel_foot">批次刪除</button>			
 								</div>
 							</th>						
-							<th>產品名稱</th>
-							<th>產品規格</th>
-							<th>產品類別</th>
+							<th>商品名稱</th>
+							<th>商品規格</th>
+							<th>商品類別</th>
 							<th>平台名稱</th>
-							<th>平台用產品名稱</th>
-							<th>平台用產品規格</th>
+							<th>平台用商品名稱</th>
+							<th>平台用商品規格</th>
 							<th>應收金額</th>
 							<th>platformId</th>
 							<th>productId</th>
@@ -974,14 +974,14 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>產品名稱</th>
+							<th>商品名稱</th>
 							<th>規格名稱</th>
 						</tr>
 					</thead>
 					<tfoot>
 						<tr>
 							<th></th>
-							<th>產品名稱</th>
+							<th>商品名稱</th>
 							<th>規格名稱</th>
 						</tr>
 					</tfoot>

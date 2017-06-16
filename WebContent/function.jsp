@@ -291,10 +291,10 @@ var customer_tags=[];
 						<label for="">type
 							<input type="text" id='type'>
 						</label>
-						<label for="">產品c_product_id
+						<label for="">商品c_product_id
 							<input type="text" id='c_product_id'>
 						</label>
-						<label for="">產品名
+						<label for="">商品名
 							<input type="text" id='product_name'>
 						</label>
 					</div>
@@ -334,7 +334,7 @@ var customer_tags=[];
 					</label>
 					<label for="">
 						<select name="" id="">
-							<option value="">產品名</option>
+							<option value="">商品名</option>
 							<option value="">選項</option>
 						</select>
 					</label>

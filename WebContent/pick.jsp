@@ -86,8 +86,8 @@
 					<thead>
 						<tr class="">
 							<th>訂單編號</th>
-							<th>自訂產品編號</th>
-							<th>產品名稱</th>
+							<th>自訂商品編號</th>
+							<th>商品名稱</th>
 							<th>數量</th>
 							<th>儲位代碼</th>				
 						</tr>

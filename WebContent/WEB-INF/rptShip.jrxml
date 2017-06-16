@@ -79,7 +79,7 @@
 						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 						<paragraph leftIndent="28" rightIndent="20"/>
 					</textElement>
-					<text><![CDATA[產品名稱]]></text>
+					<text><![CDATA[商品名稱]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="97fd276e-4622-4a69-8362-e576e420541d" mode="Opaque" x="93" y="0" width="133" height="24" backcolor="#F5F5F5"/>
@@ -94,7 +94,7 @@
 						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 						<paragraph leftIndent="20" rightIndent="20"/>
 					</textElement>
-					<text><![CDATA[自訂產品代碼]]></text>
+					<text><![CDATA[自訂商品代碼]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="622" y="0" width="100" height="24" backcolor="#F5F5F5"/>

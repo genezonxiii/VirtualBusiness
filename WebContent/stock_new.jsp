@@ -206,11 +206,11 @@
 				"data" : null,
 				"defaultContent" : ""
 			},{
-				"title" : "產品流水編號",
+				"title" : "商品流水編號",
 				"data" : "productVO.c_product_id",
 				"defaultContent" : ""
 			}, {
-				"title" : "產品名稱",
+				"title" : "商品名稱",
 				"data" : "productVO.product_name",
 				"defaultContent" : ""
 			}, {

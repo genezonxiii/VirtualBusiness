@@ -97,7 +97,7 @@
 						$("#sales-contain").show();
 						$("#sales").dataTable().fnDestroy();
 						$("#sales tbody").html(result_table);
-						draw_table("sales","產品報表");
+						draw_table("sales","商品報表");
 						//$("#sales").dataTable({"language": {"url": "js/dataTables_zh-tw.txt"},"order": []});
 						$("#sales").find("td").css("text-align","center");
 						$("#sales").find("th").css("text-align","center");
@@ -182,7 +182,7 @@
 			draw_product(information);
 		});
 		
-		//自訂產品ID查詢相關設定
+		//自訂商品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			information={
@@ -268,7 +268,7 @@
 	    	        var found = $.inArray(source, temp);
 	    	        if(found < 0) {
 	    	            $(this).val('');
-	    	            $(this).attr("placeholder","輸入正確的產品名稱!");
+	    	            $(this).attr("placeholder","輸入正確的商品名稱!");
 	    	        }
 	    	    }     
 	         });
@@ -341,7 +341,7 @@
 				</div>
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">產品名稱查詢</span>
+						<span class="block-label">商品名稱查詢</span>
 						<input type="text" id="searh_name" name="searh_name"></input>
 					</label>
 					<button class="btn btn-darkblue" id="searh-name">查詢</button>
@@ -356,17 +356,17 @@
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>自訂產品ID</th>
-								<th style="min-width:80px;">產品名稱</th>
+								<th>自訂商品ID</th>
+								<th style="min-width:80px;">商品名稱</th>
 								<th>供應商名稱</th>
-								<th>產品類別</th>
-								<th>產品單位</th>
+								<th>商品類別</th>
+								<th>商品單位</th>
 								<th style="min-width:70px;">成本</th>
 								<th style="min-width:70px;">售價</th>
 								<th>安全庫存</th>
-<!-- 								<th style="max-width:100px;">產品圖片1</th> -->
-<!-- 								<th style="max-width:100px;">產品圖片2</th> -->
-								<th>產品說明</th>
+<!-- 								<th style="max-width:100px;">商品圖片1</th> -->
+<!-- 								<th style="max-width:100px;">商品圖片2</th> -->
+								<th>商品說明</th>
 								<th>條碼</th>
 							</tr>
 						</thead>

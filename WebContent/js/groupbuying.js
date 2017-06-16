@@ -136,7 +136,7 @@ function buildSelect(){
 	var code_values_arr = ['0','O','A','M','G','D','OG','MG','OS',
 	                       'GS','AS','MS','DS','Y','ME','BW','UBG', 
 	                       'UW','UST','US','USK','YK','GK','LM'];
-	var code_texts_arr = ['請選擇產品代碼','LP28敏立清益生菌(原味)',
+	var code_texts_arr = ['請選擇商品代碼','LP28敏立清益生菌(原味)',
 	                      'LP28敏立清益生菌(紅蘋果)','LP28敏立清益生菌(蔓越莓)',
 	                      'LP28敏立清益生菌(青蘋果)','LP28敏立清益生菌(草莓)',
 	                      '金敏立清-多多原味','金敏立清-蔓越莓','欣敏立清多多原味',

@@ -28,7 +28,7 @@ public class tagprint extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 //		String user_id = request.getSession().getAttribute("user_id").toString();
-		// 產品搜尋
+		// 商品搜尋
 		if ("search".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數-格式檢查 ****************************************/

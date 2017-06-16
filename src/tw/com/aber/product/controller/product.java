@@ -318,7 +318,7 @@ public class product extends HttpServlet {
 
 		}
 
-		// 獲得產品訊息電文
+		// 獲得商品訊息電文
 		if ("get_data_by_c_productc_id".equals(action)) {
 
 			List<ProductBean> productList = null;

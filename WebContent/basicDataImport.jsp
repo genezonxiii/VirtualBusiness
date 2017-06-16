@@ -42,9 +42,9 @@
 							<select id='select-type'>
 								<option value="0">請選擇</option>
 								<option value="supplyTemplate">供應</option>
-								<option value="productTemplate">產品</option>
-								<option value="packageTemplate">產品組合</option>
-								<option value="contrastTemplate">產品對照</option>
+								<option value="productTemplate">商品</option>
+								<option value="packageTemplate">商品組合</option>
+								<option value="contrastTemplate">商品對照</option>
 							</select>
 						</div>
 					</div>

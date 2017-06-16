@@ -294,7 +294,7 @@
 					});
 		});
 		
-		//自訂產品ID查詢相關設定
+		//自訂商品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -496,7 +496,7 @@
 				</div>
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">產品名稱查詢</span>
+						<span class="block-label">商品名稱查詢</span>
 						<input type="text" id="searh_name" name="searh_name"></input>
 					</label>
 					<button class="btn btn-darkblue" id="searh-name">查詢</button>
@@ -511,15 +511,15 @@
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>自訂產品ID</th>
-								<th>產品名稱</th>
+								<th>自訂商品ID</th>
+								<th>商品名稱</th>
 								<th>廠商名稱</th>
-								<th>產品類別</th>
-								<th>產品單位</th>
+								<th>商品類別</th>
+								<th>商品單位</th>
 								<th>成本</th>
 								<th>售價</th>
 								<th>安全庫存</th>
-								<th>產品說明</th>
+								<th>商品說明</th>
 								<th>條碼</th>
 							</tr>
 						</thead>

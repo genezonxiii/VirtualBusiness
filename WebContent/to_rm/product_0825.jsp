@@ -366,7 +366,7 @@
 					});
 		});
 		
-		//自訂產品ID查詢相關設定
+		//自訂商品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			$.ajax({
@@ -1385,20 +1385,20 @@
 				<p>是否確認刪除該筆資料</p>
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
+			<div id="dialog-form-update" title="修改商品資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline"	>
 					<fieldset>
 				<table class="result-table">
 					<tbody>
 						<tr>
-							<td>自訂產品ID:</td><td><input type="text" id="c_p_id2" name="c_product_id"/></td>
+							<td>自訂商品ID:</td><td><input type="text" id="c_p_id2" name="c_product_id"/></td>
 							<td>廠商名稱:</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
 						</tr><tr>
-							<td>產品類別:</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
-							<td>產品單位:</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
+							<td>商品類別:</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
+							<td>商品單位:</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
 						</tr><tr>
-							<td>產品名稱:</td><td><input type="text" name="product_name"  ></td>
-							<td>產品說明:</td><td><input type="text" name="description"/></td>
+							<td>商品名稱:</td><td><input type="text" name="product_name"  ></td>
+							<td>商品說明:</td><td><input type="text" name="description"/></td>
 						</tr><tr>
 							<td>成本:</td><td><input type="text" name="cost" /></td>
 							<td>售價:</td><td><input type="text" name="price" /></td>
@@ -1416,7 +1416,7 @@
 					<tbody>
 					<tr>
 						<td>
-							<h6>產品圖片:</h6>
+							<h6>商品圖片:</h6>
 						</td>
 						<td>
 							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1429,7 +1429,7 @@
                		 	</tr>	
                		<tr>
               			 <td>	
-               				<h6>產品圖片2:&nbsp;&nbsp;</h6>
+               				<h6>商品圖片2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
                              <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1448,20 +1448,20 @@
  
 			</div>
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品資料" style="display:none;">
+			<div id="dialog-form-insert" title="新增商品資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
 					<table class="result-table">
 					<tbody>
 						<tr>
-							<td>自訂產品ID:</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
+							<td>自訂商品ID:</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
 							<td>廠商名稱:</td><td><input type="text" id="insert_supply_name" name="supply_name"/></td>
 						</tr><tr>
-							<td>產品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
-							<td>產品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
+							<td>商品類別:</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
+							<td>商品單位:</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
 						</tr><tr>
-							<td>產品名稱:</td><td><input type="text" name="product_name"  ></td>
-							<td>產品說明:</td><td><input type="text" name="description"/></td>
+							<td>商品名稱:</td><td><input type="text" name="product_name"  ></td>
+							<td>商品說明:</td><td><input type="text" name="description"/></td>
 						</tr><tr>
 							<td>成本:</td><td><input type="text" name="cost" /></td>
 							<td>售價:</td><td><input type="text" name="price" /></td>
@@ -1481,7 +1481,7 @@
 					<tbody>
 					<tr>
 						<td>
-							<h6>產品圖片:</h6>
+							<h6>商品圖片:</h6>
 						</td>
 						<td>
 							<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1494,7 +1494,7 @@
                		 	</tr>	
                		<tr>
               			 <td>	
-               				<h6>產品圖片2:&nbsp;&nbsp;</h6>
+               				<h6>商品圖片2:&nbsp;&nbsp;</h6>
                			 </td>
               			 <td>	
                              <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
@@ -1522,7 +1522,7 @@
 				</div>
 				<div class="form-row">
 					<label for="">
-						<span class="block-label">產品名稱查詢</span>
+						<span class="block-label">商品名稱查詢</span>
 						<input type="text" id="searh_name" name="searh_name"></input>
 					</label>
 					<button class="btn btn-darkblue" id="searh-name">查詢</button>
@@ -1553,7 +1553,7 @@
 			<!-- 第二列 -->
 <!-- 			<div class="row" align="center"> -->
 <!-- 				<div class="ui-widget"> -->
-<!-- 					<button id="create-sale">新增產品資料</button> -->
+<!-- 					<button id="create-sale">新增商品資料</button> -->
 <!-- 				</div> -->
 <!-- 			</div>						 -->
 			<!-- 第三列 -->
@@ -1562,17 +1562,17 @@
 					<table id="sales" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>自訂產品ID</th>
-								<th>產品名稱</th>
+								<th>自訂商品ID</th>
+								<th>商品名稱</th>
 								<th>廠商名稱</th>
-								<th>產品類別</th>
-								<th>產品單位</th>
+								<th>商品類別</th>
+								<th>商品單位</th>
 								<th>成本</th>
 								<th>售價</th>
 								<th>安全庫存</th>
-<!-- 								<th><p style="width:100px;">產品圖片名稱</p></th> -->
-<!-- 								<th><p style="width:120px;">產品圖片名稱2</p></th> -->
-								<th>產品說明</th>
+<!-- 								<th><p style="width:100px;">商品圖片名稱</p></th> -->
+<!-- 								<th><p style="width:120px;">商品圖片名稱2</p></th> -->
+								<th>商品說明</th>
 								<th>條碼</th>
 								<th>功能</th>
 							</tr>
@@ -1589,8 +1589,8 @@
 					<table id="sales22" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>自訂產品ID</th>
-								<th>產品名稱</th>
+								<th>自訂商品ID</th>
+								<th>商品名稱</th>
 								<th>數量</th>
 								<th>售價</th>
 								<th>功能</th>

@@ -434,7 +434,7 @@ function draw_invoice(parameter){
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th>產品名稱</th>
+								<th>商品名稱</th>
 								<th>銷貨金額</th>
 								<th>發票號碼</th>
 								<th>發票日期</th>
@@ -479,7 +479,7 @@ function draw_invoice(parameter){
 							<tr>
 								<th>銷貨單號</th>
 								<th>訂單號</th>
-								<th>產品名稱</th>
+								<th>商品名稱</th>
 								<th>銷貨金額</th>
 								<th>發票號碼</th>
 								<th>發票日期</th>

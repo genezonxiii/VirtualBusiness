@@ -579,7 +579,7 @@
 			draw_product(information);
 		});
 		
-		//自訂產品ID查詢相關設定
+		//自訂商品ID查詢相關設定
 		$("#searh-sale").click(function(e) {
 			e.preventDefault();
 			
@@ -1055,7 +1055,7 @@
 				var found = $.inArray(source, temp);
 				if(found < 0) {
 					$(this).val('');
-					$(this).attr("placeholder","輸入正確的產品名稱!");
+					$(this).attr("placeholder","輸入正確的商品名稱!");
 				}
 			}
 		});
@@ -1656,20 +1656,20 @@
 			</div>
 			
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改產品資料" style="display:none;">
+			<div id="dialog-form-update" title="修改商品資料" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post" style="display:inline">
 					<fieldset>
 						<table class="form-table">
 							<tbody>
 								<tr>
-									<td>自訂產品ID：</td>
+									<td>自訂商品ID：</td>
 									<td><input type="text" id="c_p_id2" name="c_product_id"/></td>
-									<td>產品類別：</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
+									<td>商品類別：</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
 								</tr><tr>
 									<td>供應商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>
-									<td>產品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
+									<td>商品單位：</td><td><select id="select_update_unit_id" name="select_update_unit_id"></select></td>
 								</tr><tr>
-									<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+									<td>商品名稱：</td><td><input type="text" name="product_name"  ></td>
 									<td>條碼：</td>
 									<td><input type="text" id="edit_barcode" name="barcode"/></td>
 									<td>
@@ -1677,7 +1677,7 @@
 											onclick="if($('#same2').prop('checked')){$('#edit_barcode').val($('#c_p_id2').val());}else{$('#edit_barcode').val('');}">同自定ID
 									</td>
 								</tr><tr>
-									<td>產品說明：</td><td><input type="text" name="description"/></td>
+									<td>商品說明：</td><td><input type="text" name="description"/></td>
 									<td>幣別：</td><td><select id='update_currency'></select></td>
 								</tr><tr>
 									<td>成本：<a class='currency2'></a></td><td><input type="text" name="tmp_cost" /></td>
@@ -1699,7 +1699,7 @@
 				<table class="form-table">
 					<tbody>
 						<tr>
-							<td>產品圖片：</td>
+							<td>商品圖片：</td>
 							<td>
 								<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
 									<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
@@ -1710,7 +1710,7 @@
 							</td>
 						</tr>	
 						<tr>
-							<td>產品圖片2：</td>
+							<td>商品圖片2：</td>
 							<td>	
 								<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
 								    <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
@@ -1728,19 +1728,19 @@
 			</div>
 			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品資料" style="display:none;">
+			<div id="dialog-form-insert" title="新增商品資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post" style="display:inline">
 					<fieldset>
 						<table class="form-table">
 							<tbody>
 								<tr>
-									<td>自訂產品ID：</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
-									<td>產品類別：</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
+									<td>自訂商品ID：</td><td><input type="text" id="c_p_id"name="c_product_id"/></td>
+									<td>商品類別：</td><td><select id="select_insert_type_id" name="select_insert_type_id"></select></td>
 								</tr><tr>
 									<td>供應商名稱：</td><td><input type="text" id="insert_supply_name" name="supply_name"/></td>
-									<td>產品單位：</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
+									<td>商品單位：</td><td><select id="select_insert_unit_id" name="select_insert_unit_id"></select></td>
 								</tr><tr>
-									<td>產品名稱：</td><td><input type="text" name="product_name"  ></td>
+									<td>商品名稱：</td><td><input type="text" name="product_name"  ></td>
 									<td>條碼：</td>
 									<td><input type="text" id="new_barcode" name="barcode"/></td>
 									<td>
@@ -1748,7 +1748,7 @@
 											onclick="if($('#same').prop('checked')){$('#new_barcode').val($('#c_p_id').val());}else{$('#new_barcode').val('');}">同自定ID
 									</td>
 								</tr><tr>
-									<td>產品說明：</td><td><input type="text" name="description"/></td>
+									<td>商品說明：</td><td><input type="text" name="description"/></td>
 									<td>幣別：</td><td><select id='insert_currency'></select></td>
 								</tr><tr>
 									<td>成本：<a class='currency1'></a></td><td><input type="text" name="tmp_cost" /></td>
@@ -1768,7 +1768,7 @@
 				<table class='form-table'>
 					<tbody>
 						<tr>
-							<td>產品圖片：</td>
+							<td>商品圖片：</td>
 							<td>
 								<span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
 								<span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
@@ -1779,7 +1779,7 @@
 	               			</td>
 	               		</tr>	
 	               		<tr>
-	              			 <td>產品圖片2：</td>
+	              			 <td>商品圖片2：</td>
 	              			 <td>	
 	                             <span class="btn btn-success fileinput-button btn-primary" style="padding: 6px 12px;border-radius: 5px;">
 						         <span><font color="white">+&nbsp;</font>瀏覽<font color="red">(最大500K)</font></span>
@@ -1804,7 +1804,7 @@
 					</div>
 					<div class="form-row">
 						<label for="">
-							<span class="block-label">產品名稱查詢</span>
+							<span class="block-label">商品名稱查詢</span>
 							<input type="text" id="searh_name" name="searh_name"></input>
 						</label>
 						<button class="btn btn-darkblue" id="searh-name">查詢</button>
@@ -1824,10 +1824,10 @@
 						<thead>
 							<tr>
 								<th>選項</th>
-								<th>自訂產品ID</th>
+								<th>自訂商品ID</th>
 								<th>供應商名稱</th>
-								<th style="min-width:100px;">產品名稱</th>
-								<th style="background-image: none !important;">產品說明</th>
+								<th style="min-width:100px;">商品名稱</th>
+								<th style="background-image: none !important;">商品說明</th>
 								<th style="min-width:40px;">類別</th>
 								<th style="min-width:40px;">單位</th>
 								<th style="min-width:70px;">成本</th>

@@ -12,7 +12,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 <html>
 <head>
-<title>出貨管理</title>
+<title>出貨流程</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true"/>
@@ -42,7 +42,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	 	<jsp:include page="template/common_headfoot.jsp" flush="true"/>
 		
 		<div class="content-wrap">
-			<h2 class="page-title">出貨管理</h2> 
+			<h2 class="page-title">出貨流程</h2> 
 		
 			<div class='bdyplane' style="opacity: 0">
 				<div class="panel-content">
@@ -123,8 +123,8 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					<thead>
 						<tr class="">
 							<th>訂單編號</th>
-							<th>自訂產品編號</th>
-							<th>產品名稱</th>
+							<th>自訂商品編號</th>
+							<th>商品名稱</th>
 							<th>數量</th>
 							<th>單價</th>
 							<th>備註</th>															
@@ -319,7 +319,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
                         }
                     });
                     if (json_obj.length == 0) {
-                        $("#warning").html("<h3>該條碼無產品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
+                        $("#warning").html("<h3>該條碼無商品存在</h3>請至'商品管理'介面&nbsp;定義該條碼。");
                         $("#warning").dialog("open");
                     }
                 }
@@ -816,7 +816,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
             });
 
         $("#update_product_name").bind('focus', function() {
-            $(this).attr("placeholder", "請輸入產品名稱以供查詢");
+            $(this).attr("placeholder", "請輸入商品名稱以供查詢");
         });
 
 

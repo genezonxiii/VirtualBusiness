@@ -257,12 +257,12 @@ function draw_producttype(parameter){
 			<div id="dialog-confirm" title="是否刪除此類型?" style="display:none;">
 			</div>
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改產品類別" style="display:none;">
+			<div id="dialog-form-update" title="修改商品類別" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>修改產品類別：</td>
+								<td>修改商品類別：</td>
 								<td><input type="text" name="type_name" placeholder="修改商品類別名稱"></td>
 							</tr>
 						</table>
@@ -270,12 +270,12 @@ function draw_producttype(parameter){
 				</form>
 			</div>			
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增產品類別" style="display:none;">
+			<div id="dialog-form-insert" title="新增商品類別" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>產品類別：</td>
+								<td>商品類別：</td>
 								<td><input type="text" name="type_name" placeholder="輸入商品類別名稱"></td>
 							</tr>
 						</table>
@@ -302,7 +302,7 @@ function draw_producttype(parameter){
 					<table id="products2" class="result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th>產品類別</th>
+								<th>商品類別</th>
 								<th style="background-image: none !important;">功能</th>
 							</tr>
 						</thead>

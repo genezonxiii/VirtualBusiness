@@ -156,7 +156,7 @@ function ship_data(){
 						<thead>
 							<tr class="ui-widget-header">
 								<th>出貨單號</th>
-								<th>自訂產品ID</th>
+								<th>自訂商品ID</th>
 								<th>出貨日期</th>
 <!-- 								<th>配送日期</th> -->
 								<th style="min-width:70px;">價格</th>
@@ -165,7 +165,7 @@ function ship_data(){
 								<th>郵編</th>
 								<th>顧客姓名</th>
 								<th>手機</th>
-								<th style="min-width:140px">產品名稱</th>
+								<th style="min-width:140px">商品名稱</th>
 								<th>銷貨單號</th>
 								<th>數量</th>	
 								<th>銷貨平台</th>

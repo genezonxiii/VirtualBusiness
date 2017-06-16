@@ -155,7 +155,7 @@
 		     }           
 		 });
 		$("#product_name").dblclick(function(event){ $("#product_name").autocomplete({minLength: 0}); });
-		//自訂產品查詢相關設定
+		//自訂商品查詢相關設定
 		$(".search-taginfo").click(function(e) {
 			e.preventDefault();
 			$.ajax({

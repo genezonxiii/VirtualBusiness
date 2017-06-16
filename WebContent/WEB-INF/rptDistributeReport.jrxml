@@ -94,7 +94,7 @@ where group_id = $P{p_group_id} and sale_id = $P{p_sale_id}]]>
 						<font fontName="標楷體" size="12" pdfFontName="MHei-Medium" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 						<paragraph leftIndent="28" rightIndent="20"/>
 					</textElement>
-					<text><![CDATA[產品名稱]]></text>
+					<text><![CDATA[商品名稱]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="573" y="72" width="100" height="24" backcolor="#F5F5F5"/>

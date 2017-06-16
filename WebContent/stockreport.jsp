@@ -300,7 +300,7 @@ var bar_search=0;
 					<table id="products" class="ui-widget ui-widget-content result-table">
 						<thead>
 							<tr class="ui-widget-header">
-								<th >產品名稱 </th>
+								<th >商品名稱 </th>
 								<th style="max-width:150px;">庫存數量</th>
 								<th style="max-width:150px;">安全庫存</th>
 							</tr>
