@@ -212,6 +212,24 @@ public class ship extends HttpServlet {
 				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
 				response.getWriter().write(result);
+			}else if("SFDeliveryOrderConfirmCancel".equals(action)){
+				String orderNo = request.getParameter("orderNo");
+				SfDeliveryApi api = new SfDeliveryApi();
+				String reqXml = api.genOrderConfirmService(orderNo);
+				String resXml = api.sendXML(reqXml);
+				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
+			}else if("SFDeliveryOrderSearchService".equals(action)){
+				String orderNo = request.getParameter("orderNo");
+				SfDeliveryApi api = new SfDeliveryApi();
+				String reqXml = api.genOrderSearchService(orderNo);
+				String resXml = api.sendXML(reqXml);
+				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
 			}
 
 		} catch (Exception e) {

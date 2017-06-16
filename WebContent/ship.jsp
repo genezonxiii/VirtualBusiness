@@ -622,55 +622,34 @@
 								.dialog('option', 'minHeight', 'auto')
 								.dialog("open");
 						}else{
-							var shipsArr = [];
-							var jsonList = '';
-							console.log(ships);
-							$checkboxs.each(function(i,item) {
-								row = $(this).closest("tr");
-								data = $table.DataTable().row(row).data();
-// 								$.ajax ({
-// 									url : "realsale.do",
-// 									type : "POST",
-// 									async: false,
-// 									data : {
-// 										"action" : "getRealSaleDetail",
-// 										"realsale_id" : data.realsale_id
-// 									},
-// 									success: function (response) {
-// 										var a =$.parseJSON(response);
-// 										data['detail'] = a;
-// 									}
-// 								});
-// 								console.log(data);
-// 								shipsArr.push(data);
-// 							});
-// 							jsonList = JSON.stringify(shipsArr);
-
-// 							console.log(jsonList);
-// 	 		                $.ajax({
-// 			                    url: 'ship.do',
-// 			                    type: 'post',
-// 			                    data: {
-// 			                        action: 'SFDelivery',
-// 			                        jsonList: jsonList
-// 			                    },
-// 				                beforeSend: function(){
-// 			                		 $(':hover').css('cursor','progress');
-// 				                },
-// 				                complete: function(){
-// 			                		 $(':hover').css('cursor','default');
-// 				                },
-// 			                    error: function(xhr) {},
-// 			                    success: function(response) {
-// 			                        var $mes = $('#message #text');
-// 			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
-// 			                        $('#message')
-// 			                            .dialog()
-// 			                            .dialog('option', 'title', '提示訊息')
-// 			                            .dialog('option', 'width', 'auto')
-// 			                            .dialog('option', 'minHeight', 'auto')
-// 			                            .dialog("open");
-// 			                    }
+							var mapIter = ships.values();
+							var orderNo = mapIter.next().value;
+							console.log(orderNo);
+							
+ 	 		                $.ajax({
+			                    url: 'ship.do',
+			                    type: 'post',
+			                    data: {
+			                        action: 'SFDeliveryOrderConfirmCancel',
+			                        orderNo: orderNo
+			                    },
+				                beforeSend: function(){
+			                		 $(':hover').css('cursor','progress');
+				                },
+				                complete: function(){
+			                		 $(':hover').css('cursor','default');
+				                },
+			                    error: function(xhr) {},
+			                    success: function(response) {
+			                        var $mes = $('#message #text');
+			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        $('#message')
+			                            .dialog()
+			                            .dialog('option', 'title', '提示訊息')
+			                            .dialog('option', 'width', 'auto')
+			                            .dialog('option', 'minHeight', 'auto')
+			                            .dialog("open");
+			                    }
 							});							
 						}
 		            }
@@ -720,36 +699,16 @@
 								.dialog('option', 'minHeight', 'auto')
 								.dialog("open");
 						}else{
-							var shipsArr = [];
-							var jsonList = '';
-							$checkboxs.each(function(i,item) {
-								row = $(this).closest("tr");
-								data = $table.DataTable().row(row).data();
-								$.ajax ({
-									url : "realsale.do",
-									type : "POST",
-									async: false,
-									data : {
-										"action" : "getRealSaleDetail",
-										"realsale_id" : data.realsale_id
-									},
-									success: function (response) {
-										var a =$.parseJSON(response);
-										data['detail'] = a;
-									}
-								});
-								console.log(data);
-								shipsArr.push(data);
-							});
-							jsonList = JSON.stringify(shipsArr);
-
-							console.log(jsonList);
-	 		                $.ajax({
+							var mapIter = ships.values();
+							var orderNo = mapIter.next().value;
+							console.log(orderNo);
+							
+ 	 		                $.ajax({
 			                    url: 'ship.do',
 			                    type: 'post',
 			                    data: {
-			                        action: 'SFDelivery',
-			                        jsonList: jsonList
+			                        action: 'SFDeliveryOrderSearchService',
+			                        orderNo: orderNo
 			                    },
 				                beforeSend: function(){
 			                		 $(':hover').css('cursor','progress');

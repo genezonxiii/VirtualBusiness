@@ -345,7 +345,7 @@ public class SfApi {
 
 			item.setBarCode(barCode);
 			item.setContainers(containers);
-			//xxx
+			// xxx
 			item.setSerialNumTrackInbound("N");
 			item.setSerialNumTrackInventory("N");
 			item.setSerialNumTrackOutbound("N");
@@ -377,7 +377,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -390,7 +390,7 @@ public class SfApi {
 
 		return result;
 	}
-	
+
 	public String genItemServiceForPackage(List<tw.com.aber.vo.PackageVO> packageVOList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
@@ -413,9 +413,8 @@ public class SfApi {
 			// item1
 			BarCode barCode = new BarCode();
 			barCode.setBarCode1(packageVO.getBarcode());
-			
-			
-			//xxx
+
+			// xxx
 			item.setSerialNumTrackInbound("N");
 			item.setSerialNumTrackInventory("N");
 			item.setSerialNumTrackOutbound("N");
@@ -449,7 +448,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -492,7 +491,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -531,7 +530,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("ITEM_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -618,7 +617,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -701,7 +700,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -725,7 +724,7 @@ public class SfApi {
 
 		for (int i = 0; i < purchaseList.size(); i++) {
 			PurchaseVO purchaseVO = purchaseList.get(i);
-			
+
 			PurchaseOrder purchaseOrder = new PurchaseOrder();
 			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
 			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
@@ -749,7 +748,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("PURCHASE_ORDER_INBOUND_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -797,7 +796,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -846,7 +845,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_PURCHASE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -890,7 +889,6 @@ public class SfApi {
 		orderReceiverInfo.setReceiverMobile("0912345678");
 		orderReceiverInfo.setReceiverCountry("台灣");
 		orderReceiverInfo.setReceiverAddress("台北市內湖區文湖街18號");
-		
 
 		String saleNo = this.genNo();
 
@@ -900,7 +898,7 @@ public class SfApi {
 		saleOrder.setErpOrder("SI".concat(saleNo));
 		saleOrder.setOrderReceiverInfo(orderReceiverInfo);
 		saleOrder.setOrderItems(orderItems);
-		
+
 		saleOrderList.add(saleOrder);
 
 		SaleOrders saleOrders = new SaleOrders();
@@ -920,7 +918,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -968,7 +966,7 @@ public class SfApi {
 			orderReceiverInfo.setReceiverName(shipVO.getV_deliver_name());
 			orderReceiverInfo.setReceiverZipCode("512");// 郵遞區號暫不填待資料完整
 			if (shipVO.getV_deliver_mobile() != null) {
-				orderReceiverInfo.setReceiverMobile(shipVO.getV_deliver_mobile());//手機號碼
+				orderReceiverInfo.setReceiverMobile(shipVO.getV_deliver_mobile());// 手機號碼
 			}
 			if (shipVO.getV_deliver_phone() != null) {
 				orderReceiverInfo.setReceiverPhone(shipVO.getV_deliver_phone());// 電話號碼
@@ -979,20 +977,21 @@ public class SfApi {
 
 			SaleOrder saleOrder = new SaleOrder();
 			OrderCarrier orderCarrier = new OrderCarrier();
-			
-			//xxx 暫定寫死
+
+			// xxx 暫定寫死
 			orderCarrier.setCarrier("CP");
 			orderCarrier.setCarrierProduct("1");
 			orderCarrier.setMonthlyAccount(groupSfVo.getMonthly_account());
 			orderCarrier.setPaymentOfcharge("寄付");
-			
+
 			saleOrder.setOrderCarrier(orderCarrier);
-			saleOrder.setWarehouseCode(warehouseVo.getSf_warehouse_code());/* 由順豐提供 資料未定 */
+			saleOrder.setWarehouseCode(
+					warehouseVo.getSf_warehouse_code());/* 由順豐提供 資料未定 */
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
 			saleOrder.setOrderItems(orderItems);
-	
+
 			saleOrderList.add(saleOrder);
 		}
 
@@ -1013,7 +1012,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1061,7 +1060,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1074,6 +1073,7 @@ public class SfApi {
 
 		return result;
 	}
+
 	public String genSaleOrderOutboundDetailQueryService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 		WarehouseVO warehouseVO = valueService.getWarehouseVO();
@@ -1105,7 +1105,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1116,7 +1116,7 @@ public class SfApi {
 		result = sw.toString();
 		logger.debug("--- end: output of marshalling ----");
 		return result;
-	
+
 	}
 
 	public String genBomService(List<PackageVO> packageVOList, ValueService valueService) {
@@ -1173,7 +1173,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("BOM_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1222,7 +1222,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_STATUS_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1235,7 +1235,7 @@ public class SfApi {
 
 		return result;
 	}
-	
+
 	public String genSaleOrderOutboundDetailQueryService() {
 		String result;
 
@@ -1272,7 +1272,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("SALE_ORDER_OUTBOUND_DETAIL_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1320,7 +1320,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("CANCEL_SALE_ORDER_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1368,7 +1368,7 @@ public class SfApi {
 
 		Request mainXML = new Request();
 		mainXML.setService("RT_INVENTORY_QUERY_SERVICE");
-		mainXML.setLang("zh-CN"); 
+		mainXML.setLang("zh-CN");
 		mainXML.setHead(head);
 		mainXML.setBody(body);
 
@@ -1390,6 +1390,7 @@ public class SfApi {
 
 	public String sendXML(String reqXml) {
 		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
+//		String targetURL = "http://192.168.112.164:8088/sfdelivery/";
 		String urlParameters = "";
 
 		SfApi api = new SfApi();
@@ -1450,7 +1451,7 @@ public class SfApi {
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-			
+
 			connection.setRequestProperty("Content-Length", Integer.toString(urlParameters.getBytes().length));
 			connection.setRequestProperty("Content-Language", "zh-TW");
 
@@ -1520,7 +1521,7 @@ public class SfApi {
 
 	/**
 	 * @param responseUtil
-	 *           
+	 * 
 	 * @return whether the return is successful
 	 */
 	public boolean isTelegraph(ResponseUtil responseUtil) {

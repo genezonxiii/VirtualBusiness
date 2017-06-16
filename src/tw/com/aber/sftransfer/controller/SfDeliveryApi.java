@@ -92,6 +92,52 @@ public class SfDeliveryApi {
 		return result;
 	}
 
+	public String genOrderConfirmService(String orderNo) {
+		String result = "";
+
+		OrderConfirm orderConfirm = new OrderConfirm();
+		orderConfirm.setOrderId(orderNo);
+
+		Body body = new Body();
+		body.setOrderConfirm(orderConfirm);
+
+		Request request = new Request();
+		request.setHead("BSPdevelop");
+		request.setService("OrderConfirmService");
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+	public String genOrderSearchService(String orderNo) {
+		String result = "";
+
+		OrderConfirm orderConfirm = new OrderConfirm();
+		orderConfirm.setOrderId(orderNo);
+
+		Body body = new Body();
+		body.setOrderConfirm(orderConfirm);
+
+		Request request = new Request();
+		request.setHead("BSPdevelop");
+		request.setService("OrderSearchService");
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
 	// 測試用
 	public String genOrderService() {
 		String result = "";
@@ -283,8 +329,8 @@ public class SfDeliveryApi {
 	}
 
 	public String sendXML(String reqXml) {
-		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
-		// String targetURL = "http://192.168.112.164:8088/sfdelivery/";
+//		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
+		 String targetURL = "http://192.168.112.164:8088/sfdelivery/";
 		String urlParameters = "";
 
 		SfDeliveryApi api = new SfDeliveryApi();
