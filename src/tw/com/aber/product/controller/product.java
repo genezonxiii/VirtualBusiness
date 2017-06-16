@@ -308,9 +308,7 @@ public class product extends HttpServlet {
 				String resXml = sfApi.sendXML(reqXml);
 				
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-				
-				String result = new Gson().toJson(responseUtil);
-				//String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
+				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
 				response.getWriter().write(result);
 			} catch (Exception e) {

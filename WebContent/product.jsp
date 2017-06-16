@@ -333,39 +333,14 @@
 			                        },
 			                        error: function(xhr) {},
 			                        success: function(response) {
-			                        	var jsonObj = $.parseJSON(response)
-			                        	var itemList = jsonObj.response.body.ItemResponse.items.itemList
-			                        	var result = "";
-			                        	
-			                        	$.each( itemList, function( key, val ) {
-			                        		console.log(val.skuNo);
-			                        		result += "<br><br>"+ (key+1)
-			                        				  + "、 商品編號: " 
-			                        				  + val.skuNo 
-			                        				  + "<br>處理結果: "
-			                        				  + (val.result=='1'?'成功':'失敗')
-			                        				  + "<br>備註: "+ val.note;
-			                        		});
-			                            var $mes = $('#message #text');
-		                        		console.log("result: "+result);
-			                            $mes.val('').html('執行結果為: '+result);
-			                    		$("#message").dialog({
-			                    			draggable : true,
-			                    			resizable : false,
-			                    			autoOpen : true,
-			                    			title : '提示訊息',
-			                    			width : "auto",
-			                    			modal : true,
-			                    			minHeight : 'auto',
-											create: function () {
-												$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
-											},
-			                    			buttons : {
-			                    				"確認" : function() {
-			                    					$(this).dialog("close");
-			                    				}
-			                    			}
-			                    		});
+			                        	var $mes = $('#message #text');
+			                        	$mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        	$('#message')
+			                        		.dialog()
+			                        		.dialog('option', 'title', '提示訊息')
+			                        		.dialog('option', 'width', 'auto')
+			                        		.dialog('option', 'minHeight', 'auto')
+			                        		.dialog("open");
 			                        }
 			                    });
 
