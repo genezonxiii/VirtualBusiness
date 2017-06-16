@@ -8,7 +8,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,11 +16,6 @@ import java.util.List;
 
 import javax.xml.bind.JAXB;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,14 +53,12 @@ import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sf.vo.SaleOrderOutboundDetailRequest;
 import tw.com.aber.sf.vo.SaleOrderRequest;
-import tw.com.aber.sf.vo.SaleOrderStatusRequest;
 import tw.com.aber.sf.vo.SaleOrders;
 import tw.com.aber.sf.vo.SfBomItem;
 import tw.com.aber.sf.vo.SfBomItems;
 import tw.com.aber.sf.vo.SfContainer;
 import tw.com.aber.sf.vo.SfItem;
 import tw.com.aber.sf.vo.SkuNoList;
-import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.PackageVO;
 import tw.com.aber.vo.ProductPackageVO;
@@ -335,29 +328,22 @@ public class SfApi {
 		GroupSfVO groupSfVo = valueService.getGroupSfVO();
 		WarehouseVO warehouseVO = valueService.getWarehouseVO();
 
-		List<PurchaseOrder> purchaseOrderList = null;
+		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
 
-		PurchaseOrders purchaseOrders = null;
-
-		Items items = new Items();
 		for (int i = 0; i < purchaseList.size(); i++) {
 			PurchaseVO purchaseVO = purchaseList.get(i);
 			List<PurchaseDetailVO> purchaseDetailList = purchaseVO.getPurchaseDetailList();
 
-			purchaseOrderList = new ArrayList<PurchaseOrder>();
-
-			List<SfItem> itemList = new ArrayList<SfItem>();
-
 			PurchaseOrder purchaseOrder = new PurchaseOrder();
-
+			List<SfItem> itemList = new ArrayList<SfItem>();
+			Items items = new Items();
+			
 			if (purchaseDetailList != null) {
 				for (int j = 0; j < purchaseDetailList.size(); j++) {
-
 					PurchaseDetailVO purchaseDetailVO = purchaseDetailList.get(j);
 					SfItem item = new SfItem();
 
 					item.setSkuNo(purchaseDetailVO.getC_product_id());
-
 					item.setQty(purchaseDetailVO.getQuantity() == null ?
 							null : purchaseDetailVO.getQuantity().toString());
 					//入庫暫定為正品
@@ -370,25 +356,22 @@ public class SfApi {
 					
 					itemList.add(item);
 				}
+				items.setItemList(itemList);
 			}
-			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
-
-			Util util = new Util();
-			// 待確認
+			
 			purchaseOrder.setErpOrder(purchaseVO.getSeq_no());
 			purchaseOrder.setErpOrderType("10");
 			purchaseOrder.setsFOrderType("采购入库");
-
 			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 			purchaseOrder.setScheduledReceiptDate(date);
 			purchaseOrder.setVendorCode(groupSfVo.getVendor_code());
+			purchaseOrder.setWarehouseCode(warehouseVO.getSf_warehouse_code());
 			purchaseOrder.setItems(items);
 
 			purchaseOrderList.add(purchaseOrder);
-			items.setItemList(itemList);
 		}
 
-		purchaseOrders = new PurchaseOrders();
+		PurchaseOrders purchaseOrders = new PurchaseOrders();
 		purchaseOrders.setPurchaseOrder(purchaseOrderList);
 
 		PurchaseOrderRequest purchaseOrderRequest = new PurchaseOrderRequest();
@@ -922,9 +905,12 @@ public class SfApi {
 			}
 			rd.close();
 			return response.toString();
+		} catch (UnknownHostException e) {
+			logger.error("發送失敗：" + e.getMessage());
+			return "<ResponseFail><reasoncode>pershing</reasoncode><remark>電文傳送失敗:" + e.getMessage() + "</remark></ResponseFail>";
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			logger.error("發送失敗：" + e.getMessage());
+			return "<ResponseFail><reasoncode>pershing</reasoncode><remark>電文傳送失敗" + e.getMessage() + "</remark></ResponseFail>";
 		} finally {
 			if (connection != null) {
 				connection.disconnect();
