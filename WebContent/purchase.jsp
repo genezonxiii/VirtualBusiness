@@ -219,7 +219,7 @@ function draw_purchase(parameter){
 												$.each(purchase, function(key, value) {
 													var suc = value.result == 1? "/" + "入庫單號：" + value.receiptId:"/" + "失敗";
 													var note = value.result == 1? "": "/" + value.note;
-													msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+													msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
 												});
 											} else if (json_obj.responseFail) {
 												console.log("fail");
@@ -283,9 +283,9 @@ function draw_purchase(parameter){
 												console.log(json_obj.response);
 												var purchase = json_obj.response.body.cancelPurchaseOrderResponse.purchaseOrders.purchaseOrder;
 												$.each(purchase, function(key, value) {
-													var suc = value.result == 1? "/" + "成功":"/" + "失敗";
-													var note = value.result == 1? "": "/" + value.note;
-													msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+													var suc = "/" + (value.result == 1? "成功":"失敗");
+													var note = "/" + value.note;
+													msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
 												});
 											} else if (json_obj.responseFail) {
 												console.log("fail");
@@ -358,7 +358,7 @@ function draw_purchase(parameter){
 														}
 														tmp_item_list += item_value.skuNo + qty + "<br/>";
 													});
-													msg += value.erpOrder + "/" + value.header.receiptId + "/" + 
+													msg += "採購單號：" + value.erpOrder + "/" + value.header.receiptId + "/" + 
 														value.header.status + "<br/>" + tmp_item_list + "<br/>";
 												});
 											} else if (json_obj.responseFail) {

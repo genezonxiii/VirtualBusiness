@@ -375,8 +375,30 @@
 		                    },
 		                    error: function(xhr) {},
 		                    success: function(response) {
-		                        var $mes = $('#message #text');
-		                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+								var msg = "";
+								if (response) {
+									console.log(response);
+									var json_obj = $.parseJSON(response);
+									console.log(json_obj);
+									if (json_obj.response) {
+										console.log("response");
+										console.log(json_obj.response);
+										var sale = json_obj.response.body.saleOrderResponse.saleOrders.saleOrder;
+										console.log(sale);
+										$.each(sale, function(key, value) {
+											var suc = value.result == 1? "/" + "出庫單號：" + value.shipmentId:"/" + "失敗";
+											var note = value.result == 1? "": "/" + value.note;
+											msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+										});
+									} else if (json_obj.responseFail) {
+										console.log("fail");
+										console.log(json_obj.responseFail);
+										msg = json_obj.responseFail.remark;
+									}										
+								}
+
+								var $mes = $('#message #text');
+		                        $mes.val('').html(msg);
 		                        $('#message')
 		                            .dialog()
 		                            .dialog('option', 'title', '提示訊息')
@@ -420,8 +442,30 @@
 		                    },
 		                    error: function(xhr) {},
 		                    success: function(response) {
-		                        var $mes = $('#message #text');
-		                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+								var msg = "";
+								if (response) {
+									console.log(response);
+									var json_obj = $.parseJSON(response);
+									console.log(json_obj);
+									if (json_obj.response) {
+										console.log("response");
+										console.log(json_obj.response);
+										var sale = json_obj.response.body.cancelSaleOrderResponse.saleOrders.saleOrder;
+										console.log(sale);
+										$.each(sale, function(key, value) {
+											var suc = "/" + (value.result == 1? "成功":"失敗");
+											var note = "/" + value.note;
+											msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+										});
+									} else if (json_obj.responseFail) {
+										console.log("fail");
+										console.log(json_obj.responseFail);
+										msg = json_obj.responseFail.remark;
+									}										
+								}
+
+								var $mes = $('#message #text');
+		                        $mes.val('').html(msg);
 		                        $('#message')
 		                            .dialog()
 		                            .dialog('option', 'title', '提示訊息')
@@ -448,8 +492,8 @@
 		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-		                if ($checkboxs.length > 3) {
-		                    alert('最多選擇三筆資料');
+		                if ($checkboxs.length > 20) {
+		                    alert('最多選擇二十筆資料');
 		                    return false;
 		                }
 
@@ -467,8 +511,48 @@
 		                    },
 		                    error: function(xhr) {},
 		                    success: function(response) {
+								var msg = "";
+								if (response) {
+									console.log(response);
+									var json_obj = $.parseJSON(response);
+									console.log(json_obj);
+									if (json_obj.response) {
+										console.log("response");
+										console.log(json_obj.response);
+										var sale = json_obj.response.body.saleOrderOutboundDetailResponse.saleOrders.saleOrder;
+										console.log(sale);
+										$.each(sale, function(key, value) {
+											var suc = value.result == 1? "/" + "出庫單號：" + value.header.shipmentId:"/" + "失敗";
+											var note = value.result == 1? "": "/" + value.note;
+											
+											var tmp_item_list = "";
+											if (value.items) {
+												$.each(value.items.itemList, function(item_key, item_value){
+													var qty = "";
+													if (item_value.actualQty) {
+														qty += "/實發數量:" + item_value.actualQty;
+													}
+													tmp_item_list += item_value.skuNo + qty + "<br/>";
+												});
+											}
+											
+											if (value.result == 1) {
+												msg += "訂單編號：" + value.erpOrder + "/" + value.header.shipmentId + "/" + 
+												value.header.dataStatus + "<br/>" + tmp_item_list + "<br/>";
+											} else {
+												msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+											}
+											
+										});
+									} else if (json_obj.responseFail) {
+										console.log("fail");
+										console.log(json_obj.responseFail);
+										msg = json_obj.responseFail.remark;
+									}										
+								}
+
 		                        var $mes = $('#message #text');
-		                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+		                        $mes.val('').html(msg);
 		                        $('#message')
 		                            .dialog()
 		                            .dialog('option', 'title', '提示訊息')

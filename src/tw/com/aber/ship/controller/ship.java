@@ -12,12 +12,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,9 +23,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tw.com.aber.sale.controller.sale;
-import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.ResponseUtil;
+import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
@@ -126,9 +123,15 @@ public class ship extends HttpServlet {
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+
+					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+					String gresult = gson.toJson(responseUtil);
+					
+					logger.debug(gresult);
+					
 					result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 					logger.debug("執行結果: " + result);
-					response.getWriter().write(result);
+					response.getWriter().write(gresult);
 				} catch (Exception e) {
 					e.printStackTrace();
 					logger.debug(e.getMessage());
@@ -158,9 +161,15 @@ public class ship extends HttpServlet {
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+
+					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+					String gresult = gson.toJson(responseUtil);
+					
+					logger.debug(gresult);					
+					
 					result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 					logger.debug("執行結果: " + result);
-					response.getWriter().write(result);
+					response.getWriter().write(gresult);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());
@@ -185,7 +194,26 @@ public class ship extends HttpServlet {
 
 					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
-
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					
+					if (responseUtil.getResponse() != null) {
+						List<SaleOrder> saleOrder = responseUtil.getResponse().getBody().getSaleOrderOutboundDetailResponse().getSaleOrders().getSaleOrder();
+					
+						if (saleOrder != null) {
+							for (SaleOrder tmp : saleOrder){
+								if ( tmp.getResult().equals("1") ) {
+									tmp.getHeader().setDataStatus(tmp.getHeader().getDataStatus());
+								}
+							}
+						}
+					}
+					
+					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+					String gresult = gson.toJson(responseUtil);
+					
+					logger.debug(gresult);					
+					
+					response.getWriter().write(gresult);
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.out.println(e.getMessage());

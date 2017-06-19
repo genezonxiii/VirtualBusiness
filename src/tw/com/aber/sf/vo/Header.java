@@ -8,8 +8,10 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Header")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "warehouseCode", "erpOrder", "shipmentId", "receiptId", "erpOrderType", "closeDate", "status",
-		"skuNo", "inventoryStatus", "totalQty", "onHandQty", "availableQty", "inTransitQty" })
+@XmlType(propOrder = { "warehouseCode", "erpOrder", "shipmentId", "receiptId", 
+		"erpOrderType", "closeDate", "status", "skuNo", "inventoryStatus", 
+		"totalQty", "onHandQty", "availableQty", "inTransitQty",
+		"carrier", "carrierProduct", "isSplit", "dataStatus" })
 public class Header {
 	private static final long serialVersionUID = 1L;
 	@XmlElement(name = "WarehouseCode")
@@ -39,7 +41,16 @@ public class Header {
 	private String availableQty;
 	@XmlElement(name = "InTransitQty")
 	private String inTransitQty;
-
+	
+	@XmlElement(name = "Carrier")
+	private String carrier;
+	@XmlElement(name = "CarrierProduct")
+	private String carrierProduct;
+	@XmlElement(name = "IsSplit")
+	private String isSplit;
+	@XmlElement(name = "DataStatus")
+	private String dataStatus;
+	
 	public String getSkuNo() {
 		return skuNo;
 	}
@@ -146,6 +157,80 @@ public class Header {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getDataStatus() {
+		return dataStatus;
+	}
+
+	public void setDataStatus(String dataStatus) {
+		String result = "";
+		dataStatus = dataStatus == null? "":dataStatus;
+		switch (dataStatus) {
+			case "1100": 
+				result = "生效";
+				break;
+			case "1400": 
+				result = "已取消";
+				break;
+			case "1600": 
+				result = "待審核";
+				break;
+			case "1700": 
+				result = "已審核";
+				break;
+			case "1800": 
+				result = "正在下發";
+				break;
+			case "1900": 
+				result = "下發失敗";
+				break;
+			case "2000": 
+				result = "已下發";
+				break;
+			case "2300": 
+				result = "等待工作";
+				break;
+			case "2400": 
+				result = "揀貨完成";
+				break;
+			case "2700": 
+				result = "包裝完成";
+				break;
+			case "2900": 
+				result = "發貨確認";
+				break;
+			case "3900": 
+				result = "訂單已完成";
+				break;
+			default:
+				result = "查無此狀態:" + dataStatus;
+		}
+		this.dataStatus = result;
+	}
+
+	public String getCarrier() {
+		return carrier;
+	}
+
+	public void setCarrier(String carrier) {
+		this.carrier = carrier;
+	}
+
+	public String getCarrierProduct() {
+		return carrierProduct;
+	}
+
+	public void setCarrierProduct(String carrierProduct) {
+		this.carrierProduct = carrierProduct;
+	}
+
+	public String getIsSplit() {
+		return isSplit;
+	}
+
+	public void setIsSplit(String isSplit) {
+		this.isSplit = isSplit;
 	}
 
 }
