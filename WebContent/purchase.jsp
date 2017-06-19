@@ -206,8 +206,30 @@ function draw_purchase(parameter){
 									},
 									error: function (xhr) { },
 									success: function (response) {
+										var msg = "";
+										if (response) {
+											console.log(response);
+											var json_obj = $.parseJSON(response);
+											console.log(json_obj);
+											if (json_obj.response) {
+												console.log("response");
+												console.log(json_obj.response);
+												var purchase = json_obj.response.body.purchaseOrderResponse.purchaseOrders.purchaseOrder;
+												console.log(purchase);
+												$.each(purchase, function(key, value) {
+													var suc = value.result == 1? "/" + "入庫單號：" + value.receiptId:"/" + "失敗";
+													var note = value.result == 1? "": "/" + value.note;
+													msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+												});
+											} else if (json_obj.responseFail) {
+												console.log("fail");
+												console.log(json_obj.responseFail);
+												msg = json_obj.responseFail.remark;
+											}										
+										}
+										
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
+										$mes.val('').html(msg);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')
@@ -252,8 +274,28 @@ function draw_purchase(parameter){
 									},
 									error: function (xhr) { },
 									success: function (response) {
+										var msg = "";
+										if (response) {
+											console.log(response);
+											var json_obj = $.parseJSON(response);
+											console.log(json_obj);
+											if (json_obj.response) {
+												console.log(json_obj.response);
+												var purchase = json_obj.response.body.cancelPurchaseOrderResponse.purchaseOrders.purchaseOrder;
+												$.each(purchase, function(key, value) {
+													var suc = value.result == 1? "/" + "成功":"/" + "失敗";
+													var note = value.result == 1? "": "/" + value.note;
+													msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
+												});
+											} else if (json_obj.responseFail) {
+												console.log("fail");
+												console.log(json_obj.responseFail);
+												msg = json_obj.responseFail.remark;
+											}
+										}
+										
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
+										$mes.val('').html(msg);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')
@@ -298,8 +340,36 @@ function draw_purchase(parameter){
 									},
 									error: function (xhr) { },
 									success: function (response) {
+										var msg = "";
+										if (response) {
+											var json_obj = $.parseJSON(response);
+											if (json_obj.response) {
+												var purchase = json_obj.response.body.purchaseOrderInboundResponse.purchaseOrders.purchaseOrder;
+												$.each(purchase, function(key, value) {
+													
+													var tmp_item_list = "";
+													$.each(value.items.itemList, function(item_key, item_value){
+														var qty = "";
+														if (item_value.planQty) {
+															qty += "/入庫數量:" + item_value.planQty;
+														}
+														if (item_value.actualQty) {
+															qty += "/實收數量:" + item_value.actualQty;
+														}
+														tmp_item_list += item_value.skuNo + qty + "<br/>";
+													});
+													msg += value.erpOrder + "/" + value.header.receiptId + "/" + 
+														value.header.status + "<br/>" + tmp_item_list + "<br/>";
+												});
+											} else if (json_obj.responseFail) {
+												console.log("fail");
+												console.log(json_obj.responseFail);
+												msg = json_obj.responseFail.remark;
+											}
+										}
+										
 										var $mes = $('#message #text');
-										$mes.val('').html('成功發送');
+										$mes.val('').html(msg);
 										$('#message')
 											.dialog()
 											.dialog('option', 'title', '提示訊息')
@@ -414,20 +484,12 @@ function draw_purchase_detail(parameter){
 				$("#purchase_detail_contain_row").animate({"opacity":"1"},300);
 			}else{
 				warning_msg("---查無該進貨單明細---");
-// 				if(!$("#purchase_detail_err_mes").length){
-//     				$("<p id='purchase_detail_err_mes'>查無明細</p>").appendTo($("#purchases-contain").parent());
-//     			}else{
-//     				$("#purchase_detail_err_mes").html("查無明細");
-//     			}
 				$("#purchase_detail_contain_row").hide();
 			}
 		}
 	});			
 }
-//#########################################################################
-//#########################################################################
-//#########################################################################
-//#########################################################################
+
 	var new_or_edit=0;
 	jQuery(document).ready(function($) {
 	    $(window).scannerDetection();

@@ -1,5 +1,7 @@
 package tw.com.aber.sf.vo;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -8,18 +10,15 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Item")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "skuNo", "result", "note", "itemName", "description", "qty", 
-		"inventoryStatus", "lot", "barCode", "containers", "qtymin", "serialNumTrackInbound", 
-		"serialNumTrackOutbound","serialNumTrackInventory", "bomAction" })
+@XmlType(propOrder = { "skuNo", "itemName", "description", "qty", 
+		"barCode", "containers", "qtymin", "serialNumTrackInbound", 
+		"serialNumTrackOutbound","serialNumTrackInventory", "bomAction", "result", "note",
+		"planQty", "actualQty", "inventoryStatus", "lot", "expirationDate", "serialNumbers"})
 public class SfItem {
 	private static final long serialVersionUID = 1L;
 
 	@XmlElement(name = "SkuNo")
 	private String skuNo;
-	@XmlElement(name = "Result")
-	private String result;
-	@XmlElement(name = "Note")
-	private String note;
 	@XmlElement(name = "ItemName")
 	private String itemName;
 	@XmlElement(name = "Description")
@@ -42,8 +41,25 @@ public class SfItem {
 	private String bomAction;
 	@XmlElement(name = "InventoryStatus")
 	private String inventoryStatus;
+	
+	//response use (商品查詢)
+	@XmlElement(name = "Result")
+	private String result;
+	@XmlElement(name = "Note")
+	private String note;
+	
+	//response use (入庫明細查詢)
+	@XmlElement(name = "PlanQty")
+	private String planQty;
+	@XmlElement(name = "ActualQty")
+	private String actualQty;
 	@XmlElement(name = "Lot")
 	private String lot;
+	@XmlElement(name = "ExpirationDate")
+	private String expirationDate;
+	@XmlElement(name = "SerialNumbers")
+    private SerialNumbers serialNumbers;
+
 	
 	public String getSkuNo() {
 		return skuNo;
@@ -135,6 +151,24 @@ public class SfItem {
 	}
 	public void setLot(String lot) {
 		this.lot = lot;
+	}
+	public String getPlanQty() {
+		return planQty;
+	}
+	public void setPlanQty(String planQty) {
+		this.planQty = planQty;
+	}
+	public String getActualQty() {
+		return actualQty;
+	}
+	public void setActualQty(String actualQty) {
+		this.actualQty = actualQty;
+	}
+	public String getExpirationDate() {
+		return expirationDate;
+	}
+	public void setExpirationDate(String expirationDate) {
+		this.expirationDate = expirationDate;
 	}
 
 	

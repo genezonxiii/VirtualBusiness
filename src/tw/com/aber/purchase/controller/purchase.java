@@ -474,9 +474,15 @@ public class purchase extends HttpServlet {
 				String reqXml = sfApi.genPurchaseOrderService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+				
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				String gresult = gson.toJson(responseUtil);
+				
+				logger.debug(gresult);
+				
 				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
-				response.getWriter().write(result);
+				response.getWriter().write(gresult);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -501,9 +507,15 @@ public class purchase extends HttpServlet {
 				String reqXml =sfApi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+				
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				String gresult = gson.toJson(responseUtil);
+				
+				logger.debug(gresult);
+				
 				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
-				response.getWriter().write(result);
+				response.getWriter().write(gresult);
 				logger.debug("resXml =" + resXml);
 				
 			} catch (Exception e) {
@@ -528,6 +540,10 @@ public class purchase extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml =sfApi.genPurchaseOrderInboundQueryService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
+				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				String gresult = gson.toJson(responseUtil);
+				response.getWriter().write(gresult);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
