@@ -145,6 +145,12 @@ input[type="number"] {
 	$(function() {
 	    $('#form_date').on("click", "button", function(e) {
 	        e.preventDefault();
+	        
+	        $("#line").hide();
+		    $("#detail-table").hide();
+		    $("#detail-table_wrapper").hide();
+	        
+	        
 	        var $startDate = $('#form_date input:eq(0)').val();
 	        var $endDate = $('#form_date input:eq(1)').val();
 	        var errorMes = '';
@@ -196,7 +202,8 @@ input[type="number"] {
 
 	    $("#line").hide();
 	    $("#detail-table_wrapper").hide();
-
+	    $("#detail-table").hide();
+	    
 	    $("#detail-table").on("click", ".btn_update", function(e) {
 	        e.preventDefault();
 	        var row = $(this).closest("tr");
@@ -296,7 +303,7 @@ input[type="number"] {
 	                                },
 	                                success: function(data) {
 	                                    if (data == "success") {
-	                                        alert("修改成功:");
+	                                        alert("修改成功");
 	                                        var parameter = {
 	                                            "action": "getAcceptdetailVOListByAcceptId",
 	                                            "accept_id": $("#hidAccept_id").val()
@@ -438,18 +445,18 @@ input[type="number"] {
 	            searchable: false,
 	            orderable: false,
 	            render: function(data, type, row) {
-	                var seq_no = row.seq_no;
+	                var accept_id = row.accept_id;
 
 	                var input = document.createElement("INPUT");
 	                input.type = 'checkbox';
 	                input.name = 'checkbox-group-select';
-	                input.id = seq_no;
+	                input.id = accept_id;
 
 	                var span = document.createElement("SPAN");
 	                span.className = 'form-label';
 
 	                var label = document.createElement("LABEL");
-	                label.htmlFor = seq_no;
+	                label.htmlFor = accept_id;
 	                label.name = 'checkbox-group-select';
 	                label.style.marginLeft = '35%';
 	                label.appendChild(span);
@@ -665,6 +672,7 @@ input[type="number"] {
 	    e.preventDefault();
 	    $("#line").show();
 	    $("#detail-table_wrapper").show();
+	    $("#detail-table").show();
 
 	    lookdown();
 	    $("#detail_contain_row").css({
@@ -738,6 +746,8 @@ input[type="number"] {
 					//關閉明細
 					$("#line").hide();
 					$("#detail-table_wrapper").hide();
+					$("#detail-table").hide();
+					
 					drawMasterTable(parameter);
 					$(this).dialog("close");
 				},
