@@ -596,6 +596,15 @@
 		<servlet-name>stockMod</servlet-name>
 		<url-pattern>/stockMod.do</url-pattern>
 	</servlet-mapping>	
+	
+	<servlet>
+		<servlet-name>Accept</servlet-name>
+		<servlet-class>tw.com.aber.accept.controller.Accept</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Accept</servlet-name>
+		<url-pattern>/Accept.do</url-pattern>
+	</servlet-mapping>
 
 	<filter>
 		<filter-name>loginFilter</filter-name>
