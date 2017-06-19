@@ -351,7 +351,7 @@ public class SfApi {
 					item.setLot(purchaseVO.getSeq_no());
 					
 					logger.debug("purchaseDetailVO");
-					logger.debug("c_product_id:" + purchaseDetailVO.getQuantity());
+					logger.debug("c_product_id:" + purchaseDetailVO.getC_product_id());
 					logger.debug("quantity:" + purchaseDetailVO.getQuantity());
 					
 					itemList.add(item);
