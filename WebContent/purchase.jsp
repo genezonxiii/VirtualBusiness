@@ -354,7 +354,7 @@ function draw_purchase(parameter){
 							}
 									}
 						   		],
-						
+						 
 						  autoWidth: false,
 						  scrollX:  true,
 				          scrollY:"300px","language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});

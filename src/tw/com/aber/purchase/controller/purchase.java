@@ -81,6 +81,7 @@ public class purchase extends HttpServlet {
 				// Handle any driver errors
 			} catch (Exception e) {
 				System.out.println(e.toString());
+				
 			}
 		}
 
