@@ -216,6 +216,41 @@ public class Accept  extends HttpServlet {
 
 				response.getWriter().write(result);
 
+			}else if("importDataToStock".equals(action)){
+				boolean isImportData = false;
+				
+				String accept_ids = request.getParameter("accept_ids");
+				
+				// 取值
+				logger.debug("accept_ids:"+accept_ids);
+				
+				// 驗證
+				if (accept_ids == "" || accept_ids == null) {
+					response.getWriter().write("error");
+					return;
+				}
+				
+				isImportData = acceptService.importDataToStock(groupId,userId,accept_ids);
+
+				if (isImportData) {
+					result = "success";
+				} else {
+					result = "error";
+				}
+
+				response.getWriter().write(result);
+		
+				// importDataToStock By accept_ids 
+
+				// import Data to tb_stock_mod By accept_ids (where tb_accept.accept_id in 'accept_ids' and stock_flag = 0 )
+				
+				// import Data to tb_stock_mod_detail By accept_ids (where tb_acceptDetail.accept_id in 'accept_ids' and tb_accept.stock_flag = 0)
+				
+				// import Date to tb_stock_new from  tb_accept_Detail (where accept_qty > 0)
+				
+				// update tb_accept tb_accept.stock_flag = 1 ;
+
+				
 			}
 
 		} catch (Exception e) {
@@ -256,7 +291,9 @@ public class Accept  extends HttpServlet {
 		public Boolean deleteAcceptDetailByAcceptDetail_id(String groupId, String acceptDetailId) {
 			return dao.deleteAcceptDetailByAcceptDetail_id(groupId, acceptDetailId);
 		}
-		
+		public Boolean importDataToStock(String groupId,String userId ,String acceptIds) {
+			return dao.importDataToStock( groupId, userId , acceptIds);
+		}
 		
 	}
 	
@@ -268,7 +305,7 @@ public class Accept  extends HttpServlet {
 		Boolean updateAcceptDetail(AcceptdetailVO  acceptdetailVO);
 		Boolean deleteAcceptByAccept_id(String groupId, String acceptId);
 		Boolean deleteAcceptDetailByAcceptDetail_id(String groupId, String acceptDetail);
-
+		Boolean importDataToStock(String groupId,String userId ,String acceptIds);
 	}							 
 	
 	class AcceptDAO implements Accept_interface {
@@ -286,7 +323,7 @@ public class Accept  extends HttpServlet {
 		private static final String sp_update_acceptdetail = "call sp_update_acceptdetail(?,?,?)";
 		private static final String sp_delete_accept_by_accept_id = "call sp_delete_accept_by_accept_id(?,?)";
 		private static final String sp_delete_accept_detail_by_acceptDetail_id = "call sp_delete_accept_detail_by_acceptDetail_id(?,?)";
-
+		private static final String sp_importData_to_stock = "call sp_importData_to_stock(?,?,?)";
 
 		@Override
 		public List<AcceptVO> getAcceptVOListByAcceptDate(String groupId, Date startDate, Date endDate) {
@@ -727,6 +764,52 @@ public class Accept  extends HttpServlet {
 			}
 			isDelete = true;
 			return isDelete;
+		}
+
+
+		@Override
+		public Boolean importDataToStock(String groupId, String userId, String acceptIds) {
+
+			boolean isImportData = false;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_importData_to_stock);
+
+				pstmt.setString(1, "'"+groupId+"'");
+				pstmt.setString(2, "'"+userId+"'");
+				pstmt.setString(3, acceptIds);
+				int value = pstmt.executeUpdate();
+
+				logger.debug("importDataToStockReturn:" + value);
+
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} catch (Exception e) {
+				throw new RuntimeException("error" + e.getMessage());
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			isImportData = true;
+			return isImportData;
 		}
 
 	}
