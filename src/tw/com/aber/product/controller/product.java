@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
@@ -93,7 +94,6 @@ public class product extends HttpServlet {
 					List<ProductBean> list = productService.getsearch_byname(group_id, product_name);
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
-					// System.out.println(jsonStrList);
 					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
@@ -142,12 +142,10 @@ public class product extends HttpServlet {
 			String term = request.getParameter("term");
 			String identity = request.getParameter("identity");
 			if ("ID".equals(identity)) {
-				// System.out.println("hihi");
 				productService = new ProductService();
 				List<ProductTypeVO> list = productService.getSearchUnit_byname(group_id, term);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
-				// System.out.println("json: "+jsonStrList);
 				response.getWriter().write(jsonStrList);
 				return;// 程式中斷
 			}
@@ -196,7 +194,6 @@ public class product extends HttpServlet {
 				 * 2.開始新增資料
 				 ***************************************/
 				productService = new ProductService();
-				// System.out.println(photo+" @@ "+photo1);
 				productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id,
 						unit_id, cost, price, current_stock, keep_stock, photo, photo1, description, barcode, ispackage,
 						user_id);
@@ -254,7 +251,6 @@ public class product extends HttpServlet {
 				int keep_stock = Integer.valueOf(request.getParameter("keep_stock"));
 				String photo = request.getParameter("photo");
 				String photo1 = request.getParameter("photo1");
-				// System.out.println("photo: " + photo);
 				String description = request.getParameter("description");
 				String barcode = request.getParameter("barcode");
 				String ispackage = request.getParameter("ispackage");
@@ -306,11 +302,10 @@ public class product extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml = sfApi.genItemService(productList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
-				
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
-				response.getWriter().write(result);
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				String gresult = gson.toJson(responseUtil);
+				response.getWriter().write(gresult);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.out.println(e.getMessage());
@@ -344,14 +339,12 @@ public class product extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml = sfApi.genItemQueryService(productList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
-
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
-				response.getWriter().write(result);
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				String gresult = gson.toJson(responseUtil);
+				response.getWriter().write(gresult);
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
+				logger.error(e.getMessage());
 			}
 
 		}
@@ -717,7 +710,6 @@ public class product extends HttpServlet {
 				pstmt.setString(15, productBean.getUser_id());
 				pstmt.setInt(16, productBean.getCurrent_stock());
 				pstmt.setString(17, productBean.getIspackage());
-				// System.out.println("in"+productBean.getPhoto()+"in"+productBean.getPhoto1());
 
 				pstmt.executeUpdate();
 
@@ -766,7 +758,6 @@ public class product extends HttpServlet {
 				pstmt.setFloat(9, productBean.getCost());
 				pstmt.setFloat(10, productBean.getPrice());
 				pstmt.setInt(11, productBean.getKeep_stock());
-				// System.out.println("have throw: "+productBean.getPhoto());
 				pstmt.setString(12, productBean.getPhoto());
 				pstmt.setString(13, productBean.getPhoto1());
 				pstmt.setString(14, productBean.getDescription());
@@ -870,11 +861,9 @@ public class product extends HttpServlet {
 					productBean.setPhoto1(rs.getString("photo1"));
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
-					// if(rs.getInt("package")==0){
-					// System.out.println(rs.getString("package"));
 					productBean.setIspackage(rs.getString("package"));
+					
 					list.add(productBean); // Store the row in the list
-					// }
 				}
 				// Handle any driver errors
 			} catch (SQLException se) {
@@ -1226,20 +1215,10 @@ public class product extends HttpServlet {
 				while (rs.next()) {
 					productBean = new ProductBean();
 					productBean.setProduct_id(rs.getString("product_id"));
-					// productBean.setGroup_id(rs.getString("group_id"));
 					productBean.setC_product_id(rs.getString("c_product_id"));
 					productBean.setProduct_name(rs.getString("product_name"));
-					// productBean.setSupply_id(rs.getString("supply_id"));
-					// productBean.setSupply_name(rs.getString("supply_name"));
-					// productBean.setType_id(rs.getString("type_id"));
-					// productBean.setUnit_id(rs.getString("unit_id"));
 					productBean.setCost(rs.getFloat("cost"));
-					// productBean.setPrice(rs.getFloat("price"));
 					productBean.setKeep_stock(rs.getInt("quantity"));
-					// productBean.setPhoto(rs.getString("photo"));
-					// productBean.setPhoto1(rs.getString("photo1"));
-					// productBean.setDescription(rs.getString("description"));
-					// productBean.setBarcode(rs.getString("barcode"));
 					list.add(productBean);
 				}
 				// Handle any driver errors
@@ -1275,7 +1254,6 @@ public class product extends HttpServlet {
 		}
 
 		public String is_duplicate(String group_id, String product_name) {
-			// System.out.println("ERROR?? ");
 			Connection con = null;
 			CallableStatement cs = null;
 			Boolean rs = null;

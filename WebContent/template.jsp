@@ -427,6 +427,7 @@ function who(){
 <script src="vendor/js/jquery-ui.min.js"></script>
 <script src="js/jquery.dataTables.min.js"></script>
 <script src="js/scripts.js"></script>
+<script src="js/virtual_business/common.js"></script>
 
 <script type="text/javascript">
 

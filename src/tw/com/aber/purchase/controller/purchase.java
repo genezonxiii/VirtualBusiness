@@ -394,11 +394,7 @@ public class purchase extends HttpServlet {
 				purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date,
 						invoice, invoice_type, amount);
 				purchaseService = new PurchaseService();
-				// System.out.println(purchase_id+ seq_no+ group_id+ user_id+
-				// supply_id+ memo+ purchase_date+ invoice+ invoice_type+
-				// amount);;
 				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
-				// System.out.println(group_id+" & "+supply_name);
 				PurchaseVO purchaseVO = new PurchaseVO();
 				purchaseVO.setMessage("驗證通過");
 				resultNameList.add(purchaseVO);
@@ -474,14 +470,8 @@ public class purchase extends HttpServlet {
 				String reqXml = sfApi.genPurchaseOrderService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-				
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);
-				
-				logger.debug(gresult);
-				
-				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
 				response.getWriter().write(gresult);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -507,17 +497,9 @@ public class purchase extends HttpServlet {
 				String reqXml =sfApi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
 				String resXml = sfApi.sendXML(reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-				
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);
-				
-				logger.debug(gresult);
-				
-				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
 				response.getWriter().write(gresult);
-				logger.debug("resXml =" + resXml);
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -982,7 +964,6 @@ public class purchase extends HttpServlet {
 				pstmt.setString(1, group_id);
 				pstmt.setString(2, supply_name);
 				rs = pstmt.executeQuery();
-				// System.out.println("supply: "+supply_name);
 				while (rs.next()) {
 					purchaseVO = new PurchaseVO();
 					purchaseVO.setPurchase_id(rs.getString("purchase_id"));
@@ -1555,9 +1536,6 @@ public class purchase extends HttpServlet {
 					
 					purchaseDetailVO = new PurchaseDetailVO();
 					
-//					System.out.println("sql="+ rs.getString("sqlStr"));
-//					
-//					logger.debug("pd_c_product_id:"+rs.getString("pd_c_product_id"));
 					purchaseDetailVO.setC_product_id(rs.getString("pd_c_product_id"));
 					purchaseDetailVO.setGroup_id(rs.getString("pd_group_id"));
 					purchaseDetailVO.setIsreturn(rs.getBoolean("pd_isreturn"));

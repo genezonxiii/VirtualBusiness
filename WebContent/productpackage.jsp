@@ -86,7 +86,7 @@
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
 						if(i<json_obj.length){
-							console.log(json_obj);
+							
 							var package_id = json_obj[i].product_id;
 
 							var input = document.createElement("INPUT");
@@ -196,17 +196,27 @@
 									},
 									error: function (xhr) { },
 									success: function (response) {
-										var $mes = $('#message #text');
-										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
-										$('#message')
-											.dialog()
-											.dialog('option', 'title', '提示訊息')
-											.dialog('option', 'width', 'auto')
-											.dialog('option', 'minHeight', 'auto')
-											.dialog("open");
+										var msg = "";
+										if (response) {
+											
+											var json_obj = $.parseJSON(response);
+											
+											if (json_obj.response) {
+												var product = json_obj.response.body.ItemResponse.items.itemList;
+												
+												$.each(product, function(key, value) {
+													var suc = "/" + (value.result == 1? "成功":"失敗");
+													var note = "/" + value.note;
+													msg += "商品料號：" + value.skuNo + suc + note + "<br/>";
+												});
+											} else if (json_obj.responseFail) {
+												msg = json_obj.responseFail.remark;
+											}										
+										}
+
+										dialogMsg("順豐商品", msg);
 									}
-								});		
-								console.log('idArr: '+ idArr);		
+								});	
 							}
 						}, {
 							text : '順豐組合商品',
@@ -244,17 +254,27 @@
 									},
 									error: function (xhr) { },
 									success: function (response) {
-										var $mes = $('#message #text');
-										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
-										$('#message')
-											.dialog()
-											.dialog('option', 'title', '提示訊息')
-											.dialog('option', 'width', 'auto')
-											.dialog('option', 'minHeight', 'auto')
-											.dialog("open");
+										var msg = "";
+										if (response) {
+											
+											var json_obj = $.parseJSON(response);
+											
+											if (json_obj.response) {
+												var bom = json_obj.response.body.bomResponse.boms.bomList;
+												
+												$.each(bom, function(key, value) {
+													var suc = "/" + (value.result == 1? "成功":"失敗");
+													var note = "/" + value.note;
+													msg += "商品料號：" + value.skuNo + suc + note + "<br/>";
+												});
+											} else if (json_obj.responseFail) {
+												msg = json_obj.responseFail.remark;
+											}										
+										}
+										
+										dialogMsg("順豐組合商品", msg);
 									}
-								});		
-								console.log('idArr: '+ idArr);		
+								});
 							}
 						}, {
 							text : '順豐商品查詢',
@@ -277,10 +297,11 @@
 								}
 								
 								$checkboxs.each(function() {
-									idArr += this.id + '~';
+									var row = jQuery(this).closest('tr');
+									var c_product_id = $(row["0"].cells.c_package_id)["0"].textContent;
+									idArr += c_product_id + '~';
 								});
 								idArr = idArr.slice(0,-1);
-				
 								
 								$.ajax({
 									url: 'productpackage.do', 
@@ -291,17 +312,44 @@
 									},
 									error: function (xhr) { },
 									success: function (response) {
-										var $mes = $('#message #text');
-										$mes.val('').html('成功發送<br><br>執行結果為: '+response);
-										$('#message')
-											.dialog()
-											.dialog('option', 'title', '提示訊息')
-											.dialog('option', 'width', 'auto')
-											.dialog('option', 'minHeight', 'auto')
-											.dialog("open");
+										var msg = "";
+										if (response) {
+											
+											var json_obj = $.parseJSON(response);
+											
+											if (json_obj.response) {
+												var product = json_obj.response.body.ItemResponse.items.itemList;
+												
+												$.each(product, function(key, value) {
+													
+													var barcode = "";
+													var itemName = "";
+													var qtymin = "";
+													
+													if (value.itemName) {
+														itemName = "/" + value.itemName;
+													}
+													if (value.barCode) {
+														barcode = "/" + value.barCode.barCode1;
+													}
+													if (value.qtymin) {
+														qtymin = "/安全庫存量：" + value.qtymin;
+													}
+													if (value.bomAction) {
+														bomAction = "/組合商品：" + value.bomAction;
+													}
+													
+													msg += "商品料號：" + value.skuNo + itemName + 
+														barcode + qtymin + bomAction + "<br/>";
+												});
+											} else if (json_obj.responseFail) {
+												msg = json_obj.responseFail.remark;
+											}										
+										}
+
+										dialogMsg("順豐商品查詢", msg);
 									}
-								});		
-								console.log('idArr: '+ idArr);		
+								});
 							}
 						}
 						]});

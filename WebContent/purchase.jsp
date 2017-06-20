@@ -63,7 +63,7 @@ function draw_purchase(parameter){
 		url : "purchase.do",
 		data : parameter,
 		success : function(result) {
-			console.log(result);
+
 				var json_obj = $.parseJSON(result);
 				var len=json_obj.length;
 				//判斷查詢結果
@@ -208,37 +208,26 @@ function draw_purchase(parameter){
 									success: function (response) {
 										var msg = "";
 										if (response) {
-											console.log(response);
+											
 											var json_obj = $.parseJSON(response);
-											console.log(json_obj);
+											
 											if (json_obj.response) {
-												console.log("response");
-												console.log(json_obj.response);
+												
 												var purchase = json_obj.response.body.purchaseOrderResponse.purchaseOrders.purchaseOrder;
-												console.log(purchase);
+												
 												$.each(purchase, function(key, value) {
 													var suc = value.result == 1? "/" + "入庫單號：" + value.receiptId:"/" + "失敗";
 													var note = value.result == 1? "": "/" + value.note;
 													msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
 												});
 											} else if (json_obj.responseFail) {
-												console.log("fail");
-												console.log(json_obj.responseFail);
 												msg = json_obj.responseFail.remark;
 											}										
 										}
 										
-										var $mes = $('#message #text');
-										$mes.val('').html(msg);
-										$('#message')
-											.dialog()
-											.dialog('option', 'title', '提示訊息')
-											.dialog('option', 'width', 'auto')
-											.dialog('option', 'minHeight', 'auto')
-											.dialog("open");
+										dialogMsg("順豐入庫", msg);
 									}
-								});		
-								console.log('idArr: '+ idArr);		
+								});
 							}
 						},{
 							text : '順豐入庫取消',
@@ -276,11 +265,11 @@ function draw_purchase(parameter){
 									success: function (response) {
 										var msg = "";
 										if (response) {
-											console.log(response);
+											
 											var json_obj = $.parseJSON(response);
-											console.log(json_obj);
+											
 											if (json_obj.response) {
-												console.log(json_obj.response);
+												
 												var purchase = json_obj.response.body.cancelPurchaseOrderResponse.purchaseOrders.purchaseOrder;
 												$.each(purchase, function(key, value) {
 													var suc = "/" + (value.result == 1? "成功":"失敗");
@@ -288,23 +277,13 @@ function draw_purchase(parameter){
 													msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
 												});
 											} else if (json_obj.responseFail) {
-												console.log("fail");
-												console.log(json_obj.responseFail);
 												msg = json_obj.responseFail.remark;
 											}
 										}
 										
-										var $mes = $('#message #text');
-										$mes.val('').html(msg);
-										$('#message')
-											.dialog()
-											.dialog('option', 'title', '提示訊息')
-											.dialog('option', 'width', 'auto')
-											.dialog('option', 'minHeight', 'auto')
-											.dialog("open");
+										dialogMsg("順豐入庫取消", msg);
 									}
-								});		
-								console.log('idArr: '+ idArr);		
+								});
 							}
 						},{
 							text : '順豐入庫明細查詢',
@@ -362,23 +341,13 @@ function draw_purchase(parameter){
 														value.header.status + "<br/>" + tmp_item_list + "<br/>";
 												});
 											} else if (json_obj.responseFail) {
-												console.log("fail");
-												console.log(json_obj.responseFail);
 												msg = json_obj.responseFail.remark;
 											}
 										}
 										
-										var $mes = $('#message #text');
-										$mes.val('').html(msg);
-										$('#message')
-											.dialog()
-											.dialog('option', 'title', '提示訊息')
-											.dialog('option', 'width', 'auto')
-											.dialog('option', 'minHeight', 'auto')
-											.dialog("open");
+										dialogMsg("順豐入庫明細查詢", msg);
 									}
-								});		
-								console.log('idArr: '+ idArr);		
+								});
 							}
 									}
 						   		],
@@ -1166,7 +1135,7 @@ function draw_purchase_detail(parameter){
                         identity : "ID"
                     },
                     success: function(data) {
-                    	console.log(data);
+                    	
                     	var json_obj = $.parseJSON(data);
                     	response($.map(json_obj, function (item) {
                             return {

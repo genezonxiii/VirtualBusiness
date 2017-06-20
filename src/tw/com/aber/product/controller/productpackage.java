@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
@@ -175,10 +176,9 @@ public class productpackage extends HttpServlet {
 			String reqXml = sfApi.genBomService(packageVOList, valueService);
 			String resXml = sfApi.sendXML(reqXml);
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-
-			logger.debug("執行結果: " + result);
-			response.getWriter().write(result);
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			String gresult = gson.toJson(responseUtil);
+			response.getWriter().write(gresult);
 		} else if ("sendItemService".equals(action)) {
 			String packageIds = request.getParameter("package_ids");
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
@@ -189,9 +189,9 @@ public class productpackage extends HttpServlet {
 			String reqXml = sfApi.genItemServiceForPackage(packageVOList, valueService);
 			String resXml = sfApi.sendXML(reqXml);
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-			logger.debug("執行結果: " + result);
-			response.getWriter().write(result);
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			String gresult = gson.toJson(responseUtil);
+			response.getWriter().write(gresult);
 		}else if ("get_data_by_c_productc_id".equals(action)) {
 			try {
 				String c_product_ids = request.getParameter("c_product_ids");
@@ -202,14 +202,12 @@ public class productpackage extends HttpServlet {
 				ValueService valueService = util.getValueService(request, response);
 				String reqXml = sfApi.genItemQueryService(arr_c_product_id, valueService);
 				String resXml = sfApi.sendXML(reqXml);
-
-				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-				String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
-				response.getWriter().write(result);
+				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);				
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				String gresult = gson.toJson(responseUtil);
+				response.getWriter().write(gresult);
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
+				logger.error(e.getMessage());
 			}
 
 		}
@@ -362,9 +360,9 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(1, package_id);
 				pstmt.executeQuery();
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return;
 		}
@@ -384,9 +382,9 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(5, package_desc);
 				pstmt.executeQuery();
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return;
 		}
@@ -404,9 +402,9 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(4, package_desc);
 				pstmt.executeQuery();
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return;
 		}
@@ -434,32 +432,22 @@ public class productpackage extends HttpServlet {
 				while (rs.next()) {
 					packages[i] = new ProductVO();
 					packages[i].product_id = rs.getString("product_id");
-					// packages[i].group_id = rs.getString("group_id");
 					packages[i].c_product_id = rs.getString("c_product_id");
 					packages[i].product_name = rs.getString("product_name");
-					// packages[i].supply_id = rs.getString("supply_id");
-					// packages[i].supply_name = rs.getString("supply_name");
-					// packages[i].type_id = rs.getString("type_id");
-					// packages[i].unit_id = rs.getString("unit_id");
-					// packages[i].cost = rs.getString("cost");
 					packages[i].price = rs.getString("price");
-					// packages[i].keep_stock = rs.getString("keep_stock");
 					packages[i].photo = rs.getString("photo");
 					packages[i].photo1 = rs.getString("photo1");
-					// packages[i].description = rs.getString("description");
-					// packages[i].barcode = rs.getString("barcode");
-					// packages[i].ispackage = rs.getString("package");
-
 					packages[i].package_id = rs.getString("package_id");
 					packages[i].parent_id = rs.getString("parent_id");
 					packages[i].quantity = rs.getString("quantity");
 					packages[i].package_desc = rs.getString("package_desc");
+					
 					i++;
 				}
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return packages;
 		}
@@ -476,18 +464,10 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(1, package_id);
 
 				pstmt.executeQuery();
-				//
-				// con = null;
-				// pstmt = null;
-				// con = DriverManager.getConnection(dbURL, dbUserName,
-				// dbPassword);
-				// pstmt = con.prepareStatement(sp_delete_package2);
-				// pstmt.setString(1, package_id);
-				// pstmt.executeQuery();
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return;
 		}
@@ -510,9 +490,9 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(7, description);
 				pstmt.executeQuery();
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return;
 		}
@@ -534,11 +514,11 @@ public class productpackage extends HttpServlet {
 				pstmt.setString(7, description);
 				pstmt.executeQuery();
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			} catch (Exception e) {
-				System.out.println(e.toString());
+				logger.error(e.toString());
 			}
 			return;
 		}
@@ -578,9 +558,9 @@ public class productpackage extends HttpServlet {
 					i++;
 				}
 			} catch (SQLException se) {
-				System.out.println("ERROR WITH: " + se);
+				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("A database error occured. " + cnfe.getMessage());
 			}
 			return packages;
 		}

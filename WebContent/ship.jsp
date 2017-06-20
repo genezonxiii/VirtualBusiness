@@ -115,7 +115,7 @@
 			var errorMes = '';
 			var $mes = $('#message #text');
 			var $orderNo = $('#form_no input[name=order_no]').val();
-			console.log($.trim($orderNo).length);
+			
 			if($.trim($orderNo).length == 0){
 				errorMes += "請輸入訂單編號!";
 			}
@@ -134,7 +134,7 @@
 				action : "searchByOrderNo",
 				orderNo : $orderNo
 			};
-			console.log(parameter);
+			
 			drawMasterTable(parameter);
 		});		
 		$('#form_date').on("click", "button", function(e) {
@@ -176,7 +176,7 @@
 				startDate : $startDate,
 				endDate : $endDate
 			};
-			console.log(parameter);
+			
 			drawMasterTable(parameter);
 		});
 	    $('#dt_master_ship').on('change', ':checkbox', function() {
@@ -350,8 +350,6 @@
 
 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 
-		                console.log($checkboxs);
-
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
 		                    return false;
@@ -377,37 +375,26 @@
 		                    success: function(response) {
 								var msg = "";
 								if (response) {
-									console.log(response);
+									
 									var json_obj = $.parseJSON(response);
-									console.log(json_obj);
+									
 									if (json_obj.response) {
-										console.log("response");
-										console.log(json_obj.response);
+										
 										var sale = json_obj.response.body.saleOrderResponse.saleOrders.saleOrder;
-										console.log(sale);
+										
 										$.each(sale, function(key, value) {
 											var suc = value.result == 1? "/" + "出庫單號：" + value.shipmentId:"/" + "失敗";
 											var note = value.result == 1? "": "/" + value.note;
 											msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
 										});
 									} else if (json_obj.responseFail) {
-										console.log("fail");
-										console.log(json_obj.responseFail);
 										msg = json_obj.responseFail.remark;
 									}										
 								}
 
-								var $mes = $('#message #text');
-		                        $mes.val('').html(msg);
-		                        $('#message')
-		                            .dialog()
-		                            .dialog('option', 'title', '提示訊息')
-		                            .dialog('option', 'width', 'auto')
-		                            .dialog('option', 'minHeight', 'auto')
-		                            .dialog("open");
+								dialogMsg("順豐出庫", msg);
 		                    }
 		                });
-		                console.log(noArr);
 		            }
 		        }, {
 		            text: '順豐出庫取消',
@@ -418,8 +405,6 @@
 		                var noArr = '';
 
 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-		                console.log($checkboxs);
 
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
@@ -444,37 +429,26 @@
 		                    success: function(response) {
 								var msg = "";
 								if (response) {
-									console.log(response);
+									
 									var json_obj = $.parseJSON(response);
-									console.log(json_obj);
+									
 									if (json_obj.response) {
-										console.log("response");
-										console.log(json_obj.response);
+										
 										var sale = json_obj.response.body.cancelSaleOrderResponse.saleOrders.saleOrder;
-										console.log(sale);
+										
 										$.each(sale, function(key, value) {
 											var suc = "/" + (value.result == 1? "成功":"失敗");
 											var note = "/" + value.note;
 											msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
 										});
 									} else if (json_obj.responseFail) {
-										console.log("fail");
-										console.log(json_obj.responseFail);
 										msg = json_obj.responseFail.remark;
 									}										
 								}
 
-								var $mes = $('#message #text');
-		                        $mes.val('').html(msg);
-		                        $('#message')
-		                            .dialog()
-		                            .dialog('option', 'title', '提示訊息')
-		                            .dialog('option', 'width', 'auto')
-		                            .dialog('option', 'minHeight', 'auto')
-		                            .dialog("open");
+								dialogMsg("順豐出庫取消", msg);
 		                    }
 		                });
-		                console.log(noArr);
 		            }
 		        },{
 		            text: '順豐出庫明細查詢',
@@ -485,9 +459,7 @@
 		                var noArr = '';
 
 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-		                console.log($checkboxs);
-
+		                
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
 		                    return false;
@@ -513,14 +485,13 @@
 		                    success: function(response) {
 								var msg = "";
 								if (response) {
-									console.log(response);
+									
 									var json_obj = $.parseJSON(response);
-									console.log(json_obj);
+									
 									if (json_obj.response) {
-										console.log("response");
-										console.log(json_obj.response);
+
 										var sale = json_obj.response.body.saleOrderOutboundDetailResponse.saleOrders.saleOrder;
-										console.log(sale);
+										
 										$.each(sale, function(key, value) {
 											var suc = value.result == 1? "/" + "出庫單號：" + value.header.shipmentId:"/" + "失敗";
 											var note = value.result == 1? "": "/" + value.note;
@@ -545,23 +516,13 @@
 											
 										});
 									} else if (json_obj.responseFail) {
-										console.log("fail");
-										console.log(json_obj.responseFail);
 										msg = json_obj.responseFail.remark;
 									}										
 								}
 
-		                        var $mes = $('#message #text');
-		                        $mes.val('').html(msg);
-		                        $('#message')
-		                            .dialog()
-		                            .dialog('option', 'title', '提示訊息')
-		                            .dialog('option', 'width', 'auto')
-		                            .dialog('option', 'minHeight', 'auto')
-		                            .dialog("open");
+								dialogMsg("順豐出庫明細查詢", msg);
 		                    }
 		                });
-		                console.log(noArr);
 		            }
 		        }
 
