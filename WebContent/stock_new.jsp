@@ -35,8 +35,9 @@
 						<div class="form-wrap">
 							<div class="form-row">
 								<form id = "form_no">
-									<label for=""> <span class="block-label">供應商名稱查詢</span> <input
-										type="text" name="supply_name">
+									<label for=""> 
+										<span class="block-label">供應商名稱查詢</span> 
+										<input type="text" name="supply_name">
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
 								</form>
@@ -97,6 +98,52 @@
 	</script>
 	<script type="text/javascript">
 	$(function(){
+		
+		$("input[name=supply_name]").autocomplete({
+            minLength: 0,
+            source: function (request, response) {
+            	console.log(request);
+                $.ajax({
+                    url : "purchase.do",
+                    type : "POST",
+                    cache : false,
+                    delay : 1500,
+                    data : {
+                    	action : "search_supply_name",
+                        term : request.term
+                    },
+                    success: function(data) {
+                    	var json_obj = $.parseJSON(data);
+                    	response($.map(json_obj, function (item) {
+                            return {
+                              label: item.supply_name,
+                              value: item.supply_name,
+                              supply_id: item.supply_id
+                            }
+                        }))
+                    }
+                });
+            },
+            change: function(event, ui) {
+    	        var source = $(this).val();
+   	            var temp = $(".ui-autocomplete li")
+   	            	.map(function () { 
+   	            		return $(this).text()
+					})
+   	            	.get();
+    	        var found = $.inArray(source, temp);
+    	
+    	        if(found < 0) {
+    	        	$("input[name=supply_name]").attr("supply_error", $(this).val());
+    	            $(this).val('');
+    	            $(this).attr("placeholder","輸入正確的供應商名稱!");
+    	            setTimeout(function(){
+    	            	$("input[name=supply_name]").attr("supply_error","");
+   	            	}, 200);
+    	        }
+    	    }     
+        });
+		
 		$('#form_no').on("click", "button", function(e) {
 			e.preventDefault();
 			
