@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "warehouseCode", "erpOrder", "shipmentId", "receiptId", 
 		"erpOrderType", "closeDate", "status", "skuNo", "inventoryStatus", 
+		"lot", "expirationDate", 
 		"totalQty", "onHandQty", "availableQty", "inTransitQty",
 		"carrier", "carrierProduct", "isSplit", "dataStatus" })
 public class Header {
@@ -33,6 +34,10 @@ public class Header {
 	private String skuNo;
 	@XmlElement(name = "InventoryStatus")
 	private String inventoryStatus;
+	@XmlElement(name = "Lot")
+	private String lot;
+	@XmlElement(name = "ExpirationDate")
+	private String expirationDate;
 	@XmlElement(name = "TotalQty")
 	private String totalQty;
 	@XmlElement(name = "OnHandQty")
@@ -231,6 +236,22 @@ public class Header {
 
 	public void setIsSplit(String isSplit) {
 		this.isSplit = isSplit;
+	}
+
+	public String getLot() {
+		return lot;
+	}
+
+	public void setLot(String lot) {
+		this.lot = lot;
+	}
+
+	public String getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(String expirationDate) {
+		this.expirationDate = expirationDate;
 	}
 
 }

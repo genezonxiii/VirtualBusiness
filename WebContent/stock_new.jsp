@@ -327,17 +327,51 @@
 						},
 						error: function (xhr) { },
 						success: function (response) {
-							var $mes = $('#message #text');
-							$mes.val('').html('成功發送<br><br>執行結果為: '+response);
-							$('#message')
-								.dialog()
-								.dialog('option', 'title', '提示訊息')
-								.dialog('option', 'width', 'auto')
-								.dialog('option', 'minHeight', 'auto')
-								.dialog("open");
+							var msg = "";
+							if (response) {
+								console.log(response);
+								var json_obj = $.parseJSON(response);
+								console.log(json_obj);
+								if (json_obj.response) {
+									
+									var rtInvList = json_obj.response.body.rtInventoryQueryResponse.rtInventorys.rtiList;
+									
+									$.each(rtInvList, function(key, value) {
+										var skuNo = "", lot = "", expire = "";
+										var availableQty = "", totalQty = "";
+										var onHandQty = "", inTransitQty = "";
+										
+										if (value.header) {
+											skuNo = "商品料號：" + value.header.skuNo;
+											availableQty = "/總庫存量：" + value.header.availableQty;
+											totalQty = "/可用量：" + value.header.totalQty;
+											onHandQty = "/在庫量：" + value.header.onHandQty;
+											inTransitQty = "/在途量：" + value.header.inTransitQty;
+											if (value.header.expirationDate) {
+												expire = "/效期：" + value.header.availableQty;
+											}
+											if (value.header.lot) {
+												lot = "/批號：" + value.header.lot;
+											}
+										}
+										
+										if (value.result == 1) {
+											msg += skuNo + 
+												availableQty + totalQty + 
+												onHandQty + inTransitQty + 
+												lot + expire + "<br/>";
+										} else {
+											msg += "商品料號：" + value.header.skuNo + "<br/>";
+										}
+									});
+								} else if (json_obj.responseFail) {
+									msg = json_obj.responseFail.remark;
+								}										
+							}
+
+							dialogMsg("順豐庫存查詢", msg);
 						}
-					});		
-					console.log(noArr);				
+					});
 				}
 			}
 			]

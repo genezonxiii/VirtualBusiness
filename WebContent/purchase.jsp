@@ -325,17 +325,20 @@ function draw_purchase(parameter){
 											if (json_obj.response) {
 												var purchase = json_obj.response.body.purchaseOrderInboundResponse.purchaseOrders.purchaseOrder;
 												$.each(purchase, function(key, value) {
-													
+													console.log(value);
 													var tmp_item_list = "";
 													$.each(value.items.itemList, function(item_key, item_value){
-														var qty = "";
+														var qty = "", expirationDate = "";
 														if (item_value.planQty) {
 															qty += "/入庫數量:" + item_value.planQty;
 														}
 														if (item_value.actualQty) {
 															qty += "/實收數量:" + item_value.actualQty;
 														}
-														tmp_item_list += item_value.skuNo + qty + "<br/>";
+														if (item_value.expirationDate) {
+															expirationDate += "/效期:" + item_value.expirationDate;
+														}
+														tmp_item_list += item_value.skuNo + qty + expirationDate + "<br/>";
 													});
 													msg += "採購單號：" + value.erpOrder + "/" + value.header.receiptId + "/" + 
 														value.header.status + "<br/>" + tmp_item_list + "<br/>";

@@ -79,11 +79,8 @@ public class StockNew extends HttpServlet {
 
 			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			responseStr = gson.toJson(stockNewList);
-
 			response.getWriter().write(responseStr);
-
 			logger.debug(responseStr);
-
 		}
 
 		if ("rtInventoryQueryService".equals(action)) {
@@ -104,9 +101,9 @@ public class StockNew extends HttpServlet {
 			String reqXml = sfApi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
 			String resXml = sfApi.sendXML(reqXml);
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-			String result = sfApi.isTelegraph(responseUtil) ? "成功" : "失敗";
-			logger.debug("執行結果: " + result);
-			response.getWriter().write(result);
+			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			String gresult = gson.toJson(responseUtil);
+			response.getWriter().write(gresult);
 		}
 
 	}
