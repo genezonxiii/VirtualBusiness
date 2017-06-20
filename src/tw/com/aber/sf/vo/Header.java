@@ -173,15 +173,27 @@ public class Header {
 		dataStatus = dataStatus == null? "":dataStatus;
 		switch (dataStatus) {
 			case "1100": 
+				/* 生效
+				 * 您的订单已接收
+				 */
 				result = "生效";
 				break;
 			case "1400": 
+				/* 已取消
+				 * 您的订单已取消
+				 */
 				result = "已取消";
 				break;
 			case "1600": 
+				/* 待确认
+				 * 您的订单己提交、正在等待系统确认
+				 */
 				result = "待審核";
 				break;
 			case "1700": 
+				/* 已确认
+				 * 您的订单己确认
+				 */
 				result = "已審核";
 				break;
 			case "1800": 
@@ -191,21 +203,36 @@ public class Header {
 				result = "下發失敗";
 				break;
 			case "2000": 
+				/* 已下发
+				 * 您的订单已经进入仓库准备出库
+				 */
 				result = "已下發";
 				break;
 			case "2300": 
+				/* 等待工作
+				 * 您的订单正准备拣货
+				 */
 				result = "等待工作";
 				break;
 			case "2400": 
 				result = "揀貨完成";
 				break;
 			case "2700": 
+				/* 包装完成
+				 * 您的订单己打包完毕
+				 */
 				result = "包裝完成";
 				break;
 			case "2900": 
+				/* 发货确认
+				 * 您的订单己出库，正发往分拣中心
+				 */
 				result = "發貨確認";
 				break;
 			case "3900": 
+				/* 已完成
+				 * 您的订单已完成
+				 */
 				result = "訂單已完成";
 				break;
 			default:
