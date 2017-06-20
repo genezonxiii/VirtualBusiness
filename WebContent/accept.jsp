@@ -204,6 +204,7 @@ input[type="number"] {
 	    $("#detail-table_wrapper").hide();
 	    $("#detail-table").hide();
 	    
+	    //修改事件
 	    $("#detail-table").on("click", ".btn_update", function(e) {
 	        e.preventDefault();
 	        var row = $(this).closest("tr");
@@ -239,13 +240,13 @@ input[type="number"] {
 	                        $("#dialog_v_warehouse_name").append("<option value='" + item.warehouse_name + "'>" + item.warehouse_name + "</option>");
 	                    }
 	                });
-
-	                $.map(json_obj.locationVOList, function(item) {
-	                    if (item.location_code != '' && ('undefined' != typeof(item.location_code))) {
-	                        $("#dialog_v_location_code").append("<option value='" + item.location_id + "'>" + item.location_code + "</option>");
-	                    }
-	                });
-
+					if(json_obj.v_location_code!='' && ('undefined' != typeof(json_obj.v_location_code))){
+		                $.map(json_obj.locationVOList, function(item) {
+		                    if (item.location_code != '' && ('undefined' != typeof(item.location_code))) {
+		                        $("#dialog_v_location_code").append("<option value='" + item.location_id + "'>" + item.location_code + "</option>");
+		                    }
+		                });
+					}
 	                console.log("data:" + data);
 	                //放置dialog value
 	                $("#dialog_c_product_id").val(json_obj.c_product_id);
@@ -481,19 +482,7 @@ input[type="number"] {
 	                        .append(
 	                            $("<div/>", {
 	                                "class": "table-function-list"
-	                            })
-	                            .append(
-	                                $("<button/>", {
-	                                    "id": row.seq_no,
-	                                    "value": row.accept_id,
-	                                    "name": row.purchase_id,
-	                                    "class": "btn-in-table btn-alert",
-	                                    "title": "刪除"
-	                                })
-	                                .append($("<i/>", {
-	                                    "class": "fa fa-trash"
-	                                }))
-	                            )
+	                            }) 
 	                            .append(
 	                                $("<button/>", {
 	                                    "id": row.seq_no,
@@ -505,6 +494,18 @@ input[type="number"] {
 	                                .append($("<i/>", {
 	                                    "class": "fa fa-pencil-square-o"
 	                                }))
+	                                .append(
+	                                $("<button/>", {
+	                                    "id": row.seq_no,
+	                                    "value": row.accept_id,
+	                                    "name": row.purchase_id,
+	                                    "class": "btn-in-table btn-alert",
+	                                    "title": "刪除"
+	                                })
+	                                .append($("<i/>", {
+	                                    "class": "fa fa-trash"
+	                                }))
+	                            )
 	                            )
 
 	                        )
@@ -533,6 +534,54 @@ input[type="number"] {
 	                        $(this).closest("tr").addClass("selected");
 	                    });
 	            }
+	        },{
+	            text: '轉庫存',
+	            action: function(e, dt, node, config) {
+					var $table =  $('#dt_master');
+
+					var cells = $dtMaster.cells().nodes();
+
+					var idArr = '';
+					
+					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+					
+					if($checkboxs.length == 0){
+						alert('請至少選擇一筆資料');
+						return false;
+					}
+					if($checkboxs.length > 20){
+						alert('最多選擇二十筆資料');
+						return false;
+					}
+					
+					$checkboxs.each(function() {
+						idArr += this.id + ',';
+					});
+					idArr = idArr.slice(0,-1);
+					idArr = idArr.replace(/,/g,"','");
+					idArr = "'" + idArr + "'";
+					
+					$.ajax({
+						url: 'Accept.do', 
+						type: 'post',
+						data: {
+							action: 'importDataToStock',
+							accept_ids: idArr
+						},
+						error: function (xhr) { },
+						success: function (response) {
+							var $mes = $('#message #text');
+							$mes.val('').html('成功發送<br><br>執行結果為: '+response);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '提示訊息')
+								.dialog('option', 'width', 'auto')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}
+					});		
+					console.log('idArr: '+ idArr);		
+				}
 	        }]
 	    });
 	};
