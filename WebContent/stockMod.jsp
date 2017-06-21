@@ -76,6 +76,11 @@
 				<div id="text"></div>
 			</div>
 			<input type="hidden" id="hidStockModId" value="">
+			<input type="hidden" id="hidBackType" 	value="">
+			<input type="hidden" id="hidBackSDate" 	value="">
+			<input type="hidden" id="hidBackEDate" 	value="">
+			<input type="hidden" id="hidBackNO" 	value="">
+			
 		</div>
 	</div>
 	<jsp:include page="template/common_js.jsp" flush="true" />
@@ -193,6 +198,10 @@
 				
 				initDetailDT();
 				
+				//給明細的回主表按鈕用
+				$("#hidBackType").val("NO");
+				$("#hidBackNO").val($('#form_no input').val());
+			
 				var parameter = {
 					action : "searchByNo",
 					stockmodNo : $('#form_no input').val()
@@ -233,6 +242,13 @@
 						.dialog("open");
 					return false;
 				}
+				
+				//給明細的回主表按鈕用
+				$("#hidBackType").val('Date');
+				$("#hidBackSDate").val(startDate);
+				$("#hidBackEDate").val(endDate);
+
+				
 				var parameter = {
 					action : "searchByDate",
 					startDate : $('#form_date input:eq(0)').val(),
@@ -298,6 +314,8 @@
 				e.preventDefault();
 
 				initMasterDT();
+				
+				console.log("masterDT:"+masterDT);
 				
 				var row = $(this).closest("tr");
 			    var data = masterDT.row(row).data();
@@ -402,7 +420,7 @@
 				resizable : false,
 				autoOpen : false,
 				modal : true,
-				width : oWidth,
+				width : 'auto',
 				buttons : [ {
 					text : btnTxt_1,
 					click : function(e) {
@@ -753,9 +771,10 @@
 		function drawDetailTable(parameter) {
 
 			detailDT = $("#stockmod-detail-table").DataTable({
-				dom : "frB<t>ip",
+				dom : "Blfr<t>ip",
 				scrollY : "290px",
 				width : 'auto',
+				lengthChange: false,
 				scrollCollapse : true,
 				destroy : true,
 				pageLength: 20,
@@ -925,6 +944,31 @@
 							.dialog("option","title",btnTxt_1)
 							.dialog('open');
 					}
+				}, {
+					text : '回主表',
+					action : function(e, dt, node, config) {
+						var backType= $("#hidBackType").val();
+						if(backType=="Date"){
+							initDetailDT();
+							
+							var parameter = {
+									action : "searchByDate",
+									startDate : $('#hidBackSDate').val(),
+									endDate : $('#hidBackEDate').val()
+								};
+								drawMasterTable(parameter);
+						}else if(backType=="NO"){
+							initDetailDT();
+							
+							var parameter = {
+								action : "searchByNo",
+								stockmodNo : $('#hidBackNO').val()
+							};
+							drawMasterTable(parameter);
+							
+						}
+						
+					}
 				} ]
 			});
 		};		
@@ -962,17 +1006,28 @@
 			$(dialog).append($('<tr></tr>').val('').html(message));
 
 		}
+		
+
+		
 		function initMasterDT(){
-			if(masterDT != null){
-				masterDT.destroy();
-				$('#stockmod-master-table').empty();
-			}
+			$("#stockmod-detail-table").show();
+			$("#stockmod-detail-table_wrapper").show();
+			
+			$("#stockmod-master-table").hide();
+			$("#stockmod-master-table_wrapper").hide();
+			
+			console.log("initMasterDT");
+
 		}
 		function initDetailDT(){
-			if(detailDT != null){
-				detailDT.destroy();
-				$('#stockmod-detail-table').empty();
-			}
+			$("#stockmod-master-table").show();
+			$("#stockmod-master-table_wrapper").show();
+			
+			$("#stockmod-detail-table").hide();
+			$("#stockmod-detail-table_wrapper").hide();
+			
+			console.log("initDetailDT");
+
 		}
 	</script>
 </body>

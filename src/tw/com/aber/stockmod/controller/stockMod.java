@@ -74,6 +74,8 @@ public class stockMod extends HttpServlet {
 					stockModVO.setStockmod_no(stockmodNo);
 					master_rows = stockModService.getSearchAllDB(stockModVO);
 				} else {
+					stockModVO.setStockmod_no(stockmodNo);
+
 					master_rows = stockModService.getSearchDB(stockModVO);
 				}
 
