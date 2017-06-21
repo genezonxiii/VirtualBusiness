@@ -1,4 +1,4 @@
-package tw.com.aber.invoice.vo;
+package tw.com.aber.inv.vo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

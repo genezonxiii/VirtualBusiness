@@ -1,4 +1,4 @@
-package tw.com.aber.invoice.vo;
+package tw.com.aber.inv.vo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,102 +8,162 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "INDEX")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "functionCode", "reply", "message", "verionUpdate", "sellerId", "posId", "posSn", "appVserion",
-		"sysTime", "userId", "taxMonth", "invoiceHeader", "invoiceStart", "invoiceEnd", "invoiceNumber", "security",
-		"sellDetail", "ckeckSum" })
+@XmlType(propOrder = { "invoiceCode", "functionCode", "reply", "errorCode", "message", "verionUpdate", "sellerId",
+		"posId", "posSn", "appVserion", "sysTime", "userId", "taxMonth", "invoiceHeader", "invoiceStart", "invoiceEnd",
+		"invoiceNumber", "invoiceDate", "security", "sellDetail", "ckeckSum" })
 
 public class Index {
 	private static final long serialVersionUID = 1L;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、B01
 	 */
 	@XmlElement(name = "FUNCTIONCODE")
 	private String functionCode;
+
 	/*
-	 * A01
+	 * A03
+	 */
+	@XmlElement(name = "INVOICE_CODE")
+	private String invoiceCode;
+
+	/*
+	 * A01、C0401、C0501、A03、B01
 	 */
 	@XmlElement(name = "SELLERID")
 	private String sellerId;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、A03、B01
 	 */
 	@XmlElement(name = "POSID")
 	private String posId;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、A03、B01
 	 */
 	@XmlElement(name = "POSSN")
 	private String posSn;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "APPVSERION")
 	private String appVserion;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、A03、B01
 	 */
 	@XmlElement(name = "SYSTIME")
 	private String sysTime;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "USERID")
 	private String userId;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "TAXMONTH")
 	private String taxMonth;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "INVOICEHEADER")
 	private String invoiceHeader;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "INVOICESTART")
 	private String invoiceStart;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "INVOICEEND")
 	private String invoiceEnd;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、B01
 	 */
-	@XmlElement(name = "INVOICENMBER")
-	private String invoiceNmber;
+	@XmlElement(name = "INVOICENUMBER")
+	private String invoiceNumber;
+
 	/*
-	 * A01
+	 * C0401、C0501
+	 */
+	@XmlElement(name = "INVOICEDATE")
+	private String invoiceDate;
+
+	/*
+	 * A01、B01
 	 */
 	@XmlElement(name = "SECURITY")
 	private String security;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "SELLDETAIL")
 	private String sellDetail;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "CKECKSUM")
 	private String ckeckSum;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、A03、B01
 	 */
 	@XmlElement(name = "REPLY")
 	private String reply;
+
 	/*
-	 * A01
+	 * A01、C0401、C0501、A03、B01
 	 */
 	@XmlElement(name = "MESSAGE")
 	private String message;
+
 	/*
-	 * A01
+	 * A01、B01
 	 */
 	@XmlElement(name = "VERIONUPDATE")
 	private String verionUpdate;
+
+	/*
+	 * C0401、C0501
+	 */
+	@XmlElement(name = "ERROR_CODE")
+	private String errorCode;
+
+	public String getInvoiceCode() {
+		return invoiceCode;
+	}
+
+	public void setInvoiceCode(String invoiceCode) {
+		this.invoiceCode = invoiceCode;
+	}
+
+	public String getInvoiceDate() {
+		return invoiceDate;
+	}
+
+	public void setInvoiceDate(String invoiceDate) {
+		this.invoiceDate = invoiceDate;
+	}
+
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
 
 	public String getFunctionCode() {
 		return functionCode;
@@ -185,12 +245,12 @@ public class Index {
 		this.invoiceEnd = invoiceEnd;
 	}
 
-	public String getInvoiceNmber() {
-		return invoiceNmber;
+	public String getInvoiceNumber() {
+		return invoiceNumber;
 	}
 
-	public void setInvoiceNmber(String invoiceNmber) {
-		this.invoiceNmber = invoiceNmber;
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 
 	public String getReply() {
