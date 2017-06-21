@@ -17,7 +17,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,18 +24,13 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tw.com.aber.sf.vo.Response;
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
-import tw.com.aber.ship.controller.ship;
-import tw.com.aber.ship.controller.ship.ShipService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.PurchaseDetailVO;
 import tw.com.aber.vo.PurchaseVO;
-import tw.com.aber.vo.ShipDetail;
-import tw.com.aber.vo.ShipVO;
 import tw.com.aber.vo.SupplyVO;
 
 public class purchase extends HttpServlet {
@@ -81,7 +75,6 @@ public class purchase extends HttpServlet {
 				// Handle any driver errors
 			} catch (Exception e) {
 				System.out.println(e.toString());
-				
 			}
 		}
 
@@ -234,12 +227,12 @@ public class purchase extends HttpServlet {
 				 ***************************************/
 				String purchase_id = request.getParameter("purchase_id");
 				/***************************
-				 * 2.開始刪除資料
+				 *2.開始刪除資料
 				 ***************************************/
 				purchaseService = new PurchaseService();
 				purchaseService.deletePurchase(purchase_id, user_id);
 				/***************************
-				 * 3.刪除完成,準備轉交(Send the Success view)
+				 *3.刪除完成,準備轉交(Send the Success view)
 				 ***********/
 				purchaseService = new PurchaseService();
 				List<PurchaseVO> salelist = purchaseService.getSearchAllDB(group_id);
@@ -532,6 +525,36 @@ public class purchase extends HttpServlet {
 			}
 
 		}
+		
+		if("importDataToAcceptByPurchaseId".equals(action)){
+			try {
+				Boolean isImporData = false;
+				
+				String result = null;
+				
+				String purchase_ids = request.getParameter("purchase_ids");
+
+				purchaseService = new PurchaseService();
+
+				logger.debug("purchase_ids =" + purchase_ids);
+				logger.debug(" group_id =" + group_id);
+				
+				String[] purchaseIdArr = purchase_ids.split(",");
+				if(purchaseIdArr.length>0){
+					isImporData = purchaseService.importDataToAcceptByPurchaseId(purchaseIdArr, group_id, user_id);
+				}
+				
+				if (isImporData) {
+					result = "success";
+				} else {
+					result = "error";
+				}
+
+				response.getWriter().write(result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
@@ -602,6 +625,8 @@ public class purchase extends HttpServlet {
 		public void deleteDB(String purchase_id, String user_id);
 
 		public void deleteDetail(String purchaseDetail_id);
+		
+		public boolean importDataToAcceptByPurchaseId(String[] PurchaseIdArr ,String group_id ,String user_id);
 
 		public List<PurchaseVO> getSaleSeqNo(String group_id);
 
@@ -672,6 +697,10 @@ public class purchase extends HttpServlet {
 		
 		public List<PurchaseVO> getPurchasesByPurchaseIDs(String group_id,String pruchase_id){
 			return dao.getPurchasesByPurchaseIDs(group_id, pruchase_id);
+		}
+		
+		public Boolean importDataToAcceptByPurchaseId(String [] PurchaseIdArr ,String group_id ,String user_id){
+			return dao.importDataToAcceptByPurchaseId(PurchaseIdArr , group_id ,user_id);
 		}
 
 		public PurchaseVO addPurchase(String seq_no, String group_id, String user_id, String supply_id, String memo,
@@ -759,6 +788,8 @@ public class purchase extends HttpServlet {
 		private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
 		private static final String sp_get_purchases_by_purchase_ids = "call sp_get_purchases_by_purchase_ids(?,?)";
+		private static final String sp_sp_import_Data_tb_accept = "call sp_import_Data_tb_accept(?,?,?)";
+
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -1617,6 +1648,54 @@ public class purchase extends HttpServlet {
 				}
 			}
 			return purchaseVOList;
+		}
+
+		@Override
+		public boolean importDataToAcceptByPurchaseId(String[] PurchaseIdArr, String group_id ,String user_id) {
+
+				boolean isImportData = false;
+				Connection con = null;
+				PreparedStatement pstmt = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_sp_import_Data_tb_accept);
+
+				for (int i = 0; i < PurchaseIdArr.length; i++) {
+					pstmt.setString(1, group_id);
+					pstmt.setString(2, user_id);
+					pstmt.setString(3, PurchaseIdArr[i]);
+					int value= pstmt.executeUpdate();
+					
+					logger.debug("changeValue = "+value);
+				}
+
+			} catch (SQLException se) {
+					throw new RuntimeException("A database error occured. " + se.getMessage());
+				} catch (ClassNotFoundException cnfe) {
+					throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				} catch (Exception e) {
+					throw new RuntimeException("error" + e.getMessage());
+				} finally {
+					if (pstmt != null) {
+						try {
+							pstmt.close();
+						} catch (SQLException se) {
+							se.printStackTrace(System.err);
+						}
+					}
+					if (con != null) {
+						try {
+							con.close();
+						} catch (Exception e) {
+							e.printStackTrace(System.err);
+						}
+					}
+				}
+				isImportData = true;
+				return isImportData;
+			
 		}
 	}
 }

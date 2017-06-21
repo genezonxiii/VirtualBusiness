@@ -352,6 +352,43 @@ function draw_purchase(parameter){
 									}
 								});
 							}
+									},{
+
+										text : '採購轉驗收',
+										action : function(e, dt, node, config) {
+											var $table =  $('#purchase');
+
+										    var cells = $dtMaster.fnGetNodes();
+											var idArr = '';
+											
+											var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+											
+											$checkboxs.each(function() {
+												idArr += this.id + ',';
+											});
+											idArr = idArr.slice(0,-1);
+
+											
+											$.ajax({
+												url: 'purchase.do', 
+												type: 'post',
+												data: {
+													action: 'importDataToAcceptByPurchaseId',
+													purchase_ids: idArr
+												},
+												error: function (xhr) { 
+													dialogMsg("採購轉入庫", "轉入失敗");
+												},
+												success: function (response) {
+													if("success"==response){
+														dialogMsg("採購轉入庫", "轉入成功");
+													}else{
+														dialogMsg("採購轉入庫", "轉入失敗");
+													}
+												}
+											});
+										}
+									
 									}
 						   		],
 						 
