@@ -605,6 +605,15 @@
 		<servlet-name>Accept</servlet-name>
 		<url-pattern>/Accept.do</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Stocktake</servlet-name>
+		<servlet-class>tw.com.aber.stocktake.controller.Stocktake</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Stocktake</servlet-name>
+		<url-pattern>/Stocktake.do</url-pattern>
+	</servlet-mapping>
 
 	<filter>
 		<filter-name>loginFilter</filter-name>
