@@ -172,6 +172,7 @@ input[type="number"] {
 	        }
 
 	        if (errorMes.length > 0) {
+	        	var $mes = $('#message #text');
 	            $mes.val('').html(errorMes);
 	            $('#message')
 	                .dialog()
@@ -303,8 +304,18 @@ input[type="number"] {
 	                                    accept_qty: $("#dialog_accept_qty").val()
 	                                },
 	                                success: function(data) {
+	                                	
 	                                    if (data == "success") {
-	                                        alert("修改成功");
+	                                       	var $mes = $('#message #text');
+	                                    	$mes.val('').html('刪除成功');
+	                                    	
+	                                    	$('#message')
+		                    				.dialog()
+		                    				.dialog('option', 'title', '提示訊息')
+		                    				.dialog('option', 'width', 'auto')
+		                    				.dialog('option', 'minHeight', 'auto')
+		                    				.dialog("open");
+		                                	
 	                                        var parameter = {
 	                                            "action": "getAcceptdetailVOListByAcceptId",
 	                                            "accept_id": $("#hidAccept_id").val()
@@ -549,10 +560,7 @@ input[type="number"] {
 						alert('請至少選擇一筆資料');
 						return false;
 					}
-					if($checkboxs.length > 20){
-						alert('最多選擇二十筆資料');
-						return false;
-					}
+				
 					
 					$checkboxs.each(function() {
 						idArr += this.id + ',';
@@ -571,13 +579,19 @@ input[type="number"] {
 						error: function (xhr) { },
 						success: function (response) {
 							var $mes = $('#message #text');
-							$mes.val('').html('成功發送<br><br>執行結果為: '+response);
+							
+							if(response=='success'){
+								$mes.val('').html('轉入成功');
+							}else{
+								$mes.val('').html('轉入失敗');
+							}
+							
 							$('#message')
-								.dialog()
-								.dialog('option', 'title', '提示訊息')
-								.dialog('option', 'width', 'auto')
-								.dialog('option', 'minHeight', 'auto')
-								.dialog("open");
+							.dialog()
+							.dialog('option', 'title', '提示訊息')
+							.dialog('option', 'width', 'auto')
+							.dialog('option', 'minHeight', 'auto')
+							.dialog("open");
 						}
 					});		
 					console.log('idArr: '+ idArr);		
@@ -754,14 +768,31 @@ input[type="number"] {
             delay: 1500,
             data: parameter,
             success: function(data) {
-                if (data == "success") {
-                    alert("刪除成功:");
-                } else {
-                    alert("刪除失敗:");
-                }
+            	var $mes = $('#message #text');
+            	if(data=='success'){
+					$mes.val('').html('刪除成功');
+
+				}else{
+					$mes.val('').html('刪除失敗');
+				}
+				
+				$('#message')
+				.dialog()
+				.dialog('option', 'title', '提示訊息')
+				.dialog('option', 'width', 'auto')
+				.dialog('option', 'minHeight', 'auto')
+				.dialog("open");
+            	
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert("刪除失敗");
+            		var $mes = $('#message #text');
+					$mes.val('').html('刪除失敗');
+					$('#message')
+					.dialog()
+					.dialog('option', 'title', '提示訊息')
+					.dialog('option', 'width', 'auto')
+					.dialog('option', 'minHeight', 'auto')
+					.dialog("open");
             }
         })
 	}
