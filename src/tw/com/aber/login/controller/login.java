@@ -95,6 +95,9 @@ public class login extends HttpServlet {
 				try{
 					List<UserVO> list = loginService.selectlogin(username, password,unicode);
 					if (list.size() != 0) {
+						logger.info("Unicode:" + unicode);
+						logger.info("Client IP:" + getClientIp(request));
+						
 						// HttpSession session = request.getSession();
 						session.setAttribute("sessionID", session.getId());
 						session.setAttribute("user_id", list.get(0).getUser_id());
@@ -549,4 +552,18 @@ public class login extends HttpServlet {
 	public String null2str(Object object) {
 		return object == null ? "" : object.toString();
 	}
+	
+	private static String getClientIp(HttpServletRequest request) {
+
+        String remoteAddr = "";
+
+        if (request != null) {
+            remoteAddr = request.getHeader("X-FORWARDED-FOR");
+            if (remoteAddr == null || "".equals(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+        }
+
+        return remoteAddr;
+    }
 }
