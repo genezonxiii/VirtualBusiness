@@ -9,10 +9,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "SaleOrders")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder", 
-		"tradeOrderDateTime", "shopName", "tradeOrder", "fromFlag", "orgErpOrder", 
-		"orgTradeOrder", "orderCarrier", "orderReceiverInfo", "orderSenderInfo", 
-		"orderItems", "shipmentId","result", "note", "header", "items", 
-		"containers", "steps" })
+		"tradeOrderDateTime", "shopName", "tradeOrder", "fromFlag", "deliveryDate", 
+		"orgErpOrder", "orgTradeOrder", "orderCarrier", "orderReceiverInfo", 
+		"orderSenderInfo", "orderItems", "shipmentId",
+		"result", "note", "header", "items", "containers", "steps" })
 
 public class SaleOrder {
 	private static final long serialVersionUID = 1L;
@@ -33,6 +33,8 @@ public class SaleOrder {
 	private String tradeOrder;
 	@XmlElement(name = "FromFlag")
 	private String fromFlag;
+	@XmlElement(name = "DeliveryDate")
+	private String deliveryDate;
 	@XmlElement(name = "OrgErpOrder")
 	private String orgErpOrder;
 	@XmlElement(name = "OrgTradeOrder")
@@ -232,6 +234,14 @@ public class SaleOrder {
 
 	public void setShopName(String shopName) {
 		this.shopName = shopName;
+	}
+
+	public String getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(String deliveryDate) {
+		this.deliveryDate = deliveryDate;
 	}
 
 }

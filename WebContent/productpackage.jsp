@@ -202,13 +202,18 @@
 											var json_obj = $.parseJSON(response);
 											
 											if (json_obj.response) {
-												var product = json_obj.response.body.ItemResponse.items.itemList;
-												
-												$.each(product, function(key, value) {
-													var suc = "/" + (value.result == 1? "成功":"失敗");
-													var note = "/" + value.note;
-													msg += "商品料號：" + value.skuNo + suc + note + "<br/>";
-												});
+												if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+													var product = json_obj.response.body.ItemResponse.items.itemList;
+													
+													$.each(product, function(key, value) {
+														var suc = "/" + (value.result == 1? "成功":"失敗");
+														var note = "/" + value.note;
+														msg += "商品料號：" + value.skuNo + suc + note + "<br/>";
+													});
+												} else if (json_obj.response.head == "ERR") {
+													msg += "代碼：" +  json_obj.response.error.code + 
+														"/原因：" +  json_obj.response.error.error;
+												}
 											} else if (json_obj.responseFail) {
 												msg = json_obj.responseFail.remark;
 											}										
@@ -260,13 +265,18 @@
 											var json_obj = $.parseJSON(response);
 											
 											if (json_obj.response) {
-												var bom = json_obj.response.body.bomResponse.boms.bomList;
-												
-												$.each(bom, function(key, value) {
-													var suc = "/" + (value.result == 1? "成功":"失敗");
-													var note = "/" + value.note;
-													msg += "商品料號：" + value.skuNo + suc + note + "<br/>";
-												});
+												if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+													var bom = json_obj.response.body.bomResponse.boms.bomList;
+													
+													$.each(bom, function(key, value) {
+														var suc = "/" + (value.result == 1? "成功":"失敗");
+														var note = "/" + value.note;
+														msg += "商品料號：" + value.skuNo + suc + note + "<br/>";
+													});
+												} else if (json_obj.response.head == "ERR") {
+													msg += "代碼：" +  json_obj.response.error.code + 
+														"/原因：" +  json_obj.response.error.error;
+												}
 											} else if (json_obj.responseFail) {
 												msg = json_obj.responseFail.remark;
 											}										
@@ -318,30 +328,35 @@
 											var json_obj = $.parseJSON(response);
 											
 											if (json_obj.response) {
-												var product = json_obj.response.body.ItemResponse.items.itemList;
-												
-												$.each(product, function(key, value) {
+												if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+													var product = json_obj.response.body.ItemResponse.items.itemList;
 													
-													var barcode = "";
-													var itemName = "";
-													var qtymin = "";
-													
-													if (value.itemName) {
-														itemName = "/" + value.itemName;
-													}
-													if (value.barCode) {
-														barcode = "/" + value.barCode.barCode1;
-													}
-													if (value.qtymin) {
-														qtymin = "/安全庫存量：" + value.qtymin;
-													}
-													if (value.bomAction) {
-														bomAction = "/組合商品：" + value.bomAction;
-													}
-													
-													msg += "商品料號：" + value.skuNo + itemName + 
-														barcode + qtymin + bomAction + "<br/>";
-												});
+													$.each(product, function(key, value) {
+														
+														var barcode = "";
+														var itemName = "";
+														var qtymin = "";
+														
+														if (value.itemName) {
+															itemName = "/" + value.itemName;
+														}
+														if (value.barCode) {
+															barcode = "/" + value.barCode.barCode1;
+														}
+														if (value.qtymin) {
+															qtymin = "/安全庫存量：" + value.qtymin;
+														}
+														if (value.bomAction) {
+															bomAction = "/組合商品：" + value.bomAction;
+														}
+														
+														msg += "商品料號：" + value.skuNo + itemName + 
+															barcode + qtymin + bomAction + "<br/>";
+													});
+												} else if (json_obj.response.head == "ERR") {
+													msg += "代碼：" +  json_obj.response.error.code + 
+														"/原因：" +  json_obj.response.error.error;
+												}
 											} else if (json_obj.responseFail) {
 												msg = json_obj.responseFail.remark;
 											}										

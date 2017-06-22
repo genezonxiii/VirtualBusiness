@@ -380,37 +380,41 @@
 								var json_obj = $.parseJSON(response);
 								console.log(json_obj);
 								if (json_obj.response) {
-									
-									var rtInvList = json_obj.response.body.rtInventoryQueryResponse.rtInventorys.rtiList;
-									
-									$.each(rtInvList, function(key, value) {
-										var skuNo = "", lot = "", expire = "";
-										var availableQty = "", totalQty = "";
-										var onHandQty = "", inTransitQty = "";
+									if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+										var rtInvList = json_obj.response.body.rtInventoryQueryResponse.rtInventorys.rtiList;
 										
-										if (value.header) {
-											skuNo = "商品料號：" + value.header.skuNo;
-											availableQty = "/總庫存量：" + value.header.availableQty;
-											totalQty = "/可用量：" + value.header.totalQty;
-											onHandQty = "/在庫量：" + value.header.onHandQty;
-											inTransitQty = "/在途量：" + value.header.inTransitQty;
-											if (value.header.expirationDate) {
-												expire = "/效期：" + value.header.availableQty;
+										$.each(rtInvList, function(key, value) {
+											var skuNo = "", lot = "", expire = "";
+											var availableQty = "", totalQty = "";
+											var onHandQty = "", inTransitQty = "";
+											
+											if (value.header) {
+												skuNo = "商品料號：" + value.header.skuNo;
+												availableQty = "/總庫存量：" + value.header.availableQty;
+												totalQty = "/可用量：" + value.header.totalQty;
+												onHandQty = "/在庫量：" + value.header.onHandQty;
+												inTransitQty = "/在途量：" + value.header.inTransitQty;
+												if (value.header.expirationDate) {
+													expire = "/效期：" + value.header.availableQty;
+												}
+												if (value.header.lot) {
+													lot = "/批號：" + value.header.lot;
+												}
 											}
-											if (value.header.lot) {
-												lot = "/批號：" + value.header.lot;
+											
+											if (value.result == 1) {
+												msg += skuNo + 
+													availableQty + totalQty + 
+													onHandQty + inTransitQty + 
+													lot + expire + "<br/>";
+											} else {
+												msg += "商品料號：" + value.header.skuNo + "<br/>";
 											}
-										}
-										
-										if (value.result == 1) {
-											msg += skuNo + 
-												availableQty + totalQty + 
-												onHandQty + inTransitQty + 
-												lot + expire + "<br/>";
-										} else {
-											msg += "商品料號：" + value.header.skuNo + "<br/>";
-										}
-									});
+										});
+									} else if (json_obj.response.head == "ERR") {
+										msg += "代碼：" +  json_obj.response.error.code + 
+											"/原因：" +  json_obj.response.error.error;
+									}
 								} else if (json_obj.responseFail) {
 									msg = json_obj.responseFail.remark;
 								}										

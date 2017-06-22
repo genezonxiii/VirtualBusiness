@@ -81,22 +81,25 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<td>轉單日：</td>
 											<td><input type="text" name="trans_list_date"
 												placeholder="輸入轉單日" class="input-date"></td>
-											<td>銷貨/出貨日期：</td>
+											<td>銷貨日：</td>
 											<td><input type="text" name="sale_date"
-												placeholder="輸入銷貨/出貨日期" class="input-date"></td>
+												placeholder="輸入銷貨日" class="input-date"></td>
+										</tr>
+										<tr>
+											<td>實際配送日：</td>
+											<td>
+												<input type="text" name="dis_date" placeholder="輸入配送日" class="input-date">
+											</td>
+											<td>銷售平台：</td>
+											<td>
+												<input type="text" name="order_source" placeholder="輸入銷售平台">
+											</td>
 										</tr>
 										<tr>
 											<td>備註說明：</td>
-											<td><input type="text" name="memo" placeholder="輸入備註說明"></td>
-											<td>銷售平台：</td>
-											<td><input type="text" name="order_source"
-												placeholder="輸入銷售平台"></td>
-										</tr>
-										<tr>
-											<td style="display: none">配送日：</td>
-											<td style="display: none"><input type="text"
-												name="dis_date" placeholder="輸入配送日" class="input-date"
-												value="2000-01-01"></td>
+											<td>
+												<input type="text" name="memo" placeholder="輸入備註說明">
+											</td>
 										</tr>
 									</table>
 								</fieldset>
@@ -889,7 +892,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				$("#dialog-form-update input[name='invoice']").val(data.invoice);
 				$("#dialog-form-update input[name='invoice_date']").val(data.invoice_date);
 				$("#dialog-form-update input[name='trans_list_date']").val(data.trans_list_date);
-				$("#dialog-form-update input[name='dis_date']").val("1991-06-29");
+				$("#dialog-form-update input[name='dis_date']").val(data.dis_date);
 				$("#dialog-form-update input[name='memo']").val(data.memo);
 				$("#dialog-form-update input[name='sale_date']").val(data.sale_date);
 				$("#dialog-form-update input[name='order_source']").val(data.order_source);

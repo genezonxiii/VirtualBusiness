@@ -184,12 +184,14 @@ public class ship extends HttpServlet {
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					
 					if (responseUtil.getResponse() != null) {
-						List<SaleOrder> saleOrder = responseUtil.getResponse().getBody().getSaleOrderOutboundDetailResponse().getSaleOrders().getSaleOrder();
-					
-						if (saleOrder != null) {
-							for (SaleOrder tmp : saleOrder){
-								if ( tmp.getResult().equals("1") ) {
-									tmp.getHeader().setDataStatus(tmp.getHeader().getDataStatus());
+						if (responseUtil.getResponse().getHead().equals("OK")) {
+							List<SaleOrder> saleOrder = responseUtil.getResponse().getBody().getSaleOrderOutboundDetailResponse().getSaleOrders().getSaleOrder();
+							
+							if (saleOrder != null) {
+								for (SaleOrder tmp : saleOrder){
+									if ( tmp.getResult().equals("1") ) {
+										tmp.getHeader().setDataStatus(tmp.getHeader().getDataStatus());
+									}
 								}
 							}
 						}
@@ -380,6 +382,7 @@ public class ship extends HttpServlet {
 						shipVO.setV_deliver_mobile(rs.getString("se_deliver_mobile"));
 						shipVO.setV_deliver_name(rs.getString("se_deliver_name"));
 						shipVO.setV_deliver_phone(rs.getString("se_deliver_phone"));
+						shipVO.setV_dis_date(rs.getDate("sm_dis_date"));
 						shipVO.setShipDetail(shipDetailList);
 						shipVOList.add(shipVO);
 						

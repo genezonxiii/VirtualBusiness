@@ -212,14 +212,18 @@ function draw_purchase(parameter){
 											var json_obj = $.parseJSON(response);
 											
 											if (json_obj.response) {
-												
-												var purchase = json_obj.response.body.purchaseOrderResponse.purchaseOrders.purchaseOrder;
-												
-												$.each(purchase, function(key, value) {
-													var suc = value.result == 1? "/" + "入庫單號：" + value.receiptId:"/" + "失敗";
-													var note = value.result == 1? "": "/" + value.note;
-													msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
-												});
+												if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+													var purchase = json_obj.response.body.purchaseOrderResponse.purchaseOrders.purchaseOrder;
+													
+													$.each(purchase, function(key, value) {
+														var suc = value.result == 1? "/" + "入庫單號：" + value.receiptId:"/" + "失敗";
+														var note = value.result == 1? "": "/" + value.note;
+														msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
+													});
+												} else if (json_obj.response.head == "ERR") {
+													msg += "代碼：" +  json_obj.response.error.code + 
+														"/原因：" +  json_obj.response.error.error;
+												}
 											} else if (json_obj.responseFail) {
 												msg = json_obj.responseFail.remark;
 											}										
@@ -269,13 +273,17 @@ function draw_purchase(parameter){
 											var json_obj = $.parseJSON(response);
 											
 											if (json_obj.response) {
-												
-												var purchase = json_obj.response.body.cancelPurchaseOrderResponse.purchaseOrders.purchaseOrder;
-												$.each(purchase, function(key, value) {
-													var suc = "/" + (value.result == 1? "成功":"失敗");
-													var note = "/" + value.note;
-													msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
-												});
+												if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+													var purchase = json_obj.response.body.cancelPurchaseOrderResponse.purchaseOrders.purchaseOrder;
+													$.each(purchase, function(key, value) {
+														var suc = "/" + (value.result == 1? "成功":"失敗");
+														var note = "/" + value.note;
+														msg += "採購單號：" + value.erpOrder + suc + note + "<br/>";
+													});
+												} else if (json_obj.response.head == "ERR") {
+													msg += "代碼：" +  json_obj.response.error.code + 
+														"/原因：" +  json_obj.response.error.error;
+												}
 											} else if (json_obj.responseFail) {
 												msg = json_obj.responseFail.remark;
 											}
@@ -323,26 +331,31 @@ function draw_purchase(parameter){
 										if (response) {
 											var json_obj = $.parseJSON(response);
 											if (json_obj.response) {
-												var purchase = json_obj.response.body.purchaseOrderInboundResponse.purchaseOrders.purchaseOrder;
-												$.each(purchase, function(key, value) {
-													console.log(value);
-													var tmp_item_list = "";
-													$.each(value.items.itemList, function(item_key, item_value){
-														var qty = "", expirationDate = "";
-														if (item_value.planQty) {
-															qty += "/入庫數量:" + item_value.planQty;
-														}
-														if (item_value.actualQty) {
-															qty += "/實收數量:" + item_value.actualQty;
-														}
-														if (item_value.expirationDate) {
-															expirationDate += "/效期:" + item_value.expirationDate;
-														}
-														tmp_item_list += item_value.skuNo + qty + expirationDate + "<br/>";
+												if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
+													var purchase = json_obj.response.body.purchaseOrderInboundResponse.purchaseOrders.purchaseOrder;
+													$.each(purchase, function(key, value) {
+														console.log(value);
+														var tmp_item_list = "";
+														$.each(value.items.itemList, function(item_key, item_value){
+															var qty = "", expirationDate = "";
+															if (item_value.planQty) {
+																qty += "/入庫數量:" + item_value.planQty;
+															}
+															if (item_value.actualQty) {
+																qty += "/實收數量:" + item_value.actualQty;
+															}
+															if (item_value.expirationDate) {
+																expirationDate += "/效期:" + item_value.expirationDate;
+															}
+															tmp_item_list += item_value.skuNo + qty + expirationDate + "<br/>";
+														});
+														msg += "採購單號：" + value.erpOrder + "/" + value.header.receiptId + "/" + 
+															value.header.status + "<br/>" + tmp_item_list + "<br/>";
 													});
-													msg += "採購單號：" + value.erpOrder + "/" + value.header.receiptId + "/" + 
-														value.header.status + "<br/>" + tmp_item_list + "<br/>";
-												});
+												} else if (json_obj.response.head == "ERR") {
+													msg += "代碼：" +  json_obj.response.error.code + 
+														"/原因：" +  json_obj.response.error.error;
+												}
 											} else if (json_obj.responseFail) {
 												msg = json_obj.responseFail.remark;
 											}

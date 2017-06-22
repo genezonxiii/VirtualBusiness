@@ -575,6 +575,11 @@ public class SfApi {
 			saleOrder.setWarehouseCode(warehouseVo.getSf_warehouse_code());
 			saleOrder.setSfOrderType("销售订单");
 			saleOrder.setErpOrder(shipVO.getOrder_no());
+			if ( shipVO.getV_dis_date() != null ){
+				String deliveryDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(shipVO.getV_dis_date());
+				saleOrder.setDeliveryDate(deliveryDate);
+			}
+			saleOrder.setErpOrder(shipVO.getOrder_no());
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
 			saleOrder.setOrderItems(orderItems);
 			String tradeOrderDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

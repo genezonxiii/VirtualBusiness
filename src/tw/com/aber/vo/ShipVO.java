@@ -25,6 +25,7 @@ public class ShipVO implements Serializable {
 	private String v_deliver_phone;// tb_realsale
 	private String v_deliver_mobile;// tb_realsale
 	private Date v_sale_date; // tb_realsale
+	private Date v_dis_date; // tb_sale
 	private String v_c_product_id;// tb_realsale
 	private String v_product_name;// tb_realsale
 	private List<ShipDetail> shipDetail;
@@ -149,6 +150,12 @@ public class ShipVO implements Serializable {
 	}
 	public void setShipDetail(List<ShipDetail> shipDetail) {
 		this.shipDetail = shipDetail;
+	}
+	public Date getV_dis_date() {
+		return v_dis_date;
+	}
+	public void setV_dis_date(Date v_dis_date) {
+		this.v_dis_date = v_dis_date;
 	}
 
 }
