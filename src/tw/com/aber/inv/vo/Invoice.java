@@ -14,55 +14,55 @@ import javax.xml.bind.annotation.XmlType;
 		"invoiceNumber", "invoiceDate", "buyerId", "cancelDate", "cancelTime", "cancelReason",
 		"returnTaxDocumentNumber", "remark", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12",
 		"A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23", "A24", "A25", "A26", "A27", "A28",
-		"A29", "A30", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "D2",
-		"D3", "D4" })
+		"A29", "A30", "B", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1",
+		"D2", "D3", "D4" })
 
 public class Invoice {
 	private static final long serialVersionUID = 1L;
 	/*
-	 * A02、C0501、A04
+	 * A02、C0501、A04、C02、C04
 	 */
 	@XmlElement(name = "INVOICE_CODE")
 	private String invoiceCode;
 
 	/*
-	 * A02、C0501、A04
+	 * A02、C0501、A04、C02、C04
 	 */
 	@XmlElement(name = "SELLERID")
 	private String sellerId;
 
 	/*
-	 * A02、C0501、A04
+	 * A02、C0501、A04、C02、C04
 	 */
 	@XmlElement(name = "POSID")
 	private String posId;
 
 	/*
-	 * A02、C0501、A04
+	 * A02、C0501、A04、C02、C04
 	 */
 	@XmlElement(name = "POSSN")
 	private String posSn;
 
 	/*
-	 * A02、C0501、A04
+	 * A02、C0501、A04、C02、C04
 	 */
 	@XmlElement(name = "SYSTIME")
 	private String sysTime;
 
 	/*
-	 * A02、A04
+	 * A02、A04、C02、C04
 	 */
 	@XmlElement(name = "REPLY")
 	private String reply;
 
 	/*
-	 * A02、A04
+	 * A02、A04、C02、C04
 	 */
 	@XmlElement(name = "MESSAGE")
 	private String message;
 
 	/*
-	 * A02
+	 * A02、C02、C04
 	 */
 	@XmlElement(name = "INVOICEDATA")
 	private List<InvoiceData> invoiceDatas;

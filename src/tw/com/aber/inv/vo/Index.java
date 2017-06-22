@@ -1,5 +1,7 @@
 package tw.com.aber.inv.vo;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -8,87 +10,94 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "INDEX")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "invoiceCode", "functionCode", "reply", "errorCode", "message", "verionUpdate", "sellerId",
-		"posId", "posSn", "appVserion", "sysTime", "userId", "taxMonth", "invoiceHeader", "invoiceStart", "invoiceEnd",
-		"invoiceNumber", "invoiceDate", "security", "sellDetail", "ckeckSum" })
+@XmlType(propOrder = { "invoiceCode", "functionCode", "reply", "errorCode", "message","posDatas",
+		"verionUpdate", "sellerId","posId", "posSn", "appVserion", "sysTime", "invoiceData",
+		"userId", "taxMonth", "invoiceHeader", "invoiceStart","invoiceEnd", "invoiceNumber",
+		"invoiceDate", "security", "sellDetail", "ckeckSum" })
 
 public class Index {
 	private static final long serialVersionUID = 1L;
 
 	/*
-	 * A01、C0401、C0501、B01
+	 * A01、C0401、C0501、B01、C01、Y01
 	 */
 	@XmlElement(name = "FUNCTIONCODE")
 	private String functionCode;
 
 	/*
-	 * A03
+	 * A03、C03、D01
 	 */
 	@XmlElement(name = "INVOICE_CODE")
 	private String invoiceCode;
 
 	/*
-	 * A01、C0401、C0501、A03、B01
+	 * A01、C0401、C0501、A03、B01、C01、C03、Y01、D01
 	 */
 	@XmlElement(name = "SELLERID")
 	private String sellerId;
 
 	/*
-	 * A01、C0401、C0501、A03、B01
+	 * A01、C0401、C0501、A03、B01、C01、C03、Y01、D01
 	 */
 	@XmlElement(name = "POSID")
 	private String posId;
 
 	/*
-	 * A01、C0401、C0501、A03、B01
+	 * A01、C0401、C0501、A03、B01、C01、C03、Y01、D01
 	 */
 	@XmlElement(name = "POSSN")
 	private String posSn;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01、Y01
 	 */
 	@XmlElement(name = "APPVSERION")
 	private String appVserion;
 
 	/*
-	 * A01、C0401、C0501、A03、B01
+	 * A01、C0401、C0501、A03、B01、C01、C03、Y01、D01
 	 */
 	@XmlElement(name = "SYSTIME")
 	private String sysTime;
 
 	/*
-	 * A01、B01
+	 * C03
+	 */
+	@XmlElement(name = "invoiceData")
+	private List<InvoiceData> invoiceData;
+
+	/*
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "USERID")
 	private String userId;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "TAXMONTH")
 	private String taxMonth;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "INVOICEHEADER")
 	private String invoiceHeader;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "INVOICESTART")
 	private String invoiceStart;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "INVOICEEND")
 	private String invoiceEnd;
 
 	/*
-	 * A01、C0401、C0501、B01
+	 * A01、C0401、C0501、B01、C01
 	 */
 	@XmlElement(name = "INVOICENUMBER")
 	private String invoiceNumber;
@@ -100,37 +109,43 @@ public class Index {
 	private String invoiceDate;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "SECURITY")
 	private String security;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "SELLDETAIL")
 	private String sellDetail;
 
 	/*
-	 * A01、B01
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "CKECKSUM")
 	private String ckeckSum;
 
 	/*
-	 * A01、C0401、C0501、A03、B01
+	 * A01、C0401、C0501、A03、B01、C01、C03、D01
 	 */
 	@XmlElement(name = "REPLY")
 	private String reply;
 
 	/*
-	 * A01、C0401、C0501、A03、B01
+	 * A01、C0401、C0501、A03、B01、C01、C03、D01
 	 */
 	@XmlElement(name = "MESSAGE")
 	private String message;
 
 	/*
-	 * A01、B01
+	 * D01
+	 */
+	@XmlElement(name = "POSDATA")
+	private List<PosData> posDatas;
+	
+	/*
+	 * A01、B01、C01
 	 */
 	@XmlElement(name = "VERIONUPDATE")
 	private String verionUpdate;
@@ -140,6 +155,14 @@ public class Index {
 	 */
 	@XmlElement(name = "ERROR_CODE")
 	private String errorCode;
+
+	public List<InvoiceData> getInvoiceData() {
+		return invoiceData;
+	}
+
+	public void setInvoiceData(List<InvoiceData> invoiceData) {
+		this.invoiceData = invoiceData;
+	}
 
 	public String getInvoiceCode() {
 		return invoiceCode;

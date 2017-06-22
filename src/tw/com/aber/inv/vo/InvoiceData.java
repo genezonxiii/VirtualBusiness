@@ -8,48 +8,50 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "INVOICEDATA")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "sellerId", "taxMonth", "type", "typeName", "invoiceHeader", "invoiceStart", "invoiceEnd" })
+@XmlType(propOrder = { "sellerId", "taxMonth", "type", "typeName",
+		"invoiceHeader", "invoiceStart", "invoiceEnd" })
 
 public class InvoiceData {
 	private static final long serialVersionUID = 1L;
+	
 	/*
-	 * A02、A03、A04
+	 * A02、A03、A04、C02、C03、C04
 	 */
 	@XmlElement(name = "TAXMONTH")
 	private String taxMonth;
 
 	/*
-	 * A02、A03、A04
+	 * A02、A03、A04、C02、C03、C04
 	 */
 	@XmlElement(name = "TYPE")
 	private String type;
 
 	/*
-	 * A03
+	 * A03、C03
 	 */
 	@XmlElement(name = "TYPENAME")
 	private String typeName;
 
 	/*
-	 * A02、A03、A04
+	 * A02、A03、A04、C02、C03、C04
 	 */
 	@XmlElement(name = "INVOICEHEADER")
 	private String invoiceHeader;
 
 	/*
-	 * A02、A03、A04
+	 * A02、A03、A04、C02、C03、C04
 	 */
 	@XmlElement(name = "INVOICESTART")
 	private String invoiceStart;
 
 	/*
-	 * A02、A03、A04
+	 * A02、A03、A04、C02、C03、C04
 	 */
 	@XmlElement(name = "INVOICEEND")
 	private String invoiceEnd;
 
 	/*
-	 * A03、A04
+	 * A03、A04、C03、C04
 	 */
 	@XmlElement(name = "SELLERID")
 	private String sellerId;
