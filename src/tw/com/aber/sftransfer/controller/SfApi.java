@@ -565,9 +565,14 @@ public class SfApi {
 			SaleOrder saleOrder = new SaleOrder();
 			OrderCarrier orderCarrier = new OrderCarrier();
 			
-			//xxx 暫定寫死
+			/* 
+			 * CP:顺丰速运
+			 */
 			orderCarrier.setCarrier("CP");
-			orderCarrier.setCarrierProduct("1");
+			/*
+			 * 43:島內件-批(80CM)
+			 */
+			orderCarrier.setCarrierProduct("43");
 			orderCarrier.setMonthlyAccount(groupSfVo.getMonthly_account());
 			orderCarrier.setPaymentOfcharge("寄付");
 			
@@ -851,7 +856,15 @@ public class SfApi {
 	 * 電文加密前置作業
 	 */
 	public String sendXML(String reqXml) {
-		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
+		String targetURL = 
+				/*
+				 * Testing
+				 */
+				"http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
+				/*
+				 * Production
+				 */
+//				"http://bsp.sf-express.com/bsp-wms/OmsCommons";
 		String urlParameters = "";
 
 		SfApi api = new SfApi();
