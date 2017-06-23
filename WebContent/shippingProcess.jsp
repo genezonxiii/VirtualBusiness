@@ -143,7 +143,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
     var customer_menu = [];
     var customer_tags = [];
 
-    function draw_sale(parameter) {
+    function draw_sale(parameter, process_name, msg) {
         $("#sales_contain_row").css({
             "opacity": "0"
         });
@@ -277,7 +277,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
                 "opacity": "1"
             }, 300);
 
-        warning_msg("");
+        dialogMsg(process_name, msg);
     }
 
     var scan_exist = 0,
@@ -471,24 +471,57 @@ String privilege = (String) request.getSession().getAttribute("privilege");
         $("#import_resale").click(function(e) {
             e.preventDefault();
             if ($("#import_trans_list_date_begin").val() == '' || $("#import_trans_list_date_end").val() == '') {
-                alert('請輸入日期');
-            } else {
-                var tmp = {
-                    action: "importData",
-                    import_trans_list_date_begin: $("#import_trans_list_date_begin").val(),
-                    import_trans_list_date_end: $("#import_trans_list_date_end").val()
-                };
-                draw_sale(tmp);
+            	dialogMsg('提醒', '請輸入日期');
+            	return;
+//             } else {
+//                 var tmp = {
+//                     action: "importData",
+//                     import_trans_list_date_begin: $("#import_trans_list_date_begin").val(),
+//                     import_trans_list_date_end: $("#import_trans_list_date_end").val()
+//                 };
+//                 draw_sale(tmp, "轉入銷貨", "轉入銷貨作業：成功");
             }
+            
+			$.ajax({
+			    type: 'POST',
+			    url: 'realsale.do',
+			    data: {
+			    	action: "importData",
+			        import_trans_list_date_begin: $("#import_trans_list_date_begin").val(),
+			        import_trans_list_date_end: $("#import_trans_list_date_end").val()
+			    },
+			    success: function(result) {
+			        var obj = jQuery.parseJSON(result);
+			        var order_no_cnt = "轉入訂單數：" + obj.order_no_cnt;
+			        var total_cnt = ", 轉入訂單商品明細數：" + obj.total_cnt;
+
+			        dialogMsg('轉入銷貨', order_no_cnt + total_cnt);
+			    }
+			});
         });
 
         //20170427從realsale匯入到alloc_inv---------------------------------
         $("#import_alloc_inv").click(function(e) {
             e.preventDefault();
-            var tmp = {
-                action: "importallocinvData"
-            };
-            draw_sale(tmp);
+//             var tmp = {
+//                 action: "importallocinvData"
+//             };
+//             draw_sale(tmp, "轉入待出庫", "轉入待出庫作業：成功");
+            
+            $.ajax({
+			    type: 'POST',
+			    url: 'realsale.do',
+			    data: {
+			    	action: "importallocinvData"
+			    },
+			    success: function(result) {
+			        var obj = jQuery.parseJSON(result);
+			        var order_no_cnt = "待出庫訂單數：" + obj.order_no_cnt;
+			        var total_cnt = ", 待出庫商品明細數：" + obj.total_cnt;
+
+			        dialogMsg('轉入待出庫', order_no_cnt + total_cnt);
+			    }
+			});
         });
 
         //20170504 做配庫alloc_inv---------------------------------
@@ -500,11 +533,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
                     action: "statisticsAllocinvData"
                 },
                 success: function(result) {
-                    var obj = jQuery.parseJSON(result);
-                    var isSuccess = obj.isSuccess;
-                    var update_count = obj.update_count;
-                    alert("isSuccess:" + isSuccess + "   " + "update_count:" + update_count);
+                	var obj = jQuery.parseJSON(result);
+			        var order_no_cnt = "出庫訂單數：" + obj.order_no_cnt;
+			        var total_cnt = ", 出庫商品明細數：" + obj.total_cnt;
 
+			        dialogMsg('執行配庫', order_no_cnt + total_cnt);
                 },
             });
 
@@ -523,13 +556,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                },
 	                success: function(result) {
 	                    var obj = jQuery.parseJSON(result);
-	                    var isSuccess = obj.isSuccess;
-	                    alert("isSuccess:" + isSuccess);
-	
-	                },
+	                    var isSuccess = obj.isSuccess?"成功":"失敗";
+	                    dialogMsg('轉入揀貨', "轉入揀貨作業：" + isSuccess);
+	                }
 	            });
 			}else{
-				alert("請輸入揀貨單訂單數量");
+				dialogMsg("轉入揀貨", "請輸入揀貨單訂單數量");
 			}
 
         });
@@ -544,9 +576,8 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                },
 	                success: function(result) {
 	                    var obj = jQuery.parseJSON(result);
-	                    var isSuccess = obj.isSuccess;
-	                    alert("isSuccess:" + isSuccess);
-	
+	                    var isSuccess = obj.isSuccess?"成功":"失敗";
+	                    dialogMsg('轉入出貨', "轉入出貨作業：" + isSuccess);
 	                },
 	            });
         });
@@ -580,7 +611,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
                                 customer_id: $insert.find("input[name='insert_customerid']").val()
                             };
 
-                            draw_sale(tmp);
+                            draw_sale(tmp, "", "");
                             insert_dialog.dialog("close");
                             $("#insert-dialog-form-post").trigger("reset");
                         }
@@ -618,7 +649,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
                         order_no: order_no
                         //c_product_id是為了刪除後，回傳指定的結果，所需參數
                     };
-                    draw_sale(tmp);
+                    draw_sale(tmp, "", "");
                     $(this).dialog("close");
                 },
                 "取消刪除": function() {
@@ -661,7 +692,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
                             };
 
-                            draw_sale(tmp);
+                            draw_sale(tmp, "", "");
                             update_dialog.dialog("close");
                             $("#update-dialog-form-post").trigger("reset");
                         }

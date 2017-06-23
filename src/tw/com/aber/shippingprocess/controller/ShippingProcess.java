@@ -43,9 +43,11 @@ public class ShippingProcess extends HttpServlet {
 		ShippingProcessService service = new ShippingProcessService();
 		try {
 			if ("statisticsAllocinvData".equals(action)) {
+				//配庫
 				JSONObject responseStr = service.statisticsAlloc(group_id, user_id);
 				response.getWriter().write(responseStr.toString());
 			} else if ("importData".equals(action)) {
+				//銷貨
 				List<RealSaleVO> realsaleList = null;
 				String c_import_trans_list_date_begin = request.getParameter("import_trans_list_date_begin");
 				String c_import_trans_list_date_end = request.getParameter("import_trans_list_date_end");
@@ -55,10 +57,12 @@ public class ShippingProcess extends HttpServlet {
 				response.getWriter().write(jsonStrList);
 				logger.info(jsonStrList);
 			}else if("importPicking".equals(action)){
+				//揀貨
 				String order_no_count = request.getParameter("order_no_count");
 				JSONObject responseStr = service.importPicking(group_id, user_id,order_no_count);
 				response.getWriter().write(responseStr.toString());
 			}else if("importShip".equals(action)){
+				//出貨
 				JSONObject responseStr = service.importShip(group_id, user_id);
 				response.getWriter().write(responseStr.toString());
 			}
@@ -127,9 +131,17 @@ public class ShippingProcess extends HttpServlet {
 				cs.setString(1, group_id);
 				cs.setString(2, user_id);
 				cs.registerOutParameter(3, Types.BOOLEAN);
+				
 				isSuccess = cs.execute();
 				updateCount = cs.getString(3);
+				
 				jsonObject.put("update_count", updateCount);
+				
+				rs = cs.getResultSet();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -153,8 +165,6 @@ public class ShippingProcess extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
-			isSuccess = true;
-			jsonObject.put("isSuccess", isSuccess);
 			return jsonObject;
 		}
 

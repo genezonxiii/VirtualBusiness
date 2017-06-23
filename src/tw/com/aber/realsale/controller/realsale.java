@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.appender.rewrite.LoggerNameLevelRewritePolicy;
+import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -224,22 +225,17 @@ public class realsale extends HttpServlet {
 				String jsonStrList = gson.toJson(realsaleList);
 				response.getWriter().write(jsonStrList);
 			} else if ("importData".equals(action)) {
+				//銷貨
 				String c_import_trans_list_date_begin = request.getParameter("import_trans_list_date_begin");
 				String c_import_trans_list_date_end = request.getParameter("import_trans_list_date_end");				
-				realsaleService.importRealSale(group_id, user_id, c_import_trans_list_date_begin,c_import_trans_list_date_end);
-				realsaleList = realsaleService.getSearchAllDB(group_id);
-				String jsonStrList = gson.toJson(realsaleList);
-				
-				response.getWriter().write(jsonStrList);
-				logger.info(jsonStrList);
+				JSONObject jsonObject = realsaleService.importRealSale(group_id, user_id, c_import_trans_list_date_begin,c_import_trans_list_date_end);
+				logger.info(jsonObject.toString());
+				response.getWriter().write(jsonObject.toString());
 			} else if ("importallocinvData".equals(action)) {
-								
-				realsaleService.importAllocInv(group_id, user_id);
-				realsaleList = realsaleService.getSearchAllDB(group_id);
-				String jsonStrList = gson.toJson(realsaleList);
-				
-				response.getWriter().write(jsonStrList);
-				logger.info(jsonStrList);
+				//配庫
+				JSONObject jsonObject = realsaleService.importAllocInv(group_id, user_id);
+				logger.info(jsonObject.toString());
+				response.getWriter().write(jsonObject.toString());
 			}			
 			
 		} catch (Exception e) {
@@ -319,9 +315,9 @@ public class realsale extends HttpServlet {
 		
 		public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway);
 	
-		public void importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end);
+		public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end);
 		
-		public void importAllocInvDB(String group_id,String user_id);
+		public JSONObject importAllocInvDB(String group_id,String user_id);
 		
 //		public List<RealSaleVO> searchorder_no(String group_id, String c_order_no_begin, String c_order_no_end);
 
@@ -375,12 +371,12 @@ public class realsale extends HttpServlet {
 			return dao.searchMuliDB(group_id,c_order_no_begin,c_order_no_end,c_customerid,c_trans_list_date_begin,c_trans_list_date_end,c_dis_date_begin,c_dis_date_end,c_order_source,c_deliveryway);
 		}
 		
-		public void importRealSale(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
-			dao.importDB(group_id,user_id,trans_list_date_begin,trans_list_date_end);
+		public JSONObject importRealSale(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
+			return dao.importDB(group_id,user_id,trans_list_date_begin,trans_list_date_end);
 		}
 		
-		public void importAllocInv(String group_id,String user_id) {
-			dao.importAllocInvDB(group_id,user_id);
+		public JSONObject importAllocInv(String group_id,String user_id) {
+			return dao.importAllocInvDB(group_id,user_id);
 		}
 		
 //		public List<RealSaleVO> getSearchDB(String group_id, String c_order_no_begin, String c_order_no_end) {
@@ -839,10 +835,14 @@ public class realsale extends HttpServlet {
 		}
 		
 		@Override
-		public void importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
+		public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			JSONObject jsonObject = new JSONObject();
+			
 			try {
+				
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_importData_realsale);
@@ -851,7 +851,12 @@ public class realsale extends HttpServlet {
 				pstmt.setString(3, trans_list_date_begin);		
 				pstmt.setString(4, trans_list_date_end);			
 
-				pstmt.executeUpdate();
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
+				
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -870,20 +875,29 @@ public class realsale extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
+			
+			return jsonObject;
 		}
 		
 		@Override
-		public void importAllocInvDB(String group_id,String user_id) {
+		public JSONObject importAllocInvDB(String group_id,String user_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			JSONObject jsonObject = new JSONObject();
+			
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_importData_alloc_inv);
 				pstmt.setString(1, group_id);
-				pstmt.setString(2, user_id);						
-
-				pstmt.executeUpdate();
+				pstmt.setString(2, user_id);
+				
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -902,6 +916,8 @@ public class realsale extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
+			
+			return jsonObject;
 		}
 		
 //		@Override
