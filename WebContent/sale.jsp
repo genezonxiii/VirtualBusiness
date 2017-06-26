@@ -212,6 +212,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								<table id="sales" class="result-table">
 									<thead>
 										<tr class="">
+											<th>批次請求</th>
 											<th>銷貨單號</th>
 											<th>訂單號</th>
 											<th style="min-width: 120px">商品 ID/名稱</th>
@@ -258,10 +259,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	</div>
 	
 	<jsp:include page="template/common_js.jsp" flush="true"/>
-
+	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<script>
 		var customer_menu = [];
 		var customer_tags = [];
+		var selectCount = 0; //全選按鈕計算用
 		function open_report(id){
 			var iframUrl="./report.do?sale_id="+id;
 			$("#dialog_report_iframe").attr("src",iframUrl );
@@ -295,8 +298,33 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			console.log('ajax start');
 			var oColumnDefs =
 		        [{
+			        targets: 0,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			            var sale_id = row.sale_id;
+
+			            var input = document.createElement("INPUT");
+			            input.type = 'checkbox';
+			            input.name = 'checkbox-group-select';
+			            input.id = sale_id;
+
+			            var span = document.createElement("SPAN");
+			            span.className = 'form-label';
+
+			            var label = document.createElement("LABEL");
+			            label.htmlFor = sale_id;
+			            label.name = 'checkbox-group-select';
+			            label.style.marginLeft = '35%';
+			            label.appendChild(span);
+
+			            var options = $("<div/>").append(input, label);
+
+			            return options.html();
+			        }
+			    },{
 					//訂單編號 及 出貨單連結
-		        	targets: 1,
+		        	targets: 2,
 					render: function ( data, type, row ) {
 						var result = $("<div/>") //fake tag
 							.append( 
@@ -312,14 +340,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					}
 	            },{
 					//自訂商品編號 + 商品名稱
-	            	targets: 2,
+	            	targets: 3,
 					render: function ( data, type, row ) {
 				   		var result = row.c_product_id + '<br>' + row.product_name;
 				 		return result;
 					}
 	            },{
 					//銷貨對象
-	            	targets: 5,
+	            	targets: 6,
 					render: function ( data, type, row ) {
 						console.log(row.customer_id);
 						console.log(customer_menu);
@@ -328,7 +356,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					}
 	            },{
 					//發票 + 發票日期
-	            	targets: 6,
+	            	targets: 7,
 					render: function ( data, type, row ) {
 				   		var result = row.invoice == null || row.invoice == '' ? "":"號碼：" + row.invoice + "<br>日期：" + row.invoice_date;
 				 		return result;
@@ -381,6 +409,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			
 			var oColumns = 
 				[
+					{"data": null, "defaultContent":""},
 					{"data": "seq_no", "width": "10%", "defaultContent":""},
 					{"data": "order_no", "width": "10%", "defaultContent":""},
 					{"data": null, "width": "20%", "defaultContent":""},
@@ -396,9 +425,19 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				];
 			
 			var dataTableObj = $("#sales").DataTable({
-				dom: "lfr<t>ip",
-				destroy: true,
-				language: {"url": "js/dataTables_zh-tw.txt"},
+				dom : "frB<t>ip",
+				lengthChange: false,
+				pageLength: 20,
+				autoWidth: false,
+				scrollY:"250px",
+				language: {
+					"url": "js/dataTables_zh-tw.txt",
+			        "emptyTable": "查無資料"
+			    },
+				initComplete: function(settings, json) {
+				    $('div .dt-buttons').css({'float': 'left','margin-left':'10px'});
+				    $('div .dt-buttons a').css('margin-left','10px');
+				},
 				ajax: {
 					url : "sale.do",
 					dataSrc: "",
@@ -406,9 +445,71 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					data : parameter
 				},
 		        columnDefs: oColumnDefs,
-				columns: oColumns
+				columns: oColumns,
+				buttons: [{
+		            text: '全選',
+		            action: function(e, dt, node, config) {
+
+		                selectCount++;
+		                var $table = $('#sales');
+		                var $checkboxs = $table.find('input[name=checkbox-group-select]');
+
+		                selectCount % 2 != 1 ?
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", false);
+		                        $(this).removeClass("toggleon");
+		                        $(this).closest("tr").removeClass("selected");
+		                    }) :
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", true);
+		                        $(this).addClass("toggleon");
+		                        $(this).closest("tr").addClass("selected");
+		                    });
+		            },
+				},{
+		            text: '產生電文',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#sales');
+
+		                var cells = dataTableObj.cells().nodes();
+		                var ids = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+
+		                $checkboxs.each(function() {
+		                    ids += this.id + ',';
+		                });
+		                ids = ids.slice(0, -1);
+
+		                console.log(ids);
+		                
+		                $.ajax({
+							url: 'sale.do',
+							type: 'post',
+							data: {
+								action: 'invoice',
+								ids: ids
+							},
+							success: function (response) {
+								
+							}
+						});
+
+		            },
+				}]
 			});	
-				
+
+		    $('#sales').on('change', ':checkbox', function() {
+		        $(this).is(":checked")?
+		        	$(this).closest("tr").addClass("selected"):
+		        	$(this).closest("tr").removeClass("selected");
+		    });				
 			
 			$("#sales_contain_row")
 				.show()

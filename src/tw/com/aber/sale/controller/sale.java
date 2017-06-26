@@ -334,6 +334,8 @@ public class sale extends HttpServlet {
 				}
 				logger.debug("saleDetail_id:".concat(saleDetail_id));
 
+			}else if ("invoice".equals(action)) {
+				
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
