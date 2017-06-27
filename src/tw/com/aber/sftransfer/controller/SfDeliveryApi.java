@@ -306,12 +306,9 @@ public class SfDeliveryApi {
 		try {
 			response = JAXB.unmarshal(new StringReader(resXml), Response.class);
 			String jsonStr = new Gson().toJson(response);
-			logger.debug("\n\n[Response]\n\nJson格式:\n\n{}\n", jsonStr);
-			StringWriter sw = new StringWriter();
-			JAXB.marshal(response, sw);
-			logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+			logger.debug(jsonStr);
 		} catch (Exception e) {
-			logger.debug("\n\ngetResponseObj err:{}\n", e.getMessage());
+			logger.debug(e.getMessage());
 		}
 		return response;
 	}
