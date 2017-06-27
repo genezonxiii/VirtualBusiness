@@ -307,7 +307,7 @@ input[type="number"] {
 	                                	
 	                                    if (data == "success") {
 	                                       	var $mes = $('#message #text');
-	                                    	$mes.val('').html('刪除成功');
+	                                    	$mes.val('').html('修改成功');
 	                                    	
 	                                    	$('#message')
 		                    				.dialog()
