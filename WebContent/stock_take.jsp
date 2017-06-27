@@ -554,9 +554,21 @@ input[type="number"] {
 	$("#dt_master").on("click", ".btn-ok", function(e) {
 	    e.preventDefault();
 	    hidDetail();
-
+	    var $mes = $('#message #text');
 	    var row = $(this).closest("tr");
 	    var data = $("#dt_master").DataTable().row(row).data();
+	    
+	    if(('undefined' != typeof(data.end_date))){
+	    	   $mes.val('').html('該筆資料已盤點完成');
+               $('#message')
+                   .dialog()
+                   .dialog('option', 'title', '提示訊息')
+                   .dialog('option', 'width', '200px')
+                   .dialog('option', 'minHeight', '200px')
+                   .dialog("open");
+	    	return ;
+	    }
+	    
 	    console.log("stocktake_id:" + data.stocktake_id);
 
 	    var parameter = {
@@ -583,7 +595,7 @@ input[type="number"] {
                         .dialog("open");
 
                 } else {
-                    $mes.val('').html('執行失敗');
+                    $mes.val('').html('執行失敗:'+data);
                     $('#message')
                         .dialog()
                         .dialog('option', 'title', '提示訊息')
@@ -641,6 +653,20 @@ input[type="number"] {
 	    var row = $(this).closest("tr");
 	    var data = $("#dt_master").DataTable().row(row).data();
 
+	    
+	    if(('undefined' != typeof(data.end_date))){
+	    	  var $mes = $('#message #text');
+	    	   $mes.val('').html('該筆資料已盤點完成');
+            $('#message')
+                .dialog()
+                .dialog('option', 'title', '提示訊息')
+                .dialog('option', 'width', '200px')
+                .dialog('option', 'minHeight', '200px')
+                .dialog("open");
+	    	return ;
+	    }
+	    
+	    
 	    console.log("stocktake_id" + data.stocktake_id);
 
 	    $("#hidStocktake_id").val(data.stocktake_id);
@@ -666,6 +692,20 @@ input[type="number"] {
 	    hidDetail();
 	    var row = $(this).closest("tr");
 	    var data = $("#dt_master").DataTable().row(row).data();
+	    
+	    
+	    if(('undefined' != typeof(data.end_date))){
+	    	  var $mes = $('#message #text');
+	    	   $mes.val('').html('該筆資料已盤點完成');
+            $('#message')
+                .dialog()
+                .dialog('option', 'title', '提示訊息')
+                .dialog('option', 'width', '200px')
+                .dialog('option', 'minHeight', '200px')
+                .dialog("open");
+	    	return ;
+	    }
+	    
 
 	    console.log("stocktake_id" + data.stocktake_id);
 
@@ -692,6 +732,20 @@ input[type="number"] {
 	    hidDetail();
 	    var row = $(this).closest("tr");
 	    var data = $("#dt_master").DataTable().row(row).data();
+	    
+	    
+	    if(('undefined' != typeof(data.end_date))){
+	    	  var $mes = $('#message #text');
+	    	   $mes.val('').html('該筆資料已盤點完成');
+            $('#message')
+                .dialog()
+                .dialog('option', 'title', '提示訊息')
+                .dialog('option', 'width', '200px')
+                .dialog('option', 'minHeight', '200px')
+                .dialog("open");
+	    	return ;
+	    }
+	    
 
 	    console.log("stocktake_id" + data.stocktake_id);
 
@@ -847,7 +901,7 @@ input[type="number"] {
 	$("#detail-table").on("click", ".btn_update", function(e) {
 	    e.preventDefault();
 
-	
+	    initDetailDialog();
 
 	    var row = $(this).closest("tr");
 	    var data = $("#detail-table").DataTable().row(row).data();

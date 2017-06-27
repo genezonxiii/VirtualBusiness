@@ -207,7 +207,7 @@ public class StockTake  extends HttpServlet {
 					stockTakeDetail.setStocktake_qty(Integer.valueOf(stocktake_qty_str));
 					isSuccess = serivce.updateStockTakeDetail(stockTakeDetail);
 				}else{
-					response.getWriter().write("請先點選盤點按鈕");
+					response.getWriter().write("該筆資料未進行盤點");
 					return;
 				}
 
@@ -266,7 +266,7 @@ public class StockTake  extends HttpServlet {
 
 			}else if("updateEndDate".equals(action)){
 				boolean isSuccess = false;
-				//boolean stocktake_Flag = true;
+				boolean stocktake_Flag = true;
 				
 				String stocktake_id = request.getParameter("stocktake_id");
 				
@@ -274,17 +274,17 @@ public class StockTake  extends HttpServlet {
 				
 				
 				//庫存狀態需要未鎖定才可完成盤點
-				//stocktake_Flag = serivce.getStockTakeVOFlag(group_id, stocktake_id);
+				stocktake_Flag = serivce.getStockTakeVOFlag(group_id, stocktake_id);
 
 				// 未鎖定才可新增盤點明細
-				//if (!stocktake_Flag) {
+				if (!stocktake_Flag) {
 					isSuccess = serivce.updateEndDate(group_id, stocktake_id);
-				//}
+				}
 
 				if (isSuccess) {
 					result = "success";
 				} else {
-					result = "error";
+					result = "請先解除盤點";
 				}
 
 				response.getWriter().write(result);
