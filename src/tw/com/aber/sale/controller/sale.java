@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.inv.controller.InvoiceApi;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.SaleDetailVO;
@@ -337,6 +338,12 @@ public class sale extends HttpServlet {
 			} else if ("invoice".equals(action)) {
 				String saleIds = (String) request.getParameter("ids");
 				 List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+				 InvoiceApi api = new InvoiceApi();
+				 
+				 //TODO 撈取發票號碼
+				 String invoiceNum ="假發票";
+				 
+				 api.genRequestForC0401(invoiceNum, saleVOs);
 				logger.debug(saleVOs.size());
 			}
 		} catch (Exception e) {

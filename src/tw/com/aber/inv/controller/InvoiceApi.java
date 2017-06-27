@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -460,23 +461,70 @@ public class InvoiceApi {
 
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-mm-dd");
 		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 		Date date = new Date();
 		String ymd = dt1.format(date);
 		String hms = dt2.format(date);
+		String ymdhms = dt3.format(date);
 
-		invoice.setA1("C0401");//訊息類型
-		invoice.setA2(invoiceNum);//發票號碼
-		invoice.setA3(ymd);//發票開立日期
-		invoice.setA4(hms);//發票開立時間
-		invoice.setA5("0000000000");//buyer識別碼(
-		invoice.setA6("0000");//buyer名稱
-		invoice.setA19(ymd);
-		invoice.setA20("北祥");
-		invoice.setA21("1020001054");
-		invoice.setA22("03");
-		invoice.setA24("0");
-		invoice.setA25("Y");
-		invoice.setA30("1234");
+		invoice.setA1("C0401");// 訊息類型
+		invoice.setA2(invoiceNum);// 發票號碼
+		invoice.setA3(ymd);// 發票開立日期
+		invoice.setA4(hms);// 發票開立時間
+		invoice.setA5("0000000000");// buyer識別碼(
+		invoice.setA6("0000");// buyer名稱
+		invoice.setA19("");// 核准日
+		invoice.setA20("");// 核准文
+		invoice.setA21("");// 核准號
+		invoice.setA22("");// 發票類別
+		invoice.setA24("");// 捐贈註記
+		invoice.setA28("");// 紙本電子發票已列印標記
+		invoice.setA30("");// 發票防偽隨機碼
+
+		List<B> bList = new ArrayList<B>();
+
+		B b = null;
+		BigDecimal c1, quantity, price, multiplyNum;
+		BigDecimal c1Total = new BigDecimal("0");// 應稅銷售額合計
+		BigDecimal sum = new BigDecimal("0");// 應稅總計金額
+
+		for (int i = 0; i < saleVOs.size(); i++) {
+
+			/*
+			 * 取得數量及單價，相乘得出總價，再計算得出該筆的應稅銷售額，逐一加入得出合計
+			 */
+			quantity = new BigDecimal(saleVOs.get(i).getQuantity());
+			price = new BigDecimal(saleVOs.get(i).getPrice());
+
+			multiplyNum = quantity.multiply(price);
+
+			c1 = multiplyNum.divide(new BigDecimal("1.05"), 0, BigDecimal.ROUND_HALF_DOWN);
+
+			c1Total.add(c1);
+			sum.add(multiplyNum);
+
+			b = new B();
+			b.setB1(String.valueOf(i+1));// 商品項目資料
+			b.setB2(saleVOs.get(i).getProduct_name());// 品名
+			b.setB3(String.valueOf(saleVOs.get(i).getQuantity()));// 數量
+			b.setB5(String.valueOf(saleVOs.get(i).getPrice()));// 單價
+			b.setB6(String.valueOf(sum));// 金額
+			b.setB7(String.valueOf(i+1));// 明細排列序號
+			bList.add(b);
+		}
+
+		invoice.setC1(String.valueOf(c1Total));// 應稅銷售額合計(新台幣)
+		invoice.setC2("0");// 免稅銷售額合計(新台幣)
+		invoice.setC3("0");// 零稅率銷售額合計(新台幣)
+		invoice.setC4("1");// 課稅別
+		invoice.setC5("0.05");// 稅率
+		invoice.setC6(String.valueOf(sum.subtract(c1Total)));// 營業稅額
+		invoice.setC7(String.valueOf(sum));// 總計
+
+		invoice.setD1("20939790");// seller識別碼(統一編號)
+		invoice.setD2("8220ceffab2327860856");// sellerPOSSN(POS機出廠序號)(通道金鑰)
+		invoice.setD3("1");// POSID(POS機編號)
+		invoice.setD4(ymdhms);// XML產生時間
 
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(invoice, sw);
