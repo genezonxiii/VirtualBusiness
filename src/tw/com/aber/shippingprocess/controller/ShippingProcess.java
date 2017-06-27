@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -46,16 +48,18 @@ public class ShippingProcess extends HttpServlet {
 				//配庫
 				JSONObject responseStr = service.statisticsAlloc(group_id, user_id);
 				response.getWriter().write(responseStr.toString());
-			} else if ("importData".equals(action)) {
-				//銷貨
-				List<RealSaleVO> realsaleList = null;
+			} else if ("importData".equals(action)) { // 銷貨
 				String c_import_trans_list_date_begin = request.getParameter("import_trans_list_date_begin");
 				String c_import_trans_list_date_end = request.getParameter("import_trans_list_date_end");
-				service.importRealSale(group_id, user_id, c_import_trans_list_date_begin, c_import_trans_list_date_end);
-				realsaleList = service.getSearchAllDB(group_id);
-				String jsonStrList = gson.toJson(realsaleList);
-				response.getWriter().write(jsonStrList);
-				logger.info(jsonStrList);
+				JSONObject jsonObject = service.importRealSale(group_id, user_id, c_import_trans_list_date_begin,
+						c_import_trans_list_date_end);
+				logger.info(jsonObject.toString());
+				response.getWriter().write(jsonObject.toString());
+			} else if ("importallocinvData".equals(action)) {
+				// 配庫
+				JSONObject jsonObject = service.importAllocInv(group_id, user_id);
+				logger.info(jsonObject.toString());
+				response.getWriter().write(jsonObject.toString());
 			}else if("importPicking".equals(action)){
 				//揀貨
 				String order_no_count = request.getParameter("order_no_count");
@@ -65,20 +69,113 @@ public class ShippingProcess extends HttpServlet {
 				//出貨
 				JSONObject responseStr = service.importShip(group_id, user_id);
 				response.getWriter().write(responseStr.toString());
+			}else if("fastExecution".equals(action)){
+				Date date = new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String dateString = sdf.format(date);
+
+				// 匯入銷貨
+				JSONObject jsonObject = service.importRealSale(group_id, user_id, "2017-05-17", "2017-05-17");
+				boolean isSucess = checkData(jsonObject,1);
+				if (!isSucess) {
+					jsonObject= new JSONObject();
+					jsonObject.put("isSuccess", false);
+					logger.info(jsonObject.toString());
+					response.getWriter().write(jsonObject.toString());
+				}
+				
+				//匯入待出庫
+				jsonObject = service.importAllocInv(group_id, user_id);
+				
+				 isSucess = checkData(jsonObject,1);
+				if (!isSucess) {
+					jsonObject.put("isSuccess", false);
+					logger.info(jsonObject.toString());
+					response.getWriter().write(jsonObject.toString());
+				}
+				
+				//配庫
+				jsonObject = service.statisticsAlloc(group_id, user_id);
+				
+				 isSucess = checkData(jsonObject,1);
+					if (!isSucess) {
+						jsonObject= new JSONObject();
+						jsonObject.put("isSuccess", false);
+						logger.info(jsonObject.toString());
+						response.getWriter().write(jsonObject.toString());
+					}
+					
+				//檢貨
+				jsonObject = service.importPicking(group_id, user_id,"1");
+				
+				 isSucess = checkData(jsonObject,2);
+					if (!isSucess) {
+						jsonObject= new JSONObject();
+						jsonObject.put("isSuccess", false);
+						logger.info(jsonObject.toString());
+						response.getWriter().write(jsonObject.toString());
+					}
+				//出貨
+				jsonObject = service.importShip(group_id, user_id);
+				
+				 isSucess = checkData(jsonObject,2);
+					if (!isSucess) {
+						jsonObject= new JSONObject();
+						jsonObject.put("isSuccess", false);
+						logger.info(jsonObject.toString());
+						response.getWriter().write(jsonObject.toString());
+					}else{
+						jsonObject= new JSONObject();
+						jsonObject.put("isSuccess", true);
+						logger.info(jsonObject.toString());
+						response.getWriter().write(jsonObject.toString());
+					}
+				
 			}
+			
+			
+			
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
 		}
 	}
+		
+	public boolean checkData(JSONObject jsonObject, int type) {
+		try {
 
+			if (type == 1) {
+
+				String order_no_cnt = (String) jsonObject.get("order_no_cnt");
+				String total_cnt = (String) jsonObject.get("total_cnt");
+
+				if ("".equals(order_no_cnt) || null == order_no_cnt) {
+					return false;
+				}
+				if ("".equals(total_cnt) || null == total_cnt) {
+					return false;
+				}
+				return true;
+			} else if (type == 2) {
+				Boolean isSuccess =  jsonObject.getBoolean("isSuccess");
+				if (isSuccess==false || null == isSuccess) {
+					return false;
+				}
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	protected class ShippingProcessService {
 		private ShippingProcess_interface dao = new ShippingProcessDAO();
 
-		public void importRealSale(String group_id, String user_id, String trans_list_date_begin,
-				String trans_list_date_end) {
-			dao.importDB(group_id, user_id, trans_list_date_begin, trans_list_date_end);
-		}
 
+		public JSONObject importRealSale(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
+			return dao.importDB(group_id,user_id,trans_list_date_begin,trans_list_date_end);
+		}
 		public List<RealSaleVO> getSearchAllDB(String group_id) {
 			return dao.searchAllDB(group_id);
 		}
@@ -92,6 +189,9 @@ public class ShippingProcess extends HttpServlet {
 		
 		public JSONObject importShip(String group_id, String user_id) {
 			return dao.importShip(group_id, user_id);
+		}
+		public JSONObject importAllocInv(String group_id,String user_id) {
+			return dao.importAllocInvDB(group_id,user_id);
 		}
 	}
 
@@ -113,7 +213,8 @@ public class ShippingProcess extends HttpServlet {
 		// 出貨
 		private static final String sp_importData_ship = "call sp_importData_ship(?,?)";
 		
-		
+		private static final String sp_importData_alloc_inv = "call sp_importData_alloc_inv (?,?)";
+
 
 		@Override
 		public JSONObject statisticsAlloc(String group_id, String user_id) {
@@ -224,19 +325,28 @@ public class ShippingProcess extends HttpServlet {
 		}
 
 		@Override
-		public void importDB(String group_id, String user_id, String trans_list_date_begin,
-				String trans_list_date_end) {
+		public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			JSONObject jsonObject = new JSONObject();
+			
 			try {
+				
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_importData_realsale);
 				pstmt.setString(1, group_id);
 				pstmt.setString(2, user_id);
-				pstmt.setString(3, trans_list_date_begin);
-				pstmt.setString(4, trans_list_date_end);
-				pstmt.executeUpdate();
+				pstmt.setString(3, trans_list_date_begin);		
+				pstmt.setString(4, trans_list_date_end);			
+
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
+				
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -255,6 +365,8 @@ public class ShippingProcess extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
+			
+			return jsonObject;
 		}
 
 		@Override
@@ -349,10 +461,52 @@ public class ShippingProcess extends HttpServlet {
 			return jsonObject;
 
 		}
+		
+		
+		@Override
+		public JSONObject importAllocInvDB(String group_id,String user_id) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			JSONObject jsonObject = new JSONObject();
+			
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_importData_alloc_inv);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, user_id);
+				
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			
+			return jsonObject;
+		}
 	}
 
 	interface ShippingProcess_interface {
-		public void importDB(String group_id, String user_id, String trans_list_date_begin, String trans_list_date_end);
+		public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end);
 
 		public List<RealSaleVO> searchAllDB(String group_id);
 
@@ -361,6 +515,8 @@ public class ShippingProcess extends HttpServlet {
 		public JSONObject importPicking(String group_id, String user_id,String order_count);
 		
 		public JSONObject importShip(String group_id, String user_id);
+		
+		public JSONObject importAllocInvDB(String group_id,String user_id);
 	}
 
 }

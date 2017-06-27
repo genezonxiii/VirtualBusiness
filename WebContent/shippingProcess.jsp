@@ -32,6 +32,20 @@ String privilege = (String) request.getSession().getAttribute("privilege");
     padding: 5px;
     font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
     }
+    input[type="number"]:disabled{
+    	 background-color: #cccccc;
+    }
+    
+   button:disabled,button[disabled]{
+	  border: 1px solid #999999;
+	  background-color: #cccccc;
+	  color: #666666;
+	  pointer-events: none;
+	}
+	
+	/*.btn-exec:hover {
+	     background-color: #cccccc;
+	}*/
   </style>
 </head>
 <body>
@@ -49,6 +63,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					<div class="datalistWrap">
 						<div class="input-field-wrap">
 							<div class="form-wrap">
+								<div class="form-row fast_div">
+									<button class="btn btn-exec btn-wide" id="fast_button">快速出庫</button>
+								</div>
+								<div class="form-row fast_div">
+									<hr class="hr-gray"></hr>
+								</div>
 								<div class="form-row">
 									<label for=""> <span class="block-label">轉單日期區間：</span>
 										<input type="text" class="input-date"
@@ -140,6 +160,16 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	<jsp:include page="template/common_js.jsp" flush="true"/>
 
 <script>
+	$(function() {
+		$("#import_alloc_inv").attr('disabled', true);
+		$("#statistics_alloc_inv").attr('disabled', true);
+		$("#import_order_count").attr('disabled', true);
+		$("#import_picking").attr('disabled', true);
+		$("#import_ship").attr('disabled', true);
+		//$(".fast_div").hide();
+		
+	});
+
     var customer_menu = [];
     var customer_tags = [];
 
@@ -484,7 +514,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
             
 			$.ajax({
 			    type: 'POST',
-			    url: 'realsale.do',
+			    url: 'shippingProcess.do',
 			    data: {
 			    	action: "importData",
 			        import_trans_list_date_begin: $("#import_trans_list_date_begin").val(),
@@ -493,9 +523,20 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			    success: function(result) {
 			        var obj = jQuery.parseJSON(result);
 			        var order_no_cnt = "轉入訂單數：" + obj.order_no_cnt;
-			        var total_cnt = ", 轉入訂單商品明細數：" + obj.total_cnt;
+			        var total_cnt = "<br/> 轉入訂單商品明細數：" + obj.total_cnt;
 
 			        dialogMsg('轉入銷貨', order_no_cnt + total_cnt);
+			        
+
+					$("#import_trans_list_date_begin").attr('disabled', true);
+					$("#import_trans_list_date_end").attr('disabled', true);
+					$("#import_resale").attr('disabled', true);
+					$("#import_alloc_inv").attr('disabled', false);
+					$("#statistics_alloc_inv").attr('disabled', true);
+					$("#import_order_count").attr('disabled', true);
+					$("#import_picking").attr('disabled', true);
+					$("#import_ship").attr('disabled', true);
+				
 			    }
 			});
         });
@@ -510,16 +551,26 @@ String privilege = (String) request.getSession().getAttribute("privilege");
             
             $.ajax({
 			    type: 'POST',
-			    url: 'realsale.do',
+			    url: 'shippingProcess.do',
 			    data: {
 			    	action: "importallocinvData"
 			    },
 			    success: function(result) {
 			        var obj = jQuery.parseJSON(result);
 			        var order_no_cnt = "待出庫訂單數：" + obj.order_no_cnt;
-			        var total_cnt = ", 待出庫商品明細數：" + obj.total_cnt;
+			        var total_cnt = "<br/> 待出庫商品明細數：" + obj.total_cnt;
 
 			        dialogMsg('轉入待出庫', order_no_cnt + total_cnt);
+			        
+					$("#import_trans_list_date_begin").attr('disabled', true);
+					$("#import_trans_list_date_end").attr('disabled', true);
+					$("#import_resale").attr('disabled', true);
+					$("#import_alloc_inv").attr('disabled', true);
+					$("#statistics_alloc_inv").attr('disabled', false);
+					$("#import_order_count").attr('disabled', true);
+					$("#import_picking").attr('disabled', true);
+					$("#import_ship").attr('disabled', true);
+			        
 			    }
 			});
         });
@@ -535,9 +586,17 @@ String privilege = (String) request.getSession().getAttribute("privilege");
                 success: function(result) {
                 	var obj = jQuery.parseJSON(result);
 			        var order_no_cnt = "出庫訂單數：" + obj.order_no_cnt;
-			        var total_cnt = ", 出庫商品明細數：" + obj.total_cnt;
+			        var total_cnt = "<br/>  出庫商品明細數：" + obj.total_cnt;
 
 			        dialogMsg('執行配庫', order_no_cnt + total_cnt);
+					$("#import_trans_list_date_begin").attr('disabled', true);
+					$("#import_trans_list_date_end").attr('disabled', true);
+					$("#import_resale").attr('disabled', true);
+					$("#import_alloc_inv").attr('disabled', true);
+					$("#statistics_alloc_inv").attr('disabled', true);
+					$("#import_order_count").attr('disabled', false);
+					$("#import_picking").attr('disabled', false);
+					$("#import_ship").attr('disabled', true);
                 },
             });
 
@@ -558,6 +617,15 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                    var obj = jQuery.parseJSON(result);
 	                    var isSuccess = obj.isSuccess?"成功":"失敗";
 	                    dialogMsg('轉入揀貨', "轉入揀貨作業：" + isSuccess);
+	                    
+						$("#import_trans_list_date_begin").attr('disabled', true);
+						$("#import_trans_list_date_end").attr('disabled', true);
+						$("#import_resale").attr('disabled', true);
+						$("#import_alloc_inv").attr('disabled', true);
+						$("#statistics_alloc_inv").attr('disabled', true);
+						$("#import_order_count").attr('disabled', true);
+						$("#import_picking").attr('disabled', true);
+						$("#import_ship").attr('disabled', false);
 	                }
 	            });
 			}else{
@@ -578,9 +646,37 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                    var obj = jQuery.parseJSON(result);
 	                    var isSuccess = obj.isSuccess?"成功":"失敗";
 	                    dialogMsg('轉入出貨', "轉入出貨作業：" + isSuccess);
+	                    
+						$("#import_trans_list_date_begin").attr('disabled', false);
+						$("#import_trans_list_date_end").attr('disabled', false);
+						$("#import_resale").attr('disabled', false);
+						$("#import_alloc_inv").attr('disabled', true);
+						$("#statistics_alloc_inv").attr('disabled', true);
+						$("#import_order_count").attr('disabled', true);
+						$("#import_picking").attr('disabled', true);
+						$("#import_ship").attr('disabled', true);
 	                },
 	            });
         });
+		
+		
+      //20170627  出貨---------------------------------
+        $("#fast_button").click(function(e) {
+	            $.ajax({
+	                type: 'POST',
+	                url: 'shippingProcess.do',
+	                data: {
+	                    action: "fastExecution"
+	                },
+	                success: function(result) {
+	                    var obj = jQuery.parseJSON(result);
+	                    var isSuccess = obj.isSuccess?"成功":"失敗";
+	                    dialogMsg('轉入出貨', "轉入出貨作業：" + isSuccess);
+	                    
+	                },
+	            });
+        });
+		
         //新增Dialog相關設定
         insert_dialog = $("#dialog-form-insert").dialog({
             draggable: true,
