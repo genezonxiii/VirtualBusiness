@@ -10,11 +10,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class OrderConfirmResponse {
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute
+	@XmlAttribute(name="orderid")
 	private String orderId;
-	@XmlAttribute
+	
+	@XmlAttribute(name="mailno")
 	private String mailno;
-	@XmlAttribute
+	
+	@XmlAttribute(name="res_status")
 	private String res_status;
 
 	public String getOrderId() {

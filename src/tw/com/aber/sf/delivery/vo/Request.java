@@ -13,9 +13,9 @@ import javax.xml.bind.annotation.XmlType;
 public class Request {
 	private static final long serialVersionUID = 1L;
 	
-	@XmlAttribute
+	@XmlAttribute(name = "service")
 	private String service;
-	@XmlAttribute
+	@XmlAttribute(name = "lang")
 	private String lang;
 	
 	@XmlElement(name = "Head")

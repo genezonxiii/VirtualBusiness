@@ -14,14 +14,18 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "routes" })
 public class RouteResponse {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@XmlAttribute(name="mailno")
 	private String mailno;
-	@XmlAttribute
+	
+	@XmlAttribute(name="accept_time")
 	private String accept_time;
-	@XmlAttribute
+	
+	@XmlAttribute(name="accept_address")
 	private String accept_address;
-	@XmlAttribute
+	
+	@XmlAttribute(name="remark")
 	private String remark;
+	
 	@XmlElement(name = "Route")
 	private List<Route> routes;
 

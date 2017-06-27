@@ -115,6 +115,7 @@ public class SfDeliveryApi {
 
 		return result;
 	}
+
 	public String genOrderSearchService(String orderNo) {
 		String result = "";
 
@@ -138,6 +139,7 @@ public class SfDeliveryApi {
 
 		return result;
 	}
+
 	// 測試用
 	public String genOrderService() {
 		String result = "";
@@ -329,8 +331,7 @@ public class SfDeliveryApi {
 	}
 
 	public String sendXML(String reqXml) {
-//		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
-		 String targetURL = "http://192.168.112.164:8088/sfdelivery/";
+		String targetURL = "http://bspoisp.sit.sf-express.com:11080/bsp-oisp/sfexpressService";
 		String urlParameters = "";
 
 		SfDeliveryApi api = new SfDeliveryApi();
@@ -400,7 +401,9 @@ public class SfDeliveryApi {
 	public static void main(String[] args) {
 		SfDeliveryApi api = new SfDeliveryApi();
 
-		// api.genOrderService();
+		String reqXml = api.genOrderService();
+		String resXml = api.sendXML(reqXml);
+		api.getResponseObj(resXml);
 		// api.getResponseObj(ORDER_SERVICE_RESPONSE);
 		// api.getResponseObj(ORDER_SERVICE_ERR_RESPONSE);
 
