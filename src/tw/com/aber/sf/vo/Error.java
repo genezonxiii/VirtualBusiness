@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlValue;
 @XmlType(propOrder = { "error" })
 public class Error {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@XmlAttribute(name="code")
 	protected String code;
 	@XmlValue
 	private String error;
