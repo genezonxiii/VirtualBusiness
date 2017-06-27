@@ -205,7 +205,7 @@ input[type="number"] {
 	    $("#detail-table_wrapper").hide();
 	    $("#detail-table").hide();
 	    
-	    //修改事件
+	    //修改事件 先直接製作
 	    $("#detail-table").on("click", ".btn_update", function(e) {
 	        e.preventDefault();
 	        var row = $(this).closest("tr");
@@ -307,7 +307,7 @@ input[type="number"] {
 	                                	
 	                                    if (data == "success") {
 	                                       	var $mes = $('#message #text');
-	                                    	$mes.val('').html('刪除成功');
+	                                    	$mes.val('').html('修改成功');
 	                                    	
 	                                    	$('#message')
 		                    				.dialog()
