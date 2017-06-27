@@ -31,6 +31,7 @@ import tw.com.aber.inv.vo.Invoice;
 import tw.com.aber.inv.vo.InvoiceData;
 import tw.com.aber.sftransfer.controller.Md5Base64;
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.SaleVO;
 
 public class InvoiceApi {
@@ -455,7 +456,7 @@ public class InvoiceApi {
 	 * C0401開立發票訊息規格 [Request]
 	 * 
 	 **********************/
-	public String genRequestForC0401(String invoiceNum, List<SaleVO> saleVOs) {
+	public String genRequestForC0401(String invoiceNum, List<SaleVO> saleVOs, GroupVO groupVO) {
 		String result = null;
 		Invoice invoice = new Invoice();
 
@@ -467,6 +468,9 @@ public class InvoiceApi {
 		String hms = dt2.format(date);
 		String ymdhms = dt3.format(date);
 
+		int randomPIN = (int) (Math.random() * 9000) + 1000;
+		String PINString = String.valueOf(randomPIN);
+
 		invoice.setA1("C0401");// 訊息類型
 		invoice.setA2(invoiceNum);// 發票號碼
 		invoice.setA3(ymd);// 發票開立日期
@@ -476,10 +480,10 @@ public class InvoiceApi {
 		invoice.setA19("");// 核准日
 		invoice.setA20("");// 核准文
 		invoice.setA21("");// 核准號
-		invoice.setA22("");// 發票類別
-		invoice.setA24("");// 捐贈註記
-		invoice.setA28("");// 紙本電子發票已列印標記
-		invoice.setA30("");// 發票防偽隨機碼
+		invoice.setA22("07");// 發票類別
+		invoice.setA24("0");// 捐贈註記
+		invoice.setA28("N");// 紙本電子發票已列印標記
+		invoice.setA30(PINString);// 發票防偽隨機碼
 
 		List<B> bList = new ArrayList<B>();
 
@@ -504,12 +508,12 @@ public class InvoiceApi {
 			sum.add(multiplyNum);
 
 			b = new B();
-			b.setB1(String.valueOf(i+1));// 商品項目資料
+			b.setB1(String.valueOf(i + 1));// 商品項目資料
 			b.setB2(saleVOs.get(i).getProduct_name());// 品名
 			b.setB3(String.valueOf(saleVOs.get(i).getQuantity()));// 數量
 			b.setB5(String.valueOf(saleVOs.get(i).getPrice()));// 單價
 			b.setB6(String.valueOf(sum));// 金額
-			b.setB7(String.valueOf(i+1));// 明細排列序號
+			b.setB7(String.valueOf(i + 1));// 明細排列序號
 			bList.add(b);
 		}
 
@@ -521,9 +525,9 @@ public class InvoiceApi {
 		invoice.setC6(String.valueOf(sum.subtract(c1Total)));// 營業稅額
 		invoice.setC7(String.valueOf(sum));// 總計
 
-		invoice.setD1("20939790");// seller識別碼(統一編號)
-		invoice.setD2("8220ceffab2327860856");// sellerPOSSN(POS機出廠序號)(通道金鑰)
-		invoice.setD3("1");// POSID(POS機編號)
+		invoice.setD1(groupVO.getGroup_unicode());// seller識別碼(統一編號)
+		invoice.setD2(groupVO.getInvoice_key());// sellerPOSSN(POS機出廠序號)(通道金鑰)
+		invoice.setD3(groupVO.getInvoice_posno());// POSID(POS機編號)
 		invoice.setD4(ymdhms);// XML產生時間
 
 		StringWriter sw = new StringWriter();

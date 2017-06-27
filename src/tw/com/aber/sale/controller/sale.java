@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.inv.controller.InvoiceApi;
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.SaleDetailVO;
 import tw.com.aber.vo.SaleVO;
@@ -337,13 +338,16 @@ public class sale extends HttpServlet {
 
 			} else if ("invoice".equals(action)) {
 				String saleIds = (String) request.getParameter("ids");
-				 List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
-				 InvoiceApi api = new InvoiceApi();
-				 
-				 //TODO 撈取發票號碼
-				 String invoiceNum ="假發票";
-				 
-				 api.genRequestForC0401(invoiceNum, saleVOs);
+				
+				List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+				GroupVO groupVO =saleService.getGroupInvoiceInfo(group_id);
+				
+				InvoiceApi api = new InvoiceApi();
+
+				// TODO 撈取發票號碼
+				String invoiceNum = "假發票";
+
+				api.genRequestForC0401(invoiceNum, saleVOs,groupVO);
 				logger.debug(saleVOs.size());
 			}
 		} catch (Exception e) {
@@ -438,6 +442,8 @@ public class sale extends HttpServlet {
 
 		public void deleteDetailDB(String saleDetail_id);
 
+		public GroupVO getGroupInvoiceInfo(String groupId);
+
 	}
 
 	class SaleService {
@@ -509,6 +515,10 @@ public class sale extends HttpServlet {
 		public List<SaleVO> getSaleOrdernoInfoByIds(String groupId, String saleIds) {
 			return dao.getSaleOrdernoInfoByIds(groupId, saleIds);
 		}
+		
+		public GroupVO getGroupInvoiceInfo(String groupId){
+			return dao.getGroupInvoiceInfo(groupId);
+		}
 	}
 
 	class SaleDAO implements sale_interface {
@@ -534,6 +544,7 @@ public class sale extends HttpServlet {
 		private static final String sp_update_saleDetail = "call sp_update_saleDetail(?, ?, ?, ?, ?)";
 		private static final String sp_del_saleDetail = "call sp_del_saleDetail(?)";
 		private static final String sp_get_sale_orderno_info_by_ids = "call sp_get_sale_orderno_info_by_ids(?,?)";
+		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
@@ -1300,6 +1311,49 @@ public class sale extends HttpServlet {
 				}
 			}
 			return list;
+		}
+
+		@Override
+		public GroupVO getGroupInvoiceInfo(String groupId) {
+			GroupVO groupVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_group_invoice_info);
+				pstmt.setString(1, groupId);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					groupVO = new GroupVO();
+					groupVO.setGroup_unicode(rs.getString("group_unicode"));
+					groupVO.setInvoice_key(rs.getString("invoice_key"));
+					groupVO.setInvoice_posno(rs.getString("invoice_posno"));
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return groupVO;
 		}
 
 	}
