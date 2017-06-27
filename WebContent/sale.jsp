@@ -483,7 +483,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		                }
 
 		                $checkboxs.each(function() {
-		                    ids += this.id + ',';
+		                    ids += "'"+this.id + "',";
 		                });
 		                ids = ids.slice(0, -1);
 

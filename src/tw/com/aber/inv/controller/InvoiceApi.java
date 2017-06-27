@@ -30,6 +30,7 @@ import tw.com.aber.inv.vo.Invoice;
 import tw.com.aber.inv.vo.InvoiceData;
 import tw.com.aber.sftransfer.controller.Md5Base64;
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.vo.SaleVO;
 
 public class InvoiceApi {
 	private static final Logger logger = LogManager.getLogger(InvoiceApi.class);
@@ -453,7 +454,7 @@ public class InvoiceApi {
 	 * C0401開立發票訊息規格 [Request]
 	 * 
 	 **********************/
-	public String genRequestForC0401() {
+	public String genRequestForC0401(String invoiceNum, List<SaleVO> saleVOs) {
 		String result = null;
 		Invoice invoice = new Invoice();
 
@@ -463,12 +464,12 @@ public class InvoiceApi {
 		String ymd = dt1.format(date);
 		String hms = dt2.format(date);
 
-		invoice.setA1("C0401");
-		invoice.setA2("10000001");
-		invoice.setA3(ymd);
-		invoice.setA4(hms);
-		invoice.setA5("20939790");
-		invoice.setA6("0000");
+		invoice.setA1("C0401");//訊息類型
+		invoice.setA2(invoiceNum);//發票號碼
+		invoice.setA3(ymd);//發票開立日期
+		invoice.setA4(hms);//發票開立時間
+		invoice.setA5("0000000000");//buyer識別碼(
+		invoice.setA6("0000");//buyer名稱
 		invoice.setA19(ymd);
 		invoice.setA20("北祥");
 		invoice.setA21("1020001054");
@@ -476,7 +477,6 @@ public class InvoiceApi {
 		invoice.setA24("0");
 		invoice.setA25("Y");
 		invoice.setA30("1234");
-		
 
 		StringWriter sw = new StringWriter();
 		JAXB.marshal(invoice, sw);
