@@ -100,6 +100,7 @@ public class SfDeliveryApi {
 
 		OrderConfirm orderConfirm = new OrderConfirm();
 		orderConfirm.setOrderId(orderNo);
+		orderConfirm.setDealtype("2");
 
 		Body body = new Body();
 		body.setOrderConfirm(orderConfirm);
@@ -123,15 +124,17 @@ public class SfDeliveryApi {
 		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 
-		OrderConfirm orderConfirm = new OrderConfirm();
-		orderConfirm.setOrderId(orderNo);
+		
+		OrderSearch orderSearcho = new OrderSearch();
+		orderSearcho.setOrderId(orderNo);
 
 		Body body = new Body();
-		body.setOrderConfirm(orderConfirm);
+		body.setOrderSearch(orderSearcho);
 
 		Request request = new Request();
 		request.setHead(groupSfDelivery.getAccess_code());
 		request.setService("OrderSearchService");
+		request.setLang("zh-CN");
 		request.setBody(body);
 
 		StringWriter sw = new StringWriter();
@@ -330,7 +333,7 @@ public class SfDeliveryApi {
 		}
 		return result;
 	}
-
+	
 	public String sendXML(String reqXml, ValueService valueService) {
 		String targetURL = "http://bspoisp.sit.sf-express.com:11080/bsp-oisp/sfexpressService";
 		String urlParameters = "";
