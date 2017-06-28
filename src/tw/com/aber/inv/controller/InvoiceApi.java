@@ -516,7 +516,8 @@ public class InvoiceApi {
 			b.setB7(String.valueOf(i + 1));// 明細排列序號
 			bList.add(b);
 		}
-
+		invoice.setB(bList);
+		
 		invoice.setC1(String.valueOf(c1Total));// 應稅銷售額合計(新台幣)
 		invoice.setC2("0");// 免稅銷售額合計(新台幣)
 		invoice.setC3("0");// 零稅率銷售額合計(新台幣)
