@@ -29,6 +29,7 @@ import tw.com.aber.sf.delivery.vo.OrderSearch;
 import tw.com.aber.sf.delivery.vo.Request;
 import tw.com.aber.sf.delivery.vo.Response;
 import tw.com.aber.sf.delivery.vo.RouteRequest;
+import tw.com.aber.vo.GroupSfDelivery;
 
 public class SfDeliveryApi {
 	private static final Logger logger = LogManager.getLogger(SfDeliveryApi.class);
@@ -93,7 +94,8 @@ public class SfDeliveryApi {
 		return result;
 	}
 
-	public String genOrderConfirmService(String orderNo) {
+	public String genOrderConfirmService(String orderNo, ValueService valueService) {
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 
 		OrderConfirm orderConfirm = new OrderConfirm();
@@ -103,7 +105,7 @@ public class SfDeliveryApi {
 		body.setOrderConfirm(orderConfirm);
 
 		Request request = new Request();
-		request.setHead("BSPdevelop");
+		request.setHead(groupSfDelivery.getAccess_code());
 		request.setService("OrderConfirmService");
 		request.setBody(body);
 
@@ -117,7 +119,8 @@ public class SfDeliveryApi {
 		return result;
 	}
 
-	public String genOrderSearchService(String orderNo) {
+	public String genOrderSearchService(String orderNo, ValueService valueService) {
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 
 		OrderConfirm orderConfirm = new OrderConfirm();
@@ -127,7 +130,7 @@ public class SfDeliveryApi {
 		body.setOrderConfirm(orderConfirm);
 
 		Request request = new Request();
-		request.setHead("BSPdevelop");
+		request.setHead(groupSfDelivery.getAccess_code());
 		request.setService("OrderSearchService");
 		request.setBody(body);
 
@@ -328,25 +331,25 @@ public class SfDeliveryApi {
 		return result;
 	}
 
-	public String sendXML(String reqXml) {
+	public String sendXML(String reqXml, ValueService valueService) {
 		String targetURL = "http://bspoisp.sit.sf-express.com:11080/bsp-oisp/sfexpressService";
 		String urlParameters = "";
 
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
+		
+		String checkWord= groupSfDelivery.getCheck_word();
 		SfDeliveryApi api = new SfDeliveryApi();
+		
+		String verifyCode = reqXml + checkWord;
 
-		String logisticsInterface = reqXml;
-		String dataDigest = reqXml + "123456";
+		logger.debug("checkWord:" + checkWord);
+		verifyCode = Md5Base64.encode(verifyCode);
+		logger.debug("md5 + Base64:" + verifyCode);
+		verifyCode = Md5Base64.urlEncode(verifyCode);
+		logger.debug("md5 + Base64 > urlEncode:" + verifyCode);
 
-		// Md5Base64 enMd5Base64 = new Md5Base64();
-		dataDigest = Md5Base64.encode(dataDigest);
-		logger.debug("md5 + Base64:" + dataDigest);
-		dataDigest = Md5Base64.urlEncode(dataDigest);
-		logger.debug("md5 + Base64 > urlEncode:" + dataDigest);
-
-		logisticsInterface = Md5Base64.urlEncode(logisticsInterface);
-		logger.debug("logisticsInterface:" + logisticsInterface);
-
-		urlParameters = "logistics_interface=" + logisticsInterface + "&data_digest=" + dataDigest;
+		reqXml = Md5Base64.urlEncode(reqXml);
+		urlParameters = "xml=" + reqXml + "&verifyCode=" + verifyCode;
 
 		String returnValue = api.executePost(targetURL, urlParameters);
 		logger.debug("returnValue:" + returnValue);
@@ -402,9 +405,9 @@ public class SfDeliveryApi {
 	public static void main(String[] args) {
 		SfDeliveryApi api = new SfDeliveryApi();
 
-		String reqXml = api.genOrderService();
-		String resXml = api.sendXML(reqXml);
-		api.getResponseObj(resXml);
+//		String reqXml = api.genOrderService();
+//		String resXml = api.sendXML(reqXml);
+//		api.getResponseObj(resXml);
 		// api.getResponseObj(ORDER_SERVICE_RESPONSE);
 		// api.getResponseObj(ORDER_SERVICE_ERR_RESPONSE);
 

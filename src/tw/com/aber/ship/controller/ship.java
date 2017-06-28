@@ -205,27 +205,35 @@ public class ship extends HttpServlet {
 				String jsonList = request.getParameter("jsonList");
 				shipService = new ShipService();
 				SfDeliveryApi api = new SfDeliveryApi();
-				
+
+				ValueService valueService = util.getValueService(request, response);
+
 				String reqXml = shipService.genSFDeliveryOrderService(jsonList, groupId);
-				String resXml = api.sendXML(reqXml);
+				String resXml = api.sendXML(reqXml, valueService);
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
 				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
 				response.getWriter().write(result);
-			}else if("SFDeliveryOrderConfirmCancel".equals(action)){
+			} else if ("SFDeliveryOrderConfirmCancel".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
 				SfDeliveryApi api = new SfDeliveryApi();
-				String reqXml = api.genOrderConfirmService(orderNo);
-				String resXml = api.sendXML(reqXml);
+
+				ValueService valueService = util.getValueService(request, response);
+
+				String reqXml = api.genOrderConfirmService(orderNo, valueService);
+				String resXml = api.sendXML(reqXml, valueService);
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
 				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
 				response.getWriter().write(result);
-			}else if("SFDeliveryOrderSearchService".equals(action)){
+			} else if ("SFDeliveryOrderSearchService".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
 				SfDeliveryApi api = new SfDeliveryApi();
-				String reqXml = api.genOrderSearchService(orderNo);
-				String resXml = api.sendXML(reqXml);
+
+				ValueService valueService = util.getValueService(request, response);
+
+				String reqXml = api.genOrderSearchService(orderNo, valueService);
+				String resXml = api.sendXML(reqXml, valueService);
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
 				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
 				logger.debug("執行結果: " + result);
@@ -547,7 +555,8 @@ public class ship extends HttpServlet {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_select_ship_delivery);
-
+				logger.debug("groupId: ".concat(groupId));
+				logger.debug("orderNo: ".concat(orderNo));
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, orderNo);
 
@@ -583,7 +592,7 @@ public class ship extends HttpServlet {
 
 				String rqJsonStr = new Gson().toJson(request);
 				logger.debug(rqJsonStr);
-				
+
 				StringWriter sw = new StringWriter();
 				JAXB.marshal(request, sw);
 				logger.debug("\n{}", sw.toString());
