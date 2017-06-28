@@ -70,12 +70,18 @@ public class ShippingProcess extends HttpServlet {
 				JSONObject responseStr = service.importShip(group_id, user_id);
 				response.getWriter().write(responseStr.toString());
 			}else if("fastExecution".equals(action)){
-				Date date = new Date();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String dateString = sdf.format(date);
+
+				String fast_trans_list_date_begin = request.getParameter("fast_trans_list_date_begin");
+				String fast_trans_list_date_end = request.getParameter("fast_trans_list_date_end");
+				String order_no_count = request.getParameter("fast_order_count");
+				
+				logger.info("fast_trans_list_date_begin:"+fast_trans_list_date_begin);
+				logger.info("fast_trans_list_date_end:"+fast_trans_list_date_end);
+				logger.info("order_no_count:"+order_no_count);
+				
 
 				// 匯入銷貨
-				JSONObject jsonObject = service.importRealSale(group_id, user_id, "2017-05-17", "2017-05-17");
+				JSONObject jsonObject = service.importRealSale(group_id, user_id, fast_trans_list_date_begin, fast_trans_list_date_end);
 				boolean isSucess = checkData(jsonObject,1);
 				if (!isSucess) {
 					jsonObject= new JSONObject();
@@ -106,7 +112,7 @@ public class ShippingProcess extends HttpServlet {
 					}
 					
 				//檢貨
-				jsonObject = service.importPicking(group_id, user_id,"1");
+				jsonObject = service.importPicking(group_id, user_id,order_no_count);
 				
 				 isSucess = checkData(jsonObject,2);
 					if (!isSucess) {
