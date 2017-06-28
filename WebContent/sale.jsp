@@ -240,6 +240,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	</div>
 
 	<div id="warning" style="display: none; color: #f00; font-size: 28px;"></div>
+	<div id="message" align="center">
+		<div id="text"></div>
+	</div>
 
 	<!-- 銷貨明細對話窗 -->
 	<div id="dialog-sale-detail" class="dialog" align="center">
@@ -472,7 +475,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		                var $table = $('#sales');
 
 		                var cells = dataTableObj.cells().nodes();
+		                var saleMap = new Map();
 		                var ids = '';
+						var row;
+						var data;
+						var message = '';
 
 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 
@@ -481,26 +488,48 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-
-		                $checkboxs.each(function() {
-		                    ids += "'"+this.id + "',";
-		                });
-		                ids = ids.slice(0, -1);
-
-		                console.log(ids);
 		                
-		                $.ajax({
-							url: 'sale.do',
-							type: 'post',
-							data: {
-								action: 'invoice',
-								ids: ids
-							},
-							success: function (response) {
-								
-							}
+						$checkboxs.each(function(index) {
+		                    ids += "'"+this.id + "',";
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							saleMap.set( data.order_no, (index+1) );
 						});
 
+						if(saleMap.size> 1){
+							message = message.concat('以下為您所勾選的訂單號↓<br><br>');
+							var table = document.createElement('table');
+							saleMap.forEach(function(value, key, fullArray){
+								var tr = document.createElement('tr');
+								var text = document.createTextNode(key);
+								tr.appendChild(text);
+								table.appendChild(tr);
+							});
+							var $mes = $('#message #text');
+							$mes.val('').html(message).append(table);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+								.dialog('option', 'width', '322.6px')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}else{
+			                ids = ids.slice(0, -1);
+
+			                console.log(ids);
+			                
+			                $.ajax({
+								url: 'sale.do',
+								type: 'post',
+								data: {
+									action: 'invoice',
+									ids: ids
+								},
+								success: function (response) {
+									
+								}
+							});							
+						}
 		            },
 				}]
 			});	
