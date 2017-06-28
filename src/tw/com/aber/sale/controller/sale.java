@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.inv.controller.InvoiceApi;
+import tw.com.aber.inv.vo.Index;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.ProductVO;
@@ -337,19 +338,27 @@ public class sale extends HttpServlet {
 				logger.debug("saleDetail_id:".concat(saleDetail_id));
 
 			} else if ("invoice".equals(action)) {
-				String saleIds = (String) request.getParameter("ids");
-				
-				List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
-				GroupVO groupVO =saleService.getGroupInvoiceInfo(group_id);
-				
-				InvoiceApi api = new InvoiceApi();
+				String result="";
+				try {
 
-				// TODO 撈取發票號碼
-				String invoiceNum = "假發票";
+					String saleIds = (String) request.getParameter("ids");
 
-				api.genRequestForC0401(invoiceNum, saleVOs,groupVO);
-				
-				logger.debug(saleVOs.size());
+					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
+
+					InvoiceApi api = new InvoiceApi();
+
+					// TODO 撈取發票號碼
+					String invoiceNum = "GV123456789";
+
+					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
+					String resXml = api.sendXML(reqXml);
+					Index index = api.getIndexResponse(resXml);
+					result = index.getMessage();
+				} catch (Exception e) {
+					result = "false";
+				}
+				response.getWriter().write(result);
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -516,8 +525,8 @@ public class sale extends HttpServlet {
 		public List<SaleVO> getSaleOrdernoInfoByIds(String groupId, String saleIds) {
 			return dao.getSaleOrdernoInfoByIds(groupId, saleIds);
 		}
-		
-		public GroupVO getGroupInvoiceInfo(String groupId){
+
+		public GroupVO getGroupInvoiceInfo(String groupId) {
 			return dao.getGroupInvoiceInfo(groupId);
 		}
 	}

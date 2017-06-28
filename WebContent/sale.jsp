@@ -532,7 +532,17 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 									ids: ids
 								},
 								success: function (response) {
-									
+		                        	var $mes = $('#message #text');
+		                        	var text = '成功發送<br><br>執行結果為: '+ response;
+		                        	
+		                        	$mes.val('').html(text);
+		                        	
+		                        	$('#message')
+		                        		.dialog()
+		                        		.dialog('option', 'title', '提示訊息')
+		                        		.dialog('option', 'width', 'auto')
+		                        		.dialog('option', 'minHeight', 'auto')
+		                        		.dialog("open");
 								}
 							});							
 						}
