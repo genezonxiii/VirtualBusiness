@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -385,10 +386,13 @@ public class SfDeliveryApi {
 			}
 			rd.close();
 			return response.toString();
+		} catch (UnknownHostException e) {
+			logger.error("發送失敗：" + e.getMessage());
+			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗:" + e.getMessage() + "</ERROR></Response>";
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
+			logger.error("發送失敗：" + e.getMessage());
+			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗:" + e.getMessage() + "</ERROR></Response>";
+		}finally {
 			if (connection != null) {
 				connection.disconnect();
 			}

@@ -582,11 +582,11 @@ public class ship extends HttpServlet {
 				request.setBody(body);
 
 				String rqJsonStr = new Gson().toJson(request);
-				logger.debug("\n\n[Request]\n\nJson格式:\n\n{}\n", rqJsonStr);
+				logger.debug(rqJsonStr);
 				
 				StringWriter sw = new StringWriter();
 				JAXB.marshal(request, sw);
-				logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+				logger.debug("\n{}", sw.toString());
 				result = sw.toString();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
