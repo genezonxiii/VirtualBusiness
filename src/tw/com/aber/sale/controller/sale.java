@@ -348,6 +348,7 @@ public class sale extends HttpServlet {
 				String invoiceNum = "假發票";
 
 				api.genRequestForC0401(invoiceNum, saleVOs,groupVO);
+				
 				logger.debug(saleVOs.size());
 			}
 		} catch (Exception e) {

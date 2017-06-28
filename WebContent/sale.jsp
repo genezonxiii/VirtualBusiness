@@ -521,6 +521,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			                $.ajax({
 								url: 'sale.do',
 								type: 'post',
+                                beforeSend: function(){
+                                    $(':hover').css('cursor','progress');
+                                },
+                                complete: function(){
+                                    $(':hover').css('cursor','default');
+                                },
 								data: {
 									action: 'invoice',
 									ids: ids
