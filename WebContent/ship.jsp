@@ -73,7 +73,7 @@
 					</fieldset>
 				</form>
 			</div>
-			<div id="message" align="center">
+			<div id="message">
 				<div id="text"></div>
 			</div>
 		</div>
@@ -496,11 +496,7 @@
 		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
-		                    return false;
-		                }
-
+		                
 						$checkboxs.each(function() {
 							row = $(this).closest("tr");
 							data = $table.DataTable().row(row).data();
@@ -564,8 +560,25 @@
 				                },
 			                    error: function(xhr) {},
 			                    success: function(response) {
+									var json_obj = $.parseJSON(response);
+									var text = '';
 			                        var $mes = $('#message #text');
-			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        
+									if( json_obj.error != null ){
+										var code = json_obj.error.code;
+										var value = json_obj.error.value;
+										if(code != null | code == 'undefined' ){
+											text += '失敗 / ' + code + ' / ' + value;
+										}else{
+											text += '失敗 / ' + value;
+										}
+									}
+									if( json_obj.body != null ){
+										var orderid = json_obj.body.orderResponse.orderid;
+										text += '成功 / 訂單編號: ' + orderid;
+									}
+									
+			                        $mes.val('').html(text);
 			                        $('#message')
 			                            .dialog()
 			                            .dialog('option', 'title', '提示訊息')
@@ -591,10 +604,6 @@
 
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
 		                    return false;
 		                }
 
@@ -641,8 +650,28 @@
 				                },
 			                    error: function(xhr) {},
 			                    success: function(response) {
+									var json_obj = $.parseJSON(response);
+									var text = '';
 			                        var $mes = $('#message #text');
-			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        
+									if( json_obj.error != null ){
+										var code = json_obj.error.code;
+										var value = json_obj.error.value;
+										if(code != null | code == 'undefined' ){
+											text += '失敗 / ' + code + ' / ' + value;
+										}else{
+											text += '失敗 / ' + value;
+										}
+									}
+									if( json_obj.body != null ){
+										console.log(json_obj);
+										var orderid = json_obj.body.orderConfirmResponse.orderid;
+										var res_status = json_obj.body.orderConfirmResponse.res_status;
+										res_status = res_status == '1' ? '客戶訂單號與順豐運單不匹配':'操作成功'
+										text += '成功 / 訂單編號: ' + orderid + ' / 備註: '+ res_status;
+									}
+									
+			                        $mes.val('').html(text);
 			                        $('#message')
 			                            .dialog()
 			                            .dialog('option', 'title', '提示訊息')
@@ -653,7 +682,7 @@
 							});							
 						}
 		            }
-		        },,{
+		        },{
 		            text: '順豐快遞結果查詢',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
@@ -668,10 +697,6 @@
 
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
 		                    return false;
 		                }
 
@@ -718,8 +743,31 @@
 				                },
 			                    error: function(xhr) {},
 			                    success: function(response) {
+									var json_obj = $.parseJSON(response);
+									var text = '';
 			                        var $mes = $('#message #text');
-			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        
+									if( json_obj.error != null ){
+										var code = json_obj.error.code;
+										var value = json_obj.error.value;
+										if(code != null | code == 'undefined' ){
+											text += '失敗 / ' + code + ' / ' + value;
+										}else{
+											text += '失敗 / ' + value;
+										}
+									}
+									if( json_obj.body != null ){
+										var orderid = json_obj.body.orderResponse.orderid;
+										var mailno = json_obj.body.orderResponse.mailno;
+										var origincode = json_obj.body.orderResponse.origincode;
+										var destcode = json_obj.body.orderResponse.destcode;
+										text += '成功 / 訂單編號: ' 
+												+ orderid + ' / 託運單號: ' 
+												+ mailno + ' / 原寄地區域代碼: '
+												+ origincode + ' / 目的地區域代碼: '
+												+ destcode;
+									}
+			                        $mes.val('').html(text);
 			                        $('#message')
 			                            .dialog()
 			                            .dialog('option', 'title', '提示訊息')
@@ -729,6 +777,96 @@
 			                    }
 							});							
 						}
+		            }
+		        },{
+		            text: '順豐快遞路由查詢',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
+
+		            	var ships = new Map();
+		                var cells = $dtMaster.cells().nodes();
+						var row;
+						var data;
+						var message = '';
+						var orderNos = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                if ($checkboxs.length > 10) {
+		                    alert('最多選擇十筆資料');
+		                    return false;
+		                }
+
+						$checkboxs.each(function() {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							ships.set( data.order_no, data.order_no );
+						});
+						
+						ships.forEach(function (item, key, mapObj) {
+							orderNos += (item + ',');
+						});
+						orderNos= orderNos.substring(0,orderNos.length-1);
+						
+						console.log(orderNos);
+
+ 		                $.ajax({
+		                    url: 'ship.do',
+		                    type: 'post',
+		                    data: {
+		                        action: 'SFDeliveryRouteService',
+		                        orderNos: orderNos
+		                    },
+			                beforeSend: function(){
+		                		 $(':hover').css('cursor','progress');
+			                },
+			                complete: function(){
+		                		 $(':hover').css('cursor','default');
+			                },
+		                    error: function(xhr) {},
+		                    success: function(response) {
+								var json_obj = $.parseJSON(response);
+								var text = '';
+		                        var $mes = $('#message #text');
+		                        
+								if( json_obj.error != null ){
+									var code = json_obj.error.code;
+									var value = json_obj.error.value;
+									if(code != null | code == 'undefined' ){
+										text += '失敗 / ' + code + ' / ' + value;
+									}else{
+										text += '失敗 / ' + value;
+									}
+								}
+								if( json_obj.body != null ){
+									var mailno = json_obj.body.routeResponse.mailno;
+									var orderid = json_obj.body.routeResponse.orderid;
+									
+									var routes = json_obj.body.routeResponse.routes;
+									
+									$.each(routes, function(index, item) {
+										var accept_time = item.accept_time;
+										var remark = item.remark;
+									text += '成功 / 訂單編號: ' 
+											+ orderid + ' / 託運單號: ' 
+											+ mailno + ' / 發生時間: '
+											+ accept_time + ' / 狀態: '
+											+ remark  + '<br>';
+									});
+								}
+		                        $mes.val('').html(text);
+		                        $('#message')
+		                            .dialog()
+		                            .dialog('option', 'title', '提示訊息')
+		                            .dialog('option', 'width', 'auto')
+		                            .dialog('option', 'minHeight', 'auto')
+		                            .dialog("open");
+		                    }
+						});	
 		            }
 		        }
 		    ]

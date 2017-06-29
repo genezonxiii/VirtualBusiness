@@ -211,8 +211,8 @@ public class ship extends HttpServlet {
 				String reqXml = shipService.genSFDeliveryOrderService(jsonList, groupId);
 				String resXml = api.sendXML(reqXml, valueService);
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
-				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
+				gson = new Gson();
+				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
 			} else if ("SFDeliveryOrderConfirmCancel".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
@@ -223,8 +223,8 @@ public class ship extends HttpServlet {
 				String reqXml = api.genOrderConfirmService(orderNo, valueService);
 				String resXml = api.sendXML(reqXml, valueService);
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
-				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
+				gson = new Gson();
+				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
 			} else if ("SFDeliveryOrderSearchService".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
@@ -235,8 +235,21 @@ public class ship extends HttpServlet {
 				String reqXml = api.genOrderSearchService(orderNo, valueService);
 				String resXml = api.sendXML(reqXml, valueService);
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
-				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
-				logger.debug("執行結果: " + result);
+				gson = new Gson();
+				result = gson.toJson(responseObj);
+				response.getWriter().write(result);
+			}else if("SFDeliveryRouteService".equals(action)){
+				String orderNos = request.getParameter("orderNos");
+				SfDeliveryApi api = new SfDeliveryApi();
+
+				ValueService valueService = util.getValueService(request, response);
+
+				String reqXml = api.genRouteService(orderNos, valueService);
+				String resXml = api.sendXML(reqXml, valueService);
+				
+				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				gson = new Gson();
+				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
 			}
 
@@ -563,7 +576,7 @@ public class ship extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					order = new Order();
-					order.setOrderId(orderNo);
+					order.setOrderid(orderNo);
 					order.setJ_company(rs.getString("j_company"));
 					order.setJ_contact(rs.getString("j_contact"));
 					order.setJ_tel(rs.getString("j_tel"));

@@ -11,7 +11,7 @@ public class OrderConfirmResponse {
 	private static final long serialVersionUID = 1L;
 
 	@XmlAttribute(name="orderid")
-	private String orderId;
+	private String orderid;
 	
 	@XmlAttribute(name="mailno")
 	private String mailno;
@@ -19,12 +19,12 @@ public class OrderConfirmResponse {
 	@XmlAttribute(name="res_status")
 	private String res_status;
 
-	public String getOrderId() {
-		return orderId;
+	public String getOrderid() {
+		return orderid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setOrderId(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public String getMailno() {

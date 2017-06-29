@@ -37,34 +37,34 @@ public class SfDeliveryApi {
 	// 下訂單(含篩選)接口響應 - 訂單處理成功
 	public static final String ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<OrderResponse orderId=\"TEST201706090001\" mailno=\"444003409873\" orgincode=\"SIN01D\" destcode=\"852\" filter_result=\"2\"/>"
+			+ "<OrderResponse orderid=\"TEST201706090001\" mailno=\"444003409873\" orgincode=\"SIN01D\" destcode=\"852\" filter_result=\"2\"/>"
 			+ "</Body>" + "</Response>";
 	// 下訂單(含篩選)接口響應 - 訂單處理失敗
 	private static final String ORDER_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"8016\">重複下單</Error></Response>";
 	// 訂單確認/取消接口響應 - 訂單確認成功
-	private static final String ORDER_CONFIRM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ORDER_CONFIRM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderConfirmService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<OrderConfirmResponse orderId=\"TEST201706090003\" mailno=\"444003078326\" res_status=\"2\"/>"
+			+ "<OrderConfirmResponse orderid=\"TEST201706090003\" mailno=\"444003078326\" res_status=\"2\"/>"
 			+ "</Body>" + "</Response>";
 	// 訂單確認/取消接口響應 - 訂單確認失敗
 	private static final String ORDER_CONFIRM_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderConfirmService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
 	// 訂單結果查詢接口響應 - 訂單處理成功
-	private static final String ORDER_SEARCH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ORDER_SEARCH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderSearchService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<OrderResponse orderId=\"TEST201706090006\" mailno=\"444003078089\" orgincode=\"755\" destcode=\"010\" filter_result=\"2\"/>"
+			+ "<OrderResponse orderid=\"TEST201706090006\" mailno=\"444003078089\" origincode=\"755\" destcode=\"010\" filter_result=\"2\"/>"
 			+ "</Body>" + "</Response>";
 	// 訂單結果查詢接口響應 - 訂單處理失敗
 	private static final String ORDER_SEARCH_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderSearchService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
 	// 路由查詢接口響應 - 路由查詢成功
-	private static final String ROUTE_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ROUTE_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"RouteService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<RouteResponse mailno=\"444003077898\">"
+			+ "<RouteResponse mailno=\"444003077898\" orderid=\"#2017051713464411\">"
 			+ "<Route accept_time =\"2017-06-09 18:09:26\" accept_address =\"深圳\" remark =\"已收件\" opcode =\"50\"/>"
 			+ "<Route accept_time =\"2017-06-10 18:09:26\" remark =\"此件签单返还的单号为123638813180\" opcode =\"922\"/>"
 			+ "</RouteResponse>" + "</Body>" + "</Response>";
@@ -99,7 +99,7 @@ public class SfDeliveryApi {
 		String result = "";
 
 		OrderConfirm orderConfirm = new OrderConfirm();
-		orderConfirm.setOrderId(orderNo);
+		orderConfirm.setOrderid(orderNo);
 		orderConfirm.setDealtype("2");
 
 		Body body = new Body();
@@ -124,9 +124,8 @@ public class SfDeliveryApi {
 		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 
-		
 		OrderSearch orderSearcho = new OrderSearch();
-		orderSearcho.setOrderId(orderNo);
+		orderSearcho.setOrderid(orderNo);
 
 		Body body = new Body();
 		body.setOrderSearch(orderSearcho);
@@ -147,6 +146,33 @@ public class SfDeliveryApi {
 		return result;
 	}
 
+	public String genRouteService(String orderNos, ValueService valueService) {
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
+		String result = "";
+		
+		RouteRequest routeRequest = new RouteRequest();
+		routeRequest.setTracking_type("2");
+		routeRequest.setTracking_number(orderNos);
+		
+		Body body = new Body();
+		body.setRouteRequest(routeRequest);
+
+		Request request = new Request();
+		request.setService("RouteService");
+		request.setLang("zh-CN");
+		request.setHead(groupSfDelivery.getAccess_code());
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+	
 	// 測試用
 	public String genOrderService() {
 		String result = "";
@@ -174,7 +200,7 @@ public class SfDeliveryApi {
 		cargos.add(cargo2);
 
 		Order order = new Order();
-		order.setOrderId("TE20170609");
+		order.setOrderid("TE20170609");
 		order.setJ_company("罗湖火车站");
 		order.setJ_contact("小雷");
 		order.setJ_tel("13810744");
@@ -229,7 +255,7 @@ public class SfDeliveryApi {
 		option.setVolume("33,33,33");
 
 		OrderConfirm confirm = new OrderConfirm();
-		confirm.setOrderId("TS201706090002");
+		confirm.setOrderid("TS201706090002");
 		confirm.setMailno("444003078326");
 		confirm.setDealtype("1");
 		confirm.setOrderConfirmOption(option);
@@ -262,7 +288,7 @@ public class SfDeliveryApi {
 	public String genOrderSearchService() {
 		String result = "";
 		OrderSearch orderSearch = new OrderSearch();
-		orderSearch.setOrderId("TS201706090009");
+		orderSearch.setOrderid("TS201706090009");
 		Body body = new Body();
 		body.setOrderSearch(orderSearch);
 
@@ -394,10 +420,10 @@ public class SfDeliveryApi {
 			return response.toString();
 		} catch (UnknownHostException e) {
 			logger.error("發送失敗：" + e.getMessage());
-			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗:" + e.getMessage() + "</ERROR></Response>";
+			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗</ERROR></Response>";
 		} catch (Exception e) {
 			logger.error("發送失敗：" + e.getMessage());
-			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗:" + e.getMessage() + "</ERROR></Response>";
+			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗</ERROR></Response>";
 		}finally {
 			if (connection != null) {
 				connection.disconnect();

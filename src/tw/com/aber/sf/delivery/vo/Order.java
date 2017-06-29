@@ -16,77 +16,77 @@ public class Order {
 	private static final long serialVersionUID = 1L;
 
 	@XmlAttribute(name = "orderid")
-	private String orderId;
+	private String orderid;
 
 	@XmlAttribute(name = "j_company")
 	private String j_company;
 
 	@XmlAttribute(name = "j_contact")
 	private String j_contact;
-	
+
 	@XmlAttribute(name = "j_tel")
 	private String j_tel;
-	
+
 	@XmlAttribute(name = "j_mobile")
 	private String j_mobile;
-	
+
 	@XmlAttribute(name = "j_province")
 	private String j_province;
-	
+
 	@XmlAttribute(name = "j_city")
 	private String j_city;
-	
+
 	@XmlAttribute(name = "j_county")
 	private String j_county;
-	
+
 	@XmlAttribute(name = "j_address")
 	private String j_address;
-	
+
 	@XmlAttribute(name = "d_company")
 	private String d_company;
-	
+
 	@XmlAttribute(name = "d_contact")
 	private String d_contact;
-	
+
 	@XmlAttribute(name = "d_tel")
 	private String d_tel;
-	
+
 	@XmlAttribute(name = "d_mobile")
 	private String d_mobile;
-	
+
 	@XmlAttribute(name = "d_address")
 	private String d_address;
-	
+
 	@XmlAttribute(name = "express_type")
 	private String express_type;
-	
+
 	@XmlAttribute(name = "pay_method")
 	private String pay_method;
-	
+
 	@XmlAttribute(name = "parcel_quantity")
 	private String parcel_quantity;
-	
+
 	@XmlAttribute(name = "cargo_length")
 	private String cargo_length;
-	
+
 	@XmlAttribute(name = "cargo_width")
 	private String cargo_width;
-	
+
 	@XmlAttribute(name = "cargo_height")
 	private String cargo_height;
-	
+
 	@XmlAttribute(name = "remark")
 	private String remark;
-	
+
 	@XmlElement(name = "Cargo")
 	private List<Cargo> cargos;
 
-	public String getOrderId() {
-		return orderId;
+	public String getOrderid() {
+		return orderid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public String getJ_company() {
