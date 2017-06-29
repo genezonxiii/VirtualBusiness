@@ -575,7 +575,17 @@
 									}
 									if( json_obj.body != null ){
 										var orderid = json_obj.body.orderResponse.orderid;
-										text += '成功 / 訂單編號: ' + orderid;
+										var mailno = json_obj.body.orderResponse.mailno;
+										var filter_result = json_obj.body.orderResponse.filter_result;
+										
+										if(filter_result == '1'){
+											filter_result = '人工確認';
+										}else if(filter_result == '2'){
+											filter_result = '可收派';
+										}else if(filter_result == '2'){
+											filter_result = '不可以收派';
+										}
+										text += '成功 / 訂單編號: ' + orderid + ' / 託運單號: ' + mailno + ' / 結果: '+ filter_result;
 									}
 									
 			                        $mes.val('').html(text);
@@ -847,13 +857,12 @@
 									var orderid = json_obj.body.routeResponse.orderid;
 									
 									var routes = json_obj.body.routeResponse.routes;
-									
+
+									text += ('訂單編號: '+ orderid + ' / 託運單號: ' + mailno + ' / 成功<br>') ;
 									$.each(routes, function(index, item) {
 										var accept_time = item.accept_time;
 										var remark = item.remark;
-									text += '成功 / 訂單編號: ' 
-											+ orderid + ' / 託運單號: ' 
-											+ mailno + ' / 發生時間: '
+									text += '時間: '
 											+ accept_time + ' / 狀態: '
 											+ remark  + '<br>';
 									});
