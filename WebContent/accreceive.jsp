@@ -9,736 +9,1300 @@
 <jsp:directive.page import="java.sql.SQLException" />
 <!DOCTYPE html>
 <html>
-<head>
-<style type="text/css">
-.dataTables_wrapper .dt-buttons {float:right;margin-bottom:10px;}
-</style>
-<title>應收帳款</title>
-<meta charset="utf-8">
-<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
-
-<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
-<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
-<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css" />
-</head>
-<body>
-	<jsp:include page="template.jsp" flush="true"/>
-	<div class="content-wrap" >
+	<head>
+		<title>應收帳款</title>
+		<meta charset="utf-8">
+		<link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
+		<link href="<c:url value="css/jquery.dataTables.min.css" />" rel="stylesheet">
+		<link href="<c:url value="css/1.11.4/jquery-ui.css" />" rel="stylesheet">
+		<link href="<c:url value="css/dataTables.jqueryui.min.css" />" rel="stylesheet">
+		<link href="<c:url value="css/buttons.jqueryui.min.css" />" rel="stylesheet">
+		<link rel="stylesheet" href="css/buttons.dataTables.min.css">
+		<link rel="stylesheet" href="css/styles.css" />
+		
+		<style type="text/css">
+			.dataTables_wrapper .dt-buttons {
+				float:right;margin-bottom:10px;
+			}
+			
+			input[type="text"]:disabled, input[type="text"].readonly {
+			    border: 0;
+			    width:450px;
+			}
+		</style>
+	</head>
+	<body>
+		<jsp:include page="template.jsp" flush="true"/>
+		<div class="content-wrap" >
 		<div class='bdyplane' style="opacity:0">
-<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
-<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
-<script type="text/javascript" src="js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/additional-methods.min.js"></script>
-<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
-<!-- data table buttons -->
-<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
-<script>
-function draw_accreceive(parameter){
+		<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/jquery-migrate-1.4.1.min.js"></script>
+		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="js/additional-methods.min.js"></script>
+		<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
+		<!-- data table buttons -->
+		<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+		<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	
-}
-
-
-
-
-function detail(str){
-	$.ajax({
-		type : "POST",
-		url : "accreceive.do",
-		data : {
-			action : "melvin",
-			seq_no : str
-		},
-		success : function(result) {
-			$("#my").html("<table class='dialog-table'>"+result+"</table>");
-			$("#my").dialog("open");
-		}
-	});
-}
-	$(function(){
-		$(".bdyplane").animate({"opacity":"1"});
-		 $("#amount_date_form").validate({
-				rules : {
-					amount_start_date : {
-						dateISO : true
-					},
-					amount_end_date:{
-						dateISO : true
-					}
-				},
-				messages:{
-					amount_start_date : {
-						dateISO : "日期格式錯誤"
-					},
-					amount_end_date : {
-						dateISO : "日期格式錯誤"
-					}
-				}
-			});
-		 $("#receive_date_form").validate({
-				rules : {
-					receive_start_date : {
-						dateISO : true
-					},
-					receive_end_date:{
-						dateISO : true
-					}
-				},
-				messages:{
-					receive_start_date : {
-						dateISO : "日期格式錯誤"
-					},
-					receive_end_date : {
-						dateISO : "日期格式錯誤"
-					}
-				}
-			});
-	//應收帳款日查詢相關設定
-	$("#searh_amount_date").click(function(e) {
-		e.preventDefault();
-		if($("#amount_date_form").valid()){			
-			$.ajax({
-				type : "POST",
-				url : "accreceive.do",
-				data : {
-					action : "searh_amount_date",
-					start_date: $("#amount_start_date").val(),
-					end_date: $("#amount_end_date").val()
-				},
-				success : function(result) {
-						var json_obj = $.parseJSON(result);
-						var len=json_obj.length;
-						//判斷查詢結果
-						var resultRunTime = 0;
-						$.each (json_obj, function (i) {
-							resultRunTime+=1;
-						});
-						//console.log(result);
-						//alert(json_obj.length);
-						if(json_obj[resultRunTime-1].message=="驗證通過"){
-							var result_table = "";
-							
-							$.each(json_obj,function(i, item) {
-								if(i<len-1){
-									if(json_obj[i].amount==null){json_obj[i].amount="";}
-									if(json_obj[i].amount_date==null){json_obj[i].amount_date="";}
-									if(json_obj[i].receive_amount==null){json_obj[i].receive_amount="";}
-									if(json_obj[i].receive_date==null){json_obj[i].receive_date="";}
-									if(json_obj[i].memo==null){json_obj[i].memo="";}
-									result_table 
-									+= "<tr ondblclick='detail("+json_obj[i].seq_no+")'>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
-									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
-									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
-									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
-									+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
-									+ "'class='checkbox_receive'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";
-								}
-							});
-						}
-						if(json_obj[resultRunTime-1].message=="如要以日期查詢，請完整填寫起日欄位"){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_amount_date_err_mes").length){
-                				$("<p id='search_amount_date_err_mes'>如要以日期查詢，請完整填寫起日欄位</p>").appendTo($("#amount_date_form").parent());
-                			}else{
-                				$("#search_amount_date_err_mes").html("如要以日期查詢，請完整填寫起日欄位");
-                			}
-						}
-						if(json_obj[resultRunTime-1].message=="如要以日期查詢，請完整填寫訖日欄位"){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_amount_date_err_mes").length){
-                				$("<p id='search_amount_date_err_mes'>如要以日期查詢，請完整填寫訖日欄位</p>").appendTo($("#amount_date_form").parent());
-                			}else{
-                				$("#search_amount_date_err_mes").html("如要以日期查詢，請完整填寫訖日欄位");
-                			}
-						}						
-						if(json_obj[resultRunTime-1].message=="起日不可大於訖日"){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_amount_date_err_mes").length){
-                				$("<p id='search_amount_date_err_mes'>起日不可大於訖日</p>").appendTo($("#amount_date_form").parent());
-                			}else{
-                				$("#search_amount_date_err_mes").html("起日不可大於訖日");
-                			}
-						}							
-						if(resultRunTime==0){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_amount_date_err_mes").length){
-                				$("<p id='search_amount_date_err_mes'>查無此結果</p>").appendTo($("#amount_date_form").parent());
-                			}else{
-                				$("#search_amount_date_err_mes").html("查無此結果");
-                			}
-						}
-						if ($.fn.DataTable.isDataTable("#account_amount_date_table")) {
-							$("#account_amount_date_table").dataTable().fnDestroy();
-						}
-						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#account_amount_date_contain").hide();
-							$("#account_amount_date_table tbody").html(result_table);
-							$("#account_amount_date_table").dataTable({
-								  autoWidth: false,
-								  scrollX:  true,
-						          scrollY:"300px",
-								  dom: 'Blfrtip',
-						          buttons: [{
-						                text: '批次收帳',
-						                className: 'btn_receive',
-						                action : function(e){
-						            		e.preventDefault();
-						            		var count = 0;
-						            		var message = "";
-						            		$(".checkbox_receive").each(function(){
-						            			if($(this).prop("checked")){
-						            				count+=1;
-						            			}
-						            		});
-						            		message = "確認要收帳嗎? 總共" + count + "筆";
-						            		$("#dialog-confirm p").text(message);
-						            		confirm_dialog.dialog("open");
-						                }
-						            }
-						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-// 						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-							$("#account_amount_date_table").find("td").css("text-align","center");
-							$("#account_amount_date_contain").fadeIn();
-							//$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-							//$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
-							if($("#search_amount_date_err_mes").length){
-                				$("#search_amount_date_err_mes").remove();
-                			}
-						}
-					}
-				});
-		}
-	});	
-	//實收帳款日查詢相關設定
-	$("#searh_receive_date").click(function(e) {
-		e.preventDefault();
-		if($("#receive_date_form").valid()){
-			$.ajax({
-				type : "POST",
-				url : "accreceive.do",
-				data : {
-					action : "searh_receive_date",
-					start_date: $("#receive_start_date").val(),
-					end_date: $("#receive_end_date").val()
-				},
-				success : function(result) {
-						var json_obj = $.parseJSON(result);
-						var len=json_obj.length;
-						//判斷查詢結果
-						var resultRunTime = 0;
-						$.each (json_obj, function (i) {
-							resultRunTime+=1;
-						});
-						if(json_obj[resultRunTime-1].message=="驗證通過"){
-							var result_table = "";
-							$.each(json_obj,function(i, item) {
-								if(i<len-1){
-									if(json_obj[i].amount==null){
-										json_obj[i].amount="";
-									}
-									if(json_obj[i].amount_date==null){
-										json_obj[i].amount_date="";
-									}
-									if(json_obj[i].receive_amount==null){
-										json_obj[i].receive_amount="";
-									}
-									if(json_obj[i].receive_date==null){
-										json_obj[i].receive_date="";
-									}
-									if(json_obj[i].memo==null){
-										json_obj[i].memo="";
-									}
-									result_table 
-									+= "<tr>"
-									+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
-									+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
-									+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
-									+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
-									+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
-									+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-									+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
-									+ "'class='checkbox_receive_cancel'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";
-								}
-							});
-						}
-						if(json_obj[resultRunTime-1].message=="如要以日期查詢，請完整填寫起日欄位"){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_receive_date_err_mes").length){
-                				$("<p id='search_receive_date_err_mes'>如要以日期查詢，請完整填寫起日欄位</p>").appendTo($("#receive_date_form").parent());
-                			}else{
-                				$("#search_receive_date_err_mes").html("如要以日期查詢，請完整填寫起日欄位");
-                			}
-						}
-						if(json_obj[resultRunTime-1].message=="如要以日期查詢，請完整填寫訖日欄位"){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_receive_date_err_mes").length){
-                				$("<p id='search_receive_date_err_mes'>如要以日期查詢，請完整填寫訖日欄位</p>").appendTo($("#receive_date_form").parent());
-                			}else{
-                				$("#search_receive_date_err_mes").html("如要以日期查詢，請完整填寫訖日欄位");
-                			}
-						}						
-						if(json_obj[resultRunTime-1].message=="起日不可大於訖日"){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_receive_date_err_mes").length){
-                				$("<p id='search_receive_date_err_mes'>起日不可大於訖日</p>").appendTo($("#receive_date_form").parent());
-                			}else{
-                				$("#search_receive_date_err_mes").html("起日不可大於訖日");
-                			}
-						}							
-						if(resultRunTime==0){
-							$("#account_amount_date_contain").hide();
-							$("#account_receive_date_contain").hide();
-							if(!$("#search_receive_date_err_mes").length){
-                				$("<p id='search_receive_date_err_mes'>查無此結果</p>").appendTo($("#receive_date_form").parent());
-                			}else{
-                				$("#search_receive_date_err_mes").html("查無此結果");
-                			}
-						}
-						if ($.fn.DataTable.isDataTable("#account_receive_date_table")) {
-							$("#account_receive_date_table").dataTable().fnDestroy();
-						}
-						if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
-							$("#account_receive_date_contain").hide();
-							$("#account_receive_date_table tbody").html(result_table);
-							$("#account_receive_date_table").dataTable({
-								  autoWidth: false,
-								  scrollX:  true,
-						          scrollY:"300px",
-								  dom: 'Blfrtip',
-						          buttons: [{
-						                text: '批次取消收帳',
-						                className: 'btn_receive_cancel',
-						                action : function(e){
-						            		e.preventDefault();
-						            		var count = 0;
-						            		var message = "";
-						            		$(".checkbox_receive_cancel").each(function(){
-						            			if($(this).prop("checked")){
-						            				count+=1;
-						            			}
-						            		});
-						            		message = "確認要取消收帳嗎? 總共" + count + "筆";
-						            		$("#dialog-cancel-confirm p").text(message);
-						            		confirm_cancel_dialog.dialog("open");
-						                }
-						            }
-						          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-							$("#account_receive_date_table").find("td").css("text-align","center");
-							$("#account_receive_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-							$("#account_receive_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-							$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
-							$("#account_receive_date_contain").fadeIn();
-							if($("#search_receive_date_err_mes").length){
-                				$("#search_receive_date_err_mes").remove();
-                			}
-						}
-					}
-				});
-		}
-	});
-	confirm_dialog = $("#dialog-confirm").dialog({
-		draggable : true,//防止拖曳
-		resizable : false,//防止縮放
-		autoOpen : false,
-		height : 200,
-		modal : true,
-		show : {effect : "blind",duration : 300},
-		hide : {effect : "fade",duration : 300},
-		buttons : {
-			"確認批次收帳" : function() {
-				$(".checkbox_receive").each(function(){
-					if($(this).prop("checked")){
-						$.ajax({
-							type : "POST",
-							url : "accreceive.do",
-							async : false,
-							data : {
-								action : "receive_account",
-								receivable_id : $(this).attr("value"),
-								receive_date : getCurrentDate()
-							},
-							success : function(result) {
-								$(".checkbox_receive").each(function(){
-									if($(this).prop("checked")){
-										var table = $("#account_amount_date_table").DataTable();
-										table.row($(this).parents('tr')).remove().draw();
-									}
-								});
-							    var json_obj = $.parseJSON(result);
-								var len=json_obj.length;
-								//判斷查詢結果
-								var resultRunTime = 0;
-								$.each (json_obj, function (i) {
-									resultRunTime+=1;
-								});
-								var result_table = "";
-								if(resultRunTime!=0){
-									$.each(json_obj,function(i, item) {
-										if(json_obj[i].amount==null){
-											json_obj[i].amount="";
-										}
-										if(json_obj[i].amount_date==null){
-											json_obj[i].amount_date="";
-										}
-										if(json_obj[i].receive_amount==null){
-											json_obj[i].receive_amount="";
-										}
-										if(json_obj[i].receive_date==null){
-											json_obj[i].receive_date="";
-										}
-										if(json_obj[i].memo==null){
-											json_obj[i].memo="";
-										}
-										result_table 
-										+= "<tr>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
-										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
-										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
-										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
-										+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
-										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
-										+ "'class='checkbox_receive_cancel'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";	
-									});
-								}							
-								if(resultRunTime==0){
-									$("#account_amount_date_contain").hide();
-									$("#account_receive_date_contain").hide();
-									if(!$("#receive_account_err_mes").length){
-		                				$("<p id='receive_account_err_mes'>查無此結果</p>").appendTo($("#amount_date_form").parent());
-		                			}else{
-		                				$("#receive_account_err_mes").html("查無此結果");
-		                			}
-								}
-								if ($.fn.DataTable.isDataTable("#account_receive_date_table")) {
-									$("#account_receive_date_table").dataTable().fnDestroy();
-								}
-								if(resultRunTime!=0){
-									$("#account_receive_date_contain").hide();
-									$("#account_receive_date_table tbody").html(result_table);
-									$("#account_receive_date_table").dataTable({
-										  autoWidth: false,
-										  scrollX:  true,
-								          scrollY:"300px",
-										  dom: 'Blfrtip',
-								          buttons: [{
-								                text: '批次取消收帳',
-								                className: 'btn_receive_cancel',
-								                action : function(e){
-								            		e.preventDefault();
-								            		var count = 0;
-								            		var message = "";
-								            		$(".checkbox_receive_cancel").each(function(){
-								            			if($(this).prop("checked")){
-								            				count+=1;
-								            			}
-								            		});
-								            		message = "確認要取消收帳嗎? 總共" + count + "筆";
-								            		$("#dialog-cancel-confirm p").text(message);
-								            		confirm_cancel_dialog.dialog("open");
-								                }
-								            }
-								          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-									$("#account_receive_date_table").find("td").css("text-align","center");
-									$("#account_receive_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-									$("#account_receive_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-									$("#account_receive_date_contain").fadeIn();
-									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
-									if($("#receive_account_err_mes").length){
-		                				$("#receive_account_err_mes").remove();
-		                			}
-								}
-							}
-						});
-					}
-				});
-				$(this).dialog("close");
-			},
-			"取消" : function() {
-				$(this).dialog("close");
-			}
-		}
-	});
-	 $("#dialog-confirm").show();
+		<script>
+		    function draw_accreceive(parameter) {
+		        var masterDT = $("#account_amount_date_table").DataTable({
+		            dom: "Blfr<t>ip",
+		            scrollY: "290px",
+		            width: 'auto',
+		            lengthChange: false,
+		            scrollCollapse: true,
+		            destroy: true,
+		            language: {
+		                "url": "js/dataTables_zh-tw.txt",
+		                "emptyTable": "查無資料",
+		            },
+		            initComplete: function(settings, json) {
+		                $('div .dt-buttons').css({
+		                    'float': 'left',
+		                    'margin-left': '10px'
+		                });
+		                $('div .dt-buttons a').css('margin-left', '10px');
+		            },
+		            ajax: {
+		                url: "accreceive.do",
+		                dataSrc: "",
+		                type: "POST",
+		                data: parameter
+		            },
+		            columns: [{
+		                "title": "批次請求",
+		                "data": null,
+		                "defaultContent": ""
+		            }, {
+		                "title": "訂單號",
+		                "data": "order_no",
+		                "defaultContent": ""
+		            }, {
+		                "title": "應收帳款金額",
+		                "data": "amount",
+		                "defaultContent": ""
+		            }, {
+		                "title": "實收帳款金額",
+		                "data": "receive_amount",
+		                "defaultContent": ""
+		            }, {
+		                "title": "應收帳款產生日期",
+		                "data": "amount_date",
+		                "defaultContent": ""
+		            }, {
+		                "title": "實收帳款產生日期",
+		                "data": "receive_date",
+		                "defaultContent": ""
+		            }, {
+		                "title": "交易平台",
+		                "data": "order_source",
+		                "defaultContent": ""
+		            }, {
+		                "title": "功能",
+		                "data": null,
+		                "defaultContent": ""
+		            }],
+		            columnDefs: [{
+		                targets: 0,
+		                searchable: false,
+		                orderable: false,
+		                render: function(data, type, row) {
+		                    var order_no = row.order_no;
+		
+		                    var input = document.createElement("INPUT");
+		                    input.type = 'checkbox';
+		                    input.name = 'checkbox-group-select';
+		                    input.id = 'my-' + order_no;
+		                    input.className = 'checkbox_receive';
+		                    input.value = order_no
+		
+		                    var span = document.createElement("SPAN");
+		                    span.className = 'form-label';
+		
+		                    var label = document.createElement("LABEL");
+		                    label.htmlFor = 'my-' + order_no;
+		                    label.name = 'checkbox-group-select';
+		                    label.style.marginLeft = '40%';
+		                    label.appendChild(span);
+		
+		                    var options = $("<div/>").append(input, label);
+		
+		                    return options.html();
+		                }
+		            }, {
+		                "className": "dt-center",
+		                "targets": "_all"
+		            }, {
+		                //功能
+		                targets: -1,
+		                searchable: false,
+		                orderable: false,
+		                render: function(data, type, row) {
+		
+		                    var options = $("<div/>").append($("<div/>", {
+		                        "class": "table-row-func btn-in-table btn-gray"
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-ellipsis-h"
+		                    })).append($("<div/>", {
+		                        "class": "table-function-list"
+		                    }).append($("<button/>", {
+		                        "class": "btn-in-table btn-green btn_list",
+		                        "value": row.order_no,
+		                        "title": "清單"
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-pencil-square-o"
+		                    }))).append($("<button/>", {
+		                        "class": "btn-in-table btn-alert btn_delete",
+		                        "title": "刪除",
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-trash"
+		                    })))));
+		
+		                    return options.html();
+		                }
+		            }],
+		            buttons: [{
+		                text: '批次收帳',
+		                className: 'btn_receive',
+		                action: function(e) {
+		                    e.preventDefault();
+		                    var count = 0;
+		                    var message = "";
+		                    $(".checkbox_receive").each(function() {
+		                        if ($(this).prop("checked")) {
+		                            count += 1;
+		                        }
+		                    });
+		
+		                    if (count == 0) {
+		                        massageDialog('警告', '至少一筆');
+		                        return false;
+		                    }
+		
+		                    message = "確認要收帳嗎? 總共" + count + "筆";
+		                    $("#dialog-confirm p").text(message);
+		                    confirm_dialog.dialog("open");
+		                }
+		            }]
+		        });
+		    }
+		
+		
+		    function draw_receive(parameter) {
+		        var masterDT = $("#account_receive_date_table").DataTable({
+		            dom: "Blfr<t>ip",
+		            scrollY: "290px",
+		            width: 'auto',
+		            lengthChange: false,
+		            scrollCollapse: true,
+		            destroy: true,
+		            language: {
+		                "url": "js/dataTables_zh-tw.txt",
+		                "emptyTable": "查無資料",
+		            },
+		            initComplete: function(settings, json) {
+		                $('div .dt-buttons').css({
+		                    'float': 'left',
+		                    'margin-left': '10px'
+		                });
+		                $('div .dt-buttons a').css('margin-left', '10px');
+		            },
+		            ajax: {
+		                url: "accreceive.do",
+		                dataSrc: "",
+		                type: "POST",
+		                data: parameter
+		            },
+		            columns: [{
+		                "title": "批次請求",
+		                "data": null,
+		                "defaultContent": ""
+		            }, {
+		                "title": "訂單號",
+		                "data": "order_no",
+		                "defaultContent": ""
+		            }, {
+		                "title": "應收帳款金額",
+		                "data": "amount",
+		                "defaultContent": ""
+		            }, {
+		                "title": "實收帳款金額",
+		                "data": "receive_amount",
+		                "defaultContent": ""
+		            }, {
+		                "title": "應收帳款產生日期",
+		                "data": "amount_date",
+		                "defaultContent": ""
+		            }, {
+		                "title": "實收帳款產生日期",
+		                "data": "receive_date",
+		                "defaultContent": ""
+		            }, {
+		                "title": "交易平台",
+		                "data": "order_source",
+		                "defaultContent": ""
+		            }, {
+		                "title": "功能",
+		                "data": null,
+		                "defaultContent": ""
+		            }],
+		            columnDefs: [{
+		                targets: 0,
+		                searchable: false,
+		                orderable: false,
+		                render: function(data, type, row) {
+		                    var order_no = row.order_no;
+		
+		                    var input = document.createElement("INPUT");
+		                    input.type = 'checkbox';
+		                    input.name = 'checkbox-group-select';
+		                    input.id = 'my-' + order_no;
+		                    input.className = 'checkbox_receive_cancel';
+		                    input.value = order_no
+		
+		                    var span = document.createElement("SPAN");
+		                    span.className = 'form-label';
+		
+		                    var label = document.createElement("LABEL");
+		                    label.htmlFor = 'my-' + order_no;
+		                    label.name = 'checkbox-group-select';
+		                    label.style.marginLeft = '40%';
+		                    label.appendChild(span);
+		
+		                    var options = $("<div/>").append(input, label);
+		
+		                    return options.html();
+		                }
+		            }, {
+		                "className": "dt-center",
+		                "targets": "_all"
+		            }, {
+		                //功能
+		                targets: -1,
+		                searchable: false,
+		                orderable: false,
+		                render: function(data, type, row) {
+		
+		                    var options = $("<div/>").append($("<div/>", {
+		                        "class": "table-row-func btn-in-table btn-gray"
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-ellipsis-h"
+		                    })).append($("<div/>", {
+		                        "class": "table-function-list"
+		                    }).append($("<button/>", {
+		                        "class": "btn-in-table btn-green btn_list",
+		                        "value": row.order_no,
+		                        "title": "清單"
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-pencil-square-o"
+		                    }))).append($("<button/>", {
+		                        "class": "btn-in-table btn-alert btn_delete",
+		                        "title": "刪除",
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-trash"
+		                    })))));
+		
+		                    return options.html();
+		                }
+		            }],
+		            buttons: [{
+		                text: '批次取消收帳',
+		                className: 'btn_receive_cancel',
+		                action: function(e) {
+		                    e.preventDefault();
+		                    var count = 0;
+		                    var message = "";
+		                    $(".checkbox_receive_cancel").each(function() {
+		                        if ($(this).prop("checked")) {
+		                            count += 1;
+		                        }
+		                    });
+		
+		                    if (count == 0) {
+		                        massageDialog('警告', '至少一筆');
+		                        return false;
+		                    }
+		
+		                    message = "確認要取消收帳嗎? 總共" + count + "筆";
+		                    $("#dialog-cancel-confirm p").text(message);
+		                    confirm_cancel_dialog.dialog("open");
+		                }
+		            }]
+		        });
+		    }
+		
+		
+		    function draw_detail(parameter, type) {
+		        console.log("draw_detail=> parameter:");
+		        console.log(parameter);
+		        console.log("draw_detail=> type:" + type);
+		
+		        var typeName = '';
+		        var typeData = '';
+		        var detailTableID = ''
+		        if (type == '1') {
+		            typeName = '應收帳款金額';
+		            typeData = 'amount';
+		            detailTableID = '#noreceive_detail_table';
+		        }
+		        if (type == '2') {
+		            typeName = '實收帳款金額';
+		            typeData = 'receive_amount';
+		            detailTableID = '#receive_detail_table';
+		        }
+		
+		        $(detailTableID).DataTable({
+		            dom: "lfr<t>ip",
+		            scrollY: "290px",
+		            width: 'auto',
+		            lengthChange: false,
+		            scrollCollapse: true,
+		            destroy: true,
+		            language: {
+		                "url": "js/dataTables_zh-tw.txt",
+		                "emptyTable": "查無資料",
+		            },
+		            initComplete: function(settings, json) {
+		                $('div .dt-buttons').css({
+		                    'float': 'left',
+		                    'margin-left': '10px'
+		                });
+		                $('div .dt-buttons a').css('margin-left', '10px');
+		            },
+		            ajax: {
+		                url: "accreceive.do",
+		                dataSrc: "",
+		                type: "POST",
+		                data: parameter
+		            },
+		            columns: [{
+		                "title": "訂單號",
+		                "data": "order_no",
+		                "defaultContent": ""
+		            }, {
+		                "title": "產品名稱",
+		                "data": "product_name",
+		                "defaultContent": ""
+		            }, {
+		                "title": typeName,
+		                "data": typeData,
+		                "defaultContent": ""
+		            }, {
+		                "title": "交易平台",
+		                "data": "order_source",
+		                "defaultContent": ""
+		            }, {
+		                "title": "備註",
+		                "data": "memo",
+		                "defaultContent": ""
+		            }, {
+		                "title": "功能",
+		                "data": null,
+		                "defaultContent": ""
+		            }],
+		            columnDefs: [{
+		                "className": "dt-center",
+		                "targets": "_all"
+		            }, {
+		                //功能
+		                targets: -1,
+		                searchable: false,
+		                orderable: false,
+		                render: function(data, type, row) {
+		
+		                    var options = $("<div/>").append($("<div/>", {
+		                        "class": "table-row-func btn-in-table btn-gray"
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-ellipsis-h"
+		                    })).append($("<div/>", {
+		                        "class": "table-function-list"
+		                    }).append($("<button/>", {
+		                        "class": "btn-in-table btn-darkblue btn_update",
+		                        "title": "修改",
+		                    }).append($("<i/>", {
+		                        "class": "fa fa-pencil"
+		                    })))));
+		
+		                    return options.html();
+		                }
+		            }]
+		        });
+		    }
+		</script>
 	
-	confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
-		draggable : true,//防止拖曳
-		resizable : false,//防止縮放
-		autoOpen : false,
-		height : 200,
-		modal : true,
-		show : {effect : "blind",duration : 300},
-		hide : {effect : "fade",duration : 300},
-		buttons : {
-			"確認取消收帳" : function() {
-				$(".checkbox_receive_cancel").each(function(){
-					if($(this).prop("checked")){
-						$.ajax({
-							type : "POST",
-							url : "accreceive.do",
-							async : false,
-							data : {
-								action : "delete_receive_account",
-								receivable_id : $(this).attr("value"),
-								start_date : $("input[name='amount_start_date'").val(),
-								end_date : $("input[name='amount_end_date'").val()
-							},
-							success : function(result) {
-								$(".checkbox_receive_cancel").each(function(){
-									if($(this).prop("checked")){
-										var table = $("#account_receive_date_table").DataTable();
-										table.row($(this).parents('tr')).remove().draw();
-									}
-								});
-							    var json_obj = $.parseJSON(result);
-								//判斷查詢結果
-								var resultRunTime = 0;
-								$.each (json_obj, function (i) {
-									resultRunTime+=1;
-								});
-								var result_table = "";
-								if(resultRunTime!=0){
-									$.each(json_obj,function(i, item) {
-										if(json_obj[i].amount==null){
-											json_obj[i].amount="";
-										}
-										if(json_obj[i].amount_date==null){
-											json_obj[i].amount_date="";
-										}
-										if(json_obj[i].receive_amount==null){
-											json_obj[i].receive_amount="";
-										}
-										if(json_obj[i].receive_date==null){
-											json_obj[i].receive_date="";
-										}
-										if(json_obj[i].memo==null){
-											json_obj[i].memo="";
-										}
-										result_table 
-										+= "<tr>"
-										+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
-										+ "<td name='"+ json_obj[i].amount_date +"'>"+ json_obj[i].amount_date+ "</td>"
-										+ "<td name='"+ json_obj[i].receive_amount +"'>"+ money(json_obj[i].receive_amount)+ "</td>"
-										+ "<td name='"+ json_obj[i].receive_date +"'>"+ json_obj[i].receive_date+ "</td>"
-										+ "<td name='"+ json_obj[i].order_source +"'>"+ json_obj[i].order_source+ "</td>"
-										+ "<td name='"+ json_obj[i].order_no +"'>"+ json_obj[i].order_no+ "</td>"
-										+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-										+ "<td><input id='my-"+ json_obj[i].receivable_id+ "' type='checkbox' style='margin: 0 auto;' value='"+ json_obj[i].receivable_id
-										+ "'class='checkbox_receive'></input><label for='my-"+ json_obj[i].receivable_id+ "'></label></td></tr>";	
-									});
-								}
-								if(resultRunTime==0){
-									$("#account_amount_date_contain").hide();
-									$("#account_receive_date_contain").hide();
-									if(!$("#receive_cancel_account_err_mes").length){
-		                				$("<p id='receive_cancel_account_err_mes'>查無此結果</p>").appendTo($("#receive_date_form").parent());
-		                			}else{
-		                				$("#receive_cancel_account_err_mes").html("查無此結果");
-		                			}
-								}
-								if ($.fn.DataTable.isDataTable("#account_amount_date_table")) {
-									$("#account_amount_date_table").dataTable().fnDestroy();
-								}
-								if(resultRunTime!=0){
-									$("#account_amount_date_contain").hide();
-									$("#account_amount_date_table tbody").html(result_table);
-									$("#account_amount_date_table").dataTable({
-										  autoWidth: false,
-										  scrollX:  true,
-								          scrollY:"300px",
-										  dom: 'Blfrtip',
-								          buttons: [{
-								                text: '批次收帳',
-								                className: 'btn_receive',
-								                action : function(e){
-								            		e.preventDefault();
-								            		var count = 0;
-								            		var message = "";
-								            		$(".checkbox_receive").each(function(){
-								            			if($(this).prop("checked")){
-								            				count+=1;
-								            			}
-								            		});
-								            		message = "確認要收帳嗎? 總共" + count + "筆";
-								            		$("#dialog-confirm p").text(message);
-								            		confirm_dialog.dialog("open");
-								                }
-								            }
-								          ],"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "沒有符合的結果"}});
-									$("#account_amount_date_table").find("td").css("text-align","center");
-									$("#account_amount_date_table").find("th").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-									$("#account_amount_date_table").find("td").css({"word-break":"break-all","min-width":"30px","text-align":"center" });
-									$("td > label").css({"float":"none","display":"inline","margin":"0px 0px 0px 5px"});
-									$("#account_amount_date_contain").fadeIn();
-									if($("#receive_cancel_account_err_mes").length){
-		                				$("#receive_cancel_account_err_mes").remove();
-		                			}
-								}
-							}
-						});
-					}
-				});
-				$(this).dialog("close");
-			},
-			"取消" : function() {
-				$(this).dialog("close");
-			}
-		}
-	});	
-	$("#dialog-cancel-confirm").show();
-	$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
-	$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
-	$(".upup").click(function(){
-		$(".input-field-wrap").slideToggle("slow");
-		$(".downdown").slideToggle();
-	});
-	$(".downdown").click(function(){
-		$(".input-field-wrap").slideToggle("slow");
-		$(".downdown").slideToggle();
-	});
-	$("#my").dialog({
-		title: "明細",
-		draggable : true, resizable : false, autoOpen : false,
-		height : "auto", width : "auto", modal : true,
-		show : {effect : "blind",duration : 300},
-		hide : {effect : "fade",duration : 300},
-		buttons : {
-			"確認" : function() {$(this).dialog("close");},
-		}
-	});
-	//get today yyyy-mm-dd
-	function getCurrentDate(){
-		var fullDate = new Date();
-		var twoDigitMonth = fullDate.getMonth()+1;	if(twoDigitMonth.length==1)	twoDigitMonth="0" +twoDigitMonth;
-		var twoDigitDate = fullDate.getDate()+"";	if(twoDigitDate.length==1)	twoDigitDate="0" +twoDigitDate;
-		var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitDate;
-		return currentDate;
-	}
-	//日期設定
-	$(".date").datepicker({
-		dayNamesMin:["日","一","二","三","四","五","六"],
-		monthNames:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],
-		dateFormat:"yy-mm-dd",
-		changeYear:true
-	});	
-	//hold header
-// 	$("#account_amount_date_table").find("th").css("min-width","120px");
-// 	$("#account_receive_date_table").find("th").css("min-width","120px");
-})
-</script>
-		<div class="datalistWrap" >
-			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="確認批次收帳嗎?" style="display:none;">
-				<br><p></p>
-			</div>
-			<!--對話窗樣式-確認-取消 -->
-			<div id="dialog-cancel-confirm" title="確認取消批次收帳嗎?" style="display:none;">
-				<br><p></p>
-			</div>			
-			<!-- 第一列 -->
-			<div class="input-field-wrap">
-			<div class="form-wrap">
-				<form id="amount_date_form" name="trans_list_date_form">
-					<div class="form-row">
-						<label for="">
-							<span class="block-label">應收起日</span>
-							<input type="text" class="input-date" id="amount_start_date" name="amount_start_date">
-						</label>
-						<div class="forward-mark"></div>
-						<label for="">
-							<span class="block-label">應收迄日</span>
-							<input type="text" class="input-date" id="amount_end_date" name="amount_end_date">
-						</label>
-						<button id="searh_amount_date" class="btn btn-darkblue">查詢</button>
-					</div>
-				</form>
-			</div><!-- /.form-wrap -->
-		</div><!-- /.input-field-wrap -->
-			<!-- 第二列 -->
-			<div class=" search-result-wrap" align="center" style="height:433px;">
-				<div id="account_amount_date_contain" class="result-table-wrap" style="display:none;">
-					<table id="account_amount_date_table" class="result-table">
-						<thead>
-							<tr class="">
-								<th>應收帳款金額</th>
-								<th>應收帳款產生日期</th>
-								<th>實收帳款金額</th>
-								<th>實收帳款產生日期</th>
-								<th>交易平台</th>
-								<th>訂單號</th>
-								<th>備註</th>
-								<th style="background-image: none !important;">勾選</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
+		<script>
+
+		
+		    function massageDialog(massage, tital) {
+		        $('#message #text').val('').html(massage);
+		        $('#message')
+		            .dialog()
+		            .dialog('option', 'title', tital)
+		            .dialog('option', 'width', 'auto')
+		            .dialog('option', 'minHeight', 'auto')
+		            .dialog("open");
+		    }
+		
+		    function initUpdateDialog() {
+		        $("#dialog-form-update-noreceive  input[name='dialog_order_no']").val("");
+		        $("#dialog-form-update-noreceive  input[name='dialog_product_name']").val("");
+		        $("#dialog-form-update-noreceive  input[name='dialog_receive_amount']").val("");
+		        $("#dialog-form-update-noreceive  input[name='dialog_amount']").val("");
+		        $("#dialog-form-update-noreceive  input[name='dialog_memo']").val("");
+		
+		        $("#dialog-form-update-receive  input[name='dialog_order_no']").val("");
+		        $("#dialog-form-update-receive  input[name='dialog_product_name']").val("");
+		        $("#dialog-form-update-receive  input[name='dialog_receive_amount']").val("");
+		        $("#dialog-form-update-receive  input[name='dialog_amount']").val("");
+		        $("#dialog-form-update-receive  input[name='dialog_memo']").val("");
+		    }
+		
+		
+		    //驗證日期格式
+		    function dateValidationCheck(str) {
+		        var re = new RegExp("^([0-9]{4})[.-]{1}([0-9]{1,2})[.-]{1}([0-9]{1,2})$");
+		        var strDataValue;
+		        var infoValidation = true;
+		        if ((strDataValue = re.exec(str)) != null) {
+		            var i;
+		            i = parseFloat(strDataValue[1]);
+		            if (i <= 0 || i > 9999) { /*年*/
+		                infoValidation = false;
+		            }
+		            i = parseFloat(strDataValue[2]);
+		            if (i <= 0 || i > 12) { /*月*/
+		                infoValidation = false;
+		            }
+		            i = parseFloat(strDataValue[3]);
+		            if (i <= 0 || i > 31) { /*日*/
+		                infoValidation = false;
+		            }
+		        } else {
+		            infoValidation = false;
+		        }
+		        return infoValidation;
+		    }
+		
+		    $(function() {
+		
+		        $("#noreceive_detail_table").delegate(".btn_update", "click", function() {
+		
+		            var row = $(this).closest("tr");
+		            var data = $("#noreceive_detail_table").DataTable().row(row).data();
+		
+		            $("#dialog-form-update-noreceive  input[name='dialog_amount']").val(data.amount);
+		            $("#dialog-form-update-noreceive  input[name='dialog_amount_date']").val(data.amount_date);
+		            $("#dialog-form-update-noreceive  input[name='dialog_memo']").val(data.memo);
+		            $("#dialog-form-update-noreceive  input[name='dialog_order_no']").val(data.order_no);
+		            $("#dialog-form-update-noreceive  input[name='dialog_product_name']").val(data.product_name);
+		
+		            $("#hidreceive_id").val(data.receivable_id);
+		
+		
+		            var dialog_form_update = $("#dialog-form-update-noreceive").dialog({
+		                draggable: true, //防止拖曳
+		                resizable: false, //防止縮放
+		                autoOpen: false,
+		                height: "auto",
+		                width: "700",
+		                modal: true,
+		                show: {
+		                    effect: "blind",
+		                    duration: 300
+		                },
+		                hide: {
+		                    effect: "fade",
+		                    duration: 300
+		                },
+		                buttons: [{
+		                    id: "update_enter",
+		                    text: "修改",
+		                    click: function() {
+		                        $.ajax({
+		                            url: 'accreceive.do',
+		                            type: 'post',
+		                            data: {
+		                                action: 'update_receivable_noreceive',
+		                                order_no: $("#dialog-form-update-noreceive  input[name='dialog_order_no']").val(),
+		                                amount: $("#dialog-form-update-noreceive  input[name='dialog_amount']").val(),
+		                                amount_date: $("#dialog-form-update-noreceive  input[name='dialog_amount_date']").val(),
+		                                memo: $("#dialog-form-update-noreceive  input[name='dialog_memo']").val(),
+		                                receivable_id: $("#hidreceive_id").val()
+		                            },
+		                            error: function(xhr) {
+		                                alere("error");
+		                            },
+		                            success: function(response) {
+		                                if ("success" == response) {
+		
+		                                    var parameter = {
+		                                        action: "getAccreceiveVOByOrderNO",
+		                                        order_no: $("#dialog-form-update-noreceive  input[name='dialog_order_no']").val()
+		                                    };
+		                                    draw_detail(parameter, '1');
+		                                    parameter = {
+		                                        action: "searh_amount_date",
+		                                        start_date: $("#hidAccreceiveBeginDate").val(),
+		                                        end_date: $("#hidAccreceiveEndDate").val()
+		                                    }
+		                                    draw_accreceive(parameter);
+		
+		                                    massageDialog('執行成功', '修改');
+		                                } else {
+		                                    massageDialog('執行失敗', '修改');
+		                                }
+		
+		                            }
+		                        });
+		
+		                        $(this).dialog("close");
+		                    }
+		                }, {
+		                    text: "取消",
+		                    click: function() {
+		                        dialog_form_update.dialog("close");
+		                    }
+		                }]
+		            });
+		
+		            dialog_form_update.dialog("open");
+		        });
+		
+		
+		
+		        $("#receive_detail_table").delegate(".btn_update", "click", function() {
+		
+		            var row = $(this).closest("tr");
+		            var data = $("#receive_detail_table").DataTable().row(row).data();
+		
+		            $("#dialog-form-update-receive  input[name='dialog_receive_amount']").val(data.receive_amount);
+		            $("#dialog-form-update-receive  input[name='dialog_receive_date']").val(data.receive_date);
+		            $("#dialog-form-update-receive  input[name='dialog_memo']").val(data.memo);
+		            $("#dialog-form-update-receive  input[name='dialog_order_no']").val(data.order_no);
+		            $("#dialog-form-update-receive  input[name='dialog_product_name']").val(data.product_name);
+		
+		            $("#hidreceive_id").val(data.receivable_id);
+		
+		
+		            var dialog_form_update = $("#dialog-form-update-receive").dialog({
+		                draggable: true, //防止拖曳
+		                resizable: false, //防止縮放
+		                autoOpen: false,
+		                height: "auto",
+		                width: "700",
+		                modal: true,
+		                show: {
+		                    effect: "blind",
+		                    duration: 300
+		                },
+		                hide: {
+		                    effect: "fade",
+		                    duration: 300
+		                },
+		                buttons: [{
+		                    id: "update_enter",
+		                    text: "修改",
+		                    click: function() {
+		                        $.ajax({
+		                            url: 'accreceive.do',
+		                            type: 'post',
+		                            data: {
+		                                action: 'update_receivable_receive',
+		                                order_no: $("#dialog-form-update-receive  input[name='dialog_order_no']").val(),
+		                                receive_amount: $("#dialog-form-update-receive  input[name='dialog_receive_amount']").val(),
+		                                receive_date: $("#dialog-form-update-receive  input[name='dialog_receive_date']").val(),
+		                                memo: $("#dialog-form-update-receive  input[name='dialog_memo']").val(),
+		                                receivable_id: $("#hidreceive_id").val()
+		                            },
+		                            error: function(xhr) {
+		                                alere("error");
+		                            },
+		                            success: function(response) {
+		                                if ("success" == response) {
+		
+		                                    var parameter = {
+		                                        action: "getAccreceiveVOByOrderNO",
+		                                        order_no: $("#dialog-form-update-receive  input[name='dialog_order_no']").val()
+		                                    };
+		                                    draw_detail(parameter, '2');
+		                                    parameter = {
+		                                        action: "searh_receive_date",
+		                                        start_date: $("#hidAccreceiveBeginDate").val(),
+		                                        end_date: $("#hidAccreceiveEndDate").val()
+		                                    }
+		                                    draw_receive(parameter);
+		                                    massageDialog('執行成功', '修改');
+		                                } else {
+		                                    massageDialog('執行失敗', '修改');
+		                                }
+		
+		                            }
+		                        });
+		
+		                        $(this).dialog("close");
+		                    }
+		                }, {
+		                    text: "取消",
+		                    click: function() {
+		                        dialog_form_update.dialog("close");
+		                    }
+		                }]
+		            });
+		
+		            dialog_form_update.dialog("open");
+		        });
+		
+		
+		        $("#account_amount_date_table").delegate(".btn_list", "click", function() {
+		
+		
+		            var row = $(this).closest("tr");
+		            var data = $("#account_amount_date_table").DataTable().row(row).data();
+		
+		            var parameter = {
+		                action: "getAccreceiveVOByOrderNO",
+		                order_no: data.order_no
+		            };
+		
+		            draw_detail(parameter, '1');
+		
+		            initUpdateDialog();
+		
+		            var dialog_form_detail = $("#dialog-form-noreceive-detail").dialog({
+		                draggable: true, //防止拖曳
+		                resizable: false, //防止縮放
+		                autoOpen: false,
+		                height: "auto",
+		                width: "900",
+		                modal: true,
+		                show: {
+		                    effect: "blind",
+		                    duration: 300
+		                },
+		                hide: {
+		                    effect: "fade",
+		                    duration: 300
+		                },
+		                buttons: {
+		                    "關閉": function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            });
+		
+		            dialog_form_detail.dialog("open");
+		        });
+		
+		
+		        $("#account_amount_date_table").delegate(".btn_delete", "click", function() {
+		            var row = $(this).closest("tr");
+		            var data = $("#account_amount_date_table").DataTable().row(row).data();
+		
+		            $("#hidOrder_no").val(data.order_no);
+		
+		            var confirm_delete_dialog = $("#dialog-delete-confirm").dialog({
+		                draggable: true, //防止拖曳
+		                resizable: false, //防止縮放
+		                autoOpen: false,
+		                height: 200,
+		                modal: true,
+		                show: {
+		                    effect: "blind",
+		                    duration: 300
+		                },
+		                hide: {
+		                    effect: "fade",
+		                    duration: 300
+		                },
+		                buttons: {
+		                    "確認刪除": function() {
+		                        $.ajax({
+		                            url: 'accreceive.do',
+		                            type: 'post',
+		                            data: {
+		                                action: 'delete_receivable',
+		                                order_no: $("#hidOrder_no").val()
+		                            },
+		                            error: function(xhr) {
+		                                alere("error");
+		                            },
+		                            success: function(response) {
+		
+		                                if ("success" == response) {
+		                                    massageDialog('執行成功', '刪除');
+		                                    parameter = {
+		                                        action: "searh_amount_date",
+		                                        start_date: $("#hidAccreceiveBeginDate").val(),
+		                                        end_date: $("#hidAccreceiveEndDate").val()
+		                                    }
+		                                    draw_accreceive(parameter);
+		
+		
+		
+		                                } else {
+		                                    massageDialog('執行失敗', '刪除');
+		                                }
+		
+		                            }
+		                        });
+		
+		                        $(this).dialog("close");
+		                    },
+		                    "取消": function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            });
+		            confirm_delete_dialog.dialog("open");
+		        });
+		
+		
+		
+		        $("#account_receive_date_table").delegate(".btn_list", "click", function() {
+		
+		
+		            var row = $(this).closest("tr");
+		            var data = $("#account_receive_date_table").DataTable().row(row).data();
+		
+		            var parameter = {
+		                action: "getAccreceiveVOByOrderNO",
+		                order_no: data.order_no
+		            };
+		
+		            draw_detail(parameter, '2');
+		
+		            initUpdateDialog();
+		
+		            var dialog_form_detail = $("#dialog-form-receive-detail").dialog({
+		                draggable: true, //防止拖曳
+		                resizable: false, //防止縮放
+		                autoOpen: false,
+		                height: "auto",
+		                width: "900",
+		                modal: true,
+		                show: {
+		                    effect: "blind",
+		                    duration: 300
+		                },
+		                hide: {
+		                    effect: "fade",
+		                    duration: 300
+		                },
+		                buttons: {
+		                    "關閉": function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            });
+		
+		            dialog_form_detail.dialog("open");
+		        });
+		
+		
+		        $("#account_receive_date_table").delegate(".btn_delete", "click", function() {
+		            var row = $(this).closest("tr");
+		            var data = $("#account_receive_date_table").DataTable().row(row).data();
+		
+		            $("#hidOrder_no").val(data.order_no);
+		
+		            var confirm_delete_dialog = $("#dialog-delete-confirm").dialog({
+		                draggable: true, //防止拖曳
+		                resizable: false, //防止縮放
+		                autoOpen: false,
+		                height: 200,
+		                modal: true,
+		                show: {
+		                    effect: "blind",
+		                    duration: 300
+		                },
+		                hide: {
+		                    effect: "fade",
+		                    duration: 300
+		                },
+		                buttons: {
+		                    "確認刪除": function() {
+		                        $.ajax({
+		                            url: 'accreceive.do',
+		                            type: 'post',
+		                            data: {
+		                                action: 'delete_receivable',
+		                                order_no: $("#hidOrder_no").val()
+		                            },
+		                            error: function(xhr) {
+		                                alere("error");
+		                            },
+		                            success: function(response) {
+		
+		                                if ("success" == response) {
+		                                    massageDialog('執行成功', '刪除');
+		                                    var parameter = {
+		                                        action: "searh_receive_date",
+		                                        start_date: $("#hidReceiveBeginDate").val(),
+		                                        end_date: $("#hidReceiveEndDate").val()
+		                                    }
+		                                    draw_receive(parameter);
+		                                } else {
+		                                    massageDialog('執行失敗', '刪除');
+		                                }
+		
+		                            }
+		                        });
+		
+		                        $(this).dialog("close");
+		                    },
+		                    "取消": function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            });
+		            confirm_delete_dialog.dialog("open");
+		        });
+		
+		
+		
+		
+		        $(".bdyplane").animate({
+		            "opacity": "1"
+		        });
+		        $("#amount_date_form").validate({
+		            rules: {
+		                amount_start_date: {
+		                    dateISO: true
+		                },
+		                amount_end_date: {
+		                    dateISO: true
+		                }
+		            },
+		            messages: {
+		                amount_start_date: {
+		                    dateISO: "日期格式錯誤"
+		                },
+		                amount_end_date: {
+		                    dateISO: "日期格式錯誤"
+		                }
+		            }
+		        });
+		        $("#receive_date_form").validate({
+		            rules: {
+		                receive_start_date: {
+		                    dateISO: true
+		                },
+		                receive_end_date: {
+		                    dateISO: true
+		                }
+		            },
+		            messages: {
+		                receive_start_date: {
+		                    dateISO: "日期格式錯誤"
+		                },
+		                receive_end_date: {
+		                    dateISO: "日期格式錯誤"
+		                }
+		            }
+		        });
+		        //應收帳款日查詢相關設定
+		        $("#searh_amount_date").click(function(e) {
+		            e.preventDefault();
+		
+		            var $startDate = $("#amount_start_date").val();
+		            var $endDate = $("#amount_end_date").val();
+		
+		            var errorMes = '';
+		            var $mes = $('#message #text');
+		            if ($endDate != null && $endDate.length != 0 && $startDate != null && $startDate.length != 0) {
+		                if ($startDate.replace(/-/g, "") > $endDate.replace(/-/g, "")) {
+		                    errorMes += "訖日不可小於起日!<br>";
+		                }
+		            }
+		            if ($startDate == null || $startDate.length == 0) {
+		                errorMes += "請選擇起日!<br>";
+		            } else if (!dateValidationCheck($startDate)) {
+		                errorMes += "起日格式不符!<br>";
+		            }
+		            if ($endDate == null || $endDate.length == 0) {
+		                errorMes += "請選擇訖日!<br>";
+		            } else if (!dateValidationCheck($endDate)) {
+		                errorMes += "訖日格式不符!<br>";
+		            }
+		
+		            if (errorMes.length > 0) {
+		                massageDialog(errorMes, '警告');
+		                return false;
+		            }
+		
+		            $("#hidAccreceiveBeginDate").val($startDate);
+		            $("#hidAccreceiveEndDate").val($endDate);
+		
+		            if ($("#amount_date_form").valid()) {
+		                var parameter = {
+		                    action: "searh_amount_date",
+		                    start_date: $("#amount_start_date").val(),
+		                    end_date: $("#amount_end_date").val()
+		                }
+		                draw_accreceive(parameter);
+		            }
+		        });
+		
+		        //實收帳款日查詢相關設定
+		        $("#searh_receive_date").click(function(e) {
+		            e.preventDefault();
+		            var $startDate = $("#receive_start_date").val();
+		            var $endDate = $("#receive_end_date").val();
+		
+		
+		            var errorMes = '';
+		            var $mes = $('#message #text');
+		            if ($endDate != null && $endDate.length != 0 && $startDate != null && $startDate.length != 0) {
+		                if ($startDate.replace(/-/g, "") > $endDate.replace(/-/g, "")) {
+		                    errorMes += "訖日不可小於起日!<br>";
+		                }
+		            }
+		            if ($startDate == null || $startDate.length == 0) {
+		                errorMes += "請選擇起日!<br>";
+		            } else if (!dateValidationCheck($startDate)) {
+		                errorMes += "起日格式不符!<br>";
+		            }
+		            if ($endDate == null || $endDate.length == 0) {
+		                errorMes += "請選擇訖日!<br>";
+		            } else if (!dateValidationCheck($endDate)) {
+		                errorMes += "訖日格式不符!<br>";
+		            }
+		
+		            if (errorMes.length > 0) {
+		                massageDialog(errorMes, '警告');
+		                return false;
+		            }
+		
+		            $("#hidReceiveBeginDate").val($startDate);
+		            $("#hidReceiveEndDate").val($endDate);
+		
+		
+		            if ($("#receive_date_form").valid()) {
+		
+		                var parameter = {
+		                    action: "searh_receive_date",
+		                    start_date: $("#receive_start_date").val(),
+		                    end_date: $("#receive_end_date").val()
+		                }
+		                draw_receive(parameter);
+		            }
+		        });
+		        confirm_dialog = $("#dialog-confirm").dialog({
+		            draggable: true, //防止拖曳
+		            resizable: false, //防止縮放
+		            autoOpen: false,
+		            height: 200,
+		            modal: true,
+		            show: {
+		                effect: "blind",
+		                duration: 300
+		            },
+		            hide: {
+		                effect: "fade",
+		                duration: 300
+		            },
+		            buttons: {
+		                "確認批次收帳": function() {
+		                    var order_nos = '';
+		
+		                    $(".checkbox_receive").each(function() {
+		                        if ($(this).prop("checked")) {
+		                            order_nos += $(this).attr("value") + '~';
+		                        }
+		                    });
+		
+		                    order_nos = order_nos.slice(0, -1);
+		
+		                    $.ajax({
+		                        type: "POST",
+		                        url: "accreceive.do",
+		                        async: false,
+		                        data: {
+		                            action: "receive_account",
+		                            order_nos: order_nos,
+		                            receive_date: getCurrentDate()
+		                        },
+		                        success: function(result) {
+		                            if ($("#hidReceiveBeginDate").val() != "") {
+		                                var parameter = {
+		                                    action: "searh_receive_date",
+		                                    start_date: $("#hidReceiveBeginDate").val(),
+		                                    end_date: $("#hidReceiveEndDate").val()
+		                                }
+		                                draw_receive(parameter);
+		                            }
+		
+		                            parameter = {
+		                                action: "searh_amount_date",
+		                                start_date: $("#hidAccreceiveBeginDate").val(),
+		                                end_date: $("#hidAccreceiveEndDate").val()
+		                            }
+		                            draw_accreceive(parameter);
+		                        }
+		                    });
+		
+		                    $(this).dialog("close");
+		                },
+		                "取消": function() {
+		                    $(this).dialog("close");
+		                }
+		            }
+		        });
+		        $("#dialog-confirm").show();
+		
+		        confirm_cancel_dialog = $("#dialog-cancel-confirm").dialog({
+		            draggable: true, //防止拖曳
+		            resizable: false, //防止縮放
+		            autoOpen: false,
+		            height: 200,
+		            modal: true,
+		            show: {
+		                effect: "blind",
+		                duration: 300
+		            },
+		            hide: {
+		                effect: "fade",
+		                duration: 300
+		            },
+		            buttons: {
+		                "確認取消收帳": function() {
+		
+		                    var order_no = '';
+		
+		                    $(".checkbox_receive_cancel").each(function() {
+		                        if ($(this).prop("checked")) {
+		                            order_no += $(this).attr("value") + '~';
+		                        }
+		                    });
+		                    order_no = order_no.slice(0, -1);
+		
+		                    $.ajax({
+		                        type: "POST",
+		                        url: "accreceive.do",
+		                        async: false,
+		                        data: {
+		                            action: "delete_receive_account",
+		                            order_nos: order_no,
+		                            receive_date: getCurrentDate()
+		                        },
+		                        success: function(result) {
+		                            var parameter = {
+		                                action: "searh_receive_date",
+		                                start_date: $("#hidReceiveBeginDate").val(),
+		                                end_date: $("#hidReceiveEndDate").val()
+		                            }
+		                            draw_receive(parameter);
+		                            if ($("#hidAccreceiveBeginDate").val() != "") {
+		                                parameter = {
+		                                    action: "searh_amount_date",
+		                                    start_date: $("#hidAccreceiveBeginDate").val(),
+		                                    end_date: $("#hidAccreceiveEndDate").val()
+		                                }
+		                                draw_accreceive(parameter);
+		                            }
+		
+		                        }
+		                    });
+		                    $(this).dialog("close");
+		                },
+		                "取消": function() {
+		                    $(this).dialog("close");
+		                }
+		            }
+		        });
+		        $("#dialog-cancel-confirm").show();
+		        $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+		        $(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+		        $(".upup").click(function() {
+		            $(".input-field-wrap").slideToggle("slow");
+		            $(".downdown").slideToggle();
+		        });
+		        $(".downdown").click(function() {
+		            $(".input-field-wrap").slideToggle("slow");
+		            $(".downdown").slideToggle();
+		        });
+		        
+		        //get today yyyy-mm-dd
+		        function getCurrentDate() {
+		            var fullDate = new Date();
+		            var twoDigitMonth = fullDate.getMonth() + 1;
+		            if (twoDigitMonth.length == 1) twoDigitMonth = "0" + twoDigitMonth;
+		            var twoDigitDate = fullDate.getDate() + "";
+		            if (twoDigitDate.length == 1) twoDigitDate = "0" + twoDigitDate;
+		            var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitDate;
+		            return currentDate;
+		        }
+		        //日期設定
+		        $(".date").datepicker({
+		            dayNamesMin: ["日", "一", "二", "三", "四", "五", "六"],
+		            monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+		            dateFormat: "yy-mm-dd",
+		            changeYear: true
+		        });
+		    })
+		</script>
+			<div class="datalistWrap" >
+				<!--對話窗樣式-確認 -->
+				<div id="dialog-confirm" title="確認批次收帳嗎?" style="display:none;">
+					<br><p></p>
 				</div>
-			</div>
-		</div>
-
-		<div class="datalistWrap">
-			<!-- 第三列 -->
-			<hr class="hr0">
-			<div class="input-field-wrap">
-				<div class="form-wrap">
-					<form id="receive_date_form" name="trans_list_date_form">
-						<div class="form-row">
-							<label for="">
-								<span class="block-label">實收起日</span>
-								<input type="text" class="input-date" id="receive_start_date" name="receive_start_date">
-							</label>
-							<div class="forward-mark"></div>
-							<label for="">
-								<span class="block-label">實收迄日</span>
-								<input type="text" class="input-date" id="receive_end_date" name="receive_end_date">
-							</label>
-							<button id="searh_receive_date" class="btn btn-darkblue">查詢</button>				
-						</div>
+				<!--對話窗樣式-確認-取消 -->
+				<div id="dialog-cancel-confirm" title="確認取消批次收帳嗎?" style="display:none;">
+					<br><p></p>
+				</div>
+				<!--對話窗樣式-確認-取消 -->
+				<div id="dialog-delete-confirm" title="警告" style="display:none;">
+					<br><p>確認刪除收帳嗎?</p>
+				</div>
+				<!--對話窗樣式-應收修改- -->
+				<div id="dialog-form-update-noreceive" title="修改資料" style="display: none;">
+					<form name="update-dialog-form-post" id="update-dialog-form-post" style="display: inline">
+						<fieldset>
+							<table class="form-table">
+								<tbody>
+									<tr>
+										<td>訂單編號：</td>
+										<td><input type="text"  name="dialog_order_no" style=" background:white;" disabled readonly /></td>
+									</tr>
+									<tr>
+										<td>產品名稱：</td>
+										<td><input type="text"  name="dialog_product_name" style=" background:white;" disabled readonly /></td>
+									</tr>
+									<tr>
+										<td>應收帳款金額：</td>
+										<td><input type="text"  name="dialog_amount"  /></td>
+									</tr>
+									<tr>
+										<td>備註：</td>
+										<td><input type="text"  name="dialog_memo" /></td>
+									</tr>
+									<tr>
+										<td>應收帳款產生日期：</td>
+										<td><input type="text"  name="dialog_amount_date" style=" background:white;" disabled readonly /></td>
+									</tr>
+										
+								</tbody>
+							</table>
+						</fieldset>
 					</form>
-				</div><!-- /.form-wrap -->
-			</div><!-- /.input-field-wrap -->
-			<div class="row search-result-wrap" align="center" style="height:433px;">
-				<div id="account_receive_date_contain" class="result-table-wrap" style="display:none;">
-					<table id="account_receive_date_table" class="result-table">
-						<thead>
-							<tr>
-								<th>應收帳款金額</th>
-								<th>應收帳款產生日期</th>
-								<th>實收帳款金額</th>
-								<th>實收帳款產生日期</th>
-								<th>交易平台</th>
-								<th>訂單號</th>
-								<th>備註</th>
-								<th style="background-image: none !important;">勾選</th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
+				</div>
+				
+				<!--對話窗樣式-實收修改- -->
+				<div id="dialog-form-update-receive" title="修改資料" style="display: none;">
+					<form name="update-dialog-form-post" id="update-dialog-form-post" style="display: inline">
+						<fieldset>
+							<table class="form-table">
+								<tbody>
+									<tr>
+										<td>訂單編號：</td>
+										<td><input type="text"  name="dialog_order_no" style=" background:white;" disabled readonly /></td>
+									</tr>
+						
+									<tr>
+										<td>產品名稱：</td>
+										<td><input type="text"  name="dialog_product_name" class="dialog_disable" style=" background:white;" disabled readonly /></td>
+									</tr>
+									<tr >
+										<td>實收帳款金額：</td>
+										<td><input type="text"  name="dialog_receive_amount"  /></td>
+									</tr>
+									<tr>
+										<td>備註：</td>
+										<td><input type="text" name="dialog_memo" /></td>
+									</tr>
+									<tr>
+										<td>實收帳款產生日期：</td>
+										<td><input type="text"  name="dialog_receive_date" style=" background:white;" disabled readonly /></td>
+									</tr>	
+								</tbody>
+							</table>
+						</fieldset>
+					</form>
+				</div>
+	
+				<!--對話窗 應收 明細-->
+				<div id="dialog-form-noreceive-detail" title="修改資料" style="display: none;">
+					<table id="noreceive_detail_table" class="result-table"></table>
+				</div>
+				
+				<!--對話窗 實收  明細-->
+				<div id="dialog-form-receive-detail" title="修改資料" style="display: none;">
+					<table id="receive_detail_table" class="result-table"></table>
+				</div>
+	
+				<!-- 第一列 -->
+				<div class="input-field-wrap">
+					<div class="form-wrap">
+						<form id="amount_date_form" name="trans_list_date_form">
+							<div class="form-row">
+								<label for="">
+									<span class="block-label">應收起日</span>
+									<input type="text" class="input-date" id="amount_start_date" name="amount_start_date">
+								</label>
+								<div class="forward-mark"></div>
+								<label for="">
+									<span class="block-label">應收迄日</span>
+									<input type="text" class="input-date" id="amount_end_date" name="amount_end_date">
+								</label>
+								<button id="searh_amount_date" class="btn btn-darkblue">查詢</button>
+							</div>
+						</form>
+		
+					</div><!-- /.form-wrap -->
+				</div><!-- /.input-field-wrap -->
+				<!-- 第二列 -->
+				<div class=" search-result-wrap" align="center" style="height:433px;">
+					<div id="account_amount_date_contain" class="result-table-wrap" >
+						<table id="account_amount_date_table" class="result-table">
+						</table>
+					</div>
+				</div>
+			</div>
+	
+			<div class="datalistWrap">
+				<!-- 第三列 -->
+				<hr class="hr0">
+				<div class="input-field-wrap">
+					<div class="form-wrap">
+						<form id="receive_date_form" name="trans_list_date_form">
+							<div class="form-row">
+								<label for="">
+									<span class="block-label">實收起日</span>
+									<input type="text" class="input-date" id="receive_start_date" name="receive_start_date">
+								</label>
+								<div class="forward-mark"></div>
+								<label for="">
+									<span class="block-label">實收迄日</span>
+									<input type="text" class="input-date" id="receive_end_date" name="receive_end_date">
+								</label>
+								<button id="searh_receive_date" class="btn btn-darkblue">查詢</button>				
+							</div>
+				
+						</form>
+					</div><!-- /.form-wrap -->
+				</div><!-- /.input-field-wrap -->
+				<div class="row search-result-wrap" align="center" style="height:433px;">
+					<div id="account_receive_date_contain" class="result-table-wrap" ">
+						<table id="account_receive_date_table" class="result-table">
+					
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	</div>
-	<div id="my"></div>
-</body>
+		</div>
+		<div id="my"></div>
+		<input type="hidden" id=hidAccreceiveBeginDate value=''>
+		<input type="hidden" id=hidAccreceiveEndDate value=''>
+		<input type="hidden" id=hidReceiveBeginDate value=''>
+		<input type="hidden" id=hidReceiveEndDate value=''>
+		<input type="hidden" id=hidreceive_id value=''>
+		<input type="hidden" id=hidOrder_no value=''>
+		<div id="message" align="center">
+			<div id="text"></div>
+		</div>
+	</body>
 </html>
