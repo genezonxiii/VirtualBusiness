@@ -320,6 +320,12 @@
 			                        type: "POST",
 			                        cache: false,
 			                        delay: 1500,
+					                beforeSend: function(){
+				                		 $(':hover').css('cursor','progress');
+					                },
+					                complete: function(){
+				                		 $(':hover').css('cursor','default');
+					                },
 			                        data: {
 			                            action: "send_data_by_c_productc_id",
 			                            c_product_ids: c_product_ids

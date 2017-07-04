@@ -1,4 +1,4 @@
-package tw.com.aber.sf.vo;
+package tw.com.aber.sf.delivery.vo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -13,13 +13,13 @@ import javax.xml.bind.annotation.XmlType;
 public class Request {
 	private static final long serialVersionUID = 1L;
 	
-	@XmlAttribute(name="service")
+	@XmlAttribute
 	private String service;
-	@XmlAttribute(name="lang")
+	@XmlAttribute
 	private String lang;
 	
 	@XmlElement(name = "Head")
-    private Head head;
+    private String head;
 	@XmlElement(name = "Body")
     private Body body;
 	
@@ -35,10 +35,10 @@ public class Request {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
-	public Head getHead() {
+	public String getHead() {
 		return head;
 	}
-	public void setHead(Head head) {
+	public void setHead(String head) {
 		this.head = head;
 	}
 	public Body getBody() {

@@ -1,4 +1,4 @@
-package tw.com.aber.sf.vo;
+package tw.com.aber.sf.delivery.vo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,13 +9,13 @@ import javax.xml.bind.annotation.XmlValue;
 
 @XmlRootElement(name = "Response")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "error" })
+@XmlType(propOrder = { "value" })
 public class Error {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute(name="code")
+	@XmlAttribute
 	protected String code;
 	@XmlValue
-	private String error;
+	private String value;
 
 	public String getCode() {
 		return code;
@@ -25,12 +25,12 @@ public class Error {
 		this.code = code;
 	}
 
-	public String getError() {
-		return error;
+	public String getValue() {
+		return value;
 	}
 
-	public void setError(String error) {
-		this.error = error;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 	public static long getSerialversionuid() {

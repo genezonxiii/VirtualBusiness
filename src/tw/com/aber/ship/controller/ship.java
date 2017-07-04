@@ -1,6 +1,8 @@
 package tw.com.aber.ship.controller;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -16,19 +18,28 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXB;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import tw.com.aber.sf.delivery.vo.Body;
+import tw.com.aber.sf.delivery.vo.Cargo;
+import tw.com.aber.sf.delivery.vo.Order;
+import tw.com.aber.sf.delivery.vo.Request;
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sf.vo.SaleOrder;
 import tw.com.aber.sftransfer.controller.SfApi;
+import tw.com.aber.sftransfer.controller.SfDeliveryApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.RealSaleDetailVO;
 import tw.com.aber.vo.ShipDetail;
+import tw.com.aber.vo.ShipSFDeliveryVO;
 import tw.com.aber.vo.ShipVO;
 
 public class ship extends HttpServlet {
@@ -45,9 +56,9 @@ public class ship extends HttpServlet {
 			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		
-		Util util =new Util();
-		
+
+		Util util = new Util();
+
 		util.ConfirmLoginAgain(request, response);
 
 		String groupId = (String) request.getSession().getAttribute("group_id");
@@ -105,9 +116,6 @@ public class ship extends HttpServlet {
 				List<ShipVO> shipVOList = null;
 
 				try {
-					/***************************
-					 * 1.接收請求參數
-					 ***************************************/
 					String ship_seq_nos = request.getParameter("ship_seq_nos");
 
 					shipService = new ShipService();
@@ -201,9 +209,39 @@ public class ship extends HttpServlet {
 					String gresult = gson.toJson(responseUtil);
 					response.getWriter().write(gresult);
 				} catch (Exception e) {
+					response.getWriter().write("失敗");
 					e.printStackTrace();
 					logger.error(e.getMessage());
 				}
+			} else if ("SFDelivery".equals(action)) {
+				String jsonList = request.getParameter("jsonList");
+				shipService = new ShipService();
+				SfDeliveryApi api = new SfDeliveryApi();
+				
+				String reqXml = shipService.genSFDeliveryOrderService(jsonList, groupId);
+				String resXml = api.sendXML(reqXml);
+				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
+			}else if("SFDeliveryOrderConfirmCancel".equals(action)){
+				String orderNo = request.getParameter("orderNo");
+				SfDeliveryApi api = new SfDeliveryApi();
+				String reqXml = api.genOrderConfirmService(orderNo);
+				String resXml = api.sendXML(reqXml);
+				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
+			}else if("SFDeliveryOrderSearchService".equals(action)){
+				String orderNo = request.getParameter("orderNo");
+				SfDeliveryApi api = new SfDeliveryApi();
+				String reqXml = api.genOrderSearchService(orderNo);
+				String resXml = api.sendXML(reqXml);
+				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				result = api.isTelegraph(responseObj) ? "成功" : "失敗";
+				logger.debug("執行結果: " + result);
+				response.getWriter().write(result);
 			}
 
 		} catch (Exception e) {
@@ -225,9 +263,13 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getSearchShipByOrderNo(ShipVO shipVO) {
 			return dao.searchShipByOrderNo(shipVO);
 		}
-		
+
 		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
 			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
+		}
+
+		public String genSFDeliveryOrderService(String info, String groupId) {
+			return dao.genSFDeliveryOrderService(info, groupId);
 		}
 	}
 
@@ -241,6 +283,7 @@ public class ship extends HttpServlet {
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
 		private static final String sp_select_ship_by_order_no = "call sp_select_ship_by_order_no (?,?)";
 		private static final String sp_get_ship_by_shipseqno = "call sp_get_ship_by_shipseqno(?,?)";
+		private static final String sp_select_ship_delivery = "call sp_select_ship_delivery(?,?)";
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -313,15 +356,15 @@ public class ship extends HttpServlet {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
-			
+
 			List<ShipDetail> shipDetailList = null;
 			ShipDetail shipDetail = null;
-			
+
 			String ship_id_Record = null;
-			String ship_id_now ="";
+			String ship_id_now = "";
 			String order_no_Record = null;
-			String order_no_now ="";
-			
+			String order_no_now = "";
+
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
@@ -333,8 +376,8 @@ public class ship extends HttpServlet {
 
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
-					
-					//sp 為ship sd 為shipDetail
+
+					// sp 為ship sd 為shipDetail
 					shipDetail = new ShipDetail();
 					shipDetail.setC_product_id(rs.getString("sd_c_product_id"));
 					shipDetail.setDeliveryway(rs.getString("sd_deliveryway"));
@@ -343,29 +386,29 @@ public class ship extends HttpServlet {
 					shipDetail.setPrice(rs.getString("sd_price"));
 					shipDetail.setProduct_id(rs.getString("sd_product_id"));
 					shipDetail.setProduct_name(rs.getString("sd_product_name"));
-					
+
 					String sd_quantity = rs.getString("sd_quantity");
-					
-					if (!(sd_quantity == null || "".equals(sd_quantity))){
+
+					if (!(sd_quantity == null || "".equals(sd_quantity))) {
 						shipDetail.setQuantity(Integer.parseInt(sd_quantity));
 					}
 					shipDetail.setShip_id(rs.getString("sd_ship_id"));
 					shipDetail.setShipDetail_id(rs.getString("sd_shipDetail_id"));
 					shipDetail.setUser_id(rs.getString("sd_user_id"));
 
-					//如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
-					//所以要新增出貨明細
-					logger.debug("order_no_now:"+order_no_now);
-					logger.debug("order_no_Record:"+order_no_Record);
-					logger.debug("order_no_Record:"+shipDetail.getC_product_id());
-					logger.debug("order_no_Record:"+shipDetail.getProduct_name());
-					
+					// 如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
+					// 所以要新增出貨明細
+					logger.debug("order_no_now:" + order_no_now);
+					logger.debug("order_no_Record:" + order_no_Record);
+					logger.debug("order_no_Record:" + shipDetail.getC_product_id());
+					logger.debug("order_no_Record:" + shipDetail.getProduct_name());
+
 					ship_id_now = rs.getString("sp_ship_id");
 					order_no_now = rs.getString("sp_order_no");
-					if((!order_no_now.equals(order_no_Record))||rs.isFirst()){
+					if ((!order_no_now.equals(order_no_Record)) || rs.isFirst()) {
 						shipDetailList = new ArrayList<ShipDetail>();
-						
-						//並且紀錄出貨明細
+
+						// 並且紀錄出貨明細
 						shipVO = new ShipVO();
 						shipVO.setShip_id(rs.getString("sp_ship_id"));
 
@@ -385,7 +428,7 @@ public class ship extends HttpServlet {
 						shipVO.setV_dis_date(rs.getDate("sm_dis_date"));
 						shipVO.setShipDetail(shipDetailList);
 						shipVOList.add(shipVO);
-						
+
 						ship_id_Record = ship_id_now;
 						order_no_Record = order_no_now;
 					}
@@ -479,6 +522,109 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
+
+		@Override
+		public String genSFDeliveryOrderService(String info, String groupId) {
+
+			Type type = new TypeToken<List<ShipSFDeliveryVO>>() {
+			}.getType();
+			List<ShipSFDeliveryVO> sfDeliveryVOs = new Gson().fromJson(info, type);
+
+			List<RealSaleDetailVO> details = null;
+			List<Cargo> cargos = new ArrayList<Cargo>();
+
+			Order order = null;
+
+			for (ShipSFDeliveryVO master : sfDeliveryVOs) {
+				details = master.getRealSaleDetailVOs();
+
+				for (RealSaleDetailVO detail : details) {
+					Cargo cargo = new Cargo();
+					cargo.setName(detail.getProduct_name());
+					cargo.setCount(String.valueOf(detail.getQuantity()));
+					cargos.add(cargo);
+				}
+			}
+			// 因為只有同筆訂單的一或多筆出貨單，才能使用該功能，所以order資料統一取第一筆(至少一筆)
+			ShipSFDeliveryVO vo = sfDeliveryVOs.get(0);
+			String orderNo = vo.getOrder_no();
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			String result = "";
+			Body body = new Body();
+			Request request = new Request();
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_ship_delivery);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, orderNo);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					order = new Order();
+					order.setOrderId(orderNo);
+					order.setJ_company(rs.getString("j_company"));
+					order.setJ_contact(rs.getString("j_contact"));
+					order.setJ_tel(rs.getString("j_tel"));
+					order.setJ_mobile(rs.getString("j_mobile"));
+					order.setJ_address(rs.getString("j_address"));
+					// TODO 到件方公司名稱先填寫為[個人]
+					order.setD_company("個人");
+					order.setD_contact(rs.getString("d_contact"));
+					order.setD_tel(rs.getString("d_tel"));
+					order.setD_mobile(rs.getString("d_mobile"));
+					order.setD_address(rs.getString("d_address"));
+					// TODO 付款方式先填寫為[1]
+					order.setPay_method("1");
+					// TODO 快件產品類別先填寫為[1]
+					order.setExpress_type("1");
+					// TODO 包裹數先填寫為[1]
+					order.setParcel_quantity("1");
+					order.setCargos(cargos);
+					request.setHead(rs.getString("head"));
+				}
+				body.setOrder(order);
+
+				request.setService("OrderService");
+				request.setLang("zh-CN");
+				request.setBody(body);
+
+				String rqJsonStr = new Gson().toJson(request);
+				logger.debug("\n\n[Request]\n\nJson格式:\n\n{}\n", rqJsonStr);
+				
+				StringWriter sw = new StringWriter();
+				JAXB.marshal(request, sw);
+				logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+				result = sw.toString();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+
+			return result;
+		}
 	}
 
 }
@@ -489,5 +635,7 @@ interface ship_interface {
 	public List<ShipVO> searchShipByOrderNo(ShipVO shipVO);
 
 	public List<ShipVO> getShipByShipSeqNo(String shipSeqNos, String groupID);
+
+	public String genSFDeliveryOrderService(String info, String groupId);
 
 }

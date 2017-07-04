@@ -536,9 +536,258 @@
 		                    }
 		                });
 		            }
+		        },{
+		            text: '順豐快遞',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
+
+		            	var ships = new Map();
+		                var cells = $dtMaster.cells().nodes();
+						var row;
+						var data;
+						var message = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                if ($checkboxs.length > 20) {
+		                    alert('最多選擇二十筆資料');
+		                    return false;
+		                }
+
+						$checkboxs.each(function() {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							ships.set( data.order_no, data.order_no );
+						});
+						
+						if(ships.size> 1){
+							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+							var table = document.createElement('table');
+							ships.forEach(function(value, key, fullArray){
+								var tr = document.createElement('tr');
+								var text = document.createTextNode(key);
+								tr.appendChild(text);
+								table.appendChild(tr);
+							});
+							var $mes = $('#message #text');
+							$mes.val('').html(message).append(table);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+								.dialog('option', 'width', '322.6px')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}else{
+							var shipsArr = [];
+							var jsonList = '';
+							$checkboxs.each(function(i,item) {
+								row = $(this).closest("tr");
+								data = $table.DataTable().row(row).data();
+								$.ajax ({
+									url : "realsale.do",
+									type : "POST",
+									async: false,
+									data : {
+										"action" : "getRealSaleDetail",
+										"realsale_id" : data.realsale_id
+									},
+									success: function (response) {
+										var a =$.parseJSON(response);
+										data['detail'] = a;
+									}
+								});
+								console.log(data);
+								shipsArr.push(data);
+							});
+							jsonList = JSON.stringify(shipsArr);
+
+							console.log(jsonList);
+	 		                $.ajax({
+			                    url: 'ship.do',
+			                    type: 'post',
+			                    data: {
+			                        action: 'SFDelivery',
+			                        jsonList: jsonList
+			                    },
+				                beforeSend: function(){
+			                		 $(':hover').css('cursor','progress');
+				                },
+				                complete: function(){
+			                		 $(':hover').css('cursor','default');
+				                },
+			                    error: function(xhr) {},
+			                    success: function(response) {
+			                        var $mes = $('#message #text');
+			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        $('#message')
+			                            .dialog()
+			                            .dialog('option', 'title', '提示訊息')
+			                            .dialog('option', 'width', 'auto')
+			                            .dialog('option', 'minHeight', 'auto')
+			                            .dialog("open");
+			                    }
+							});							
+						}
+		            }
+		        },{
+		            text: '順豐快遞取消',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
+
+		            	var ships = new Map();
+		                var cells = $dtMaster.cells().nodes();
+						var row;
+						var data;
+						var message = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                if ($checkboxs.length > 20) {
+		                    alert('最多選擇二十筆資料');
+		                    return false;
+		                }
+
+						$checkboxs.each(function() {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							ships.set( data.order_no, data.order_no );
+						});
+						
+						if(ships.size> 1){
+							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+							var table = document.createElement('table');
+							ships.forEach(function(value, key, fullArray){
+								var tr = document.createElement('tr');
+								var text = document.createTextNode(key);
+								tr.appendChild(text);
+								table.appendChild(tr);
+							});
+							var $mes = $('#message #text');
+							$mes.val('').html(message).append(table);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+								.dialog('option', 'width', '322.6px')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}else{
+							var mapIter = ships.values();
+							var orderNo = mapIter.next().value;
+							console.log(orderNo);
+							
+ 	 		                $.ajax({
+			                    url: 'ship.do',
+			                    type: 'post',
+			                    data: {
+			                        action: 'SFDeliveryOrderConfirmCancel',
+			                        orderNo: orderNo
+			                    },
+				                beforeSend: function(){
+			                		 $(':hover').css('cursor','progress');
+				                },
+				                complete: function(){
+			                		 $(':hover').css('cursor','default');
+				                },
+			                    error: function(xhr) {},
+			                    success: function(response) {
+			                        var $mes = $('#message #text');
+			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        $('#message')
+			                            .dialog()
+			                            .dialog('option', 'title', '提示訊息')
+			                            .dialog('option', 'width', 'auto')
+			                            .dialog('option', 'minHeight', 'auto')
+			                            .dialog("open");
+			                    }
+							});							
+						}
+		            }
+		        },,{
+		            text: '順豐快遞結果查詢',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
+
+		            	var ships = new Map();
+		                var cells = $dtMaster.cells().nodes();
+						var row;
+						var data;
+						var message = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                if ($checkboxs.length > 20) {
+		                    alert('最多選擇二十筆資料');
+		                    return false;
+		                }
+
+						$checkboxs.each(function() {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							ships.set( data.order_no, data.order_no );
+						});
+						
+						if(ships.size> 1){
+							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+							var table = document.createElement('table');
+							ships.forEach(function(value, key, fullArray){
+								var tr = document.createElement('tr');
+								var text = document.createTextNode(key);
+								tr.appendChild(text);
+								table.appendChild(tr);
+							});
+							var $mes = $('#message #text');
+							$mes.val('').html(message).append(table);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+								.dialog('option', 'width', '322.6px')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}else{
+							var mapIter = ships.values();
+							var orderNo = mapIter.next().value;
+							console.log(orderNo);
+							
+ 	 		                $.ajax({
+			                    url: 'ship.do',
+			                    type: 'post',
+			                    data: {
+			                        action: 'SFDeliveryOrderSearchService',
+			                        orderNo: orderNo
+			                    },
+				                beforeSend: function(){
+			                		 $(':hover').css('cursor','progress');
+				                },
+				                complete: function(){
+			                		 $(':hover').css('cursor','default');
+				                },
+			                    error: function(xhr) {},
+			                    success: function(response) {
+			                        var $mes = $('#message #text');
+			                        $mes.val('').html('成功發送<br><br>執行結果為: '+response);
+			                        $('#message')
+			                            .dialog()
+			                            .dialog('option', 'title', '提示訊息')
+			                            .dialog('option', 'width', 'auto')
+			                            .dialog('option', 'minHeight', 'auto')
+			                            .dialog("open");
+			                    }
+							});							
+						}
+		            }
 		        }
-
-
 		    ]
 		});
 		};
