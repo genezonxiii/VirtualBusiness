@@ -125,6 +125,9 @@ public class purchase extends HttpServlet {
 			try {
 				String purchaseDetail_id = request.getParameter("purchaseDetail_id");
 				String purchase_id = request.getParameter("purchase_id");
+
+				logger.debug("purchaseDetail_id:" + purchaseDetail_id);
+				
 				purchaseService = new PurchaseService();
 				purchaseService.deletePurchaseDetail(purchaseDetail_id);
 				purchaseService = new PurchaseService();
@@ -226,11 +229,13 @@ public class purchase extends HttpServlet {
 				 * 1.接收請求參數
 				 ***************************************/
 				String purchase_id = request.getParameter("purchase_id");
+				logger.debug("purchase_id:" + purchase_id);
+				
 				/***************************
 				 *2.開始刪除資料
 				 ***************************************/
 				purchaseService = new PurchaseService();
-				purchaseService.deletePurchase(purchase_id, user_id);
+				String result = purchaseService.deletePurchase(purchase_id, user_id);
 				/***************************
 				 *3.刪除完成,準備轉交(Send the Success view)
 				 ***********/
@@ -238,6 +243,7 @@ public class purchase extends HttpServlet {
 				List<PurchaseVO> salelist = purchaseService.getSearchAllDB(group_id);
 				PurchaseVO purchaseVO = new PurchaseVO();
 				purchaseVO.setMessage("驗證通過");
+				purchaseVO.setNote(result);
 				salelist.add(purchaseVO);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonStrList = gson.toJson(salelist);
@@ -252,7 +258,11 @@ public class purchase extends HttpServlet {
 			try {
 				String start_date = request.getParameter("purchase_start_date");
 				String end_date = request.getParameter("purchase_end_date");
+				logger.debug("start_date:" + start_date);
+				logger.debug("end_date:" + end_date);
+				
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
+					logger.debug("缺少end_date");
 					List<PurchaseVO> list = new ArrayList<PurchaseVO>();
 					PurchaseVO purchaseVO = new PurchaseVO();
 					purchaseVO.setMessage("如要以日期查詢，請完整填寫訖日欄位");
@@ -263,6 +273,7 @@ public class purchase extends HttpServlet {
 					return;// 程式中斷
 				}
 				if (end_date.trim().length() != 0 & start_date.trim().length() == 0) {
+					logger.debug("缺少start_date");
 					List<PurchaseVO> list = new ArrayList<PurchaseVO>();
 					PurchaseVO purchaseVO = new PurchaseVO();
 					purchaseVO.setMessage("如要以日期查詢，請完整填寫起日欄位");
@@ -274,6 +285,7 @@ public class purchase extends HttpServlet {
 				}
 				if (start_date.trim().length() != 0 & end_date.trim().length() != 0) {
 					if (DateConversionToDigital(start_date) > DateConversionToDigital(end_date)) {
+						logger.debug("起日不可大於訖日");
 						List<PurchaseVO> list = new ArrayList<PurchaseVO>();
 						PurchaseVO purchaseVO = new PurchaseVO();
 						purchaseVO.setMessage("起日不可大於訖日");
@@ -283,6 +295,7 @@ public class purchase extends HttpServlet {
 						response.getWriter().write(jsonStrList);
 						return;// 程式中斷
 					} else {
+						logger.debug("符合起訖日區間");
 						// 查詢指定期限
 						purchaseService = new PurchaseService();
 						List<PurchaseVO> list = purchaseService.getSearchPurchaseDateDB(group_id, start_date, end_date);
@@ -297,6 +310,7 @@ public class purchase extends HttpServlet {
 				}
 				// 假如無查詢條件，則是查詢全部
 				if (start_date.trim().length() == 0 & end_date.trim().length() == 0) {
+					logger.debug("區間未填寫 - getSearchAllDB");
 					purchaseService = new PurchaseService();
 					List<PurchaseVO> list = purchaseService.getSearchAllDB(group_id);
 					PurchaseVO purchaseVO = new PurchaseVO();
@@ -410,12 +424,15 @@ public class purchase extends HttpServlet {
 				 * 1.接收請求參數-格式檢查
 				 ****************************************/
 				String supply_name = request.getParameter("supply_name");
+				logger.debug("supply_name:" + supply_name);
+				
 				/***************************
 				 * 2.開始查詢資料
 				 ****************************************/
 				// 假如無查詢條件，則是查詢全部
 				if (supply_name == null || (supply_name.trim()).length() == 0) {
 					purchaseService = new PurchaseService();
+					logger.debug("getSearchAllDB");
 					List<PurchaseVO> list = purchaseService.getSearchAllDB(group_id);
 					PurchaseVO purchaseVO = new PurchaseVO();
 					purchaseVO.setMessage("驗證通過");
@@ -428,6 +445,7 @@ public class purchase extends HttpServlet {
 				// 查詢指定名稱
 				if (supply_name != null || supply_name.trim().length() != 0) {
 					purchaseService = new PurchaseService();
+					logger.debug("getSearchDB - By Supply Name");
 					List<PurchaseVO> list = purchaseService.getSearchDB(group_id, supply_name);
 					PurchaseVO purchaseVO = new PurchaseVO();
 					purchaseVO.setMessage("驗證通過");
@@ -622,7 +640,7 @@ public class purchase extends HttpServlet {
 
 		public void updateDetailToDB(PurchaseDetailVO purchaseDetailVO);
 
-		public void deleteDB(String purchase_id, String user_id);
+		public String deleteDB(String purchase_id, String user_id);
 
 		public void deleteDetail(String purchaseDetail_id);
 		
@@ -655,8 +673,8 @@ public class purchase extends HttpServlet {
 			dao = new PurchaseDAO();
 		}
 
-		public void deletePurchase(String purchase_id, String user_id) {
-			dao.deleteDB(purchase_id, user_id);
+		public String deletePurchase(String purchase_id, String user_id) {
+			return dao.deleteDB(purchase_id, user_id);
 		}
 
 		public void deletePurchaseDetail(String purchaseDetail_id) {
@@ -780,7 +798,7 @@ public class purchase extends HttpServlet {
 		private static final String sp_selectall_purchase = "call sp_selectall_purchase (?)";
 		private static final String sp_get_supplyname = "call sp_get_supplyname(?,?)";
 		private static final String sp_select_purchase_bypurchase_date = "call sp_select_purchase_bypurchase_date(?,?,?)";
-		private static final String sp_del_purchase = "call sp_del_purchase(?,?)";
+		private static final String sp_del_purchase = "call sp_del_purchase(?)";
 		private static final String sp_selectall_purchasedetail = "call sp_selectall_purchasedetail(?)";
 		private static final String sp_update_purchaseDetail = "call sp_update_purchaseDetail(?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_del_purchaseDetail = "call sp_del_purchaseDetail(?)";
@@ -789,7 +807,7 @@ public class purchase extends HttpServlet {
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
 		private static final String sp_get_purchases_by_purchase_ids = "call sp_get_purchases_by_purchase_ids(?,?)";
 		private static final String sp_sp_import_Data_tb_accept = "call sp_import_Data_tb_accept(?,?,?)";
-
+		private static final String sp_check_purchase = "call sp_check_purchase(?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -890,18 +908,36 @@ public class purchase extends HttpServlet {
 		}
 
 		@Override
-		public void deleteDB(String purchase_id, String user_id) {
-
+		public String deleteDB(String purchase_id, String user_id) {
+			String msg = "";
 			Connection con = null;
 			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_del_purchase);
+				pstmt = con.prepareStatement(sp_check_purchase);
 				pstmt.setString(1, purchase_id);
-				pstmt.setString(2, user_id);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					if (!rs.getBoolean("accept_flag")){
+						pstmt = con.prepareStatement(sp_del_purchase);
+						pstmt.setString(1, purchase_id);
+//						pstmt.setString(2, user_id);
 
-				pstmt.executeUpdate();
+						pstmt.executeUpdate();
+						msg = "刪除成功";
+					} else {
+						msg = "已轉入驗收，不可刪除！";
+					};
+				}
+				
+//				pstmt = con.prepareStatement(sp_del_purchase);
+//				pstmt.setString(1, purchase_id);
+////				pstmt.setString(2, user_id);
+//
+//				pstmt.executeUpdate();
 
 				// Handle any SQL errors
 			} catch (SQLException se) {
@@ -925,6 +961,8 @@ public class purchase extends HttpServlet {
 					}
 				}
 			}
+			
+			return msg;
 		}
 
 		@Override
@@ -1010,6 +1048,8 @@ public class purchase extends HttpServlet {
 					purchaseVO.setAmount(rs.getFloat("amount"));
 					purchaseVO.setReturn_date(rs.getDate("return_date"));
 					purchaseVO.setIsreturn(rs.getBoolean("isreturn"));
+					purchaseVO.setAccept_flag(rs.getBoolean("accept_flag"));
+					
 					list.add(purchaseVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -1073,6 +1113,8 @@ public class purchase extends HttpServlet {
 					purchaseVO.setAmount(rs.getFloat("amount"));
 					purchaseVO.setReturn_date(rs.getDate("return_date"));
 					purchaseVO.setIsreturn(rs.getBoolean("isreturn"));
+					purchaseVO.setAccept_flag(rs.getBoolean("accept_flag"));
+					
 					list.add(purchaseVO); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -1140,6 +1182,8 @@ public class purchase extends HttpServlet {
 					purchaseVO.setAmount(rs.getFloat("amount"));
 					purchaseVO.setReturn_date(rs.getDate("return_date"));
 					purchaseVO.setIsreturn(rs.getBoolean("isreturn"));
+					purchaseVO.setAccept_flag(rs.getBoolean("accept_flag"));
+					
 					list.add(purchaseVO); // Store the row in the list
 				}
 				// Handle any driver errors

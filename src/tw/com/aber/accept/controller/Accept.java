@@ -60,8 +60,8 @@ public class Accept  extends HttpServlet {
 			if("searchByDate".equals(action)){
 				String startStr = request.getParameter("startDate");
 				String endStr = request.getParameter("endDate");
-				logger.debug("startDate"+startStr);
-				logger.debug("endDate"+endStr);
+				logger.debug("startDate:"+startStr);
+				logger.debug("endDate:"+endStr);
 
 				java.util.Date date = null;
 				Date startDate = null, endDate = null;
@@ -72,7 +72,7 @@ public class Accept  extends HttpServlet {
 					date = sdf.parse(endStr);
 					endDate = new java.sql.Date(date.getTime());
 				} catch (ParseException e) {
-					logger.error("search date convert :".concat(e.getMessage()));
+					logger.error("search date convert:".concat(e.getMessage()));
 				}
 				
 				List<AcceptVO> acceptVOList=acceptService.getAcceptVOListByAcceptDate(groupId, startDate, endDate);
@@ -170,11 +170,11 @@ public class Accept  extends HttpServlet {
 				response.getWriter().write(result);
 
 			} else if ("masterDeleteByAccept_id".equals(action)) {
-				boolean isDelete = false;
+				String msg = "";
 
 				// 取值
 				String accept_id = request.getParameter("accept_id");
-			
+				logger.debug("accept_id:" + accept_id);
 
 				// 驗證
 				if (accept_id == "" || accept_id == null) {
@@ -182,15 +182,9 @@ public class Accept  extends HttpServlet {
 					return;
 				}
 
-				isDelete = acceptService.deleteAcceptByAccept_id(groupId,accept_id);
-
-				if (isDelete) {
-					result = "success";
-				} else {
-					result = "error";
-				}
-
-				response.getWriter().write(result);
+				msg = acceptService.deleteAcceptByAccept_id(groupId,accept_id);
+				
+				response.getWriter().write(msg);
 
 			}else if ("detailDeleteByAcceptDetail_id".equals(action)) {
 				boolean isDelete = false;
@@ -285,7 +279,7 @@ public class Accept  extends HttpServlet {
 		public Boolean updateAcceptDetail(AcceptdetailVO  acceptdetailVO) {
 			return dao.updateAcceptDetail(acceptdetailVO);
 		}
-		public Boolean deleteAcceptByAccept_id(String groupId, String acceptId) {
+		public String deleteAcceptByAccept_id(String groupId, String acceptId) {
 			return dao.deleteAcceptByAccept_id(groupId, acceptId);
 		}
 		public Boolean deleteAcceptDetailByAcceptDetail_id(String groupId, String acceptDetailId) {
@@ -303,7 +297,7 @@ public class Accept  extends HttpServlet {
 		AcceptdetailVO getAcceptDatailByAcceptDetail_id(String groupId, String acceptDetail_id);
 		Map getDetailDialogDataByWarehouseCode(String groupId, String warehouse_code);
 		Boolean updateAcceptDetail(AcceptdetailVO  acceptdetailVO);
-		Boolean deleteAcceptByAccept_id(String groupId, String acceptId);
+		String deleteAcceptByAccept_id(String groupId, String acceptId);
 		Boolean deleteAcceptDetailByAcceptDetail_id(String groupId, String acceptDetail);
 		Boolean importDataToStock(String groupId,String userId ,String acceptIds);
 	}							 
@@ -324,6 +318,7 @@ public class Accept  extends HttpServlet {
 		private static final String sp_delete_accept_by_accept_id = "call sp_delete_accept_by_accept_id(?,?)";
 		private static final String sp_delete_accept_detail_by_acceptDetail_id = "call sp_delete_accept_detail_by_acceptDetail_id(?,?)";
 		private static final String sp_importData_to_stock = "call sp_importData_to_stock(?,?,?)";
+		private static final String sp_check_accept = "call sp_check_accept(?,?)";
 
 		@Override
 		public List<AcceptVO> getAcceptVOListByAcceptDate(String groupId, Date startDate, Date endDate) {
@@ -343,7 +338,6 @@ public class Accept  extends HttpServlet {
 				pstmt.setDate(2, startDate);
 				pstmt.setDate(3, endDate);
 				rs = pstmt.executeQuery();
-				
 			
 				while(rs.next()){
 					acceptVO = new AcceptVO();
@@ -676,23 +670,37 @@ public class Accept  extends HttpServlet {
 		}
 		
 		@Override
-		public Boolean deleteAcceptByAccept_id(String groupId, String acceptId) {
-
-			boolean isDelete = false;
+		public String deleteAcceptByAccept_id(String groupId, String acceptId) {
+			String msg = "刪除失敗";
 			Connection con = null;
 			PreparedStatement pstmt = null;
-
+			ResultSet rs = null;
+			
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_delete_accept_by_accept_id);
-
+				pstmt = con.prepareStatement(sp_check_accept);
 				pstmt.setString(1, groupId);
 				pstmt.setString(2, acceptId);
+				
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					if (!rs.getBoolean("stock_flag")){
+						pstmt = con.prepareStatement(sp_delete_accept_by_accept_id);
 
-				int value = pstmt.executeUpdate();
+						pstmt.setString(1, groupId);
+						pstmt.setString(2, acceptId);
 
-				logger.debug("deleteReturn:" + value);
+						int value = pstmt.executeUpdate();
+
+						logger.debug("deleteReturn:" + value);
+						msg = "刪除成功";
+					} else {
+						msg = "已轉入庫存，不可刪除！";
+					};
+				}
+				
+				
 
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -716,8 +724,8 @@ public class Accept  extends HttpServlet {
 					}
 				}
 			}
-			isDelete = true;
-			return isDelete;
+			
+			return msg;
 		}
 
 
