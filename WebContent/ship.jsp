@@ -79,7 +79,7 @@
 		</div>
 	</div>
 	<!-- 銷貨明細對話窗-->
-	<div id="dialog-sale-detail" class="dialog" align="center">
+	<div id="dialog-sale-detail" class="dialog" align="center" style="display:none">
 		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
 			<fieldset>
 				<table id="dialog-sale-detail-table" class="result-table">
@@ -99,6 +99,18 @@
 			</fieldset>
 		</form>
 	</div> 
+	<!-- 下訂單對話窗-->
+	<div id="dialog-sf-delivery-order" style="display:none">
+		<form id ="dialog-sf-delivery-order-form">
+			<fieldset>
+				<table class='form-table'>
+					<tr>
+						<td>重量</td><td><input type="text" name="weight" placeholder="單位(千克)"></td>
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
 
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
@@ -521,82 +533,126 @@
 								.dialog('option', 'minHeight', 'auto')
 								.dialog("open");
 						}else{
-							var shipsArr = [];
-							var jsonList = '';
-							$checkboxs.each(function(i,item) {
-								row = $(this).closest("tr");
-								data = $table.DataTable().row(row).data();
-								$.ajax ({
-									url : "realsale.do",
-									type : "POST",
-									async: false,
-									data : {
-										"action" : "getRealSaleDetail",
-										"realsale_id" : data.realsale_id
-									},
-									success: function (response) {
-										var a =$.parseJSON(response);
-										data['detail'] = a;
+							jQuery.validator.addMethod("decimal", function(value, element) {
+								var decimal = /^-?\d+(\.\d{1,3})?$/;
+								return this.optional(element) || (decimal.test(value));
+							},"小數點不能超過三位");
+							
+							var validator_order = 
+								$("#dialog-sf-delivery-order-form").validate({
+									rules : {
+										weight : {
+											number: true,
+											decimal : true
+										}
 									}
 								});
-								console.log(data);
-								shipsArr.push(data);
-							});
-							jsonList = JSON.stringify(shipsArr);
+							
+							$("#dialog-sf-delivery-order").dialog({
+								draggable : true,
+								resizable : false,
+								height : "auto",
+								width : "auto",
+								modal : true,
+								title : '訂單貨物總重量',
+								buttons : [{
+											text : "發送",
+											click : function() {
+												if ($('#dialog-sf-delivery-order-form').valid()) {
+													var shipsArr = [];
+													var jsonList = '';
+													$checkboxs.each(function(i,item) {
+														row = $(this).closest("tr");
+														data = $table.DataTable().row(row).data();
+														$.ajax ({
+															url : "realsale.do",
+															type : "POST",
+															async: false,
+															data : {
+																"action" : "getRealSaleDetail",
+																"realsale_id" : data.realsale_id
+															},
+															success: function (response) {
+																var a =$.parseJSON(response);
+																data['detail'] = a;
+															}
+														});
+														console.log(data);
+														shipsArr.push(data);
+													});
+													jsonList = JSON.stringify(shipsArr);
 
-							console.log(jsonList);
-	 		                $.ajax({
-			                    url: 'ship.do',
-			                    type: 'post',
-			                    data: {
-			                        action: 'SFDelivery',
-			                        jsonList: jsonList
-			                    },
-				                beforeSend: function(){
-			                		 $(':hover').css('cursor','progress');
-				                },
-				                complete: function(){
-			                		 $(':hover').css('cursor','default');
-				                },
-			                    error: function(xhr) {},
-			                    success: function(response) {
-									var json_obj = $.parseJSON(response);
-									var text = '';
-			                        var $mes = $('#message #text');
-			                        
-									if( json_obj.error != null ){
-										var code = json_obj.error.code;
-										var value = json_obj.error.value;
-										if(code != null | code == 'undefined' ){
-											text += '失敗 / ' + code + ' / ' + value;
-										}else{
-											text += '失敗 / ' + value;
-										}
-									}
-									if( json_obj.body != null ){
-										var orderid = json_obj.body.orderResponse.orderid;
-										var mailno = json_obj.body.orderResponse.mailno;
-										var filter_result = json_obj.body.orderResponse.filter_result;
-										
-										if(filter_result == '1'){
-											filter_result = '人工確認';
-										}else if(filter_result == '2'){
-											filter_result = '可收派';
-										}else if(filter_result == '2'){
-											filter_result = '不可以收派';
-										}
-										text += '成功 / 訂單編號: ' + orderid + ' / 託運單號: ' + mailno + ' / 結果: '+ filter_result;
-									}
-									
-			                        $mes.val('').html(text);
-			                        $('#message')
-			                            .dialog()
-			                            .dialog('option', 'title', '提示訊息')
-			                            .dialog('option', 'width', 'auto')
-			                            .dialog('option', 'minHeight', 'auto')
-			                            .dialog("open");
-			                    }
-							});							
+													console.log(jsonList);
+							 		                $.ajax({
+									                    url: 'ship.do',
+									                    type: 'post',
+									                    data: {
+									                        action: 'SFDelivery',
+									                        weight: $("#dialog-sf-delivery-order-form").find("input[name=weight]").val(),
+									                        jsonList: jsonList
+									                    },
+										                beforeSend: function(){
+									                		 $(':hover').css('cursor','progress');
+										                },
+										                complete: function(){
+									                		 $(':hover').css('cursor','default');
+										                },
+									                    error: function(xhr) {},
+									                    success: function(response) {
+															var json_obj = $.parseJSON(response);
+															var text = '';
+									                        var $mes = $('#message #text');
+									                        
+															if( json_obj.error != null ){
+																var code = json_obj.error.code;
+																var value = json_obj.error.value;
+																if(code != null | code == 'undefined' ){
+																	text += '失敗 / ' + code + ' / ' + value;
+																}else{
+																	text += '失敗 / ' + value;
+																}
+															}
+															if( json_obj.body != null ){
+																var orderid = json_obj.body.orderResponse.orderid;
+																var mailno = json_obj.body.orderResponse.mailno;
+																var filter_result = json_obj.body.orderResponse.filter_result;
+																
+																if(filter_result == '1'){
+																	filter_result = '人工確認';
+																}else if(filter_result == '2'){
+																	filter_result = '可收派';
+																}else if(filter_result == '2'){
+																	filter_result = '不可以收派';
+																}
+																text += '成功 / 訂單編號: ' + orderid + ' / 託運單號: ' + mailno + ' / 結果: '+ filter_result;
+															}
+															
+									                        $mes.val('').html(text);
+									                        $('#message')
+									                            .dialog()
+									                            .dialog('option', 'title', '提示訊息')
+									                            .dialog('option', 'width', 'auto')
+									                            .dialog('option', 'minHeight', 'auto')
+									                            .dialog("open");
+									                    }
+													});										
+													$(this).dialog("close");
+												}
+											}
+										}, {
+											text : "取消",
+											click : function() {
+												validator_order.resetForm();
+												$("#dialog-sf-delivery-order-form").trigger("reset");
+												$(this).dialog("close");
+											}
+										} ],
+								close : function() {
+									validator_order.resetForm();
+									$("#dialog-sf-delivery-order-form").trigger("reset");
+								}
+							});
+													
 						}
 		            }
 		        },{

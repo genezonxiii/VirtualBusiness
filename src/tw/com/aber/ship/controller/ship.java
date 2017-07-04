@@ -3,12 +3,14 @@ package tw.com.aber.ship.controller;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +42,7 @@ import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.SfDeliveryApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.DeliveryVO;
 import tw.com.aber.vo.RealSaleDetailVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipVO;
@@ -202,15 +205,52 @@ public class ship extends HttpServlet {
 					logger.debug(e.getMessage());
 				}
 			} else if ("SFDelivery".equals(action)) {
-				String jsonList = request.getParameter("jsonList");
+
+				DeliveryVO deliveryVO = new DeliveryVO();
 				shipService = new ShipService();
 				SfDeliveryApi api = new SfDeliveryApi();
 
+				String jsonList = request.getParameter("jsonList");
+				String totalWeight = request.getParameter("weight");
 				ValueService valueService = util.getValueService(request, response);
 
-				String reqXml = shipService.genSFDeliveryOrderService(jsonList, groupId);
-				String resXml = api.sendXML(reqXml, valueService);
-				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+				// 得到序號
+				String seqNo = shipService.getShipSFDeliveryNewSeqNo(groupId);
+
+				Type type = new TypeToken<List<ShipSFDeliveryVO>>() {
+				}.getType();
+
+				List<ShipSFDeliveryVO> sfDeliveryVOs = new Gson().fromJson(jsonList, type);
+				
+				// 得到前端訂單號
+				String orderNo = sfDeliveryVOs.get(0).getOrder_no();
+
+				String reqXml = shipService.genSFDeliveryOrderService(jsonList, groupId, totalWeight, seqNo);
+
+				try {
+					String resXml = api.sendXML(reqXml, valueService);
+
+					tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
+
+					String mailNo = responseObj.getBody().getOrderResponse().getMailno();
+					String origincode = responseObj.getBody().getOrderResponse().getOrigincode();
+					String destcode = responseObj.getBody().getOrderResponse().getDestcode();
+					String sf_result = responseObj.getBody().getOrderResponse().getFilter_result();
+
+					deliveryVO.setSeq_no(seqNo);
+					deliveryVO.setOrder_no(orderNo);
+					deliveryVO.setGroup_id(groupId);
+					deliveryVO.setMailno(mailNo);
+					deliveryVO.setWeight(totalWeight);
+					deliveryVO.setOrigincode(origincode);
+					deliveryVO.setDestcode(destcode);
+					deliveryVO.setSf_result(sf_result);
+				} catch (Exception e) {
+					String remark = "電文傳送失敗";
+					deliveryVO.setSeq_no(seqNo);
+					deliveryVO.setRemark(remark);
+				}
+
 				gson = new Gson();
 				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
@@ -238,7 +278,7 @@ public class ship extends HttpServlet {
 				gson = new Gson();
 				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
-			}else if("SFDeliveryRouteService".equals(action)){
+			} else if ("SFDeliveryRouteService".equals(action)) {
 				String orderNos = request.getParameter("orderNos");
 				SfDeliveryApi api = new SfDeliveryApi();
 
@@ -246,7 +286,7 @@ public class ship extends HttpServlet {
 
 				String reqXml = api.genRouteService(orderNos, valueService);
 				String resXml = api.sendXML(reqXml, valueService);
-				
+
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
 				gson = new Gson();
 				result = gson.toJson(responseObj);
@@ -277,8 +317,16 @@ public class ship extends HttpServlet {
 			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 		}
 
-		public String genSFDeliveryOrderService(String info, String groupId) {
-			return dao.genSFDeliveryOrderService(info, groupId);
+		public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo) {
+			return dao.genSFDeliveryOrderService(info, groupId, totalWeight, seqNo);
+		}
+
+		public String getShipSFDeliveryNewSeqNo(String groupId) {
+			return dao.getShipSFDeliveryNewSeqNo(groupId);
+		}
+
+		public void insertToShipSFDelivery(DeliveryVO deliveryVO) {
+			dao.insertToShipSFDelivery(deliveryVO);
 		}
 	}
 
@@ -293,6 +341,8 @@ public class ship extends HttpServlet {
 		private static final String sp_select_ship_by_order_no = "call sp_select_ship_by_order_no (?,?)";
 		private static final String sp_get_ship_by_shipseqno = "call sp_get_ship_by_shipseqno(?,?)";
 		private static final String sp_select_ship_delivery = "call sp_select_ship_delivery(?,?)";
+		private static final String sp_get_ship_sf_delivery_new_no = "call sp_get_ship_sf_delivery_new_no(?,?)";
+		private static final String sp_insert_ship_sf_delivery = "call sp_insert_ship_sf_delivery(?,?,?,?,?,?,?,?,?,?)";
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -532,7 +582,7 @@ public class ship extends HttpServlet {
 		}
 
 		@Override
-		public String genSFDeliveryOrderService(String info, String groupId) {
+		public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo) {
 
 			Type type = new TypeToken<List<ShipSFDeliveryVO>>() {
 			}.getType();
@@ -576,7 +626,7 @@ public class ship extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					order = new Order();
-					order.setOrderid(orderNo);
+					order.setOrderid(orderNo + seqNo);
 					order.setJ_company(rs.getString("j_company"));
 					order.setJ_contact(rs.getString("j_contact"));
 					order.setJ_tel(rs.getString("j_tel"));
@@ -595,6 +645,7 @@ public class ship extends HttpServlet {
 					// TODO 包裹數先填寫為[1]
 					order.setParcel_quantity("1");
 					order.setCargos(cargos);
+					order.setCargo_total_weight(totalWeight);
 					request.setHead(rs.getString("head"));
 				}
 				body.setOrder(order);
@@ -634,17 +685,103 @@ public class ship extends HttpServlet {
 
 			return result;
 		}
+
+		@Override
+		public String getShipSFDeliveryNewSeqNo(String groupId) {
+			Connection con = null;
+			CallableStatement cs = null;
+			String seqNo = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_get_ship_sf_delivery_new_no);
+
+				cs.setString(1, groupId);
+				cs.registerOutParameter(2, Types.CHAR);
+				cs.execute();
+
+				seqNo = cs.getString(2);
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return seqNo;
+		}
+
+		@Override
+		public void insertToShipSFDelivery(DeliveryVO deliveryVO) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_insert_ship_sf_delivery);
+
+				cs.setString(1, deliveryVO.getSeq_no());
+				cs.setString(2, deliveryVO.getOrder_no());
+				cs.setString(3, deliveryVO.getGroup_id());
+				cs.setString(4, deliveryVO.getMailno());
+				cs.setString(5, deliveryVO.getWeight());
+				cs.setString(6, deliveryVO.getOrigincode());
+				cs.setString(7, deliveryVO.getDestcode());
+				cs.setString(8, deliveryVO.getSf_result());
+				cs.setString(9, deliveryVO.getErr_code());
+				cs.setString(10, deliveryVO.getRemark());
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
 	}
 
 }
 
 interface ship_interface {
+
+	public String getShipSFDeliveryNewSeqNo(String groupId);
+
 	public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate);
 
 	public List<ShipVO> searchShipByOrderNo(ShipVO shipVO);
 
 	public List<ShipVO> getShipByShipSeqNo(String shipSeqNos, String groupID);
 
-	public String genSFDeliveryOrderService(String info, String groupId);
+	public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo);
+
+	public void insertToShipSFDelivery(DeliveryVO deliveryVO);
 
 }

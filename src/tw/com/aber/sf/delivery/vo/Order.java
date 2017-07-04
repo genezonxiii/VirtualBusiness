@@ -75,6 +75,9 @@ public class Order {
 	@XmlAttribute(name = "cargo_height")
 	private String cargo_height;
 
+	@XmlAttribute(name = "cargo_total_weight")
+	private String cargo_total_weight;
+
 	@XmlAttribute(name = "remark")
 	private String remark;
 
@@ -83,6 +86,14 @@ public class Order {
 
 	public String getOrderid() {
 		return orderid;
+	}
+
+	public String getCargo_total_weight() {
+		return cargo_total_weight;
+	}
+
+	public void setCargo_total_weight(String cargo_total_weight) {
+		this.cargo_total_weight = cargo_total_weight;
 	}
 
 	public void setOrderid(String orderid) {
