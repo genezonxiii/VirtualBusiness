@@ -221,7 +221,7 @@ public class ship extends HttpServlet {
 				}.getType();
 
 				List<ShipSFDeliveryVO> sfDeliveryVOs = new Gson().fromJson(jsonList, type);
-				
+
 				// 得到前端訂單號
 				String orderNo = sfDeliveryVOs.get(0).getOrder_no();
 
@@ -232,28 +232,50 @@ public class ship extends HttpServlet {
 
 					tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);
 
-					String mailNo = responseObj.getBody().getOrderResponse().getMailno();
-					String origincode = responseObj.getBody().getOrderResponse().getOrigincode();
-					String destcode = responseObj.getBody().getOrderResponse().getDestcode();
-					String sf_result = responseObj.getBody().getOrderResponse().getFilter_result();
+					if (responseObj.getError() != null) {
+						String err_code = responseObj.getError().getCode();
+						String remark = responseObj.getError().getValue();
+						deliveryVO.setGroup_id(groupId);
+						deliveryVO.setSeq_no(seqNo);
+						deliveryVO.setErr_code(err_code);
+						deliveryVO.setRemark(remark);
 
-					deliveryVO.setSeq_no(seqNo);
-					deliveryVO.setOrder_no(orderNo);
-					deliveryVO.setGroup_id(groupId);
-					deliveryVO.setMailno(mailNo);
-					deliveryVO.setWeight(totalWeight);
-					deliveryVO.setOrigincode(origincode);
-					deliveryVO.setDestcode(destcode);
-					deliveryVO.setSf_result(sf_result);
+						shipService.insertToShipSFDelivery(deliveryVO);
+
+					} else {
+						String mailNo = responseObj.getBody().getOrderResponse().getMailno();
+						String origincode = responseObj.getBody().getOrderResponse().getOrigincode();
+						String destcode = responseObj.getBody().getOrderResponse().getDestcode();
+						String sf_result = responseObj.getBody().getOrderResponse().getFilter_result();
+
+						logger.debug("mailNo: ".concat(mailNo));
+						logger.debug("origincode: ".concat(origincode));
+						logger.debug("destcode: ".concat(destcode));
+						logger.debug("sf_result: ".concat(sf_result));
+
+						deliveryVO.setSeq_no(seqNo);
+						deliveryVO.setOrder_no(orderNo);
+						deliveryVO.setGroup_id(groupId);
+						deliveryVO.setMailno(mailNo);
+
+						deliveryVO.setWeight(totalWeight);
+						deliveryVO.setOrigincode(origincode);
+						deliveryVO.setDestcode(destcode);
+						deliveryVO.setSf_result(sf_result);
+
+						shipService.insertToShipSFDelivery(deliveryVO);
+					}
+
+					gson = new Gson();
+					result = gson.toJson(responseObj);
+					response.getWriter().write(result);
 				} catch (Exception e) {
+					logger.debug(e.getMessage());
 					String remark = "電文傳送失敗";
 					deliveryVO.setSeq_no(seqNo);
 					deliveryVO.setRemark(remark);
+					shipService.insertToShipSFDelivery(deliveryVO);
 				}
-
-				gson = new Gson();
-				result = gson.toJson(responseObj);
-				response.getWriter().write(result);
 			} else if ("SFDeliveryOrderConfirmCancel".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
 				SfDeliveryApi api = new SfDeliveryApi();
@@ -626,7 +648,7 @@ public class ship extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					order = new Order();
-					order.setOrderid(orderNo + seqNo);
+					order.setOrderid(orderNo.concat("-").concat(seqNo));
 					order.setJ_company(rs.getString("j_company"));
 					order.setJ_contact(rs.getString("j_contact"));
 					order.setJ_tel(rs.getString("j_tel"));
@@ -745,6 +767,8 @@ public class ship extends HttpServlet {
 				cs.setString(8, deliveryVO.getSf_result());
 				cs.setString(9, deliveryVO.getErr_code());
 				cs.setString(10, deliveryVO.getRemark());
+
+				cs.execute();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
