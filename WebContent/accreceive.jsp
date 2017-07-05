@@ -178,7 +178,7 @@
 		                    });
 		
 		                    if (count == 0) {
-		                        massageDialog('警告', '至少一筆');
+		                        massageDialog('至少一筆', '警告');
 		                        return false;
 		                    }
 		
@@ -322,7 +322,7 @@
 		                    });
 		
 		                    if (count == 0) {
-		                        massageDialog('警告', '至少一筆');
+		                        massageDialog('至少一筆', '警告');
 		                        return false;
 		                    }
 		
@@ -463,7 +463,7 @@
 		
 		    //驗證日期格式
 		    function dateValidationCheck(str) {
-		        var re = new RegExp("^([0-9]{4})[.-]{1}([0-9]{1,2})[.-]{1}([0-9]{1,2})$");
+		        var re = new RegExp("^([0-9]{4})[.-]{1}([0-9]{1,2})[.-]{1}([0-9]{2})$");
 		        var strDataValue;
 		        var infoValidation = true;
 		        if ((strDataValue = re.exec(str)) != null) {
@@ -513,6 +513,9 @@
 		                    effect: "blind",
 		                    duration: 300
 		                },
+		                open: function(event, ui) {
+	                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
 		                hide: {
 		                    effect: "fade",
 		                    duration: 300
@@ -598,6 +601,9 @@
 		                    effect: "blind",
 		                    duration: 300
 		                },
+		                open: function(event, ui) {
+	                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
 		                hide: {
 		                    effect: "fade",
 		                    duration: 300
@@ -681,7 +687,9 @@
 		                show: {
 		                    effect: "blind",
 		                    duration: 300
-		                },
+		                },open: function(event, ui) {
+	                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
 		                hide: {
 		                    effect: "fade",
 		                    duration: 300
@@ -713,6 +721,9 @@
 		                    effect: "blind",
 		                    duration: 300
 		                },
+		                open: function(event, ui) {
+	                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
 		                hide: {
 		                    effect: "fade",
 		                    duration: 300
@@ -786,7 +797,9 @@
 		                show: {
 		                    effect: "blind",
 		                    duration: 300
-		                },
+		                },open: function(event, ui) {
+	                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
 		                hide: {
 		                    effect: "fade",
 		                    duration: 300
@@ -818,6 +831,9 @@
 		                    effect: "blind",
 		                    duration: 300
 		                },
+		                open: function(event, ui) {
+	                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
 		                hide: {
 		                    effect: "fade",
 		                    duration: 300
@@ -1034,13 +1050,14 @@
 		                                }
 		                                draw_receive(parameter);
 		                            }
-		
-		                            parameter = {
-		                                action: "searh_amount_date",
-		                                start_date: $("#hidAccreceiveBeginDate").val(),
-		                                end_date: $("#hidAccreceiveEndDate").val()
+		                            if ($("#hidAccreceiveBeginDate").val() != "") {
+			                            parameter = {
+			                                action: "searh_amount_date",
+			                                start_date: $("#hidAccreceiveBeginDate").val(),
+			                                end_date: $("#hidAccreceiveEndDate").val()
+			                            }
+			                            draw_accreceive(parameter);
 		                            }
-		                            draw_accreceive(parameter);
 		                        }
 		                    });
 		
@@ -1089,10 +1106,12 @@
 		                            receive_date: getCurrentDate()
 		                        },
 		                        success: function(result) {
-		                            var parameter = {
-		                                action: "searh_receive_date",
-		                                start_date: $("#hidReceiveBeginDate").val(),
-		                                end_date: $("#hidReceiveEndDate").val()
+		                        	if ($("#hidReceiveBeginDate").val() != "") {
+			                            var parameter = {
+			                                action: "searh_receive_date",
+			                                start_date: $("#hidReceiveBeginDate").val(),
+			                                end_date: $("#hidReceiveEndDate").val()
+			                            }
 		                            }
 		                            draw_receive(parameter);
 		                            if ($("#hidAccreceiveBeginDate").val() != "") {
