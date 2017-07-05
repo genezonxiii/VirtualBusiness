@@ -17,13 +17,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.accreceive.controller.accreceive;
 import tw.com.aber.vo.AccpayVO;
 
 
 public class accpay extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(accpay.class);
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,34 +44,13 @@ public class accpay extends HttpServlet {
 				String start_date = request.getParameter("start_date");
 				String end_date = request.getParameter("end_date");
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
-					List<AccpayVO> list = new ArrayList<AccpayVO>();
-					AccpayVO accpayVO = new AccpayVO();
-					accpayVO.setMessage("如要以日期查詢，請完整填寫訖日欄位");
-					list.add(accpayVO);
-					Gson gson = new Gson();
-					String jsonStrList = gson.toJson(list);
-					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
 				if (end_date.trim().length() != 0 & start_date.trim().length() == 0) {
-					List<AccpayVO> list = new ArrayList<AccpayVO>();
-					AccpayVO accpayVO = new AccpayVO();
-					accpayVO.setMessage("如要以日期查詢，請完整填寫起日欄位");
-					list.add(accpayVO);
-					Gson gson = new Gson();
-					String jsonStrList = gson.toJson(list);
-					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
 				if (start_date.trim().length() != 0 & end_date.trim().length() != 0) {
 					if (DateConversionToDigital(start_date) > DateConversionToDigital(end_date)) {
-						List<AccpayVO> list = new ArrayList<AccpayVO>();
-						AccpayVO accpayVO = new AccpayVO();
-						accpayVO.setMessage("起日不可大於訖日");
-						list.add(accpayVO);
-						Gson gson = new Gson();
-						String jsonStrList = gson.toJson(list);
-						response.getWriter().write(jsonStrList);
 						return;// 程式中斷
 					} else {
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -86,9 +71,6 @@ public class accpay extends HttpServlet {
 						// 查詢指定期限
 						accpayService = new AccpayService();
 						List<AccpayVO> list = accpayService.searchAccountNotPayByDayDB(group_id, amount_start_date, amount_end_date);
-						AccpayVO accpayVO = new AccpayVO();
-						accpayVO.setMessage("驗證通過");
-						list.add(accpayVO);
 						Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 						String jsonStrList = gson.toJson(list);
 						response.getWriter().write(jsonStrList);
@@ -99,9 +81,6 @@ public class accpay extends HttpServlet {
 				if (start_date.trim().length() == 0 & end_date.trim().length() == 0) {
 					accpayService = new AccpayService();
 					List<AccpayVO> list = accpayService.searchAccountNotPayDB(group_id);
-					AccpayVO accpayVO = new AccpayVO();
-					accpayVO.setMessage("驗證通過");
-					list.add(accpayVO);
 					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
@@ -117,36 +96,15 @@ public class accpay extends HttpServlet {
 				String start_date = request.getParameter("start_date");
 				String end_date = request.getParameter("end_date");
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
-					List<AccpayVO> list = new ArrayList<AccpayVO>();
-					AccpayVO accpayVO = new AccpayVO();
-					accpayVO.setMessage("如要以日期查詢，請完整填寫訖日欄位");
-					list.add(accpayVO);
-					Gson gson = new Gson();
-					String jsonStrList = gson.toJson(list);
-					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
 				if (end_date.trim().length() != 0 & start_date.trim().length() == 0) {
-					List<AccpayVO> list = new ArrayList<AccpayVO>();
-					AccpayVO accpayVO = new AccpayVO();
-					accpayVO.setMessage("如要以日期查詢，請完整填寫起日欄位");
-					list.add(accpayVO);
-					Gson gson = new Gson();
-					String jsonStrList = gson.toJson(list);
-					response.getWriter().write(jsonStrList);
 					return;// 程式中斷
 				}
 				if (start_date.trim().length() != 0 & end_date.trim().length() != 0) {
-					if (DateConversionToDigital(start_date) > DateConversionToDigital(end_date)) {
-						List<AccpayVO> list = new ArrayList<AccpayVO>();
-						AccpayVO accpayVO = new AccpayVO();
-						accpayVO.setMessage("起日不可大於訖日");
-						list.add(accpayVO);
-						Gson gson = new Gson();
-						String jsonStrList = gson.toJson(list);
-						response.getWriter().write(jsonStrList);
+					/*if (DateConversionToDigital(start_date) > DateConversionToDigital(end_date)) {
 						return;// 程式中斷
-					} else {
+					} else {*/
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						java.sql.Date pay_start_date = null;
 						try {
@@ -165,22 +123,16 @@ public class accpay extends HttpServlet {
 						// 查詢指定期限
 						accpayService = new AccpayService();
 						List<AccpayVO> list = accpayService.searchAccountPayByDayDB(group_id, pay_start_date, pay_end_date);
-						AccpayVO accpayVO = new AccpayVO();
-						accpayVO.setMessage("驗證通過");
-						list.add(accpayVO);
 						Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 						String jsonStrList = gson.toJson(list);
 						response.getWriter().write(jsonStrList);
 						return;// 程式中斷
-					}
+					//}
 				}
 				// 假如無查詢條件，則是查詢全部(沒有實付)
 				if (start_date.trim().length() == 0 & end_date.trim().length() == 0) {
 					accpayService = new AccpayService();
 					List<AccpayVO> list = accpayService.searchAccountPayDB(group_id);
-					AccpayVO accpayVO = new AccpayVO();
-					accpayVO.setMessage("驗證通過");
-					list.add(accpayVO);
 					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
@@ -193,81 +145,128 @@ public class accpay extends HttpServlet {
 		}
 		if ("pay_account".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
-				String pay_id = request.getParameter("pay_id");
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				String pay_ids = request.getParameter("pay_ids");
+				String[] pay_ids_arr = pay_ids.split("~");
 
-				java.sql.Date pay_date = null;
-				try {
-					String pay_date_str = request.getParameter("pay_date");
-					java.util.Date invoice_date_util = sdf.parse(pay_date_str);
-					pay_date = new java.sql.Date(invoice_date_util.getTime());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				/*************************** 2.開始付帳退回 ***************************************/
 				accpayService = new AccpayService();
-				accpayService.payAccountTotDB(pay_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
-				accpayService = new AccpayService();
-				List<AccpayVO> list = accpayService.searchAccountPayByDayDB(group_id, pay_date, pay_date);
-				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-				String jsonStrList = gson.toJson(list);
-				response.getWriter().write(jsonStrList);
-				return;// 程式中斷
-				/*************************** 其他可能的錯誤處理 **********************************/
+				accpayService.payAccountTotDB(pay_ids_arr, user_id);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		if ("delete_pay_account".equals(action)) {
 			try {
-				/*************************** 1.接收請求參數 ***************************************/
-				String pay_id = request.getParameter("pay_id");
-				String start_date = request.getParameter("start_date");
-				String end_date = request.getParameter("end_date");
-				/*************************** 2.開始付帳退回 ***************************************/
+				String pay_ids = request.getParameter("pay_ids");
+				String[] pay_ids_arr = pay_ids.split("~");
+				
 				accpayService = new AccpayService();
-				accpayService.delPayAccountTotDB(pay_id, user_id);
-				/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
-				// 假如無查詢條件，則是查詢全部
-				if ((start_date == null || (start_date.trim()).length() == 0)&(end_date == null || (end_date.trim()).length() == 0)) {
-					accpayService = new AccpayService();
-					List<AccpayVO> list = accpayService.searchAccountNotPayDB(group_id);
-					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-					String jsonStrList = gson.toJson(list);
-					response.getWriter().write(jsonStrList);
-					return;// 程式中斷
-				}
-				// 假如有一開始查詢日期的話，查詢指定日期
-				if ((start_date != null || (start_date.trim()).length() != 0)&(end_date != null || (end_date.trim()).length() != 0)) {
-					accpayService = new AccpayService();
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					java.sql.Date amount_start_date = null;
-					try {
-						java.util.Date start_date_util = sdf.parse(start_date);
-						amount_start_date = new java.sql.Date(start_date_util.getTime());
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					java.sql.Date amount_end_date = null;
-					try {
-						java.util.Date end_date_util = sdf.parse(end_date);
-						amount_end_date = new java.sql.Date(end_date_util.getTime());
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
-					List<AccpayVO> list = accpayService.searchAccountNotPayByDayDB(group_id, amount_start_date, amount_end_date);
-					Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-					String jsonStrList = gson.toJson(list);
-					response.getWriter().write(jsonStrList);
-					return;// 程式中斷
-				}
-				/*************************** 其他可能的錯誤處理 **********************************/
+				accpayService.delPayAccountTotDB(pay_ids_arr, user_id);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}		
+		}
+		
+		if ("update_noaccpay".equals(action)) {
+			try {
+				String pay_id = request.getParameter("pay_id");
+				String amount_str = request.getParameter("amount");
+				String amount_date = request.getParameter("amount_date");
+				String memo = request.getParameter("memo");
+				Float amount = null;
+				Boolean isSuccess = false;
+				if ("".equals(amount_str)) {
+					amount = null;
+				} else {
+					amount = Float.valueOf(amount_str);
+
+					AccpayVO accpayVO = new AccpayVO();
+					accpayVO.setPay_id(pay_id);
+					accpayVO.setAmount(amount);
+					accpayVO.setMemo(memo);
+					accpayVO.setGroup_id(group_id);
+
+					accpayService = new AccpayService();
+					isSuccess = accpayService.update_noaccpay(accpayVO);
+
+					if (isSuccess) {
+						response.getWriter().write("success");
+					} else {
+						response.getWriter().write("error");
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+		
+		if ("update_accpay".equals(action)) {
+			try {
+				String pay_id = request.getParameter("pay_id");
+				String pay_amount_str = request.getParameter("pay_amount");
+				String amount_date = request.getParameter("amount_date");
+				String memo = request.getParameter("memo");
+				Float pay_amount = null;
+				Boolean isSuccess = false;
+				if ("".equals(pay_amount_str)) {
+					pay_amount = null;
+				} else {
+					pay_amount = Float.valueOf(pay_amount_str);
+
+					AccpayVO accpayVO = new AccpayVO();
+					accpayVO.setPay_id(pay_id);
+					accpayVO.setPay_amount(pay_amount);
+					accpayVO.setMemo(memo);
+					accpayVO.setGroup_id(group_id);
+
+					accpayService = new AccpayService();
+					isSuccess = accpayService.update_accpay(accpayVO);
+
+					if (isSuccess) {
+						response.getWriter().write("success");
+					} else {
+						response.getWriter().write("error");
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+		if("delete_accpay_by_pay_id".equals(action)){
+
+			try {
+				String pay_id = request.getParameter("pay_id");
+				Boolean isSuccess = false;
+				if (!"".equals(pay_id)) {
+					AccpayVO accpayVO = new AccpayVO();
+					accpayVO.setPay_id(pay_id);
+					accpayVO.setGroup_id(group_id);
+
+					accpayService = new AccpayService();
+					isSuccess = accpayService.deleteAccpayByPayId(accpayVO);
+
+					if (isSuccess) {
+						response.getWriter().write("success");
+					} else {
+						response.getWriter().write("error");
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		
+			
+		}
+
+		
+		
 	}
 	public int DateConversionToDigital(String Date) {
 
@@ -281,9 +280,9 @@ public class accpay extends HttpServlet {
 
 	interface accpay_interface {
 
-		public void payAccountTotDB(String pay_id, String user_id);
+		public void payAccountTotDB(String[] pay_id_arr, String user_id);
 
-		public void delPayAccountTotDB(String pay_id, String user_id);
+		public void delPayAccountTotDB(String[] pay_id, String user_id);
 
 		public List<AccpayVO> searchAccountNotPayDB(String group_id);
 
@@ -294,18 +293,26 @@ public class accpay extends HttpServlet {
 		public List<AccpayVO> searchAccountNotPayByDayDB(String group_id, Date start_date, Date end_date);
 		
 		public List<AccpayVO> searchAccountPayByDayDB(String group_id, Date start_date, Date end_date);
+		
+		public Boolean update_noaccpay(AccpayVO accpayVO);
+		
+		public Boolean update_accpay(AccpayVO accpayVO);
+		
+		public Boolean deleteAccpayByPayId(AccpayVO accpayVO);
+
+		
 	}
 	class AccpayService{
 		private accpay_interface dao;
 		public AccpayService(){
 			dao = new AccpayDAO();
 		}
-		public void payAccountTotDB(String pay_id, String user_id){
-			dao.payAccountTotDB(pay_id, user_id);
+		public void payAccountTotDB(String[] pay_id_arr, String user_id){
+			dao.payAccountTotDB(pay_id_arr, user_id);
 		}
 
-		public void delPayAccountTotDB(String pay_id, String user_id){
-			dao.delPayAccountTotDB(pay_id, user_id);
+		public void delPayAccountTotDB(String[] pay_id_arr, String user_id){
+			dao.delPayAccountTotDB(pay_id_arr, user_id);
 		}
 
 		public List<AccpayVO> searchAccountNotPayDB(String group_id){
@@ -327,6 +334,18 @@ public class accpay extends HttpServlet {
 		public List<AccpayVO> searchAccountPayByDayDB(String group_id, Date start_date, Date end_date){
 			return dao.searchAccountPayByDayDB(group_id, start_date, end_date);
 		}
+		public Boolean update_noaccpay(AccpayVO accpayVO){
+			return dao.update_noaccpay(accpayVO);
+		}
+		
+		public Boolean update_accpay(AccpayVO accpayVO){
+			return dao.update_accpay(accpayVO);
+		}
+
+		public Boolean deleteAccpayByPayId(AccpayVO accpayVO){
+			return dao.deleteAccpayByPayId(accpayVO);
+		}
+
 	}
 	class AccpayDAO implements accpay_interface {
 		private static final String sp_selectall_account_payable = "call sp_selectall_account_payable (?)";
@@ -336,6 +355,10 @@ public class accpay extends HttpServlet {
 		private static final String sp_select_account_pay_byday = "call sp_select_account_pay_byday(?,?,?)";
 		private static final String sp_pay_account= "call sp_pay_account(?,?)";
 		private static final String sp_del_pay_account = "call sp_del_pay_account(?,?)";
+		private static final String sp_update_accpay_nopay = "call sp_update_accpay_nopay(?,?,?,?)";
+		private static final String sp_update_accpay_pay = "call sp_update_accpay_pay(?,?,?,?)";
+		private static final String sp_delete_accpay_by_pay_id = "call sp_delete_accpay_by_pay_id(?,?)";
+
 		
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -343,19 +366,18 @@ public class accpay extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		
 		@Override
-		public void payAccountTotDB(String pay_id, String user_id) {
+		public void payAccountTotDB(String[] pay_id_arr, String user_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_pay_account);
-				//System.out.println("pay_id: "+pay_id+" user_id: "+user_id);
-				pstmt.setString(1, pay_id);
-				pstmt.setString(2, user_id);
-
-				pstmt.executeUpdate();
-
+				for (int i = 0; i < pay_id_arr.length; i++) {
+					pstmt = con.prepareStatement(sp_pay_account);
+					pstmt.setString(1, pay_id_arr[i]);
+					pstmt.setString(2, user_id);
+					pstmt.executeUpdate();
+				}
 				// Handle any SQL errors
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -381,19 +403,18 @@ public class accpay extends HttpServlet {
 		}
 
 		@Override
-		public void delPayAccountTotDB(String pay_id, String user_id) {
+		public void delPayAccountTotDB(String[] pay_id_arr, String user_id) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				for(int i=0;i<pay_id_arr.length;i++){
 				pstmt = con.prepareStatement(sp_del_pay_account);
-
-				pstmt.setString(1, pay_id);
+				pstmt.setString(1, pay_id_arr[i]);
 				pstmt.setString(2, user_id);
-
 				pstmt.executeUpdate();
-
+				}
 				// Handle any SQL errors
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -725,6 +746,125 @@ public class accpay extends HttpServlet {
 				}
 			}
 			return list;
+		}
+
+		@Override
+		public Boolean update_noaccpay(AccpayVO accpayVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			Boolean isSuccess = false;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_update_accpay_nopay);
+
+				pstmt.setString(1, accpayVO.getGroup_id());
+				pstmt.setFloat(2, accpayVO.getAmount());
+				pstmt.setString(3, accpayVO.getMemo());
+				pstmt.setString(4, accpayVO.getPay_id());
+
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			isSuccess = true;
+			return isSuccess;
+		}
+
+		
+		@Override
+		public Boolean update_accpay(AccpayVO accpayVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			Boolean isSuccess = false;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_update_accpay_pay);
+
+				pstmt.setString(1, accpayVO.getGroup_id());
+				pstmt.setFloat(2, accpayVO.getPay_amount());
+				pstmt.setString(3, accpayVO.getMemo());
+				pstmt.setString(4, accpayVO.getPay_id());
+
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			isSuccess = true;
+			return isSuccess;
+		}
+
+		@Override
+		public Boolean deleteAccpayByPayId(AccpayVO accpayVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			Boolean isSuccess = false;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_delete_accpay_by_pay_id);
+
+				pstmt.setString(1, accpayVO.getGroup_id());
+				pstmt.setString(2, accpayVO.getPay_id());
+
+				rs = pstmt.executeQuery();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			isSuccess = true;
+			return isSuccess;
 		}
 
 	}
