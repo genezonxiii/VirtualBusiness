@@ -126,11 +126,12 @@ function draw_purchase(parameter){
 							+ "<td>"+ options.html() +"</td>"
 							+ "<td name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+ "</td>"
 							+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
+							+ "<td>"+ json_obj[i].v_supply_name + "</td>"
 							+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 							+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 							+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 							+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-							+ "<td name='"+ item.accept_flag +"'>"+ (item.accept_flag? "是":"否")+ "</td>"
+							+ "<td>"+ (item.accept_flag? "是":"否")+ "</td>"
 							+ (isIE()?"<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>":"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>")
 							+ "	<div class='table-function-list' >"
 							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改採購單' id='"+json_obj[i].seq_no+"' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil'></i></button>"
@@ -361,37 +362,62 @@ function draw_purchase(parameter){
 
 										text : '採購轉驗收',
 										action : function(e, dt, node, config) {
-											var $table =  $('#purchase');
+							            	$("<div></div>").dialog({
+							            		title: "採購轉驗收",
+								                modal: true,
+								                open: function(event, ui) {
+							                        $(this)
+							                        	.html("確認是否轉入驗收。")
+							                        	.parent().children().children('.ui-dialog-titlebar-close').hide();
+							                    },
+								                buttons: [{
+								                    text: "確認",
+								                    click: function() {
+								                    	var $table =  $('#purchase');
 
-										    var cells = $dtMaster.fnGetNodes();
-											var idArr = '';
-											
-											var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-											
-											$checkboxs.each(function() {
-												idArr += this.id + ',';
-											});
-											idArr = idArr.slice(0,-1);
+													    var cells = $dtMaster.fnGetNodes();
+														var idArr = '';
+														
+														var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+														
+														$checkboxs.each(function() {
+															idArr += this.id + ',';
+														});
+														idArr = idArr.slice(0,-1);
 
-											
-											$.ajax({
-												url: 'purchase.do', 
-												type: 'post',
-												data: {
-													action: 'importDataToAcceptByPurchaseId',
-													purchase_ids: idArr
-												},
-												error: function (xhr) { 
-													dialogMsg("採購轉驗收", "轉入失敗");
-												},
-												success: function (response) {
-													if("success"==response){
-														dialogMsg("採購轉驗收", "轉入成功");
-													}else{
-														dialogMsg("採購轉驗收", "轉入失敗");
-													}
-												}
-											});
+														
+														$.ajax({
+															url: 'purchase.do', 
+															type: 'post',
+															data: {
+																action: 'importDataToAcceptByPurchaseId',
+																purchase_ids: idArr
+															},
+															error: function (xhr) { 
+																dialogMsg("採購轉驗收", "轉入失敗");
+															},
+															success: function (response) {
+																if("success"==response){
+																	dialogMsg("採購轉驗收", "轉入成功");
+																}else{
+																	dialogMsg("採購轉驗收", "轉入失敗");
+																}
+																var tmp={
+																		action : "search",
+																		supply_name : $("input[name='searh_purchase_by_supply_name'").val()
+																	};
+																draw_purchase(tmp);
+															}
+														});
+														$(this).dialog("close");
+								                    }
+								                }, {
+								                	text: "取消",
+								                    click: function() {
+								                    	$(this).dialog("close");
+								                    }
+								                }]
+							            	});
 										}
 									
 									}
@@ -439,7 +465,14 @@ function draw_purchase_detail(parameter){
 		url : "purchase.do",
 		data : parameter,
 		success : function(result) {
-			var json_obj = $.parseJSON(result);
+			var result_obj = $.parseJSON(result);
+			var note = result_obj.note;
+			
+			if (note){
+				dialogMsg("提示", note);
+			}
+			
+			var json_obj = result_obj.detail;
 			//判斷查詢結果
 			var resultRunTime = 0;
 			$.each (json_obj, function (i) {
@@ -903,9 +936,9 @@ function draw_purchase_detail(parameter){
 			uuid = $(this).val();
 			$("#dialog-confirm").html(
 				"<table class='dialog-table'>"+
-				"<tr><td>銷貨單號：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(1)").attr("name")+"'</span></td></tr>"+
-				"<tr><td>交易日期：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span></td></tr>"+
-				"<tr><td>銷貨金額：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(5)").html()+"'</span></td></tr>"+
+				"<tr><td>採購單號：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span></td></tr>"+
+				"<tr><td>採購日期：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(3)").attr("name")+"'</span></td></tr>"+
+				"<tr><td>發票金額：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(6)").html()+"'</span></td></tr>"+
 				"</table>"
 			);
 			confirm_dialog.dialog("open");
@@ -1392,11 +1425,11 @@ function draw_purchase_detail(parameter){
 		
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="是否刪除此採購紀錄?" style="display:none;"></div>
+			<div id="dialog-confirm" title="是否刪除此採購單?" style="display:none;"></div>
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-detail-confirm" title="是否刪除此明細?" style="display:none;"></div>		
+			<div id="dialog-detail-confirm" title="是否刪除此採購單明細?" style="display:none;"></div>		
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改採購資料" style="display:none;">
+			<div id="dialog-form-update" title="修改採購單" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
@@ -1539,6 +1572,7 @@ function draw_purchase_detail(parameter){
 								<th>批次請求</th>
 								<th>採購單號</th>
 								<th>採購日期</th>
+								<th>供應商名稱</th>
 								<th style="background-image: none !important;">採購發票號碼</th>
 								<th style="background-image: none !important;">發票樣式</th>
 								<th>採購發票金額</th>

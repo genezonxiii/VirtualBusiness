@@ -11,7 +11,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -108,13 +111,21 @@ public class purchase extends HttpServlet {
 				}
 
 				purchaseService = new PurchaseService();
-				purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id,
-						product_name, quantity, cost, memo);
-				purchaseService = new PurchaseService();
+				
+				Map<String, Object> map = new HashMap<>();
+				if (!purchaseService.checkPurchase(purchase_id)) {
+					//未轉入驗收
+					purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id,
+							product_name, quantity, cost, memo);
+				} else {
+					map.put("note", "已轉入驗收，明細資料不可新增！");
+				}
+				
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
+				map.put("detail", list);
 
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-				String jsonList = gson.toJson(list);
+				String jsonList = gson.toJson(map);
 				response.getWriter().write(jsonList);
 			} catch (Exception e) {
 
@@ -129,11 +140,19 @@ public class purchase extends HttpServlet {
 				logger.debug("purchaseDetail_id:" + purchaseDetail_id);
 				
 				purchaseService = new PurchaseService();
-				purchaseService.deletePurchaseDetail(purchaseDetail_id);
-				purchaseService = new PurchaseService();
+				Map<String, Object> map = new HashMap<>();
+				if (!purchaseService.checkPurchase(purchase_id)) {
+					//未轉入驗收
+					purchaseService.deletePurchaseDetail(purchaseDetail_id);
+				} else {
+					map.put("note", "已轉入驗收，明細資料不可刪除！");
+				}
+				
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
+				map.put("detail", list);
+
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-				String jsonList = gson.toJson(list);
+				String jsonList = gson.toJson(map);
 				response.getWriter().write(jsonList);
 			} catch (Exception e) {
 
@@ -168,13 +187,21 @@ public class purchase extends HttpServlet {
 
 					e.printStackTrace();
 				}
+				
 				purchaseService = new PurchaseService();
-				purchaseService.updatePurchaseDetail(purchaseDetail_id, purchase_id, group_id, user_id, product_id,
-						c_product_id, product_name, quantity, cost, memo);
-				purchaseService = new PurchaseService();
+				Map<String, Object> map = new HashMap<>();
+				if (!purchaseService.checkPurchase(purchase_id)) {
+					//未轉入驗收
+					purchaseService.updatePurchaseDetail(purchaseDetail_id, purchase_id, group_id, user_id, product_id,
+							c_product_id, product_name, quantity, cost, memo);
+				} else {
+					map.put("note", "已轉入驗收，明細資料不可修改！");
+				}
+				
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
+				map.put("detail", list);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-				String jsonList = gson.toJson(list);
+				String jsonList = gson.toJson(map);
 				response.getWriter().write(jsonList);
 			} catch (Exception e) {
 
@@ -207,11 +234,14 @@ public class purchase extends HttpServlet {
 			String purchase_id = request.getParameter("purchase_id");
 			purchaseService = new PurchaseService();
 			List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("detail", list);
+			
 			Gson gson = new Gson();
-			String jsonStrList = gson.toJson(list);
+			String jsonStrList = gson.toJson(map);
 			response.getWriter().write(jsonStrList);
 			return;// 程式中斷
-
 		}
 		// 新增時的auto complete
 		if ("search_supply_name".equals(action)) {
@@ -398,13 +428,20 @@ public class purchase extends HttpServlet {
 				if (amountStr.length() != 0) {
 					amount = Float.valueOf(amountStr);
 				}
+				
 				purchaseService = new PurchaseService();
-				purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date,
-						invoice, invoice_type, amount);
-				purchaseService = new PurchaseService();
-				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
 				PurchaseVO purchaseVO = new PurchaseVO();
 				purchaseVO.setMessage("驗證通過");
+				
+				if (!purchaseService.checkPurchase(purchase_id)) {
+					//未轉入驗收
+					purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date,
+							invoice, invoice_type, amount);
+				} else {
+					purchaseVO.setNote("已轉入驗收，資料不可修改！");
+				}
+				
+				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
 				resultNameList.add(purchaseVO);
 
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -664,6 +701,8 @@ public class purchase extends HttpServlet {
 		public List<ProductVO> getProductById(String group_id, String c_product_id);
 		
 		public List<PurchaseVO> getPurchasesByPurchaseIDs(String group_id,String purchase_ids);
+		
+		public Boolean checkPurchase(String purchase_id);
 	}
 
 	class PurchaseService {
@@ -719,6 +758,10 @@ public class purchase extends HttpServlet {
 		
 		public Boolean importDataToAcceptByPurchaseId(String [] PurchaseIdArr ,String group_id ,String user_id){
 			return dao.importDataToAcceptByPurchaseId(PurchaseIdArr , group_id ,user_id);
+		}
+		
+		public Boolean checkPurchase(String purchase_id) {
+			return dao.checkPurchase(purchase_id);
 		}
 
 		public PurchaseVO addPurchase(String seq_no, String group_id, String user_id, String supply_id, String memo,
@@ -1049,6 +1092,7 @@ public class purchase extends HttpServlet {
 					purchaseVO.setReturn_date(rs.getDate("return_date"));
 					purchaseVO.setIsreturn(rs.getBoolean("isreturn"));
 					purchaseVO.setAccept_flag(rs.getBoolean("accept_flag"));
+					purchaseVO.setV_supply_name(rs.getString("supply_name"));
 					
 					list.add(purchaseVO); // Store the row in the list
 				}
@@ -1114,6 +1158,7 @@ public class purchase extends HttpServlet {
 					purchaseVO.setReturn_date(rs.getDate("return_date"));
 					purchaseVO.setIsreturn(rs.getBoolean("isreturn"));
 					purchaseVO.setAccept_flag(rs.getBoolean("accept_flag"));
+					purchaseVO.setV_supply_name(rs.getString("supply_name"));
 					
 					list.add(purchaseVO); // Store the row in the list
 				}
@@ -1183,6 +1228,7 @@ public class purchase extends HttpServlet {
 					purchaseVO.setReturn_date(rs.getDate("return_date"));
 					purchaseVO.setIsreturn(rs.getBoolean("isreturn"));
 					purchaseVO.setAccept_flag(rs.getBoolean("accept_flag"));
+					purchaseVO.setV_supply_name(rs.getString("supply_name"));
 					
 					list.add(purchaseVO); // Store the row in the list
 				}
@@ -1741,5 +1787,48 @@ public class purchase extends HttpServlet {
 				return isImportData;
 			
 		}
+		
+		@Override
+		public Boolean checkPurchase(String purchase_id) {
+			
+			Boolean accept_flag = false;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_check_purchase);
+				pstmt.setString(1, purchase_id);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					accept_flag = rs.getBoolean("accept_flag");
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			
+			return accept_flag;
+		}
+
 	}
 }

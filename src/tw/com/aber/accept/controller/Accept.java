@@ -190,8 +190,10 @@ public class Accept  extends HttpServlet {
 				boolean isDelete = false;
 
 				// 取值
+				String accept_id = request.getParameter("accept_id");
 				String acceptDetail_id = request.getParameter("acceptDetail_id");
-			
+				
+				logger.debug("accept_id:"+accept_id);
 				logger.debug("acceptDetail_id:"+acceptDetail_id);
 				
 				// 驗證
@@ -288,6 +290,9 @@ public class Accept  extends HttpServlet {
 		public Boolean importDataToStock(String groupId,String userId ,String acceptIds) {
 			return dao.importDataToStock( groupId, userId , acceptIds);
 		}
+		public Boolean checkAccept(String group_id, String purchase_id) {
+			return dao.checkAccept(group_id, purchase_id);
+		}
 		
 	}
 	
@@ -300,6 +305,7 @@ public class Accept  extends HttpServlet {
 		String deleteAcceptByAccept_id(String groupId, String acceptId);
 		Boolean deleteAcceptDetailByAcceptDetail_id(String groupId, String acceptDetail);
 		Boolean importDataToStock(String groupId,String userId ,String acceptIds);
+		public Boolean checkAccept(String group_id, String purchase_id);
 	}							 
 	
 	class AcceptDAO implements Accept_interface {
@@ -820,6 +826,48 @@ public class Accept  extends HttpServlet {
 			return isImportData;
 		}
 
+		@Override
+		public Boolean checkAccept(String group_id, String accept_id) {
+			
+			Boolean stock_flag = false;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_check_accept);
+				pstmt.setString(1, group_id);
+				pstmt.setString(1, accept_id);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					stock_flag = rs.getBoolean("stock_flag");
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			
+			return stock_flag;
+		}
 	}
 
 	/*

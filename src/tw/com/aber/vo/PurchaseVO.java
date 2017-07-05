@@ -20,7 +20,8 @@ public class PurchaseVO implements java.io.Serializable {
 	private Boolean accept_flag;
 	private List<PurchaseDetailVO> purchaseDetailList;
 	private String message;// 此參數用來存放錯誤訊息
-	private String note;// 此參數用來存放錯誤訊息
+	private String note;
+	private String v_supply_name;
 
 	public String getMessage() {
 		return message;
@@ -148,6 +149,14 @@ public class PurchaseVO implements java.io.Serializable {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public String getV_supply_name() {
+		return v_supply_name;
+	}
+
+	public void setV_supply_name(String v_supply_name) {
+		this.v_supply_name = v_supply_name;
 	}
 	
 }

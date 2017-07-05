@@ -546,48 +546,76 @@ input[type="number"] {
 	        },{
 	            text: '轉入庫存',
 	            action: function(e, dt, node, config) {
-					var $table =  $('#dt_master');
+	            	
+	            	$("<div></div>").dialog({
+	            		title: "轉入庫存",
+		                modal: true,
+		                open: function(event, ui) {
+	                        $(this)
+	                        	.html("轉入庫存前，請確認是否驗收完成。")
+	                        	.parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
+		                buttons: [{
+		                    text: "確認",
+		                    click: function() {
+		                    	var $table =  $('#dt_master');
 
-					var cells = $dtMaster.cells().nodes();
+		    					var cells = $dtMaster.cells().nodes();
 
-					var idArr = '';
-					
-					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-					
-					if($checkboxs.length == 0){
-						dialogMsg("提示", "請至少選擇一筆資料");
-						return false;
-					}
-				
-					
-					$checkboxs.each(function() {
-						idArr += this.id + ',';
-					});
-					idArr = idArr.slice(0,-1);
-					idArr = idArr.replace(/,/g,"','");
-					idArr = "'" + idArr + "'";
-					
-					$.ajax({
-						url: 'Accept.do', 
-						type: 'post',
-						data: {
-							action: 'importDataToStock',
-							accept_ids: idArr
-						},
-						error: function (xhr) { },
-						success: function (response) {
-							var msg = "";
-							
-							if(response=='success'){
-								msg = '轉入成功';
-							}else{
-								msg = '轉入失敗';
-							}
-							
-							dialogMsg("轉入庫存", msg);
-						}
-					});		
-					console.log('idArr: '+ idArr);		
+		    					var idArr = '';
+		    					
+		    					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+		    					
+		    					if($checkboxs.length == 0){
+		    						dialogMsg("提示", "請至少選擇一筆資料");
+		    						return false;
+		    					}
+		    				
+		    					
+		    					$checkboxs.each(function() {
+		    						idArr += this.id + ',';
+		    					});
+		    					idArr = idArr.slice(0,-1);
+		    					idArr = idArr.replace(/,/g,"','");
+		    					idArr = "'" + idArr + "'";
+		    					
+		    					$.ajax({
+		    						url: 'Accept.do',
+		    						type: 'post',
+		    						data: {
+		    							action: 'importDataToStock',
+		    							accept_ids: idArr
+		    						},
+		    						error: function (xhr) { },
+		    						success: function (response) {
+		    							var msg = "";
+		    							
+		    							if(response=='success'){
+		    								msg = '轉入成功';
+		    							}else{
+		    								msg = '轉入失敗';
+		    							}
+		    							
+		    							dialogMsg("轉入庫存", msg);
+		    							
+		    							parameter = {
+		    					            action: "searchByDate",
+		    					            startDate: $("#hidStartDate").val(),
+		    					            endDate: $("#hidEndDate").val()
+		    					        };
+		    							drawMasterTable(parameter);
+		    						}
+		    					});
+		    					console.log('idArr: '+ idArr);
+		    					$(this).dialog("close");
+		                    }
+		                }, {
+		                	text: "取消",
+		                    click: function() {
+		                    	$(this).dialog("close");
+		                    }
+		                }]
+	            	});
 				}
 	        }]
 	    });
