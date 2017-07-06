@@ -58,6 +58,7 @@ public class upload extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
+		logger.debug("Action:" + action);
 		if ("select_platform_kind".equals(action)) {
 			UploadService service = new UploadService();
 			String jsonStrList = service.getPlatformJson();
