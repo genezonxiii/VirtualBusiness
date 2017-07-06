@@ -68,8 +68,12 @@ function draw_purchase(parameter){
 				var len=json_obj.length;
 				//判斷查詢結果
 				var resultRunTime = 0;
-				$.each (json_obj, function (i) {
+				$.each (json_obj, function (i, item) {
 					resultRunTime+=1;
+					
+					if (item.note) {
+						dialogMsg("提示", item.note);
+					}
 				});
 				if(json_obj[resultRunTime-1].message=="驗證通過"){
 					var result_table = "";
@@ -122,14 +126,16 @@ function draw_purchase(parameter){
 							+ "<td>"+ options.html() +"</td>"
 							+ "<td name='"+ json_obj[i].seq_no +"'>"+ json_obj[i].seq_no+ "</td>"
 							+ "<td name='"+ json_obj[i].purchase_date +"'>"+ json_obj[i].purchase_date+ "</td>"
+							+ "<td>"+ json_obj[i].v_supply_name + "</td>"
 							+ "<td name='"+ json_obj[i].invoice +"'>"+ json_obj[i].invoice+ "</td>"
 							+ "<td name='"+ json_obj[i].invoice_type +"'>"+ json_obj[i].invoice_type+ "</td>"
 							+ "<td name='"+ json_obj[i].amount +"'>"+ money(json_obj[i].amount)+ "</td>"
 							+ "<td name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
+							+ "<td>"+ (item.accept_flag? "是":"否")+ "</td>"
 							+ (isIE()?"<td><div class='table-row-func btn-in-table btn-gray' style='float:left;'><i class='fa fa-ellipsis-h'></i>":"<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>")
 							+ "	<div class='table-function-list' >"
-							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改進貨單' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "' ><i class='fa fa-pencil'></i></button>"
-							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除進貨單' id='"+json_obj[i].seq_no+"'value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
+							+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改採購單' id='"+json_obj[i].seq_no+"' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil'></i></button>"
+							+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除採購單' id='"+json_obj[i].seq_no+"' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-trash'></i></button>"
 							+ "		<button class='btn-in-table btn-primary btn_detail' title='顯示明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-list'></i></button>"
 							+ "		<button class='btn-in-table btn-green btn_create' title='新增明細' value='"+ json_obj[i].purchase_id + "'><i class='fa fa-pencil-square-o'></i></button>"
 							+ "	</div></div></td></tr>";	
@@ -369,37 +375,62 @@ function draw_purchase(parameter){
 
 										text : '採購轉驗收',
 										action : function(e, dt, node, config) {
-											var $table =  $('#purchase');
+							            	$("<div></div>").dialog({
+							            		title: "採購轉驗收",
+								                modal: true,
+								                open: function(event, ui) {
+							                        $(this)
+							                        	.html("確認是否轉入驗收。")
+							                        	.parent().children().children('.ui-dialog-titlebar-close').hide();
+							                    },
+								                buttons: [{
+								                    text: "確認",
+								                    click: function() {
+								                    	var $table =  $('#purchase');
 
-										    var cells = $dtMaster.fnGetNodes();
-											var idArr = '';
-											
-											var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-											
-											$checkboxs.each(function() {
-												idArr += this.id + ',';
-											});
-											idArr = idArr.slice(0,-1);
+													    var cells = $dtMaster.fnGetNodes();
+														var idArr = '';
+														
+														var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+														
+														$checkboxs.each(function() {
+															idArr += this.id + ',';
+														});
+														idArr = idArr.slice(0,-1);
 
-											
-											$.ajax({
-												url: 'purchase.do', 
-												type: 'post',
-												data: {
-													action: 'importDataToAcceptByPurchaseId',
-													purchase_ids: idArr
-												},
-												error: function (xhr) { 
-													dialogMsg("採購轉入庫", "轉入失敗");
-												},
-												success: function (response) {
-													if("success"==response){
-														dialogMsg("採購轉入庫", "轉入成功");
-													}else{
-														dialogMsg("採購轉入庫", "轉入失敗");
-													}
-												}
-											});
+														
+														$.ajax({
+															url: 'purchase.do', 
+															type: 'post',
+															data: {
+																action: 'importDataToAcceptByPurchaseId',
+																purchase_ids: idArr
+															},
+															error: function (xhr) { 
+																dialogMsg("採購轉驗收", "轉入失敗");
+															},
+															success: function (response) {
+																if("success"==response){
+																	dialogMsg("採購轉驗收", "轉入成功");
+																}else{
+																	dialogMsg("採購轉驗收", "轉入失敗");
+																}
+																var tmp={
+																		action : "search",
+																		supply_name : $("input[name='searh_purchase_by_supply_name'").val()
+																	};
+																draw_purchase(tmp);
+															}
+														});
+														$(this).dialog("close");
+								                    }
+								                }, {
+								                	text: "取消",
+								                    click: function() {
+								                    	$(this).dialog("close");
+								                    }
+								                }]
+							            	});
 										}
 									
 									}
@@ -447,7 +478,14 @@ function draw_purchase_detail(parameter){
 		url : "purchase.do",
 		data : parameter,
 		success : function(result) {
-			var json_obj = $.parseJSON(result);
+			var result_obj = $.parseJSON(result);
+			var note = result_obj.note;
+			
+			if (note){
+				dialogMsg("提示", note);
+			}
+			
+			var json_obj = result_obj.detail;
 			//判斷查詢結果
 			var resultRunTime = 0;
 			$.each (json_obj, function (i) {
@@ -505,7 +543,7 @@ function draw_purchase_detail(parameter){
 				$("#purchase_detail_contain_row").animate({"opacity":"0.01"},1);
 				$("#purchase_detail_contain_row").animate({"opacity":"1"},300);
 			}else{
-				warning_msg("---查無該進貨單明細---");
+				warning_msg("---查無該採購單明細---");
 				$("#purchase_detail_contain_row").hide();
 			}
 		}
@@ -602,7 +640,7 @@ function draw_purchase_detail(parameter){
 		$("#searh_supply_name").click(function(e) {
 			e.preventDefault();
 			if($("#searh_supply_name").attr("supply_error").length>0){
-			    var tmp="查無供應商名稱: "+$("#searh_supply_name").attr("supply_error")+"\n將為您查詢所有進貨單";
+			    var tmp="查無供應商名稱: "+$("#searh_supply_name").attr("supply_error")+"\n將為您查詢所有採購單";
 			    if(!confirm(tmp,"繼續","取消") ){
 			        return;
 			    }
@@ -911,9 +949,9 @@ function draw_purchase_detail(parameter){
 			uuid = $(this).val();
 			$("#dialog-confirm").html(
 				"<table class='dialog-table'>"+
-				"<tr><td>銷貨單號：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(1)").attr("name")+"'</span></td></tr>"+
-				"<tr><td>交易日期：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span></td></tr>"+
-				"<tr><td>銷貨金額：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(5)").html()+"'</span></td></tr>"+
+				"<tr><td>採購單號：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span></td></tr>"+
+				"<tr><td>採購日期：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(3)").attr("name")+"'</span></td></tr>"+
+				"<tr><td>發票金額：</td><td><span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(6)").html()+"'</span></td></tr>"+
 				"</table>"
 			);
 			confirm_dialog.dialog("open");
@@ -1004,7 +1042,7 @@ function draw_purchase_detail(parameter){
 			purchase_id= $(this).attr("id");
 			$("#dialog-detail-confirm").html(
 				"<table class='dialog-table'><tr>"+
-				"<td>進貨 <span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span> X "+
+				"<td>採購 <span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(2)").attr("name")+"'</span> X "+
 				"<span class='delete_msg'>'"+$(this).parents("tr").find("td:nth-child(3)").attr("name")+"'</span><br></td>"+
 				"</tr></table>"
 			);
@@ -1379,19 +1417,19 @@ function draw_purchase_detail(parameter){
 				<div class="form-row">
 				<form id="purchase_date_form" name="purchase_date_form">
 					<label for="">
-						<span class="block-label">進貨起日</span>
+						<span class="block-label">採購起日</span>
 						<input type="text" class="input-date" id="purchase_start_date" name="purchase_start_date">
 					</label>
 					<div class="forward-mark"></div>
 					<label for="">
-						<span class="block-label">進貨迄日</span>
+						<span class="block-label">採購迄日</span>
 						<input type="text" class="input-date" id="purchase_end_date" name="purchase_end_date">
 					</label>
 					<button class="btn btn-darkblue" id="search_purchase_date">查詢</button>
 				</form>
 				</div>
 				<div class="btn-row">
-					<button class="btn btn-exec " id="create-supply">新增進貨資料</button>
+					<button class="btn btn-exec " id="create-supply">新增採購資料</button>
 				</div>
 				<div id="supply_name_err_mes"></div>
 			</div><!-- /.form-wrap -->
@@ -1400,11 +1438,11 @@ function draw_purchase_detail(parameter){
 		
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-confirm" title="是否刪除此進貨紀錄?" style="display:none;"></div>
+			<div id="dialog-confirm" title="是否刪除此採購單?" style="display:none;"></div>
 			<!--對話窗樣式-確認 -->
-			<div id="dialog-detail-confirm" title="是否刪除此明細?" style="display:none;"></div>		
+			<div id="dialog-detail-confirm" title="是否刪除此採購單明細?" style="display:none;"></div>		
 			<!--對話窗樣式-修改 -->
-			<div id="dialog-form-update" title="修改進貨資料" style="display:none;">
+			<div id="dialog-form-update" title="修改採購單" style="display:none;">
 				<form name="update-dialog-form-post" id="update-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
@@ -1413,14 +1451,14 @@ function draw_purchase_detail(parameter){
 								<td><input type="text" name="supply_id" id="update_supply_id" placeholder="輸入供應商名稱已供查詢"></td>
 							</tr>
 							<tr>
-								<td>進貨發票號碼：</td>
-								<td><input type="text" name="invoice"  placeholder="輸入進貨發票號碼"></td>
+								<td>採購發票號碼：</td>
+								<td><input type="text" name="invoice"  placeholder="輸入採購發票號碼"></td>
 								<td>發票金額：</td>
 								<td><input type="text" name="amount"  placeholder="輸入發票金額"></td>
 							</tr>
 							<tr>
-								<td>進貨日期：</td>
-								<td><input type="text" name="purchase_date"  placeholder="輸入進貨日期" class="input-date"></td>
+								<td>採購日期：</td>
+								<td><input type="text" name="purchase_date"  placeholder="輸入採購日期" class="input-date"></td>
 								<td>發票樣式：</td>
 								<td><select name="invoice_type" id="update_select_invoice_type"><option value="0">選擇</option><option value="1">二聯式發票</option><option value="2">三聯式發票</option></select></td>
 							</tr>
@@ -1452,14 +1490,14 @@ function draw_purchase_detail(parameter){
 								<td><select id='update_currency'></select></td>
 							</tr>
 							<tr>
-								<td>進貨單價：<a class='currency1'></a></td>
+								<td>採購單價：<a class='currency1'></a></td>
 								<td><input type="text" id="update_tmp_value" name='tmp_value' placeholder="輸入單價"></td>
 								<td>折合台幣單價：</td>
 								<td><a id='update_exchange_msg'>NT＄0 x 1 = NT$0</a><input type="hidden" id="update_detail_product_price" name="cost" disabled></td>
 							</tr>
 							<tr>
-								<td>進貨數量：</td>
-								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入進貨數量"></td>
+								<td>採購數量：</td>
+								<td><input type="text" id="update_detail_product_n" name="quantity"  placeholder="輸入採購數量"></td>
 								<td>總價格：</td>
 								<td><input type="text" id="update_detail_product_cost" name="total" disabled></td>
 							</tr>
@@ -1472,25 +1510,25 @@ function draw_purchase_detail(parameter){
 				</form>
 			</div>						
 			<!--對話窗樣式-新增 -->
-			<div id="dialog-form-insert" title="新增進貨資料" style="display:none;">
+			<div id="dialog-form-insert" title="新增採購資料" style="display:none;">
 				<form name="insert-dialog-form-post" id="insert-dialog-form-post">
 					<fieldset>
 						<table class="form-table">
 							<tr>
-								<td>進貨單號：</td>
+								<td>採購單號：</td>
 								<td><input id="title-dialog-post"type="text" name="original_seq_no" disabled="disabled" value="系統自動產生"></td>
 								<td>供應商名稱：</td>
 								<td><input type="text" name="supply_id" id="insert_supply_id" placeholder="輸入供應商名稱查詢"></td>
 							</tr>
 							<tr>
-								<td>進貨發票號碼：</td>
-								<td><input type="text" name="invoice" placeholder="輸入進貨發票號碼"></td>
+								<td>採購發票號碼：</td>
+								<td><input type="text" name="invoice" placeholder="輸入採購發票號碼"></td>
 								<td>發票金額：</td>
 								<td><input type="text" name="amount" placeholder="輸入發票金額"></td>
 							</tr>
 							<tr>
-								<td>進貨日期：</td>
-								<td><input type="text" name="purchase_date" placeholder="輸入進貨日期" class="input-date"></td>
+								<td>採購日期：</td>
+								<td><input type="text" name="purchase_date" placeholder="輸入採購日期" class="input-date"></td>
 								<td>發票樣式：</td>
 								<td><select name="invoice_type" id="insert_select_invoice_type"><option value="0">選擇</option><option value="1">二聯式發票</option><option value="2">三聯式發票</option></select></td>
 							</tr>
@@ -1519,14 +1557,14 @@ function draw_purchase_detail(parameter){
 								<td><select id='insert_currency'></select></td>
 							</tr>
 							<tr>
-								<td>進貨單價：<a class='currency1'></a></td>
+								<td>採購單價：<a class='currency1'></a></td>
 								<td><input type="text" id="insert_tmp_value" name='tmp_value' placeholder="輸入單價"></td>
 								<td>折合台幣單價：</td>
 								<td><a id='insert_exchange_msg'>NT＄0 x 1 = NT$0</a><input  type="hidden" id="insert_detail_product_price" name="cost" disabled></td>
 							</tr>
 							<tr>
-								<td>進貨數量：</td>
-								<td><input type="text" id="insert_detail_product_n" name="quantity" placeholder="輸入進貨數量"></td>
+								<td>採購數量：</td>
+								<td><input type="text" id="insert_detail_product_n" name="quantity" placeholder="輸入採購數量"></td>
 								<td>總價格：</td>
 								<td><input type="text" id="insert_detail_product_cost" name="total" disabled></td>
 							</tr>
@@ -1545,12 +1583,14 @@ function draw_purchase_detail(parameter){
 						<thead>
 							<tr>
 								<th>批次請求</th>
-								<th>進貨單號</th>
-								<th>進貨日期</th>
-								<th style="background-image: none !important;">進貨發票號碼</th>
+								<th>採購單號</th>
+								<th>採購日期</th>
+								<th>供應商名稱</th>
+								<th style="background-image: none !important;">採購發票號碼</th>
 								<th style="background-image: none !important;">發票樣式</th>
-								<th>進貨發票金額</th>
+								<th>採購發票金額</th>
 								<th style="background-image: none !important;">備註說明</th>
+								<th style="background-image: none !important;">已轉驗收(可重複)</th>
 								<th style="min-width:75px;background-image: none !important;">功能</th>
 							</tr>
 						</thead>
@@ -1569,8 +1609,8 @@ function draw_purchase_detail(parameter){
 							<tr>
 								<th style="background-image: none !important;">自訂商品ID</th>
 								<th style="background-image: none !important;">商品名稱</th>
-								<th>進貨數量</th>
-								<th>進貨單價</th>
+								<th>採購數量</th>
+								<th>採購單價</th>
 								<th style="background-image: none !important;">備註說明 </th>
 								<th style="background-image: none !important;">功能</th>
 							</tr>

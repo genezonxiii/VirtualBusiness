@@ -172,14 +172,7 @@ input[type="number"] {
 	        }
 
 	        if (errorMes.length > 0) {
-	        	var $mes = $('#message #text');
-	            $mes.val('').html(errorMes);
-	            $('#message')
-	                .dialog()
-	                .dialog('option', 'title', '警告')
-	                .dialog('option', 'width', 'auto')
-	                .dialog('option', 'minHeight', 'auto')
-	                .dialog("open");
+	        	dialogMsg("提示", errorMes);
 	            return false;
 	        }
 	        
@@ -306,15 +299,7 @@ input[type="number"] {
 	                                success: function(data) {
 	                                	
 	                                    if (data == "success") {
-	                                       	var $mes = $('#message #text');
-	                                    	$mes.val('').html('修改成功');
-	                                    	
-	                                    	$('#message')
-		                    				.dialog()
-		                    				.dialog('option', 'title', '提示訊息')
-		                    				.dialog('option', 'width', 'auto')
-		                    				.dialog('option', 'minHeight', 'auto')
-		                    				.dialog("open");
+	                                    	dialogMsg("驗收明細修改", "儲存成功");
 		                                	
 	                                        var parameter = {
 	                                            "action": "getAcceptdetailVOListByAcceptId",
@@ -323,11 +308,11 @@ input[type="number"] {
 	                                        drawDetailTable(parameter)
 
 	                                    } else {
-	                                        alert("修改失敗:" + data);
+	                                    	dialogMsg("驗收明細修改", "儲存失敗:" + data);
 	                                    }
 	                                },
 	                                error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                                    alert("發生錯誤修改失敗");
+	                                    dialogMsg("驗收明細修改", "發生錯誤, 儲存失敗");
 	                                }
 	                            })
 
@@ -350,7 +335,7 @@ input[type="number"] {
 	                update_dialog.dialog("open");
 	            },
 	            error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                alert(textStatus);
+	                dialogMsg("錯誤", textStatus);
 	            }
 	        });
 
@@ -390,7 +375,7 @@ input[type="number"] {
 	                    }
 	                },
 	                error: function(XMLHttpRequest, textStatus, errorThrown) {
-	                    alert(textStatus);
+	                	dialogMsg("錯誤", textStatus);
 	                }
 	            });
 	        });
@@ -448,6 +433,10 @@ input[type="number"] {
 	            "data": "memo",
 	            "defaultContent": ""
 	        }, {
+	            "title": "已轉庫存",
+	            "data": "stock_flag",
+	            "defaultContent": ""
+	        }, {
 	            "title": "功能",
 	            "data": null,
 	            "defaultContent": ""
@@ -476,6 +465,15 @@ input[type="number"] {
 	                var options = $("<div/>").append(input, label);
 
 	                return options.html();
+	            }
+	        }, {
+	            //已轉庫存
+	            targets: -2,
+	            searchable: false,
+	            orderable: false,
+	            render: function(data, type, row) {
+	            	var msg = row.stock_flag?"是":"否";
+	            	return msg;
 	            }
 	        }, {
 	            //功能
@@ -546,55 +544,78 @@ input[type="number"] {
 	                    });
 	            }
 	        },{
-	            text: '轉庫存',
+	            text: '轉入庫存',
 	            action: function(e, dt, node, config) {
-					var $table =  $('#dt_master');
+	            	
+	            	$("<div></div>").dialog({
+	            		title: "轉入庫存",
+		                modal: true,
+		                open: function(event, ui) {
+	                        $(this)
+	                        	.html("轉入庫存前，請確認是否驗收完成。")
+	                        	.parent().children().children('.ui-dialog-titlebar-close').hide();
+	                    },
+		                buttons: [{
+		                    text: "確認",
+		                    click: function() {
+		                    	var $table =  $('#dt_master');
 
-					var cells = $dtMaster.cells().nodes();
+		    					var cells = $dtMaster.cells().nodes();
 
-					var idArr = '';
-					
-					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-					
-					if($checkboxs.length == 0){
-						alert('請至少選擇一筆資料');
-						return false;
-					}
-				
-					
-					$checkboxs.each(function() {
-						idArr += this.id + ',';
-					});
-					idArr = idArr.slice(0,-1);
-					idArr = idArr.replace(/,/g,"','");
-					idArr = "'" + idArr + "'";
-					
-					$.ajax({
-						url: 'Accept.do', 
-						type: 'post',
-						data: {
-							action: 'importDataToStock',
-							accept_ids: idArr
-						},
-						error: function (xhr) { },
-						success: function (response) {
-							var $mes = $('#message #text');
-							
-							if(response=='success'){
-								$mes.val('').html('轉入成功');
-							}else{
-								$mes.val('').html('轉入失敗');
-							}
-							
-							$('#message')
-							.dialog()
-							.dialog('option', 'title', '提示訊息')
-							.dialog('option', 'width', 'auto')
-							.dialog('option', 'minHeight', 'auto')
-							.dialog("open");
-						}
-					});		
-					console.log('idArr: '+ idArr);		
+		    					var idArr = '';
+		    					
+		    					var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+		    					
+		    					if($checkboxs.length == 0){
+		    						dialogMsg("提示", "請至少選擇一筆資料");
+		    						return false;
+		    					}
+		    				
+		    					
+		    					$checkboxs.each(function() {
+		    						idArr += this.id + ',';
+		    					});
+		    					idArr = idArr.slice(0,-1);
+		    					idArr = idArr.replace(/,/g,"','");
+		    					idArr = "'" + idArr + "'";
+		    					
+		    					$.ajax({
+		    						url: 'Accept.do',
+		    						type: 'post',
+		    						data: {
+		    							action: 'importDataToStock',
+		    							accept_ids: idArr
+		    						},
+		    						error: function (xhr) { },
+		    						success: function (response) {
+		    							var msg = "";
+		    							
+		    							if(response=='success'){
+		    								msg = '轉入成功';
+		    							}else{
+		    								msg = '轉入失敗';
+		    							}
+		    							
+		    							dialogMsg("轉入庫存", msg);
+		    							
+		    							parameter = {
+		    					            action: "searchByDate",
+		    					            startDate: $("#hidStartDate").val(),
+		    					            endDate: $("#hidEndDate").val()
+		    					        };
+		    							drawMasterTable(parameter);
+		    						}
+		    					});
+		    					console.log('idArr: '+ idArr);
+		    					$(this).dialog("close");
+		                    }
+		                }, {
+		                	text: "取消",
+		                    click: function() {
+		                    	$(this).dialog("close");
+		                    }
+		                }]
+	            	});
 				}
 	        }]
 	    });
@@ -768,31 +789,10 @@ input[type="number"] {
             delay: 1500,
             data: parameter,
             success: function(data) {
-            	var $mes = $('#message #text');
-            	if(data=='success'){
-					$mes.val('').html('刪除成功');
-
-				}else{
-					$mes.val('').html('刪除失敗');
-				}
-				
-				$('#message')
-				.dialog()
-				.dialog('option', 'title', '提示訊息')
-				.dialog('option', 'width', 'auto')
-				.dialog('option', 'minHeight', 'auto')
-				.dialog("open");
-            	
+            	dialogMsg("提示", data);
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
-            		var $mes = $('#message #text');
-					$mes.val('').html('刪除失敗');
-					$('#message')
-					.dialog()
-					.dialog('option', 'title', '提示訊息')
-					.dialog('option', 'width', 'auto')
-					.dialog('option', 'minHeight', 'auto')
-					.dialog("open");
+            	dialogMsg("提示", '刪除失敗');
             }
         })
 	}
