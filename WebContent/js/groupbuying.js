@@ -299,7 +299,9 @@ function sendFileToServer(formData,status){
 						$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog('option','width','auto').dialog("open");
 			    	}
-			    	
+			    	console.log('duplicate uploadURL ');
+			    	console.log(duplicate);
+			    	console.log(duplicate.length);
 			    	if ((sendCountTime == sendCount) && (duplicate.length!=0)){
 				    	status_dialog.dialog("close");
 				    	

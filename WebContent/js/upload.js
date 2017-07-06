@@ -46,6 +46,8 @@ function getPlatformMap(){
 				}
 				platform_map[key]=value;			
 			});
+			console.log(platform_map['yohopower']);
+			console.log(platform_map);
 			console.log('getPlatformMap end');
 			console.log('==================================================\n\n');
 		}
@@ -230,8 +232,12 @@ function sendFileToServer(formData,status){
 		            	var json_obj = $.parseJSON(result);
 						$.each(json_obj,function(i, item) {
 				        	console.log('item '+i);
-				        	if(i == 'duplicate'){
+				        	console.log(item);
+				        	if(i == 'duplicate' && (item.length) != 0){
 				        		duplicate = item.split(',');
+				        		if(item == null){
+				        			duplicate = [];
+				        		}
 				        	}
 				        	console.log('duplicate');
 				        	console.log(duplicate);
@@ -250,6 +256,9 @@ function sendFileToServer(formData,status){
 						$('#message').find("#text").val('').html("拋轉失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog('option','width','auto').dialog("open");
 			    	}
+			    	console.log('duplicate uploadURL ');
+			    	console.log(duplicate);
+			    	console.log(duplicate.length);
 			    	if ((sendCountTime == sendCount) && (duplicate.length!=0)){
 				    	status_dialog.dialog("close");
 				    	
@@ -725,7 +734,8 @@ $(document).ready(function() {
 	    var fileInput= document.createElement('INPUT');
 	    
 	    fileInput.type = "file";
-	    fileInput.accept = ".csv,.xls,.xml,.pdf";
+	    //可視的檔案類型
+	    fileInput.accept = ".csv,.xls,.xml,.pdf,.xlsx";
 	    //fileInput.multiple = "multiple";
 	    
 	    $(fileInput).trigger('click');
