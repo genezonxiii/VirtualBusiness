@@ -188,7 +188,7 @@ function draw_purchase(parameter){
 								
 								
 								if($checkboxs.length == 0){
-									alert('請至少選擇一筆資料');
+									dialogMsg('提示','請選擇一筆資料');
 									return false;
 								}
 								if($checkboxs.length > 20){
@@ -254,7 +254,7 @@ function draw_purchase(parameter){
 									return false;
 								}
 								if($checkboxs.length == 0){
-									alert('請至少選擇一筆資料');
+									dialogMsg('提示','請選擇一筆資料');
 									return false;
 								}
 								$checkboxs.each(function() {
@@ -314,7 +314,7 @@ function draw_purchase(parameter){
 									return false;
 								}
 								if($checkboxs.length == 0){
-									alert('請至少選擇一筆資料');
+									dialogMsg('提示','請選擇一筆資料');
 									return false;
 								}
 								$checkboxs.each(function() {
@@ -375,6 +375,15 @@ function draw_purchase(parameter){
 
 										text : '採購轉驗收',
 										action : function(e, dt, node, config) {
+											var $table =  $('#purchase');
+										    var cells = $dtMaster.fnGetNodes();
+											var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+											
+											if($checkboxs.length == 0){
+												dialogMsg('提示','請選擇一筆資料');
+												return;
+											}
+											
 							            	$("<div></div>").dialog({
 							            		title: "採購轉驗收",
 								                modal: true,

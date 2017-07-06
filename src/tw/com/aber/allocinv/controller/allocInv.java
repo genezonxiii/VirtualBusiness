@@ -298,10 +298,10 @@ public class allocInv extends HttpServlet {
 
 				// Handle any SQL errors
 			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
+				logger.error("SQLException:" + se.getMessage());
 				// Clean up JDBC resources
 			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				logger.error("ClassNotFoundException:" + cnfe.getMessage());
 			} finally {
 				if (cs != null) {
 					try {
