@@ -3,6 +3,7 @@ package tw.com.aber.ship.controller;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.security.interfaces.RSAKey;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -303,9 +304,12 @@ public class ship extends HttpServlet {
 			} else if ("SFDeliveryRouteService".equals(action)) {
 				String orderNos = request.getParameter("orderNos");
 				SfDeliveryApi api = new SfDeliveryApi();
+				shipService = new ShipService();
 
+				List<DeliveryVO> list = shipService.getShipSFDeliveryInfoByOrderNo(groupId, orderNos);
+				logger.debug(new Gson().toJson(list));
 				ValueService valueService = util.getValueService(request, response);
-
+				
 				String reqXml = api.genRouteService(orderNos, valueService);
 				String resXml = api.sendXML(reqXml, valueService);
 
@@ -350,6 +354,10 @@ public class ship extends HttpServlet {
 		public void insertToShipSFDelivery(DeliveryVO deliveryVO) {
 			dao.insertToShipSFDelivery(deliveryVO);
 		}
+
+		public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos) {
+			return dao.getShipSFDeliveryInfoByOrderNo(groupId, orderNos);
+		}
 	}
 
 	class ShipDAO implements ship_interface {
@@ -359,6 +367,7 @@ public class ship extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
+		private static final String sp_get_ship_sf_delivery_info_by_order_no = "call sp_get_ship_sf_delivery_info_by_order_no(?, ?)";
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
 		private static final String sp_select_ship_by_order_no = "call sp_select_ship_by_order_no (?,?)";
 		private static final String sp_get_ship_by_shipseqno = "call sp_get_ship_by_shipseqno(?,?)";
@@ -790,6 +799,55 @@ public class ship extends HttpServlet {
 				}
 			}
 		}
+
+		@Override
+		public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos) {
+			List<DeliveryVO> rows = new ArrayList<DeliveryVO>();
+			DeliveryVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_ship_sf_delivery_info_by_order_no);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, orderNos);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new DeliveryVO();
+					row.setMailno(rs.getString("mailno"));
+					row.setSeq_no(rs.getString("seq_no"));
+					row.setOrder_no(rs.getString("order_no"));
+
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
 	}
 
 }
@@ -807,5 +865,7 @@ interface ship_interface {
 	public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo);
 
 	public void insertToShipSFDelivery(DeliveryVO deliveryVO);
+
+	public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos);
 
 }
