@@ -302,6 +302,7 @@ function createUpBtn(){
         var files = getFiles();
         var obj = $(".dragandrophandler");
 	    fileUpload(files,obj);
+	    $('#clearBtn').trigger('click');
 	});
 	return uploadBtn;
 }

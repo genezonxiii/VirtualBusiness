@@ -194,21 +194,22 @@ public class ship extends HttpServlet {
 					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
-					
+
 					if (responseUtil.getResponse() != null) {
 						if (responseUtil.getResponse().getHead().equals("OK")) {
-							List<SaleOrder> saleOrder = responseUtil.getResponse().getBody().getSaleOrderOutboundDetailResponse().getSaleOrders().getSaleOrder();
-							
+							List<SaleOrder> saleOrder = responseUtil.getResponse().getBody()
+									.getSaleOrderOutboundDetailResponse().getSaleOrders().getSaleOrder();
+
 							if (saleOrder != null) {
-								for (SaleOrder tmp : saleOrder){
-									if ( tmp.getResult().equals("1") ) {
+								for (SaleOrder tmp : saleOrder) {
+									if (tmp.getResult().equals("1")) {
 										tmp.getHeader().setDataStatus(tmp.getHeader().getDataStatus());
 									}
 								}
 							}
 						}
 					}
-					
+
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
 					response.getWriter().write(gresult);
@@ -315,14 +316,38 @@ public class ship extends HttpServlet {
 				response.getWriter().write(result);
 			} else if ("SFDeliveryRouteService".equals(action)) {
 				String orderNos = request.getParameter("orderNos");
+				String type = request.getParameter("type");
+
 				SfDeliveryApi api = new SfDeliveryApi();
 				shipService = new ShipService();
+				String[] orderNoArr = orderNos.split(",");
+				String formatNos = "";
 
-				List<DeliveryVO> list = shipService.getShipSFDeliveryInfoByOrderNo(groupId, orderNos);
-				logger.debug(new Gson().toJson(list));
-				ValueService valueService = util.getValueService(request, response);
+				for (String s : orderNoArr) {
+					formatNos += "\"" + s + "\",";
+				}
+				formatNos = formatNos.substring(1, formatNos.length() - 2);
+
+				List<DeliveryVO> list = shipService.getShipSFDeliveryInfoByOrderNo(groupId, formatNos);
+
+				orderNos = "";
+
+				if ("1".equals(type)) {
+					for (DeliveryVO vo : list) {
+						orderNos = orderNos + vo.getMailno() + ",";
+					}
+				}
+
+				if ("2".equals(type)) {
+					for (DeliveryVO vo : list) {
+						orderNos = orderNos + vo.getOrder_no() + ",";
+					}
+				}
+				orderNos = orderNos.substring(0, orderNos.length()-1);
 				
-				String reqXml = api.genRouteService(orderNos, valueService);
+				ValueService valueService = util.getValueService(request, response);
+
+				String reqXml = api.genRouteService(orderNos, type, valueService);
 				String resXml = api.sendXML(reqXml, valueService);
 
 				tw.com.aber.sf.delivery.vo.Response responseObj = api.getResponseObj(resXml);

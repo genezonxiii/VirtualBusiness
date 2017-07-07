@@ -146,12 +146,12 @@ public class SfDeliveryApi {
 		return result;
 	}
 
-	public String genRouteService(String orderNos, ValueService valueService) {
+	public String genRouteService(String orderNos,String type, ValueService valueService) {
 		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 		
 		RouteRequest routeRequest = new RouteRequest();
-		routeRequest.setTracking_type("2");
+		routeRequest.setTracking_type(type);
 		routeRequest.setTracking_number(orderNos);
 		
 		Body body = new Body();

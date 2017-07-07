@@ -80,7 +80,7 @@ public class ValueService {
 		ValueService_Service valueService_Service = new ValueService_Service();
 		this.groupSfVO = valueService_Service.getGroupSfVoByGroupId(userVO.getGroup_id());
 		this.warehouseVO = valueService_Service.getWarehouseVoByGroudId(userVO.getGroup_id());
-		this.groupSfDelivery = valueService_Service.getGroupGfDeliveryByGroudId(userVO.getGroup_id());
+		this.groupSfDelivery = valueService_Service.getGroupSFDeliveryByGroudId(userVO.getGroup_id());
 	}
 
 	interface ValueService_interFace {
@@ -88,7 +88,7 @@ public class ValueService {
 
 		public GroupSfVO getGroupSfVoByGroupId(String groudId);
 
-		public GroupSfDelivery getGroupGfDeliveryByGroudId(String groudId);
+		public GroupSfDelivery getGroupSFDeliveryByGroudId(String groudId);
 	}
 
 	class ValueServiceDAO implements ValueService_interFace {
@@ -202,7 +202,7 @@ public class ValueService {
 		}
 
 		@Override
-		public GroupSfDelivery getGroupGfDeliveryByGroudId(String groudId) {
+		public GroupSfDelivery getGroupSFDeliveryByGroudId(String groudId) {
 
 			GroupSfDelivery groupSfDelivery = new GroupSfDelivery();
 
@@ -267,8 +267,8 @@ public class ValueService {
 			return dao.getGroupSfVoByGroupId(groudId);
 		}
 		
-		public GroupSfDelivery getGroupGfDeliveryByGroudId(String groudId){
-			return dao.getGroupGfDeliveryByGroudId(groudId);
+		public GroupSfDelivery getGroupSFDeliveryByGroudId(String groudId){
+			return dao.getGroupSFDeliveryByGroudId(groudId);
 		}
 	}
 
