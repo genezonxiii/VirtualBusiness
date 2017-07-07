@@ -614,6 +614,14 @@
 		<servlet-name>StockTake</servlet-name>
 		<url-pattern>/StockTake.do</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>Egs</servlet-name>
+		<servlet-class>tw.com.aber.egs.controller.Egs</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Egs</servlet-name>
+		<url-pattern>/Egs.do</url-pattern>
+	</servlet-mapping>
 	
 
 	<filter>

@@ -8,6 +8,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import tw.com.aber.sf.delivery.vo.OrderSearch;
 import tw.com.aber.sf.delivery.vo.Request;
 import tw.com.aber.sf.delivery.vo.Response;
 import tw.com.aber.sf.delivery.vo.RouteRequest;
+import tw.com.aber.vo.GroupSfDelivery;
 
 public class SfDeliveryApi {
 	private static final Logger logger = LogManager.getLogger(SfDeliveryApi.class);
@@ -35,34 +37,34 @@ public class SfDeliveryApi {
 	// 下訂單(含篩選)接口響應 - 訂單處理成功
 	public static final String ORDER_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<OrderResponse orderId=\"TEST201706090001\" mailno=\"444003409873\" orgincode=\"SIN01D\" destcode=\"852\" filter_result=\"2\"/>"
+			+ "<OrderResponse orderid=\"TEST201706090001\" mailno=\"444003409873\" orgincode=\"SIN01D\" destcode=\"852\" filter_result=\"2\"/>"
 			+ "</Body>" + "</Response>";
 	// 下訂單(含篩選)接口響應 - 訂單處理失敗
 	private static final String ORDER_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"8016\">重複下單</Error></Response>";
 	// 訂單確認/取消接口響應 - 訂單確認成功
-	private static final String ORDER_CONFIRM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ORDER_CONFIRM_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderConfirmService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<OrderConfirmResponse orderId=\"TEST201706090003\" mailno=\"444003078326\" res_status=\"2\"/>"
+			+ "<OrderConfirmResponse orderid=\"TEST201706090003\" mailno=\"444003078326\" res_status=\"2\"/>"
 			+ "</Body>" + "</Response>";
 	// 訂單確認/取消接口響應 - 訂單確認失敗
 	private static final String ORDER_CONFIRM_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderConfirmService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
 	// 訂單結果查詢接口響應 - 訂單處理成功
-	private static final String ORDER_SEARCH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ORDER_SEARCH_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderSearchService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<OrderResponse orderId=\"TEST201706090006\" mailno=\"444003078089\" orgincode=\"755\" destcode=\"010\" filter_result=\"2\"/>"
+			+ "<OrderResponse orderid=\"TEST201706090006\" mailno=\"444003078089\" origincode=\"755\" destcode=\"010\" filter_result=\"2\"/>"
 			+ "</Body>" + "</Response>";
 	// 訂單結果查詢接口響應 - 訂單處理失敗
 	private static final String ORDER_SEARCH_SERVICE_ERR_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"OrderSearchService\">" + "<Head>ERR</Head>"
 			+ "<Error code=\"4001\">系統發生數據錯誤或運行時異常</Error></Response>";
 	// 路由查詢接口響應 - 路由查詢成功
-	private static final String ROUTE_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	public static final String ROUTE_SERVICE_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 			+ "<Response service=\"RouteService\">" + "<Head>OK</Head>" + "<Body>"
-			+ "<RouteResponse mailno=\"444003077898\">"
+			+ "<RouteResponse mailno=\"444003077898\" orderid=\"#2017051713464411\">"
 			+ "<Route accept_time =\"2017-06-09 18:09:26\" accept_address =\"深圳\" remark =\"已收件\" opcode =\"50\"/>"
 			+ "<Route accept_time =\"2017-06-10 18:09:26\" remark =\"此件签单返还的单号为123638813180\" opcode =\"922\"/>"
 			+ "</RouteResponse>" + "</Body>" + "</Response>";
@@ -92,17 +94,19 @@ public class SfDeliveryApi {
 		return result;
 	}
 
-	public String genOrderConfirmService(String orderNo) {
+	public String genOrderConfirmService(String orderNo, ValueService valueService) {
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 
 		OrderConfirm orderConfirm = new OrderConfirm();
-		orderConfirm.setOrderId(orderNo);
+		orderConfirm.setOrderid(orderNo);
+		orderConfirm.setDealtype("2");
 
 		Body body = new Body();
 		body.setOrderConfirm(orderConfirm);
 
 		Request request = new Request();
-		request.setHead("BSPdevelop");
+		request.setHead(groupSfDelivery.getAccess_code());
 		request.setService("OrderConfirmService");
 		request.setBody(body);
 
@@ -115,18 +119,21 @@ public class SfDeliveryApi {
 
 		return result;
 	}
-	public String genOrderSearchService(String orderNo) {
+
+	public String genOrderSearchService(String orderNo, ValueService valueService) {
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
 		String result = "";
 
-		OrderConfirm orderConfirm = new OrderConfirm();
-		orderConfirm.setOrderId(orderNo);
+		OrderSearch orderSearcho = new OrderSearch();
+		orderSearcho.setOrderid(orderNo);
 
 		Body body = new Body();
-		body.setOrderConfirm(orderConfirm);
+		body.setOrderSearch(orderSearcho);
 
 		Request request = new Request();
-		request.setHead("BSPdevelop");
+		request.setHead(groupSfDelivery.getAccess_code());
 		request.setService("OrderSearchService");
+		request.setLang("zh-CN");
 		request.setBody(body);
 
 		StringWriter sw = new StringWriter();
@@ -138,6 +145,34 @@ public class SfDeliveryApi {
 
 		return result;
 	}
+
+	public String genRouteService(String orderNos, ValueService valueService) {
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
+		String result = "";
+		
+		RouteRequest routeRequest = new RouteRequest();
+		routeRequest.setTracking_type("2");
+		routeRequest.setTracking_number(orderNos);
+		
+		Body body = new Body();
+		body.setRouteRequest(routeRequest);
+
+		Request request = new Request();
+		request.setService("RouteService");
+		request.setLang("zh-CN");
+		request.setHead(groupSfDelivery.getAccess_code());
+		request.setBody(body);
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(request, sw);
+		logger.debug("--- start: output of marshalling ----");
+		logger.debug(sw.toString());
+		result = sw.toString();
+		logger.debug("--- end: output of marshalling ----");
+
+		return result;
+	}
+	
 	// 測試用
 	public String genOrderService() {
 		String result = "";
@@ -165,7 +200,7 @@ public class SfDeliveryApi {
 		cargos.add(cargo2);
 
 		Order order = new Order();
-		order.setOrderId("TE20170609");
+		order.setOrderid("TE20170609");
 		order.setJ_company("罗湖火车站");
 		order.setJ_contact("小雷");
 		order.setJ_tel("13810744");
@@ -220,7 +255,7 @@ public class SfDeliveryApi {
 		option.setVolume("33,33,33");
 
 		OrderConfirm confirm = new OrderConfirm();
-		confirm.setOrderId("TS201706090002");
+		confirm.setOrderid("TS201706090002");
 		confirm.setMailno("444003078326");
 		confirm.setDealtype("1");
 		confirm.setOrderConfirmOption(option);
@@ -253,7 +288,7 @@ public class SfDeliveryApi {
 	public String genOrderSearchService() {
 		String result = "";
 		OrderSearch orderSearch = new OrderSearch();
-		orderSearch.setOrderId("TS201706090009");
+		orderSearch.setOrderid("TS201706090009");
 		Body body = new Body();
 		body.setOrderSearch(orderSearch);
 
@@ -304,12 +339,9 @@ public class SfDeliveryApi {
 		try {
 			response = JAXB.unmarshal(new StringReader(resXml), Response.class);
 			String jsonStr = new Gson().toJson(response);
-			logger.debug("\n\n[Response]\n\nJson格式:\n\n{}\n", jsonStr);
-			StringWriter sw = new StringWriter();
-			JAXB.marshal(response, sw);
-			logger.debug("\n\nXML格式:\n\n{}\n", sw.toString());
+			logger.debug(jsonStr);
 		} catch (Exception e) {
-			logger.debug("\n\ngetResponseObj err:{}\n", e.getMessage());
+			logger.debug(e.getMessage());
 		}
 		return response;
 	}
@@ -327,27 +359,26 @@ public class SfDeliveryApi {
 		}
 		return result;
 	}
-
-	public String sendXML(String reqXml) {
-//		String targetURL = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
-		 String targetURL = "http://192.168.112.164:8088/sfdelivery/";
+	
+	public String sendXML(String reqXml, ValueService valueService) {
+		String targetURL = "http://bspoisp.sit.sf-express.com:11080/bsp-oisp/sfexpressService";
 		String urlParameters = "";
 
+		GroupSfDelivery groupSfDelivery = valueService.getGroupSfDelivery();
+		
+		String checkWord= groupSfDelivery.getCheck_word();
 		SfDeliveryApi api = new SfDeliveryApi();
+		
+		String verifyCode = reqXml + checkWord;
 
-		String logisticsInterface = reqXml;
-		String dataDigest = reqXml + "123456";
+		logger.debug("checkWord:" + checkWord);
+		verifyCode = Md5Base64.encode(verifyCode);
+		logger.debug("md5 + Base64:" + verifyCode);
+		verifyCode = Md5Base64.urlEncode(verifyCode);
+		logger.debug("md5 + Base64 > urlEncode:" + verifyCode);
 
-		// Md5Base64 enMd5Base64 = new Md5Base64();
-		dataDigest = Md5Base64.encode(dataDigest);
-		logger.debug("md5 + Base64:" + dataDigest);
-		dataDigest = Md5Base64.urlEncode(dataDigest);
-		logger.debug("md5 + Base64 > urlEncode:" + dataDigest);
-
-		logisticsInterface = Md5Base64.urlEncode(logisticsInterface);
-		logger.debug("logisticsInterface:" + logisticsInterface);
-
-		urlParameters = "logistics_interface=" + logisticsInterface + "&data_digest=" + dataDigest;
+		reqXml = Md5Base64.urlEncode(reqXml);
+		urlParameters = "xml=" + reqXml + "&verifyCode=" + verifyCode;
 
 		String returnValue = api.executePost(targetURL, urlParameters);
 		logger.debug("returnValue:" + returnValue);
@@ -387,10 +418,13 @@ public class SfDeliveryApi {
 			}
 			rd.close();
 			return response.toString();
+		} catch (UnknownHostException e) {
+			logger.error("發送失敗：" + e.getMessage());
+			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗</ERROR></Response>";
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		} finally {
+			logger.error("發送失敗：" + e.getMessage());
+			return "<Response><Head>ERR</Head><ERROR>電文傳送失敗</ERROR></Response>";
+		}finally {
 			if (connection != null) {
 				connection.disconnect();
 			}
@@ -400,7 +434,9 @@ public class SfDeliveryApi {
 	public static void main(String[] args) {
 		SfDeliveryApi api = new SfDeliveryApi();
 
-		// api.genOrderService();
+//		String reqXml = api.genOrderService();
+//		String resXml = api.sendXML(reqXml);
+//		api.getResponseObj(resXml);
 		// api.getResponseObj(ORDER_SERVICE_RESPONSE);
 		// api.getResponseObj(ORDER_SERVICE_ERR_RESPONSE);
 

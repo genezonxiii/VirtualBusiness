@@ -9,19 +9,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Cargo {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@XmlAttribute(name = "name")
 	private String name;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "count")
 	private String count;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "unit")
 	private String unit;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "weight")
 	private String weight;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "amount")
 	private String amount;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "currency")
 	private String currency;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "source_area")
 	private String source_area;
 
 	public String getName() {
