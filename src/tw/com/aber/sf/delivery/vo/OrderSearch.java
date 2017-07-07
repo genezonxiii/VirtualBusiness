@@ -10,15 +10,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class OrderSearch {
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute
-	private String orderId;
+	@XmlAttribute(name = "orderid")
+	private String orderid;
 
-	public String getOrderId() {
-		return orderId;
+	public String getOrderid() {
+		return orderid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public static long getSerialversionuid() {

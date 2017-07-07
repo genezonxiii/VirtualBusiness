@@ -9,11 +9,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RouteRequest {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@XmlAttribute(name = "tracking_type")
 	private String tracking_type;
-	@XmlAttribute
+
+	@XmlAttribute(name = "method_type")
 	private String method_type;
-	@XmlAttribute
+
+	@XmlAttribute(name = "tracking_number")
 	private String tracking_number;
 
 	public String getTracking_type() {

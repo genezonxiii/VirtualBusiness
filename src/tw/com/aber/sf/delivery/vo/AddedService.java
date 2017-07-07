@@ -10,9 +10,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AddedService {
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute
+	@XmlAttribute(name = "name")
 	private String name;
-	@XmlAttribute
+	@XmlAttribute(name = "value")
 	private String value;
 
 	public String getName() {

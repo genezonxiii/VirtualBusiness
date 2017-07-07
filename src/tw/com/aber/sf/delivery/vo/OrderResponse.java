@@ -9,23 +9,27 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrderResponse {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
-	private String orderId;
-	@XmlAttribute
+	@XmlAttribute(name = "orderid")
+	private String orderid;
+
+	@XmlAttribute(name = "mailno")
 	private String mailno;
-	@XmlAttribute
+
+	@XmlAttribute(name = "origincode")
 	private String origincode;
-	@XmlAttribute
+
+	@XmlAttribute(name = "destcode")
 	private String destcode;
-	@XmlAttribute
+
+	@XmlAttribute(name = "filter_result")
 	private String filter_result;
 
-	public String getOrderId() {
-		return orderId;
+	public String getOrderid() {
+		return orderid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public String getMailno() {

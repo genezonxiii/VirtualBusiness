@@ -9,13 +9,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Route {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@XmlAttribute(name="accept_time")
 	private String accept_time;
-	@XmlAttribute
+	
+	@XmlAttribute(name="accept_address")
 	private String accept_address;
-	@XmlAttribute
+	
+	@XmlAttribute(name="remark")
 	private String remark;
-	@XmlAttribute
+	
+	@XmlAttribute(name="opcode")
 	private String opcode;
 
 	public String getAccept_time() {
