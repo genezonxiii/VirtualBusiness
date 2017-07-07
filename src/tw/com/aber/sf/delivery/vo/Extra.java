@@ -10,45 +10,64 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Extra {
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute
+	@XmlAttribute(name = "e1")
 	private String e1;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e2")
 	private String e2;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e3")
 	private String e3;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e4")
 	private String e4;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e5")
 	private String e5;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e6")
 	private String e6;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e7")
 	private String e7;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e8")
 	private String e8;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e9")
 	private String e9;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e10")
 	private String e10;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e11")
 	private String e11;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e12")
 	private String e12;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e13")
 	private String e13;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e14")
 	private String e14;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e15")
 	private String e15;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e16")
 	private String e16;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e17")
 	private String e17;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e18")
 	private String e18;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e19")
 	private String e19;
-	@XmlAttribute
+	
+	@XmlAttribute(name = "e20")
 	private String e20;
 
 	public String getE1() {

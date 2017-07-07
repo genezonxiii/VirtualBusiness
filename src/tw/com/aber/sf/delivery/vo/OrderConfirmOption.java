@@ -9,9 +9,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OrderConfirmOption {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	
+	@XmlAttribute(name="weight")
 	private String weight;
-	@XmlAttribute
+	
+	@XmlAttribute(name="volume")
 	private String volume;
 
 	public String getWeight() {

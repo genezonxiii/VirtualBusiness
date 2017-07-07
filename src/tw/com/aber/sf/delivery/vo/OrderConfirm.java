@@ -13,12 +13,15 @@ import javax.xml.bind.annotation.XmlType;
 public class OrderConfirm {
 	private static final long serialVersionUID = 1L;
 
-	@XmlAttribute
-	private String orderId;
-	@XmlAttribute
+	@XmlAttribute(name = "orderid")
+	private String orderid;
+
+	@XmlAttribute(name = "mailno")
 	private String mailno;
-	@XmlAttribute
+
+	@XmlAttribute(name = "dealtype")
 	private String dealtype;
+	
 	@XmlElement(name = "OrderConfirmOption")
 	private OrderConfirmOption orderConfirmOption;
 
@@ -30,12 +33,12 @@ public class OrderConfirm {
 		this.orderConfirmOption = orderConfirmOption;
 	}
 
-	public String getOrderId() {
-		return orderId;
+	public String getOrderid() {
+		return orderid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 
 	public String getMailno() {

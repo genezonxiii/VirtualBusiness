@@ -12,11 +12,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "head", "error", "body" })
 public class Response {
 	private static final long serialVersionUID = 1L;
-	@XmlAttribute
+	@XmlAttribute(name = "service")
 	private String service;
 	@XmlElement(name = "Head")
     private String head;
-	@XmlElement(name = "Error")
+	@XmlElement(name = "ERROR")
 	private Error error;
 	@XmlElement(name = "Body")
 	private Body body;

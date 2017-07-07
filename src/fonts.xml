@@ -11,5 +11,15 @@
 			<export key="net.sf.jasperreports.xhtml">'標楷體', Arial, Helvetica, sans-serif</export>
 		</exportFonts>
 	</fontFamily>
+	
+	<fontFamily name="C39P36DmTt">
+		<normal>tw/com/aber/fonts/C39P36DmTt.ttf</normal>
+		<pdfEncoding>Identity-H</pdfEncoding>
+		<pdfEmbedded>true</pdfEmbedded>
+		<exportFonts>
+			<export key="net.sf.jasperreports.html">C39P36DmTt, Arial, Helvetica, sans-serif</export>
+			<export key="net.sf.jasperreports.xhtml">C39P36DmTt, Arial, Helvetica, sans-serif</export>
+		</exportFonts>
+	</fontFamily>
 
 </fontFamilies>
