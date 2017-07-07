@@ -146,10 +146,10 @@ function buildDialog(){
 							var type = selectedRadio.val();
 							var id = $('input[name="ec-radio-group"]:checked').attr("id");
 							var lab = $( "label[for='" + id + "']" );
-//							var left = ((lab.offset().left)+ (lab.width()*3/5))+'px';
-//							var top = (lab.offset().top)+'px';
-							var left =  lab.offset().left - lab.width()*1/2.2 +"px";
-							var top = $("#iconBtns").offset().top - lab.offset().top + 400 +'px';
+							var left =  lab.offset().left - lab.width()*1/2.2  +"px";
+							var top = 	$("#iconBtns").offset().top - lab.offset().top + 
+										$(".ec-radio-group-wrap").height() * ($(".ec-radio-group-wrap").length +1.5)
+										-5 +'px';
 							var hidden = $('#deliveryMethod');
 							
 							var img = document.createElement('IMG');
@@ -664,9 +664,10 @@ $(document).ready(function() {
 				var hidden = $('#deliveryMethod');
 				var id = $(this).attr('id');
 				var lab = $( "label[for='" + id + "']" );
-				var left =  lab.offset().left - lab.width()*1/2.2 +"px";
-				var top = $("#iconBtns").offset().top - lab.offset().top + 400 +'px';
-
+				var left =  lab.offset().left - lab.width()*1/2.2  +"px";
+				var top = 	$("#iconBtns").offset().top - lab.offset().top + 
+							$(".ec-radio-group-wrap").height() * ($(".ec-radio-group-wrap").length +1.5)
+							-5 +'px';
 				var img = document.createElement('IMG');
 				img.id = 'typeImg'
 				img.style.position = 'relative';
