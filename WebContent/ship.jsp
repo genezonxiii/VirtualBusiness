@@ -1065,6 +1065,7 @@
 		                    type: 'post',
 		                    data: {
 		                        action: 'SFDeliveryRouteService',
+		                        type: '1',
 		                        orderNos: orderNos
 		                    },
 			                beforeSend: function(){
@@ -1093,15 +1094,28 @@
 									var orderid = json_obj.body.routeResponse.orderid;
 									
 									var routes = json_obj.body.routeResponse.routes;
+									
+									if((orderid != null) && (mailno == null)){
+										text += ('訂單編號: '+ orderid + ' / 成功<br>') ;
+									}
+									
+									if((orderid != null) && (mailno != null)){
+										text += ('訂單編號: '+ orderid + ' / 託運單號: ' + mailno + ' / 成功<br>') ;
+									}
+									
+									if((orderid == null) && (mailno != null)){
+										text += ('託運單號: ' + mailno + ' / 成功<br>') ;
+									}
 
-									text += ('訂單編號: '+ orderid + ' / 託運單號: ' + mailno + ' / 成功<br>') ;
-									$.each(routes, function(index, item) {
-										var accept_time = item.accept_time;
-										var remark = item.remark;
-									text += '時間: '
-											+ accept_time + ' / 狀態: '
-											+ remark  + '<br>';
-									});
+									if(routes != null){
+										$.each(routes, function(index, item) {
+											var accept_time = item.accept_time;
+											var remark = item.remark;
+												text += '時間: '
+												+ accept_time + ' / 狀態: '
+												+ remark  + '<br>';
+										});
+									}
 								}
 		                        $mes.val('').html(text);
 		                        $('#message')
