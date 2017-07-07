@@ -222,11 +222,120 @@
 			<hr><h4>備註</h4>
 			<input type="text" name="comment">
 		</form>
+	</div> 
+	<!-- 黑貓對話窗-->
+	<div id="dialog-egs" style="display:none">
+		<form id ="dialog-egs-form">
+			<section>
+				<hr><h4>指定配達時段</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group" checked>
+						<label for="delivery-timezone-1">
+							<span class="form-label">9~12時</span>
+						</label>
+	          			<input id="delivery-timezone-2" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-2">
+							<span class="form-label">12~17時</span>
+	          			</label>
+	          			
+	          			<input id="delivery-timezone-3" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-3">
+							<span class="form-label">17~20時</span>
+	          			</label>
+	          			
+	          			<input id="delivery-timezone-4" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-4">
+							<span class="form-label">不限時</span>
+	          			</label>
+					</div>
+				</div>
+			</section>
+			<hr><h4>指定配達日期</h4>
+			<input type="text" name="delivery-date" class="self-date">
+			
+			<section>
+				<hr><h4>尺寸</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="package-size-0001" type="radio" name="package-size-radio-group" checked>
+						<label for="package-size-0001">
+							<span class="form-label">60cm</span>
+						</label>
+						
+	          			<input id="package-size-0002" type="radio" name="package-size-radio-group">
+	          			<label for="package-size-0002">
+							<span class="form-label">90cm</span>
+	          			</label>
+	          			
+	          			<input id="package-size-0003" type="radio" name="package-size-radio-group">
+	          			<label for="package-size-0003">
+							<span class="form-label">120cm</span>
+	          			</label>
+	          			
+	          			<input id="package-size-0004" type="radio" name="package-size-radio-group">
+	          			<label for="package-size-0004">
+							<span class="form-label">150cm</span>
+	          			</label>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<hr><h4>溫層</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="temperature-0001" type="radio" name="temperature-radio-group" checked>
+						<label for="temperature-0001">
+							<span class="form-label">常溫</span>
+						</label>
+						
+	          			<input id="temperature-0002" type="radio" name="temperature-radio-group">
+	          			<label for="temperature-0002">
+							<span class="form-label">冷藏</span>
+	          			</label>
+	          			
+	          			<input id="temperature-0003" type="radio" name="temperature-radio-group">
+	          			<label for="temperature-0003">
+							<span class="form-label">冷凍</span>
+	          			</label>
+
+					</div>
+				</div>
+			</section>
+						
+			<section>
+				<hr><h4>託運單類別</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group" checked>
+						<label for="waybill-type-A">
+							<span class="form-label">一般</span>
+						</label>
+	          			<input id="waybill-type-B" type="radio" name="waybill-type-radio-group">
+	          			<label for="waybill-type-B">
+							<span class="form-label">代收</span>
+	          			</label>
+	          			<!-- 報值先關起來
+	          			<input id="waybill-type-G" type="radio" name="waybill-type-radio-group">
+	          			<label for="waybill-type-G">
+							<span class="form-label">報值</span>
+	          			</label>
+	          			 -->
+					</div>
+				</div>
+			</section>
+			
+			<hr><h4>備註</h4>
+			<input type="text" name="comment">
+		</form>
 	</div>
 
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
+	<script type="text/javascript" src="js/buttons.colVis.min.js"></script>
+	
 	<script>
 	var $dtMaster = null; //主要datatable
 	var selectCount = 0; //全選按鈕計算用
@@ -1128,12 +1237,15 @@
 						});	
 		            }
 		        },{
-		            text: '傳送單筆託運單資料(黑貓)',
+		            text: '黑貓託運',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
 		            	var orders = new Map(); //儲存訂單
-		            	var ships = new Map(); //儲存訂單內容ship id
+		            	var productNames = '';
+		            	var shipIds = '';
+		            	var realsaleIds = '';
+		            	
 		                var cells = $dtMaster.cells().nodes();
 						var row;
 						var data;
@@ -1151,14 +1263,28 @@
 							data = $table.DataTable().row(row).data();
 							console.log(data);
 							orders.set( data.order_no, data.order_no );
-							ships.set( data.ship_id, data.ship_id );
+							productNames+= (','+ data.v_product_name);
+							shipIds += (','+ data.ship_id);
+							realsaleIds += ( ",'" + data.realsale_id + "'");
 						});
+						
+						if(realsaleIds.length != 0){
+							realsaleIds = realsaleIds.substring( 1, realsaleIds.length);
+						}
+						
+						if(productNames.length != 0){
+							productNames = productNames.substring( 1, productNames.length);
+						}
+
+						if(shipIds.length != 0){
+							shipIds = shipIds.substring( 1, shipIds.length);
+						}
 						
 						console.log('orders');
 						console.log(orders);
-						console.log('ships');
-						console.log(ships);
-						
+						console.log('productNames');
+						console.log(productNames);
+
 						if(orders.size> 1){
 							message = message.concat('以下為您所勾選的訂單↓<br><br>');
 							var table = document.createElement('table');
@@ -1187,11 +1313,12 @@
 									   dateFormat:"yy-mm-dd",
 									   changeYear: true,
 									   changeMonth: true,
-									   minDate : 0,
+									   minDate : 0
 									   };
-							$("#dialog-egs-form").find("input[name=delivary-date]" ).datepicker(opt);
-							
+							$("#dialog-egs-form").find("input[name=delivery-date]" ).datepicker(opt);
+							$("#dialog-egs-form").find("input[name=delivery-date]" ).val(new Date().toJSON().slice(0,10));
 							$('#dialog-egs').dialog({
+								autoOpen: false,
 								draggable : true,
 								resizable : false,
 								overflow: 'auto',
@@ -1205,25 +1332,33 @@
 												var timezone_type_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
 												var waybill_type_str = $("input[name='waybill-type-radio-group']:checked", '#dialog-egs-form').attr("id");
 												var temperature_str = $("input[name='temperature-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var package_size_str = $("input[name='package-size-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var delivery_timezone_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
+												
 												
 												console.log('timezone_type_str: ' + timezone_type_str);
 												console.log('waybill_type_str: ' + waybill_type_str);
 												console.log('temperature_str: ' + temperature_str);
-												
-												
+
 								                $.ajax({
 								                    url: 'Egs.do',
 								                    type: 'post',
 								                    data: {
-								                        //action: 'test_delivery_timezone',
 								                        action: 'transfer_waybill',
+					 			                        orderNo: data.order_no,
 								                        realsale_id: data.realsale_id,
 					 			                        receiver_name: data.deliver_name,
 								                        receiver_address: data.deliver_to,
 								                        service_type: timezone_type_str.substring( timezone_type_str.length, timezone_type_str.length -1 ),
 								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 ),
 								                        temperature : temperature_str.substring( temperature_str.length, temperature_str.length -1 ),
-								                        comment : $("input[name='comment']", '#dialog-egs-form').val()
+								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -1 ),
+								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
+								                        delivery_date : $("#dialog-egs-form input[name='delivery-date']").val(),
+								                        comment : $("input[name='comment']", '#dialog-egs-form').val(),
+								                        product_name : productNames,
+								                        shipIds : shipIds,
+								                        realsaleIds : realsaleIds
 								                    },
 									                beforeSend: function(){
 								                		 $(':hover').css('cursor','progress');
@@ -1233,6 +1368,30 @@
 									                },
 								                    error: function(xhr) {},
 								                    success: function(response) {
+								                    	
+								                    	console.log('response: '+ response);
+								                    	var json_obj = $.parseJSON(response);
+								                    	var text = '';
+								                    	
+														$("#dialog-egs-form").trigger("reset");
+														$('#dialog-egs').dialog("close");
+
+														if(json_obj.status == 'OK'){
+															text = '傳送託運單: 成功 / 託運單號碼: '+ json_obj.tracking_number;
+														}else{
+															text = '傳送託運單: 失敗';
+															if(json_obj.message.length!=0){
+																text += (' / 訊息: ' + json_obj.message );
+															}
+														}
+														var $mes = $('#message #text');
+								                        $mes.val('').html(text);
+								                        $('#message')
+								                            .dialog()
+								                            .dialog('option', 'title', '訊息')
+								                            .dialog('option', 'width', 'auto')
+								                            .dialog('option', 'minHeight', 'auto')
+								                            .dialog("open");
 								                    }
 												});													
 											}
@@ -1247,28 +1406,7 @@
 									$("#dialog-egs-form").trigger("reset");
 								}
 							});
-							
-// 			                $.ajax({
-// 			                    url: 'Egs.do',
-// 			                    type: 'post',
-// 			                    data: {
-// 			                        action: 'transfer_waybill',
-// 			                        orderNo: data.order_no,
-// 			                        receiver_name: data.deliver_name,
-// 			                        receiver_address: data.deliver_to,
-// 			                        shipId: data.ship_id,
-// 			                        realShipId: data.realsale_id
-// 			                    },
-// 				                beforeSend: function(){
-// 			                		 $(':hover').css('cursor','progress');
-// 				                },
-// 				                complete: function(){
-// 			                		 $(':hover').css('cursor','default');
-// 				                },
-// 			                    error: function(xhr) {},
-// 			                    success: function(response) {
-// 			                    }
-// 							});								
+							$( "#dialog-egs" ).dialog( "option", "height", 530 ).dialog( 'open' );			
 						}
 		            }
 		        }
