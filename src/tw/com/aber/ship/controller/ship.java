@@ -316,6 +316,8 @@ public class ship extends HttpServlet {
 				response.getWriter().write(result);
 			} else if ("SFDeliveryRouteService".equals(action)) {
 				String orderNos = request.getParameter("orderNos");
+				
+				//前端參數控制後端傳遞 1:託運單號 2:訂單號
 				String type = request.getParameter("type");
 
 				SfDeliveryApi api = new SfDeliveryApi();
