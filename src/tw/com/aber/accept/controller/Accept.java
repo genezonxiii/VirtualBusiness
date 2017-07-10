@@ -78,8 +78,11 @@ public class Accept  extends HttpServlet {
 				List<AcceptVO> acceptVOList=acceptService.getAcceptVOListByAcceptDate(groupId, startDate, endDate);
 				
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				Map<String, Object> map = new HashMap<>();
+				//map.put("msg", "有問題");
+				map.put("acceptVOList", acceptVOList);
 
-				result = gson.toJson(acceptVOList);
+				result = gson.toJson(map);
 				
 				response.getWriter().write(result);
 			} else if ("getAcceptdetailVOListByAcceptId".equals(action)) {
@@ -130,6 +133,7 @@ public class Accept  extends HttpServlet {
 
 				// 取值
 				String acceptDetail_id = request.getParameter("acceptDetail_id");
+				String accept_id = request.getParameter("accept_id");
 				String location_id = request.getParameter("location_id");
 				String accept_qty_str = request.getParameter("accept_qty");
 				Integer accept_qty = null;
@@ -151,6 +155,10 @@ public class Accept  extends HttpServlet {
 				}
 				if (accept_qty < 0) {
 					response.getWriter().write("數量不可為0");
+					return;
+				}
+				if (acceptService.checkAccept(groupId,accept_id) ) {
+					response.getWriter().write("已轉入庫存，不可刪除！");
 					return;
 				}
 
@@ -199,6 +207,10 @@ public class Accept  extends HttpServlet {
 				// 驗證
 				if (acceptDetail_id == "" || acceptDetail_id == null) {
 					response.getWriter().write("error");
+					return;
+				}
+				if (acceptService.checkAccept(groupId,accept_id) ) {
+					response.getWriter().write("已轉入庫存，不可刪除！");
 					return;
 				}
 
@@ -290,8 +302,8 @@ public class Accept  extends HttpServlet {
 		public Boolean importDataToStock(String groupId,String userId ,String acceptIds) {
 			return dao.importDataToStock( groupId, userId , acceptIds);
 		}
-		public Boolean checkAccept(String group_id, String purchase_id) {
-			return dao.checkAccept(group_id, purchase_id);
+		public Boolean checkAccept(String group_id, String accept_id) {
+			return dao.checkAccept(group_id, accept_id);
 		}
 		
 	}
@@ -305,7 +317,7 @@ public class Accept  extends HttpServlet {
 		String deleteAcceptByAccept_id(String groupId, String acceptId);
 		Boolean deleteAcceptDetailByAcceptDetail_id(String groupId, String acceptDetail);
 		Boolean importDataToStock(String groupId,String userId ,String acceptIds);
-		public Boolean checkAccept(String group_id, String purchase_id);
+		public Boolean checkAccept(String group_id, String accept_id);
 	}							 
 	
 	class AcceptDAO implements Accept_interface {
@@ -839,7 +851,7 @@ public class Accept  extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_check_accept);
 				pstmt.setString(1, group_id);
-				pstmt.setString(1, accept_id);
+				pstmt.setString(2, accept_id);
 				rs = pstmt.executeQuery();
 				if (rs.next()) {
 					stock_flag = rs.getBoolean("stock_flag");
