@@ -293,6 +293,7 @@ input[type="number"] {
 	                                data: {
 	                                    action: "upDateAcceptDetail",
 	                                    acceptDetail_id: $("#hidAcceptDetail_id").val(),
+	                                    accept_id: $("#hidAccept_id").val(),   
 	                                    location_id: $("#dialog-form-update select[name='dialog_v_location_code']").val(),
 	                                    accept_qty: $("#dialog_accept_qty").val()
 	                                },
@@ -405,10 +406,16 @@ input[type="number"] {
 	                'margin-left': '10px'
 	            });
 	            $('div .dt-buttons a').css('margin-left', '10px');
+	            
+	            if(json.msg!=null){
+	            	alert(json.msg);
+	            }
+	          
+	           // alert(json);
 	        },
 	        ajax: {
 	            url: "Accept.do",
-	            dataSrc: "",
+	            dataSrc: "acceptVOList",
 	            type: "POST",
 	            data: parameter
 	        },
@@ -639,7 +646,6 @@ input[type="number"] {
 	            type: "POST",
 	            data: parameter
 	        },
-
 	        columns: [{
 	            "title": "產品編號",
 	            "data": "c_product_id",
@@ -789,7 +795,11 @@ input[type="number"] {
             delay: 1500,
             data: parameter,
             success: function(data) {
-            	dialogMsg("提示", data);
+            	if(data=='success'){
+            	  	dialogMsg("提示", '執行成功');
+            	}else{
+                    	dialogMsg("提示", data);
+            	}
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
             	dialogMsg("提示", '刪除失敗');
@@ -857,6 +867,7 @@ input[type="number"] {
 				"確認刪除" : function() {
 					parameter={
 						action : "detailDeleteByAcceptDetail_id",
+						accept_id: $("#hidAccept_id").val(),
 						acceptDetail_id :  delete_value
 					};
 					deleteAjax(parameter);

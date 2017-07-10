@@ -894,7 +894,7 @@ public class purchase extends HttpServlet {
 		private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
 		private static final String sp_get_purchases_by_purchase_ids = "call sp_get_purchases_by_purchase_ids(?,?)";
-		private static final String sp_sp_import_Data_tb_accept = "call sp_import_Data_tb_accept(?,?,?)";
+		private static final String sp_import_Data_tb_accept = "call sp_import_Data_tb_accept(?,?,?)";
 		private static final String sp_check_purchase = "call sp_check_purchase(?)";
 		private static final String sp_check_account_payable = "call sp_check_account_payable(?,?)";
 
@@ -1796,7 +1796,7 @@ public class purchase extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_sp_import_Data_tb_accept);
+				pstmt = con.prepareStatement(sp_import_Data_tb_accept);
 
 				for (int i = 0; i < PurchaseIdArr.length; i++) {
 					pstmt.setString(1, group_id);
