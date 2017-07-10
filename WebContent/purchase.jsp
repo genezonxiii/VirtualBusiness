@@ -19,6 +19,7 @@
 <style type="text/css">
 	.warning_msg{
 		position:relative;
+		margin-left: 100px;
 		height:0px;
  		padding-top:0px ! important; 
 		top:20px;
@@ -75,6 +76,10 @@ function draw_purchase(parameter){
 						dialogMsg("提示", item.note);
 					}
 				});
+				if(json_obj[resultRunTime-1].message=="already_paid"){
+					dialogMsg('提示','已付款，資料不可刪除！');
+				}
+
 				if(json_obj[resultRunTime-1].message=="驗證通過"){
 					var result_table = "";
 					$.each(json_obj,function(i, item) {
@@ -144,7 +149,7 @@ function draw_purchase(parameter){
 				}
 				var table = $("#purchases").dataTable().fnDestroy();
 
-				if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
+				if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"||resultRunTime!=0&&json_obj[resultRunTime-1].message=="already_paid"){
 					$("#purchases_contain_row").hide();
 					$("#purchases tbody").html(result_table);
 					$dtMaster = $("#purchases").dataTable({
@@ -785,7 +790,7 @@ function draw_purchase_detail(parameter){
 	 							action : "update",
 	 							purchase_id : uuid,
 	 							seq_no :seqNo,
-								supply_id : supply_id,
+								supply_id :  $("#hidSupplyId").val(),
 								supply_name : $("#dialog-form-update input[name='supply_id']").val(),
 								memo : $("#dialog-form-update input[name='memo']").val(),
 								purchase_date : $("#dialog-form-update input[name='purchase_date']").val(),
@@ -849,6 +854,8 @@ function draw_purchase_detail(parameter){
 											tmp=result;
 										}
 									});
+									
+									$("#hidSupplyId").val(json_obj[i].supply_id);
 									$("#dialog-form-update input[name='supply_id']").val(tmp);
 									$("#update_select_invoice_type").val(json_obj[i].invoice_type);
 									$("#dialog-form-update input[name='memo']").val(json_obj[i].memo);
@@ -1481,6 +1488,7 @@ function draw_purchase_detail(parameter){
 						
 					</fieldset>
 				</form>
+				<input type="hidden" id=hidSupplyId value=''> 
 			</div>
 			<!--對話窗樣式-detail-修改 -->
 			<div id="detail_dialog_form_update" title="修改明細資料" style="display:none;">

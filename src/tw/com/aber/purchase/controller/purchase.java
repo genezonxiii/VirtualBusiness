@@ -113,14 +113,21 @@ public class purchase extends HttpServlet {
 				purchaseService = new PurchaseService();
 				
 				Map<String, Object> map = new HashMap<>();
-				if (!purchaseService.checkPurchase(purchase_id)) {
-					//未轉入驗收
-					purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id,
-							product_name, quantity, cost, memo);
-				} else {
-					map.put("note", "已轉入驗收，明細資料不可新增！");
-				}
 				
+				
+				if (!purchaseService.checkAccountPayable(group_id, purchase_id)) {
+					//未付款
+					if (!purchaseService.checkPurchase(purchase_id)) {
+						//未轉入驗收
+						purchaseService.addPurchaseDetail(purchase_id, group_id, user_id, product_id, c_product_id,
+								product_name, quantity, cost, memo);
+					} else {
+						map.put("note", "已轉入驗收，明細資料不可新增！");
+					}
+				} else {
+					map.put("note", "已付款，明細資料不可新增！");
+				}
+
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
 				map.put("detail", list);
 
@@ -138,16 +145,22 @@ public class purchase extends HttpServlet {
 				String purchase_id = request.getParameter("purchase_id");
 
 				logger.debug("purchaseDetail_id:" + purchaseDetail_id);
-				
+
 				purchaseService = new PurchaseService();
 				Map<String, Object> map = new HashMap<>();
-				if (!purchaseService.checkPurchase(purchase_id)) {
-					//未轉入驗收
-					purchaseService.deletePurchaseDetail(purchaseDetail_id);
+
+				if (!purchaseService.checkAccountPayable(group_id, purchase_id)) {
+					//未付款
+					if (!purchaseService.checkPurchase(purchase_id)) {
+						// 未轉入驗收
+						purchaseService.deletePurchaseDetail(purchaseDetail_id);
+					} else {
+						map.put("note", "已轉入驗收，明細資料不可刪除！");
+					}
 				} else {
-					map.put("note", "已轉入驗收，明細資料不可刪除！");
+					map.put("note", "已付款，明細資料不可刪除！");
 				}
-				
+
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
 				map.put("detail", list);
 
@@ -190,13 +203,22 @@ public class purchase extends HttpServlet {
 				
 				purchaseService = new PurchaseService();
 				Map<String, Object> map = new HashMap<>();
-				if (!purchaseService.checkPurchase(purchase_id)) {
-					//未轉入驗收
-					purchaseService.updatePurchaseDetail(purchaseDetail_id, purchase_id, group_id, user_id, product_id,
-							c_product_id, product_name, quantity, cost, memo);
+				
+				if (!purchaseService.checkAccountPayable(group_id, purchase_id)) {
+					//未付款
+					if (!purchaseService.checkPurchase(purchase_id)) {
+						// 未轉入驗收
+						purchaseService.updatePurchaseDetail(purchaseDetail_id, purchase_id, group_id, user_id,
+								product_id, c_product_id, product_name, quantity, cost, memo);
+					} else {
+						map.put("note", "已轉入驗收，明細資料不可修改！");
+					}
 				} else {
-					map.put("note", "已轉入驗收，明細資料不可修改！");
+					map.put("note", "已付款，明細資料不可修改！");
 				}
+				
+				
+				
 				
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
 				map.put("detail", list);
@@ -259,22 +281,32 @@ public class purchase extends HttpServlet {
 				 * 1.接收請求參數
 				 ***************************************/
 				String purchase_id = request.getParameter("purchase_id");
+				List<PurchaseVO> salelist = null;
 				logger.debug("purchase_id:" + purchase_id);
-				
-				/***************************
-				 *2.開始刪除資料
-				 ***************************************/
 				purchaseService = new PurchaseService();
-				String result = purchaseService.deletePurchase(purchase_id, user_id);
-				/***************************
-				 *3.刪除完成,準備轉交(Send the Success view)
-				 ***********/
-				purchaseService = new PurchaseService();
-				List<PurchaseVO> salelist = purchaseService.getSearchAllDB(group_id);
-				PurchaseVO purchaseVO = new PurchaseVO();
-				purchaseVO.setMessage("驗證通過");
-				purchaseVO.setNote(result);
-				salelist.add(purchaseVO);
+
+				if (!purchaseService.checkAccountPayable(group_id, purchase_id)) {
+					// 未付款
+
+					/***************************
+					 * 2.開始刪除資料
+					 ***************************************/
+					String result = purchaseService.deletePurchase(purchase_id, user_id);
+					/***************************
+					 * 3.刪除完成,準備轉交(Send the Success view)
+					 ***********/
+					purchaseService = new PurchaseService();
+					salelist = purchaseService.getSearchAllDB(group_id);
+					PurchaseVO purchaseVO = new PurchaseVO();
+					purchaseVO.setMessage("驗證通過");
+					purchaseVO.setNote(result);
+					salelist.add(purchaseVO);
+				} else {
+					PurchaseVO purchaseVO = new PurchaseVO();
+					purchaseVO.setMessage("already_paid");
+					salelist = purchaseService.getSearchAllDB(group_id);
+					salelist.add(purchaseVO);
+				}
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String jsonStrList = gson.toJson(salelist);
 				response.getWriter().write(jsonStrList);
@@ -433,14 +465,21 @@ public class purchase extends HttpServlet {
 				PurchaseVO purchaseVO = new PurchaseVO();
 				purchaseVO.setMessage("驗證通過");
 				
-				if (!purchaseService.checkPurchase(purchase_id)) {
-					//未轉入驗收
-					purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date,
-							invoice, invoice_type, amount);
-				} else {
-					purchaseVO.setNote("已轉入驗收，資料不可修改！");
-				}
 				
+				
+				if (!purchaseService.checkAccountPayable(group_id, purchase_id)) {
+					//未付款
+					if (!purchaseService.checkPurchase(purchase_id)) {
+						//未轉入驗收
+						purchaseService.updatePurchase(purchase_id, seq_no, group_id, user_id, supply_id, memo, purchase_date,
+								invoice, invoice_type, amount);
+					} else {
+						purchaseVO.setNote("已轉入驗收，資料不可修改！");
+					}
+				} else {
+					purchaseVO.setNote("已付款，資料不可修改！");
+				}
+
 				List<PurchaseVO> resultNameList = purchaseService.getSearchDB(group_id, supply_name);
 				resultNameList.add(purchaseVO);
 
@@ -703,6 +742,8 @@ public class purchase extends HttpServlet {
 		public List<PurchaseVO> getPurchasesByPurchaseIDs(String group_id,String purchase_ids);
 		
 		public Boolean checkPurchase(String purchase_id);
+		
+		public Boolean checkAccountPayable(String group_id,String purchase_id);
 	}
 
 	class PurchaseService {
@@ -762,6 +803,10 @@ public class purchase extends HttpServlet {
 		
 		public Boolean checkPurchase(String purchase_id) {
 			return dao.checkPurchase(purchase_id);
+		}
+		
+		public Boolean checkAccountPayable(String group_id,String purchase_id){
+			return dao.checkAccountPayable(group_id,purchase_id);
 		}
 
 		public PurchaseVO addPurchase(String seq_no, String group_id, String user_id, String supply_id, String memo,
@@ -851,6 +896,7 @@ public class purchase extends HttpServlet {
 		private static final String sp_get_purchases_by_purchase_ids = "call sp_get_purchases_by_purchase_ids(?,?)";
 		private static final String sp_sp_import_Data_tb_accept = "call sp_import_Data_tb_accept(?,?,?)";
 		private static final String sp_check_purchase = "call sp_check_purchase(?)";
+		private static final String sp_check_account_payable = "call sp_check_account_payable(?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -1829,6 +1875,51 @@ public class purchase extends HttpServlet {
 			
 			return accept_flag;
 		}
+
+		@Override
+		public Boolean checkAccountPayable(String group_id, String purchase_id) {
+			
+			Boolean flag = false;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_check_account_payable);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, purchase_id);
+				rs = pstmt.executeQuery();
+				if (rs.next()) {
+					flag = rs.getBoolean("flag");
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+				// Clean up JDBC resources
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			
+			return flag;
+		}
+
+
 
 	}
 }
