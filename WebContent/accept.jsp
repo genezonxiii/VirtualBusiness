@@ -648,6 +648,7 @@ input[type="number"] {
 	            url: "Accept.do",
 	            dataSrc: "",
 	            type: "POST",
+	            delay: 1500,
 	            data: parameter
 	        },
 	        columns: [{
