@@ -224,7 +224,6 @@ input[type="number"] {
 	                $("#dialog_warehouse_code").empty();
 	                $("#dialog_v_warehouse_name").empty();
 	                $("#dialog_v_location_code").empty();
-	                console.log("json_obj.warehouseVOList:" + json_obj.warehouseVOList);
 	                $.map(json_obj.warehouseVOList, function(item) {
 	                    if (item.warehouse_code != '' && ('undefined' != typeof(item.warehouse_code))) {
 	                        $("#dialog_warehouse_code").append("<option value='" + item.warehouse_code + "'>" + item.warehouse_code + "</option>");
@@ -417,6 +416,7 @@ input[type="number"] {
 	            url: "Accept.do",
 	            dataSrc: "acceptVOList",
 	            type: "POST",
+	            delay: 1500,
 	            data: parameter
 	        },
 	        columns: [{
@@ -644,6 +644,7 @@ input[type="number"] {
 	            url: "Accept.do",
 	            dataSrc: "",
 	            type: "POST",
+	            delay: 1500,
 	            data: parameter
 	        },
 	        columns: [{
@@ -792,7 +793,6 @@ input[type="number"] {
             url: "Accept.do",
             type: "POST",
             cache: false,
-            delay: 1500,
             data: parameter,
             success: function(data) {
             	if(data=='success'){
@@ -876,7 +876,9 @@ input[type="number"] {
                       action: "getAcceptdetailVOListByAcceptId",
                       accept_id: $("#hidAccept_id").val()        
 				    };
-					drawDetailTable(parameter);
+		
+					setTimeout(function(){ drawDetailTable(parameter) 
+						}, 500);
 					$(this).dialog("close");
 			
 					
