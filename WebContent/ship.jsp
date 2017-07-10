@@ -1065,7 +1065,7 @@
 		                    type: 'post',
 		                    data: {
 		                        action: 'SFDeliveryRouteService',
-		                        type: '1',
+		                        type: '1',//前端參數控制後端傳遞 1:託運單號 2:訂單號
 		                        orderNos: orderNos
 		                    },
 			                beforeSend: function(){
