@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "Header")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "warehouseCode", "erpOrder", "shipmentId", "receiptId", 
+		"wayBillNo", 
 		"erpOrderType", "closeDate", "status", "skuNo", "inventoryStatus", 
 		"lot", "expirationDate", 
 		"totalQty", "onHandQty", "availableQty", "inTransitQty",
@@ -29,6 +30,8 @@ public class Header {
 	private String status;
 	@XmlElement(name = "ShipmentId")
 	private String shipmentId;
+	@XmlElement(name = "WayBillNo")
+	private String wayBillNo;
 
 	@XmlElement(name = "SkuNo")
 	private String skuNo;
