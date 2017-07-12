@@ -638,7 +638,7 @@
 												}
 												
 												if (value.result == 1) {
-													msg += "訂單編號：" + value.erpOrder + "/" + value.header.shipmentId + "/" + 
+													msg += "訂單編號：" + value.erpOrder + "/" + value.header.wayBillNo + "/" + 
 													value.header.dataStatus + "<br/>" + tmp_item_list + "<br/>";
 												} else {
 													msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
