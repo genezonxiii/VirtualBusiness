@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "invoiceCode", "functionCode", "reply", "errorCode", "message","posDatas",
 		"verionUpdate", "sellerId","posId", "posSn", "appVserion", "sysTime", "invoiceData",
-		"userId", "taxMonth", "invoiceHeader", "invoiceStart","invoiceEnd", "invoiceNumber",
+		"userId", "taxMonth", "type", "invoiceHeader", "invoiceStart","invoiceEnd", "invoiceNumber",
 		"invoiceDate", "security", "sellDetail", "ckeckSum" })
 
 public class Index {
@@ -155,6 +155,12 @@ public class Index {
 	 */
 	@XmlElement(name = "ERROR_CODE")
 	private String errorCode;
+	
+	/*
+	 * A01
+	 */
+	@XmlElement(name = "TYPE")
+	private String type;
 
 	public List<InvoiceData> getInvoiceData() {
 		return invoiceData;
@@ -334,6 +340,14 @@ public class Index {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 }

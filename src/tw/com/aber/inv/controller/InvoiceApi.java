@@ -1,11 +1,14 @@
 package tw.com.aber.inv.controller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -16,9 +19,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,8 +29,6 @@ import tw.com.aber.inv.vo.B;
 import tw.com.aber.inv.vo.Index;
 import tw.com.aber.inv.vo.Invoice;
 import tw.com.aber.inv.vo.InvoiceData;
-import tw.com.aber.sftransfer.controller.Md5Base64;
-import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.SaleVO;
 
@@ -45,13 +43,13 @@ public class InvoiceApi {
 		String result = null;
 		Index index = new Index();
 
-		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String setSysTime = dt.format(new Date());
 
 		index.setFunctionCode("A01");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -102,7 +100,7 @@ public class InvoiceApi {
 		invoice.setInvoiceCode("A02");
 		invoice.setSellerId("20939790");
 		invoice.setPosId("1");
-		invoice.setPosSn("8220ceffab2327860856");
+		invoice.setPosSn("9dcd1bbf10201d542698");
 		invoice.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -168,7 +166,7 @@ public class InvoiceApi {
 		index.setInvoiceCode("A03");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		InvoiceData invoiceData1 = new InvoiceData();
@@ -235,10 +233,10 @@ public class InvoiceApi {
 		SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 		String setSysTime = dt.format(new Date());
 
-		invoice.setInvoiceCode("A03");
+		invoice.setInvoiceCode("A04");
 		invoice.setSellerId("20939790");
 		invoice.setPosId("1");
-		invoice.setPosSn("8220ceffab2327860856");
+		invoice.setPosSn("9dcd1bbf10201d542698");
 		invoice.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -262,7 +260,7 @@ public class InvoiceApi {
 		index.setFunctionCode("B01");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		index.setTaxMonth("10606");
@@ -292,7 +290,7 @@ public class InvoiceApi {
 		index.setFunctionCode("C01");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		index.setTaxMonth("10606");
@@ -322,7 +320,7 @@ public class InvoiceApi {
 		invoice.setInvoiceCode("C02");
 		invoice.setSellerId("20939790");
 		invoice.setPosId("1");
-		invoice.setPosSn("8220ceffab2327860856");
+		invoice.setPosSn("9dcd1bbf10201d542698");
 		invoice.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -346,7 +344,7 @@ public class InvoiceApi {
 		index.setInvoiceCode("C03");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		InvoiceData invoiceData1 = new InvoiceData();
@@ -394,7 +392,7 @@ public class InvoiceApi {
 		invoice.setInvoiceCode("C04");
 		invoice.setSellerId("20939790");
 		invoice.setPosId("1");
-		invoice.setPosSn("8220ceffab2327860856");
+		invoice.setPosSn("9dcd1bbf10201d542698");
 		invoice.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -418,7 +416,7 @@ public class InvoiceApi {
 		index.setFunctionCode("Y01");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -442,7 +440,7 @@ public class InvoiceApi {
 		index.setInvoiceCode("D01");
 		index.setSellerId("20939790");
 		index.setPosId("1");
-		index.setPosSn("8220ceffab2327860856");
+		index.setPosSn("9dcd1bbf10201d542698");
 		index.setSysTime(setSysTime);
 
 		StringWriter sw = new StringWriter();
@@ -460,9 +458,9 @@ public class InvoiceApi {
 		String result = null;
 		Invoice invoice = new Invoice();
 
-		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-mm-dd");
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm:ss");
-		SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
 		String ymd = dt1.format(date);
 		String hms = dt2.format(date);
@@ -482,7 +480,7 @@ public class InvoiceApi {
 		invoice.setA21("");// 核准號
 		invoice.setA22("07");// 發票類別
 		invoice.setA24("0");// 捐贈註記
-		invoice.setA28("N");// 紙本電子發票已列印標記
+		invoice.setA28("Y");// 紙本電子發票已列印標記
 		invoice.setA30(PINString);// 發票防偽隨機碼
 
 		List<B> bList = new ArrayList<B>();
@@ -504,15 +502,15 @@ public class InvoiceApi {
 
 			c1 = multiplyNum.divide(new BigDecimal("1.05"), 0, BigDecimal.ROUND_HALF_DOWN);
 
-			c1Total.add(c1);
-			sum.add(multiplyNum);
+			c1Total = c1Total.add(c1);
+			sum = sum.add(multiplyNum);
 
 			b = new B();
 			b.setB1(String.valueOf(i + 1));// 商品項目資料
 			b.setB2(saleVOs.get(i).getProduct_name());// 品名
 			b.setB3(String.valueOf(saleVOs.get(i).getQuantity()));// 數量
-			b.setB5(String.valueOf(saleVOs.get(i).getPrice()));// 單價
-			b.setB6(String.valueOf(sum));// 金額
+			b.setB5(String.valueOf(saleVOs.get(i).getPrice().intValue()));// 單價
+			b.setB6(String.valueOf(multiplyNum));// 金額
 			b.setB7(String.valueOf(i + 1));// 明細排列序號
 			bList.add(b);
 		}
@@ -525,6 +523,13 @@ public class InvoiceApi {
 		invoice.setC5("0.05");// 稅率
 		invoice.setC6(String.valueOf(sum.subtract(c1Total)));// 營業稅額
 		invoice.setC7(String.valueOf(sum));// 總計
+		
+		//買方統編有填寫
+		if(true){
+			invoice.setC1(String.valueOf(sum));// 應稅銷售額合計(新台幣)
+			invoice.setC6("0");
+			invoice.setC7(String.valueOf(sum));// 總計
+		}
 
 		invoice.setD1(groupVO.getGroup_unicode());// seller識別碼(統一編號)
 		invoice.setD2(groupVO.getInvoice_key());// sellerPOSSN(POS機出廠序號)(通道金鑰)
@@ -546,7 +551,7 @@ public class InvoiceApi {
 		String urlParameters = "";
 
 		urlParameters = reqXml;
-
+		
 		String returnValue = InvoiceApi.executePost(targetURL, urlParameters);
 		logger.debug("returnValue:" + returnValue);
 		return returnValue;
@@ -564,16 +569,16 @@ public class InvoiceApi {
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
 			connection.setRequestProperty("Content-Length", Integer.toString(urlParameters.getBytes().length));
 			connection.setRequestProperty("Content-Language", "zh-TW");
-
 			connection.setUseCaches(false);
 			connection.setDoOutput(true);
 
 			// Send request
 			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-			wr.writeBytes(urlParameters);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
+			writer.write(urlParameters);
+			writer.close();
 			wr.close();
 
 			// Get Response

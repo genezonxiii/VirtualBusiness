@@ -349,7 +349,7 @@ public class sale extends HttpServlet {
 					InvoiceApi api = new InvoiceApi();
 
 					// TODO 撈取發票號碼
-					String invoiceNum = "GV123456789";
+					String invoiceNum = "TT16662000";
 
 					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
 					String resXml = api.sendXML(reqXml);
