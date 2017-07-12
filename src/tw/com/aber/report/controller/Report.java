@@ -43,10 +43,6 @@ public class Report extends HttpServlet {
 		if (request.getSession().getAttribute("group_id") == null) {
 			return;
 		}
-<<<<<<< HEAD
-=======
-
->>>>>>> ccd9000d4058cca371152de02324cf364d5b5561
 		HashMap<String, Object> hm = null;
 
 		String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
