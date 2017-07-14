@@ -614,7 +614,7 @@
 		<servlet-name>StockTake</servlet-name>
 		<url-pattern>/StockTake.do</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>Warehouse</servlet-name>
 		<servlet-class>tw.com.aber.warehouse.controller.Warehouse</servlet-class>
@@ -622,6 +622,15 @@
 	<servlet-mapping>
 		<servlet-name>Warehouse</servlet-name>
 		<url-pattern>/Warehouse.do</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Location</servlet-name>
+		<servlet-class>tw.com.aber.location.controller.Location</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Location</servlet-name>
+		<url-pattern>/Location.do</url-pattern>
 	</servlet-mapping>
 	
 
