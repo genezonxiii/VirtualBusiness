@@ -8,6 +8,11 @@ public class LocationVO {
 	private String location_code;
 	private String location_desc;
 	private String location_memo;
+	
+	private String v_warehouse_code;
+	private String v_warehouse_name;
+	private String v_warehouse_locate;
+	private String v_sf_warehouse_code;
 	private WarehouseVO warehouseVO;
 	
 	public String getLocation_id() {
@@ -46,11 +51,37 @@ public class LocationVO {
 	public void setLocation_memo(String location_memo) {
 		this.location_memo = location_memo;
 	}
+	public String getV_warehouse_code() {
+		return v_warehouse_code;
+	}
+	public void setV_warehouse_code(String v_warehouse_code) {
+		this.v_warehouse_code = v_warehouse_code;
+	}
+	public String getV_warehouse_name() {
+		return v_warehouse_name;
+	}
+	public void setV_warehouse_name(String v_warehouse_name) {
+		this.v_warehouse_name = v_warehouse_name;
+	}
+	public String getV_warehouse_locate() {
+		return v_warehouse_locate;
+	}
+	public void setV_warehouse_locate(String v_warehouse_locate) {
+		this.v_warehouse_locate = v_warehouse_locate;
+	}
+	public String getV_sf_warehouse_code() {
+		return v_sf_warehouse_code;
+	}
+	public void setV_sf_warehouse_code(String v_sf_warehouse_code) {
+		this.v_sf_warehouse_code = v_sf_warehouse_code;
+	}
 	public WarehouseVO getWarehouseVO() {
 		return warehouseVO;
 	}
 	public void setWarehouseVO(WarehouseVO warehouseVO) {
 		this.warehouseVO = warehouseVO;
 	}
+	
+
 
 }
