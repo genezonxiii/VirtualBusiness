@@ -933,6 +933,79 @@
 		                    }
 						});	
 		            }
+		        },{
+		            text: '查詢EGS資訊',
+		            action: function(e, dt, node, config) {
+
+ 		                $.ajax({
+		                    url: 'Egs.do',
+		                    type: 'post',
+		                    data: {
+		                        action: 'query_egs_info'
+		                    },
+			                beforeSend: function(){
+		                		 $(':hover').css('cursor','progress');
+			                },
+			                complete: function(){
+		                		 $(':hover').css('cursor','default');
+			                },
+		                    error: function(xhr) {},
+		                    success: function(response) {
+		                    }
+						});	
+		            }
+		        },{
+		            text: '查詢地址對應的速達五碼郵遞區號',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
+
+		            	var addressMap = new Map();
+		            	var addresses = '';
+		                var cells = $dtMaster.cells().nodes();
+						var row;
+						var data;
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+		                
+						$checkboxs.each(function(index) {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							addressMap.set( data.deliver_to, index );
+						});
+						console.log(addressMap);
+
+		                if (addressMap.size > 200) {
+		                    alert('目前已有'+ addressMap.size + '筆地址，最大200筆的上限限制');
+		                    return false;
+		                }
+		                if(addressMap.size == 0){
+		                	addresses = 'noaddress'
+		                }else{
+							addressMap.forEach(function (item, key, mapObj) {
+								addresses += (key+',');
+							});
+							addresses = addresses.substring(0,addresses.length-1);
+		                }
+						console.log('addresses: '+ addresses);
+						
+ 		                $.ajax({
+		                    url: 'Egs.do',
+		                    type: 'post',
+		                    data: {
+		                        action: 'query_suda5',
+		                        addresses: addresses
+		                    },
+			                beforeSend: function(){
+		                		 $(':hover').css('cursor','progress');
+			                },
+			                complete: function(){
+		                		 $(':hover').css('cursor','default');
+			                },
+		                    error: function(xhr) {},
+		                    success: function(response) {
+		                    }
+						});	
+		            }
 		        }
 		    ]
 		});
