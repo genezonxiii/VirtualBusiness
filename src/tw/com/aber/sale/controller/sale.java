@@ -339,17 +339,36 @@ public class sale extends HttpServlet {
 
 			} else if ("invoice".equals(action)) {
 				String result="";
+				String errorMsg="";
 				try {
 
 					String saleIds = (String) request.getParameter("ids");
-
-					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
 					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
-
 					InvoiceApi api = new InvoiceApi();
 
+					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+					
+					//確認資料都沒有發送過
+					for(int i =0;i<saleVOs.size();i++){
+						String invoice=saleVOs.get(i).getInvoice();
+						if(null!=invoice){
+							errorMsg = "很抱歉，該訂單已有發票，不可重複發送";
+							response.getWriter().write(errorMsg);
+							return;
+						}
+					}
+
 					// TODO 撈取發票號碼
-					String invoiceNum = "TT16662000";
+					String invoiceNum = saleService.getInvoiceNum(group_id);
+					logger.debug("invoiceNum: "+invoiceNum);
+					
+					if(invoiceNum==null ||"".equals(invoiceNum)){
+						errorMsg = "發票字軌用罄，請洽系統管理員";
+						response.getWriter().write(errorMsg);
+						return;
+					}
+					
+					saleService.updateSaleInvoice(saleVOs,invoiceNum);
 
 					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
 					String resXml = api.sendXML(reqXml);
@@ -453,6 +472,10 @@ public class sale extends HttpServlet {
 		public void deleteDetailDB(String saleDetail_id);
 
 		public GroupVO getGroupInvoiceInfo(String groupId);
+		
+		public String getInvoiceNum(String group_id);
+		
+		public void updateSaleInvoice(List<SaleVO> SaleVOs,String invoiceNum);
 
 	}
 
@@ -529,6 +552,15 @@ public class sale extends HttpServlet {
 		public GroupVO getGroupInvoiceInfo(String groupId) {
 			return dao.getGroupInvoiceInfo(groupId);
 		}
+		
+		public String getInvoiceNum(String group_id){
+			return dao.getInvoiceNum(group_id);
+		}
+		
+		public void updateSaleInvoice(List<SaleVO> SaleVOs,String invoiceNum){
+			dao.updateSaleInvoice(SaleVOs , invoiceNum);
+
+		}
 	}
 
 	class SaleDAO implements sale_interface {
@@ -555,6 +587,8 @@ public class sale extends HttpServlet {
 		private static final String sp_del_saleDetail = "call sp_del_saleDetail(?)";
 		private static final String sp_get_sale_orderno_info_by_ids = "call sp_get_sale_orderno_info_by_ids(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
+		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?)";
+		private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?)";
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
@@ -1364,6 +1398,87 @@ public class sale extends HttpServlet {
 				}
 			}
 			return groupVO;
+		}
+
+		@Override
+		public String getInvoiceNum(String group_id) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String InvoiceNum = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_invoiceNum);
+				pstmt.setString(1, group_id);
+			
+				 pstmt.execute();
+				 rs = pstmt.getResultSet();
+				if (rs.next()) {
+					InvoiceNum = rs.getString("invoiceNum");
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return InvoiceNum;
+		}
+
+		@Override
+		public void updateSaleInvoice(List<SaleVO> SaleVOs,String invoiceNum) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				
+				for(int i =0;i<SaleVOs.size();i++){
+					
+					pstmt = con.prepareStatement(sp_update_sale_invoice);
+					pstmt.setString(1, SaleVOs.get(i).getGroup_id());
+					pstmt.setString(2, SaleVOs.get(i).getSale_id());
+					pstmt.setString(3, invoiceNum);
+					pstmt.executeUpdate();
+				}
+			
+			
+
+			
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
 		}
 
 	}
