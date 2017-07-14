@@ -1,5 +1,7 @@
 package tw.com.aber.sf.vo;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -8,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name="OrderCarrier")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "carrier","carrierProduct","paymentOfcharge","monthlyAccount"})
+@XmlType(propOrder = { "carrier","carrierProduct","paymentOfcharge","monthlyAccount", "carrierAddedServices"})
 public class OrderCarrier {
 	@XmlElement(name = "Carrier")
 	private String carrier;
@@ -18,6 +20,8 @@ public class OrderCarrier {
 	private String paymentOfcharge;
 	@XmlElement(name = "MonthlyAccount")
 	private String monthlyAccount;
+	@XmlElement(name = "CarrierAddedServices")
+	private CarrierAddedServices carrierAddedServices;
 	
 	public String getCarrier() {
 		return carrier;
@@ -42,6 +46,12 @@ public class OrderCarrier {
 	}
 	public void setMonthlyAccount(String monthlyAccount) {
 		this.monthlyAccount = monthlyAccount;
+	}
+	public CarrierAddedServices getCarrierAddedServices() {
+		return carrierAddedServices;
+	}
+	public void setCarrierAddedServices(CarrierAddedServices carrierAddedServices) {
+		this.carrierAddedServices = carrierAddedServices;
 	}
 
 }
