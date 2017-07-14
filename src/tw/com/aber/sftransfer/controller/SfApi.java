@@ -29,6 +29,8 @@ import tw.com.aber.sf.vo.BomRequest;
 import tw.com.aber.sf.vo.Boms;
 import tw.com.aber.sf.vo.CancelPurchaseOrderRequest;
 import tw.com.aber.sf.vo.CancelSaleOrderRequest;
+import tw.com.aber.sf.vo.CarrierAddedService;
+import tw.com.aber.sf.vo.CarrierAddedServices;
 import tw.com.aber.sf.vo.Containers;
 import tw.com.aber.sf.vo.Head;
 import tw.com.aber.sf.vo.ItemQueryRequest;
@@ -574,7 +576,23 @@ public class SfApi {
 			orderCarrier.setCarrierProduct("43");
 			orderCarrier.setMonthlyAccount(groupSfVo.getMonthly_account());
 			orderCarrier.setPaymentOfcharge("寄付");
-
+			
+			/*
+			 * 代收貨款
+			 */
+			CarrierAddedServices carrierAddedServices = new CarrierAddedServices();
+			List<CarrierAddedService> carrierAddedServicesList = new ArrayList<CarrierAddedService>();
+			if (shipVO.getV_pay_kind() != null && shipVO.getV_pay_kind().equals("宅配-貨到付款")
+					&& shipVO.getV_pay_status() != null && shipVO.getV_pay_status().equals("未付款")) {
+				CarrierAddedService carrierAddedService = new CarrierAddedService();
+				carrierAddedService.setServiceCode("VA0019");
+				carrierAddedService.setAttr01(shipVO.getV_total_amt());
+				logger.debug("amt:" + shipVO.getV_total_amt());
+				carrierAddedServicesList.add(carrierAddedService);
+			}
+			carrierAddedServices.setCarrierAddedServicesList(carrierAddedServicesList);
+			orderCarrier.setCarrierAddedServices(carrierAddedServices);
+			
 			saleOrder.setOrderCarrier(orderCarrier);
 			saleOrder.setWarehouseCode(warehouseVo.getSf_warehouse_code());
 			saleOrder.setSfOrderType("销售订单");
