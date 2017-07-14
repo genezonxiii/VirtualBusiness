@@ -630,6 +630,14 @@
 		<servlet-name>Warehouse</servlet-name>
 		<url-pattern>/Warehouse.do</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>Location</servlet-name>
+		<servlet-class>tw.com.aber.location.controller.Location</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Location</servlet-name>
+		<url-pattern>/Location.do</url-pattern>
+	</servlet-mapping>
 
 	<filter>
 		<filter-name>loginFilter</filter-name>
