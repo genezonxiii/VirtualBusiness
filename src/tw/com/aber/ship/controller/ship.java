@@ -121,6 +121,8 @@ public class ship extends HttpServlet {
 
 				try {
 					String ship_seq_nos = request.getParameter("ship_seq_nos");
+					
+					logger.debug("ship_seq_nos:" + ship_seq_nos);
 
 					shipService = new ShipService();
 					ship_seq_nos = ship_seq_nos.replace(",", "','");
@@ -554,6 +556,9 @@ public class ship extends HttpServlet {
 						shipVO.setV_deliver_mobile(rs.getString("se_deliver_mobile"));
 						shipVO.setV_deliver_name(rs.getString("se_deliver_name"));
 						shipVO.setV_deliver_phone(rs.getString("se_deliver_phone"));
+						shipVO.setV_pay_kind(rs.getString("se_pay_kind"));
+						shipVO.setV_pay_status(rs.getString("se_pay_status"));
+						shipVO.setV_total_amt(rs.getString("se_total_amt"));
 						shipVO.setV_dis_date(rs.getDate("sm_dis_date"));
 						shipVO.setShipDetail(shipDetailList);
 						shipVOList.add(shipVO);

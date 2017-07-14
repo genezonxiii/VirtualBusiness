@@ -24,6 +24,9 @@ public class ShipVO implements Serializable {
 	private String v_deliver_name;// tb_realsale
 	private String v_deliver_phone;// tb_realsale
 	private String v_deliver_mobile;// tb_realsale
+	private String v_pay_kind;// tb_realsale
+	private String v_pay_status;// tb_realsale
+	private String v_total_amt;// tb_realsale
 	private Date v_sale_date; // tb_realsale
 	private Date v_dis_date; // tb_sale
 	private String v_c_product_id;// tb_realsale
@@ -156,6 +159,24 @@ public class ShipVO implements Serializable {
 	}
 	public void setV_dis_date(Date v_dis_date) {
 		this.v_dis_date = v_dis_date;
+	}
+	public String getV_pay_status() {
+		return v_pay_status;
+	}
+	public void setV_pay_status(String v_pay_status) {
+		this.v_pay_status = v_pay_status;
+	}
+	public String getV_total_amt() {
+		return v_total_amt;
+	}
+	public void setV_total_amt(String v_total_amt) {
+		this.v_total_amt = v_total_amt;
+	}
+	public String getV_pay_kind() {
+		return v_pay_kind;
+	}
+	public void setV_pay_kind(String v_pay_kind) {
+		this.v_pay_kind = v_pay_kind;
 	}
 
 }
