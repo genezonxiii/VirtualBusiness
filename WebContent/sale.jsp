@@ -433,6 +433,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				pageLength: 20,
 				autoWidth: false,
 				scrollY:"250px",
+				destroy: true,
 				language: {
 					"url": "js/dataTables_zh-tw.txt",
 			        "emptyTable": "查無資料"
@@ -543,6 +544,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		                        		.dialog('option', 'width', 'auto')
 		                        		.dialog('option', 'minHeight', 'auto')
 		                        		.dialog("open");
+		                        	
+		                        	var tmp = {
+		            						action : "search_trans_list_date",
+		            						trans_list_start_date : $("#trans_list_start_date").val(),
+		            						trans_list_end_date : $("#trans_list_end_date").val()
+		            					};
+		            					draw_sale(tmp);
+		                        	
 								}
 							});							
 						}
