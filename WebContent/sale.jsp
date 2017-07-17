@@ -102,6 +102,21 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								</fieldset>
 							</form>
 						</div>
+						
+						<!--對話窗樣式-發票日期 -->
+						<div id="dialog-invoice" title="請選擇發票日期" style="display:none;">
+							<form name="dialog-invoice-form-post" id="idialog-invoice-form-post" >
+								<fieldset>
+									<table class='form-table'>
+										<tr>
+											<td>發票日期：</td>
+											<td><input type="text" id="invoice_num_date"
+												class="input-date hasDatepicker"></td>
+										</tr>
+									</table>
+								</fieldset>
+							</form>
+						</div>
 	
 						<!--對話窗樣式-新增 -->
 						<div id="dialog-form-insert" title="新增銷貨資料">
@@ -514,46 +529,86 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								.dialog('option', 'width', '322.6px')
 								.dialog('option', 'minHeight', 'auto')
 								.dialog("open");
-						}else{
-			                ids = ids.slice(0, -1);
+						}else{ //修改Dialog相關設定
+							   ids = ids.slice(0, -1);
+							   var Today=new Date();
+							   $("#invoice_num_date").val(formatDate())
+				                console.log(ids);
+							     
+							
+						var	dialog_invoice = $("#dialog-invoice").dialog({
+								draggable : true,
+								resizable : false,
+								autoOpen : false,
+								height : "auto",
+								width : "auto",
+								modal : true,
+			                    open: function(event, ui) {
+			                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+			                    },
+			                    buttons: [{
+			                        id: "dialog_invoice_enter",
+			                        text: "確定",
+			                        click: function() {
+			                        	
+			                            
+						                $.ajax({
+											url: 'sale.do',
+											type: 'post',
+			                                beforeSend: function(){
+			                                    $(':hover').css('cursor','progress');
+			                                },
+			                                complete: function(){
+			                                    $(':hover').css('cursor','default');
+			                                },
+											data: {
+												action: 'invoice',
+												ids: ids,
+												invoice_date: $("#invoice_num_date").val()
+											},
+											success: function (response) {
+					                        	var $mes = $('#message #text');
+					                        	var text = '成功發送<br><br>執行結果為: '+ response;
+					                        	
+					                        	$mes.val('').html(text);
+					                        	
+					                        	$('#message')
+					                        		.dialog()
+					                        		.dialog('option', 'title', '提示訊息')
+					                        		.dialog('option', 'width', 'auto')
+					                        		.dialog('option', 'minHeight', 'auto')
+					                        		.dialog("open");
+					                        	
+					                        	var tmp = {
+					            						action : "search_trans_list_date",
+					            						trans_list_start_date : $("#trans_list_start_date").val(),
+					            						trans_list_end_date : $("#trans_list_end_date").val()
+					            					};
+					            					draw_sale(tmp);
+					                        	
+											}
+										});		
 
-			                console.log(ids);
 			                
-			                $.ajax({
-								url: 'sale.do',
-								type: 'post',
-                                beforeSend: function(){
-                                    $(':hover').css('cursor','progress');
-                                },
-                                complete: function(){
-                                    $(':hover').css('cursor','default');
-                                },
-								data: {
-									action: 'invoice',
-									ids: ids
-								},
-								success: function (response) {
-		                        	var $mes = $('#message #text');
-		                        	var text = '成功發送<br><br>執行結果為: '+ response;
-		                        	
-		                        	$mes.val('').html(text);
-		                        	
-		                        	$('#message')
-		                        		.dialog()
-		                        		.dialog('option', 'title', '提示訊息')
-		                        		.dialog('option', 'width', 'auto')
-		                        		.dialog('option', 'minHeight', 'auto')
-		                        		.dialog("open");
-		                        	
-		                        	var tmp = {
-		            						action : "search_trans_list_date",
-		            						trans_list_start_date : $("#trans_list_start_date").val(),
-		            						trans_list_end_date : $("#trans_list_end_date").val()
-		            					};
-		            					draw_sale(tmp);
-		                        	
-								}
-							});							
+
+			                            $("#dialog-invoice").trigger("reset");
+			                            dialog_invoice.dialog("close");
+			                        }
+
+
+			                    }, {
+			                        text: "取消",
+			                        click: function() {
+			                            $("#dialog-invoice").trigger("reset");
+			                            dialog_invoice.dialog("close");
+			                        }
+			                    }],
+			                    close: function() {
+			                        $("#dialog-invoice").trigger("reset");
+			                    }
+			                });
+						dialog_invoice.dialog("open");
+
 						}
 		            },
 				}]
@@ -1456,6 +1511,17 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			});
 
 			return dataDialog;
+		}
+		function formatDate() {
+		    var d = new Date(),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + d.getDate(),
+		        year = d.getFullYear();
+
+		    if (month.length < 2) month = '0' + month;
+		    if (day.length < 2) day = '0' + day;
+
+		    return [year, month, day].join('-');
 		}
 	</script>
 

@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import tw.com.aber.inv.controller.InvoiceApi;
 import tw.com.aber.inv.vo.Index;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupVO;
+import tw.com.aber.vo.InvoiceTrackVO;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.SaleDetailVO;
 import tw.com.aber.vo.SaleVO;
@@ -340,9 +342,25 @@ public class sale extends HttpServlet {
 			} else if ("invoice".equals(action)) {
 				String result="";
 				String errorMsg="";
+				java.sql.Date invoice_date;
 				try {
 
 					String saleIds = (String) request.getParameter("ids");
+					String invoice_date_str = (String) request.getParameter("invoice_date");
+					
+					try {
+						//設定日期格式
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						//進行轉換
+						java.util.Date date = sdf.parse(invoice_date_str);
+
+						 invoice_date = new java.sql.Date(date.getTime()); 
+					} catch (ParseException e) {
+							errorMsg = "日期格式錯誤";
+							response.getWriter().write(errorMsg);
+							return;
+					}
+				
 					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
 					InvoiceApi api = new InvoiceApi();
 
@@ -359,7 +377,9 @@ public class sale extends HttpServlet {
 					}
 
 					// TODO 撈取發票號碼
-					String invoiceNum = saleService.getInvoiceNum(group_id);
+					InvoiceTrackVO invoiceTrackVO = saleService.getInvoiceTrack(group_id, invoice_date);
+					String invoiceNum = invoiceTrackVO.getInvoiceNum();
+					
 					logger.debug("invoiceNum: "+invoiceNum);
 					
 					if(invoiceNum==null ||"".equals(invoiceNum)){
@@ -368,7 +388,7 @@ public class sale extends HttpServlet {
 						return;
 					}
 					
-					saleService.updateSaleInvoice(saleVOs,invoiceNum);
+					saleService.updateSaleInvoice(saleVOs,invoiceTrackVO,invoice_date);
 
 					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
 					String resXml = api.sendXML(reqXml);
@@ -473,9 +493,9 @@ public class sale extends HttpServlet {
 
 		public GroupVO getGroupInvoiceInfo(String groupId);
 		
-		public String getInvoiceNum(String group_id);
+		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date);
 		
-		public void updateSaleInvoice(List<SaleVO> SaleVOs,String invoiceNum);
+		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date);
 
 	}
 
@@ -553,12 +573,12 @@ public class sale extends HttpServlet {
 			return dao.getGroupInvoiceInfo(groupId);
 		}
 		
-		public String getInvoiceNum(String group_id){
-			return dao.getInvoiceNum(group_id);
+		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date){
+			return dao.getInvoiceTrack(group_id, invoice_num_date);
 		}
 		
-		public void updateSaleInvoice(List<SaleVO> SaleVOs,String invoiceNum){
-			dao.updateSaleInvoice(SaleVOs , invoiceNum);
+		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date){
+			dao.updateSaleInvoice(SaleVOs , invoiceTrackVO, invoice_num_date);
 
 		}
 	}
@@ -587,8 +607,8 @@ public class sale extends HttpServlet {
 		private static final String sp_del_saleDetail = "call sp_del_saleDetail(?)";
 		private static final String sp_get_sale_orderno_info_by_ids = "call sp_get_sale_orderno_info_by_ids(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
-		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?)";
-		private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?)";
+		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
+		private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
@@ -1314,6 +1334,7 @@ public class sale extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					saleVO = new SaleVO();
+					saleVO.setGroup_id(rs.getString("group_id"));
 					saleVO.setSale_id(rs.getString("sale_id"));
 					saleVO.setSeq_no(rs.getString("seq_no"));
 					saleVO.setOrder_no(rs.getString("order_no"));
@@ -1401,21 +1422,37 @@ public class sale extends HttpServlet {
 		}
 
 		@Override
-		public String getInvoiceNum(String group_id) {
+		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date)  {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
 			String InvoiceNum = null;
+			InvoiceTrackVO invoiceTrackVO = new InvoiceTrackVO();
+
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_get_invoiceNum);
 				pstmt.setString(1, group_id);
-			
+				pstmt.setDate(2, invoice_num_date);
 				 pstmt.execute();
 				 rs = pstmt.getResultSet();
 				if (rs.next()) {
+
 					InvoiceNum = rs.getString("invoiceNum");
+					if(InvoiceNum!=null){
+						invoiceTrackVO.setGroup_id(group_id);
+						invoiceTrackVO.setInvoice_beginno(rs.getString("invoice_beginno"));
+						invoiceTrackVO.setInvoice_endno(rs.getString("invoice_endno"));
+						invoiceTrackVO.setInvoice_id(rs.getString("invoice_id"));
+						invoiceTrackVO.setInvoice_track(rs.getString("invoice_track"));
+						invoiceTrackVO.setInvoice_type(rs.getString("invoice_type"));
+						invoiceTrackVO.setInvoiceNum(InvoiceNum);
+						invoiceTrackVO.setSeq(rs.getString("seq"));
+						invoiceTrackVO.setYear_month(rs.getString("year_month"));
+						
+						
+					}
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -1438,11 +1475,11 @@ public class sale extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
-			return InvoiceNum;
+			return invoiceTrackVO;
 		}
 
 		@Override
-		public void updateSaleInvoice(List<SaleVO> SaleVOs,String invoiceNum) {
+		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
@@ -1454,7 +1491,11 @@ public class sale extends HttpServlet {
 					pstmt = con.prepareStatement(sp_update_sale_invoice);
 					pstmt.setString(1, SaleVOs.get(i).getGroup_id());
 					pstmt.setString(2, SaleVOs.get(i).getSale_id());
-					pstmt.setString(3, invoiceNum);
+					pstmt.setString(3, invoiceTrackVO.getInvoiceNum());
+					pstmt.setString(4, invoiceTrackVO.getInvoice_type());
+					pstmt.setString(5, invoiceTrackVO.getYear_month());
+					pstmt.setDate(6, invoice_num_date);
+
 					pstmt.executeUpdate();
 				}
 			
