@@ -101,6 +101,51 @@ function ship_data(){
 	});
 }
 
+function open_report(param){
+	
+	$("<div></div>")
+	.attr("align", "center")
+	.dialog({
+	    title: "報表",
+	    modal: true,
+	    width: "auto",
+	    open: function(event, ui) {
+	    	var iframeUrl="./shipreport.do?" + param;
+	        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	        $iframe = $("<iframe></iframe>")
+	        	.attr("width", 850)
+	        	.attr("height", 450)
+	        	.attr("src", iframeUrl);
+	        $(this).html( $iframe );
+	    },
+	    buttons: [{
+	        text: "確認",
+	        click: function() {
+	        	$(this).dialog("close");
+	        }
+	    }]
+	});
+	
+}
+
+function download_report(param){
+	
+	$("<div></div>")
+	.dialog({
+	    title: "下載",
+	    modal: true,
+	    open: function(event, ui) {
+	    	var iframeUrl="./shipreport.do?" + param; 
+	    	$(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+	        $iframe = $("<iframe></iframe>")
+	        	.attr("src", iframeUrl);
+	        $(this).html( $iframe );
+	        $(this).dialog("close");
+	    }
+	});
+	
+}
+
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});
 		var value='<%=request.getParameter("action")%>';
@@ -114,12 +159,21 @@ function ship_data(){
 			$('#datepicker1').datepicker('setDate',new Date());
 			$('#datepicker2').datepicker('setDate',new Date());
 		}
+		
 		//查詢相關設定
 		$("#searh-productunit").click(function(e) {
 			e.preventDefault();
-			do_whar="searh";
-			ship_data();
+			var param = "action=ship&kind=pdf&time1=" + $('#datepicker1').val() + "&time2=" + $('#datepicker2').val();
+			open_report(param);
 		});
+		
+		//下載
+		$("#download-report").click(function(e) {
+			e.preventDefault();
+			var param = "action=ship&kind=xls&time1=" + $('#datepicker1').val() + "&time2=" + $('#datepicker2').val();
+			download_report(param);
+		});
+		
 		$(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
 		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
 		$(".upup").click(function(){
@@ -146,6 +200,7 @@ function ship_data(){
 						<input type="text" class="input-date" id="datepicker2">
 					</label>
 					<a class="btn btn-darkblue" id="searh-productunit">查詢</a>
+					<a class="btn btn-darkblue" id="download-report">下載</a>
 				</div>
 			</div><!-- /.form-wrap -->
 		</div>
