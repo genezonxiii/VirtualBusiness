@@ -63,6 +63,10 @@
 									</select>
 								</form>
 							</div>
+							<input type="hidden" id="hid_type" value="">
+							<input type="hidden" id="hid_supply_name" value="">
+							<input type="hidden" id="hid_start_date" value="">
+							<input type="hidden" id="hid_end_date" value="">
 						</div>
 					</div>
 				</div>
@@ -165,6 +169,10 @@
 					.dialog("open");
 				return false;
 			}
+			
+			$("#hid_type").val("supply");
+			$("#hid_supply_name").val($supply_name);
+			
 			var parameter = {
 				action : "getStockNewListBySupplyName",
 				supply_name : $supply_name
@@ -207,6 +215,10 @@
 					.dialog("open");
 				return false;
 			}
+			$("#hid_type").val("date");
+			$("#hid_start_date").val($startDate);
+			$("#hid_end_date").val($endDate);
+
 			var parameter = {
 				action : "getStockNewListByStockTime",
 				startDate : $startDate,
@@ -387,7 +399,6 @@
 											var skuNo = "", lot = "", expire = "";
 											var availableQty = "", totalQty = "";
 											var onHandQty = "", inTransitQty = "";
-											
 											if (value.header) {
 												skuNo = "商品料號：" + value.header.skuNo;
 												availableQty = "/總庫存量：" + value.header.availableQty;
@@ -421,6 +432,22 @@
 							}
 
 							dialogMsg("順豐庫存查詢", msg);
+							
+							if($("#hid_type").val()=="date"){
+								var parameter = {
+										action : "getStockNewListByStockTime",
+										startDate : $("#hid_start_date").val(),
+										endDate : $("#hid_end_date").val()
+									};
+									console.log(parameter);
+									drawMasterTable(parameter);
+							}else if($("#hid_type").val()=="supply"){
+								var parameter = {
+										action : "getStockNewListBySupplyName",
+										supply_name : $("#hid_supply_name").val()
+									};
+							}
+
 						}
 					});
 				}

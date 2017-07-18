@@ -7,14 +7,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,16 +23,15 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tw.com.aber.sf.vo.Response;
+import tw.com.aber.sf.vo.Header;
+import tw.com.aber.sf.vo.RTInventory;
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sftransfer.controller.SfApi;
 import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.LocationVO;
 import tw.com.aber.vo.ProductVO;
-import tw.com.aber.vo.PurchaseVO;
 import tw.com.aber.vo.StockNewVO;
-import tw.com.aber.vo.UserVO;
 import tw.com.aber.vo.WarehouseVO;
 
 public class StockNew extends HttpServlet {
@@ -100,7 +100,11 @@ public class StockNew extends HttpServlet {
 
 			String reqXml = sfApi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
 			String resXml = sfApi.sendXML(reqXml);
+
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+			
+			stockNewService.upInventoryQuery(responseUtil, group_id);
+			
 			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String gresult = gson.toJson(responseUtil);
 			response.getWriter().write(gresult);
@@ -114,6 +118,9 @@ public class StockNew extends HttpServlet {
 		public List<StockNewVO> getStockNewListByStockTime(String group_id, String StockTimeStart, String StockTimeEnd);
 
 		public List<StockNewVO> getStockNewListByStockIDs(String group_id, String stock_ids);
+		
+		public Boolean upInventoryQuery(String group_id,String c_product_id,Integer totalQtySum);
+
 
 	}
 
@@ -122,6 +129,8 @@ public class StockNew extends HttpServlet {
 		private static final String sp_get_stock_new_list_by_supplyname = "call sp_get_stock_new_list_by_supplyname (?,?)";
 		private static final String sp_get_stock_new_List_by_stock_time = "call sp_get_stock_new_List_by_stock_time (?,?,?)";
 		private static final String sp_get_stock_new_List_by_stock_ids = "call sp_get_stock_new_List_by_stock_ids (?,?)";
+		private static final String sp_update_stock_new_by_response = "call sp_update_stock_new_by_response (?,?,?)";
+
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -350,6 +359,52 @@ public class StockNew extends HttpServlet {
 			return stockNewVOList;
 		}
 
+		@Override
+		public Boolean upInventoryQuery(String group_id,String c_product_id,Integer totalQtySum) {
+
+			boolean isUpdate = false;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_update_stock_new_by_response);
+
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, c_product_id);
+				pstmt.setInt(3, totalQtySum);
+				int value = pstmt.executeUpdate();
+
+				logger.debug("updateReturn:" + value);
+
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} catch (Exception e) {
+				throw new RuntimeException("error" + e.getMessage());
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			isUpdate = true;
+			return isUpdate;
+
+		}
+
 	}
 
 	class StockNewService {
@@ -371,6 +426,92 @@ public class StockNew extends HttpServlet {
 		public List<StockNewVO> getStockNewListByStockIDs(String group_id, String stock_ids) {
 			return dao.getStockNewListByStockIDs(group_id, stock_ids);
 		}
-	}
 
+		public void upInventoryQuery(ResponseUtil responseUtil, String group_id) {
+			// 需代 group_id
+			String skuNoTemp = "";
+			String skuNoNow = "";
+
+			int totalQtySum = 0;
+			int totalQty = 0;
+
+			// 驗證
+			if (responseUtil == null || responseUtil.getResponse() == null
+					|| responseUtil.getResponse().getHead() == null) {
+				return;
+			}
+			String head = responseUtil.getResponse().getHead();
+			if (!("OK".equals(head) || "PART".equals(head))) {
+				return;
+			}
+
+			List<RTInventory> rtInvList = responseUtil.getResponse().getBody().getRtInventoryQueryResponse()
+					.getRtInventorys().getRtiList();
+
+			// 因為直接對rtInvList做排序 刪除等 會影響到原本的資料 所以另外copy 一個一模一樣的list 來做動作
+			List<RTInventory> rtInvListCopy = new ArrayList<RTInventory>(
+					Arrays.asList(new RTInventory[rtInvList.size()]));
+
+			Collections.copy(rtInvListCopy, rtInvList);
+
+			List<RTInventory> delrtInvListCopy = new ArrayList<RTInventory>();
+
+			// 紀錄失敗的的
+			for (int i = 0; i < rtInvListCopy.size(); i++) {
+				RTInventory rTInventory = rtInvListCopy.get(i);
+				Header header = rTInventory.getHeader();
+				if ((!"1".equals(rTInventory.getResult())) || header == null) {
+					delrtInvListCopy.add(rTInventory);
+				}
+			}
+
+			// 移除失敗的
+			for (int i = 0; i < delrtInvListCopy.size(); i++) {
+				rtInvListCopy.remove(delrtInvListCopy.get(i));
+			}
+
+			// 排序 c_product_id
+			if (rtInvListCopy.size() > 1) {
+				Collections.sort(rtInvListCopy, new Comparator<RTInventory>() {
+					@Override
+					public int compare(RTInventory arg0, RTInventory arg1) {
+						return arg0.getHeader().getSkuNo().compareTo(arg1.getHeader().getSkuNo());
+					}
+				});
+			}
+
+			for (int i = 0; i < rtInvListCopy.size(); i++) {
+				RTInventory rTInventory = rtInvListCopy.get(i);
+				Header header = rTInventory.getHeader();
+
+				skuNoNow = header.getSkuNo();
+				totalQty = Integer.valueOf(header.getTotalQty());
+
+				if (i == 0) {
+					skuNoTemp = skuNoNow;
+				}
+				if (!skuNoTemp.equals(skuNoNow)) {
+					logger.debug("c_product_id:" + skuNoTemp);
+					logger.debug("totalQtySum:" + totalQtySum);
+
+					dao.upInventoryQuery(group_id, skuNoTemp, totalQtySum);
+
+					skuNoTemp = skuNoNow;
+					totalQtySum = 0;
+				}
+
+				totalQtySum = totalQtySum + totalQty;
+
+				if (i == rtInvListCopy.size() - 1) {
+					logger.debug("c_product_id:" + skuNoTemp);
+					logger.debug("totalQtySum:" + totalQtySum);
+					dao.upInventoryQuery(group_id, skuNoTemp, totalQtySum);
+				}
+
+			}
+
+		}
+
+	}
+	
 }
