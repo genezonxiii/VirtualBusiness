@@ -1,5 +1,7 @@
 package tw.com.aber.basicinfo;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,19 +9,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import tw.com.aber.vo.StockVO;
 
 public class stock extends HttpServlet {
-
+	private static final Logger logger = LogManager.getLogger(stock.class);
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -42,6 +57,83 @@ public class stock extends HttpServlet {
 			// stockService.barcode_search(group_id,barcode);
 			response.getWriter().write(stockService.barcode_search(group_id, barcode));
 			return;
+		}
+		
+		if ("report".equals(action)){
+			String kind = request.getParameter("kind");
+			
+			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
+					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
+			String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
+			String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
+
+			
+			String reportSourcePath = ("" + this.getClass().getResource("/")).substring(5)
+					.replace("VirtualBusiness/WEB-INF/classes/", "VirtualBusiness/WEB-INF/");
+			
+			String reportGeneratePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/report";
+			new File(reportGeneratePath).mkdir();
+			
+			
+			String reportName = "rptStockNew";
+			
+			String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+			String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+			String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+			String xlsFileName = reportGeneratePath + "/" + reportName + ".xls";
+
+			try {
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+		
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				
+				HashMap<String, Object> hm = null;
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
+				
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+				
+				JRXlsExporter exporter = new JRXlsExporter();
+		        exporter.setParameter(JRXlsExporterParameter.JASPER_PRINT, jprint);
+		        exporter.setParameter(JRXlsExporterParameter.OUTPUT_FILE_NAME, xlsFileName);
+
+		        exporter.exportReport();
+
+		        File file = null;
+				if (kind.equals("pdf")) {
+					response.setContentType("APPLICATION/PDF");
+					String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+					response.setHeader("Content-Disposition", disHeader);
+					file = new File(pdfFileName);
+				} else if (kind.equals("xls")) {
+					response.setContentType("application/vns.ms-excel");
+					String disHeader = "inline;Filename=\"" + reportName + ".xls" + "\"";
+					response.setHeader("Content-Disposition", disHeader);
+					file = new File(xlsFileName);
+				}
+				
+				
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+		
+				fileIn.close();
+				out.flush();
+				out.close();
+			
+			} catch (JRException e) {
+				logger.error("JRException:" + e.getMessage());
+			} catch (SQLException e) {
+				logger.error("SQLException:" + e.getMessage());
+			} catch (ClassNotFoundException e) {
+				logger.error("ClassNotFoundException:" + e.getMessage());
+			}
 		}
 		if ("searh".equals(action)) {
 			try {
