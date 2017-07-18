@@ -30,6 +30,10 @@ input[type="number"] {
 	padding: 5px;
 	font-family: Arial, Helvetica, sans-serif;
 }
+#dt_master_wrapper{
+		height:500px;
+	
+}
 </style>
 </head>
 <body>
@@ -644,7 +648,6 @@ input[type="number"] {
 	            url: "Accept.do",
 	            dataSrc: "",
 	            type: "POST",
-	            delay: 1500,
 	            data: parameter
 	        },
 	        columns: [{

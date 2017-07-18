@@ -20,10 +20,11 @@
 	.warning_msg{
 		position:relative;
 		margin-left: 100px;
-		height:0px;
+		height:0;
  		padding-top:0px ! important; 
 		top:20px;
 	}
+
 </style>
 </head>
 <body>
