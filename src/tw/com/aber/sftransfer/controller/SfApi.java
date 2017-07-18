@@ -877,11 +877,11 @@ public class SfApi {
 				/*
 				 * Testing
 				 */
-				"http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
+//				"http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
 				/*
 				 * Production
 				 */
-//				"http://bsp.sf-express.com/bsp-wms/OmsCommons";
+				"http://bsp.sf-express.com/bsp-wms/OmsCommons";
 		String urlParameters = "";
 
 		SfApi api = new SfApi();
