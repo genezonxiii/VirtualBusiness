@@ -486,7 +486,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 		                    });
 		            },
 				},{
-		            text: '產生電文',
+		            text: '開立發票',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#sales');
 
