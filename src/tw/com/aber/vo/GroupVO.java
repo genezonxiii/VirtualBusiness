@@ -18,6 +18,24 @@ public class GroupVO implements java.io.Serializable {
 	private String user_id;
 	private String invoice_path;
 	private Date expired;
+	private String invoice_posno;
+	private String invoice_key;
+
+	public String getInvoice_posno() {
+		return invoice_posno;
+	}
+
+	public void setInvoice_posno(String invoice_posno) {
+		this.invoice_posno = invoice_posno;
+	}
+
+	public String getInvoice_key() {
+		return invoice_key;
+	}
+
+	public void setInvoice_key(String invoice_key) {
+		this.invoice_key = invoice_key;
+	}
 
 	public String getGroup_id() {
 		return group_id;
