@@ -105,6 +105,21 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								</fieldset>
 							</form>
 						</div>
+						
+						<!--對話窗樣式-發票日期 -->
+						<div id="dialog-invoice" title="請選擇發票日期" style="display:none;">
+							<form name="dialog-invoice-form-post" id="idialog-invoice-form-post" >
+								<fieldset>
+									<table class='form-table'>
+										<tr>
+											<td>發票日期：</td>
+											<td><input type="text" id="invoice_num_date"
+												class="input-date hasDatepicker"></td>
+										</tr>
+									</table>
+								</fieldset>
+							</form>
+						</div>
 	
 						<!--對話窗樣式-新增 -->
 						<div id="dialog-form-insert" title="新增銷貨資料">
@@ -215,6 +230,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 								<table id="sales" class="result-table">
 									<thead>
 										<tr class="">
+											<th>批次請求</th>
 											<th>銷貨單號</th>
 											<th>訂單號</th>
 											<th style="min-width: 120px">商品 ID/名稱</th>
@@ -242,6 +258,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	</div>
 
 	<div id="warning" style="display: none; color: #f00; font-size: 28px;"></div>
+	<div id="message" align="center">
+		<div id="text"></div>
+	</div>
 
 	<!-- 銷貨明細對話窗 -->
 	<div id="dialog-sale-detail" class="dialog" align="center">
@@ -261,10 +280,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	</div>
 	
 	<jsp:include page="template/common_js.jsp" flush="true"/>
-
+	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<script>
 		var customer_menu = [];
 		var customer_tags = [];
+		var selectCount = 0; //全選按鈕計算用
 		function open_report(id){
 			var iframUrl="./report.do?sale_id="+id;
 			$("#dialog_report_iframe").attr("src",iframUrl );
@@ -298,8 +319,33 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			console.log('ajax start');
 			var oColumnDefs =
 		        [{
+			        targets: 0,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			            var sale_id = row.sale_id;
+
+			            var input = document.createElement("INPUT");
+			            input.type = 'checkbox';
+			            input.name = 'checkbox-group-select';
+			            input.id = sale_id;
+
+			            var span = document.createElement("SPAN");
+			            span.className = 'form-label';
+
+			            var label = document.createElement("LABEL");
+			            label.htmlFor = sale_id;
+			            label.name = 'checkbox-group-select';
+			            label.style.marginLeft = '35%';
+			            label.appendChild(span);
+
+			            var options = $("<div/>").append(input, label);
+
+			            return options.html();
+			        }
+			    },{
 					//訂單編號 及 出貨單連結
-		        	targets: 1,
+		        	targets: 2,
 					render: function ( data, type, row ) {
 						var result = $("<div/>") //fake tag
 							.append( 
@@ -315,14 +361,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					}
 	            },{
 					//自訂商品編號 + 商品名稱
-	            	targets: 2,
+	            	targets: 3,
 					render: function ( data, type, row ) {
 				   		var result = row.c_product_id + '<br>' + row.product_name;
 				 		return result;
 					}
 	            },{
 					//銷貨對象
-	            	targets: 5,
+	            	targets: 6,
 					render: function ( data, type, row ) {
 						console.log(row.customer_id);
 						console.log(customer_menu);
@@ -331,7 +377,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					}
 	            },{
 					//發票 + 發票日期
-	            	targets: 6,
+	            	targets: 7,
 					render: function ( data, type, row ) {
 				   		var result = row.invoice == null || row.invoice == '' ? "":"號碼：" + row.invoice + "<br>日期：" + row.invoice_date;
 				 		return result;
@@ -384,6 +430,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			
 			var oColumns = 
 				[
+					{"data": null, "defaultContent":""},
 					{"data": "seq_no", "width": "10%", "defaultContent":""},
 					{"data": "order_no", "width": "10%", "defaultContent":""},
 					{"data": null, "width": "20%", "defaultContent":""},
@@ -399,9 +446,20 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				];
 			
 			var dataTableObj = $("#sales").DataTable({
-				dom: "lfr<t>ip",
+				dom : "frB<t>ip",
+				lengthChange: false,
+				pageLength: 20,
+				autoWidth: false,
+				scrollY:"250px",
 				destroy: true,
-				language: {"url": "js/dataTables_zh-tw.txt"},
+				language: {
+					"url": "js/dataTables_zh-tw.txt",
+			        "emptyTable": "查無資料"
+			    },
+				initComplete: function(settings, json) {
+				    $('div .dt-buttons').css({'float': 'left','margin-left':'10px'});
+				    $('div .dt-buttons a').css('margin-left','10px');
+				},
 				ajax: {
 					url : "sale.do",
 					dataSrc: "",
@@ -409,9 +467,161 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 					data : parameter
 				},
 		        columnDefs: oColumnDefs,
-				columns: oColumns
+				columns: oColumns,
+				buttons: [{
+		            text: '全選',
+		            action: function(e, dt, node, config) {
+
+		                selectCount++;
+		                var $table = $('#sales');
+		                var $checkboxs = $table.find('input[name=checkbox-group-select]');
+
+		                selectCount % 2 != 1 ?
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", false);
+		                        $(this).removeClass("toggleon");
+		                        $(this).closest("tr").removeClass("selected");
+		                    }) :
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", true);
+		                        $(this).addClass("toggleon");
+		                        $(this).closest("tr").addClass("selected");
+		                    });
+		            },
+				},{
+		            text: '開立發票',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#sales');
+
+		                var cells = dataTableObj.cells().nodes();
+		                var saleMap = new Map();
+		                var ids = '';
+						var row;
+						var data;
+						var message = '';
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                
+						$checkboxs.each(function(index) {
+		                    ids += "'"+this.id + "',";
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							saleMap.set( data.order_no, (index+1) );
+						});
+
+						if(saleMap.size> 1){
+							message = message.concat('以下為您所勾選的訂單號↓<br><br>');
+							var table = document.createElement('table');
+							saleMap.forEach(function(value, key, fullArray){
+								var tr = document.createElement('tr');
+								var text = document.createTextNode(key);
+								tr.appendChild(text);
+								table.appendChild(tr);
+							});
+							var $mes = $('#message #text');
+							$mes.val('').html(message).append(table);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+								.dialog('option', 'width', '322.6px')
+								.dialog('option', 'minHeight', 'auto')
+								.dialog("open");
+						}else{ //修改Dialog相關設定
+							   ids = ids.slice(0, -1);
+							   var Today=new Date();
+							   $("#invoice_num_date").val(formatDate())
+				                console.log(ids);
+							     
+							
+						var	dialog_invoice = $("#dialog-invoice").dialog({
+								draggable : true,
+								resizable : false,
+								autoOpen : false,
+								height : "auto",
+								width : "auto",
+								modal : true,
+			                    open: function(event, ui) {
+			                        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+			                    },
+			                    buttons: [{
+			                        id: "dialog_invoice_enter",
+			                        text: "確定",
+			                        click: function() {
+			                        	
+			                            
+						                $.ajax({
+											url: 'sale.do',
+											type: 'post',
+			                                beforeSend: function(){
+			                                    $(':hover').css('cursor','progress');
+			                                },
+			                                complete: function(){
+			                                    $(':hover').css('cursor','default');
+			                                },
+											data: {
+												action: 'invoice',
+												ids: ids,
+												invoice_date: $("#invoice_num_date").val()
+											},
+											success: function (response) {
+					                        	var $mes = $('#message #text');
+					                        	var text = '成功發送<br><br>執行結果為: '+ response;
+					                        	
+					                        	$mes.val('').html(text);
+					                        	
+					                        	$('#message')
+					                        		.dialog()
+					                        		.dialog('option', 'title', '提示訊息')
+					                        		.dialog('option', 'width', 'auto')
+					                        		.dialog('option', 'minHeight', 'auto')
+					                        		.dialog("open");
+					                        	
+					                        	var tmp = {
+					            						action : "search_trans_list_date",
+					            						trans_list_start_date : $("#trans_list_start_date").val(),
+					            						trans_list_end_date : $("#trans_list_end_date").val()
+					            					};
+					            					draw_sale(tmp);
+					                        	
+											}
+										});		
+
+			                
+
+			                            $("#dialog-invoice").trigger("reset");
+			                            dialog_invoice.dialog("close");
+			                        }
+
+
+			                    }, {
+			                        text: "取消",
+			                        click: function() {
+			                            $("#dialog-invoice").trigger("reset");
+			                            dialog_invoice.dialog("close");
+			                        }
+			                    }],
+			                    close: function() {
+			                        $("#dialog-invoice").trigger("reset");
+			                    }
+			                });
+						dialog_invoice.dialog("open");
+
+						}
+		            },
+				}]
 			});	
-				
+
+		    $('#sales').on('change', ':checkbox', function() {
+		        $(this).is(":checked")?
+		        	$(this).closest("tr").addClass("selected"):
+		        	$(this).closest("tr").removeClass("selected");
+		    });				
 			
 			$("#sales_contain_row")
 				.show()
@@ -1304,6 +1514,17 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			});
 
 			return dataDialog;
+		}
+		function formatDate() {
+		    var d = new Date(),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + d.getDate(),
+		        year = d.getFullYear();
+
+		    if (month.length < 2) month = '0' + month;
+		    if (day.length < 2) day = '0' + day;
+
+		    return [year, month, day].join('-');
 		}
 	</script>
 
