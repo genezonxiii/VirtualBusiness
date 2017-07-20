@@ -15,14 +15,50 @@ public class EgsApi {
 
 	private EgsApi egsApi;
 	private String conString = "http://192.168.112.156:8800/egs?";
-	private String cmd = "cmd=", params = "";
+	private String cmd = "cmd=";
 
-	public String queryEgsInfo(String command) {
+	public String send(String command) {
 		egsApi = new EgsApi();
 		cmd = cmd.concat(command);
 		conString += cmd;
 		return egsApi.executeGET(conString);
 	}
+
+	public String send(String command, String params) {
+		egsApi = new EgsApi();
+		cmd = cmd.concat(command).concat(params);
+		conString += cmd;
+		return egsApi.executeGET(conString);
+	}
+	
+//	public String queryWaybillIdRange(String command, String params) {
+//		egsApi = new EgsApi();
+//		cmd = cmd.concat(command).concat(params);
+//		conString += cmd;
+//		return egsApi.executeGET(conString);
+//	}
+//
+//	
+//	public String queryEgsInfo(String command) {
+//		egsApi = new EgsApi();
+//		cmd = cmd.concat(command);
+//		conString += cmd;
+//		return egsApi.executeGET(conString);
+//	}
+//
+//	public String queryCustomers(String command) {
+//		egsApi = new EgsApi();
+//		cmd = cmd.concat(command);
+//		conString += cmd;
+//		return egsApi.executeGET(conString);
+//	}
+//
+//	public String testDeliveryTimezone(String command, String params) {
+//		egsApi = new EgsApi();
+//		cmd = cmd.concat(command).concat(params);
+//		conString += cmd;
+//		return egsApi.executeGET(conString);
+//	}
 
 	public String querySuda5(String command, String addresses) {
 		egsApi = new EgsApi();
@@ -31,7 +67,7 @@ public class EgsApi {
 		String params = "";
 		/*
 		 * 假如無地址，則以noaddress替代，若有多筆地址，因中文緣故，需編碼處理
-		 * */
+		 */
 		if (!"noaddress".equals(addresses)) {
 			String[] addresArr = addresses.split(",");
 
@@ -50,6 +86,18 @@ public class EgsApi {
 		}
 		conString += (cmd + params);
 		return egsApi.executeGET(conString);
+	}
+
+	public String getParams(String[] paramsArr) {
+		String result = "";
+		try {
+			for (int i = 0; i < paramsArr.length; i++) {
+				result += ("&" + paramsArr[i]);
+			}
+		} catch (Exception e) {
+			logger.debug(e.getMessage());
+		}
+		return result;
 	}
 
 	private String executeGET(String conString) {
