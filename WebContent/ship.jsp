@@ -17,6 +17,7 @@
 <link rel="Shortcut Icon" type="image/x-icon"
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true" />
+<link rel="stylesheet" href="css/ship.css">
 <link rel="stylesheet" href="css/buttons.dataTables.min.css">
 </head>
 <body>
@@ -109,6 +110,112 @@
 					</tr>
 				</table>
 			</fieldset>
+		</form>
+	</div> 
+	<!-- 黑貓對話窗-->
+	<div id="dialog-egs" style="display:none">
+		<form id ="dialog-egs-form">
+			<section>
+				<hr><h4>指定配達時段</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="delivery-timezone-radio-1" type="radio" name="delivery-timezone-radio-group">
+						<label for="delivery-timezone-radio-1">
+							<span class="form-label">9~12時</span>
+						</label>
+	          			<input id="delivery-timezone-radio-2" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-radio-2">
+							<span class="form-label">12~17時</span>
+	          			</label>
+	          			
+	          			<input id="delivery-timezone-radio-3" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-radio-3">
+							<span class="form-label">17~20時</span>
+	          			</label>
+	          			
+	          			<input id="delivery-timezone-radio-4" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-radio-4">
+							<span class="form-label">不限時</span>
+	          			</label>
+					</div>
+				</div>
+			</section>
+			<hr><h4>指定配達日期</h4>
+			<input type="text" name="delivary-date" class="self-date">
+			
+			<section>
+				<hr><h4>尺寸</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="package-size-0001" type="radio" name="package-size-radio-group">
+						<label for="package-size-0001">
+							<span class="form-label">60cm</span>
+						</label>
+						
+	          			<input id="package-size-0002" type="radio" name="package-size-radio-group">
+	          			<label for="package-size-0002">
+							<span class="form-label">90cm</span>
+	          			</label>
+	          			
+	          			<input id="package-size-0003" type="radio" name="package-size-radio-group">
+	          			<label for="package-size-0003">
+							<span class="form-label">120cm</span>
+	          			</label>
+	          			
+	          			<input id="package-size-0004" type="radio" name="package-size-radio-group">
+	          			<label for="package-size-0004">
+							<span class="form-label">150cm</span>
+	          			</label>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<hr><h4>溫層</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="temperature-0001" type="radio" name="temperature-radio-group">
+						<label for="temperature-0001">
+							<span class="form-label">常溫</span>
+						</label>
+						
+	          			<input id="temperature-0002" type="radio" name="temperature-radio-group">
+	          			<label for="temperature-0002">
+							<span class="form-label">冷藏</span>
+	          			</label>
+	          			
+	          			<input id="temperature-0003" type="radio" name="temperature-radio-group">
+	          			<label for="temperature-0003">
+							<span class="form-label">冷凍</span>
+	          			</label>
+
+					</div>
+				</div>
+			</section>
+						
+			<section>
+				<hr><h4>託運單類別</h4>
+				<div class="form-wrap">
+					<div class="form-row">
+						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group">
+						<label for="waybill-type-A">
+							<span class="form-label">一般</span>
+						</label>
+	          			<input id="waybill-type-B" type="radio" name="waybill-type-radio-group">
+	          			<label for="waybill-type-B">
+							<span class="form-label">代收</span>
+	          			</label>
+	          			
+	          			<input id="waybill-type-G" type="radio" name="waybill-type-radio-group">
+	          			<label for="waybill-type-G">
+							<span class="form-label">報值</span>
+	          			</label>
+					</div>
+				</div>
+			</section>
+			
+			<hr><h4>備註</h4>
+			<input type="text" name="comment">
 		</form>
 	</div>
 
@@ -934,77 +1041,145 @@
 						});	
 		            }
 		        },{
-		            text: '查詢EGS資訊',
-		            action: function(e, dt, node, config) {
-
- 		                $.ajax({
-		                    url: 'Egs.do',
-		                    type: 'post',
-		                    data: {
-		                        action: 'query_egs_info'
-		                    },
-			                beforeSend: function(){
-		                		 $(':hover').css('cursor','progress');
-			                },
-			                complete: function(){
-		                		 $(':hover').css('cursor','default');
-			                },
-		                    error: function(xhr) {},
-		                    success: function(response) {
-		                    }
-						});	
-		            }
-		        },{
-		            text: '查詢地址對應的速達五碼郵遞區號',
+		            text: '傳送單筆託運單資料(黑貓)',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
-		            	var addressMap = new Map();
-		            	var addresses = '';
+		            	var orders = new Map(); //儲存訂單
+		            	var ships = new Map(); //儲存訂單內容ship id
 		                var cells = $dtMaster.cells().nodes();
 						var row;
 						var data;
+						var message = '';
 
 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-		                
-						$checkboxs.each(function(index) {
-							row = $(this).closest("tr");
-							data = $table.DataTable().row(row).data();
-							addressMap.set( data.deliver_to, index );
-						});
-						console.log(addressMap);
 
-		                if (addressMap.size > 200) {
-		                    alert('目前已有'+ addressMap.size + '筆地址，最大200筆的上限限制');
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-		                if(addressMap.size == 0){
-		                	addresses = 'noaddress'
-		                }else{
-							addressMap.forEach(function (item, key, mapObj) {
-								addresses += (key+',');
-							});
-							addresses = addresses.substring(0,addresses.length-1);
-		                }
-						console.log('addresses: '+ addresses);
+
+						$checkboxs.each(function() {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							console.log(data);
+							orders.set( data.order_no, data.order_no );
+							ships.set( data.ship_id, data.ship_id );
+						});
 						
- 		                $.ajax({
-		                    url: 'Egs.do',
-		                    type: 'post',
-		                    data: {
-		                        action: 'query_suda5',
-		                        addresses: addresses
-		                    },
-			                beforeSend: function(){
-		                		 $(':hover').css('cursor','progress');
-			                },
-			                complete: function(){
-		                		 $(':hover').css('cursor','default');
-			                },
-		                    error: function(xhr) {},
-		                    success: function(response) {
-		                    }
-						});	
+						console.log('orders');
+						console.log(orders);
+						console.log('ships');
+						console.log(ships);
+						
+						if(orders.size> 1){
+							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+							var table = document.createElement('table');
+							orders.forEach(function(value, key, fullArray){
+								var tr = document.createElement('tr');
+								var text = document.createTextNode(key);
+								tr.appendChild(text);
+								table.appendChild(tr);
+							});
+							var $mes = $('#message #text');
+							$mes.val('').html(message).append(table);
+							$('#message')
+								.dialog()
+								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+								.dialog('option', 'width', '322.6px')
+								.dialog('option', 'minHeight', 'auto')
+						}else{
+							var opt = {
+									   dayNamesMin:["日","一","二","三","四","五","六"],
+									   monthNames:["1","2","3","4","5","6","7","8","9","10","11","12"],
+									   monthNamesShort:["1","2","3","4","5","6","7","8","9","10","11","12"],
+									   prevText:"上月",
+									   nextText:"次月",
+									   weekHeader:"週",
+									   showMonthAfterYear:true,
+									   dateFormat:"yy-mm-dd",
+									   changeYear: true,
+									   changeMonth: true,
+									   minDate : 0,
+									   };
+							$("#dialog-egs-form").find("input[name=delivary-date]" ).datepicker(opt);
+							
+							$('#dialog-egs').dialog({
+								draggable : true,
+								resizable : false,
+								overflow: 'auto',
+								width : 'auto',
+								modal : true,
+								title : '傳送託運單資料',
+								buttons : [{
+											text : "確認",
+											click : function() {
+												
+												var timezone_type_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var waybill_type_str = $("input[name='waybill-type-radio-group']:checked", '#dialog-egs-form').attr("id");
+												
+												console.log('timezone_type_str: ' + timezone_type_str);
+												console.log('waybill_type_str: ' + waybill_type_str);
+												console.log('receiver_name: ' + waybill_type_str);
+												
+												
+								                $.ajax({
+								                    url: 'Egs.do',
+								                    type: 'post',
+								                    data: {
+								                        //action: 'test_delivery_timezone',
+								                        action: 'transfer_waybill',
+								                        realsale_id: data.realsale_id,
+					 			                        receiver_name: data.deliver_name,
+								                        receiver_address: data.deliver_to,
+								                        service_type: timezone_type_str.substring( timezone_type_str.length, timezone_type_str.length -1 ),
+								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 )
+								                    },
+									                beforeSend: function(){
+								                		 $(':hover').css('cursor','progress');
+									                },
+									                complete: function(){
+								                		 $(':hover').css('cursor','default');
+									                },
+								                    error: function(xhr) {},
+								                    success: function(response) {
+								                    }
+												});													
+											}
+										}, {
+											text : "取消",
+											click : function() {
+												$("#dialog-egs-form").trigger("reset");
+												$(this).dialog("close");
+											}
+										} ],
+								close : function() {
+									$("#dialog-egs-form").trigger("reset");
+								}
+							});
+							
+// 			                $.ajax({
+// 			                    url: 'Egs.do',
+// 			                    type: 'post',
+// 			                    data: {
+// 			                        action: 'transfer_waybill',
+// 			                        orderNo: data.order_no,
+// 			                        receiver_name: data.deliver_name,
+// 			                        receiver_address: data.deliver_to,
+// 			                        shipId: data.ship_id,
+// 			                        realShipId: data.realsale_id
+// 			                    },
+// 				                beforeSend: function(){
+// 			                		 $(':hover').css('cursor','progress');
+// 				                },
+// 				                complete: function(){
+// 			                		 $(':hover').css('cursor','default');
+// 				                },
+// 			                    error: function(xhr) {},
+// 			                    success: function(response) {
+// 			                    }
+// 							});								
+						}
 		            }
 		        }
 		    ]
