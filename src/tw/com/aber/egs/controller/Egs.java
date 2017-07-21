@@ -53,19 +53,28 @@ public class Egs extends HttpServlet {
 			// String orderNo = request.getParameter("orderNo");
 			// logger.debug("orderNo: " + orderNo);
 
+			
+			// 溫層
+			String temperature = request.getParameter("temperature");
+			logger.debug("[溫層] temperature: " + temperature);
+			
+			// 備註
+			String comment = request.getParameter("comment");
+			logger.debug("[備註] comment: " + comment);
+			
 			// 收件人姓名
 			String receiver_name = request.getParameter("receiver_name");
-			logger.debug("receiver_name: " + receiver_name);
+			logger.debug("[收件人姓名] receiver_name: " + receiver_name);
 
 			// 收件人地址
 			String receiver_address = request.getParameter("receiver_address");
-			logger.debug("receiver_address: " + receiver_address);
+			logger.debug("[收件人地址] receiver_address: " + receiver_address);
 
 			// 收件人地址的速達五碼郵遞區號
 			api = new EgsApi();
 			String receiver_suda5 = api.querySuda5("query_suda5", receiver_address);
 			receiver_suda5 = receiver_suda5.split("&")[1].split("=")[1];
-			logger.debug("receiver_suda5: " + receiver_suda5);
+			logger.debug("[收件人地址的速達五碼郵遞區號] receiver_suda5: " + receiver_suda5);
 			
 			
 			EgsService service = new EgsService();
@@ -73,18 +82,21 @@ public class Egs extends HttpServlet {
 
 			// 寄件人姓名
 			String sender_name = groupVO.getGroup_name();
+			logger.debug("[寄件人姓名] sender_name: " + sender_name);
 			
 			// 寄件人地址
 			String sender_address = groupVO.getAddress();
+			logger.debug("[寄件人地址] sender_address: " + sender_address);
 			
 			// 寄件人電話
 			String sender_phone = groupVO.getPhone();
+			logger.debug("[寄件人電話] sender_phone: " + sender_phone);
 			
 			/*
 			 * 託運單類別 A:一般 B:代收 G:報值
 			 */
 			String waybill_type = request.getParameter("waybill_type");
-			logger.debug("waybill_type: " + waybill_type);
+			logger.debug("[託運單類別] waybill_type: " + waybill_type);
 
 			// 連線契客代號
 			api = new EgsApi();
@@ -92,7 +104,7 @@ public class Egs extends HttpServlet {
 			String customer_id = api.send(command);
 
 			customer_id = customer_id.split("&")[1].split(",")[0].split("=")[1];
-			logger.debug("customer_id: " + customer_id);
+			logger.debug("[連線契客代號] customer_id: " + customer_id);
 
 			// 託運單號碼
 			api = new EgsApi();
@@ -112,7 +124,7 @@ public class Egs extends HttpServlet {
 			command = "query_waybill_id_range";
 			String tracking_number = api.send(command, params);
 			tracking_number = tracking_number.split("&")[2].split("=")[1];
-			logger.debug("tracking_number: " + tracking_number);
+			logger.debug("[託運單號碼] tracking_number: " + tracking_number);
 
 			// EgsService service = new EgsService();
 			// List<DeliveryVO> list =

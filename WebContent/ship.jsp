@@ -1117,10 +1117,11 @@
 												
 												var timezone_type_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
 												var waybill_type_str = $("input[name='waybill-type-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var temperature_str = $("input[name='temperature-radio-group']:checked", '#dialog-egs-form').attr("id");
 												
 												console.log('timezone_type_str: ' + timezone_type_str);
 												console.log('waybill_type_str: ' + waybill_type_str);
-												console.log('receiver_name: ' + waybill_type_str);
+												console.log('temperature_str: ' + temperature_str);
 												
 												
 								                $.ajax({
@@ -1133,7 +1134,9 @@
 					 			                        receiver_name: data.deliver_name,
 								                        receiver_address: data.deliver_to,
 								                        service_type: timezone_type_str.substring( timezone_type_str.length, timezone_type_str.length -1 ),
-								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 )
+								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 ),
+								                        temperature : temperature_str.substring( temperature_str.length, temperature_str.length -1 ),
+								                        comment : $("input[name='comment']", '#dialog-egs-form').val()
 								                    },
 									                beforeSend: function(){
 								                		 $(':hover').css('cursor','progress');
