@@ -50,18 +50,33 @@ public class Egs extends HttpServlet {
 		if ("transfer_waybill".equals(action)) {
 
 			// 訂單編號
-			// String orderNo = request.getParameter("orderNo");
-			// logger.debug("orderNo: " + orderNo);
+			String orderNo = request.getParameter("orderNo");
+			logger.debug("[訂單編號] orderNo: " + orderNo);
 
-			
 			// 溫層
 			String temperature = request.getParameter("temperature");
 			logger.debug("[溫層] temperature: " + temperature);
-			
+
+			// 尺寸
+			String package_size = request.getParameter("package_size");
+			logger.debug("[尺吋] temperature: " + package_size);
+
+			// 指定配達日期
+			String delivery_date = request.getParameter("delivery_date");
+			logger.debug("[指定配達日期] delivery_date: " + delivery_date);
+
+			// 指定配達時段
+			String delivery_timezone = request.getParameter("delivery_timezone");
+			logger.debug("[指定配達時段] delivery_timezone: " + delivery_timezone);
+
+			// 品名
+			String product_name = request.getParameter("product_name");
+			logger.debug("[品名] product_name: " + product_name);
+
 			// 備註
 			String comment = request.getParameter("comment");
 			logger.debug("[備註] comment: " + comment);
-			
+
 			// 收件人姓名
 			String receiver_name = request.getParameter("receiver_name");
 			logger.debug("[收件人姓名] receiver_name: " + receiver_name);
@@ -75,23 +90,28 @@ public class Egs extends HttpServlet {
 			String receiver_suda5 = api.querySuda5("query_suda5", receiver_address);
 			receiver_suda5 = receiver_suda5.split("&")[1].split("=")[1];
 			logger.debug("[收件人地址的速達五碼郵遞區號] receiver_suda5: " + receiver_suda5);
-			
-			
+
 			EgsService service = new EgsService();
 			GroupVO groupVO = service.getGroupByGroupId(groupId);
 
 			// 寄件人姓名
 			String sender_name = groupVO.getGroup_name();
 			logger.debug("[寄件人姓名] sender_name: " + sender_name);
-			
+
 			// 寄件人地址
 			String sender_address = groupVO.getAddress();
 			logger.debug("[寄件人地址] sender_address: " + sender_address);
-			
+
+			// 寄件人地址的速達五碼郵遞區號
+			api = new EgsApi();
+			String sender_suda5 = api.querySuda5("query_suda5", sender_address);
+			sender_suda5 = sender_suda5.split("&")[1].split("=")[1];
+			logger.debug("[寄件人地址的速達五碼郵遞區號] receiver_suda5: " + sender_suda5);
+
 			// 寄件人電話
 			String sender_phone = groupVO.getPhone();
 			logger.debug("[寄件人電話] sender_phone: " + sender_phone);
-			
+
 			/*
 			 * 託運單類別 A:一般 B:代收 G:報值
 			 */
@@ -110,7 +130,7 @@ public class Egs extends HttpServlet {
 			api = new EgsApi();
 			command = "query_waybill_id_range";
 			String count = "1";
-			
+
 			paramsArr = new String[3];
 			paramsArr[0] = "customer_id=".concat(customer_id);
 			paramsArr[1] = "waybill_type=".concat(waybill_type);

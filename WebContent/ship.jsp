@@ -119,22 +119,22 @@
 				<hr><h4>指定配達時段</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="delivery-timezone-radio-1" type="radio" name="delivery-timezone-radio-group">
-						<label for="delivery-timezone-radio-1">
+						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group">
+						<label for="delivery-timezone-1">
 							<span class="form-label">9~12時</span>
 						</label>
-	          			<input id="delivery-timezone-radio-2" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-radio-2">
+	          			<input id="delivery-timezone-2" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-2">
 							<span class="form-label">12~17時</span>
 	          			</label>
 	          			
-	          			<input id="delivery-timezone-radio-3" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-radio-3">
+	          			<input id="delivery-timezone-3" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-3">
 							<span class="form-label">17~20時</span>
 	          			</label>
 	          			
-	          			<input id="delivery-timezone-radio-4" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-radio-4">
+	          			<input id="delivery-timezone-4" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-4">
 							<span class="form-label">不限時</span>
 	          			</label>
 					</div>
@@ -1046,7 +1046,9 @@
 		                var $table = $('#dt_master_ship');
 
 		            	var orders = new Map(); //儲存訂單
-		            	var ships = new Map(); //儲存訂單內容ship id
+		            	var productNames = '';
+		            	var shipIds = '';
+		            	
 		                var cells = $dtMaster.cells().nodes();
 						var row;
 						var data;
@@ -1064,14 +1066,23 @@
 							data = $table.DataTable().row(row).data();
 							console.log(data);
 							orders.set( data.order_no, data.order_no );
-							ships.set( data.ship_id, data.ship_id );
+							productNames+= (','+ data.v_product_name);
+							shipIds+= (','+ data.ship_id);
 						});
+						
+						if(productNames.length != 0){
+							productNames = productNames.substring( 1, productNames.length);
+						}
+
+						if(shipIds.length != 0){
+							shipIds = shipIds.substring( 1, shipIds.length);
+						}
 						
 						console.log('orders');
 						console.log(orders);
-						console.log('ships');
-						console.log(ships);
-						
+						console.log('productNames');
+						console.log(productNames);
+
 						if(orders.size> 1){
 							message = message.concat('以下為您所勾選的訂單↓<br><br>');
 							var table = document.createElement('table');
@@ -1118,6 +1129,9 @@
 												var timezone_type_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
 												var waybill_type_str = $("input[name='waybill-type-radio-group']:checked", '#dialog-egs-form').attr("id");
 												var temperature_str = $("input[name='temperature-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var package_size_str = $("input[name='package-size-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var delivery_timezone_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
+												
 												
 												console.log('timezone_type_str: ' + timezone_type_str);
 												console.log('waybill_type_str: ' + waybill_type_str);
@@ -1130,13 +1144,19 @@
 								                    data: {
 								                        //action: 'test_delivery_timezone',
 								                        action: 'transfer_waybill',
+					 			                        orderNo: data.order_no,
 								                        realsale_id: data.realsale_id,
 					 			                        receiver_name: data.deliver_name,
 								                        receiver_address: data.deliver_to,
 								                        service_type: timezone_type_str.substring( timezone_type_str.length, timezone_type_str.length -1 ),
 								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 ),
 								                        temperature : temperature_str.substring( temperature_str.length, temperature_str.length -1 ),
-								                        comment : $("input[name='comment']", '#dialog-egs-form').val()
+								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -1 ),
+								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
+								                        delivary_date : $("input[name='delivary-date']", '#dialog-egs-form').val(),
+								                        comment : $("input[name='comment']", '#dialog-egs-form').val(),
+								                        product_name : productNames,
+								                        shipIds : shipIds
 								                    },
 									                beforeSend: function(){
 								                		 $(':hover').css('cursor','progress');
