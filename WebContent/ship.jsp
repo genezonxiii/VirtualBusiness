@@ -205,11 +205,12 @@
 	          			<label for="waybill-type-B">
 							<span class="form-label">代收</span>
 	          			</label>
-	          			
+	          			<!-- 報值先關起來
 	          			<input id="waybill-type-G" type="radio" name="waybill-type-radio-group">
 	          			<label for="waybill-type-G">
 							<span class="form-label">報值</span>
 	          			</label>
+	          			 -->
 					</div>
 				</div>
 			</section>
@@ -1116,6 +1117,7 @@
 							$("#dialog-egs-form").find("input[name=delivary-date]" ).datepicker(opt);
 							
 							$('#dialog-egs').dialog({
+								autoOpen: false,
 								draggable : true,
 								resizable : false,
 								overflow: 'auto',
@@ -1180,28 +1182,7 @@
 									$("#dialog-egs-form").trigger("reset");
 								}
 							});
-							
-// 			                $.ajax({
-// 			                    url: 'Egs.do',
-// 			                    type: 'post',
-// 			                    data: {
-// 			                        action: 'transfer_waybill',
-// 			                        orderNo: data.order_no,
-// 			                        receiver_name: data.deliver_name,
-// 			                        receiver_address: data.deliver_to,
-// 			                        shipId: data.ship_id,
-// 			                        realShipId: data.realsale_id
-// 			                    },
-// 				                beforeSend: function(){
-// 			                		 $(':hover').css('cursor','progress');
-// 				                },
-// 				                complete: function(){
-// 			                		 $(':hover').css('cursor','default');
-// 				                },
-// 			                    error: function(xhr) {},
-// 			                    success: function(response) {
-// 			                    }
-// 							});								
+							$( "#dialog-egs" ).dialog( "option", "height", 530 ).dialog( 'open' );			
 						}
 		            }
 		        }

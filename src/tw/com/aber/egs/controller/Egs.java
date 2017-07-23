@@ -2,13 +2,11 @@ package tw.com.aber.egs.controller;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,11 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import tw.com.aber.ship.controller.ship;
-import tw.com.aber.ship.controller.ship.ShipService;
-import tw.com.aber.vo.DeliveryVO;
 import tw.com.aber.vo.GroupVO;
-import tw.com.aber.vo.ShipVO;
 
 public class Egs extends HttpServlet {
 
@@ -72,7 +66,11 @@ public class Egs extends HttpServlet {
 			// 品名
 			String product_name = request.getParameter("product_name");
 			logger.debug("[品名] product_name: " + product_name);
-
+			
+			// 選取的單筆出貨單明細id
+			String shipIds = request.getParameter("shipIds");
+			logger.debug("[選取的單筆出貨單明細id] shipIds: " + shipIds);
+			
 			// 備註
 			String comment = request.getParameter("comment");
 			logger.debug("[備註] comment: " + comment);
@@ -112,6 +110,21 @@ public class Egs extends HttpServlet {
 			String sender_phone = groupVO.getPhone();
 			logger.debug("[寄件人電話] sender_phone: " + sender_phone);
 
+			// 距離 00:同縣市 01:外縣市 02:離島
+			api = new EgsApi();
+			command = "query_distance";
+
+			paramsArr = new String[2];
+			paramsArr[0] = "suda5_senderpostcode_1=".concat(sender_suda5);
+			paramsArr[1] = "suda5_customerpostcode_1=".concat(receiver_suda5);
+
+			params = api.getParams(paramsArr);
+			logger.debug("params: " + params);
+
+			String distance = api.send(command, params);
+			distance = distance.split("&")[1].split("=")[1];
+			logger.debug("[距離] distance: " + distance);
+
 			/*
 			 * 託運單類別 A:一般 B:代收 G:報值
 			 */
@@ -119,17 +132,16 @@ public class Egs extends HttpServlet {
 			logger.debug("[託運單類別] waybill_type: " + waybill_type);
 
 			// 連線契客代號
-			api = new EgsApi();
-			command = "query_customers";
-			String customer_id = api.send(command);
-
-			customer_id = customer_id.split("&")[1].split(",")[0].split("=")[1];
+			String customer_id = service.getGroupEzcatCustomerIdByGroupId(groupId);
 			logger.debug("[連線契客代號] customer_id: " + customer_id);
 
+			// 託運單帳號(託運單帳號 = 連線契客代號)
+			String account_id = customer_id;
+			logger.debug("[託運單帳號] account_id: " + account_id);
+
 			// 託運單號碼
-			api = new EgsApi();
-			command = "query_waybill_id_range";
 			String count = "1";
+			command = "query_waybill_id_range";
 
 			paramsArr = new String[3];
 			paramsArr[0] = "customer_id=".concat(customer_id);
@@ -140,53 +152,27 @@ public class Egs extends HttpServlet {
 			params = api.getParams(paramsArr);
 			logger.debug("params: " + params);
 
-			api = new EgsApi();
-			command = "query_waybill_id_range";
 			String tracking_number = api.send(command, params);
 			tracking_number = tracking_number.split("&")[2].split("=")[1];
 			logger.debug("[託運單號碼] tracking_number: " + tracking_number);
 
-			// EgsService service = new EgsService();
-			// List<DeliveryVO> list =
-			// service.getShipSFDeliveryInfoByOrderNo(groupId, orderNo);
-			//
-			// // 託運單號碼
-			// String tracking_number = list.get(0).getMailno();
-			// logger.debug("tracking_number: " + tracking_number);
+			// 取時間
+			SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+			java.util.Date current = new java.util.Date();
+
+			String nowDate = sdFormat.format(current);
+			String create_time = nowDate;
+			String print_time = nowDate;
+			logger.debug("[建立時間] create_time: " + create_time);
+			logger.debug("[列印時間] print_time: " + print_time);
+
+			// 會員編號、關稅、報值金額 default:0
+			String member_no = "0", taxin = "0", insurance = "0";
+			logger.debug("[會員編號] member_no: " + member_no);
+			logger.debug("[關稅] taxin: " + taxin);
+			logger.debug("[報值金額] insurance: " + insurance);
 
 		}
-		// 因為目前type 1-4無須檢查
-		// if ("test_delivery_timezone".equals(action)) {
-		// String receiver_address = request.getParameter("receiver_address");
-		// logger.debug("receiver_address: " + receiver_address);
-		//
-		// String service_type = request.getParameter("service_type");
-		// logger.debug("service_type: " + service_type);
-		//
-		// api = new EgsApi();
-		//
-		// String areaCode = api.querySuda5("query_suda5", receiver_address);
-		// areaCode = areaCode.split("&")[1].split("=")[1];
-		// logger.debug("areaCode: " + areaCode);
-		//
-		// paramsArr = new String[2];
-		// paramsArr[0] = "service_type=".concat(service_type);
-		// paramsArr[1] = "suda5_1=".concat(areaCode);
-		//
-		// api = new EgsApi();
-		// params = api.getParams(paramsArr);
-		// logger.debug("params: " + params);
-		//
-		// //status=OK&delivery_timezone_1=3
-		// String allowType = api.testDeliveryTimezone(action, params);
-		// allowType = allowType.split("&")[1].split("=")[1];
-		// logger.debug("allowType: " + allowType);
-		//
-		// if(!service_type.equals(allowType)){
-		//
-		// }
-		// }
-
 	}
 
 	public class EgsDao implements egs_interface {
@@ -197,6 +183,7 @@ public class Egs extends HttpServlet {
 		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 
 		private static final String sp_get_group_by_groupId = "call sp_get_group_by_groupId(?)";
+		private static final String sp_get_group_ezcat_customer_id_by_group_id = "call sp_get_group_ezcat_customer_id_by_group_id(?)";
 
 		@Override
 		public GroupVO getGroupByGroupId(String groupId) {
@@ -243,6 +230,48 @@ public class Egs extends HttpServlet {
 			return row;
 		}
 
+		@Override
+		public String getGroupEzcatCustomerIdByGroupId(String groupId) {
+			String customId = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_group_ezcat_customer_id_by_group_id);
+
+				pstmt.setString(1, groupId);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					customId = rs.getString("customer_id");
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return customId;
+		}
+
 	}
 
 	public class EgsService {
@@ -256,8 +285,8 @@ public class Egs extends HttpServlet {
 			return dao.getGroupByGroupId(groupId);
 		}
 
-		public void getShipByShipSeqNo(String groupId, String seqNo) {
-
+		public String getGroupEzcatCustomerIdByGroupId(String groupId) {
+			return dao.getGroupEzcatCustomerIdByGroupId(groupId);
 		}
 
 	}
@@ -265,6 +294,8 @@ public class Egs extends HttpServlet {
 	interface egs_interface {
 
 		public GroupVO getGroupByGroupId(String groupId);
+
+		public String getGroupEzcatCustomerIdByGroupId(String groupId);
 
 	}
 }

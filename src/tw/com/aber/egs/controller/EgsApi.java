@@ -30,35 +30,6 @@ public class EgsApi {
 		conString += cmd;
 		return egsApi.executeGET(conString);
 	}
-	
-//	public String queryWaybillIdRange(String command, String params) {
-//		egsApi = new EgsApi();
-//		cmd = cmd.concat(command).concat(params);
-//		conString += cmd;
-//		return egsApi.executeGET(conString);
-//	}
-//
-//	
-//	public String queryEgsInfo(String command) {
-//		egsApi = new EgsApi();
-//		cmd = cmd.concat(command);
-//		conString += cmd;
-//		return egsApi.executeGET(conString);
-//	}
-//
-//	public String queryCustomers(String command) {
-//		egsApi = new EgsApi();
-//		cmd = cmd.concat(command);
-//		conString += cmd;
-//		return egsApi.executeGET(conString);
-//	}
-//
-//	public String testDeliveryTimezone(String command, String params) {
-//		egsApi = new EgsApi();
-//		cmd = cmd.concat(command).concat(params);
-//		conString += cmd;
-//		return egsApi.executeGET(conString);
-//	}
 
 	public String querySuda5(String command, String addresses) {
 		egsApi = new EgsApi();
