@@ -31,7 +31,7 @@ public class EgsApi {
 		return egsApi.executeGET(conString);
 	}
 
-	public String querySuda5(String command, String addresses) {
+	public String querySuda(String command, String addresses) {
 		egsApi = new EgsApi();
 		cmd = cmd.concat(command);
 
