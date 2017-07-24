@@ -432,7 +432,18 @@
 		                                "class": "fa fa-pencil-square-o"
 		                            }))
 		                        )
-
+								.append(
+		                            $("<button/>", {
+		                                "id": row.seq_no,
+		                                "value": row.sale_id,
+		                                "name": row.c_product_id,
+		                                "class": "btn-in-table btn-green btn_print",
+		                                "title": "清單"
+		                            })
+		                            .append($("<i/>", {
+		                                "class": "fa fa-pencil-square-o"
+		                            }))
+		                        )
 		                    )
 		                );
 
@@ -1213,9 +1224,6 @@
 		  }
 		  return infoValidation;
 	}
-	
-	
-	
 	
 	$("#dt_master_ship").on("click", ".btn_list", function(e) {
 		e.preventDefault();
