@@ -141,7 +141,7 @@
 				</div>
 			</section>
 			<hr><h4>指定配達日期</h4>
-			<input type="text" name="delivary-date" class="self-date">
+			<input type="text" name="delivery-date" class="self-date">
 			
 			<section>
 				<hr><h4>尺寸</h4>
@@ -1120,6 +1120,7 @@
 		            	var orders = new Map(); //儲存訂單
 		            	var productNames = '';
 		            	var shipIds = '';
+		            	var realsaleIds = '';
 		            	
 		                var cells = $dtMaster.cells().nodes();
 						var row;
@@ -1139,8 +1140,13 @@
 							console.log(data);
 							orders.set( data.order_no, data.order_no );
 							productNames+= (','+ data.v_product_name);
-							shipIds+= (','+ data.ship_id);
+							shipIds += (','+ data.ship_id);
+							realsaleIds += ( ",'" + data.realsale_id + "'");
 						});
+						
+						if(realsaleIds.length != 0){
+							realsaleIds = realsaleIds.substring( 1, realsaleIds.length);
+						}
 						
 						if(productNames.length != 0){
 							productNames = productNames.substring( 1, productNames.length);
@@ -1185,7 +1191,7 @@
 									   changeMonth: true,
 									   minDate : 0,
 									   };
-							$("#dialog-egs-form").find("input[name=delivary-date]" ).datepicker(opt);
+							$("#dialog-egs-form").find("input[name=delivery-date]" ).datepicker(opt);
 							
 							$('#dialog-egs').dialog({
 								autoOpen: false,
@@ -1209,8 +1215,7 @@
 												console.log('timezone_type_str: ' + timezone_type_str);
 												console.log('waybill_type_str: ' + waybill_type_str);
 												console.log('temperature_str: ' + temperature_str);
-												
-												
+
 								                $.ajax({
 								                    url: 'Egs.do',
 								                    type: 'post',
@@ -1226,10 +1231,11 @@
 								                        temperature : temperature_str.substring( temperature_str.length, temperature_str.length -1 ),
 								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -1 ),
 								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
-								                        delivary_date : $("input[name='delivary-date']", '#dialog-egs-form').val(),
+								                        delivery_date : $("#dialog-egs-form input[name='delivery-date']").val(),
 								                        comment : $("input[name='comment']", '#dialog-egs-form').val(),
 								                        product_name : productNames,
-								                        shipIds : shipIds
+								                        shipIds : shipIds,
+								                        realsaleIds : realsaleIds
 								                    },
 									                beforeSend: function(){
 								                		 $(':hover').css('cursor','progress');
@@ -1239,6 +1245,24 @@
 									                },
 								                    error: function(xhr) {},
 								                    success: function(response) {
+								                    	var text = '';
+								                    	
+														$("#dialog-egs-form").trigger("reset");
+														$('#dialog-egs').dialog("close");
+
+														if(response == 'OK'){
+															text = '傳送託運單成功';
+														}else{
+															text = '傳送託運單失敗';
+														}
+														var $mes = $('#message #text');
+								                        $mes.val('').html(text);
+								                        $('#message')
+								                            .dialog()
+								                            .dialog('option', 'title', '訊息')
+								                            .dialog('option', 'width', 'auto')
+								                            .dialog('option', 'minHeight', 'auto')
+								                            .dialog("open");
 								                    }
 												});													
 											}
