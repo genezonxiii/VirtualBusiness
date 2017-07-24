@@ -2,9 +2,21 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
 	<property name="ireport.zoom" value="3.452271214393128"/>
 	<property name="ireport.x" value="180"/>
-	<property name="ireport.y" value="17"/>
+	<property name="ireport.y" value="128"/>
+	<parameter name="p_group_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_order_no" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_suda7" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_egs_num" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[call db_virtualbusiness.sp_delivery_report('cbcc3138-5603-11e6-a532-000d3a800878', '123','3233042','2.0.2.1');]]>
+		<![CDATA[call  db_virtualbusiness.sp_delivery_report($P{p_group_id}, $P{p_order_no}, $P{p_suda7}, $P{p_egs_num});]]>
 	</queryString>
 	<field name="egs_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -91,9 +103,6 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="insurance" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="ship_ids" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="suda2" class="java.lang.String"/>

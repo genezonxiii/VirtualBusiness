@@ -79,6 +79,11 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- 報表 對話窗 -->
+	<div id="dialog_report" class="dialog" align="center" style="display:none">
+		<iframe src="" frameborder="0" id="dialog_report_iframe" width="850" height="450"></iframe>
+	</div>
 	<!-- 銷貨明細對話窗-->
 	<div id="dialog-sale-detail" class="dialog" align="center" style="display:none">
 		<form name="dialog-form-sale-detail" id="dialog-form-sale-detail">
@@ -437,11 +442,11 @@
 		                                "id": row.seq_no,
 		                                "value": row.sale_id,
 		                                "name": row.c_product_id,
-		                                "class": "btn-in-table btn-green btn_print",
+		                                "class": "btn-in-table  btn-darkblue btn_ship_report",
 		                                "title": "清單"
 		                            })
 		                            .append($("<i/>", {
-		                                "class": "fa fa-pencil-square-o"
+		                                "class": "fa fa-file-pdf-o"
 		                            }))
 		                        )
 		                    )
@@ -1224,6 +1229,43 @@
 		  }
 		  return infoValidation;
 	}
+	
+	
+	
+	function open_report(key,value,key1,value1){
+		
+		var iframUrl="./report.do?"+key+"="+encodeURIComponent(value)+"&"+key1+"="+value1+"&type=ship_report";
+
+		console.log(iframUrl);
+		$("#dialog_report_iframe").attr("src",iframUrl );
+		 $("#dialog_report").dialog({
+				draggable : true,
+				resizable : false,
+				autoOpen : false,
+				height : "600",
+				width : "900",
+				modal : true, 
+				closeOnEscape: false,
+			    open: function(event, ui) {
+			        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+			    },
+				buttons : [{
+						text : "關閉",
+						click : function() {
+							$("#dialog_report").dialog("close");
+						}
+						}]
+		 })
+		 $("#dialog_report").dialog("open"); 	
+	}
+	
+	
+	$("#dt_master_ship").on("click", ".btn_ship_report", function(e) {
+		var row = $(this).closest("tr");
+	    var data = $("#dt_master_ship").DataTable().row(row).data();
+	    open_report("order_no",data.order_no,"address",data.deliver_to);
+	});
+	
 	
 	$("#dt_master_ship").on("click", ".btn_list", function(e) {
 		e.preventDefault();

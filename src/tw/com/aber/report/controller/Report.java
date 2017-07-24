@@ -16,14 +16,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import tw.com.aber.egs.controller.EgsApi;
+import tw.com.aber.ship.controller.ship;
 
 public class Report extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static final String sp_get_ship_sf_delivery_new_no = "call sp_delivery_report(?,?,?,?)";
+	private static final Logger logger = LogManager.getLogger(Report.class);
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		doPost(request, response);
@@ -34,7 +41,8 @@ public class Report extends HttpServlet {
 		if (request.getSession().getAttribute("group_id") == null) {
 			return;
 		}
-		HashMap hm = null;
+
+		HashMap<String, Object> hm = null;
 
 		String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -138,6 +146,55 @@ public class Report extends HttpServlet {
 				} catch (ClassNotFoundException cnfe) {
 					throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 				}
+			} else if ("ship_report".equals(request.getParameter("type"))) {
+				String address = request.getParameter("address");
+				String order_no = request.getParameter("order_no");
+
+				EgsApi egsApi = new EgsApi();
+				String suda7 = egsApi.getQuerySuda7(address);
+				EgsApi api = new EgsApi();
+				String eGSNum = api.getEGSNum();
+				
+				logger.debug("address"+address);
+				logger.debug("suda7"+suda7);
+				logger.debug("eGSNum"+eGSNum);
+				logger.debug("group_id"+request.getSession().getAttribute("group_id").toString());
+				logger.debug("order_no"+order_no);
+
+				String reportName = "shipReportA4_3";
+
+				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id: ", request.getSession().getAttribute("group_id").toString());
+				hm.put("p_order_no: ", order_no);
+				hm.put("p_suda7: ", suda7);
+				hm.put("p_egs_num: ", eGSNum);
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+				
+				response.setContentType("APPLICATION/PDF");
+				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+				response.setHeader("Content-Disposition", disHeader);
+
+				File file = new File(pdfFileName);
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+
+				fileIn.close();
+				out.flush();
+				out.close();
 			}
 
 		} catch (Exception e) {
