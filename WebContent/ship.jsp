@@ -1220,7 +1220,6 @@
 								                    url: 'Egs.do',
 								                    type: 'post',
 								                    data: {
-								                        //action: 'test_delivery_timezone',
 								                        action: 'transfer_waybill',
 					 			                        orderNo: data.order_no,
 								                        realsale_id: data.realsale_id,
