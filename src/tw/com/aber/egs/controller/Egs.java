@@ -221,7 +221,6 @@ public class Egs extends HttpServlet {
 				logger.debug("[報值金額] insurance: " + insurance);
 
 				// 組合傳送單筆託運單資料電文
-
 				paramsArr = new String[26];
 				paramsArr[0] = "customer_id=".concat(customer_id);
 				paramsArr[1] = "tracking_number=".concat(tracking_number);
