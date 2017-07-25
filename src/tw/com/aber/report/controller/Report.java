@@ -173,10 +173,10 @@ public class Report extends HttpServlet {
 				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 
 				hm = new HashMap<String, Object>();
-				hm.put("p_group_id: ", request.getSession().getAttribute("group_id").toString());
-				hm.put("p_order_no: ", order_no);
-				hm.put("p_suda7: ", suda7);
-				hm.put("p_egs_num: ", eGSNum);
+				hm.put("p_group_id", request.getSession().getAttribute("group_id").toString());
+				hm.put("p_order_no", order_no);
+				hm.put("p_suda7", suda7);
+				hm.put("p_egs_num", eGSNum);
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 				
