@@ -38,7 +38,113 @@
 <script>
 var first=1;
 function draw_customer(parameter){
-	$("#customer-contain").css({"opacity":"0"});
+        $("#customer").DataTable({
+            dom: "lfr<t>ip",
+            scrollY: "290px",
+            width: 'auto',
+            lengthChange: false,
+            scrollCollapse: true,
+            destroy: true,
+            language: {
+                "url": "js/dataTables_zh-tw.txt",
+                "emptyTable": "查無資料",
+            },
+            initComplete: function(settings, json) {
+                $('div .dt-buttons').css({
+                    'float': 'left',
+                    'margin-left': '10px'
+                });
+                $('div .dt-buttons a').css('margin-left', '10px');
+            },
+            ajax: {
+                url: "customer.do",
+                dataSrc: "",
+                type: "POST",
+                data: parameter
+            },
+            columns: [{
+                "title": "客戶姓名",
+                "data": "name",
+                "defaultContent": ""
+            }, {
+                "title": "收貨地址",
+                "data": "address",
+                "defaultContent": ""
+            }, {
+                "title": "電話",
+                "data": "phone",
+                "defaultContent": ""
+            }, {
+                "title": "手機",
+                "data": "mobile",
+                "defaultContent": ""
+            }, {
+                "title": "Email",
+                "data": "email",
+                "defaultContent": ""
+            }, {
+                "title": "郵政編號",
+                "data": "post",
+                "defaultContent": ""
+            }, {
+                "title": "客戶等級",
+                "data": "class",
+                "defaultContent": ""
+            }, {
+                "title": "備註",
+                "data": "memo",
+                "defaultContent": ""
+            }, {
+                "title": "功能",
+                "data": null,
+                "defaultContent": ""
+            }],
+            columnDefs: [{
+                "className": "dt-center",
+                "targets": "_all"
+            }, {
+                //功能
+                targets: -1,
+                searchable: false,
+                orderable: false,
+                render: function(data, type, row) {
+                    var options = $("<div/>").append($("<div/>", {
+                        "class": "table-row-func btn-in-table btn-gray"
+                    }).append($("<i/>", {
+                        "class": "fa fa-ellipsis-h"
+                    })).append($("<div/>", {
+                        "class": "table-function-list"
+                    }).append($("<button/>", {
+                        "class": "btn-in-table btn-darkblue btn_update",
+                        "title": "修改",
+                    }).append($("<i/>", {
+                        "class": "fa fa-pencil"
+                    }))).append($("<button/>", {
+                        "class": "btn-in-table btn-alert btn_delete",
+                        "title": "刪除",
+                    }).append($("<i/>", {
+                        "class": "fa fa-trash"
+                    })))));
+
+                    return options.html();
+                }
+            }]
+        });
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*$("#customer-contain").css({"opacity":"0"});
 	warning_msg("---讀取中請稍候---");
 	$.ajax({
 		type : "POST",
@@ -130,7 +236,7 @@ function draw_customer(parameter){
 			}						
 		}
 	});
-}
+}*/
 	$(function() {
 		$(".bdyplane").animate({"opacity":"1"});
 		var tmp={
@@ -172,6 +278,7 @@ function draw_customer(parameter){
 					action : "getCustomerVOByName",
 					custome_name : $custome_name
 				};
+                $("#hidCustomeName").val($custome_name);
 				console.log(parameter);
 				draw_customer(parameter);
 			});	
@@ -220,17 +327,18 @@ function draw_customer(parameter){
 		//修改事件聆聽
 		$("#customer").delegate(".btn_update", "click", function(e) {
 			e.preventDefault();
-			customer_id = $(this).val();
-			row = $(this).attr("id");
-			$("#dialog-form-update input[name='customer_id']").val(customer_id);
-			$("#dialog-form-update input[name='name']").val($('#name_'+row).html());
-			$("#dialog-form-update input[name='address']").val($('#address_'+row).html());
-			$("#dialog-form-update input[name='phone']").val($('#phone_'+row).html());
-			$("#dialog-form-update input[name='mobile']").val($('#mobile_'+row).html());
-			$("#dialog-form-update input[name='email']").val($('#email_'+row).html());
-			$("#dialog-form-update input[name='post']").val($('#post_'+row).html());
-			$("#dialog-form-update input[name='class']").val($('#class_'+row).html());
-			$("#dialog-form-update input[name='memo']").val($('#memo_'+row).html());
+			var row = $(this).closest("tr");
+	        var data = $("#customer").DataTable().row(row).data();
+
+			$("#dialog-form-update input[name='customer_id']").val(data.customer_id);
+			$("#dialog-form-update input[name='name']").val(data.name);
+			$("#dialog-form-update input[name='address']").val(data.address);
+			$("#dialog-form-update input[name='phone']").val(data.phone);
+			$("#dialog-form-update input[name='mobile']").val(data.mobile);
+			$("#dialog-form-update input[name='email']").val(data.email);
+			$("#dialog-form-update input[name='post']").val(data.post);
+			$("#dialog-form-update input[name='class']").val(data.class);
+			$("#dialog-form-update input[name='memo']").val(data.memo);
 			update_dialog.dialog("open");
 		});
 		
@@ -407,9 +515,9 @@ function draw_customer(parameter){
 				</form>
 			</div>	
 			<!-- 第一列 -->
+			<input type="hidden" id="hidCustomeName" value=''>
 			
 			<div class="input-field-wrap">
-			
 				<div class="form-wrap">
 					<div class="form-row">
 						<label for=""> <span class="block-label">客戶姓名</span> <input
@@ -430,23 +538,8 @@ function draw_customer(parameter){
 			<!-- 第二列 -->
 
 			<div class="row search-result-wrap" align="center" id ="sales_contain_row">
-				<div id="customer-contain" class="ui-widget" style="display:none">
+				<div id="customer-contain" class="ui-widget" >
 					<table id="customer" class="result-table">
-						<thead>
-							<tr>
-								<th>客戶姓名</th>
-								<th>收貨地址</th>
-								<th style="background-image: none !important;">電話</th>
-								<th style="background-image: none !important;">手機</th>
-								<th style="background-image: none !important;">Email</th>
-								<th style="background-image: none !important;">郵政編號</th>
-								<th style="background-image: none !important;">客戶等級</th>
-								<th style="background-image: none !important;">備註</th>
-								<th style="background-image: none !important;">功能</th>
-							</tr>	
-						</thead>
-						<tbody>
-						</tbody>
 					</table>
 				</div>
 				<span class="validateTips"> </span>
