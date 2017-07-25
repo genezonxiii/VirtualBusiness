@@ -52,7 +52,7 @@ public class EgsApi {
 					params += ("&address_" + (i + 1) + "=" + addresArr[i]);
 				}
 			} catch (Exception e) {
-				logger.debug("querySuda5:" + e.getMessage());
+				logger.debug("querySuda:" + e.getMessage());
 			}
 		} else {
 			params += ("&address_1=" + addresses);
