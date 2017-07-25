@@ -2,6 +2,8 @@ package tw.com.aber.egs.controller;
 
 import java.io.StringWriter;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -57,6 +59,19 @@ public class EgsApi {
 		}
 		conString += (cmd + params);
 		return egsApi.executeGET(conString);
+	}
+
+	public Map<String, String> toMap(String string) {
+		Map<String, String> map = new HashMap<String, String>();
+		String[] pairs = string.split("&");
+		if (pairs.length > 0) {
+			for (int i = 0; i < pairs.length; i++) {
+				String pair = pairs[i];
+				String[] keyValue = pair.split("=");
+				map.put(keyValue[0], keyValue[1]);
+			}
+		}
+		return map;
 	}
 
 	public String getParams(String[] paramsArr) {

@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
+
 import tw.com.aber.egs.vo.EgsVO;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.ShipVO;
@@ -113,13 +115,13 @@ public class Egs extends HttpServlet {
 				// 收件人地址的速達五碼郵遞區號
 				api = new EgsApi();
 				String receiver_suda5 = api.querySuda("query_suda5", receiver_address);
-				receiver_suda5 = receiver_suda5.split("&")[1].split("=")[1];
+				receiver_suda5 = api.toMap(receiver_suda5).get("suda5_1");
 				logger.debug("[收件人地址的速達五碼郵遞區號] receiver_suda5: " + receiver_suda5);
 
 				// 收件人地址的速達七碼郵遞區號
 				api = new EgsApi();
 				String receiver_suda7 = api.querySuda("query_suda7", receiver_address);
-				receiver_suda7 = receiver_suda7.split("&")[1].split("=")[1];
+				receiver_suda7 = api.toMap(receiver_suda7).get("suda7_1");
 				logger.debug("[收件人地址的速達七碼郵遞區號] receiver_suda7: " + receiver_suda7);
 
 				GroupVO groupVO = service.getGroupByGroupId(groupId);
@@ -135,7 +137,7 @@ public class Egs extends HttpServlet {
 				// 寄件人地址的速達五碼郵遞區號
 				api = new EgsApi();
 				String sender_suda5 = api.querySuda("query_suda5", sender_address);
-				sender_suda5 = sender_suda5.split("&")[1].split("=")[1];
+				sender_suda5 = api.toMap(sender_suda5).get("suda5_1");
 				logger.debug("[寄件人地址的速達五碼郵遞區號] receiver_suda5: " + sender_suda5);
 
 				// 寄件人電話
@@ -154,7 +156,7 @@ public class Egs extends HttpServlet {
 				logger.debug("params: " + params);
 
 				String distance = api.send(command, params);
-				distance = distance.split("&")[1].split("=")[1];
+				distance = api.toMap(distance).get("distance_1");
 				logger.debug("[距離] distance: " + distance);
 
 				/*
@@ -185,7 +187,7 @@ public class Egs extends HttpServlet {
 				logger.debug("params: " + params);
 
 				String tracking_number = api.send(command, params);
-				tracking_number = tracking_number.split("&")[2].split("=")[1];
+				tracking_number = api.toMap(tracking_number).get("waybill_id");
 				logger.debug("[託運單號碼] tracking_number: " + tracking_number);
 
 				// 取時間
@@ -254,7 +256,11 @@ public class Egs extends HttpServlet {
 
 				String apiResponseStr = api.send(action, params);
 				logger.debug("apiResponseStr: " + apiResponseStr);
-				if ("OK".equals(apiResponseStr.split("=")[1])) {
+
+				String status = api.toMap(apiResponseStr).get("status");
+
+				if ("OK".equals(status)) {
+					// set value
 					egsVO = new EgsVO();
 					egsVO.setGroup_id(groupId);
 					egsVO.setCustomer_id(customer_id);
@@ -285,8 +291,9 @@ public class Egs extends HttpServlet {
 					egsVO.setTaxin(taxin);
 					egsVO.setInsurance(insurance);
 
+					// insert to database
 					service.insertEgs(egsVO);
-					result="OK";
+					result = "OK";
 				}
 			} catch (Exception e) {
 				logger.debug(e.getMessage());
