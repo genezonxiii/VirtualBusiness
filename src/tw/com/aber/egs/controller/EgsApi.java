@@ -32,7 +32,7 @@ public class EgsApi {
 		}
 		return map;
 	}
-
+	
 	public String getQuerySuda7(String address) {
 		String suda7 = null;
 		try {
