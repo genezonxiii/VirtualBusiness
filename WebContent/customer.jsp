@@ -35,396 +35,458 @@
 <script type="text/javascript" src="js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="js/additional-methods.min.js"></script>
 <script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
-<script>
-var first=1;
-function draw_customer(parameter){
-        $("#customer").DataTable({
-            dom: "lfr<t>ip",
-            scrollY: "290px",
-            width: 'auto',
-            lengthChange: false,
-            scrollCollapse: true,
-            destroy: true,
-            language: {
-                "url": "js/dataTables_zh-tw.txt",
-                "emptyTable": "查無資料",
-            },
-            initComplete: function(settings, json) {
-                $('div .dt-buttons').css({
-                    'float': 'left',
-                    'margin-left': '10px'
-                });
-                $('div .dt-buttons a').css('margin-left', '10px');
-            },
-            ajax: {
-                url: "customer.do",
-                dataSrc: "",
-                type: "POST",
-                data: parameter
-            },
-            columns: [{
-                "title": "客戶姓名",
-                "data": "name",
-                "defaultContent": ""
-            }, {
-                "title": "收貨地址",
-                "data": "address",
-                "defaultContent": ""
-            }, {
-                "title": "電話",
-                "data": "phone",
-                "defaultContent": ""
-            }, {
-                "title": "手機",
-                "data": "mobile",
-                "defaultContent": ""
-            }, {
-                "title": "Email",
-                "data": "email",
-                "defaultContent": ""
-            }, {
-                "title": "郵政編號",
-                "data": "post",
-                "defaultContent": ""
-            }, {
-                "title": "客戶等級",
-                "data": "class",
-                "defaultContent": ""
-            }, {
-                "title": "備註",
-                "data": "memo",
-                "defaultContent": ""
-            }, {
-                "title": "功能",
-                "data": null,
-                "defaultContent": ""
-            }],
-            columnDefs: [{
-                "className": "dt-center",
-                "targets": "_all"
-            }, {
-                //功能
-                targets: -1,
-                searchable: false,
-                orderable: false,
-                render: function(data, type, row) {
-                    var options = $("<div/>").append($("<div/>", {
-                        "class": "table-row-func btn-in-table btn-gray"
-                    }).append($("<i/>", {
-                        "class": "fa fa-ellipsis-h"
-                    })).append($("<div/>", {
+<script>var first = 1;
+
+function draw_customer(parameter) {
+    $("#customer").DataTable({
+        dom: "lfr<t>ip",
+        scrollY: "290px",
+        width: 'auto',
+        lengthChange: false,
+        scrollCollapse: true,
+        destroy: true,
+        language: {
+            "url": "js/dataTables_zh-tw.txt",
+            "emptyTable": "查無資料",
+        },
+        initComplete: function(settings, json) {
+            $('div .dt-buttons').css({
+                'float': 'left',
+                'margin-left': '10px'
+            });
+            $('div .dt-buttons a').css('margin-left', '10px');
+        },
+        ajax: {
+            url: "customer.do",
+            dataSrc: "",
+            type: "POST",
+            data: parameter
+        },
+        columns: [{
+            "title": "客戶姓名",
+            "data": "name",
+            "defaultContent": ""
+        }, {
+            "title": "收貨地址",
+            "data": "address",
+            "defaultContent": ""
+        }, {
+            "title": "電話",
+            "data": "phone",
+            "defaultContent": ""
+        }, {
+            "title": "手機",
+            "data": "mobile",
+            "defaultContent": ""
+        }, {
+            "title": "Email",
+            "data": "email",
+            "defaultContent": ""
+        }, {
+            "title": "郵政編號",
+            "data": "post",
+            "defaultContent": ""
+        }, {
+            "title": "客戶等級",
+            "data": "class",
+            "defaultContent": ""
+        }, {
+            "title": "備註",
+            "data": "memo",
+            "defaultContent": ""
+        }, {
+            "title": "功能",
+            "data": null,
+            "defaultContent": ""
+        }],
+        columnDefs: [{
+            "className": "dt-center",
+            "targets": "_all"
+        }, {
+            //功能
+            targets: -1,
+            searchable: false,
+            orderable: false,
+            render: function(data, type, row) {
+                var options = $("<div/>").append($("<div/>", {
+                    "class": "table-row-func btn-in-table btn-gray"
+                }).append($("<i/>", {
+                    "class": "fa fa-ellipsis-h"
+                })).append($("<div/>", {
                         "class": "table-function-list"
                     }).append($("<button/>", {
                         "class": "btn-in-table btn-darkblue btn_update",
                         "title": "修改",
                     }).append($("<i/>", {
                         "class": "fa fa-pencil"
-                    }))).append($("<button/>", {
+                    }))).append(
+                        $("<button/>", {
+                            "id": row.seq_no,
+                            "value": row.sale_id,
+                            "name": row.c_product_id,
+                            "class": "btn-in-table btn-green btn_list",
+                            "title": "清單"
+                        })
+                        .append($("<i/>", {
+                            "class": "fa fa-pencil-square-o"
+                        }))
+                    )
+
+                    .append($("<button/>", {
                         "class": "btn-in-table btn-alert btn_delete",
                         "title": "刪除",
                     }).append($("<i/>", {
                         "class": "fa fa-trash"
                     })))));
 
-                    return options.html();
+                return options.html();
+            }
+        }]
+    });
+}
+
+function draw_transaction_record(parameter) {
+    $("#customerTransactionRecordTable").DataTable({
+        dom: "lfr<t>ip",
+        scrollY: "290px",
+        width: 'auto',
+        lengthChange: false,
+        scrollCollapse: true,
+        destroy: true,
+        language: {
+            "url": "js/dataTables_zh-tw.txt",
+            "emptyTable": "查無資料",
+        },
+        initComplete: function(settings, json) {
+            $('div .dt-buttons').css({
+                'float': 'left',
+                'margin-left': '10px'
+            });
+            $('div .dt-buttons a').css('margin-left', '10px');
+        },
+        ajax: {
+            url: "customer.do",
+            dataSrc: "",
+            type: "POST",
+            data: parameter
+        },
+        columns: [{
+            "title": "訂單編號",
+            "data": "order_no",
+            "defaultContent": ""
+        }, {
+            "title": "產品編號",
+            "data": "c_product_id",
+            "defaultContent": ""
+        }, {
+            "title": "產品名稱",
+            "data": "product_name",
+            "defaultContent": ""
+        }, {
+            "title": "交易日期",
+            "data": "trans_list_date",
+            "defaultContent": ""
+        }],
+        columnDefs: [{
+            "className": "dt-center",
+            "targets": "_all"
+        }]
+    });
+}
+
+$(function() {
+    $(".bdyplane").animate({
+        "opacity": "1"
+    });
+    var tmp = {
+        action: "search"
+    };
+    draw_customer(tmp);
+    var validator_insert = $("#insert-dialog-form-post").validate({
+        rules: {
+            name: {
+                required: true
+            },
+            address: {
+                required: true
+            },
+            phone: {
+                required: true
+            },
+            mobile: {
+                required: true
+            },
+            email: {
+                email: true
+            },
+            post: {
+                digits: true,
+                maxlength: 5
+            }
+        }
+    });
+    var validator_update = $("#update-dialog-form-post").validate({
+        rules: {
+            name: {
+                required: true
+            },
+            address: {
+                required: true
+            },
+            phone: {
+                required: true
+            },
+            mobile: {
+                required: true
+            },
+            email: {
+                email: true
+            },
+            post: {
+                digits: true,
+                maxlength: 5
+            }
+        }
+    });
+    //新增事件聆聽
+    $("#create-customer").click(function(e) {
+        e.preventDefault();
+        insert_dialog.dialog("open");
+    });
+
+    //查詢
+    $('#select_date').click(function(e) {
+        e.preventDefault();
+        console.log("select_date");
+        var $custome_name = $('input[name=custome_name]').val();
+        var parameter = {
+            action: "getCustomerVOByName",
+            custome_name: $custome_name
+        };
+        $("#hidCustomeName").val($custome_name);
+        console.log(parameter);
+        draw_customer(parameter);
+    });
+
+    // "新增" Dialog相關設定
+    insert_dialog = $("#dialog-form-insert").dialog({
+        draggable: true,
+        resizable: false,
+        autoOpen: false,
+        height: "auto",
+        width: "auto",
+        modal: true,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "fade",
+            duration: 300
+        },
+        buttons: [{
+            id: "insert",
+            text: "新增",
+            click: function() {
+                if ($('#insert-dialog-form-post').valid()) {
+                    var tmp = {
+                        action: "insert",
+                        name: $("#dialog-form-insert input[name='name']").val(),
+                        address: $("#dialog-form-insert input[name='address']").val(),
+                        phone: $("#dialog-form-insert input[name='phone']").val(),
+                        mobile: $("#dialog-form-insert input[name='mobile']").val(),
+                        email: $("#dialog-form-insert input[name='email']").val(),
+                        post: $("#dialog-form-insert input[name='post']").val(),
+                        class: $("#dialog-form-insert input[name='class']").val(),
+                        memo: $("#dialog-form-insert input[name='memo']").val()
+                    };
+                    draw_customer(tmp);
+                    $("#insert-dialog-form-post").trigger("reset");
+                    insert_dialog.dialog("close");
                 }
-            }]
-        });
-    }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/*$("#customer-contain").css({"opacity":"0"});
-	warning_msg("---讀取中請稍候---");
-	$.ajax({
-		type : "POST",
-		url : "customer.do",
-		data :parameter,
-		success : function(result) {
-// 			console.log(result);
-			if(result.indexOf('Error')>-1){warning_msg("連線異常,請洽系統管理員。");}
-			var json_obj = $.parseJSON(result);
-			//判斷查詢結果
-			var resultRunTime = 0;
-			$.each (json_obj, function (i) {
-				resultRunTime+=1;
-			});
-			var result_table = "";
-			if(resultRunTime!=0){
-				$.each(json_obj,function(i, item) {
-					if(json_obj[i].name==null||json_obj[i].name=='NULL'){
-				        json_obj[i].name ="";
-				    }
-					if(json_obj[i].address==null||json_obj[i].address=='NULL'){
-				        json_obj[i].address ="";
-				    }
-					if(json_obj[i].phone==null||json_obj[i].phone=='NULL'){
-				        json_obj[i].phone ="";
-				    }
-					if(json_obj[i].mobile==null||json_obj[i].mobile=='NULL'){
-				        json_obj[i].mobile ="";
-				    }
-					if(json_obj[i].email==null||json_obj[i].email=='NULL'){
-				        json_obj[i].email ="";
-				    }
-					if(json_obj[i].post==null||json_obj[i].post=='NULL'){
-				        json_obj[i].post ="";
-				    }
-					if(json_obj[i].class==null||json_obj[i].class=='NULL'){
-				        json_obj[i].class ="";
-				    }
-					if(json_obj[i].memo==null||json_obj[i].memo=='NULL'){
-				        json_obj[i].memo ="";
-				    }
-					result_table 
-					+= "<tr>"
-					+ "<td id='name_"+i+"' name='"+ json_obj[i].name +"'>"+ json_obj[i].name+ "</td>"
-					+ "<td id='address_"+i+"' name='"+ json_obj[i].address +"'>"+ json_obj[i].address+ "</td>"
-					+ "<td id='phone_"+i+"' name='"+ json_obj[i].phone +"'>"+ json_obj[i].phone+ "</td>"
-					+ "<td id='mobile_"+i+"' name='"+ json_obj[i].mobile +"'>"+ json_obj[i].mobile+ "</td>"
-					+ "<td id='email_"+i+"' name='"+ json_obj[i].email +"'>"+ json_obj[i].email+ "</td>"
-					+ "<td id='post_"+i+"' name='"+ json_obj[i].post +"'>"+ json_obj[i].post+ "</td>"
-					+ "<td id='class_"+i+"' name='"+ json_obj[i].class +"'>"+ json_obj[i].class+ "</td>"
-					+ "<td id='memo_"+i+"' name='"+ json_obj[i].memo +"'>"+ json_obj[i].memo+ "</td>"
-					+ "<td><div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
-					+ "	<div class='table-function-list'>"
-					+ "		<button class='btn-in-table btn-darkblue btn_update' title='修改' id="+i+" value='"+ json_obj[i].customer_id + "' ><i class='fa fa-pencil'></i></button>"
-					+ "		<button class='btn-in-table btn-alert btn_delete' title='刪除' id="+i+" value='"+ json_obj[i].customer_id + "'val2='"+json_obj[i].name+"' ><i class='fa fa-trash'></i></button>"
-					+ "	</div></div></td></tr>";
-				});
-			}
-			if(resultRunTime==0){
-				$("#customer-contain").hide();
-				warning_msg("---查無此結果---");
-			}
-			$("#customer").dataTable().fnDestroy();
-			
-			if(resultRunTime!=0){
-				
-				$("#customer-contain").show();
-				$("#customer tbody").html(result_table);
-				$("#customer").find("td").css("text-align", "center");
-				$("#customer tbody td:nth-child(2)").css("text-align", "left");
-// 				if(first==0){$("#customer").dataTable().fnDraw(true);}
-// 				else{
-// 					first=1;
-				$("#customer").dataTable({
-// 					"bStateSave": true,
-// 					"bRetrieve": true,
-// 					"bDestroy": true,
-// 					"order": [],
-					"language": {"url": "js/dataTables_zh-tw.txt","zeroRecords": "<font size=3>---查無結果---</font>"}});
-				tooltip('btn_update');
-				tooltip('btn_delete');
-				
-// 				}
-				$("#customer-contain").animate({"opacity":"0.01"},1);
-				$("#customer-contain").animate({"opacity":"1"},300);
-// 				$("#customer").find("th").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-// 				$("#customer").find("td").css({"word-break":"break-all","min-width":"70px","text-align":"center" });
-				warning_msg("");
-			}						
-		}
-	});
-}*/
-	$(function() {
-		$(".bdyplane").animate({"opacity":"1"});
-		var tmp={
-				action : "search"
-			 };
-		draw_customer(tmp);
-		var validator_insert = $("#insert-dialog-form-post").validate({
-			rules : {
-				name : {required : true},
-				address : {required : true},
-				phone : {required : true},
-				mobile : {required : true},
-				email : {email: true},
-				post : {digits : true, maxlength : 5}
-			}
-		});
-		var validator_update = $("#update-dialog-form-post").validate({
-			rules : {
-				name : {required : true},
-				address : {required : true},
-				phone : {required : true},
-				mobile : {required : true},
-				email : {email: true},
-				post : {digits : true, maxlength : 5}
-			}
-		});
-		//新增事件聆聽
-		$("#create-customer").click(function(e) {
-			e.preventDefault();		
-			insert_dialog.dialog("open");
-		});
-		
-		//查詢
-			$('#select_date').click(function(e) {
-				e.preventDefault();
-				console.log("select_date");
-				var $custome_name = $('input[name=custome_name]').val();
-				var parameter = {
-					action : "getCustomerVOByName",
-					custome_name : $custome_name
-				};
-                $("#hidCustomeName").val($custome_name);
-				console.log(parameter);
-				draw_customer(parameter);
-			});	
+            }
+        }, {
+            text: "取消",
+            click: function() {
+                validator_insert.resetForm();
+                $("#insert-dialog-form-post").trigger("reset");
+                insert_dialog.dialog("close");
+            }
+        }],
+        close: function() {
+            validator_insert.resetForm();
+            $("#insert-dialog-form-post").trigger("reset");
+        }
+    });
+    $("#dialog-form-insert").show();
 
-		// "新增" Dialog相關設定
-		insert_dialog = $("#dialog-form-insert").dialog({
-			draggable : true, resizable : false, autoOpen : false,
-			height : "auto", width : "auto", modal : true,
-			show : {effect : "blind",duration : 300},
-			hide : {effect : "fade",duration : 300},
-			buttons : [{
-				id : "insert",
-				text : "新增",
-				click : function() {
-					if ($('#insert-dialog-form-post').valid()) {
-						var tmp={
-							action : "insert",
-							name : $("#dialog-form-insert input[name='name']").val(),
-							address : $("#dialog-form-insert input[name='address']").val(),
-							phone : $("#dialog-form-insert input[name='phone']").val(),
-							mobile : $("#dialog-form-insert input[name='mobile']").val(),
-							email : $("#dialog-form-insert input[name='email']").val(),
-							post : $("#dialog-form-insert input[name='post']").val(),
-							class : $("#dialog-form-insert input[name='class']").val(),
-							memo : $("#dialog-form-insert input[name='memo']").val()
-						};
-						draw_customer(tmp);
-						$("#insert-dialog-form-post").trigger("reset");
-						insert_dialog.dialog("close");
-					}
-				}
-			}, {
-				text : "取消",
-				click : function() {
-					validator_insert.resetForm();
-					$("#insert-dialog-form-post").trigger("reset");
-					insert_dialog.dialog("close");
-				}
-			} ],
-			close : function() {
-				validator_insert.resetForm();
-				$("#insert-dialog-form-post").trigger("reset");
-			}
-		});
-		$("#dialog-form-insert").show();
-		//修改事件聆聽
-		$("#customer").delegate(".btn_update", "click", function(e) {
-			e.preventDefault();
-			var row = $(this).closest("tr");
-	        var data = $("#customer").DataTable().row(row).data();
+    //交易紀錄清單
+    $("#customer").delegate(".btn_list", "click", function(e) {
+        e.preventDefault();
+        var row = $(this).closest("tr");
+        var data = $("#customer").DataTable().row(row).data();
 
-			$("#dialog-form-update input[name='customer_id']").val(data.customer_id);
-			$("#dialog-form-update input[name='name']").val(data.name);
-			$("#dialog-form-update input[name='address']").val(data.address);
-			$("#dialog-form-update input[name='phone']").val(data.phone);
-			$("#dialog-form-update input[name='mobile']").val(data.mobile);
-			$("#dialog-form-update input[name='email']").val(data.email);
-			$("#dialog-form-update input[name='post']").val(data.post);
-			$("#dialog-form-update input[name='class']").val(data.class);
-			$("#dialog-form-update input[name='memo']").val(data.memo);
-			update_dialog.dialog("open");
-		});
-		
-		// "修改" Dialog相關設定
-		update_dialog = $("#dialog-form-update").dialog({
-			draggable : true, resizable : false, autoOpen : false,
-			height : "auto", width : "auto", modal : true,
-			show : {effect : "blind",duration : 300},
-			hide : {effect : "fade",duration : 300},
-			buttons : [{
-				text : "修改",
-				click : function() {
-					if ($('#update-dialog-form-post').valid()) {
-						var tmp ={
-	 							action : "update",
-								customer_id : $("#dialog-form-update input[name='customer_id']").val(),
-	 							name : $("#dialog-form-update input[name='name']").val(),
-	 							address : $("#dialog-form-update input[name='address']").val(),
-								phone : $("#dialog-form-update input[name='phone']").val(),
-								mobile : $("#dialog-form-update input[name='mobile']").val(),
-								email : $("#dialog-form-update input[name='email']").val(),
-								post : $("#dialog-form-update input[name='post']").val(),
-								class : $("#dialog-form-update input[name='class']").val(),
-								memo : $("#dialog-form-update input[name='memo']").val()
-							};
-						draw_customer(tmp);
-						update_dialog.dialog("close");
-						$("#update-dialog-form-post").trigger("reset");
-					}
-				}
-			}, {
-				text : "取消",
-				click : function() {
-					validator_update.resetForm();
-					$("#update-dialog-form-post").trigger("reset");
-					update_dialog.dialog("close");
-				}
-			} ],
-			close : function() {
-				$("#update-dialog-form-post").trigger("reset");
-				validator_update.resetForm();
-			}
-		});
-		$("#dialog-form-update").show();
-		
-		//刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
-		$("#customer").delegate(".btn_delete", "click", function() {
-			$("#dialog-confirm").html("<div class='delete_msg'>'"+$(this).attr("val2")+"'</div>");
-			$("#dialog-confirm").val($(this).val());
-			confirm_dialog.dialog("open");
-		});
-		
-		// "刪除" Dialog相關設定
-		confirm_dialog = $("#dialog-confirm").dialog({
-			draggable : true, resizable : false, autoOpen : false,
-			height : "auto", width : "auto", modal : true,
-			show : {effect : "blind",duration : 300},
-			hide : {effect : "fade",duration : 300},
-			buttons : {
-				"確認刪除" : function() {
-					var tmp={
-							action : "delete",
-							customer_id : $(this).val()
-						};
-					draw_customer(tmp);
-					$(this).dialog("close");
-				},
-				"取消刪除" : function() {
-					$(this).dialog("close");
-				}
-			}
-		});	
-	 $("#dialog-confirm").show();
-	 $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
-		$(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
-		$(".upup").click(function(){
-			$(".input-field-wrap").slideToggle("slow");
-			$(".downdown").slideToggle();
-		});
-		$(".downdown").click(function(){
-			$(".input-field-wrap").slideToggle("slow");
-			$(".downdown").slideToggle();
-		});
-	});
+        var parameter = {
+            action: "transactionRecord",
+            customer_id: data.customer_id
+        };
+        draw_transaction_record(parameter);
+        customer_transaction_record_dialog.dialog("open");
+    });
+
+    customer_transaction_record_dialog = $("#dialog_form_customer_transaction_record").dialog({
+        draggable: true,
+        resizable: false,
+        autoOpen: false,
+        height: "auto",
+        width: "1200",
+        modal: true,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "fade",
+            duration: 300
+        },
+        buttons: [{
+            text: "取消",
+            click: function() {
+                validator_update.resetForm();
+                customer_transaction_record_dialog.dialog("close");
+            }
+        }],
+        close: function() {
+            $("#customer_transaction_form_post").trigger("reset");
+        }
+    });
+
+
+
+    //修改事件聆聽
+    $("#customer").delegate(".btn_update", "click", function(e) {
+        e.preventDefault();
+        var row = $(this).closest("tr");
+        var data = $("#customer").DataTable().row(row).data();
+
+        $("#dialog-form-update input[name='customer_id']").val(data.customer_id);
+        $("#dialog-form-update input[name='name']").val(data.name);
+        $("#dialog-form-update input[name='address']").val(data.address);
+        $("#dialog-form-update input[name='phone']").val(data.phone);
+        $("#dialog-form-update input[name='mobile']").val(data.mobile);
+        $("#dialog-form-update input[name='email']").val(data.email);
+        $("#dialog-form-update input[name='post']").val(data.post);
+        $("#dialog-form-update input[name='class']").val(data.class);
+        $("#dialog-form-update input[name='memo']").val(data.memo);
+        update_dialog.dialog("open");
+    });
+
+    // "修改" Dialog相關設定
+    update_dialog = $("#dialog-form-update").dialog({
+        draggable: true,
+        resizable: false,
+        autoOpen: false,
+        height: "auto",
+        width: "auto",
+        modal: true,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "fade",
+            duration: 300
+        },
+        buttons: [{
+            text: "修改",
+            click: function() {
+                if ($('#update-dialog-form-post').valid()) {
+                    var tmp = {
+                        action: "update",
+                        customer_id: $("#dialog-form-update input[name='customer_id']").val(),
+                        name: $("#dialog-form-update input[name='name']").val(),
+                        address: $("#dialog-form-update input[name='address']").val(),
+                        phone: $("#dialog-form-update input[name='phone']").val(),
+                        mobile: $("#dialog-form-update input[name='mobile']").val(),
+                        email: $("#dialog-form-update input[name='email']").val(),
+                        post: $("#dialog-form-update input[name='post']").val(),
+                        class: $("#dialog-form-update input[name='class']").val(),
+                        memo: $("#dialog-form-update input[name='memo']").val()
+                    };
+                    draw_customer(tmp);
+                    update_dialog.dialog("close");
+                    $("#update-dialog-form-post").trigger("reset");
+                }
+            }
+        }, {
+            text: "取消",
+            click: function() {
+                validator_update.resetForm();
+                $("#update-dialog-form-post").trigger("reset");
+                update_dialog.dialog("close");
+            }
+        }],
+        close: function() {
+            $("#update-dialog-form-post").trigger("reset");
+            validator_update.resetForm();
+        }
+    });
+    $("#dialog-form-update").show();
+
+    //刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
+    $("#customer").delegate(".btn_delete", "click", function() {
+        $("#dialog-confirm").html("<div class='delete_msg'>'" + $(this).attr("val2") + "'</div>");
+        $("#dialog-confirm").val($(this).val());
+        var row = $(this).closest("tr");
+        var data = $("#customer").DataTable().row(row).data();
+        $("#hidCustomerId").val(data.customer_id);
+
+        confirm_dialog.dialog("open");
+    });
+
+    // "刪除" Dialog相關設定
+    confirm_dialog = $("#dialog-confirm").dialog({
+        draggable: true,
+        resizable: false,
+        autoOpen: false,
+        height: "auto",
+        width: "auto",
+        modal: true,
+        show: {
+            effect: "blind",
+            duration: 300
+        },
+        hide: {
+            effect: "fade",
+            duration: 300
+        },
+        buttons: {
+            "確認刪除": function() {
+                var tmp = {
+                    action: "delete",
+                    customer_id: $("#hidCustomerId").val()
+                };
+                draw_customer(tmp);
+                $(this).dialog("close");
+            },
+            "取消刪除": function() {
+                $(this).dialog("close");
+            }
+        }
+    });
+    $("#dialog-confirm").show();
+    $(".input-field-wrap").append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>");
+    $(".input-field-wrap").after("<div class='div_right_top downdown' style='display:none;'><img src='./images/downdown.png'></div>");
+    $(".upup").click(function() {
+        $(".input-field-wrap").slideToggle("slow");
+        $(".downdown").slideToggle();
+    });
+    $(".downdown").click(function() {
+        $(".input-field-wrap").slideToggle("slow");
+        $(".downdown").slideToggle();
+    });
+});
 </script>
-
 	<div class="panel-content">
 		<div class="datalistWrap">
 			<!--對話窗樣式-確認 -->
@@ -514,9 +576,17 @@ function draw_customer(parameter){
 					</fieldset>
 				</form>
 			</div>	
+			
+			<!--對話窗樣式-交易紀錄 -->
+			<div id="dialog_form_customer_transaction_record" title="客戶交易紀錄" style="display:none;">
+				<form name="customer_transaction_form_post" id="customer_transaction_form_post" style="display:inline">
+					<table id="customerTransactionRecordTable">
+					</table>
+				</form>
+			</div>	
 			<!-- 第一列 -->
 			<input type="hidden" id="hidCustomeName" value=''>
-			
+			<input type="hidden" id="hidCustomerId" value=''>
 			<div class="input-field-wrap">
 				<div class="form-wrap">
 					<div class="form-row">
