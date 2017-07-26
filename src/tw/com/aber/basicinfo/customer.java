@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.vo.CustomerVO;
+import tw.com.aber.vo.SaleVO;
 
 public class customer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -95,12 +96,22 @@ public class customer extends HttpServlet {
 				String post = request.getParameter("post");
 				String customerClass = request.getParameter("class");
 				String memo = request.getParameter("memo");
+				
+				CustomerVO customerVO = new CustomerVO();
+				customerVO.setName(name);
+				customerVO.setAddress(address);
+				customerVO.setPhone(phone);
+				customerVO.setMobile(mobile);
+				customerVO.setEmail(email);
+				customerVO.setPost(post);
+				customerVO.setCustomerClass(customerClass);
+				customerVO.setMemo(memo);
 
 				customerService = new CustomerService();
 				CustomerVO encodeCustomerData = customerService.getEncodeData(name, address, phone, mobile);
 				customerService.addCustomer(group_id, encodeCustomerData.getName(), encodeCustomerData.getAddress(),
 						encodeCustomerData.getPhone(), encodeCustomerData.getMobile(), email, post, customerClass, memo,
-						user_id);
+						user_id,customerVO);
 				List<CustomerVO> list = customerService.getAllCustomer(group_id);
 				Gson gson = new Gson();
 				String jsonList = gson.toJson(list);
@@ -123,10 +134,21 @@ public class customer extends HttpServlet {
 				String memo = request.getParameter("memo");
 
 				customerService = new CustomerService();
+				CustomerVO customerVO = new CustomerVO();
+				customerVO.setCustomer_id(customer_id);
+				customerVO.setName(name);
+				customerVO.setAddress(address);
+				customerVO.setPhone(phone);
+				customerVO.setMobile(mobile);
+				customerVO.setEmail(email);
+				customerVO.setPost(post);
+				customerVO.setCustomerClass(customerClass);
+				customerVO.setMemo(memo);
+				
 				CustomerVO encodeCustomerData = customerService.getEncodeData(name, address, phone, mobile);
 				customerService.updateCustomer(customer_id, group_id, encodeCustomerData.getName(),
 						encodeCustomerData.getAddress(), encodeCustomerData.getPhone(), encodeCustomerData.getMobile(),
-						email, post, customerClass, memo, user_id);
+						email, post, customerClass, memo, user_id,customerVO);
 				List<CustomerVO> list = customerService.getAllCustomer(group_id);
 				Gson gson = new Gson();
 				String jsonList = gson.toJson(list);
@@ -161,6 +183,15 @@ public class customer extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		if("transactionRecord".equals(action)){
+			String customer_id = request.getParameter("customer_id");
+			customerService = new CustomerService();
+			List<SaleVO> salelist = customerService.getTransactionRecord(group_id,customer_id);
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			String jsonStrList = gson.toJson(salelist);
+			response.getWriter().write(jsonStrList);
+			/*************************** 其他可能的錯誤處理 **********************************/
+		}
 	}
 
 	interface Customer_interface {
@@ -168,11 +199,13 @@ public class customer extends HttpServlet {
 
 		public void deleteCustomer(String customer_id, String user_id);
 
-		public void insertDB(CustomerVO customerVO, String user_id);
+		public void insertDB(CustomerVO customerVO, String user_id,CustomerVO clearCustomerVO);
 
-		public void updateDB(CustomerVO customerVO, String user_id);
+		public void updateDB(CustomerVO customerVO, String user_id,CustomerVO clearCustomerVO);
 		
 		public List<CustomerVO> getCustomerVOByName(String group_id,CustomerVO customerVO);
+		
+		public List<SaleVO> getTransactionRecord(String group_id,String customer_id);
 		
 		public CustomerVO getEncodeData(CustomerVO customerVO);
 	}
@@ -187,9 +220,13 @@ public class customer extends HttpServlet {
 		public void deleteCustomer(String customer_id, String user_id) {
 			dao.deleteCustomer(customer_id, user_id);
 		}
+		public List<SaleVO> getTransactionRecord(String group_id,String customer_id){
+			return dao.getTransactionRecord(group_id, customer_id);
+		}
+
 
 		public void addCustomer(String group_id, String name, String address, String phone, String mobile, String email,
-				String post, String customerClass, String memo, String user_id) {
+				String post, String customerClass, String memo, String user_id,CustomerVO clearCustomerVO) {
 			CustomerVO customerVO = new CustomerVO();
 			customerVO.setGroup_id(group_id);
 			customerVO.setName(name);
@@ -200,11 +237,11 @@ public class customer extends HttpServlet {
 			customerVO.setPost(post);
 			customerVO.setCustomerClass(customerClass);
 			customerVO.setMemo(memo);
-			dao.insertDB(customerVO, user_id);
+			dao.insertDB(customerVO, user_id, clearCustomerVO);
 		}
 
 		public void updateCustomer(String customer_id, String group_id, String name, String address, String phone,
-				String mobile, String email, String post, String customerClass, String memo, String user_id) {
+				String mobile, String email, String post, String customerClass, String memo, String user_id,CustomerVO clearCustomerVO) {
 			CustomerVO customerVO = new CustomerVO();
 			customerVO.setCustomer_id(customer_id);
 			customerVO.setGroup_id(group_id);
@@ -216,7 +253,7 @@ public class customer extends HttpServlet {
 			customerVO.setPost(post);
 			customerVO.setCustomerClass(customerClass);
 			customerVO.setMemo(memo);
-			dao.updateDB(customerVO, user_id);
+			dao.updateDB(customerVO, user_id,clearCustomerVO);
 		}
 
 		public List<CustomerVO> getAllCustomer(String group_id) {
@@ -239,11 +276,12 @@ public class customer extends HttpServlet {
 
 	class CustomerDAO implements Customer_interface {
 		private static final String sp_del_customer = "call sp_del_customer(?,?)";
-		private static final String sp_insert_customer = "call sp_insert_customer(?,?,?,?,?,?,?,?,?,?)";
-		private static final String sp_update_customer = "call sp_update_customer(?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_insert_customer = "call sp_insert_customer(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_update_customer = "call sp_update_customer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_selectall_customer = "call sp_selectall_customer(?)";
 		private static final String sp_get_customervo_by_name = "call sp_get_customervo_by_name(?,?)";
-		
+		private static final String sp_get_transaction_record_by_customer_id = "call sp_get_transaction_record_by_customer_id(?,?)";
+
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -291,7 +329,7 @@ public class customer extends HttpServlet {
 		}
 
 		@Override
-		public void insertDB(CustomerVO customerVO, String user_id) {
+		public void insertDB(CustomerVO customerVO, String user_id,CustomerVO clearCustomerVO) {
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -310,6 +348,10 @@ public class customer extends HttpServlet {
 				pstmt.setString(8, customerVO.getCustomerClass());
 				pstmt.setString(9, customerVO.getMemo());
 				pstmt.setString(10, user_id);
+				pstmt.setString(11, clearCustomerVO.getName());
+				pstmt.setString(12, clearCustomerVO.getAddress());
+				pstmt.setString(13, clearCustomerVO.getPhone());
+				pstmt.setString(14, clearCustomerVO.getMobile());
 
 				pstmt.executeUpdate();
 				// Handle any SQL errors
@@ -337,7 +379,7 @@ public class customer extends HttpServlet {
 		}
 
 		@Override
-		public void updateDB(CustomerVO customerVO, String user_id) {
+		public void updateDB(CustomerVO customerVO, String user_id,CustomerVO clearCustomerVO) {
 
 			Connection con = null;
 			PreparedStatement pstmt = null;
@@ -357,7 +399,10 @@ public class customer extends HttpServlet {
 				pstmt.setString(9, customerVO.getCustomerClass());
 				pstmt.setString(10, customerVO.getMemo());
 				pstmt.setString(11, user_id);
-
+				pstmt.setString(12, clearCustomerVO.getName());
+				pstmt.setString(13, clearCustomerVO.getAddress());
+				pstmt.setString(14, clearCustomerVO.getPhone());
+				pstmt.setString(15, clearCustomerVO.getMobile());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -552,6 +597,57 @@ public class customer extends HttpServlet {
 					} catch (Exception e) {
 						e.printStackTrace(System.err);
 					}
+				}
+			}
+			return list;
+		}
+
+		@Override
+		public List<SaleVO> getTransactionRecord(String group_id, String customer_id) {
+			List<SaleVO> list = new ArrayList<SaleVO>();
+			SaleVO saleVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_transaction_record_by_customer_id);
+
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, customer_id);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					saleVO = new SaleVO();
+					saleVO.setOrder_no(rs.getString("order_no"));
+					saleVO.setProduct_name(rs.getString("product_name"));
+					saleVO.setC_product_id(rs.getString("c_product_id"));
+					saleVO.setQuantity(rs.getInt("quantity"));
+					saleVO.setPrice(rs.getFloat("price"));
+					saleVO.setTrans_list_date(rs.getDate("trans_list_date"));
+					list.add(saleVO);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
 			return list;
