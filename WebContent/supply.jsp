@@ -331,21 +331,7 @@ function draw_supply(info){
 					});
 				}
 			});
-// 			$("#dialog-form-update").val($(this).val());
-// 			$("#dialog-form-update input[name='supply_name']").val($(this).parents("tr").find("td[name='name']").html());
-// 			$("#dialog-form-update input[name='supply_unicode']").val($(this).parents("tr").find("td[name='uni']").html());
-// 			$("#dialog-form-update input[name='address']").val($(this).parents("tr").find("td[name='addr']").html());
-// 			$("#dialog-form-update input[name='contact']").val($(this).parents("tr").find("td[name='contact0']").html());
-// 			$("#dialog-form-update input[name='phone']").val($(this).parents("tr").find("td[name='phone0']").html());
-// 			$("#dialog-form-update input[name='ext']").val($(this).parents("tr").find("td[name='ext0']").html());
-// 			$("#dialog-form-update input[name='mobile']").val($(this).parents("tr").find("td[name='mobile0']").html());
-// 			$("#dialog-form-update input[name='contact1']").val($(this).parents("tr").find("td[name='contact1']").html());
-// 			$("#dialog-form-update input[name='phone1']").val($(this).parents("tr").find("td[name='phone1']").html());
-// 			$("#dialog-form-update input[name='ext1']").val($(this).parents("tr").find("td[name='ext1']").html());
-// 			$("#dialog-form-update input[name='mobile1']").val($(this).parents("tr").find("td[name='mobile1']").html());
-// 			$("#dialog-form-update input[name='email']").val($(this).parents("tr").find("td[name='email0']").html());
-// 			$("#dialog-form-update input[name='email1']").val($(this).parents("tr").find("td[name='email1']").html());
-// 			$("#dialog-form-update textarea[name='memo']").val($(this).parents("tr").find("td[name='memo']").html());
+
 			update_dialog.dialog("open");
 		});		
 		//新增事件聆聽
