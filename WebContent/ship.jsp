@@ -1044,7 +1044,7 @@
 						});	
 		            }
 		        },{
-		            text: '傳送單筆託運單資料(黑貓)',
+		            text: '黑貓託運',
 		            action: function(e, dt, node, config) {
 		                var $table = $('#dt_master_ship');
 
