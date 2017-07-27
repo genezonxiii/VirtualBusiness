@@ -262,9 +262,11 @@ public class Egs extends HttpServlet {
 				logger.debug("apiResponseStr: " + apiResponseStr);
 
 				Map<String, String> resultMap = api.toMap(apiResponseStr);
-
-				String message = URLDecoder.decode(resultMap.get("message"), "utf8");
-				resultMap.put("message", message);
+				
+				if(resultMap.get("message")!=null){
+					String message = URLDecoder.decode(resultMap.get("message"), "utf8");
+					resultMap.put("message", message);
+				}
 
 				String status = resultMap.get("status");
 
@@ -307,6 +309,7 @@ public class Egs extends HttpServlet {
 				}
 				result = new Gson().toJson(resultMap);
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.error(e.getMessage());
 			}
 			logger.debug("result: " + result);

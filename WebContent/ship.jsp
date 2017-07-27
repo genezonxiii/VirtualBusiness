@@ -119,7 +119,7 @@
 				<hr><h4>指定配達時段</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group">
+						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group" checked>
 						<label for="delivery-timezone-1">
 							<span class="form-label">9~12時</span>
 						</label>
@@ -147,7 +147,7 @@
 				<hr><h4>尺寸</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="package-size-0001" type="radio" name="package-size-radio-group">
+						<input id="package-size-0001" type="radio" name="package-size-radio-group" checked>
 						<label for="package-size-0001">
 							<span class="form-label">60cm</span>
 						</label>
@@ -174,7 +174,7 @@
 				<hr><h4>溫層</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="temperature-0001" type="radio" name="temperature-radio-group">
+						<input id="temperature-0001" type="radio" name="temperature-radio-group" checked>
 						<label for="temperature-0001">
 							<span class="form-label">常溫</span>
 						</label>
@@ -197,7 +197,7 @@
 				<hr><h4>託運單類別</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group">
+						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group" checked>
 						<label for="waybill-type-A">
 							<span class="form-label">一般</span>
 						</label>
@@ -1120,10 +1120,10 @@
 									   dateFormat:"yy-mm-dd",
 									   changeYear: true,
 									   changeMonth: true,
-									   minDate : 0,
+									   minDate : 0
 									   };
 							$("#dialog-egs-form").find("input[name=delivery-date]" ).datepicker(opt);
-							
+							$("#dialog-egs-form").find("input[name=delivery-date]" ).val(new Date().toJSON().slice(0,10));
 							$('#dialog-egs').dialog({
 								autoOpen: false,
 								draggable : true,
