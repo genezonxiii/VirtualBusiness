@@ -258,12 +258,12 @@ $(function() {
     $('#select_date').click(function(e) {
         e.preventDefault();
         console.log("select_date");
-        var $custome_name = $('input[name=custome_name]').val();
+        var $customer_name = $('input[name=customer_name]').val();
         var parameter = {
             action: "getCustomerVOByName",
-            custome_name: $custome_name
+            customer_name: $customer_name
         };
-        $("#hidCustomeName").val($custome_name);
+        $("#hidCustomeName").val($customer_name);
         console.log(parameter);
         draw_customer(parameter);
     });
@@ -297,7 +297,7 @@ $(function() {
                         mobile: $("#dialog-form-insert input[name='mobile']").val(),
                         email: $("#dialog-form-insert input[name='email']").val(),
                         post: $("#dialog-form-insert input[name='post']").val(),
-                        class: $("#dialog-form-insert input[name='class']").val(),
+                        customerClass: $("#dialog-form-insert input[name='class']").val(),
                         memo: $("#dialog-form-insert input[name='memo']").val()
                     };
                     draw_customer(tmp);
@@ -410,7 +410,7 @@ $(function() {
                         mobile: $("#dialog-form-update input[name='mobile']").val(),
                         email: $("#dialog-form-update input[name='email']").val(),
                         post: $("#dialog-form-update input[name='post']").val(),
-                        class: $("#dialog-form-update input[name='class']").val(),
+                        customerClass: $("#dialog-form-update input[name='class']").val(),
                         memo: $("#dialog-form-update input[name='memo']").val()
                     };
                     draw_customer(tmp);
@@ -435,10 +435,11 @@ $(function() {
 
     //刪除事件聆聽 : 因為聆聽事件動態產生，所以採用delegate來批量處理，節省資源
     $("#customer").delegate(".btn_delete", "click", function() {
-        $("#dialog-confirm").html("<div class='delete_msg'>'" + $(this).attr("val2") + "'</div>");
-        $("#dialog-confirm").val($(this).val());
         var row = $(this).closest("tr");
         var data = $("#customer").DataTable().row(row).data();
+    	
+        $("#dialog-confirm").html("<div class='delete_msg'>" +data.name  + "</div>");
+        $("#dialog-confirm").val(data.customer_id);
         $("#hidCustomerId").val(data.customer_id);
 
         confirm_dialog.dialog("open");
@@ -591,7 +592,7 @@ $(function() {
 				<div class="form-wrap">
 					<div class="form-row">
 						<label for=""> <span class="block-label">客戶姓名</span> <input
-							type="text" name="custome_name">
+							type="text" name="customer_name">
 						</label>
 						<button class="btn btn-darkblue" id="select_date">查詢</button>
 					</div>
@@ -602,9 +603,7 @@ $(function() {
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="row" align="center"> -->
-<!-- 				<button id="create-customer">新增</button> -->
-<!-- 			</div> -->
+
 			<!-- 第二列 -->
 
 			<div class="row search-result-wrap" align="center" id ="sales_contain_row">
