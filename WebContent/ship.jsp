@@ -1244,15 +1244,18 @@
 									                },
 								                    error: function(xhr) {},
 								                    success: function(response) {
+								                    	
+								                    	console.log('response: '+ response);
+								                    	var json_obj = $.parseJSON(response);
 								                    	var text = '';
 								                    	
 														$("#dialog-egs-form").trigger("reset");
 														$('#dialog-egs').dialog("close");
 
-														if(response == 'OK'){
-															text = '傳送託運單成功';
+														if(json_obj.status == 'OK'){
+															text = '傳送託運單: 成功 / 託運單號碼: '+ json_obj.tracking_number;
 														}else{
-															text = '傳送託運單失敗';
+															text = '傳送託運單: 失敗';
 														}
 														var $mes = $('#message #text');
 								                        $mes.val('').html(text);
