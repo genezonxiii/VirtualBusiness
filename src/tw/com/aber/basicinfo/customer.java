@@ -45,6 +45,10 @@ public class customer extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		logger.debug("action: "+action);
+		logger.debug("group_id: "+group_id);
+		
 		if ("search".equals(action)) {
 			try {
 				/*************************** 開始查詢資料 ****************************************/
@@ -68,10 +72,12 @@ public class customer extends HttpServlet {
 		if ("getCustomerVOByName".equals(action)) {
 			try {
 				/*************************** 開始查詢資料 ****************************************/
-				String custome_name = request.getParameter("custome_name");
+				String customer_name = request.getParameter("customer_name");
+				logger.debug("customer_name: "+customer_name);
+		
 				customerService = new CustomerService();
 				CustomerVO customerVO = new CustomerVO();
-				customerVO.setName(custome_name);
+				customerVO.setName(customer_name);
 				List<CustomerVO> list = customerService.getCustomerVOByName(group_id, customerVO);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
@@ -94,8 +100,17 @@ public class customer extends HttpServlet {
 				String mobile = request.getParameter("mobile");
 				String email = request.getParameter("email");
 				String post = request.getParameter("post");
-				String customerClass = request.getParameter("class");
+				String customerClass = request.getParameter("customerClass");
 				String memo = request.getParameter("memo");
+				
+				logger.debug("name: "+name);
+				logger.debug("address: "+address);
+				logger.debug("phone: "+phone);
+				logger.debug("mobile: "+mobile);
+				logger.debug("email: "+email);
+				logger.debug("post: "+post);
+				logger.debug("customerClass: "+customerClass);
+				logger.debug("memo: "+memo);
 				
 				CustomerVO customerVO = new CustomerVO();
 				customerVO.setName(name);
@@ -130,8 +145,18 @@ public class customer extends HttpServlet {
 				String mobile = request.getParameter("mobile");
 				String email = request.getParameter("email");
 				String post = request.getParameter("post");
-				String customerClass = request.getParameter("class");
+				String customerClass = request.getParameter("customerClass");
 				String memo = request.getParameter("memo");
+				
+				logger.debug("customer_id: "+customer_id);
+				logger.debug("name: "+name);
+				logger.debug("address: "+address);
+				logger.debug("phone: "+phone);
+				logger.debug("mobile: "+mobile);
+				logger.debug("email: "+email);
+				logger.debug("post: "+post);
+				logger.debug("customerClass: "+customerClass);
+				logger.debug("memo: "+memo);
 
 				customerService = new CustomerService();
 				CustomerVO customerVO = new CustomerVO();
@@ -164,6 +189,8 @@ public class customer extends HttpServlet {
 				 * 1.接收請求參數
 				 ***************************************/
 				String customer_id = request.getParameter("customer_id");
+				logger.debug("customer_id: "+customer_id);
+
 				/***************************
 				 * 2.開始刪除資料
 				 ***************************************/
@@ -185,6 +212,8 @@ public class customer extends HttpServlet {
 		}
 		if("transactionRecord".equals(action)){
 			String customer_id = request.getParameter("customer_id");
+			logger.debug("customer_id: "+customer_id);
+
 			customerService = new CustomerService();
 			List<SaleVO> salelist = customerService.getTransactionRecord(group_id,customer_id);
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -277,7 +306,7 @@ public class customer extends HttpServlet {
 	class CustomerDAO implements Customer_interface {
 		private static final String sp_del_customer = "call sp_del_customer(?,?)";
 		private static final String sp_insert_customer = "call sp_insert_customer(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		private static final String sp_update_customer = "call sp_update_customer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_new_update_customer = "call sp_new_update_customer(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_selectall_customer = "call sp_selectall_customer(?)";
 		private static final String sp_get_customervo_by_name = "call sp_get_customervo_by_name(?,?)";
 		private static final String sp_get_transaction_record_by_customer_id = "call sp_get_transaction_record_by_customer_id(?,?)";
@@ -386,7 +415,7 @@ public class customer extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_update_customer);
+				pstmt = con.prepareStatement(sp_new_update_customer);
 
 				pstmt.setString(1, customerVO.getCustomer_id());
 				pstmt.setString(2, customerVO.getGroup_id());
