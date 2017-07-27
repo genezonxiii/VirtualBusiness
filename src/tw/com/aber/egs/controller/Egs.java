@@ -1,6 +1,7 @@
 package tw.com.aber.egs.controller;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -13,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -259,7 +261,12 @@ public class Egs extends HttpServlet {
 				String apiResponseStr = api.send(action, params);
 				logger.debug("apiResponseStr: " + apiResponseStr);
 
-				String status = api.toMap(apiResponseStr).get("status");
+				Map<String, String> resultMap = api.toMap(apiResponseStr);
+
+				String message = URLDecoder.decode(resultMap.get("message"), "utf8");
+				resultMap.put("message", message);
+
+				String status = resultMap.get("status");
 
 				if ("OK".equals(status)) {
 					// set value
@@ -295,11 +302,14 @@ public class Egs extends HttpServlet {
 
 					// insert to database
 					service.insertEgs(egsVO);
-					result = "{\"status\": \"OK\",\"tracking_number\": \"" + tracking_number + "\"}";
+
+					resultMap.put("tracking_number", tracking_number);
 				}
+				result = new Gson().toJson(resultMap);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
+			logger.debug("result: " + result);
 			response.getWriter().write(result);
 		} else if ("query_consignment_note".equals(action)) {
 			// 訂單編號

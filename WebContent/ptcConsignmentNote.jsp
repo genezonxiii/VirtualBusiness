@@ -17,6 +17,7 @@
 <link rel="Shortcut Icon" type="image/x-icon"
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true" />
+<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 </head>
 <body>
 	<input type="hidden" id="glb_menu" value='<%=menu%>' />
@@ -57,6 +58,9 @@
 		</div>
 	</div>
 	<jsp:include page="template/common_js.jsp" flush="true" />
+	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
+	<script type="text/javascript" src="js/buttons.colVis.min.js"></script>
 
 	<script type="text/javascript">
 		$('form').on('click', 'button', function(event){
@@ -78,10 +82,13 @@
 		function drawCNTable(parameter) {
 	
 			$("#consignment-note-table").DataTable({
-				dom : "Blfr<t>ip",
-				width : 'auto',
-				scrollCollapse : true,
-				destroy : true,
+			    dom: "frB<t>ip",
+			    lengthChange: false,
+			    pageLength: 20,
+			    scrollY: "290px",
+			    width: 'auto',
+			    scrollCollapse: true,
+			    destroy: true,
 				language : {
 					"url" : "js/dataTables_zh-tw.txt",
 					"emptyTable" : "查無資料",
@@ -92,6 +99,11 @@
 					type : "POST",
 					data : parameter
 				},
+		        buttons: [{
+		        	text: '欄位控制',
+					extend: 'colvis',
+					collectionLayout: 'fixed two-column'
+		        }],
 				columns : [ {
 					"title" : "連線契客代號",
 					"data" : "customer_id",
