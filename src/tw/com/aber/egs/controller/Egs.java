@@ -294,11 +294,11 @@ public class Egs extends HttpServlet {
 					egsVO.setInsurance(insurance);
 
 					// insert to database
-					// service.insertEgs(egsVO);
+					service.insertEgs(egsVO);
 					result = "{\"status\": \"OK\",\"tracking_number\": \"" + tracking_number + "\"}";
 				}
 			} catch (Exception e) {
-				logger.debug(e.getMessage());
+				logger.error(e.getMessage());
 			}
 			response.getWriter().write(result);
 		} else if ("query_consignment_note".equals(action)) {
@@ -668,10 +668,10 @@ public class Egs extends HttpServlet {
 				rs = pstmt.executeQuery();
 				while (rs.next()) {
 					row = new EgsVO();
-					row.setGroup_id(rs.getString("groupId"));
+					row.setGroup_id(rs.getString("group_id"));
 					row.setCustomer_id(rs.getString("customer_id"));
 					row.setTracking_number(rs.getString("tracking_number"));
-					row.setOrder_no(rs.getString("orderNo"));
+					row.setOrder_no(rs.getString("order_no"));
 					row.setReceiver_name(rs.getString("receiver_name"));
 					row.setReceiver_address(rs.getString("receiver_address"));
 					row.setReceiver_suda5(rs.getString("receiver_suda5"));
@@ -684,7 +684,7 @@ public class Egs extends HttpServlet {
 					row.setSender_phone(rs.getString("sender_phone"));
 					row.setProduct_price(rs.getString("product_price"));
 					row.setProduct_name(rs.getString("product_name"));
-					row.setEgs_comment(rs.getString("comment"));
+					row.setEgs_comment(rs.getString("egs_comment"));
 					row.setPackage_size(rs.getString("package_size"));
 					row.setTemperature(rs.getString("temperature"));
 					row.setDistance(rs.getString("distance"));
