@@ -223,6 +223,8 @@
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
+	<script type="text/javascript" src="js/buttons.colVis.min.js"></script>
+	
 	<script>
 	var $dtMaster = null; //主要datatable
 	var selectCount = 0; //全選按鈕計算用
@@ -1185,6 +1187,9 @@
 															text = '傳送託運單: 成功 / 託運單號碼: '+ json_obj.tracking_number;
 														}else{
 															text = '傳送託運單: 失敗';
+															if(json_obj.message.length!=0){
+																text += (' / 訊息: ' + json_obj.message );
+															}
 														}
 														var $mes = $('#message #text');
 								                        $mes.val('').html(text);
