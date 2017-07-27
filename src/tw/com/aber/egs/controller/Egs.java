@@ -309,7 +309,6 @@ public class Egs extends HttpServlet {
 				}
 				result = new Gson().toJson(resultMap);
 			} catch (Exception e) {
-				e.printStackTrace();
 				logger.error(e.getMessage());
 			}
 			logger.debug("result: " + result);
