@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import tw.com.aber.egs.vo.EgsVO;
 import tw.com.aber.vo.GroupVO;
@@ -50,7 +53,7 @@ public class Egs extends HttpServlet {
 		logger.debug("Action:".concat(action));
 
 		if ("transfer_waybill".equals(action)) {
-			String result = "ERR";
+			String result = "{\"status\": \"ERR\"}";
 			try {
 				EgsService service = new EgsService();
 
@@ -75,7 +78,7 @@ public class Egs extends HttpServlet {
 
 				// 尺寸
 				String package_size = request.getParameter("package_size");
-				logger.debug("[尺吋] temperature: " + package_size);
+				logger.debug("[尺吋] package_size: " + package_size);
 
 				// 指定配達日期
 				String delivery_date = request.getParameter("delivery_date");
@@ -291,14 +294,27 @@ public class Egs extends HttpServlet {
 					egsVO.setInsurance(insurance);
 
 					// insert to database
-					service.insertEgs(egsVO);
-					result = "OK";
+					// service.insertEgs(egsVO);
+					result = "{\"status\": \"OK\",\"tracking_number\": \"" + tracking_number + "\"}";
 				}
 			} catch (Exception e) {
 				logger.debug(e.getMessage());
 			}
 			response.getWriter().write(result);
+		} else if ("query_consignment_note".equals(action)) {
+			// 訂單編號
+			String orderNo = request.getParameter("order_no");
+			logger.debug("[訂單編號] orderNo: " + orderNo);
 
+			// 託運單號碼
+			String trackingNo = request.getParameter("tracking_number");
+			logger.debug("[託運單號碼] trackingNo: " + trackingNo);
+
+			EgsService service = new EgsService();
+			List<EgsVO> list = service.getEgsByOrderNoOrTrackingNo(groupId, orderNo, trackingNo);
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			logger.debug(gson.toJson(list));
+			response.getWriter().write(gson.toJson(list));
 		}
 	}
 
@@ -315,6 +331,7 @@ public class Egs extends HttpServlet {
 		private static final String sp_get_egs_receiver_info = "call sp_get_egs_receiver_info(?)";
 		private static final String sp_get_ship_by_order_no = "call sp_get_ship_by_order_no(?,?)";
 		private static final String sp_insert_egs = "call sp_insert_egs(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_select_egs_by_orderno_or_trackingno = "call sp_select_egs_by_orderno_or_trackingno(?,?,?)";
 
 		@Override
 		public GroupVO getGroupByGroupId(String groupId) {
@@ -621,6 +638,90 @@ public class Egs extends HttpServlet {
 			}
 		}
 
+		@Override
+		public List<EgsVO> getEgsByOrderNoOrTrackingNo(String groupId, String orderNo, String trackingNo) {
+			List<EgsVO> rows = new ArrayList<EgsVO>();
+			EgsVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_egs_by_orderno_or_trackingno);
+
+				pstmt.setString(1, groupId);
+				if (orderNo == null || orderNo.length() == 0) {
+					pstmt.setNull(2, Types.VARCHAR);
+					logger.error("pstmt.setNull(2, Types.VARCHAR)");
+				} else {
+					pstmt.setString(2, orderNo);
+				}
+				if (trackingNo == null || trackingNo.length() == 0) {
+					pstmt.setNull(3, Types.VARCHAR);
+					logger.error("pstmt.setNull(3, Types.VARCHAR)");
+				} else {
+					pstmt.setString(3, trackingNo);
+				}
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new EgsVO();
+					row.setGroup_id(rs.getString("groupId"));
+					row.setCustomer_id(rs.getString("customer_id"));
+					row.setTracking_number(rs.getString("tracking_number"));
+					row.setOrder_no(rs.getString("orderNo"));
+					row.setReceiver_name(rs.getString("receiver_name"));
+					row.setReceiver_address(rs.getString("receiver_address"));
+					row.setReceiver_suda5(rs.getString("receiver_suda5"));
+					row.setReceiver_suda7(rs.getString("receiver_suda7"));
+					row.setReceiver_mobile(rs.getString("receiver_mobile"));
+					row.setReceiver_phone(rs.getString("receiver_phone"));
+					row.setSender_name(rs.getString("sender_name"));
+					row.setSender_address(rs.getString("sender_address"));
+					row.setSender_suda5(rs.getString("sender_suda5"));
+					row.setSender_phone(rs.getString("sender_phone"));
+					row.setProduct_price(rs.getString("product_price"));
+					row.setProduct_name(rs.getString("product_name"));
+					row.setEgs_comment(rs.getString("comment"));
+					row.setPackage_size(rs.getString("package_size"));
+					row.setTemperature(rs.getString("temperature"));
+					row.setDistance(rs.getString("distance"));
+					row.setDelivery_date(rs.getString("delivery_date"));
+					row.setDelivery_timezone(rs.getString("delivery_timezone"));
+					row.setCreate_time(rs.getDate("create_time"));
+					row.setPrint_time(rs.getDate("print_time"));
+					row.setAccount_id(rs.getString("account_id"));
+					row.setMember_no(rs.getString("member_no"));
+					row.setTaxin(rs.getString("taxin"));
+					row.setInsurance(rs.getString("insurance"));
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
+
 	}
 
 	public class EgsService {
@@ -653,6 +754,10 @@ public class Egs extends HttpServlet {
 		public void insertEgs(EgsVO egsVO) {
 			dao.insertEgs(egsVO);
 		}
+
+		public List<EgsVO> getEgsByOrderNoOrTrackingNo(String groupId, String orderNo, String trackingNo) {
+			return dao.getEgsByOrderNoOrTrackingNo(groupId, orderNo, trackingNo);
+		}
 	}
 
 	interface egs_interface {
@@ -666,6 +771,8 @@ public class Egs extends HttpServlet {
 		public EgsVO getEgsReceiverInfo(String realsaleIds);
 
 		public ShipVO getShipByOrderno(String groupId, String orderNo);
+
+		public List<EgsVO> getEgsByOrderNoOrTrackingNo(String groupId, String orderNo, String trackingNo);
 
 		public void insertEgs(EgsVO egsVO);
 	}
