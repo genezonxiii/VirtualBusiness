@@ -398,6 +398,42 @@ public class sale extends HttpServlet {
 					result = "false";
 				}
 				response.getWriter().write(result);
+			}else if ("invoice_cancel".equals(action)) {
+				String result="";
+				String errorMsg="";
+				try {
+
+					String saleIds = (String) request.getParameter("ids");
+					String reason = (String) request.getParameter("reason");
+					
+
+					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
+					InvoiceApi api = new InvoiceApi();
+
+					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+					
+					//確認資料都沒有發送過 需要確認都有訂單嗎?
+					for(int i =0;i<saleVOs.size();i++){
+						String invoice=saleVOs.get(i).getInvoice();
+						if(null==invoice){
+							errorMsg = "很抱歉，單號"+saleVOs.get(i).getSeq_no()+" 並無開立發票";
+							response.getWriter().write(errorMsg);
+							return;
+						}
+					}
+
+					
+					saleService.invoiceCancel(group_id,saleIds);
+
+//					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
+//					String resXml = api.sendXML(reqXml);
+//					Index index = api.getIndexResponse(resXml);
+//					result = index.getMessage();
+				} catch (Exception e) {
+					logger.debug(e.getMessage());
+					result = "false";
+				}
+				response.getWriter().write(result);
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -496,6 +532,8 @@ public class sale extends HttpServlet {
 		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date);
 		
 		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date);
+		
+		public void invoiceCancel(String group_id,String sale_ids);
 
 	}
 
@@ -581,6 +619,10 @@ public class sale extends HttpServlet {
 			dao.updateSaleInvoice(SaleVOs , invoiceTrackVO, invoice_num_date);
 
 		}
+		public void invoiceCancel(String group_id,String sale_ids){
+			dao.invoiceCancel(group_id,sale_ids);
+		}
+		
 	}
 
 	class SaleDAO implements sale_interface {
@@ -609,6 +651,8 @@ public class sale extends HttpServlet {
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
 		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 		private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
+		private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?)";
+
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
@@ -1502,6 +1546,38 @@ public class sale extends HttpServlet {
 			
 
 			
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
+		@Override
+		public void invoiceCancel(String group_id, String sale_ids) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_invoice_cancel);
+				pstmt.setString(1, "'"+group_id+"'");
+				pstmt.setString(2, sale_ids);
+				pstmt.executeUpdate();
+
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
