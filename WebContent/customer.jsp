@@ -125,10 +125,10 @@ function draw_customer(parameter) {
                             "value": row.sale_id,
                             "name": row.c_product_id,
                             "class": "btn-in-table btn-green btn_list",
-                            "title": "清單"
+                            "title": "歷史交易紀錄"
                         })
                         .append($("<i/>", {
-                            "class": "fa fa-pencil-square-o"
+                            "class": "fa fa-list"
                         }))
                     )
 
@@ -183,7 +183,7 @@ function draw_transaction_record(parameter) {
             "data": "product_name",
             "defaultContent": ""
         }, {
-            "title": "交易日期",
+            "title": "轉單日期",
             "data": "trans_list_date",
             "defaultContent": ""
         }],
@@ -343,14 +343,14 @@ $(function() {
         modal: true,
         show: {
             effect: "blind",
-            duration: 300
+            duration: 200
         },
         hide: {
             effect: "fade",
-            duration: 300
+            duration: 200
         },
-        buttons: [{
-            text: "取消",
+		buttons: [{
+            text: "關閉",
             click: function() {
                 validator_update.resetForm();
                 customer_transaction_record_dialog.dialog("close");
@@ -579,7 +579,7 @@ $(function() {
 			</div>	
 			
 			<!--對話窗樣式-交易紀錄 -->
-			<div id="dialog_form_customer_transaction_record" title="客戶交易紀錄" style="display:none;">
+			<div id="dialog_form_customer_transaction_record" title="歷史交易紀錄" style="display:none;">
 				<form name="customer_transaction_form_post" id="customer_transaction_form_post" style="display:inline">
 					<table id="customerTransactionRecordTable">
 					</table>
