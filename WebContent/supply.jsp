@@ -163,7 +163,7 @@ function draw_supply(parameter) {
                             "title": "清單"
                         })
                         .append($("<i/>", {
-                            "class": "fa fa-pencil-square-o"
+                            "class": "fa fa-list"
                         })).append($("<button/>", {
                             "class": "btn-in-table btn-alert btn_delete",
                             "title": "刪除",
@@ -239,6 +239,21 @@ function draw_purchase(parameter) {
             "className": "dt-center",
             "targets": "_all"
         }, {
+            //發票樣式
+            targets: 4,
+            searchable: false,
+            orderable: false,
+            render: function(data, type, row) {
+            	var desc = "";
+            	if (row.invoice_type == 1) {
+            		desc = "二聯式";
+            	} else if (row.invoice_type == 2) {
+            		desc = "三聯式";
+            	}
+            	
+            	return desc;
+            }
+        }, {
             //功能
             targets: -1,
             searchable: false,
@@ -259,7 +274,7 @@ function draw_purchase(parameter) {
                         "title": "清單"
                     })
                     .append($("<i/>", {
-                        "class": "fa fa-pencil-square-o"
+                        "class": "fa fa-list"
                     })))));
 
                 return options.html();
@@ -295,11 +310,11 @@ function draw_purchaseDetail(parameter) {
             data: parameter
         },
         columns: [{
-            "title": "產品編號",
+            "title": "商品編號",
             "data": "c_product_id",
             "defaultContent": ""
         }, {
-            "title": "產品名稱",
+            "title": "商品名稱",
             "data": "product_name",
             "defaultContent": ""
         }, {
@@ -440,7 +455,10 @@ $(function() {
         height: "auto",
         width: "1200",
         modal: true,
-        show: {
+        open: function(event, ui) {
+            $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+        },
+		show: {
             effect: "blind",
             duration: 300
         },
@@ -449,7 +467,7 @@ $(function() {
             duration: 300
         },
         buttons: [{
-            text: "取消",
+            text: "關閉",
             click: function() {
                 purchase_dialog.dialog("close");
                 $("#purchase-dialog-form-post").trigger("reset");
@@ -469,6 +487,9 @@ $(function() {
         height: "auto",
         width: "1200",
         modal: true,
+        open: function(event, ui) {
+            $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+        },
         show: {
             effect: "blind",
             duration: 300
@@ -478,7 +499,7 @@ $(function() {
             duration: 300
         },
         buttons: [{
-            text: "取消",
+            text: "關閉",
             click: function() {
                 purchaseDetail_dialog.dialog("close");
                 $("#purchaseDetail-dialog-form-post").trigger("reset");
