@@ -638,14 +638,6 @@
 		<servlet-name>Location</servlet-name>
 		<url-pattern>/Location.do</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>Egs</servlet-name>
-		<servlet-class>tw.com.aber.egs.controller.Egs</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Egs</servlet-name>
-		<url-pattern>/Egs.do</url-pattern>
-	</servlet-mapping>
 
 	<filter>
 		<filter-name>loginFilter</filter-name>

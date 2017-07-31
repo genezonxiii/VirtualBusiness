@@ -117,4 +117,43 @@ public class EgsApi {
 		}
 		return responseStr;
 	}
+	
+	public String getQuerySuda7(String address) {
+		String suda7 = null;
+		try {
+			address = URLEncoder.encode(address, "utf8");
+
+			String sendString = "query_suda7&address_1=" + address;
+			logger.debug("sendString:" + sendString);
+
+			String responseStr = send(sendString);
+
+			logger.debug("responseStr:" + responseStr);
+			Map<String, String> map = toMap(responseStr);
+			suda7 = map.get("suda7_1");
+
+		} catch (Exception e) {
+			logger.debug("error:" + e.getMessage());
+			return "";
+		}
+		if (suda7 != null) {
+			suda7 = suda7.replace("+", "");
+			return suda7;
+		} else {
+			return "";
+		}
+	}
+
+	public String getEGSNum() {
+		String responseStr = send("query_egs_info");
+		logger.debug("responseStr:" + responseStr);
+		Map<String, String> map = toMap(responseStr);
+		String eGSNum = map.get("egs_version");
+		if (eGSNum != null) {
+			return eGSNum;
+		} else {
+			return "";
+		}
+	}
+
 }
