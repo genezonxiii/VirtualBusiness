@@ -340,36 +340,37 @@ public class sale extends HttpServlet {
 				logger.debug("saleDetail_id:".concat(saleDetail_id));
 
 			} else if ("invoice".equals(action)) {
-				String result="";
-				String errorMsg="";
+				String result = "";
+				String errorMsg = "";
 				java.sql.Date invoice_date;
 				try {
 
 					String saleIds = (String) request.getParameter("ids");
 					String invoice_date_str = (String) request.getParameter("invoice_date");
-					
+
+					logger.debug("saleIds: " + saleIds);
+					logger.debug("invoice_date: " + invoice_date_str);
+
 					try {
-						//設定日期格式
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						//進行轉換
 						java.util.Date date = sdf.parse(invoice_date_str);
 
-						 invoice_date = new java.sql.Date(date.getTime()); 
+						invoice_date = new java.sql.Date(date.getTime());
 					} catch (ParseException e) {
-							errorMsg = "日期格式錯誤";
-							response.getWriter().write(errorMsg);
-							return;
+						errorMsg = "日期格式錯誤";
+						response.getWriter().write(errorMsg);
+						return;
 					}
-				
+
 					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
 					InvoiceApi api = new InvoiceApi();
 
 					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
-					
-					//確認資料都沒有發送過
-					for(int i =0;i<saleVOs.size();i++){
-						String invoice=saleVOs.get(i).getInvoice();
-						if(null!=invoice){
+
+					// 確認資料都沒有發送過
+					for (int i = 0; i < saleVOs.size(); i++) {
+						String invoice = saleVOs.get(i).getInvoice();
+						if ((null != invoice)&&(!"".equals(invoice))) {
 							errorMsg = "很抱歉，該訂單已有發票，不可重複發送";
 							response.getWriter().write(errorMsg);
 							return;
@@ -379,56 +380,59 @@ public class sale extends HttpServlet {
 					// TODO 撈取發票號碼
 					InvoiceTrackVO invoiceTrackVO = saleService.getInvoiceTrack(group_id, invoice_date);
 					String invoiceNum = invoiceTrackVO.getInvoiceNum();
-					
-					logger.debug("invoiceNum: "+invoiceNum);
-					
-					if(invoiceNum==null ||"".equals(invoiceNum)){
+
+					logger.debug("invoiceNum: " + invoiceNum);
+
+					if (invoiceNum == null || "".equals(invoiceNum)) {
 						errorMsg = "發票字軌用罄，請洽系統管理員";
 						response.getWriter().write(errorMsg);
 						return;
 					}
-					
-					saleService.updateSaleInvoice(saleVOs,invoiceTrackVO,invoice_date);
 
 					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
 					String resXml = api.sendXML(reqXml);
 					Index index = api.getIndexResponse(resXml);
+
+					if ("1".equals(index.getReply())) {// 0失敗 1 成功
+						saleService.updateSaleInvoice(saleVOs, invoiceTrackVO, invoice_date);
+					}
+
 					result = index.getMessage();
 				} catch (Exception e) {
 					result = "false";
 				}
 				response.getWriter().write(result);
-			}else if ("invoice_cancel".equals(action)) {
-				String result="";
-				String errorMsg="";
+			} else if ("invoice_cancel".equals(action)) {
+				String result = "";
+				String errorMsg = "";
+				String saleIds = (String) request.getParameter("ids");
+				String reason = (String) request.getParameter("reason");
+				InvoiceApi api = new InvoiceApi();
+
+				logger.debug("saleIds: " + saleIds);
+				logger.debug("reason: " + reason);
+				logger.debug("group_id: " + group_id);
 				try {
-
-					String saleIds = (String) request.getParameter("ids");
-					String reason = (String) request.getParameter("reason");
-					
-
 					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
-					InvoiceApi api = new InvoiceApi();
-
-					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
 					
-					//確認資料都沒有發送過 需要確認都有訂單嗎?
-					for(int i =0;i<saleVOs.size();i++){
-						String invoice=saleVOs.get(i).getInvoice();
-						if(null==invoice){
-							errorMsg = "很抱歉，單號"+saleVOs.get(i).getSeq_no()+" 並無開立發票";
-							response.getWriter().write(errorMsg);
-							return;
-						}
+					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+
+					errorMsg = saleService.checkCancelDate(saleVOs);
+
+					if (errorMsg.length() > 1) {
+						response.getWriter().write(errorMsg);
+						return;
 					}
 
-					
-					saleService.invoiceCancel(group_id,saleIds);
+					String reqXml = api.genRequestForC0501(reason, saleVOs, groupVO);
+					String resXml = api.sendXML(reqXml);
+					Index index = api.getIndexResponse(resXml);
 
-//					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
-//					String resXml = api.sendXML(reqXml);
-//					Index index = api.getIndexResponse(resXml);
-//					result = index.getMessage();
+					if ("1".equals(index.getReply())) {// 0失敗 1 成功
+						saleService.invoiceCancel(group_id, saleIds);
+					}
+
+					result = index.getMessage();
 				} catch (Exception e) {
 					logger.debug(e.getMessage());
 					result = "false";
@@ -621,6 +625,23 @@ public class sale extends HttpServlet {
 		}
 		public void invoiceCancel(String group_id,String sale_ids){
 			dao.invoiceCancel(group_id,sale_ids);
+		}
+		
+		public String checkCancelDate(List<SaleVO> saleVOs) {
+			String errorMsg ="";
+			if (saleVOs.size() < 1) {
+				errorMsg = "很抱歉，查無資料";
+			}
+			
+			// 確認資料有開立發票
+			for (int i = 0; i < saleVOs.size(); i++) {
+				String invoice = saleVOs.get(i).getInvoice();
+				if (null == invoice) {
+					errorMsg = "很抱歉，單號" + saleVOs.get(i).getSeq_no() + " 並無開立發票";
+				}
+			}
+			
+			return errorMsg;
 		}
 		
 	}
@@ -1570,13 +1591,14 @@ public class sale extends HttpServlet {
 		public void invoiceCancel(String group_id, String sale_ids) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
+			ResultSet rs = null;
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_invoice_cancel);
 				pstmt.setString(1, "'"+group_id+"'");
 				pstmt.setString(2, sale_ids);
-				pstmt.executeUpdate();
+				pstmt.execute();
 
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
