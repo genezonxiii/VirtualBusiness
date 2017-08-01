@@ -124,112 +124,6 @@
 				<hr><h4>指定配達時段</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="delivery-timezone-radio-1" type="radio" name="delivery-timezone-radio-group">
-						<label for="delivery-timezone-radio-1">
-							<span class="form-label">9~12時</span>
-						</label>
-	          			<input id="delivery-timezone-radio-2" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-radio-2">
-							<span class="form-label">12~17時</span>
-	          			</label>
-	          			
-	          			<input id="delivery-timezone-radio-3" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-radio-3">
-							<span class="form-label">17~20時</span>
-	          			</label>
-	          			
-	          			<input id="delivery-timezone-radio-4" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-radio-4">
-							<span class="form-label">不限時</span>
-	          			</label>
-					</div>
-				</div>
-			</section>
-			<hr><h4>指定配達日期</h4>
-			<input type="text" name="delivary-date" class="self-date">
-			
-			<section>
-				<hr><h4>尺寸</h4>
-				<div class="form-wrap">
-					<div class="form-row">
-						<input id="package-size-0001" type="radio" name="package-size-radio-group">
-						<label for="package-size-0001">
-							<span class="form-label">60cm</span>
-						</label>
-						
-	          			<input id="package-size-0002" type="radio" name="package-size-radio-group">
-	          			<label for="package-size-0002">
-							<span class="form-label">90cm</span>
-	          			</label>
-	          			
-	          			<input id="package-size-0003" type="radio" name="package-size-radio-group">
-	          			<label for="package-size-0003">
-							<span class="form-label">120cm</span>
-	          			</label>
-	          			
-	          			<input id="package-size-0004" type="radio" name="package-size-radio-group">
-	          			<label for="package-size-0004">
-							<span class="form-label">150cm</span>
-	          			</label>
-					</div>
-				</div>
-			</section>
-
-			<section>
-				<hr><h4>溫層</h4>
-				<div class="form-wrap">
-					<div class="form-row">
-						<input id="temperature-0001" type="radio" name="temperature-radio-group">
-						<label for="temperature-0001">
-							<span class="form-label">常溫</span>
-						</label>
-						
-	          			<input id="temperature-0002" type="radio" name="temperature-radio-group">
-	          			<label for="temperature-0002">
-							<span class="form-label">冷藏</span>
-	          			</label>
-	          			
-	          			<input id="temperature-0003" type="radio" name="temperature-radio-group">
-	          			<label for="temperature-0003">
-							<span class="form-label">冷凍</span>
-	          			</label>
-
-					</div>
-				</div>
-			</section>
-						
-			<section>
-				<hr><h4>託運單類別</h4>
-				<div class="form-wrap">
-					<div class="form-row">
-						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group">
-						<label for="waybill-type-A">
-							<span class="form-label">一般</span>
-						</label>
-	          			<input id="waybill-type-B" type="radio" name="waybill-type-radio-group">
-	          			<label for="waybill-type-B">
-							<span class="form-label">代收</span>
-	          			</label>
-	          			
-	          			<input id="waybill-type-G" type="radio" name="waybill-type-radio-group">
-	          			<label for="waybill-type-G">
-							<span class="form-label">報值</span>
-	          			</label>
-					</div>
-				</div>
-			</section>
-			
-			<hr><h4>備註</h4>
-			<input type="text" name="comment">
-		</form>
-	</div> 
-	<!-- 黑貓對話窗-->
-	<div id="dialog-egs" style="display:none">
-		<form id ="dialog-egs-form">
-			<section>
-				<hr><h4>指定配達時段</h4>
-				<div class="form-wrap">
-					<div class="form-row">
 						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group" checked>
 						<label for="delivery-timezone-1">
 							<span class="form-label">9~12時</span>
@@ -329,7 +223,7 @@
 			<hr><h4>備註</h4>
 			<input type="text" name="comment">
 		</form>
-	</div>
+	</div> 
 
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
@@ -944,195 +838,195 @@
 													
 						}
 		            }
-		        },{
-		            text: '順豐快遞取消',
-		            action: function(e, dt, node, config) {
-		                var $table = $('#dt_master_ship');
+// 		        },{
+// 		            text: '順豐快遞取消',
+// 		            action: function(e, dt, node, config) {
+// 		                var $table = $('#dt_master_ship');
 
-		            	var ships = new Map();
-		                var cells = $dtMaster.cells().nodes();
-						var row;
-						var data;
-						var message = '';
+// 		            	var ships = new Map();
+// 		                var cells = $dtMaster.cells().nodes();
+// 						var row;
+// 						var data;
+// 						var message = '';
 
-		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+// 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 
-		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
+// 		                if ($checkboxs.length == 0) {
+// 		                    alert('請至少選擇一筆資料');
+// 		                    return false;
+// 		                }
 
-						$checkboxs.each(function() {
-							row = $(this).closest("tr");
-							data = $table.DataTable().row(row).data();
-							ships.set( data.order_no, data.order_no );
-						});
+// 						$checkboxs.each(function() {
+// 							row = $(this).closest("tr");
+// 							data = $table.DataTable().row(row).data();
+// 							ships.set( data.order_no, data.order_no );
+// 						});
 						
-						if(ships.size> 1){
-							message = message.concat('以下為您所勾選的訂單↓<br><br>');
-							var table = document.createElement('table');
-							ships.forEach(function(value, key, fullArray){
-								var tr = document.createElement('tr');
-								var text = document.createTextNode(key);
-								tr.appendChild(text);
-								table.appendChild(tr);
-							});
-							var $mes = $('#message #text');
-							$mes.val('').html(message).append(table);
-							$('#message')
-								.dialog()
-								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-								.dialog('option', 'width', '322.6px')
-								.dialog('option', 'minHeight', 'auto')
-								.dialog("open");
-						}else{
-							var mapIter = ships.values();
-							var orderNo = mapIter.next().value;
-							console.log(orderNo);
+// 						if(ships.size> 1){
+// 							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+// 							var table = document.createElement('table');
+// 							ships.forEach(function(value, key, fullArray){
+// 								var tr = document.createElement('tr');
+// 								var text = document.createTextNode(key);
+// 								tr.appendChild(text);
+// 								table.appendChild(tr);
+// 							});
+// 							var $mes = $('#message #text');
+// 							$mes.val('').html(message).append(table);
+// 							$('#message')
+// 								.dialog()
+// 								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+// 								.dialog('option', 'width', '322.6px')
+// 								.dialog('option', 'minHeight', 'auto')
+// 								.dialog("open");
+// 						}else{
+// 							var mapIter = ships.values();
+// 							var orderNo = mapIter.next().value;
+// 							console.log(orderNo);
 							
- 	 		                $.ajax({
-			                    url: 'ship.do',
-			                    type: 'post',
-			                    data: {
-			                        action: 'SFDeliveryOrderConfirmCancel',
-			                        orderNo: orderNo
-			                    },
-				                beforeSend: function(){
-			                		 $(':hover').css('cursor','progress');
-				                },
-				                complete: function(){
-			                		 $(':hover').css('cursor','default');
-				                },
-			                    error: function(xhr) {},
-			                    success: function(response) {
-									var json_obj = $.parseJSON(response);
-									var text = '';
-			                        var $mes = $('#message #text');
+//  	 		                $.ajax({
+// 			                    url: 'ship.do',
+// 			                    type: 'post',
+// 			                    data: {
+// 			                        action: 'SFDeliveryOrderConfirmCancel',
+// 			                        orderNo: orderNo
+// 			                    },
+// 				                beforeSend: function(){
+// 			                		 $(':hover').css('cursor','progress');
+// 				                },
+// 				                complete: function(){
+// 			                		 $(':hover').css('cursor','default');
+// 				                },
+// 			                    error: function(xhr) {},
+// 			                    success: function(response) {
+// 									var json_obj = $.parseJSON(response);
+// 									var text = '';
+// 			                        var $mes = $('#message #text');
 			                        
-									if( json_obj.error != null ){
-										var code = json_obj.error.code;
-										var value = json_obj.error.value;
-										if(code != null | code == 'undefined' ){
-											text += '失敗 / ' + code + ' / ' + value;
-										}else{
-											text += '失敗 / ' + value;
-										}
-									}
-									if( json_obj.body != null ){
-										console.log(json_obj);
-										var orderid = json_obj.body.orderConfirmResponse.orderid;
-										var res_status = json_obj.body.orderConfirmResponse.res_status;
-										res_status = res_status == '1' ? '客戶訂單號與順豐運單不匹配':'操作成功'
-										text += '成功 / 訂單編號: ' + orderid + ' / 備註: '+ res_status;
-									}
+// 									if( json_obj.error != null ){
+// 										var code = json_obj.error.code;
+// 										var value = json_obj.error.value;
+// 										if(code != null | code == 'undefined' ){
+// 											text += '失敗 / ' + code + ' / ' + value;
+// 										}else{
+// 											text += '失敗 / ' + value;
+// 										}
+// 									}
+// 									if( json_obj.body != null ){
+// 										console.log(json_obj);
+// 										var orderid = json_obj.body.orderConfirmResponse.orderid;
+// 										var res_status = json_obj.body.orderConfirmResponse.res_status;
+// 										res_status = res_status == '1' ? '客戶訂單號與順豐運單不匹配':'操作成功'
+// 										text += '成功 / 訂單編號: ' + orderid + ' / 備註: '+ res_status;
+// 									}
 									
-			                        $mes.val('').html(text);
-			                        $('#message')
-			                            .dialog()
-			                            .dialog('option', 'title', '提示訊息')
-			                            .dialog('option', 'width', 'auto')
-			                            .dialog('option', 'minHeight', 'auto')
-			                            .dialog("open");
-			                    }
-							});							
-						}
-		            }
-		        },{
-		            text: '順豐快遞結果查詢',
-		            action: function(e, dt, node, config) {
-		                var $table = $('#dt_master_ship');
+// 			                        $mes.val('').html(text);
+// 			                        $('#message')
+// 			                            .dialog()
+// 			                            .dialog('option', 'title', '提示訊息')
+// 			                            .dialog('option', 'width', 'auto')
+// 			                            .dialog('option', 'minHeight', 'auto')
+// 			                            .dialog("open");
+// 			                    }
+// 							});							
+// 						}
+// 		            }
+// 		        },{
+// 		            text: '順豐快遞結果查詢',
+// 		            action: function(e, dt, node, config) {
+// 		                var $table = $('#dt_master_ship');
 
-		            	var ships = new Map();
-		                var cells = $dtMaster.cells().nodes();
-						var row;
-						var data;
-						var message = '';
+// 		            	var ships = new Map();
+// 		                var cells = $dtMaster.cells().nodes();
+// 						var row;
+// 						var data;
+// 						var message = '';
 
-		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+// 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 
-		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
+// 		                if ($checkboxs.length == 0) {
+// 		                    alert('請至少選擇一筆資料');
+// 		                    return false;
+// 		                }
 
-						$checkboxs.each(function() {
-							row = $(this).closest("tr");
-							data = $table.DataTable().row(row).data();
-							ships.set( data.order_no, data.order_no );
-						});
+// 						$checkboxs.each(function() {
+// 							row = $(this).closest("tr");
+// 							data = $table.DataTable().row(row).data();
+// 							ships.set( data.order_no, data.order_no );
+// 						});
 						
-						if(ships.size> 1){
-							message = message.concat('以下為您所勾選的訂單↓<br><br>');
-							var table = document.createElement('table');
-							ships.forEach(function(value, key, fullArray){
-								var tr = document.createElement('tr');
-								var text = document.createTextNode(key);
-								tr.appendChild(text);
-								table.appendChild(tr);
-							});
-							var $mes = $('#message #text');
-							$mes.val('').html(message).append(table);
-							$('#message')
-								.dialog()
-								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-								.dialog('option', 'width', '322.6px')
-								.dialog('option', 'minHeight', 'auto')
-								.dialog("open");
-						}else{
-							var mapIter = ships.values();
-							var orderNo = mapIter.next().value;
-							console.log(orderNo);
+// 						if(ships.size> 1){
+// 							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+// 							var table = document.createElement('table');
+// 							ships.forEach(function(value, key, fullArray){
+// 								var tr = document.createElement('tr');
+// 								var text = document.createTextNode(key);
+// 								tr.appendChild(text);
+// 								table.appendChild(tr);
+// 							});
+// 							var $mes = $('#message #text');
+// 							$mes.val('').html(message).append(table);
+// 							$('#message')
+// 								.dialog()
+// 								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+// 								.dialog('option', 'width', '322.6px')
+// 								.dialog('option', 'minHeight', 'auto')
+// 								.dialog("open");
+// 						}else{
+// 							var mapIter = ships.values();
+// 							var orderNo = mapIter.next().value;
+// 							console.log(orderNo);
 							
- 	 		                $.ajax({
-			                    url: 'ship.do',
-			                    type: 'post',
-			                    data: {
-			                        action: 'SFDeliveryOrderSearchService',
-			                        orderNo: orderNo
-			                    },
-				                beforeSend: function(){
-			                		 $(':hover').css('cursor','progress');
-				                },
-				                complete: function(){
-			                		 $(':hover').css('cursor','default');
-				                },
-			                    error: function(xhr) {},
-			                    success: function(response) {
-									var json_obj = $.parseJSON(response);
-									var text = '';
-			                        var $mes = $('#message #text');
+//  	 		                $.ajax({
+// 			                    url: 'ship.do',
+// 			                    type: 'post',
+// 			                    data: {
+// 			                        action: 'SFDeliveryOrderSearchService',
+// 			                        orderNo: orderNo
+// 			                    },
+// 				                beforeSend: function(){
+// 			                		 $(':hover').css('cursor','progress');
+// 				                },
+// 				                complete: function(){
+// 			                		 $(':hover').css('cursor','default');
+// 				                },
+// 			                    error: function(xhr) {},
+// 			                    success: function(response) {
+// 									var json_obj = $.parseJSON(response);
+// 									var text = '';
+// 			                        var $mes = $('#message #text');
 			                        
-									if( json_obj.error != null ){
-										var code = json_obj.error.code;
-										var value = json_obj.error.value;
-										if(code != null | code == 'undefined' ){
-											text += '失敗 / ' + code + ' / ' + value;
-										}else{
-											text += '失敗 / ' + value;
-										}
-									}
-									if( json_obj.body != null ){
-										var orderid = json_obj.body.orderResponse.orderid;
-										var mailno = json_obj.body.orderResponse.mailno;
-										var origincode = json_obj.body.orderResponse.origincode;
-										var destcode = json_obj.body.orderResponse.destcode;
-										text += '成功 / 訂單編號: ' 
-												+ orderid + ' / 託運單號: ' 
-												+ mailno + ' / 原寄地區域代碼: '
-												+ origincode + ' / 目的地區域代碼: '
-												+ destcode;
-									}
-			                        $mes.val('').html(text);
-			                        $('#message')
-			                            .dialog()
-			                            .dialog('option', 'title', '提示訊息')
-			                            .dialog('option', 'width', 'auto')
-			                            .dialog('option', 'minHeight', 'auto')
-			                            .dialog("open");
-			                    }
-							});							
-						}
-		            }
+// 									if( json_obj.error != null ){
+// 										var code = json_obj.error.code;
+// 										var value = json_obj.error.value;
+// 										if(code != null | code == 'undefined' ){
+// 											text += '失敗 / ' + code + ' / ' + value;
+// 										}else{
+// 											text += '失敗 / ' + value;
+// 										}
+// 									}
+// 									if( json_obj.body != null ){
+// 										var orderid = json_obj.body.orderResponse.orderid;
+// 										var mailno = json_obj.body.orderResponse.mailno;
+// 										var origincode = json_obj.body.orderResponse.origincode;
+// 										var destcode = json_obj.body.orderResponse.destcode;
+// 										text += '成功 / 訂單編號: ' 
+// 												+ orderid + ' / 託運單號: ' 
+// 												+ mailno + ' / 原寄地區域代碼: '
+// 												+ origincode + ' / 目的地區域代碼: '
+// 												+ destcode;
+// 									}
+// 			                        $mes.val('').html(text);
+// 			                        $('#message')
+// 			                            .dialog()
+// 			                            .dialog('option', 'title', '提示訊息')
+// 			                            .dialog('option', 'width', 'auto')
+// 			                            .dialog('option', 'minHeight', 'auto')
+// 			                            .dialog("open");
+// 			                    }
+// 							});							
+// 						}
+// 		            }
 		        },{
 		            text: '順豐快遞路由查詢',
 		            action: function(e, dt, node, config) {
@@ -1242,9 +1136,7 @@
 		                var $table = $('#dt_master_ship');
 
 		            	var orders = new Map(); //儲存訂單
-		            	var productNames = '';
-		            	var shipIds = '';
-		            	var realsaleIds = '';
+		            	var order_nos = '';
 		            	
 		                var cells = $dtMaster.cells().nodes();
 						var row;
@@ -1261,47 +1153,20 @@
 						$checkboxs.each(function() {
 							row = $(this).closest("tr");
 							data = $table.DataTable().row(row).data();
-							console.log(data);
 							orders.set( data.order_no, data.order_no );
-							productNames+= (','+ data.v_product_name);
-							shipIds += (','+ data.ship_id);
-							realsaleIds += ( ",'" + data.realsale_id + "'");
 						});
-						
-						if(realsaleIds.length != 0){
-							realsaleIds = realsaleIds.substring( 1, realsaleIds.length);
-						}
-						
-						if(productNames.length != 0){
-							productNames = productNames.substring( 1, productNames.length);
-						}
 
-						if(shipIds.length != 0){
-							shipIds = shipIds.substring( 1, shipIds.length);
+						orders.forEach(function(value, index, fullArray){
+							order_nos+= (','+ value);
+						});
+						if(order_nos.length != 0){
+							order_nos = order_nos.substring( 1, order_nos.length);
 						}
-						
+						console.log('order_nos');
+						console.log(order_nos);
 						console.log('orders');
 						console.log(orders);
-						console.log('productNames');
-						console.log(productNames);
 
-						if(orders.size> 1){
-							message = message.concat('以下為您所勾選的訂單↓<br><br>');
-							var table = document.createElement('table');
-							orders.forEach(function(value, key, fullArray){
-								var tr = document.createElement('tr');
-								var text = document.createTextNode(key);
-								tr.appendChild(text);
-								table.appendChild(tr);
-							});
-							var $mes = $('#message #text');
-							$mes.val('').html(message).append(table);
-							$('#message')
-								.dialog()
-								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-								.dialog('option', 'width', '322.6px')
-								.dialog('option', 'minHeight', 'auto')
-						}else{
 							var opt = {
 									   dayNamesMin:["日","一","二","三","四","五","六"],
 									   monthNames:["1","2","3","4","5","6","7","8","9","10","11","12"],
@@ -1323,6 +1188,7 @@
 								resizable : false,
 								overflow: 'auto',
 								width : 'auto',
+								height : 530,
 								modal : true,
 								title : '傳送託運單資料',
 								buttons : [{
@@ -1346,6 +1212,7 @@
 								                    data: {
 								                        action: 'transfer_waybill',
 					 			                        orderNo: data.order_no,
+					 			                        order_nos: order_nos,
 								                        realsale_id: data.realsale_id,
 					 			                        receiver_name: data.deliver_name,
 								                        receiver_address: data.deliver_to,
@@ -1355,10 +1222,7 @@
 								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -1 ),
 								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
 								                        delivery_date : $("#dialog-egs-form input[name='delivery-date']").val(),
-								                        comment : $("input[name='comment']", '#dialog-egs-form').val(),
-								                        product_name : productNames,
-								                        shipIds : shipIds,
-								                        realsaleIds : realsaleIds
+								                        comment : $("input[name='comment']", '#dialog-egs-form').val()
 								                    },
 									                beforeSend: function(){
 								                		 $(':hover').css('cursor','progress');
@@ -1375,15 +1239,24 @@
 								                    	
 														$("#dialog-egs-form").trigger("reset");
 														$('#dialog-egs').dialog("close");
-
-														if(json_obj.status == 'OK'){
-															text = '傳送託運單: 成功 / 託運單號碼: '+ json_obj.tracking_number;
-														}else{
-															text = '傳送託運單: 失敗';
-															if(json_obj.message.length!=0){
-																text += (' / 訊息: ' + json_obj.message );
+								                    	
+								                    	console.log('json_obj');
+								                    	console.log(json_obj);
+								                    	
+								                    	$.each(json_obj, function(i, item){
+								                    		console.log(i);
+								                    		console.log(item);
+								                    		if(item.status == 'OK'){
+																text += ('傳送託運單: 成功 / 訂單編號: '+ item.orderNo +' / 託運單號碼: '+ item.trackingNo + '<br><hr>');
+								                    		}else{
+																text += '傳送託運單: 失敗/ 訂單編號: '+ item.orderNo;
+																if(item.message!=null){
+																	text += (' / 訊息: ' + item.message );
+																}
+																text += '<br><hr>';
 															}
-														}
+								                    	});
+								                    	
 														var $mes = $('#message #text');
 								                        $mes.val('').html(text);
 								                        $('#message')
@@ -1405,9 +1278,9 @@
 								close : function() {
 									$("#dialog-egs-form").trigger("reset");
 								}
-							});
-							$( "#dialog-egs" ).dialog( "option", "height", 530 ).dialog( 'open' );			
-						}
+							}).dialog( 'open' );
+
+							
 		            }
 		        }
 		    ]

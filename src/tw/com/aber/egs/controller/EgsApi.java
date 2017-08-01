@@ -16,8 +16,17 @@ public class EgsApi {
 	private static final Logger logger = LogManager.getLogger(EgsApi.class);
 
 	private EgsApi egsApi;
+
 	private String conString = "http://192.168.112.156:8800/egs?";
 	private String cmd = "cmd=";
+
+	public String getConString() {
+		return conString;
+	}
+
+	public String getCmd() {
+		return cmd;
+	}
 
 	public String send(String command) {
 		egsApi = new EgsApi();
