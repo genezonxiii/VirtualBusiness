@@ -1079,23 +1079,7 @@
 						console.log(order_nos);
 						console.log('orders');
 						console.log(orders);
-// 						if(orders.size> 1){
-// 							message = message.concat('以下為您所勾選的訂單↓<br><br>');
-// 							var table = document.createElement('table');
-// 							orders.forEach(function(value, key, fullArray){
-// 								var tr = document.createElement('tr');
-// 								var text = document.createTextNode(key);
-// 								tr.appendChild(text);
-// 								table.appendChild(tr);
-// 							});
-// 							var $mes = $('#message #text');
-// 							$mes.val('').html(message).append(table);
-// 							$('#message')
-// 								.dialog()
-// 								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-// 								.dialog('option', 'width', '322.6px')
-// 								.dialog('option', 'minHeight', 'auto')
-// 						}else{
+
 							var opt = {
 									   dayNamesMin:["日","一","二","三","四","五","六"],
 									   monthNames:["1","2","3","4","5","6","7","8","9","10","11","12"],
@@ -1117,6 +1101,7 @@
 								resizable : false,
 								overflow: 'auto',
 								width : 'auto',
+								height : 530,
 								modal : true,
 								title : '傳送託運單資料',
 								buttons : [{
@@ -1206,9 +1191,7 @@
 								close : function() {
 									$("#dialog-egs-form").trigger("reset");
 								}
-							});
-							$( "#dialog-egs" ).dialog( "option", "height", 530 ).dialog( 'open' );			
-// 						}
+							}).dialog( 'open' );
 		            }
 		        }
 		    ]
