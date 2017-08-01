@@ -45,11 +45,11 @@
 							<div class="form-row">
 								<form id = "form_date">
 									<label for=""> <span class="block-label">銷售起日</span> <input
-										type="text" name="start_date" class='input-date'>
+										type="text" name="start_date" class='input-date' value="2017-07-01">
 									</label>
 									<div class='forward-mark'></div>
 									<label for=""> <span class="block-label">銷售迄日</span> <input
-										type="text" name="end_date" class='input-date'>
+										type="text" name="end_date" class='input-date' value="2017-07-31">
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
 								</form>
@@ -1049,9 +1049,7 @@
 		                var $table = $('#dt_master_ship');
 
 		            	var orders = new Map(); //儲存訂單
-		            	var productNames = '';
-		            	var shipIds = '';
-		            	var realsaleIds = '';
+		            	var order_nos = '';
 		            	
 		                var cells = $dtMaster.cells().nodes();
 						var row;
@@ -1068,47 +1066,36 @@
 						$checkboxs.each(function() {
 							row = $(this).closest("tr");
 							data = $table.DataTable().row(row).data();
-							console.log(data);
 							orders.set( data.order_no, data.order_no );
-							productNames+= (','+ data.v_product_name);
-							shipIds += (','+ data.ship_id);
-							realsaleIds += ( ",'" + data.realsale_id + "'");
 						});
-						
-						if(realsaleIds.length != 0){
-							realsaleIds = realsaleIds.substring( 1, realsaleIds.length);
-						}
-						
-						if(productNames.length != 0){
-							productNames = productNames.substring( 1, productNames.length);
-						}
 
-						if(shipIds.length != 0){
-							shipIds = shipIds.substring( 1, shipIds.length);
+						orders.forEach(function(value, index, fullArray){
+							order_nos+= (','+ value);
+						});
+						if(order_nos.length != 0){
+							order_nos = order_nos.substring( 1, order_nos.length);
 						}
-						
+						console.log('order_nos');
+						console.log(order_nos);
 						console.log('orders');
 						console.log(orders);
-						console.log('productNames');
-						console.log(productNames);
-
-						if(orders.size> 1){
-							message = message.concat('以下為您所勾選的訂單↓<br><br>');
-							var table = document.createElement('table');
-							orders.forEach(function(value, key, fullArray){
-								var tr = document.createElement('tr');
-								var text = document.createTextNode(key);
-								tr.appendChild(text);
-								table.appendChild(tr);
-							});
-							var $mes = $('#message #text');
-							$mes.val('').html(message).append(table);
-							$('#message')
-								.dialog()
-								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-								.dialog('option', 'width', '322.6px')
-								.dialog('option', 'minHeight', 'auto')
-						}else{
+// 						if(orders.size> 1){
+// 							message = message.concat('以下為您所勾選的訂單↓<br><br>');
+// 							var table = document.createElement('table');
+// 							orders.forEach(function(value, key, fullArray){
+// 								var tr = document.createElement('tr');
+// 								var text = document.createTextNode(key);
+// 								tr.appendChild(text);
+// 								table.appendChild(tr);
+// 							});
+// 							var $mes = $('#message #text');
+// 							$mes.val('').html(message).append(table);
+// 							$('#message')
+// 								.dialog()
+// 								.dialog('option', 'title', '警告訊息(只允許同一張訂單)')
+// 								.dialog('option', 'width', '322.6px')
+// 								.dialog('option', 'minHeight', 'auto')
+// 						}else{
 							var opt = {
 									   dayNamesMin:["日","一","二","三","四","五","六"],
 									   monthNames:["1","2","3","4","5","6","7","8","9","10","11","12"],
@@ -1153,6 +1140,7 @@
 								                    data: {
 								                        action: 'transfer_waybill',
 					 			                        orderNo: data.order_no,
+					 			                        order_nos: order_nos,
 								                        realsale_id: data.realsale_id,
 					 			                        receiver_name: data.deliver_name,
 								                        receiver_address: data.deliver_to,
@@ -1162,10 +1150,7 @@
 								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -1 ),
 								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
 								                        delivery_date : $("#dialog-egs-form input[name='delivery-date']").val(),
-								                        comment : $("input[name='comment']", '#dialog-egs-form').val(),
-								                        product_name : productNames,
-								                        shipIds : shipIds,
-								                        realsaleIds : realsaleIds
+								                        comment : $("input[name='comment']", '#dialog-egs-form').val()
 								                    },
 									                beforeSend: function(){
 								                		 $(':hover').css('cursor','progress');
@@ -1182,15 +1167,24 @@
 								                    	
 														$("#dialog-egs-form").trigger("reset");
 														$('#dialog-egs').dialog("close");
-
-														if(json_obj.status == 'OK'){
-															text = '傳送託運單: 成功 / 託運單號碼: '+ json_obj.tracking_number;
-														}else{
-															text = '傳送託運單: 失敗';
-															if(json_obj.message.length!=0){
-																text += (' / 訊息: ' + json_obj.message );
+								                    	
+								                    	console.log('json_obj');
+								                    	console.log(json_obj);
+								                    	
+								                    	$.each(json_obj, function(i, item){
+								                    		console.log(i);
+								                    		console.log(item);
+								                    		if(item.status == 'OK'){
+																text += ('傳送託運單: 成功 / 訂單編號: '+ item.orderNo +' / 託運單號碼: '+ item.trackingNo + '<br><hr>');
+								                    		}else{
+																text += '傳送託運單: 失敗/ 訂單編號: '+ item.orderNo;
+																if(item.message!=null){
+																	text += (' / 訊息: ' + item.message );
+																}
+																text += '<br><hr>';
 															}
-														}
+								                    	});
+								                    	
 														var $mes = $('#message #text');
 								                        $mes.val('').html(text);
 								                        $('#message')
@@ -1214,7 +1208,7 @@
 								}
 							});
 							$( "#dialog-egs" ).dialog( "option", "height", 530 ).dialog( 'open' );			
-						}
+// 						}
 		            }
 		        }
 		    ]

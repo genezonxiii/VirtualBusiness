@@ -13,6 +13,7 @@ import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,31 +49,17 @@ public class Egs extends HttpServlet {
 
 		String groupId = (String) request.getSession().getAttribute("group_id");
 		String action = (String) request.getParameter("action");
-		String command = null, params = null;
-		String[] paramsArr = null;
-		EgsApi api = null;
 
 		logger.debug("Action:".concat(action));
 
 		if ("transfer_waybill".equals(action)) {
 			String result = "{\"status\": \"ERR\"}";
+			List<Map<String, String>> resultMapList = new ArrayList<Map<String, String>>();
+			Map<String, String> resultMap = null;
+			EgsVO egsVO = null;
+
 			try {
 				EgsService service = new EgsService();
-
-				// 訂單編號
-				String orderNo = request.getParameter("orderNo");
-				logger.debug("[訂單編號] orderNo: " + orderNo);
-
-				// 以訂單編號查詢同訂單所需資訊
-				ShipVO shipVO = service.getShipByOrderno(groupId, orderNo);
-
-				// 選取的多筆出貨單id
-				String shipIds = shipVO.getShip_id();
-				logger.debug("[選取的單筆出貨單id] shipIds: " + shipIds);
-
-				// 選取的多筆出貨單明細id
-				String realsaleIds = shipVO.getRealsale_id();
-				logger.debug("[選取的單筆出貨單明細id] realsaleIds: " + realsaleIds);
 
 				// 溫層
 				String temperature = request.getParameter("temperature");
@@ -90,85 +77,9 @@ public class Egs extends HttpServlet {
 				String delivery_timezone = request.getParameter("delivery_timezone");
 				logger.debug("[指定配達時段] delivery_timezone: " + delivery_timezone);
 
-				// 品名
-				String product_name = request.getParameter("product_name");
-				logger.debug("[品名] product_name: " + product_name);
-
 				// 備註
 				String comment = request.getParameter("comment");
 				logger.debug("[備註] comment: " + comment);
-
-				// 收件人資訊
-				EgsVO egsVO = service.getEgsReceiverInfo(realsaleIds);
-
-				// // 收件人姓名
-				String receiver_name = egsVO.getReceiver_name();
-				logger.debug("[收件人姓名] receiver_name: " + receiver_name);
-
-				// 收件人地址
-				String receiver_address = egsVO.getReceiver_address();
-				logger.debug("[收件人地址] receiver_address: " + receiver_address);
-
-				// 收件人行動電話
-				String receiver_mobile = egsVO.getReceiver_mobile();
-				logger.debug("[收件人行動電話] receiver_mobile: " + receiver_mobile);
-
-				// 收件人電話
-				String receiver_phone = egsVO.getReceiver_phone();
-				logger.debug("[收件人電話] receiver_phone: " + receiver_phone);
-
-				// 收件人地址的速達五碼郵遞區號
-				api = new EgsApi();
-				String receiver_suda5 = api.querySuda("query_suda5", receiver_address);
-				receiver_suda5 = api.toMap(receiver_suda5).get("suda5_1");
-				logger.debug("[收件人地址的速達五碼郵遞區號] receiver_suda5: " + receiver_suda5);
-
-				// 收件人地址的速達七碼郵遞區號
-				api = new EgsApi();
-				String receiver_suda7 = api.querySuda("query_suda7", receiver_address);
-				receiver_suda7 = api.toMap(receiver_suda7).get("suda7_1");
-				logger.debug("[收件人地址的速達七碼郵遞區號] receiver_suda7: " + receiver_suda7);
-
-				GroupVO groupVO = service.getGroupByGroupId(groupId);
-
-				// 寄件人姓名
-				String sender_name = groupVO.getGroup_name();
-				logger.debug("[寄件人姓名] sender_name: " + sender_name);
-
-				// 寄件人地址
-				String sender_address = groupVO.getAddress();
-				logger.debug("[寄件人地址] sender_address: " + sender_address);
-
-				// 寄件人地址的速達五碼郵遞區號
-				api = new EgsApi();
-				String sender_suda5 = api.querySuda("query_suda5", sender_address);
-				sender_suda5 = api.toMap(sender_suda5).get("suda5_1");
-				logger.debug("[寄件人地址的速達五碼郵遞區號] receiver_suda5: " + sender_suda5);
-
-				// 寄件人電話
-				String sender_phone = groupVO.getPhone();
-				logger.debug("[寄件人電話] sender_phone: " + sender_phone);
-
-				// 距離 00:同縣市 01:外縣市 02:離島
-				api = new EgsApi();
-				command = "query_distance";
-
-				paramsArr = new String[2];
-				paramsArr[0] = "suda5_senderpostcode_1=".concat(sender_suda5);
-				paramsArr[1] = "suda5_customerpostcode_1=".concat(receiver_suda5);
-
-				params = api.getParams(paramsArr);
-				logger.debug("params: " + params);
-
-				String distance = api.send(command, params);
-				distance = api.toMap(distance).get("distance_1");
-				logger.debug("[距離] distance: " + distance);
-
-				/*
-				 * 託運單類別 A:一般 B:代收 G:報值
-				 */
-				String waybill_type = request.getParameter("waybill_type");
-				logger.debug("[託運單類別] waybill_type: " + waybill_type);
 
 				// 連線契客代號
 				String customer_id = service.getGroupEzcatCustomerIdByGroupId(groupId);
@@ -178,22 +89,11 @@ public class Egs extends HttpServlet {
 				String account_id = customer_id;
 				logger.debug("[託運單帳號] account_id: " + account_id);
 
-				// 託運單號碼
-				String count = "1";
-				command = "query_waybill_id_range";
-
-				paramsArr = new String[3];
-				paramsArr[0] = "customer_id=".concat(customer_id);
-				paramsArr[1] = "waybill_type=".concat(waybill_type);
-				paramsArr[2] = "count=".concat(count);
-
-				api = new EgsApi();
-				params = api.getParams(paramsArr);
-				logger.debug("params: " + params);
-
-				String tracking_number = api.send(command, params);
-				tracking_number = api.toMap(tracking_number).get("waybill_id");
-				logger.debug("[託運單號碼] tracking_number: " + tracking_number);
+				/*
+				 * 託運單類別 A:一般 B:代收 G:報值
+				 */
+				String waybill_type = request.getParameter("waybill_type");
+				logger.debug("[託運單類別] waybill_type: " + waybill_type);
 
 				// 取時間
 				SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
@@ -215,102 +115,45 @@ public class Egs extends HttpServlet {
 				logger.debug("[建立時間] create_time: " + create_time);
 				logger.debug("[列印時間] print_time: " + print_time);
 
-				// 代收貨款金額
-				String product_price = service.getEgsTotalAmt(realsaleIds);
-				logger.debug("[代收貨款金額] product_price: " + product_price);
-
 				// 會員編號、關稅、報值金額 default:0
 				String member_no = "0", taxin = "0", insurance = "0";
 				logger.debug("[會員編號] member_no: " + member_no);
 				logger.debug("[關稅] taxin: " + taxin);
 				logger.debug("[報值金額] insurance: " + insurance);
 
-				// 組合傳送單筆託運單資料電文
-				paramsArr = new String[26];
-				paramsArr[0] = "customer_id=".concat(customer_id);
-				paramsArr[1] = "tracking_number=".concat(tracking_number);
-				paramsArr[2] = "orderNo=".concat(orderNo);
-				paramsArr[3] = "receiver_name=".concat(URLEncoder.encode(receiver_name, "utf8"));
-				paramsArr[4] = "receiver_address=".concat(URLEncoder.encode(receiver_address, "utf8"));
-				paramsArr[5] = "receiver_suda5=".concat(receiver_suda5);
-				paramsArr[6] = "receiver_mobile=".concat(receiver_mobile);
-				paramsArr[7] = "receiver_phone=".concat(receiver_phone);
-				paramsArr[8] = "sender_name=".concat(URLEncoder.encode(sender_name, "utf8"));
-				paramsArr[9] = "sender_address=".concat(URLEncoder.encode(sender_address, "utf8"));
-				paramsArr[10] = "sender_suda5=".concat(sender_suda5);
-				paramsArr[11] = "sender_phone=".concat(sender_phone);
-				paramsArr[12] = "product_price=".concat(product_price);
-				paramsArr[13] = "product_name=".concat(URLEncoder.encode(product_name, "utf8"));
-				paramsArr[14] = "comment=".concat(URLEncoder.encode(comment, "utf8"));
-				paramsArr[15] = "package_size=".concat(package_size);
-				paramsArr[16] = "temperature=".concat(temperature);
-				paramsArr[17] = "distance=".concat(distance);
-				paramsArr[18] = "delivery_date=".concat(delivery_date);
-				paramsArr[19] = "delivery_timezone=".concat(delivery_timezone);
-				paramsArr[20] = "create_time=".concat(nowDate);
-				paramsArr[21] = "print_time=".concat(nowDate);
-				paramsArr[22] = "account_id=".concat(account_id);
-				paramsArr[23] = "member_no=".concat(member_no);
-				paramsArr[24] = "taxin=".concat(taxin);
-				paramsArr[25] = "insurance=".concat(insurance);
+				//訂單編號
+				String[] orderNoArr = request.getParameter("order_nos").split(",");
 
-				api = new EgsApi();
-				params = api.getParams(paramsArr);
-				logger.debug("params: " + params);
+				Egs egs = new Egs();
+				egsVO = new EgsVO();
 
-				String apiResponseStr = api.send(action, params);
-				logger.debug("apiResponseStr: " + apiResponseStr);
+				egsVO.setGroup_id(groupId);
+				egsVO.setCustomer_id(customer_id);
+				egsVO.setEgs_comment(comment);
+				egsVO.setPackage_size(package_size);
+				egsVO.setTemperature(temperature);
+				egsVO.setDelivery_date(delivery_date);
+				egsVO.setDelivery_timezone(delivery_timezone);
+				egsVO.setAccount_id(account_id);
+				egsVO.setMember_no(member_no);
+				egsVO.setTaxin(taxin);
+				egsVO.setInsurance(insurance);
+				egsVO.setCreate_time(create_time);
+				egsVO.setPrint_time(print_time);
 
-				Map<String, String> resultMap = api.toMap(apiResponseStr);
-				
-				if(resultMap.get("message")!=null){
-					String message = URLDecoder.decode(resultMap.get("message"), "utf8");
-					resultMap.put("message", message);
+				logger.debug("批次產生託運單，並記錄於資料庫開始");
+				for (String orderNo : orderNoArr) {
+					logger.debug("[目前執行訂單編號] orderNo: " + orderNo);
+					resultMap = egs.genConsignmentNote(orderNo, egsVO, service, waybill_type);
+					resultMapList.add(resultMap);
 				}
+				logger.debug("批次產生託運單，並記錄於資料庫結束");
 
-				String status = resultMap.get("status");
-
-				if ("OK".equals(status)) {
-					// set value
-					egsVO = new EgsVO();
-					egsVO.setGroup_id(groupId);
-					egsVO.setCustomer_id(customer_id);
-					egsVO.setTracking_number(tracking_number);
-					egsVO.setOrder_no(orderNo);
-					egsVO.setReceiver_name(receiver_name);
-					egsVO.setReceiver_address(receiver_address);
-					egsVO.setReceiver_suda5(receiver_suda5);
-					egsVO.setReceiver_suda7(receiver_suda7);
-					egsVO.setReceiver_mobile(receiver_mobile);
-					egsVO.setReceiver_phone(receiver_phone);
-					egsVO.setSender_name(sender_name);
-					egsVO.setSender_address(sender_address);
-					egsVO.setSender_suda5(sender_suda5);
-					egsVO.setSender_phone(sender_phone);
-					egsVO.setProduct_price(product_price);
-					egsVO.setProduct_name(product_name);
-					egsVO.setEgs_comment(comment);
-					egsVO.setPackage_size(package_size);
-					egsVO.setTemperature(temperature);
-					egsVO.setDistance(distance);
-					egsVO.setDelivery_date(delivery_date);
-					egsVO.setDelivery_timezone(delivery_timezone);
-					egsVO.setCreate_time(create_time);
-					egsVO.setPrint_time(print_time);
-					egsVO.setAccount_id(account_id);
-					egsVO.setMember_no(member_no);
-					egsVO.setTaxin(taxin);
-					egsVO.setInsurance(insurance);
-
-					// insert to database
-					service.insertEgs(egsVO);
-
-					resultMap.put("tracking_number", tracking_number);
-				}
-				result = new Gson().toJson(resultMap);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 			}
+
+			result = new Gson().toJson(resultMapList);
 			logger.debug("result: " + result);
 			response.getWriter().write(result);
 		} else if ("query_consignment_note".equals(action)) {
@@ -787,5 +630,263 @@ public class Egs extends HttpServlet {
 		public List<EgsVO> getEgsByOrderNoOrTrackingNo(String groupId, String orderNo, String trackingNo);
 
 		public void insertEgs(EgsVO egsVO);
+	}
+
+	public Map<String, String> genConsignmentNote(String orderNo, EgsVO egsVO, EgsService service,
+			String waybill_type) {
+
+		String command = null, params = null;
+		String[] paramsArr = null;
+		EgsApi api = null;
+		Map<String, String> resultMap = null;
+		String tracking_number = null;
+		try {
+			String groupId = egsVO.getGroup_id();
+			// 連線契客代號
+			String customer_id = egsVO.getCustomer_id();
+			logger.debug("[連線契客代號] customer_id: " + customer_id);
+
+			/*
+			 * 託運單類別 A:一般 B:代收 G:報值
+			 */
+			logger.debug("[託運單類別] waybill_type: " + waybill_type);
+
+			// 託運單號碼
+			String count = "1";
+			command = "query_waybill_id_range";
+
+			paramsArr = new String[3];
+			paramsArr[0] = "customer_id=".concat(customer_id);
+			paramsArr[1] = "waybill_type=".concat(waybill_type);
+			paramsArr[2] = "count=".concat(count);
+
+			api = new EgsApi();
+			params = api.getParams(paramsArr);
+			logger.debug("params: " + params);
+
+			tracking_number = api.send(command, params);
+			tracking_number = api.toMap(tracking_number).get("waybill_id");
+			logger.debug("[託運單號碼] tracking_number: " + tracking_number);
+
+			// 備註
+			String comment = egsVO.getEgs_comment();
+			logger.debug("[備註] comment: " + comment);
+
+			// 尺寸
+			String package_size = egsVO.getPackage_size();
+			logger.debug("[尺吋] package_size: " + package_size);
+
+			// 溫層
+			String temperature = egsVO.getTemperature();
+			logger.debug("[溫層] temperature: " + temperature);
+
+			// 指定配達日期
+			String delivery_date = egsVO.getDelivery_date();
+			logger.debug("[指定配達日期] delivery_date: " + delivery_date);
+
+			// 指定配達時段
+			String delivery_timezone = egsVO.getDelivery_timezone();
+			logger.debug("[指定配達時段] delivery_timezone: " + delivery_timezone);
+
+			// 託運單帳號(託運單帳號 = 連線契客代號)
+			String account_id = egsVO.getAccount_id();
+			logger.debug("[託運單帳號] account_id: " + account_id);
+			String member_no = egsVO.getMember_no();
+			String taxin = egsVO.getTaxin();
+
+			// 會員編號、關稅、報值金額 default:0
+			String insurance = egsVO.getInsurance();
+			logger.debug("[會員編號] member_no: " + member_no);
+			logger.debug("[關稅] taxin: " + taxin);
+			logger.debug("[報值金額] insurance: " + insurance);
+
+			// 建立時間 & 列印時間 ( 建立時間 = 列印時間 )
+			java.sql.Date create_time = egsVO.getCreate_time();
+			java.sql.Date print_time = egsVO.getPrint_time();
+
+			logger.debug("[建立時間] create_time: " + create_time);
+			logger.debug("[列印時間] print_time: " + print_time);
+
+			// 以訂單編號查詢同訂單所需資訊
+			ShipVO shipVO = service.getShipByOrderno(groupId, orderNo);
+
+			// 選取的多筆出貨單id
+			String shipIds = shipVO.getShip_id();
+			logger.debug("[選取的單筆出貨單id] shipIds: " + shipIds);
+
+			// 選取的多筆出貨單明細id
+			String realsaleIds = shipVO.getRealsale_id();
+			logger.debug("[選取的單筆出貨單明細id] realsaleIds: " + realsaleIds);
+
+			// 品名
+			String product_name = shipVO.getV_product_name();
+			logger.debug("[品名] product_name: " + product_name);
+
+			// 收件人資訊
+			egsVO = service.getEgsReceiverInfo(realsaleIds);
+
+			// // 收件人姓名
+			String receiver_name = egsVO.getReceiver_name();
+			logger.debug("[收件人姓名] receiver_name: " + receiver_name);
+
+			// 收件人地址
+			String receiver_address = egsVO.getReceiver_address();
+			if (receiver_address != null) {
+				receiver_address = receiver_address.replaceAll(" ", "");
+				logger.debug("[去除空白收件人地址] receiver_address: " + receiver_address);
+			}
+			logger.debug("[收件人地址] receiver_address: " + receiver_address);
+
+			// 收件人行動電話
+			String receiver_mobile = egsVO.getReceiver_mobile();
+			logger.debug("[收件人行動電話] receiver_mobile: " + receiver_mobile);
+
+			// 收件人電話
+			String receiver_phone = egsVO.getReceiver_phone();
+			logger.debug("[收件人電話] receiver_phone: " + receiver_phone);
+
+			// 收件人地址的速達五碼郵遞區號
+			api = new EgsApi();
+			String receiver_suda5 = api.querySuda("query_suda5", receiver_address);
+			receiver_suda5 = api.toMap(receiver_suda5).get("suda5_1");
+			logger.debug("[收件人地址的速達五碼郵遞區號] receiver_suda5: " + receiver_suda5);
+
+			// 收件人地址的速達七碼郵遞區號
+			api = new EgsApi();
+			String receiver_suda7 = api.querySuda("query_suda7", receiver_address);
+			receiver_suda7 = api.toMap(receiver_suda7).get("suda7_1");
+			logger.debug("[收件人地址的速達七碼郵遞區號] receiver_suda7: " + receiver_suda7);
+
+			GroupVO groupVO = service.getGroupByGroupId(groupId);
+
+			// 寄件人姓名
+			String sender_name = groupVO.getGroup_name();
+			logger.debug("[寄件人姓名] sender_name: " + sender_name);
+
+			// 寄件人地址
+			String sender_address = groupVO.getAddress();
+			logger.debug("[寄件人地址] sender_address: " + sender_address);
+
+			// 寄件人地址的速達五碼郵遞區號
+			api = new EgsApi();
+			String sender_suda5 = api.querySuda("query_suda5", sender_address);
+			sender_suda5 = api.toMap(sender_suda5).get("suda5_1");
+			logger.debug("[寄件人地址的速達五碼郵遞區號] receiver_suda5: " + sender_suda5);
+
+			// 寄件人電話
+			String sender_phone = groupVO.getPhone();
+			logger.debug("[寄件人電話] sender_phone: " + sender_phone);
+
+			// 距離 00:同縣市 01:外縣市 02:離島
+			api = new EgsApi();
+			command = "query_distance";
+
+			paramsArr = new String[2];
+			paramsArr[0] = "suda5_senderpostcode_1=".concat(sender_suda5);
+			paramsArr[1] = "suda5_customerpostcode_1=".concat(receiver_suda5);
+
+			params = api.getParams(paramsArr);
+			logger.debug("params: " + params);
+
+			String distance = api.send(command, params);
+			distance = api.toMap(distance).get("distance_1");
+			logger.debug("[距離] distance: " + distance);
+
+			// 代收貨款金額
+			String product_price = service.getEgsTotalAmt(realsaleIds);
+			logger.debug("[代收貨款金額] product_price: " + product_price);
+
+			// 組合傳送單筆託運單資料電文
+			paramsArr = new String[26];
+			paramsArr[0] = "customer_id=".concat(customer_id);
+			paramsArr[1] = "tracking_number=".concat(tracking_number);
+			paramsArr[2] = "orderNo=".concat(orderNo);
+			paramsArr[3] = "receiver_name=".concat(URLEncoder.encode(receiver_name, "utf8"));
+			paramsArr[4] = "receiver_address=".concat(URLEncoder.encode(receiver_address, "utf8"));
+			paramsArr[5] = "receiver_suda5=".concat(receiver_suda5);
+			paramsArr[6] = "receiver_mobile=".concat(receiver_mobile);
+			paramsArr[7] = "receiver_phone=".concat(receiver_phone);
+			paramsArr[8] = "sender_name=".concat(URLEncoder.encode(sender_name, "utf8"));
+			paramsArr[9] = "sender_address=".concat(URLEncoder.encode(sender_address, "utf8"));
+			paramsArr[10] = "sender_suda5=".concat(sender_suda5);
+			paramsArr[11] = "sender_phone=".concat(sender_phone);
+			paramsArr[12] = "product_price=".concat(product_price);
+			paramsArr[13] = "product_name=".concat(URLEncoder.encode(product_name, "utf8"));
+			paramsArr[14] = "comment=".concat(URLEncoder.encode(comment, "utf8"));
+			paramsArr[15] = "package_size=".concat(package_size);
+			paramsArr[16] = "temperature=".concat(temperature);
+			paramsArr[17] = "distance=".concat(distance);
+			paramsArr[18] = "delivery_date=".concat(delivery_date);
+			paramsArr[19] = "delivery_timezone=".concat(delivery_timezone);
+			paramsArr[20] = "create_time=".concat(String.valueOf(create_time));
+			paramsArr[21] = "print_time=".concat(String.valueOf(print_time));
+			paramsArr[22] = "account_id=".concat(account_id);
+			paramsArr[23] = "member_no=".concat(member_no);
+			paramsArr[24] = "taxin=".concat(taxin);
+			paramsArr[25] = "insurance=".concat(insurance);
+
+			api = new EgsApi();
+			params = api.getParams(paramsArr);
+			logger.debug("params: " + params);
+
+			String apiResponseStr = api.send("transfer_waybill", params);
+			logger.debug("apiResponseStr: " + apiResponseStr);
+
+			resultMap = api.toMap(apiResponseStr);
+
+			if (resultMap.get("message") != null) {
+				String message = URLDecoder.decode(resultMap.get("message"), "utf8");
+				resultMap.put("message", message);
+			}
+
+			String status = resultMap.get("status");
+
+			if ("OK".equals(status)) {
+				// set value
+				egsVO = new EgsVO();
+				egsVO.setGroup_id(groupId);
+				egsVO.setCustomer_id(customer_id);
+				egsVO.setTracking_number(tracking_number);
+				egsVO.setOrder_no(orderNo);
+				egsVO.setReceiver_name(receiver_name);
+				egsVO.setReceiver_address(receiver_address);
+				egsVO.setReceiver_suda5(receiver_suda5);
+				egsVO.setReceiver_suda7(receiver_suda7);
+				egsVO.setReceiver_mobile(receiver_mobile);
+				egsVO.setReceiver_phone(receiver_phone);
+				egsVO.setSender_name(sender_name);
+				egsVO.setSender_address(sender_address);
+				egsVO.setSender_suda5(sender_suda5);
+				egsVO.setSender_phone(sender_phone);
+				egsVO.setProduct_price(product_price);
+				egsVO.setProduct_name(product_name);
+				egsVO.setEgs_comment(comment);
+				egsVO.setPackage_size(package_size);
+				egsVO.setTemperature(temperature);
+				egsVO.setDistance(distance);
+				egsVO.setDelivery_date(delivery_date);
+				egsVO.setDelivery_timezone(delivery_timezone);
+				egsVO.setCreate_time(create_time);
+				egsVO.setPrint_time(print_time);
+				egsVO.setAccount_id(account_id);
+				egsVO.setMember_no(member_no);
+				egsVO.setTaxin(taxin);
+				egsVO.setInsurance(insurance);
+
+				// insert to database
+				service.insertEgs(egsVO);
+
+				resultMap.put("trackingNo", tracking_number);
+				resultMap.put("orderNo", orderNo);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			resultMap = new HashMap<String, String>();
+			resultMap.put("status", "ERR");
+			resultMap.put("trackingNo", tracking_number);
+			resultMap.put("orderNo", orderNo);
+		}
+		return resultMap;
 	}
 }
