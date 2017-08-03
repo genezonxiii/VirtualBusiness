@@ -35,65 +35,6 @@ import tw.com.aber.vo.SaleVO;
 public class InvoiceApi {
 	private static final Logger logger = LogManager.getLogger(InvoiceApi.class);
 	
-	/*
-	 * test
-	 */
-	public String test() {
-		String targetURL = "http://127.0.0.1:55180/receiver.php";
-		String urlParameters = "";
-
-		urlParameters ="<Invoice>"
-           	 +"<A1>C0401</A1>"
-           	 +"<A2>TT16662164</A2>"
-           	 +"<A3>2017-07-31</A3>"
-           	 +"<A4>10:15:42</A4>"
-           	 +"<A5>0000000000</A5>"
-           	 +"<A6>0000</A6>"
-           	 +"<A19></A19>"
-           	 +"<A20></A20>"
-           	 +"<A21></A21>"
-           	 +"<A22>07</A22>"
-           	 +"<A24>0</A24>"
-           	 +"<A28>Y</A28>"
-           	 +"<A30>5315</A30>"
-           	 +"<B>"
-           	 +"<B1>1</B1>"
-           	 +"<B2>【強效除臭清潔組】身體/地板/衣物/玩具/食碗</B2>"
-           	 +"<B3>1</B3>"
-           	 +"<B5>850</B5>"
-           	 +"<B6>850</B6>"
-           	 +"<B7>1</B7>"
-           	 +"</B>"
-           	 +"<B>"
-           	 +"<B1>2</B1>"
-           	 +"<B2>【犬貓通用】除臭抑菌水濕巾5包/入</B2>"
-           	 +"<B3>1</B3>"
-           	 +"<B5>125</B5>"
-           	 +"<B6>125</B6>"
-           	 +"<B7>2</B7>"
-           	 +"</B>"
-           	 +"<C1>975</C1>"
-           	 +"<C2>0</C2>"
-           	 +"<C3>0</C3>"
-           	 +"<C4>1</C4>"
-           	 +"<C5>0.05</C5>"
-           	 +"<C6>0</C6>"
-           	 +"<C7>975</C7>"
-           	 +"<D1>20939790</D1>"
-           	 +"<D2>9dcd1bbf10201d542698</D2>"
-           	 +"<D3>1</D3>"
-           	 +"<D4>2017-07-31 10:15:42</D4>"
-           	 +"</Invoice>";
-		
-		String returnValue = InvoiceApi.executePost(targetURL, urlParameters);
-		logger.debug("returnValue:" + returnValue);
-		return returnValue;
-	}
-
-	
-	
-	
-
 	/**********************
 	 * A01發票號碼取號 [Request]
 	 * 
