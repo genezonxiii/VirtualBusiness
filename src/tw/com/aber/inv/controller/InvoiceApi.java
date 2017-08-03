@@ -449,6 +449,71 @@ public class InvoiceApi {
 		result = sw.toString();
 		return result;
 	}
+	
+	/**********************
+	 * 依order_no來分類SaleVO
+	 * 
+	 **********************/
+	public List<List<SaleVO>> classification(List<SaleVO> saleVOsAll) {
+		List<List<SaleVO>> saleVOsAll_classification =new ArrayList<List<SaleVO>>();
+		String order_no_record = "";
+		List<SaleVO> saleVOs = null ;
+		
+		for (int i = 0; i < saleVOsAll.size(); i++) {
+			SaleVO saleVO = saleVOsAll.get(i);
+			// check data
+			if ("".equals(saleVO.getInvoice()) || null == saleVO.getInvoice()) {
+				logger.error("getInvoice is null");
+				return null;
+			}
+			if(i==0){
+				saleVOs = new ArrayList<SaleVO>();
+				order_no_record=saleVO.getOrder_no();
+			}
+
+			// classification
+			if (!order_no_record.equals(saleVO.getOrder_no())) {
+				order_no_record=saleVO.getOrder_no();
+				saleVOsAll_classification.add(saleVOs);
+				saleVOs = new ArrayList<SaleVO>();
+			}
+
+			saleVOs.add(saleVO);
+
+			if (i == saleVOsAll.size()-1) {
+				saleVOsAll_classification.add(saleVOs);
+			}
+		}
+		
+		return saleVOsAll_classification;
+	}
+	
+	/**********************
+	 * 取得列印發票字串
+	 * 
+	 **********************/
+	public List<String> getPrintStr(List<SaleVO> saleVOsAll, GroupVO groupVO) {
+		List<String> printStrList = new ArrayList<String>();
+		List<List<SaleVO>> saleVOsAll_classification = classification(saleVOsAll);
+
+		if (saleVOsAll_classification == null) {
+			return null;
+		}
+
+		for (int i = 0; i < saleVOsAll_classification.size(); i++) {
+			List<SaleVO> saleVOs = saleVOsAll_classification.get(i);
+			String invoiceNum = saleVOs.get(0).getInvoice();
+			String xmlStr = genRequestForC0401(invoiceNum, saleVOs, groupVO);
+			logger.debug("xmlStr: "+xmlStr);
+
+			printStrList.add(xmlStr);
+
+		}
+
+		return printStrList;
+	}
+	
+	
 
 	/**********************
 	 * C0401開立發票訊息規格 [Request]
