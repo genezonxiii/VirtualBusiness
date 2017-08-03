@@ -3,6 +3,8 @@ package tw.com.aber.util;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +23,25 @@ import tw.com.aber.vo.UserVO;
  */
 public class Util {
 	private static final Logger logger = LogManager.getLogger(Util.class);
+
+	/**
+	 * @param date
+	 *            The string to be processed
+	 * @param regular
+	 *            Format string
+	 * @return boolean value
+	 */
+	public boolean checkDateFormat(String date, String regular) {
+		boolean result = false;
+		try {
+			Pattern p = Pattern.compile(regular);
+			Matcher m = p.matcher(date);
+			result = m.matches();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return result;
+	}
 
 	/**
 	 * @param object
@@ -63,8 +84,8 @@ public class Util {
 		String userId = (String) request.getSession().getAttribute("user_id");
 		boolean result = true;
 		if (groupId == null | userId == null) {
-			logger.debug("groupId: "+groupId);
-			logger.debug("userId: "+userId);
+			logger.debug("groupId: " + groupId);
+			logger.debug("userId: " + userId);
 			HttpSession session = request.getSession(true);
 			session.setAttribute("sessionID", null);
 			session.setAttribute("user_id", null);
