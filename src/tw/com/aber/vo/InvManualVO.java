@@ -1,6 +1,7 @@
 package tw.com.aber.vo;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 public class InvManualVO implements Serializable {
 
@@ -11,10 +12,10 @@ public class InvManualVO implements Serializable {
 	private String invoice_type;
 	private String year_month;
 	private String invoice_no;
-	private String invoice_date;
+	private Date invoice_date;
 	private String title;
 	private String unicode;
-	private String amount;
+	private Float amount;
 
 	public String getInv_manual_id() {
 		return inv_manual_id;
@@ -56,11 +57,11 @@ public class InvManualVO implements Serializable {
 		this.invoice_no = invoice_no;
 	}
 
-	public String getInvoice_date() {
+	public Date getInvoice_date() {
 		return invoice_date;
 	}
 
-	public void setInvoice_date(String invoice_date) {
+	public void setInvoice_date(Date invoice_date) {
 		this.invoice_date = invoice_date;
 	}
 
@@ -80,11 +81,11 @@ public class InvManualVO implements Serializable {
 		this.unicode = unicode;
 	}
 
-	public String getAmount() {
+	public Float getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(Float amount) {
 		this.amount = amount;
 	}
 

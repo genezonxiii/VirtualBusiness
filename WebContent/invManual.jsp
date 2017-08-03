@@ -68,6 +68,9 @@
 						<td>買受人</td><td><input type="text" name="title"></td>
 					</tr>
 					<tr>
+						<td>發票號碼</td><td><input type="text" name="invoice_no"></td>
+					</tr>
+					<tr>
 						<td>發票類別</td>
 						<td>
 							<input id="invoice-type-radio-1" type="radio" name="invoice-type-radio-group">
@@ -100,6 +103,7 @@
 	
 	<!-- Listener -->
 	<script type="text/javascript">
+		//查詢
 		$('.page-wrapper').on('click', '.btn-darkblue', function(event){
 			event.preventDefault();
 			
@@ -114,6 +118,8 @@
 			};
 			drawInvMasTable(parameter);
 		});
+		
+		//新增發票
 		$('.page-wrapper').on('click', '.btn-exec', function(event){
 			event.preventDefault();
 			
@@ -129,7 +135,8 @@
 				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
 				    }
 				}
-			);			
+			);
+			
 			$dialog.dialog({
 				draggable : true,
 				resizable : false,
@@ -140,19 +147,70 @@
 				buttons : [{
 							text : "儲存",
 							click : function() {
-
+								
+								var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
+								invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+								
+								var title = $( "input[name='title']", $dialog ).val();
+								var unicode = $( "input[name='unicode']", $dialog ).val();
+								var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
+								
+								console.log('invoice_type: '+ invoice_type);
+								console.log('title: '+ title);
+								console.log('unicode: '+ unicode);
+								console.log('invoice_no: '+ invoice_no);
+								
+								$.ajax({
+									url: 'InvManual.do',
+									type: 'post',
+									data : {
+										action: 'insertMaster',
+										invoice_type: invoice_type,
+										title: title,
+										unicode:  unicode,
+										invoice_no: invoice_no
+									},
+									beforeSend: function(){
+									    $(':hover').css('cursor','progress');
+									},
+									complete: function(){
+										$(':hover').css('cursor','default');
+									},
+									success: function (response) {
+										$masterTable.ajax.reload();
+										$dialog.find('form').trigger("reset");
+										$dialog.dialog("close");
+									}
+								});
 							}
 						}, {
 							text : "取消",
 							click : function() {
-
 								$(this).dialog("close");
 							}
 						} ],
 				close : function() {
-
+					$dialog.find('form').trigger("reset");
 				}
 			});
+		});
+		
+		//主單功能-清單
+		$('#invoice-master-table').delegate(".btn_list", "click", function(e) {
+			e.preventDefault();
+			
+			var row = $(this).closest("tr");
+		    var data = $masterTable.row(row).data();
+		    var inv_manual_id = data.inv_manual_id;
+		    
+		    $masterTable.destroy();
+		    $('#invoice-master-table').empty();
+
+			var parameter = {
+					action: 'query_invoice_detail',
+					inv_manual_id: inv_manual_id
+			};
+			drawInvListTable(parameter);
 		});		
 	</script>
 	
@@ -176,7 +234,13 @@
 					url : "InvManual.do",
 					dataSrc : "",
 					type : "POST",
-					data : parameter
+					data : parameter,
+                    beforeSend: function(){
+                        $(':hover').css('cursor','progress');
+                    },
+                    complete: function(){
+                    	$(':hover').css('cursor','default');
+                    }
 				},
 				columns : [{
 					"title" : "發票類別",
@@ -206,9 +270,154 @@
 					"title" : "總金額",
 					"data" : "amount",
 					"defaultContent" : ""
-				}]
+				}, {
+			        "title": "功能",
+			        "data": null,
+			        "defaultContent": ""
+			    }],
+			    columnDefs: [{
+			        targets: -1,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			            var options = $("<div/>")
+			                .append($("<div/>", {
+			                        "class": "table-row-func btn-in-table btn-gray"
+			                    })
+			                    .append($("<i/>", {
+			                        "class": "fa fa-ellipsis-h"
+			                    }))
+			                    .append(
+			                        $("<div/>", {
+			                            "class": "table-function-list"
+			                        })
+									.append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-alert btn_delete",
+											"title": "刪除"
+										})
+										.append( $("<i/>", {"class": "fa fa-trash"}) )
+									)
+									.append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-green btn_list",
+											"title": "清單"
+										})
+										.append( $("<i/>", {"class": "fa fa-pencil-square-o"}) )
+									)
+			                    )
+			                );
+
+			            return options.html();
+			        }
+			    }]
 			});		
 		};
+		
+		function drawInvListTable(parameter) {
+			
+			$detailTable = $("#invoice-detail-table").DataTable({
+			    dom: "frB<t>ip",
+			    lengthChange: false,
+			    pageLength: 20,
+			    scrollY: "340px",
+			    width: 'auto',
+			    scrollCollapse: true,
+			    destroy: true,
+				language : {
+					"url" : "js/dataTables_zh-tw.txt",
+					"emptyTable" : "查無資料",
+				},
+			    initComplete: function(settings, json) {
+			        $('div .dt-buttons').css({
+			            'float': 'left',
+			            'margin-left': '10px'
+			        });
+			        $('div .dt-buttons a').css('margin-left', '10px');
+			    },
+				ajax : {
+					url : "InvManual.do",
+					dataSrc : "",
+					type : "POST",
+					data : parameter,
+                    beforeSend: function(){
+                        $(':hover').css('cursor','progress');
+                    },
+                    complete: function(){
+                    	$(':hover').css('cursor','default');
+                    }
+				},
+				columns : [{
+					"title" : "品名",
+					"data" : "description",
+					"defaultContent" : ""
+				},{
+					"title" : "單價",
+					"data" : "price",
+					"defaultContent" : ""
+				},{
+					"title" : "數量",
+					"data" : "quantity",
+					"defaultContent" : ""
+				},{
+					"title" : "小計",
+					"data" : "subtotal",
+					"defaultContent" : ""
+				}, {
+			        "title": "功能",
+			        "data": null,
+			        "defaultContent": ""
+			    }],
+			    columnDefs: [{
+			        targets: -1,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			            var options = $("<div/>")
+			                .append($("<div/>", {
+			                        "class": "table-row-func btn-in-table btn-gray"
+			                    })
+			                    .append($("<i/>", {
+			                        "class": "fa fa-ellipsis-h"
+			                    }))
+			                    .append(
+			                        $("<div/>", {
+			                            "class": "table-function-list"
+			                        })
+									.append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-alert btn_delete",
+											"title": "刪除"
+										})
+										.append( $("<i/>", {"class": "fa fa-trash"}) )
+									)
+									.append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-darkblue btn_update",
+											"title": "修改"
+										})
+										.append( $("<i/>", {"class": "fa fa-pencil"}) )
+									)
+			                    )
+			                );
+			            return options.html();
+			        }
+			    }],
+	    		buttons: [{
+		            text: '返回主單',
+		            action: function(e, dt, node, config) {
+		            	
+		    		    $detailTable.destroy();
+		    		    $('#invoice-detail-table').empty();		 
+		    		    
+		    			var parameter = {
+		    					action: 'query_invoice'
+		    			};
+		    			drawInvMasTable(parameter);
+		            }
+				}]
+			});		
+		};		
 	</script>	
 </body>
 </html>

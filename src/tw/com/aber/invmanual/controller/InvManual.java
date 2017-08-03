@@ -1,15 +1,17 @@
 package tw.com.aber.invmanual.controller;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.InvManualDetailVO;
 import tw.com.aber.vo.InvManualVO;
 
 public class InvManual extends HttpServlet {
@@ -47,15 +50,16 @@ public class InvManual extends HttpServlet {
 
 		logger.debug("Action: {} \\ GroupId: {} \\ UserId: {}", action, groupId, userId);
 
+		Util util = new Util();
+		InvManualService service = new InvManualService();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+
 		if ("query_invoice".equals(action)) {
 			String startDate = req.getParameter("startDate");
 			String endDate = req.getParameter("endDate");
 
 			String regular = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
 
-			Util util = new Util();
-			InvManualService service = new InvManualService();
-			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String result = null;
 
 			if (util.checkDateFormat(startDate, regular) && util.checkDateFormat(endDate, regular)) {
@@ -64,6 +68,63 @@ public class InvManual extends HttpServlet {
 				result = gson.toJson(service.searchAllInvManual(groupId));
 			}
 			logger.debug("result: {}", result);
+			resp.getWriter().write(result);
+		} else if ("insertMaster".equals(action)) {
+			String invoice_type = req.getParameter("invoice_type");
+			String title = req.getParameter("title");
+			String unicode = req.getParameter("unicode");
+			String invoice_no = req.getParameter("invoice_no");
+			String year_month = null;
+
+			java.util.Date date = new java.util.Date();
+			Date invoice_date = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				invoice_date = new java.sql.Date(date.getTime());
+				year_month = sdf.format(invoice_date);
+
+				year_month = year_month.substring(5, 7);
+				int year_month_int = Integer.valueOf(year_month);
+
+				Integer start = null, end = null;
+				if (year_month_int % 2 != 0) {
+					start = year_month_int;
+					end = year_month_int + 1;
+				} else {
+					start = year_month_int - 1;
+					end = year_month_int;
+				}
+				year_month = "" + start + "-" + end;
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+
+			Float amount = 0F;
+
+			InvManualVO invManualVO = new InvManualVO();
+			invManualVO.setGroup_id(groupId);
+			invManualVO.setInvoice_type(invoice_type);
+			invManualVO.setYear_month(year_month);
+			invManualVO.setInvoice_no(invoice_no);
+			invManualVO.setInvoice_date(invoice_date);
+			invManualVO.setTitle(title);
+			invManualVO.setUnicode(unicode);
+			invManualVO.setAmount(amount);
+			service.insertInvManual(invManualVO);
+
+		} else if ("query_invoice_detail".equals(action)) {
+			String inv_manual_id = req.getParameter("inv_manual_id");
+
+			String result = null;
+			try {
+				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+				invManualDetailVO.setGroup_id(groupId);
+				invManualDetailVO.setInv_manual_id(inv_manual_id);
+				result = gson.toJson(service.searchInvManualByInvManualId(invManualDetailVO));
+				logger.debug("result: {}", result);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
 			resp.getWriter().write(result);
 		}
 	}
@@ -75,12 +136,20 @@ public class InvManual extends HttpServlet {
 			dao = new InvManualDao();
 		}
 
+		public List<InvManualDetailVO> searchInvManualByInvManualId(InvManualDetailVO invManualDetailVO) {
+			return dao.searchInvManualByInvManualId(invManualDetailVO);
+		}
+
 		public List<InvManualVO> searchAllInvManual(String groupId) {
 			return dao.searchAllInvManual(groupId);
 		}
 
 		public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate) {
 			return dao.searchInvManualByInvoiceDate(groupId, startDate, endDate);
+		}
+
+		public void insertInvManual(InvManualVO invManualVO) {
+			dao.insertInvManual(invManualVO);
 		}
 	}
 
@@ -94,6 +163,8 @@ public class InvManual extends HttpServlet {
 		private static final String sp_select_all_inv_manual = "call sp_select_all_inv_manual (?)";
 		private static final String sp_select_inv_manual_by_invoice_date = "call sp_select_inv_manual_by_invoice_date (?,?,?)";
 		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?,?,?)";
+		private static final String sp_select_inv_manual_detail_by_inv_manual_id = "call sp_select_inv_manual_detail_by_inv_manual_id(?,?)";
+
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
 			List<InvManualVO> rows = new ArrayList<InvManualVO>();
@@ -117,10 +188,10 @@ public class InvManual extends HttpServlet {
 					row.setInvoice_type(rs.getString("invoice_type"));
 					row.setYear_month(rs.getString("year_month"));
 					row.setInvoice_no(rs.getString("invoice_no"));
-					row.setInvoice_date(rs.getString("invoice_date"));
+					row.setInvoice_date(rs.getDate("invoice_date"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
-					row.setAmount(rs.getString("amount"));
+					row.setAmount(rs.getFloat("amount"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -172,10 +243,103 @@ public class InvManual extends HttpServlet {
 					row.setInvoice_type(rs.getString("invoice_type"));
 					row.setYear_month(rs.getString("year_month"));
 					row.setInvoice_no(rs.getString("invoice_no"));
-					row.setInvoice_date(rs.getString("invoice_date"));
+					row.setInvoice_date(rs.getDate("invoice_date"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
-					row.setAmount(rs.getString("amount"));
+					row.setAmount(rs.getFloat("amount"));
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
+
+		@Override
+		public void insertInvManual(InvManualVO invManualVO) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_insert_inv_manual);
+
+				cs.setString(1, invManualVO.getGroup_id());
+				cs.setString(2, invManualVO.getInvoice_type());
+				cs.setString(3, invManualVO.getYear_month());
+				cs.setString(4, invManualVO.getInvoice_no());
+				cs.setDate(5, invManualVO.getInvoice_date());
+				cs.setString(6, invManualVO.getTitle());
+				cs.setString(7, invManualVO.getUnicode());
+				cs.setFloat(8, invManualVO.getAmount());
+
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
+		@Override
+		public List<InvManualDetailVO> searchInvManualByInvManualId(InvManualDetailVO invManualDetailVO) {
+			List<InvManualDetailVO> rows = new ArrayList<InvManualDetailVO>();
+			InvManualDetailVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_inv_manual_detail_by_inv_manual_id);
+
+				pstmt.setString(1, invManualDetailVO.getGroup_id());
+				pstmt.setString(2, invManualDetailVO.getInv_manual_id());
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new InvManualDetailVO();
+					row.setInv_manual_detail_id(rs.getString("inv_manual_detail_id"));
+					row.setInv_manual_id(rs.getString("inv_manual_id"));
+					row.setDescription(rs.getString("description"));
+					row.setQuantity(rs.getInt("quantity"));
+					row.setPrice(rs.getInt("price"));
+					row.setSubtotal(rs.getInt("subtotal"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -208,7 +372,10 @@ public class InvManual extends HttpServlet {
 interface InvManual_interface {
 	public List<InvManualVO> searchAllInvManual(String groupId);
 
+	public List<InvManualDetailVO> searchInvManualByInvManualId(InvManualDetailVO invManualDetailVO);
+
 	public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate);
-	
+
 	public void insertInvManual(InvManualVO invManualVO);
+
 }
