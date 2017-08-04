@@ -89,7 +89,28 @@
 				</table>
 			</fieldset>
 		</form>
-	</div> 
+	</div>
+	
+	<div id="dialog-invoice-deatil" style="display:none">
+		<form>
+			<fieldset>
+				<table class='form-table'>
+					<tr>
+						<td>品名</td><td><input type="text" name="description"></td>
+					</tr>
+					<tr>
+						<td>單價</td><td><input type="text" name="price"></td>
+					</tr>
+					<tr>
+						<td>數量</td><td><input type="text" name="quantity"></td>
+					</tr>
+					<tr>
+						<td>小計</td><td><input type="text" name="subtotal" placeholder="系統自動產生" disabled></td>
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div> 	
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
@@ -99,6 +120,7 @@
 	<script type="text/javascript">
 		var $masterTable; //master datatable
 		var $detailTable; //detail datatable
+		var inv_manual_id;
 	</script>
 	
 	<!-- Listener -->
@@ -201,7 +223,7 @@
 			
 			var row = $(this).closest("tr");
 		    var data = $masterTable.row(row).data();
-		    var inv_manual_id = data.inv_manual_id;
+		    inv_manual_id = data.inv_manual_id;
 		    
 		    $masterTable.destroy();
 		    $('#invoice-master-table').empty();
@@ -217,6 +239,10 @@
 	<!-- Method -->
 	<script type="text/javascript">
 		function drawInvMasTable(parameter) {
+			if ($detailTable instanceof $.fn.dataTable.Api) {
+			    $detailTable.destroy();
+			    $('#invoice-detail-table').empty();
+			}
 			
 			$masterTable = $("#invoice-master-table").DataTable({
 			    dom: "fr<t>ip",
@@ -348,6 +374,10 @@
                     }
 				},
 				columns : [{
+			        "title": "批次請求",
+			        "data": null,
+			        "defaultContent": ""
+			    },{
 					"title" : "品名",
 					"data" : "description",
 					"defaultContent" : ""
@@ -369,6 +399,30 @@
 			        "defaultContent": ""
 			    }],
 			    columnDefs: [{
+			        targets: 0,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+
+			            var input = document.createElement("INPUT");
+			            input.type = 'checkbox';
+			            input.name = 'checkbox-group-select';
+			            input.id = '';
+
+			            var span = document.createElement("SPAN");
+			            span.className = 'form-label';
+
+			            var label = document.createElement("LABEL");
+			            label.htmlFor = '';
+			            label.name = 'checkbox-group-select';
+			            label.style.marginLeft = '45%';
+			            label.appendChild(span);
+
+			            var options = $("<div/>").append(input, label);
+
+			            return options.html();
+			        }
+			    },{
 			        targets: -1,
 			        searchable: false,
 			        orderable: false,
@@ -414,6 +468,77 @@
 		    					action: 'query_invoice'
 		    			};
 		    			drawInvMasTable(parameter);
+		            }
+				},{
+		            text: '批次刪除',
+		            action: function(e, dt, node, config) {
+		            	
+		            }
+				},{
+		            text: '新增明細',
+		            action: function(e, dt, node, config) {
+		            	var $dialog = $('#dialog-invoice-deatil');
+		            	
+		            	var $price = $dialog.find('input[name=price]');
+		            	var $quantity = $dialog.find('input[name=quantity]');
+		            	var $description = $dialog.find('input[name=description]');
+		            	var $subtotal = $dialog.find('input[name=subtotal]');
+
+
+		            	$dialog.find('input[name=price],input[name=quantity]').change(function(){
+		            		var subtotalVal = $price.val()* $quantity.val();
+		            		
+		            		subtotalVal = isNaN(subtotalVal) ? '資料錯誤，請檢查欄位': subtotalVal;
+
+		            		$subtotal.val( subtotalVal );
+		        		});
+		            	
+		            	
+		    			$dialog.dialog({
+		    				draggable : true,
+		    				resizable : false,
+		    				height : "auto",
+		    				width : "auto",
+		    				modal : true,
+		    				title : '新增明細',
+		    				buttons : [{
+		    							text : "儲存",
+		    							click : function() {
+
+		    								$.ajax({
+		    									url: 'InvManual.do',
+		    									type: 'post',
+		    									data : {
+		    										action: 'insertDetail',
+		    										inv_manual_id: inv_manual_id,
+		    										price: $price.val(),
+		    										quantity: $quantity.val(),
+		    										description: $description.val(),
+		    										subtotal: $subtotal.val()
+		    									},
+		    									beforeSend: function(){
+		    									    $(':hover').css('cursor','progress');
+		    									},
+		    									complete: function(){
+		    										$(':hover').css('cursor','default');
+		    									},
+		    									success: function (response) {
+		    										$masterTable.ajax.reload();
+		    										$dialog.find('form').trigger("reset");
+		    										$dialog.dialog("close");
+		    									}
+		    								});
+		    							}
+		    						}, {
+		    							text : "取消",
+		    							click : function() {
+		    								$(this).dialog("close");
+		    							}
+		    						} ],
+		    				close : function() {
+		    					$dialog.find('form').trigger("reset");
+		    				}
+		    			});		            	
 		            }
 				}]
 			});		

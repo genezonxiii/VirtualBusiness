@@ -126,6 +126,23 @@ public class InvManual extends HttpServlet {
 				logger.error(e.getMessage());
 			}
 			resp.getWriter().write(result);
+		} else if ("insertDetail".equals(action)) {
+			String inv_manual_id = req.getParameter("inv_manual_id");
+			String price = req.getParameter("price");
+			String quantity = req.getParameter("quantity");
+			String description = req.getParameter("description");
+			String subtotal = req.getParameter("subtotal");
+			logger.debug("inv_manual_id: {} \\ price: {} \\ quantity: {} \\ description: {} \\ subtotal: {}",
+					inv_manual_id, price, quantity, description, subtotal);
+			InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+			invManualDetailVO.setGroup_id(groupId);
+			invManualDetailVO.setInv_manual_id(inv_manual_id);
+			invManualDetailVO.setPrice(Integer.valueOf(price));
+			invManualDetailVO.setQuantity(Integer.valueOf(quantity));
+			invManualDetailVO.setDescription(description);
+			invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
+			service.insertInvManualDetail(invManualDetailVO);
+			
 		}
 	}
 
@@ -151,6 +168,9 @@ public class InvManual extends HttpServlet {
 		public void insertInvManual(InvManualVO invManualVO) {
 			dao.insertInvManual(invManualVO);
 		}
+		public void insertInvManualDetail(InvManualDetailVO invManualDetailVO){
+			dao.insertInvManualDetail(invManualDetailVO);
+		}
 	}
 
 	class InvManualDao implements InvManual_interface {
@@ -164,7 +184,8 @@ public class InvManual extends HttpServlet {
 		private static final String sp_select_inv_manual_by_invoice_date = "call sp_select_inv_manual_by_invoice_date (?,?,?)";
 		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?,?,?)";
 		private static final String sp_select_inv_manual_detail_by_inv_manual_id = "call sp_select_inv_manual_detail_by_inv_manual_id(?,?)";
-
+		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?)";
+		
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
 			List<InvManualVO> rows = new ArrayList<InvManualVO>();
@@ -366,6 +387,46 @@ public class InvManual extends HttpServlet {
 			return rows;
 		}
 
+		@Override
+		public void insertInvManualDetail(InvManualDetailVO invManualDetailVO) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_insert_inv_manual_detail);
+
+				cs.setString(1, invManualDetailVO.getInv_manual_id());
+				cs.setString(2, invManualDetailVO.getGroup_id());
+				cs.setString(3, invManualDetailVO.getDescription());
+				cs.setInt(4, invManualDetailVO.getPrice());
+				cs.setInt(5, invManualDetailVO.getQuantity());
+				cs.setInt(6, invManualDetailVO.getSubtotal());
+
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
 	}
 }
 
@@ -377,5 +438,7 @@ interface InvManual_interface {
 	public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate);
 
 	public void insertInvManual(InvManualVO invManualVO);
+	
+	public void insertInvManualDetail(InvManualDetailVO invManualDetailVO);
 
 }
