@@ -410,6 +410,7 @@ public class upload extends HttpServlet {
 				if("false".equals(ret)){
 					File file = new File(fullPath);
 					file.delete();
+					logger.debug("file delete:" + fullPath);
 				}
 				response.getWriter().write(ret);
 			} catch (FileUploadException e) {
