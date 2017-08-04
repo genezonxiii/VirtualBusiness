@@ -65,7 +65,7 @@
 					$.each (json_obj, function (i) {
 						resultRunTime+=1;
 					});
-					if(json_obj[resultRunTime-1].message=="驗證通過"){
+// 					if(json_obj[resultRunTime-1].message=="驗證通過"){
 						var result_table = "";
 						$.each(json_obj,function(i, item) {
 							if(i<len-1){
@@ -87,13 +87,17 @@
 								+ "<td name='"+ json_obj[i].barcode +"'>"+ json_obj[i].barcode+ "</td></tr>";
 							}
 						});
-					}
+// 					}
+					console.log("test1");
 					if(resultRunTime==0){
 						$("#sales-contain").hide();
 						$(".validateTips").text("查無此結果");
 					}
+					console.log("test2");
 					$("#sales").dataTable().fnDestroy();
-					if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
+					console.log("test3");
+// 					if(resultRunTime!=0&&json_obj[resultRunTime-1].message=="驗證通過"){
+						console.log("test");
 						$("#sales-contain").show();
 						$("#sales").dataTable().fnDestroy();
 						$("#sales tbody").html(result_table);
@@ -102,7 +106,8 @@
 						$("#sales").find("td").css("text-align","center");
 						$("#sales").find("th").css("text-align","center");
 						$(".validateTips").text("");
-					}
+// 					}
+					console.log("test4");
 				}
 			});
 		
