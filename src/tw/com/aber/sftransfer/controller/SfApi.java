@@ -545,7 +545,7 @@ public class SfApi {
 			orderItems.setOrderItem(orderItemList);
 			
 			OrderReceiverInfo orderReceiverInfo = new OrderReceiverInfo();
-			orderReceiverInfo.setReceiverCompany("個人");
+			orderReceiverInfo.setReceiverCompany(shipVO.getV_deliver_name());
 			orderReceiverInfo.setReceiverName(shipVO.getV_deliver_name());
 			orderReceiverInfo.setReceiverZipCode("");// 郵遞區號暫不填待資料完整
 			if (shipVO.getV_deliver_mobile() != null) {

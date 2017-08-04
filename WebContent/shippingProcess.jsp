@@ -151,7 +151,7 @@ line-height: 25px;
 										</div>
 										<div class="under_div">
 											<span>
-												<button class="btn btn-exec btn-wide" id="import_picking">轉入揀貨單</button>
+												<button class="btn btn-exec btn-wide" id="import_picking">轉入揀貨</button>
 											</span> <span class="forward-mark"></span>
 										</div>
 
@@ -161,7 +161,7 @@ line-height: 25px;
 										<div class="on_div"></div>
 
 										<div class="under_div">
-											<button class="btn btn-exec btn-wide" id="import_ship">轉入出庫</button>
+											<button class="btn btn-exec btn-wide" id="import_ship">轉入出貨</button>
 										</div>
 									</div>
 
