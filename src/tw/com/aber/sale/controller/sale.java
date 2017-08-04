@@ -30,6 +30,7 @@ import tw.com.aber.util.Util;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.InvoiceTrackVO;
 import tw.com.aber.vo.ProductVO;
+import tw.com.aber.vo.ResponseVO;
 import tw.com.aber.vo.SaleDetailVO;
 import tw.com.aber.vo.SaleVO;
 
@@ -398,6 +399,33 @@ public class sale extends HttpServlet {
 					result = "false";
 				}
 				response.getWriter().write(result);
+			} else if ("invoice_print".equals(action)) {
+				ResponseVO responseVO = new ResponseVO();
+				String saleIds = (String) request.getParameter("ids");
+
+				logger.debug("saleIds: " + saleIds);
+
+				GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
+				InvoiceApi api = new InvoiceApi();
+				List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
+
+				responseVO = checkData(saleVOs);
+
+				if (responseVO.getError().length() > 0) {
+					String jsonResponse = gson.toJson(responseVO);
+					logger.debug("jsonStrList: " + jsonResponse);
+					response.getWriter().write(jsonResponse);
+					return;
+				}
+
+				List<String> reqXmlList = api.getPrintStr(saleVOs, groupVO);
+				responseVO.setList(reqXmlList);
+				responseVO.setSuccess(true);
+
+				String jsonResponse = gson.toJson(responseVO);
+				logger.debug("jsonStrList: " + jsonResponse);
+				response.getWriter().write(jsonResponse);
+
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
@@ -456,6 +484,21 @@ public class sale extends HttpServlet {
 	public String getGenerateSeqNo(String str) {
 		str = str.substring(str.length() - 4);
 		return getThisYearMonthDate() + formatSeqNo((Integer.valueOf(str) + 1));
+	}
+	
+	public ResponseVO checkData(List<SaleVO> saleVOsAll){
+		ResponseVO responseVO = new ResponseVO();
+		for (int i = 0; i < saleVOsAll.size(); i++) {
+			SaleVO saleVO = saleVOsAll.get(i);
+			// check data
+			if ("".equals(saleVO.getInvoice()) || null == saleVO.getInvoice()) {
+				logger.error("getInvoice is null");
+				String order_no=saleVO.getOrder_no();
+				responseVO.setErrorReason("錯誤:訂單編號"+order_no+"，未開立發票。");
+				return responseVO;
+			}
+		}
+		return responseVO;
 	}
 
 	interface sale_interface {

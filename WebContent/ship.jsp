@@ -440,18 +440,31 @@
 		                                "class": "fa fa-pencil-square-o"
 		                            }))
 		                        )
-								.append(
+		                        .append(
 		                            $("<button/>", {
 		                                "id": row.seq_no,
 		                                "value": row.sale_id,
 		                                "name": row.c_product_id,
-		                                "class": "btn-in-table  btn-darkblue btn_ship_report",
-		                                "title": "清單"
+		                                "class": "btn-in-table  btn-darkblue btn_ship_report_a4_2",
+		                                "title": "黑貓A4_2模"
 		                            })
 		                            .append($("<i/>", {
 		                                "class": "fa fa-file-pdf-o"
 		                            }))
 		                        )
+								.append(
+		                            $("<button/>", {
+		                                "id": row.seq_no,
+		                                "value": row.sale_id,
+		                                "name": row.c_product_id,
+		                                "class": "btn-in-table  btn-alert btn_ship_report_a4_3",
+		                                "title": "黑貓A4_3模"
+		                            })
+		                            .append($("<i/>", {
+		                                "class": "fa fa-file-pdf-o"
+		                            }))
+		                        )
+		                        
 		                    )
 		                );
 
@@ -1314,9 +1327,9 @@
 	
 	
 	
-	function open_report(key,value,key1,value1){
+	function open_report(key,value,key1,value1,modeltype){
 		
-		var iframUrl="./report.do?"+key+"="+encodeURIComponent(value)+"&"+key1+"="+value1+"&type=ship_report";
+		var iframUrl="./report.do?"+key+"="+encodeURIComponent(value)+"&"+key1+"="+value1+"&type=ship_report&modeltype="+modeltype;
 
 		console.log(iframUrl);
 		$("#dialog_report_iframe").attr("src",iframUrl );
@@ -1342,12 +1355,17 @@
 	}
 	
 	
-	$("#dt_master_ship").on("click", ".btn_ship_report", function(e) {
+	$("#dt_master_ship").on("click", ".btn_ship_report_a4_3", function(e) {
 		var row = $(this).closest("tr");
 	    var data = $("#dt_master_ship").DataTable().row(row).data();
-	    open_report("order_no",data.order_no,"address",data.deliver_to);
+	    open_report("order_no",data.order_no,"address",data.deliver_to,"a4_3");
 	});
 	
+	$("#dt_master_ship").on("click", ".btn_ship_report_a4_2", function(e) {
+		var row = $(this).closest("tr");
+	    var data = $("#dt_master_ship").DataTable().row(row).data();
+	    open_report("order_no",data.order_no,"address",data.deliver_to,"a4_2");
+	});
 	
 	$("#dt_master_ship").on("click", ".btn_list", function(e) {
 		e.preventDefault();

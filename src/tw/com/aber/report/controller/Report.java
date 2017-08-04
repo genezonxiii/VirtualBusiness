@@ -228,6 +228,8 @@ public class Report extends HttpServlet {
 			} else if ("ship_report".equals(request.getParameter("type"))) {
 				String address = request.getParameter("address");
 				String order_no = request.getParameter("order_no");
+				String modeltype = request.getParameter("modeltype");
+				String reportName ="";
 
 				EgsApi egsApi = new EgsApi();
 				String suda7 = egsApi.getQuerySuda7(address);
@@ -239,8 +241,15 @@ public class Report extends HttpServlet {
 				logger.debug("eGSNum"+eGSNum);
 				logger.debug("group_id"+request.getSession().getAttribute("group_id").toString());
 				logger.debug("order_no"+order_no);
+				logger.debug("modeltype"+modeltype);
 
-				String reportName = "shipReportA4_3";
+				if("a4_2".equals(modeltype)){
+					reportName = "shipReportA4_2";
+				}else if("a4_3".equals(modeltype)){
+					reportName = "shipReportA4_3";
+				}else{
+					return;
+				}
 
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
