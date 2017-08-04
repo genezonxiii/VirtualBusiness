@@ -607,6 +607,44 @@ public class InvoiceApi {
 		result = sw.toString();
 		return result;
 	}
+	
+	/**********************
+	 * C0501開立發票訊息規格 [Request]
+	 * 
+	 **********************/
+	public String genRequestForC0501(String reason, List<SaleVO> saleVOs, GroupVO groupVO) {
+		String result = null;
+		Invoice invoice = new Invoice();
+		String invoiceNum = saleVOs.get(0).getInvoice();
+		Date invoice_date = saleVOs.get(0).getInvoice_date();
+
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		String ymd = dt1.format(date);
+		String hms = dt2.format(date);
+		String ymdhms = dt3.format(date);
+		String ymd_invoice = dt1.format(invoice_date);
+
+		invoice.setInvoiceCode("C0501");
+		invoice.setPosSn(groupVO.getInvoice_key());// POS機出廠序號;
+		invoice.setPosId(groupVO.getInvoice_posno());
+		invoice.setInvoiceNumber(invoiceNum);
+		invoice.setInvoiceDate(ymd_invoice);
+		invoice.setBuyerId("0000000000");
+		invoice.setSellerId(groupVO.getGroup_unicode());
+		invoice.setCancelDate(ymd);
+		invoice.setCancelTime(hms);
+		invoice.setCancelReason(reason);// 作廢原因
+		invoice.setSysTime(ymdhms);// 系統時間
+
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(invoice, sw);
+		logger.debug(sw.toString());
+		result = sw.toString();
+		return result;
+	}
 
 	/*
 	 * 電文加密前置作業
