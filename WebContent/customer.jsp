@@ -108,36 +108,49 @@ function draw_customer(parameter) {
             searchable: false,
             orderable: false,
             render: function(data, type, row) {
-                var options = $("<div/>").append($("<div/>", {
-                    "class": "table-row-func btn-in-table btn-gray"
-                }).append($("<i/>", {
-                    "class": "fa fa-ellipsis-h"
-                })).append($("<div/>", {
-                        "class": "table-function-list"
-                    }).append($("<button/>", {
-                        "class": "btn-in-table btn-darkblue btn_update",
-                        "title": "修改",
-                    }).append($("<i/>", {
-                        "class": "fa fa-pencil"
-                    }))).append(
-                        $("<button/>", {
-                            "id": row.seq_no,
-                            "value": row.sale_id,
-                            "name": row.c_product_id,
-                            "class": "btn-in-table btn-green btn_list",
-                            "title": "歷史交易紀錄"
-                        })
-                        .append($("<i/>", {
-                            "class": "fa fa-list"
-                        }))
-                    )
-
-                    .append($("<button/>", {
-                        "class": "btn-in-table btn-alert btn_delete",
-                        "title": "刪除",
-                    }).append($("<i/>", {
-                        "class": "fa fa-trash"
-                    })))));
+                var options = $("<div/>")
+                .append( $("<div/>", {
+                    	"class": "table-row-func btn-in-table btn-gray"
+	                })
+	                .append( $("<i/>", {
+		                    "class": "fa fa-ellipsis-h"
+		                })
+	                )
+	                .append( $("<div/>", {
+							"class": "table-function-list"
+						})
+	                    .append( $("<button/>", {
+		                        "class": "btn-in-table btn-darkblue btn_update",
+		                        "title": "修改",
+		                    })
+		                    .append( $("<i/>", {
+			                        "class": "fa fa-pencil"
+			                    })
+		                    )
+	                    )
+                       .append( $("<button/>", {
+	                            "class": "btn-in-table btn-alert btn_delete",
+	                            "title": "刪除",
+	                        })
+	                        .append( $("<i/>", {
+		                            "class": "fa fa-trash"
+		                        })
+							)
+						)
+	                    .append( $("<button/>", {
+	                            "id": row.seq_no,
+	                            "value": row.sale_id,
+	                            "name": row.c_product_id,
+	                            "class": "btn-in-table btn-green btn_list",
+	                            "title": "歷史交易紀錄"
+	                        })
+	                        .append( $("<i/>", {
+		                            "class": "fa fa-list"
+		                        })
+	                        )
+						)
+					)
+				);
 
                 return options.html();
             }
