@@ -110,7 +110,7 @@
 				</table>
 			</fieldset>
 		</form>
-	</div> 	
+	</div>
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
@@ -120,6 +120,7 @@
 	<script type="text/javascript">
 		var $masterTable; //master datatable
 		var $detailTable; //detail datatable
+		var selectCount = 0; //全選按鈕計算用
 		var inv_manual_id;
 	</script>
 	
@@ -216,6 +217,128 @@
 				}
 			});
 		});
+
+		//清單功能-刪除
+		$('#invoice-detail-table').delegate(".btn_delete", "click", function(e) {
+			e.preventDefault();
+			
+			var row = $(this).closest("tr");
+		    var data = $detailTable.row(row).data();
+		    var inv_manual_id = data.inv_manual_id;
+		    var inv_manual_detail_id = data.inv_manual_detail_id;
+		    
+		    console.log(data);
+		    
+			var parameter = {
+					action: 'delete_invoice_detail',
+					inv_manual_id: inv_manual_id,
+					inv_manual_detail_id: inv_manual_detail_id
+			};
+			
+			$('<div/>').dialog({
+				title: '警示訊息',
+				draggable : true,
+				resizable : false,
+				height : "auto",
+				width : "auto",
+				modal : true,
+				buttons : {
+					"確認刪除" : function() {
+						$.ajax({
+							url: 'InvManual.do',
+							async: false,
+							type: 'post',
+							data: parameter,
+			                beforeSend: function(){
+			                    $(':hover').css('cursor','progress');
+			                },
+			                complete: function(){
+			                	$(':hover').css('cursor','default');
+			                },
+							success: function (response) {
+								
+								var result = 'OK' == response ? '刪除成功!': '刪除失敗!';
+
+								$('<div/>').dialog({
+									title: '提示訊息',
+									draggable : true,
+									resizable : false,
+									modal : true
+								}).append($('<p>', {text: result }));
+							}
+						});
+						
+						$detailTable.ajax.reload();
+						
+						$(this).dialog("close");
+					},
+					"取消刪除" : function() {
+						$(this).dialog("close");
+					}
+				}
+			}).text("確認刪除嗎?");
+
+		});	
+
+		//主單功能-刪除
+		$('#invoice-master-table').delegate(".btn_delete", "click", function(e) {
+			e.preventDefault();
+			
+			var row = $(this).closest("tr");
+		    var data = $masterTable.row(row).data();
+		    var inv_manual_id = data.inv_manual_id;
+		    
+		    console.log(data);
+		    
+			var parameter = {
+					action: 'delete_invoice',
+					inv_manual_id: inv_manual_id
+			};
+			
+			$('<div/>').dialog({
+				title: '警示訊息',
+				draggable : true,
+				resizable : false,
+				height : "auto",
+				width : "auto",
+				modal : true,
+				buttons : {
+					"確認刪除" : function() {
+						$.ajax({
+							url: 'InvManual.do',
+							async: false,
+							type: 'post',
+							data: parameter,
+			                beforeSend: function(){
+			                    $(':hover').css('cursor','progress');
+			                },
+			                complete: function(){
+			                	$(':hover').css('cursor','default');
+			                },
+							success: function (response) {
+								
+								var result = 'OK' == response ? '刪除成功!': '刪除失敗!';
+
+								$('<div/>').dialog({
+									title: '提示訊息',
+									draggable : true,
+									resizable : false,
+									modal : true
+								}).append($('<p>', {text: result }));
+							}
+						});
+						
+						$masterTable.ajax.reload();
+						
+						$(this).dialog("close");
+					},
+					"取消刪除" : function() {
+						$(this).dialog("close");
+					}
+				}
+			}).text("確認刪除嗎?");
+
+		});		
 		
 		//主單功能-清單
 		$('#invoice-master-table').delegate(".btn_list", "click", function(e) {
@@ -224,28 +347,37 @@
 			var row = $(this).closest("tr");
 		    var data = $masterTable.row(row).data();
 		    inv_manual_id = data.inv_manual_id;
-		    
-		    $masterTable.destroy();
-		    $('#invoice-master-table').empty();
 
+			if ($masterTable instanceof $.fn.dataTable.Api) {
+			    $masterTable.destroy();
+			    $('#invoice-master-table').empty();
+			}
 			var parameter = {
 					action: 'query_invoice_detail',
 					inv_manual_id: inv_manual_id
 			};
 			drawInvListTable(parameter);
-		});		
+		});
+
+	    $('#invoice-master-table').on('change', ':checkbox', function() {
+	        $(this).is(":checked")?
+	        	$(this).closest("tr").addClass("selected"):
+	        	$(this).closest("tr").removeClass("selected");
+	    });
+
+	    $('#invoice-detail-table').on('change', ':checkbox', function() {
+	        $(this).is(":checked")?
+	        	$(this).closest("tr").addClass("selected"):
+	        	$(this).closest("tr").removeClass("selected");
+	    });
+	    
 	</script>
 	
 	<!-- Method -->
 	<script type="text/javascript">
 		function drawInvMasTable(parameter) {
-			if ($detailTable instanceof $.fn.dataTable.Api) {
-			    $detailTable.destroy();
-			    $('#invoice-detail-table').empty();
-			}
-			
 			$masterTable = $("#invoice-master-table").DataTable({
-			    dom: "fr<t>ip",
+			    dom: "frB<t>ip",
 			    lengthChange: false,
 			    pageLength: 20,
 			    scrollY: "340px",
@@ -256,6 +388,13 @@
 					"url" : "js/dataTables_zh-tw.txt",
 					"emptyTable" : "查無資料",
 				},
+			    initComplete: function(settings, json) {
+			        $('div .dt-buttons').css({
+			            'float': 'left',
+			            'margin-left': '10px'
+			        });
+			        $('div .dt-buttons a').css('margin-left', '10px');
+			    },
 				ajax : {
 					url : "InvManual.do",
 					dataSrc : "",
@@ -269,6 +408,10 @@
                     }
 				},
 				columns : [{
+			        "title": "批次請求",
+			        "data": null,
+			        "defaultContent": ""
+			    },{
 					"title" : "發票類別",
 					"data" : "invoice_type",
 					"defaultContent" : ""
@@ -302,6 +445,32 @@
 			        "defaultContent": ""
 			    }],
 			    columnDefs: [{
+			        targets: 0,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			        	
+			        	var inv_manual_id = data.inv_manual_id;
+
+			            var input = document.createElement("INPUT");
+			            input.type = 'checkbox';
+			            input.name = 'checkbox-inv-master-select';
+			            input.id = inv_manual_id;
+
+			            var span = document.createElement("SPAN");
+			            span.className = 'form-label';
+
+			            var label = document.createElement("LABEL");
+			            label.htmlFor = inv_manual_id;
+			            label.name = 'checkbox-inv-master-select';
+			            label.style.marginLeft = '45%';
+			            label.appendChild(span);
+
+			            var options = $("<div/>").append(input, label);
+
+			            return options.html();
+			        }
+			    },{
 			        targets: -1,
 			        searchable: false,
 			        orderable: false,
@@ -336,12 +505,101 @@
 
 			            return options.html();
 			        }
-			    }]
+			    }],
+	    		buttons: [{
+		            text: '全選',
+		            action: function(e, dt, node, config) {
+
+		                selectCount++;
+		                var $checkboxs = $('#invoice-master-table input[name=checkbox-inv-master-select]');
+
+		                selectCount % 2 != 1 ?
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", false);
+		                        $(this).removeClass("toggleon");
+		                        $(this).closest("tr").removeClass("selected");
+		                    }) :
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", true);
+		                        $(this).addClass("toggleon");
+		                        $(this).closest("tr").addClass("selected");
+		                    });
+		            }
+		        },{
+		            text: '批次刪除',
+		            action: function(e, dt, node, config) {
+
+		                var $checkboxs = $('#invoice-master-table input[name=checkbox-inv-master-select]:checked');
+		                
+		                console.log($checkboxs)
+		                
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                var inv_manual_ids = '';
+
+		                $checkboxs.each(function() {
+		                	inv_manual_ids += this.id + ',';
+		                });
+		                
+		                inv_manual_ids = inv_manual_ids.slice(0, -1);
+		    		    
+		    			var parameter = {
+		    					action: 'delete_invoice',
+		    					inv_manual_id: inv_manual_ids
+		    			};
+		    		    
+		    		    console.log(parameter);
+		    		    
+		    			$('<div/>').dialog({
+		    				title: '警示訊息',
+		    				draggable : true,
+		    				resizable : false,
+		    				height : "auto",
+		    				width : "auto",
+		    				modal : true,
+		    				buttons : {
+		    					"確認刪除" : function() {
+		    						$.ajax({
+		    							url: 'InvManual.do',
+		    							async: false,
+		    							type: 'post',
+		    							data: parameter,
+		    			                beforeSend: function(){
+		    			                    $(':hover').css('cursor','progress');
+		    			                },
+		    			                complete: function(){
+		    			                	$(':hover').css('cursor','default');
+		    			                },
+		    							success: function (response) {
+		    								
+		    								var result = 'OK' == response ? '刪除成功!': '刪除失敗!';
+
+		    								$('<div/>').dialog({
+		    									title: '提示訊息',
+		    									draggable : true,
+		    									resizable : false,
+		    									modal : true
+		    								}).append($('<p>', {text: result }));
+		    							}
+		    						});
+		    						
+		    						$masterTable.ajax.reload();
+		    						
+		    						$(this).dialog("close");
+		    					},
+		    					"取消刪除" : function() {
+		    						$(this).dialog("close");
+		    					}
+		    				}
+		    			}).text("確認刪除嗎?");
+		            }
+				}]
 			});		
 		};
 		
 		function drawInvListTable(parameter) {
-			
 			$detailTable = $("#invoice-detail-table").DataTable({
 			    dom: "frB<t>ip",
 			    lengthChange: false,
@@ -403,18 +661,20 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
+			        	
+			        	var inv_manual_detail_id = data.inv_manual_detail_id;
 
 			            var input = document.createElement("INPUT");
 			            input.type = 'checkbox';
-			            input.name = 'checkbox-group-select';
-			            input.id = '';
+			            input.name = 'checkbox-inv-detail-select';
+			            input.id = inv_manual_detail_id;
 
 			            var span = document.createElement("SPAN");
 			            span.className = 'form-label';
 
 			            var label = document.createElement("LABEL");
-			            label.htmlFor = '';
-			            label.name = 'checkbox-group-select';
+			            label.htmlFor = inv_manual_detail_id;
+			            label.name = 'checkbox-inv-detail-select';
 			            label.style.marginLeft = '45%';
 			            label.appendChild(span);
 
@@ -458,21 +718,94 @@
 			        }
 			    }],
 	    		buttons: [{
-		            text: '返回主單',
+		            text: '全選',
 		            action: function(e, dt, node, config) {
-		            	
-		    		    $detailTable.destroy();
-		    		    $('#invoice-detail-table').empty();		 
-		    		    
-		    			var parameter = {
-		    					action: 'query_invoice'
-		    			};
-		    			drawInvMasTable(parameter);
+
+		                selectCount++;
+		                var $checkboxs = $('#invoice-detail-table input[name=checkbox-inv-detail-select]');
+
+		                selectCount % 2 != 1 ?
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", false);
+		                        $(this).removeClass("toggleon");
+		                        $(this).closest("tr").removeClass("selected");
+		                    }) :
+		                    $checkboxs.each(function() {
+		                        $(this).prop("checked", true);
+		                        $(this).addClass("toggleon");
+		                        $(this).closest("tr").addClass("selected");
+		                    });
 		            }
-				},{
+		        },{
 		            text: '批次刪除',
 		            action: function(e, dt, node, config) {
-		            	
+
+		                var $checkboxs = $('#invoice-detail-table input[name=checkbox-inv-detail-select]:checked');
+		                
+		                console.log($checkboxs)
+		                
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                var inv_manual_detail_ids = '';
+
+		                $checkboxs.each(function() {
+		                	inv_manual_detail_ids += this.id + ',';
+		                });
+		                
+		                inv_manual_detail_ids = inv_manual_detail_ids.slice(0, -1);
+		    		    
+		    			var parameter = {
+		    					action: 'delete_invoice_detail',
+		    					inv_manual_id: inv_manual_id,
+		    					inv_manual_detail_id: inv_manual_detail_ids
+		    			};
+		    		    
+		    		    console.log(parameter);
+		    		    
+		    			$('<div/>').dialog({
+		    				title: '警示訊息',
+		    				draggable : true,
+		    				resizable : false,
+		    				height : "auto",
+		    				width : "auto",
+		    				modal : true,
+		    				buttons : {
+		    					"確認刪除" : function() {
+		    						$.ajax({
+		    							url: 'InvManual.do',
+		    							async: false,
+		    							type: 'post',
+		    							data: parameter,
+		    			                beforeSend: function(){
+		    			                    $(':hover').css('cursor','progress');
+		    			                },
+		    			                complete: function(){
+		    			                	$(':hover').css('cursor','default');
+		    			                },
+		    							success: function (response) {
+		    								
+		    								var result = 'OK' == response ? '刪除成功!': '刪除失敗!';
+
+		    								$('<div/>').dialog({
+		    									title: '提示訊息',
+		    									draggable : true,
+		    									resizable : false,
+		    									modal : true
+		    								}).append($('<p>', {text: result }));
+		    							}
+		    						});
+		    						
+		    						$detailTable.ajax.reload();
+		    						
+		    						$(this).dialog("close");
+		    					},
+		    					"取消刪除" : function() {
+		    						$(this).dialog("close");
+		    					}
+		    				}
+		    			}).text("確認刪除嗎?");
 		            }
 				},{
 		            text: '新增明細',
@@ -493,7 +826,6 @@
 		            		$subtotal.val( subtotalVal );
 		        		});
 		            	
-		            	
 		    			$dialog.dialog({
 		    				draggable : true,
 		    				resizable : false,
@@ -505,8 +837,13 @@
 		    							text : "儲存",
 		    							click : function() {
 
+		    				            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
+		    				            		return false;
+		    				            	}
+		    				            	
 		    								$.ajax({
 		    									url: 'InvManual.do',
+		    									async : false,
 		    									type: 'post',
 		    									data : {
 		    										action: 'insertDetail',
@@ -528,6 +865,8 @@
 		    										$dialog.dialog("close");
 		    									}
 		    								});
+		    								
+		    								$detailTable.ajax.reload();
 		    							}
 		    						}, {
 		    							text : "取消",
@@ -539,6 +878,20 @@
 		    					$dialog.find('form').trigger("reset");
 		    				}
 		    			});		            	
+		            }
+				},{
+		            text: '返回主單',
+		            action: function(e, dt, node, config) {
+
+		    			if ($detailTable instanceof $.fn.dataTable.Api) {
+		    				$detailTable.destroy();
+		    			    $('#invoice-detail-table').empty();
+		    			}	 
+		    		    
+		    			var parameter = {
+		    					action: 'query_invoice'
+		    			};
+		    			drawInvMasTable(parameter);
 		            }
 				}]
 			});		

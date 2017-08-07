@@ -8,7 +8,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +119,7 @@ public class InvManual extends HttpServlet {
 				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
 				invManualDetailVO.setGroup_id(groupId);
 				invManualDetailVO.setInv_manual_id(inv_manual_id);
-				result = gson.toJson(service.searchInvManualByInvManualId(invManualDetailVO));
+				result = gson.toJson(service.searchInvManualDetailByInvManualId(invManualDetailVO));
 				logger.debug("result: {}", result);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
@@ -142,7 +141,42 @@ public class InvManual extends HttpServlet {
 			invManualDetailVO.setDescription(description);
 			invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
 			service.insertInvManualDetail(invManualDetailVO);
-			
+
+		} else if ("delete_invoice_detail".equals(action)) {
+			String[] detail_ids = req.getParameter("inv_manual_detail_id").split(",");
+			String inv_manual_id = req.getParameter("inv_manual_id");
+			String result = "OK";
+			try {
+				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+				invManualDetailVO.setInv_manual_id(inv_manual_id);
+				invManualDetailVO.setGroup_id(groupId);
+
+				for (int i = 0; i < detail_ids.length; i++) {
+					invManualDetailVO.setInv_manual_detail_id(detail_ids[i]);
+					service.delInvManualDetail(invManualDetailVO);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result = "ERROR";
+			}
+			logger.debug("inv_manual_id: {} \\ result: {}", inv_manual_id, result);
+			resp.getWriter().write(result);
+		} else if ("delete_invoice".equals(action)) {
+			String[] master_ids = req.getParameter("inv_manual_id").split(",");
+			String result = "OK";
+			try {
+				InvManualVO invManualVO = new InvManualVO();
+				invManualVO.setGroup_id(groupId);
+
+				for (int i = 0; i < master_ids.length; i++) {
+					invManualVO.setInv_manual_id(master_ids[i]);
+					service.delInvManual(invManualVO);
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result = "ERROR";
+			}
+			resp.getWriter().write(result);
 		}
 	}
 
@@ -153,8 +187,8 @@ public class InvManual extends HttpServlet {
 			dao = new InvManualDao();
 		}
 
-		public List<InvManualDetailVO> searchInvManualByInvManualId(InvManualDetailVO invManualDetailVO) {
-			return dao.searchInvManualByInvManualId(invManualDetailVO);
+		public List<InvManualDetailVO> searchInvManualDetailByInvManualId(InvManualDetailVO invManualDetailVO) {
+			return dao.searchInvManualDetailByInvManualId(invManualDetailVO);
 		}
 
 		public List<InvManualVO> searchAllInvManual(String groupId) {
@@ -168,8 +202,17 @@ public class InvManual extends HttpServlet {
 		public void insertInvManual(InvManualVO invManualVO) {
 			dao.insertInvManual(invManualVO);
 		}
-		public void insertInvManualDetail(InvManualDetailVO invManualDetailVO){
+
+		public void insertInvManualDetail(InvManualDetailVO invManualDetailVO) {
 			dao.insertInvManualDetail(invManualDetailVO);
+		}
+
+		public void delInvManualDetail(InvManualDetailVO invManualDetailVO) {
+			dao.delInvManualDetail(invManualDetailVO);
+		}
+
+		public void delInvManual(InvManualVO invManualVO) {
+			dao.delInvManual(invManualVO);
 		}
 	}
 
@@ -185,7 +228,9 @@ public class InvManual extends HttpServlet {
 		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?,?,?)";
 		private static final String sp_select_inv_manual_detail_by_inv_manual_id = "call sp_select_inv_manual_detail_by_inv_manual_id(?,?)";
 		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?)";
-		
+		private static final String sp_del_inv_manual_detail = "call sp_del_inv_manual_detail(?,?,?)";
+		private static final String sp_del_inv_manual = "call sp_del_inv_manual(?,?)";
+
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
 			List<InvManualVO> rows = new ArrayList<InvManualVO>();
@@ -337,7 +382,7 @@ public class InvManual extends HttpServlet {
 		}
 
 		@Override
-		public List<InvManualDetailVO> searchInvManualByInvManualId(InvManualDetailVO invManualDetailVO) {
+		public List<InvManualDetailVO> searchInvManualDetailByInvManualId(InvManualDetailVO invManualDetailVO) {
 			List<InvManualDetailVO> rows = new ArrayList<InvManualDetailVO>();
 			InvManualDetailVO row = null;
 
@@ -427,18 +472,87 @@ public class InvManual extends HttpServlet {
 			}
 		}
 
+		@Override
+		public void delInvManualDetail(InvManualDetailVO invManualDetailVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_del_inv_manual_detail);
+				pstmt.setString(1, invManualDetailVO.getInv_manual_detail_id());
+				pstmt.setString(2, invManualDetailVO.getInv_manual_id());
+				pstmt.setString(3, invManualDetailVO.getGroup_id());
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
+		@Override
+		public void delInvManual(InvManualVO invManualVO) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_del_inv_manual);
+				pstmt.setString(1, invManualVO.getInv_manual_id());
+				pstmt.setString(2, invManualVO.getGroup_id());
+
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
 	}
 }
 
 interface InvManual_interface {
 	public List<InvManualVO> searchAllInvManual(String groupId);
 
-	public List<InvManualDetailVO> searchInvManualByInvManualId(InvManualDetailVO invManualDetailVO);
+	public List<InvManualDetailVO> searchInvManualDetailByInvManualId(InvManualDetailVO invManualDetailVO);
 
 	public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate);
 
 	public void insertInvManual(InvManualVO invManualVO);
-	
+
 	public void insertInvManualDetail(InvManualDetailVO invManualDetailVO);
+
+	public void delInvManualDetail(InvManualDetailVO invManualDetailVO);
+
+	public void delInvManual(InvManualVO invManualVO);
 
 }
