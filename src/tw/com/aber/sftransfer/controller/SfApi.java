@@ -527,6 +527,10 @@ public class SfApi {
 		List<SaleOrder> saleOrderList = new ArrayList<SaleOrder>();
 
 		for (int i = 0; i < shipList.size(); i++) {
+			
+			List<String> order_note_list = new ArrayList<String>();
+			
+			String order_note = "";
 			OrderItems orderItems = new OrderItems();
 			logger.debug("i:" + i);
 			ShipVO shipVO = shipList.get(i);
@@ -535,6 +539,10 @@ public class SfApi {
 			orderItemList = new ArrayList<OrderItem>();
 			for (int j = 0; j < shipDetailList.size(); j++) {
 				ShipDetail shipDetail = shipDetailList.get(j);
+				if (shipDetail.getQuantity() == null) {
+					logger.debug("continue");
+					continue;
+				}
 				logger.debug("shipDetail:" + shipDetail + shipDetail.getQuantity());
 				// item1
 				OrderItem orderItem = new OrderItem();
@@ -557,6 +565,21 @@ public class SfApi {
 			orderReceiverInfo.setReceiverCountry("中国");
 			orderReceiverInfo.setReceiverProvince("台灣");
 			orderReceiverInfo.setReceiverAddress(shipVO.getDeliver_to());
+			
+			if (shipVO.getDeliver_to() != null) {
+				int idx = shipVO.getDeliver_to().indexOf("/");
+				if (idx > 0) {
+					String order_note_shop = shipVO.getDeliver_to().substring(idx + 1);
+					order_note_list.add(order_note_shop);
+					logger.debug("order_note_shop:" + order_note_shop);
+				}
+			}
+			
+			if (shipVO.getV_ext_deliver_note() != null && !shipVO.getV_ext_deliver_note().equals("")) {
+				String order_note_note = shipVO.getV_ext_deliver_note();
+				order_note_list.add(order_note_note);
+				logger.debug("order_note_note:" + order_note_note);
+			}
 			
 			//配合FromFlag為10時。20時，由順豐系統帶入。
 			OrderSenderInfo orderSenderInfo = new OrderSenderInfo();
@@ -584,14 +607,30 @@ public class SfApi {
 			 */
 			CarrierAddedServices carrierAddedServices = new CarrierAddedServices();
 			List<CarrierAddedService> carrierAddedServicesList = new ArrayList<CarrierAddedService>();
-			if (shipVO.getV_pay_kind() != null && shipVO.getV_pay_kind().equals("宅配-貨到付款")
+			if (shipVO.getV_pay_kind() != null && 
+					(shipVO.getV_pay_kind().equals("宅配-貨到付款") 
+					|| shipVO.getV_pay_kind().equals("7-11代收")
+					|| shipVO.getV_pay_kind().equals("全家-代收") )
 					&& shipVO.getV_pay_status() != null && shipVO.getV_pay_status().equals("未付款")) {
 				CarrierAddedService carrierAddedService = new CarrierAddedService();
 				carrierAddedService.setServiceCode("VA0019");
 				carrierAddedService.setAttr01(shipVO.getV_total_amt());
 				logger.debug("amt:" + shipVO.getV_total_amt());
 				carrierAddedServicesList.add(carrierAddedService);
+				
+				String order_note_amount = "代收$" + shipVO.getV_total_amt();
+				order_note_list.add(order_note_amount);
+				logger.debug("order_note_amount:" + order_note_amount);
 			}
+			
+			if (order_note_list.size() > 0){
+				for (String s : order_note_list) {
+					order_note += s + "，　";
+				}
+				order_note = order_note.substring(0, order_note.length() - 2);
+				logger.debug("order_note:" + order_note);
+			}
+			
 			carrierAddedServices.setCarrierAddedServicesList(carrierAddedServicesList);
 			orderCarrier.setCarrierAddedServices(carrierAddedServices);
 			
@@ -604,6 +643,7 @@ public class SfApi {
 				saleOrder.setDeliveryDate(deliveryDate);
 			}
 			saleOrder.setErpOrder(shipVO.getOrder_no());
+			saleOrder.setOrderNote(order_note);
 			saleOrder.setOrderReceiverInfo(orderReceiverInfo);
 			saleOrder.setOrderItems(orderItems);
 			String tradeOrderDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

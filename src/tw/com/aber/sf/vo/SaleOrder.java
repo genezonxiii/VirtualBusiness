@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "SaleOrders")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "warehouseCode", "sfOrderType", "erpOrderType", "erpOrder", 
+		"orderNote", 
 		"tradeOrderDateTime", "shopName", "tradeOrder", "fromFlag", "deliveryDate", 
 		"orgErpOrder", "orgTradeOrder", "orderCarrier", "orderReceiverInfo", 
 		"orderSenderInfo", "orderItems", "shipmentId",
@@ -25,6 +26,8 @@ public class SaleOrder {
 	private String erpOrderType;
 	@XmlElement(name = "ErpOrder")
 	private String erpOrder;
+	@XmlElement(name = "OrderNote")
+	private String orderNote;
 	@XmlElement(name = "TradeOrderDateTime")
 	private String tradeOrderDateTime;
 	@XmlElement(name = "ShopName")
@@ -242,6 +245,14 @@ public class SaleOrder {
 
 	public void setDeliveryDate(String deliveryDate) {
 		this.deliveryDate = deliveryDate;
+	}
+
+	public String getOrderNote() {
+		return orderNote;
+	}
+
+	public void setOrderNote(String orderNote) {
+		this.orderNote = orderNote;
 	}
 
 }

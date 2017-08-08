@@ -31,6 +31,7 @@ public class ShipVO implements Serializable {
 	private Date v_dis_date; // tb_sale
 	private String v_c_product_id;// tb_realsale
 	private String v_product_name;// tb_realsale
+	private String v_ext_deliver_note;// tb_sale_ext
 	private List<ShipDetail> shipDetail;
 	
 	
@@ -177,6 +178,12 @@ public class ShipVO implements Serializable {
 	}
 	public void setV_pay_kind(String v_pay_kind) {
 		this.v_pay_kind = v_pay_kind;
+	}
+	public String getV_ext_deliver_note() {
+		return v_ext_deliver_note;
+	}
+	public void setV_ext_deliver_note(String v_ext_deliver_note) {
+		this.v_ext_deliver_note = v_ext_deliver_note;
 	}
 
 }
