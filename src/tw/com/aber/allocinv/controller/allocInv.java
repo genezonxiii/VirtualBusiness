@@ -51,7 +51,10 @@ public class allocInv extends HttpServlet {
 		String userId = (String) request.getSession().getAttribute("user_id");
 
 		String action = request.getParameter("action");
-		logger.debug("Action:".concat(action));
+		
+		logger.debug("Action: ".concat(action));
+		logger.debug("groupId: "+groupId);
+		logger.debug("userId: "+userId);
 
 		AllocInvService service = null;
 		Gson gson = null;
@@ -64,7 +67,7 @@ public class allocInv extends HttpServlet {
 
 			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			jsonStr = gson.toJson(list);
-			logger.debug(jsonStr);
+			logger.debug("jsonStr: "+jsonStr);
 
 			response.getWriter().write(jsonStr);
 		} else if ("getGroup".equals(action)) {
@@ -81,6 +84,9 @@ public class allocInv extends HttpServlet {
 				service = new AllocInvService();
 				String seqNo = service.getPurchaseSeqNo(groupId);
 				String jsonList = request.getParameter("jsonList");
+				
+				logger.debug("seqNo: "+seqNo);
+				logger.debug("jsonList: "+jsonList);
 
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				Type type = new TypeToken<List<AllocInvVo>>() {

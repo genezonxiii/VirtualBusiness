@@ -80,8 +80,6 @@ public class accreceive extends HttpServlet {
 
 						Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 						String jsonStrList = gson.toJson(list);
-
-						logger.debug(jsonStrList);
 						response.getWriter().write(jsonStrList);
 						return;// 程式中斷
 					}
@@ -198,6 +196,13 @@ public class accreceive extends HttpServlet {
 				String amount_date_str = request.getParameter("amount_date");
 				String memo = request.getParameter("memo");
 				String receivable_id = request.getParameter("receivable_id");
+				
+				logger.debug("order_no:" + order_no);
+				logger.debug("amount_str:" + amount_str);
+				logger.debug("amount_date_str:" + amount_date_str);
+				logger.debug("memo:" + memo);
+				logger.debug("receivable_id:" + receivable_id);
+
 				Boolean isSuccess = false;
 
 				if ("".equals(amount_str)) {
@@ -243,6 +248,12 @@ public class accreceive extends HttpServlet {
 				String receivable_id = request.getParameter("receivable_id");
 				Boolean isSuccess = false;
 
+				logger.debug("order_no:" + order_no);
+				logger.debug("receive_amount_str:" + receive_amount_str);
+				logger.debug("receive_date_str:" + receive_date_str);
+				logger.debug("memo:" + memo);
+				logger.debug("receivable_id:" + receivable_id);
+
 				if ("".equals(receive_amount_str)) {
 					receive_amount = null;
 				} else {
@@ -280,6 +291,9 @@ public class accreceive extends HttpServlet {
 			try {
 
 				String order_no = request.getParameter("order_no");
+				
+				logger.debug("order_no:" + order_no);
+			
 				AccreceiveVO accreceiveVO = new AccreceiveVO();
 				accreceiveVO.setGroup_id(group_id);
 

@@ -52,7 +52,9 @@ public class Accept  extends HttpServlet {
 		String result = null;
 		Gson gson = null;
 
-		logger.debug("Action:".concat(action));
+		logger.debug("groupId: "+groupId);
+		logger.debug("userId: "+userId);
+		logger.debug("Action: "+action);
 
 		try {
 			
@@ -84,6 +86,9 @@ public class Accept  extends HttpServlet {
 				result = gson.toJson(map);
 				
 				response.getWriter().write(result);
+				
+				logger.debug("result: "+result);
+
 			} else if ("getAcceptdetailVOListByAcceptId".equals(action)) {
 				String accept_id = request.getParameter("accept_id");
 				logger.debug("request groupId: "+groupId+ "  accept_id: "+accept_id);
@@ -97,6 +102,7 @@ public class Accept  extends HttpServlet {
 				logger.debug("response:"+result);
 				
 				response.getWriter().write(result);
+				
 			}else if ("getAcceptDatailByAcceptDetail_id".equals(action)){
 				String acceptDetail_id = request.getParameter("acceptDetail_id");
 				logger.debug("acceptDetail_id :"+acceptDetail_id);
@@ -112,6 +118,7 @@ public class Accept  extends HttpServlet {
 				logger.debug("response:"+result);
 				
 				response.getWriter().write(result);
+				
 			}else if("getDetailDialogDataByWarehouseCode".equals(action)){
 				String warehouse_code = request.getParameter("warehouse_code");
 				
@@ -144,19 +151,23 @@ public class Accept  extends HttpServlet {
 
 				// 驗證
 				if (acceptDetail_id == "" || accept_qty_str == null) {
+					logger.debug("error");
 					response.getWriter().write("error");
 					return;
 				}
 				accept_qty = Integer.valueOf(accept_qty_str);
 				if (null == location_id || "".equals(location_id)) {
+					logger.debug("儲位編號不可為空");
 					response.getWriter().write("儲位編號不可為空");
 					return;
 				}
 				if (accept_qty < 0) {
+					logger.debug("數量不可為0");
 					response.getWriter().write("數量不可為0");
 					return;
 				}
 				if (acceptService.checkAccept(groupId,accept_id) ) {
+					logger.debug("已轉入庫存，不可刪除！");
 					response.getWriter().write("已轉入庫存，不可刪除！");
 					return;
 				}
@@ -175,6 +186,8 @@ public class Accept  extends HttpServlet {
 				}
 
 				response.getWriter().write(result);
+				
+				logger.debug("result: "+result);
 
 			} else if ("masterDeleteByAccept_id".equals(action)) {
 				String msg = "";
@@ -185,6 +198,7 @@ public class Accept  extends HttpServlet {
 
 				// 驗證
 				if (accept_id == "" || accept_id == null) {
+					logger.debug("error");
 					response.getWriter().write("error");
 					return;
 				}
@@ -192,6 +206,8 @@ public class Accept  extends HttpServlet {
 				msg = acceptService.deleteAcceptByAccept_id(groupId,accept_id);
 				
 				response.getWriter().write(msg);
+				
+				logger.debug("msg: "+msg);
 
 			}else if ("detailDeleteByAcceptDetail_id".equals(action)) {
 				boolean isDelete = false;
@@ -205,10 +221,12 @@ public class Accept  extends HttpServlet {
 				
 				// 驗證
 				if (acceptDetail_id == "" || acceptDetail_id == null) {
+					logger.debug("error");
 					response.getWriter().write("error");
 					return;
 				}
 				if (acceptService.checkAccept(groupId,accept_id) ) {
+					logger.debug("已轉入庫存，不可刪除！");
 					response.getWriter().write("已轉入庫存，不可刪除！");
 					return;
 				}
@@ -222,6 +240,8 @@ public class Accept  extends HttpServlet {
 				}
 
 				response.getWriter().write(result);
+				
+				logger.debug("result: "+result);
 
 			}else if("importDataToStock".equals(action)){
 				boolean isImportData = false;
@@ -229,10 +249,11 @@ public class Accept  extends HttpServlet {
 				String accept_ids = request.getParameter("accept_ids");
 				
 				// 取值
-				logger.debug("accept_ids:"+accept_ids);
+				logger.debug("accept_ids: "+accept_ids);
 				
 				// 驗證
 				if (accept_ids == "" || accept_ids == null) {
+					logger.debug("error");
 					response.getWriter().write("error");
 					return;
 				}
@@ -246,18 +267,8 @@ public class Accept  extends HttpServlet {
 				}
 
 				response.getWriter().write(result);
-		
-				// importDataToStock By accept_ids 
-
-				// import Data to tb_stock_mod By accept_ids (where tb_accept.accept_id in 'accept_ids' and stock_flag = 0 )
-				
-				// import Data to tb_stock_mod_detail By accept_ids (where tb_acceptDetail.accept_id in 'accept_ids' and tb_accept.stock_flag = 0)
-				
-				// import Date to tb_stock_new from  tb_accept_Detail (where accept_qty > 0)
-				
-				// update tb_accept tb_accept.stock_flag = 1 ;
-
-				
+	
+				logger.debug("result: "+result);
 			}
 
 		} catch (Exception e) {

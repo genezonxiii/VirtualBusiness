@@ -39,10 +39,20 @@ public class accpay extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		logger.debug("action: "+action);
+		logger.debug("group_id: "+group_id);
+		logger.debug("user_id: "+user_id);
+		
 		if("searh_amount_date".equals(action)){
 			try {
 				String start_date = request.getParameter("start_date");
 				String end_date = request.getParameter("end_date");
+				
+				logger.debug("start_date: "+start_date);
+				logger.debug("end_date: "+end_date);
+
+				
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
 					return;// 程式中斷
 				}
@@ -95,6 +105,10 @@ public class accpay extends HttpServlet {
 			try {
 				String start_date = request.getParameter("start_date");
 				String end_date = request.getParameter("end_date");
+				
+				logger.debug("start_date: "+start_date);
+				logger.debug("end_date: "+end_date);
+				
 				if (start_date.trim().length() != 0 & end_date.trim().length() == 0) {
 					return;// 程式中斷
 				}
@@ -102,9 +116,7 @@ public class accpay extends HttpServlet {
 					return;// 程式中斷
 				}
 				if (start_date.trim().length() != 0 & end_date.trim().length() != 0) {
-					/*if (DateConversionToDigital(start_date) > DateConversionToDigital(end_date)) {
-						return;// 程式中斷
-					} else {*/
+
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						java.sql.Date pay_start_date = null;
 						try {
@@ -127,7 +139,6 @@ public class accpay extends HttpServlet {
 						String jsonStrList = gson.toJson(list);
 						response.getWriter().write(jsonStrList);
 						return;// 程式中斷
-					//}
 				}
 				// 假如無查詢條件，則是查詢全部(沒有實付)
 				if (start_date.trim().length() == 0 & end_date.trim().length() == 0) {
@@ -147,6 +158,8 @@ public class accpay extends HttpServlet {
 			try {
 				String pay_ids = request.getParameter("pay_ids");
 				String[] pay_ids_arr = pay_ids.split("~");
+				
+				logger.debug("pay_ids: "+pay_ids);
 
 				accpayService = new AccpayService();
 				accpayService.payAccountTotDB(pay_ids_arr, user_id);
@@ -158,6 +171,8 @@ public class accpay extends HttpServlet {
 			try {
 				String pay_ids = request.getParameter("pay_ids");
 				String[] pay_ids_arr = pay_ids.split("~");
+				
+				logger.debug("pay_ids: "+pay_ids);
 				
 				accpayService = new AccpayService();
 				accpayService.delPayAccountTotDB(pay_ids_arr, user_id);
@@ -172,6 +187,12 @@ public class accpay extends HttpServlet {
 				String amount_str = request.getParameter("amount");
 				String amount_date = request.getParameter("amount_date");
 				String memo = request.getParameter("memo");
+
+				logger.debug("pay_id: "+pay_id);
+				logger.debug("amount_str: "+amount_str);
+				logger.debug("amount_date: "+amount_date);
+				logger.debug("memo: "+memo);
+				
 				Float amount = null;
 				Boolean isSuccess = false;
 				if ("".equals(amount_str)) {
@@ -208,6 +229,12 @@ public class accpay extends HttpServlet {
 				String pay_amount_str = request.getParameter("pay_amount");
 				String amount_date = request.getParameter("amount_date");
 				String memo = request.getParameter("memo");
+				
+				logger.debug("pay_id: "+pay_id);
+				logger.debug("pay_amount_str: "+pay_amount_str);
+				logger.debug("amount_date: "+amount_date);
+				logger.debug("memo: "+memo);
+				
 				Float pay_amount = null;
 				Boolean isSuccess = false;
 				if ("".equals(pay_amount_str)) {
@@ -241,6 +268,9 @@ public class accpay extends HttpServlet {
 
 			try {
 				String pay_id = request.getParameter("pay_id");
+				
+				logger.debug("pay_id: "+pay_id);
+				
 				Boolean isSuccess = false;
 				if (!"".equals(pay_id)) {
 					AccpayVO accpayVO = new AccpayVO();
@@ -260,13 +290,7 @@ public class accpay extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-		
-			
-		}
-
-		
-		
+		}	
 	}
 	public int DateConversionToDigital(String Date) {
 

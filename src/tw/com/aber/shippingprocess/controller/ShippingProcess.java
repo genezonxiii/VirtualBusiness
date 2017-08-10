@@ -41,106 +41,136 @@ public class ShippingProcess extends HttpServlet {
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		String action = request.getParameter("action");
+		
+		logger.debug("group_id: "+group_id);
+		logger.debug("user_id: "+group_id);
+		logger.debug("action: "+action);
+		
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		ShippingProcessService service = new ShippingProcessService();
 		try {
 			if ("statisticsAllocinvData".equals(action)) {
-				//配庫
-				JSONObject responseStr = service.statisticsAlloc(group_id, user_id);
-				response.getWriter().write(responseStr.toString());
+				// 配庫
+				JSONObject jsonObject = service.statisticsAlloc(group_id, user_id);
+
+				response.getWriter().write(jsonObject.toString());
+				
+				logger.debug("jsonObject: " + jsonObject.toString());
+
 			} else if ("importData".equals(action)) { // 銷貨
 				String c_import_trans_list_date_begin = request.getParameter("import_trans_list_date_begin");
 				String c_import_trans_list_date_end = request.getParameter("import_trans_list_date_end");
+
+				logger.debug("c_import_trans_list_date_begin: " + c_import_trans_list_date_begin);
+				logger.debug("c_import_trans_list_date_end: " + c_import_trans_list_date_end);
+
 				JSONObject jsonObject = service.importRealSale(group_id, user_id, c_import_trans_list_date_begin,
 						c_import_trans_list_date_end);
-				logger.info(jsonObject.toString());
+
 				response.getWriter().write(jsonObject.toString());
+				
+				logger.debug("jsonObject: " + jsonObject.toString());
+
 			} else if ("importallocinvData".equals(action)) {
 				// 配庫
 				JSONObject jsonObject = service.importAllocInv(group_id, user_id);
-				logger.info(jsonObject.toString());
+
 				response.getWriter().write(jsonObject.toString());
-			}else if("importPicking".equals(action)){
-				//揀貨
+				
+				logger.debug("responseStr: " + jsonObject.toString());
+
+			} else if ("importPicking".equals(action)) {
+				// 揀貨
 				String order_no_count = request.getParameter("order_no_count");
-				JSONObject responseStr = service.importPicking(group_id, user_id,order_no_count);
-				response.getWriter().write(responseStr.toString());
-			}else if("importShip".equals(action)){
-				//出貨
-				JSONObject responseStr = service.importShip(group_id, user_id);
-				response.getWriter().write(responseStr.toString());
-			}else if("fastExecution".equals(action)){
+				
+				logger.debug("order_no_count: " + order_no_count);
+
+				JSONObject jsonObject = service.importPicking(group_id, user_id, order_no_count);
+				
+				logger.debug("jsonObject: " + jsonObject.toString());
+				
+				response.getWriter().write(jsonObject.toString());
+
+			} else if ("importShip".equals(action)) {
+				// 出貨
+				JSONObject jsonObject = service.importShip(group_id, user_id);
+				
+				logger.debug("jsonObject: " + jsonObject.toString());
+
+				response.getWriter().write(jsonObject.toString());
+				
+			} else if ("fastExecution".equals(action)) {
 
 				String fast_trans_list_date_begin = request.getParameter("fast_trans_list_date_begin");
 				String fast_trans_list_date_end = request.getParameter("fast_trans_list_date_end");
 				String order_no_count = request.getParameter("fast_order_count");
-				
-				logger.info("fast_trans_list_date_begin:"+fast_trans_list_date_begin);
-				logger.info("fast_trans_list_date_end:"+fast_trans_list_date_end);
-				logger.info("order_no_count:"+order_no_count);
-				
+
+				logger.debug("fast_trans_list_date_begin:" + fast_trans_list_date_begin);
+				logger.debug("fast_trans_list_date_end:" + fast_trans_list_date_end);
+				logger.debug("order_no_count:" + order_no_count);
 
 				// 匯入銷貨
-				JSONObject jsonObject = service.importRealSale(group_id, user_id, fast_trans_list_date_begin, fast_trans_list_date_end);
-				boolean isSucess = checkData(jsonObject,1);
+				JSONObject jsonObject = service.importRealSale(group_id, user_id, fast_trans_list_date_begin,
+						fast_trans_list_date_end);
+				
+				boolean isSucess = checkData(jsonObject, 1);
+				
 				if (!isSucess) {
-					jsonObject= new JSONObject();
+					jsonObject = new JSONObject();
 					jsonObject.put("isSuccess", false);
-					logger.info(jsonObject.toString());
+					logger.debug(jsonObject.toString());
 					response.getWriter().write(jsonObject.toString());
 				}
-				
-				//匯入待出庫
+
+				// 匯入待出庫
 				jsonObject = service.importAllocInv(group_id, user_id);
-				
-				 isSucess = checkData(jsonObject,1);
+
+				isSucess = checkData(jsonObject, 1);
 				if (!isSucess) {
 					jsonObject.put("isSuccess", false);
-					logger.info(jsonObject.toString());
+					logger.debug(jsonObject.toString());
 					response.getWriter().write(jsonObject.toString());
 				}
-				
-				//配庫
+
+				// 配庫
 				jsonObject = service.statisticsAlloc(group_id, user_id);
-				
-				 isSucess = checkData(jsonObject,1);
-					if (!isSucess) {
-						jsonObject= new JSONObject();
-						jsonObject.put("isSuccess", false);
-						logger.info(jsonObject.toString());
-						response.getWriter().write(jsonObject.toString());
-					}
-					
-				//檢貨
-				jsonObject = service.importPicking(group_id, user_id,order_no_count);
-				
-				 isSucess = checkData(jsonObject,2);
-					if (!isSucess) {
-						jsonObject= new JSONObject();
-						jsonObject.put("isSuccess", false);
-						logger.info(jsonObject.toString());
-						response.getWriter().write(jsonObject.toString());
-					}
-				//出貨
+
+				isSucess = checkData(jsonObject, 1);
+				if (!isSucess) {
+					jsonObject = new JSONObject();
+					jsonObject.put("isSuccess", false);
+					logger.debug(jsonObject.toString());
+					response.getWriter().write(jsonObject.toString());
+				}
+
+				// 檢貨
+				jsonObject = service.importPicking(group_id, user_id, order_no_count);
+
+				isSucess = checkData(jsonObject, 2);
+				if (!isSucess) {
+					jsonObject = new JSONObject();
+					jsonObject.put("isSuccess", false);
+					logger.debug(jsonObject.toString());
+					response.getWriter().write(jsonObject.toString());
+				}
+				// 出貨
 				jsonObject = service.importShip(group_id, user_id);
-				
-				 isSucess = checkData(jsonObject,2);
-					if (!isSucess) {
-						jsonObject= new JSONObject();
-						jsonObject.put("isSuccess", false);
-						logger.info(jsonObject.toString());
-						response.getWriter().write(jsonObject.toString());
-					}else{
-						jsonObject= new JSONObject();
-						jsonObject.put("isSuccess", true);
-						logger.info(jsonObject.toString());
-						response.getWriter().write(jsonObject.toString());
-					}
-				
+
+				isSucess = checkData(jsonObject, 2);
+				if (!isSucess) {
+					jsonObject = new JSONObject();
+					jsonObject.put("isSuccess", false);
+					logger.debug(jsonObject.toString());
+					response.getWriter().write(jsonObject.toString());
+				} else {
+					jsonObject = new JSONObject();
+					jsonObject.put("isSuccess", true);
+					logger.debug(jsonObject.toString());
+					response.getWriter().write(jsonObject.toString());
+				}
+
 			}
-			
-			
-			
+
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
 		}
