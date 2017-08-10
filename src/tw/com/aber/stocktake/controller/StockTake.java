@@ -45,12 +45,15 @@ public class StockTake  extends HttpServlet {
 		String group_id = (String) request.getSession().getAttribute("group_id");
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		
+		logger.debug("Action:" + action);
+		logger.debug("group_id:" + group_id);
+		logger.debug("user_id:" + user_id);
+		
 		String result = null;
 		Gson gson = null;
 		
 		StocktakeSerivce serivce = new StocktakeSerivce();
 
-		logger.debug("action: "+action);
 		try {
 
 			if ("createMaster".equals(action)) {
@@ -75,8 +78,6 @@ public class StockTake  extends HttpServlet {
 				response.getWriter().write(result);
 				
 			} else if ("getAllMaster".equals(action)) {
-
-				logger.debug("group_id: "+group_id);
 				
 				List<StockTakeVO> stackTakeVOList = serivce.getAllMaster(group_id);
 
@@ -89,8 +90,6 @@ public class StockTake  extends HttpServlet {
 				response.getWriter().write(result);
 				
 			}else if ("getAllWarehouse".equals(action)){
-
-				logger.debug("group_id: "+group_id);
 				
 				List<WarehouseVO> warehouseVOList = serivce.getAllWarehouse(group_id);
 
@@ -105,8 +104,6 @@ public class StockTake  extends HttpServlet {
 			}else if("getLocationDataByWarehouseCode".equals(action)){
 				
 				String warehouse_code = (String) request.getParameter("warehouse_code");
-
-				logger.debug("group_id: "+group_id);
 				
 				logger.debug("warehouse_code: "+warehouse_code);
 				
@@ -247,12 +244,10 @@ public class StockTake  extends HttpServlet {
 				String stocktake_id = request.getParameter("stocktake_id");
 				
 				logger.debug("stocktake_id: "+stocktake_id);
-	
 				
 				StockTakeVO stockTakeVO = new StockTakeVO();
 				stockTakeVO.setGroup_id(group_id);
 				stockTakeVO.setStocktake_id(stocktake_id);
-
 
 				isSuccess = serivce.unLockStocktakeByStocktake_id(stockTakeVO);
 

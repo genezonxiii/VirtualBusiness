@@ -59,6 +59,10 @@ public class StockNew extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = (String) request.getSession().getAttribute("group_id");
 		String user_id = (String) request.getSession().getAttribute("user_id");
+		
+		logger.debug("action:" + action);
+		logger.debug("group_id:" + group_id);
+		logger.debug("user_id:" + user_id);
 
 		if ("getStockNewListBySupplyName".equals(action)) {
 			String supply_name = request.getParameter("supply_name");

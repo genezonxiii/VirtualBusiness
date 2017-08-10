@@ -46,7 +46,6 @@ public class purchase extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		PurchaseService purchaseService = null;
 		String action = request.getParameter("action");
-		logger.debug("Action:" + action);
 		
 		Util util =new Util();
 		
@@ -54,6 +53,11 @@ public class purchase extends HttpServlet {
 		
 		String group_id = (String)request.getSession().getAttribute("group_id");
 		String user_id = (String)request.getSession().getAttribute("user_id");
+		
+		logger.debug("Action:" + action);
+		logger.debug("group_id:" + group_id);
+		logger.debug("user_id:" + user_id);
+	
 		if ("get_supply_name".equals(action)) {
 
 			String supply_id = request.getParameter("supply_id");
@@ -88,10 +92,17 @@ public class purchase extends HttpServlet {
 				String c_product_id = request.getParameter("c_product_id");
 				String product_name = request.getParameter("product_name");
 				String memo = request.getParameter("memo");
+				
+				logger.debug("purchase_id:" + purchase_id);
+				logger.debug("product_id:" + product_id);
+				logger.debug("c_product_id:" + c_product_id);
+				logger.debug("product_name:" + product_name);
+				logger.debug("memo:" + memo);
 
 				Integer quantity = 0;
 				try {
 					String quantityStr = request.getParameter("quantity");
+					logger.debug("quantityStr:" + quantityStr);
 					if (quantityStr.trim().length() != 0) {
 						quantity = Integer.valueOf(quantityStr);
 					}
@@ -102,6 +113,9 @@ public class purchase extends HttpServlet {
 				Float cost = null;
 				try {
 					String costStr = request.getParameter("cost");
+					
+					logger.debug("costStr:" + costStr);
+					
 					if (costStr.trim().length() != 0) {
 						cost = Float.valueOf(costStr);
 					}
@@ -179,9 +193,19 @@ public class purchase extends HttpServlet {
 				String product_id = request.getParameter("product_id");
 				String c_product_id = request.getParameter("c_product_id");
 				String product_name = request.getParameter("product_name");
+				
+				logger.debug("purchase_id:" + purchase_id);
+				logger.debug("product_id:" + product_id);
+				logger.debug("c_product_id:" + c_product_id);
+				logger.debug("product_name:" + product_name);
+				logger.debug("purchaseDetail_id:" + purchaseDetail_id);
+				
+				
 				Integer quantity = 0;
 				try {
 					String quantityStr = request.getParameter("quantity");
+					logger.debug("quantity:" + quantity);
+
 					if (quantityStr.trim().length() != 0) {
 						quantity = Integer.valueOf(quantityStr);
 					}
@@ -190,11 +214,13 @@ public class purchase extends HttpServlet {
 					e.printStackTrace();
 				}
 				String memo = request.getParameter("memo");
+				logger.debug("memo:" + memo);
 				Float cost = null;
 				try {
 					String costStr = request.getParameter("cost");
 					if (costStr.trim().length() != 0) {
 						cost = Float.valueOf(costStr);
+						logger.debug("costStr:" + costStr);
 					}
 				} catch (Exception e) {
 
@@ -217,9 +243,6 @@ public class purchase extends HttpServlet {
 					map.put("note", "已付款，明細資料不可修改！");
 				}
 				
-				
-				
-				
 				List<PurchaseDetailVO> list = purchaseService.getSearchAllPurchaseDetail(purchase_id);
 				map.put("detail", list);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -233,6 +256,9 @@ public class purchase extends HttpServlet {
 		if ("search_product_data".equals(action)) {
 			String term = request.getParameter("term");
 			String identity = request.getParameter("identity");
+			
+			logger.debug("term:" + term);
+			logger.debug("identity:" + identity);
 
 			if ("ID".equals(identity)) {
 				purchaseService = new PurchaseService();
@@ -268,6 +294,8 @@ public class purchase extends HttpServlet {
 		// 新增時的auto complete
 		if ("search_supply_name".equals(action)) {
 			String term = request.getParameter("term");
+			
+			logger.debug("term:" + term);
 			purchaseService = new PurchaseService();
 			List<SupplyVO> list = purchaseService.getSupplyname(group_id, term);
 			Gson gson = new Gson();

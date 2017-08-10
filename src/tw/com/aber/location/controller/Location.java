@@ -42,6 +42,10 @@ public class Location  extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = (String) request.getSession().getAttribute("group_id");
 		String user_id = (String) request.getSession().getAttribute("user_id");
+		
+		logger.debug("action :"+action);
+		logger.debug("group_id :"+group_id);
+		logger.debug("user_id :"+user_id);
 			
 		LocationSerivce locationSerivce = new LocationSerivce();
 		String result = null;
@@ -49,6 +53,8 @@ public class Location  extends HttpServlet {
 		try {
 			if("getLocationVOListByWarehousecode".equals(action)){
 				String warehouse_code=request.getParameter("warehouse_code");
+				
+				logger.debug("warehouse_code :"+warehouse_code);
 				
 				if("".equals(warehouse_code.trim())){
 					
@@ -85,6 +91,9 @@ public class Location  extends HttpServlet {
 			
 			}else if("getLocationByWarehouseCode".equals(action)){
 				String warehouse_code = request.getParameter("warehouse_code");
+				
+				logger.debug("warehouse_code :"+warehouse_code);
+				
 				List<WarehouseVO> warehouseVOList = locationSerivce.getWarehouseByParallelismWarehouseCode(group_id, warehouse_code);
 
 				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -99,8 +108,12 @@ public class Location  extends HttpServlet {
 				String location_memo = request.getParameter("location_memo");
 				String location_code = request.getParameter("location_code");
 				String v_warehouse_code = request.getParameter("v_warehouse_code");
-				//String location_id = request.getParameter("location_id");
 
+				logger.debug("location_desc :"+location_desc);
+				logger.debug("location_memo :"+location_memo);
+				logger.debug("location_code :"+location_code);
+				logger.debug("v_warehouse_code :"+v_warehouse_code);
+				
 				Boolean isSuccess = false;
 
 				String errorMsg = checkData(v_warehouse_code, location_code,location_desc,group_id);
@@ -130,6 +143,11 @@ public class Location  extends HttpServlet {
 				String v_warehouse_code = request.getParameter("v_warehouse_code");
 				String location_id = request.getParameter("location_id");
 
+				logger.debug("location_desc :"+location_desc);
+				logger.debug("location_memo :"+location_memo);
+				logger.debug("location_code :"+location_code);
+				logger.debug("v_warehouse_code :"+v_warehouse_code);
+				
 				Boolean isSuccess = false;
 
 				String errorMsg = checkData(location_id,v_warehouse_code, location_code,location_desc,group_id);

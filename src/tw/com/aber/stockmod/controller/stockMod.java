@@ -56,6 +56,8 @@ public class stockMod extends HttpServlet {
 		String userId = request.getSession().getAttribute("user_id").toString();
 		
 		logger.debug("Action:" + action);
+		logger.debug("groupId:" + groupId);
+		logger.debug("userId:" + userId);
 
 		if ("searchByNo".equals(action)) {
 			try {
