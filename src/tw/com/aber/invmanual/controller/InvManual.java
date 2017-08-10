@@ -177,6 +177,68 @@ public class InvManual extends HttpServlet {
 				result = "ERROR";
 			}
 			resp.getWriter().write(result);
+		} else if ("updateMaster".equals(action)) {
+			String inv_manual_id = req.getParameter("inv_manual_id");
+			String invoice_type = req.getParameter("invoice_type");
+			String title = req.getParameter("title");
+			String unicode = req.getParameter("unicode");
+			String invoice_no = req.getParameter("invoice_no");
+			String year_month = null;
+
+			java.util.Date date = new java.util.Date();
+			Date invoice_date = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				invoice_date = new java.sql.Date(date.getTime());
+				year_month = sdf.format(invoice_date);
+
+				year_month = year_month.substring(5, 7);
+				int year_month_int = Integer.valueOf(year_month);
+
+				Integer start = null, end = null;
+				if (year_month_int % 2 != 0) {
+					start = year_month_int;
+					end = year_month_int + 1;
+				} else {
+					start = year_month_int - 1;
+					end = year_month_int;
+				}
+				year_month = "" + start + "-" + end;
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+
+			InvManualVO invManualVO = new InvManualVO();
+			invManualVO.setInv_manual_id(inv_manual_id);
+			invManualVO.setGroup_id(groupId);
+			invManualVO.setInvoice_type(invoice_type);
+			invManualVO.setYear_month(year_month);
+			invManualVO.setInvoice_no(invoice_no);
+			invManualVO.setInvoice_date(invoice_date);
+			invManualVO.setTitle(title);
+			invManualVO.setUnicode(unicode);
+
+			service.updateInvManual(invManualVO);
+
+		} else if ("updateDetail".equals(action)) {
+			String inv_manual_detail_id = req.getParameter("inv_manual_detail_id");
+			String inv_manual_id = req.getParameter("inv_manual_id");
+			String price = req.getParameter("price");
+			String quantity = req.getParameter("quantity");
+			String description = req.getParameter("description");
+			String subtotal = req.getParameter("subtotal");
+			logger.debug(
+					"inv_manual_detail_id:{} \\inv_manual_id: {} \\ price: {} \\ quantity: {} \\ description: {} \\ subtotal: {}",
+					inv_manual_detail_id, inv_manual_id, price, quantity, description, subtotal);
+			InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+			invManualDetailVO.setGroup_id(groupId);
+			invManualDetailVO.setInv_manual_detail_id(inv_manual_detail_id);
+			invManualDetailVO.setInv_manual_id(inv_manual_id);
+			invManualDetailVO.setPrice(Integer.valueOf(price));
+			invManualDetailVO.setQuantity(Integer.valueOf(quantity));
+			invManualDetailVO.setDescription(description);
+			invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
+			service.updateInvManualDetail(invManualDetailVO);
 		}
 	}
 
@@ -214,6 +276,14 @@ public class InvManual extends HttpServlet {
 		public void delInvManual(InvManualVO invManualVO) {
 			dao.delInvManual(invManualVO);
 		}
+
+		public void updateInvManual(InvManualVO invManualVO) {
+			dao.updateInvManual(invManualVO);
+		}
+
+		public void updateInvManualDetail(InvManualDetailVO invManualDetailVO) {
+			dao.updateInvManualDetail(invManualDetailVO);
+		}
 	}
 
 	class InvManualDao implements InvManual_interface {
@@ -230,6 +300,8 @@ public class InvManual extends HttpServlet {
 		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?)";
 		private static final String sp_del_inv_manual_detail = "call sp_del_inv_manual_detail(?,?,?)";
 		private static final String sp_del_inv_manual = "call sp_del_inv_manual(?,?)";
+		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?)";
+		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?)";
 
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
@@ -537,6 +609,89 @@ public class InvManual extends HttpServlet {
 			}
 		}
 
+		@Override
+		public void updateInvManual(InvManualVO invManualVO) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_update_inv_manual);
+
+				cs.setString(1, invManualVO.getInv_manual_id());
+				cs.setString(2, invManualVO.getGroup_id());
+				cs.setString(3, invManualVO.getInvoice_type());
+				cs.setString(4, invManualVO.getYear_month());
+				cs.setString(5, invManualVO.getInvoice_no());
+				cs.setDate(6, invManualVO.getInvoice_date());
+				cs.setString(7, invManualVO.getTitle());
+				cs.setString(8, invManualVO.getUnicode());
+
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
+		@Override
+		public void updateInvManualDetail(InvManualDetailVO invManualDetailVO) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_update_inv_manual_detail);
+
+				cs.setString(1, invManualDetailVO.getInv_manual_detail_id());
+				cs.setString(2, invManualDetailVO.getInv_manual_id());
+				cs.setString(3, invManualDetailVO.getGroup_id());
+				cs.setString(4, invManualDetailVO.getDescription());
+				cs.setInt(5, invManualDetailVO.getPrice());
+				cs.setInt(6, invManualDetailVO.getQuantity());
+				cs.setInt(7, invManualDetailVO.getSubtotal());
+
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
 	}
 }
 
@@ -554,5 +709,9 @@ interface InvManual_interface {
 	public void delInvManualDetail(InvManualDetailVO invManualDetailVO);
 
 	public void delInvManual(InvManualVO invManualVO);
+
+	public void updateInvManual(InvManualVO invManualVO);
+
+	public void updateInvManualDetail(InvManualDetailVO invManualDetailVO);
 
 }

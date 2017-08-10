@@ -81,6 +81,7 @@
 		          			<label for="invoice-type-radio-2">
 								<span class="form-label">三聯式</span>
 		          			</label>
+		          			<div id = 'validate-invoice-type-radio'></div>
 						</td>
 					</tr>
 					<tr>
@@ -91,7 +92,7 @@
 		</form>
 	</div>
 	
-	<div id="dialog-invoice-deatil" style="display:none">
+	<div id="dialog-invoice-detail" style="display:none">
 		<form>
 			<fieldset>
 				<table class='form-table'>
@@ -124,11 +125,60 @@
 		var inv_manual_id;
 	</script>
 	
+	<!-- Jquery Validate -->
+	<script type="text/javascript">
+		$.extend(jQuery.validator.messages, {
+		    required: "必填欄位"
+		});
+		
+		var validator_insert_invoice = $('#dialog-invoice').find('form').validate({
+	        rules: {
+	        	'title': {
+	                required: true
+	            },
+	            'invoice_no': {
+	                required: true
+	            },
+	            'invoice-type-radio-group': {
+	                required: true
+	            }
+	        },
+	        errorPlacement: function(error, element) {
+	        	  if (element.attr("name") == "invoice-type-radio-group") {
+	        	     error.insertAfter("#validate-invoice-type-radio");
+	        	  } else {
+	        	     error.insertAfter(element);
+	        	  }
+	    	}
+	    });
+		
+		var validator_insert_invoice_detail = $('#dialog-invoice-detail').find('form').validate({
+	        rules: {
+	        	'description': {
+	                required: true
+	            },
+	            'price': {
+	                required: true,
+	                digits:true
+	            },
+	            'quantity': {
+	                required: true,
+	                digits:true
+	            }
+	        }
+	    });		
+	</script>
 	<!-- Listener -->
 	<script type="text/javascript">
+
 		//查詢
-		$('.page-wrapper').on('click', '.btn-darkblue', function(event){
+		$('.input-field-wrap').on('click', '.btn-darkblue', function(event){
 			event.preventDefault();
+
+			if ($detailTable instanceof $.fn.dataTable.Api) {
+				$detailTable.destroy();
+			    $('#invoice-detail-table').empty();
+			}
 			
 			var $form = $('form');
 			var startDate = $form.find('input[type=text]:eq(0)').val();
@@ -143,11 +193,11 @@
 		});
 		
 		//新增發票
-		$('.page-wrapper').on('click', '.btn-exec', function(event){
+		$('.input-field-wrap').on('click', '.btn-exec', function(event){
 			event.preventDefault();
 			
 			var $dialog = $('#dialog-invoice');
-
+			
 			$('input:radio[name="invoice-type-radio-group"]').change(
 				function(){
 					console.log(this);
@@ -164,57 +214,61 @@
 				draggable : true,
 				resizable : false,
 				height : "auto",
-				width : "auto",
+				width : "500px",
 				modal : true,
 				title : '新增發票',
 				buttons : [{
 							text : "儲存",
 							click : function() {
-								
-								var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
-								invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
-								
-								var title = $( "input[name='title']", $dialog ).val();
-								var unicode = $( "input[name='unicode']", $dialog ).val();
-								var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
-								
-								console.log('invoice_type: '+ invoice_type);
-								console.log('title: '+ title);
-								console.log('unicode: '+ unicode);
-								console.log('invoice_no: '+ invoice_no);
-								
-								$.ajax({
-									url: 'InvManual.do',
-									type: 'post',
-									data : {
-										action: 'insertMaster',
-										invoice_type: invoice_type,
-										title: title,
-										unicode:  unicode,
-										invoice_no: invoice_no
-									},
-									beforeSend: function(){
-									    $(':hover').css('cursor','progress');
-									},
-									complete: function(){
-										$(':hover').css('cursor','default');
-									},
-									success: function (response) {
-										$masterTable.ajax.reload();
-										$dialog.find('form').trigger("reset");
-										$dialog.dialog("close");
-									}
-								});
+
+								if($('#dialog-invoice').find('form').valid()){
+									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
+									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+									
+									var title = $( "input[name='title']", $dialog ).val();
+									var unicode = $( "input[name='unicode']", $dialog ).val();
+									var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
+									
+									console.log('invoice_type: '+ invoice_type);
+									console.log('title: '+ title);
+									console.log('unicode: '+ unicode);
+									console.log('invoice_no: '+ invoice_no);
+									
+									$.ajax({
+										url: 'InvManual.do',
+										type: 'post',
+										data : {
+											action: 'insertMaster',
+											invoice_type: invoice_type,
+											title: title,
+											unicode:  unicode,
+											invoice_no: invoice_no
+										},
+										beforeSend: function(){
+										    $(':hover').css('cursor','progress');
+										},
+										complete: function(){
+											$(':hover').css('cursor','default');
+										},
+										success: function (response) {
+											$masterTable.ajax.reload();
+											$dialog.find('form').trigger("reset");
+											$dialog.dialog("close");
+										}
+									});
+								}
 							}
 						}, {
 							text : "取消",
 							click : function() {
+								validator_insert_invoice.resetForm();
 								$(this).dialog("close");
 							}
 						} ],
-				close : function() {
+			    beforeClose: function() {
+					validator_insert_invoice.resetForm();
 					$dialog.find('form').trigger("reset");
-				}
+			    }
 			});
 		});
 
@@ -280,6 +334,93 @@
 
 		});	
 
+		//清單功能-修改
+		$('#invoice-detail-table').delegate(".btn_update", "click", function(e) {
+			e.preventDefault();
+
+			var row = $(this).closest("tr");
+		    var data = $detailTable.row(row).data();
+		    var inv_manual_detail_id = data.inv_manual_detail_id;
+		    var inv_manual_id = data.inv_manual_id;
+		    
+        	var $dialog = $('#dialog-invoice-detail');
+        	
+        	var $price = $dialog.find('input[name=price]');
+        	var $quantity = $dialog.find('input[name=quantity]');
+        	var $description = $dialog.find('input[name=description]');
+        	var $subtotal = $dialog.find('input[name=subtotal]');
+
+        	$price.val(data.price);
+			$quantity.val(data.quantity);
+			$description.val(data.description);
+			$subtotal.val(data.subtotal);
+			
+        	$dialog.find('input[name=price],input[name=quantity]').change(function(){
+        		var subtotalVal = $price.val()* $quantity.val();
+        		
+        		subtotalVal = isNaN(subtotalVal) ? '資料錯誤，請檢查欄位': subtotalVal;
+
+        		$subtotal.val( subtotalVal );
+    		});
+        	console.log('data');
+        	console.log(data);
+			$dialog.dialog({
+				draggable : true,
+				resizable : false,
+				height : "auto",
+				width : "auto",
+				modal : true,
+				title : '修改明細',
+				buttons : [{
+							text : "修改",
+							click : function() {
+
+				            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
+				            		return false;
+				            	}
+
+								if($('#dialog-invoice-detail').find('form').valid()){
+									$.ajax({
+										url: 'InvManual.do',
+										async : false,
+										type: 'post',
+										data : {
+											action: 'updateDetail',
+											inv_manual_detail_id: inv_manual_detail_id,
+											inv_manual_id: inv_manual_id,
+											price: $price.val(),
+											quantity: $quantity.val(),
+											description: $description.val(),
+											subtotal: $subtotal.val()
+										},
+										beforeSend: function(){
+										    $(':hover').css('cursor','progress');
+										},
+										complete: function(){
+											$(':hover').css('cursor','default');
+										},
+										success: function (response) {
+											$dialog.find('form').trigger("reset");
+											$dialog.dialog("close");
+										}
+									});
+									
+									$detailTable.ajax.reload();
+								}
+								}
+						}, {
+							text : "取消",
+							click : function() {
+								$(this).dialog("close");
+							}
+						} ],
+			    beforeClose: function() {
+			    	validator_insert_invoice_detail.resetForm();
+					$dialog.find('form').trigger("reset");
+			    }
+			});	
+		});	
+		
 		//主單功能-刪除
 		$('#invoice-master-table').delegate(".btn_delete", "click", function(e) {
 			e.preventDefault();
@@ -359,6 +500,96 @@
 			drawInvListTable(parameter);
 		});
 
+		//主單功能-修改
+		$('#invoice-master-table').delegate(".btn_update", "click", function(e) {
+			event.preventDefault();
+
+			var row = $(this).closest("tr");
+		    var data = $masterTable.row(row).data();
+		    inv_manual_id = data.inv_manual_id;
+		    
+			var $dialog = $('#dialog-invoice');
+
+			$dialog.find('input[name=title]').val(data.title);
+			$dialog.find('input[name=invoice_no]').val(data.invoice_no);
+			$dialog.find('input[name=unicode]').val(data.unicode);
+			$( '#invoice-type-radio-'+ data.invoice_type ).prop("checked", true);
+			
+			$('input:radio[name="invoice-type-radio-group"]').change(
+				function(){
+					console.log(this);
+				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
+				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
+				    }else{
+				    	$dialog.find('input[name="unicode"]').val('');
+				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
+				    }
+				}
+			);
+			
+			$dialog.dialog({
+				draggable : true,
+				resizable : false,
+				height : "auto",
+				width : "auto",
+				modal : true,
+				title : '修改發票',
+				buttons : [{
+							text : "儲存",
+							click : function() {
+
+								if($('#dialog-invoice').find('form').valid()){
+									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
+									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+									
+									var title = $( "input[name='title']", $dialog ).val();
+									var unicode = $( "input[name='unicode']", $dialog ).val();
+									var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
+									
+									console.log('invoice_type: '+ invoice_type);
+									console.log('title: '+ title);
+									console.log('unicode: '+ unicode);
+									console.log('invoice_no: '+ invoice_no);
+									
+									$.ajax({
+										url: 'InvManual.do',
+										type: 'post',
+										data : {
+											action: 'updateMaster',
+											inv_manual_id: inv_manual_id,
+											invoice_type: invoice_type,
+											title: title,
+											unicode:  unicode,
+											invoice_no: invoice_no
+										},
+										beforeSend: function(){
+										    $(':hover').css('cursor','progress');
+										},
+										complete: function(){
+											$(':hover').css('cursor','default');
+										},
+										success: function (response) {
+											$masterTable.ajax.reload();
+											$dialog.find('form').trigger("reset");
+											$dialog.dialog("close");
+										}
+									});
+								}
+							}
+						}, {
+							text : "取消",
+							click : function() {
+								validator_insert_invoice.resetForm();
+								$(this).dialog("close");
+							}
+						} ],
+			    beforeClose: function() {
+					validator_insert_invoice.resetForm();
+					$dialog.find('form').trigger("reset");
+			    }
+			});
+		});
+		
 	    $('#invoice-master-table').on('change', ':checkbox', function() {
 	        $(this).is(":checked")?
 	        	$(this).closest("tr").addClass("selected"):
@@ -492,6 +723,13 @@
 											"title": "刪除"
 										})
 										.append( $("<i/>", {"class": "fa fa-trash"}) )
+									)
+									.append( 
+										$("<button/>", {
+											"class": "btn-in-table btn-darkblue btn_update",
+											"title": "修改"
+										})
+										.append( $("<i/>", {"class": "fa fa-pencil"}) )
 									)
 									.append( 
 										$("<button/>", {
@@ -810,7 +1048,7 @@
 				},{
 		            text: '新增明細',
 		            action: function(e, dt, node, config) {
-		            	var $dialog = $('#dialog-invoice-deatil');
+		            	var $dialog = $('#dialog-invoice-detail');
 		            	
 		            	var $price = $dialog.find('input[name=price]');
 		            	var $quantity = $dialog.find('input[name=quantity]');
@@ -837,46 +1075,51 @@
 		    							text : "儲存",
 		    							click : function() {
 
-		    				            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
-		    				            		return false;
-		    				            	}
-		    				            	
-		    								$.ajax({
-		    									url: 'InvManual.do',
-		    									async : false,
-		    									type: 'post',
-		    									data : {
-		    										action: 'insertDetail',
-		    										inv_manual_id: inv_manual_id,
-		    										price: $price.val(),
-		    										quantity: $quantity.val(),
-		    										description: $description.val(),
-		    										subtotal: $subtotal.val()
-		    									},
-		    									beforeSend: function(){
-		    									    $(':hover').css('cursor','progress');
-		    									},
-		    									complete: function(){
-		    										$(':hover').css('cursor','default');
-		    									},
-		    									success: function (response) {
-		    										$masterTable.ajax.reload();
-		    										$dialog.find('form').trigger("reset");
-		    										$dialog.dialog("close");
-		    									}
-		    								});
-		    								
-		    								$detailTable.ajax.reload();
+		    								if($('#dialog-invoice-detail').find('form').valid()){
+
+			    				            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
+			    				            		return false;
+			    				            	}
+			    				            	
+			    								$.ajax({
+			    									url: 'InvManual.do',
+			    									async : false,
+			    									type: 'post',
+			    									data : {
+			    										action: 'insertDetail',
+			    										inv_manual_id: inv_manual_id,
+			    										price: $price.val(),
+			    										quantity: $quantity.val(),
+			    										description: $description.val(),
+			    										subtotal: $subtotal.val()
+			    									},
+			    									beforeSend: function(){
+			    									    $(':hover').css('cursor','progress');
+			    									},
+			    									complete: function(){
+			    										$(':hover').css('cursor','default');
+			    									},
+			    									success: function (response) {
+			    										$masterTable.ajax.reload();
+			    										$dialog.find('form').trigger("reset");
+			    										$dialog.dialog("close");
+			    									}
+			    								});
+			    								
+			    								$detailTable.ajax.reload();
+			    							}
 		    							}
 		    						}, {
 		    							text : "取消",
 		    							click : function() {
+		    								validator_insert_invoice_detail.resetForm();
 		    								$(this).dialog("close");
 		    							}
 		    						} ],
-		    				close : function() {
-		    					$dialog.find('form').trigger("reset");
-		    				}
+    					    beforeClose: function() {
+    					    	validator_insert_invoice_detail.resetForm();
+    							$dialog.find('form').trigger("reset");
+    					    }
 		    			});		            	
 		            }
 				},{
