@@ -48,9 +48,14 @@ public class stock extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		StockService stockService = null;
 		String action = request.getParameter("action");
-
+		
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		logger.debug("group_id: "+group_id);
+		logger.debug("user_id: "+user_id);
+		logger.debug("action: "+action);
+		
 		if ("bar_code_search".equals(action)) {
 			String barcode = request.getParameter("barcode");
 			stockService = new StockService();
@@ -62,6 +67,8 @@ public class stock extends HttpServlet {
 		if ("report".equals(action)){
 			String kind = request.getParameter("kind");
 			
+			logger.debug("kind: "+kind);
+
 			String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 					+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 			String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -176,7 +183,12 @@ public class stock extends HttpServlet {
 				String memo = request.getParameter("memo");
 				String stock_id = request.getParameter("stock_id");
 				String product_id = request.getParameter("product_id");
-				// System.out.println(stock_id);
+				
+				logger.debug("quantity: "+quantity);
+				logger.debug("memo: "+memo);
+				logger.debug("stock_id: "+stock_id);
+				logger.debug("product_id: "+product_id);
+				
 				/***************************
 				 * 2.開始修改資料
 				 ***************************************/

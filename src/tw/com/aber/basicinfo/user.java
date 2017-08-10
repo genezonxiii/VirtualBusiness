@@ -16,11 +16,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import tw.com.aber.vo.UserVO;
 
 public class user extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(user.class);
+
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -35,6 +40,10 @@ public class user extends HttpServlet {
 		String action = request.getParameter("action");
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
+		
+		logger.debug("action: "+action);
+		logger.debug("group_id: "+group_id);
+		logger.debug("user_id: "+user_id);
 		
 		
 		if ("check_email".equals(action)) {
@@ -83,6 +92,12 @@ public class user extends HttpServlet {
 				String role = request.getParameter("role");
 				String email = request.getParameter("email");
 				String password = request.getParameter("password");
+				
+				logger.debug("user_name: "+user_name);
+				logger.debug("role: "+role);
+				logger.debug("email: "+email);
+				logger.debug("password: "+password);
+
 				/*************************** 2.開始新增資料 ***************************************/
 				userService = new UserService();
 				userService.addUser(group_id, user_name,role,email,password);
@@ -106,6 +121,11 @@ public class user extends HttpServlet {
 				String role = request.getParameter("role");
 				String email = request.getParameter("email");
 				
+				logger.debug("user_id1: "+user_id1);
+				logger.debug("user_name: "+user_name);
+				logger.debug("role: "+role);
+				logger.debug("email: "+email);
+				
 				/*************************** 2.開始修改資料 ***************************************/
 				userService = new UserService();
 				userService.updateUser(user_id1, group_id, user_name, role, email);
@@ -125,6 +145,9 @@ public class user extends HttpServlet {
 				/*************************** 1.接收請求參數 ***************************************/
 				String operation = request.getParameter("operation");
 				String user_id2 = request.getParameter("user_id");
+		
+				logger.debug("operation: "+operation);
+				logger.debug("user_id2: "+user_id2);
 				/*************************** 2.開始刪除資料 ***************************************/
 				userService = new UserService();
 				userService.deleteUser(user_id2,operation);

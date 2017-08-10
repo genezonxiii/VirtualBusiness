@@ -44,6 +44,8 @@ public class DeliveryOrder extends HttpServlet {
 
 		String action = request.getParameter("action");
 
+		logger.debug("action: " + action);
+		
 		if ("search".equals(action)) {
 			String group_id = request.getSession().getAttribute("group_id").toString();
 			String start = request.getParameter("startTime");

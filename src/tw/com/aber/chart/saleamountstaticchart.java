@@ -14,9 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 public class saleamountstaticchart extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(saleamountstaticchart.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -43,6 +47,11 @@ public class saleamountstaticchart extends HttpServlet {
 		time1 = (time1 == null || time1.length() < 3) ? "1999-12-31" : time1;
 		String time2 = request.getParameter("time2");
 		time2 = (time2 == null || time2.length() < 3) ? "2300-12-31" : time2;
+		
+		logger.debug("group_id: " +group_id);
+		logger.debug("user_id: " +user_id);
+		logger.debug("time1: "+time1);
+		logger.debug("time2: "+time2);
 		
 		try {
 			SalechartService salechartService = null;

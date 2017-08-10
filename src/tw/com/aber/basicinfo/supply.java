@@ -48,6 +48,7 @@ public class supply extends HttpServlet {
 		
 		logger.debug("action: "+action);
 		logger.debug("group_id: "+group_id);
+		logger.debug("user_id: "+user_id);
 		
 		if ("search".equals(action)) {
 			try {

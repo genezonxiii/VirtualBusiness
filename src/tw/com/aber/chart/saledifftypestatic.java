@@ -17,9 +17,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
 public class saledifftypestatic extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(saledifftypestatic.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -44,6 +48,12 @@ public class saledifftypestatic extends HttpServlet {
 		String time2 = request.getParameter("time2");
 		time2 = (time2 == null || time2.length() < 3) ? "2300-12-31" : time2;
 		String action = request.getParameter("action");
+		
+		logger.debug("group_id: " +group_id);
+		logger.debug("action: " +action);
+		logger.debug("time1: "+time1);
+		logger.debug("time2: "+time2);
+		
 		if ("search_best_sale".equals(action)) {
 			try {
 				List<BestsaleVO> list;

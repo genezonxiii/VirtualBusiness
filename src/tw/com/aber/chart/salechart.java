@@ -14,11 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
-//import tw.com.aber.chart.saleamountstaticchart.Salechart;
-
 public class salechart extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(salechart.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -44,6 +46,12 @@ public class salechart extends HttpServlet {
 		time1 = (time1 == null || time1.length() < 3) ? "1999-12-31" : time1;
 		String time2 = request.getParameter("time2");
 		time2 = (time2 == null || time2.length() < 3) ? "2300-12-31" : time2;
+		
+		logger.debug("group_id: " +group_id);
+		logger.debug("user_id: " +user_id);
+		logger.debug("time1: "+time1);
+		logger.debug("time2: "+time2);
+		
 		if (!"searh".equals(request.getParameter("action"))) {
 			return;
 		}
@@ -52,11 +60,7 @@ public class salechart extends HttpServlet {
 			java.sql.Date from_date = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time1).getTime());
 			java.sql.Date till_date = new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(time2).getTime());
 			salechartService = new SalechartService();
-//			SalechartVO chart_data = salechartService.getSearhDB(group_id, from_date, till_date);
 			response.getWriter().write(salechartService.getSearhDB(group_id, from_date, till_date));
-//			Gson gson = new Gson();
-//			String jsonStrList = gson.toJson(chart_data);
-//			response.getWriter().write(jsonStrList);
 			return;
 		} catch (Exception e) {
 			System.out.println("Error with time parse. :" + e);
@@ -152,33 +156,25 @@ public class salechart extends HttpServlet {
 				}
 				int k = 0;
 				Salechart[] arr =new Salechart[count];
-//				String[] vender = new String[count];
-//				int[] answer = new int[count];
-//				int[] month = new int[count];
 				rs.beforeFirst();
 				while (rs.next()) {
 					arr[k] = new Salechart();
 					arr[k].month = rs.getString("month").substring(0,4)+"-"+rs.getString("month").substring(4);
 					arr[k].ordersource = rs.getString("order_source");
 					arr[k].amount = rs.getString("price");
-//					month[k] = rs.getInt("month");
-//					answer[k] = rs.getInt("price");
-//					vender[k] = rs.getString("order_source");
+
 					k++;
 				}
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(arr);
 				return jsonStrList;
-//				salechartVO.setEntrance(vender);
-//				salechartVO.setAnswer(answer);
-//				salechartVO.setMonth(month);
+
 			} catch (SQLException se) {
 				System.out.println("ERROR WITH: " + se);
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			}
 			return "[]";
-//			return salechartVO;
 		}
 	}
 }

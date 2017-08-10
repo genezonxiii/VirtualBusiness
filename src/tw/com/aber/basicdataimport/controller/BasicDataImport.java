@@ -55,6 +55,8 @@ public class BasicDataImport extends HttpServlet {
 		String[] actions = { "download" };
 
 		int key = Arrays.asList(actions).indexOf(action);
+		
+		logger.debug("action: " + action);
 
 		logger.debug("key: " + key);
 

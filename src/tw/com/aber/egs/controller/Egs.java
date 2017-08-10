@@ -51,6 +51,7 @@ public class Egs extends HttpServlet {
 		String action = (String) request.getParameter("action");
 
 		logger.debug("Action:".concat(action));
+		logger.debug("groupId:".concat(action));
 
 		if ("transfer_waybill".equals(action)) {
 			String result = "{\"status\": \"ERR\"}";

@@ -11,11 +11,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 
+import tw.com.aber.basicinfo.user;
 import tw.com.aber.vo.PasswordVO;
 
 public class changepassword extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(changepassword.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -31,10 +36,15 @@ public class changepassword extends HttpServlet {
 		String group_id = request.getSession().getAttribute("group_id").toString();
 		String user_id = request.getSession().getAttribute("user_id").toString();
 		
+		logger.debug("action: "+action);
+		logger.debug("group_id: "+group_id);
+		logger.debug("user_id: "+user_id);
+		
 		if ("update".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數 ***************************************/
 				String password = request.getParameter("password");
+				
 				
 				/*************************** 2.開始修改資料 ***************************************/
 				passwordVOService = new PasswordVOService();

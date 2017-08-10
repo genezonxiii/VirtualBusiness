@@ -14,8 +14,11 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class heavybuyer extends HttpServlet {
+	private static final Logger logger = LogManager.getLogger(heavybuyer.class);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -34,14 +37,19 @@ public class heavybuyer extends HttpServlet {
 		time1=(time1==null || time1.length()<3)?"1999-12-31":time1;
 		String time2 = request.getParameter("time2");
 		time2=(time2==null || time2.length()<3)?"2300-12-31":time2;
-		//System.out.println("from "+time1+" to "+time2);
-		//###########################################
+		
+		logger.debug("group_id: " +group_id);
+		logger.debug("time1: "+time1);
+		logger.debug("time2: "+time2);
+		
 		String action = request.getParameter("action");
 		if("search_best_sale".equals(action)){
 			try {
-//				List<BestsaleVO> list;
 				BestsaleDAO bestsaledao = null;
 				String order_source=request.getParameter("ordersource");
+				
+				logger.debug("order_source: "+order_source);
+				
 				bestsaledao = new BestsaleDAO();
 				String ret;
 				if(order_source.length()<1){
@@ -49,10 +57,6 @@ public class heavybuyer extends HttpServlet {
 				}else{
 					ret = bestsaledao.heavybuyerbyordersource(group_id, order_source, time1, time2);
 				}
-				//System.out.println(ret);
-//				Gson gson = new Gson();
-//				String jsonStrList = gson.toJson(list);
-				//System.out.println(ret);
 				response.getWriter().write(ret);
 				return;
 			} catch (Exception e) {System.out.println("Error with time parse. :"+e);}
@@ -68,25 +72,14 @@ public class heavybuyer extends HttpServlet {
 	}
 	/*************************** 操作資料庫 ****************************************/
 	class BestsaleDAO{
-		// 會使用到的Stored procedure
-//		private static final String sp_saleproduct_top10 = "call sp_saleproduct_top10(?,?,?)";
-//		private static final String sp_saleproduct_channel  = "call sp_saleproduct_channel (?,?,?,?)";
-
-//		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
-//				+"?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-//		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
-//		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
-//		
 		public String heavybuyer(String group_id, String time1, String time2) {
 			String conString=getServletConfig().getServletContext().getInitParameter("pythonwebservice")
 					+ "/analytics/type=VE9QMTA=&guid="
-					//+ "Y2JjYzMxMzgtNTYwMy0xMWU2LWE1MzItMDAwZDNhODAwODc4"
 					+ new String(Base64.encodeBase64String(group_id.getBytes()))
 					+ "&star="
 					+ new String(Base64.encodeBase64String(time1.getBytes()))
 					+ "&endd="
 					+ new String(Base64.encodeBase64String(time2.getBytes()));
-			//System.out.println(conString);
 			HttpClient client = new HttpClient();
 			HttpMethod method;
 			String ret="";
@@ -97,7 +90,6 @@ public class heavybuyer extends HttpServlet {
 				StringWriter writer = new StringWriter();
 				IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
 			    ret=writer.toString().replaceAll("null", "\"\"");
-				//ret=method.getResponseBodyAsString().replaceAll("null", "\"\"");
 				if('<'==ret.charAt(0)){
 					ret="WebService Error";
 				}
@@ -118,7 +110,7 @@ public class heavybuyer extends HttpServlet {
 					+ new String(Base64.encodeBase64String(time2.getBytes()))
 					+ "&from="
 					+ new String(Base64.encodeBase64String(order_source.getBytes()));
-			//System.out.println(conString);
+
 			HttpClient client = new HttpClient();
 			HttpMethod method;
 			String ret="";
@@ -127,9 +119,7 @@ public class heavybuyer extends HttpServlet {
 				client.executeMethod(method);
 				StringWriter writer = new StringWriter();
 				IOUtils.copy(method.getResponseBodyAsStream(), writer, "UTF-8");
-			    ret=writer.toString().replaceAll("null", "\"\"");
-//				ret=method.getResponseBodyAsString().replaceAll("null", "\"\"");
-			    
+			    ret=writer.toString().replaceAll("null", "\"\"");			    
 			}catch(Exception e){
 				return "WebService Error for:"+e.toString();
 			}
