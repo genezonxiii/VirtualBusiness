@@ -229,7 +229,9 @@
 					"action": "search-product-contrast",
 					"product_name": $('#search-product-product-name ').val(),
 					"product_name_platform": $('#search-contrast-platform-name').val(),
-					"platform_name": $('#search-platform-platform-name').val()
+					"platform_name": $('#search-platform-platform-name').val(),
+					"c_product_id_platform": $('#search-contrast-platform-c_product').val()
+					
 				};
 
 			$("#product-contrast-table").dataTable().fnDestroy();
@@ -863,6 +865,14 @@
 					<label for="">
 						<span class="block-label">平台用商品名稱</span>
 		 				<select id="search-contrast-platform-name">
+		 					<option value=""></option>
+		 				</select>
+					</label>
+				</div>
+				<div class="form-row">
+					<label for="">
+						<span class="block-label">平台用自訂商品代碼</span>
+		 				<select id="search-contrast-platform-c_product">
 		 					<option value=""></option>
 		 				</select>
 					</label>

@@ -18,6 +18,7 @@ public class ProductContrastVO implements Serializable {
 	private String product_spec;
 	private String contrast_type;
 	private String platform_name; // tb_platform
+	private String c_product_id_platform;
 
 	public String getPlatform_name() {
 		return platform_name;
@@ -114,5 +115,15 @@ public class ProductContrastVO implements Serializable {
 	public void setProduct_spec(String product_spec) {
 		this.product_spec = product_spec;
 	}
+
+	public String getC_product_id_platform() {
+		return c_product_id_platform;
+	}
+
+	public void setC_product_id_platform(String c_product_id_platform) {
+		this.c_product_id_platform = c_product_id_platform;
+	}
+	
+	
 
 }

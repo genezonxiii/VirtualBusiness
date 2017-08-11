@@ -212,10 +212,13 @@ public class ProductContrast extends HttpServlet {
 				String product_name = request.getParameter("product_name");
 				String product_name_platform = request.getParameter("product_name_platform");
 				String platform_name = request.getParameter("platform_name");
+				String c_product_id_platform = request.getParameter("c_product_id_platform");
 
 				logger.debug("product_name: " + product_name);
 				logger.debug("product_name_platform: " + product_name_platform);
 				logger.debug("platform_name: " + platform_name);
+				logger.debug("c_product_id_platform: " + c_product_id_platform);
+
 
 				productContrastService = new ProductContrastService();
 
@@ -223,6 +226,7 @@ public class ProductContrast extends HttpServlet {
 				productContrastVO.setProductName(product_name);
 				productContrastVO.setProductNamePlatform(product_name_platform);
 				productContrastVO.setPlatform_name(platform_name);
+				productContrastVO.setC_product_id_platform(c_product_id_platform);
 
 				List<ProductContrastVO> list = productContrastService.getProductContrast(productContrastVO, group_id);
 
