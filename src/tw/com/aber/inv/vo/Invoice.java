@@ -10,12 +10,11 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Invoice")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "invoiceCode", "sellerId", "posId", "posSn", "sysTime", "reply", "message", "invoiceDatas",
-		"invoiceNumber", "invoiceDate", "buyerId", "cancelDate", "cancelTime", "cancelReason",
-		"returnTaxDocumentNumber", "remark", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10", "A11", "A12",
-		"A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23", "A24", "A25", "A26", "A27", "A28",
-		"A29", "A30", "B", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1",
-		"D2", "D3", "D4" })
+@XmlType(propOrder = { "invoiceCode", "sellerId", "posId", "posSn", "sysTime", "main", "details", "amount", "reply",
+		"message", "invoiceDatas", "invoiceNumber", "invoiceDate", "buyerId", "cancelDate", "cancelTime",
+		"cancelReason", "returnTaxDocumentNumber", "remark", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9",
+		"A10", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22", "A23", "A24", "A25",
+		"A26", "A27", "A28", "A29", "A30", "B", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "D1", "D2", "D3", "D4" })
 
 public class Invoice {
 	private static final long serialVersionUID = 1L;
@@ -48,6 +47,24 @@ public class Invoice {
 	 */
 	@XmlElement(name = "SYSTIME")
 	private String sysTime;
+
+	/*
+	 * A0401
+	 */
+	@XmlElement(name = "Main")
+	private Main main;
+
+	/*
+	 * A0401
+	 */
+	@XmlElement(name = "Details")
+	private Details details;
+
+	/*
+	 * A0401
+	 */
+	@XmlElement(name = "Amount")
+	private Amount amount;
 
 	/*
 	 * A02、A04、C02、C04
@@ -834,4 +851,29 @@ public class Invoice {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	public Main getMain() {
+		return main;
+	}
+
+	public void setMain(Main main) {
+		this.main = main;
+	}
+
+	public Details getDetails() {
+		return details;
+	}
+
+	public void setDetails(Details details) {
+		this.details = details;
+	}
+
+	public Amount getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Amount amount) {
+		this.amount = amount;
+	}
+
 }

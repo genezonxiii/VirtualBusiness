@@ -670,6 +670,10 @@
 					"title" : "總金額",
 					"data" : "amount",
 					"defaultContent" : ""
+				},{
+					"title" : "已開立",
+					"data" : null,
+					"defaultContent" : ""
 				}, {
 			        "title": "功能",
 			        "data": null,
@@ -700,6 +704,13 @@
 			            var options = $("<div/>").append(input, label);
 
 			            return options.html();
+			        }
+			    },{
+			        targets: 8,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			        	
 			        }
 			    },{
 			        targets: -1,
