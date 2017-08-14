@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
-	<property name="ireport.zoom" value="2.853116706110054"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="555" pageHeight="802" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
+	<property name="ireport.zoom" value="1.771561000000033"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="576"/>
+	<property name="ireport.y" value="750"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -1508,7 +1508,7 @@
 				<textFieldExpression><![CDATA[$F{receiver_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="42d8e490-4084-4015-95a6-394086c697a2" stretchType="RelativeToBandHeight" x="251" y="259" width="80" height="62"/>
+				<reportElement uuid="42d8e490-4084-4015-95a6-394086c697a2" stretchType="RelativeToBandHeight" x="251" y="259" width="80" height="44"/>
 				<textElement>
 					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="3"/>
@@ -1516,7 +1516,7 @@
 				<textFieldExpression><![CDATA[$F{receiver_address}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="e19c39bf-e6ab-4e8d-b46c-3c6315a8d7e0" stretchType="RelativeToBandHeight" x="208" y="303" width="43" height="17"/>
+				<reportElement uuid="e19c39bf-e6ab-4e8d-b46c-3c6315a8d7e0" stretchType="RelativeToBandHeight" x="208" y="303" width="123" height="17"/>
 				<textElement>
 					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="5"/>
@@ -1664,4 +1664,21 @@
 	<summary>
 		<band height="42" splitType="Stretch"/>
 	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement uuid="33014e68-4fdd-475b-bbc7-ea26c7568d20" x="0" y="0" width="196" height="50"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[查無資料，請先送黑貓託運單。]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>

@@ -224,6 +224,24 @@
 			<input type="text" name="comment">
 		</form>
 	</div> 
+	
+	
+	<!--對話窗樣式-新增 -->
+	<div id="dialog-form-select" title="請選擇託運單" style="display:none;">
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<td>託運單類別：</td>
+					<td>
+						<select id="select_report">
+						  <option value="a4_2">A4_2模</option>
+  						  <option value="a4_3">A4_3模</option>
+						</select>
+					</td>
+				</tr>
+			</tbody>
+		</table>		
+	</div>
 
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
@@ -440,25 +458,13 @@
 		                                "class": "fa fa-pencil-square-o"
 		                            }))
 		                        )
-		                        .append(
-		                            $("<button/>", {
-		                                "id": row.seq_no,
-		                                "value": row.sale_id,
-		                                "name": row.c_product_id,
-		                                "class": "btn-in-table  btn-darkblue btn_ship_report_a4_2",
-		                                "title": "黑貓A4_2模"
-		                            })
-		                            .append($("<i/>", {
-		                                "class": "fa fa-file-pdf-o"
-		                            }))
-		                        )
 								.append(
 		                            $("<button/>", {
 		                                "id": row.seq_no,
 		                                "value": row.sale_id,
 		                                "name": row.c_product_id,
-		                                "class": "btn-in-table  btn-alert btn_ship_report_a4_3",
-		                                "title": "黑貓A4_3模"
+		                                "class": "btn-in-table  btn-alert btn_ship_report",
+		                                "title": "託運單"
 		                            })
 		                            .append($("<i/>", {
 		                                "class": "fa fa-file-pdf-o"
@@ -1355,18 +1361,38 @@
 	}
 	
 	
-	$("#dt_master_ship").on("click", ".btn_ship_report_a4_3", function(e) {
+	$("#dt_master_ship").on("click", ".btn_ship_report", function(e) {
 		var row = $(this).closest("tr");
 	    var data = $("#dt_master_ship").DataTable().row(row).data();
-	    open_report("order_no",data.order_no,"address",data.deliver_to,"a4_3");
+	    
+	    
+	    dialog_select = $("#dialog-form-select").dialog({
+			draggable : true, resizable : false, autoOpen : false,
+			height : "auto", width : "auto", modal : true,
+			show : {effect : "blind",duration : 300},
+			hide : {effect : "fade",duration : 300},
+			open : function(event, ui) {
+				$(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+				$("#select_report")[0].selectedIndex = 0;
+			},
+			buttons : [{
+						id : "choose",
+						text : "確定",
+						click : function() {
+							var report_type=$("#select_report").val();
+							 open_report("order_no",data.order_no,"address",data.deliver_to,report_type);
+								dialog_select.dialog("close");
+						}
+					}, {
+						text : "取消",
+						click : function() {
+							dialog_select.dialog("close");
+						}
+					} ]
+		}).css("width", "10%");
+	    dialog_select.dialog("open");
 	});
-	
-	$("#dt_master_ship").on("click", ".btn_ship_report_a4_2", function(e) {
-		var row = $(this).closest("tr");
-	    var data = $("#dt_master_ship").DataTable().row(row).data();
-	    open_report("order_no",data.order_no,"address",data.deliver_to,"a4_2");
-	});
-	
+
 	$("#dt_master_ship").on("click", ".btn_list", function(e) {
 		e.preventDefault();
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
 	<property name="ireport.zoom" value="2.1435888100000176"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="152"/>
+	<property name="ireport.y" value="670"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -988,4 +988,21 @@
 	<summary>
 		<band height="42" splitType="Stretch"/>
 	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement uuid="33014e68-4fdd-475b-bbc7-ea26c7568d20" x="0" y="0" width="196" height="50"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[查無資料，請先送黑貓託運單。]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>
