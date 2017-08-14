@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
-	<property name="ireport.zoom" value="2.1435888100000176"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="3.45227121439313"/>
+	<property name="ireport.x" value="91"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -265,8 +265,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sender_address}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" x="28" y="144" width="49" height="12"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" stretchType="RelativeToBandHeight" x="28" y="144" width="240" height="12"/>
 				<textElement>
 					<font fontName="標楷體" size="7" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="3"/>
@@ -336,8 +336,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{receiver_name}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" x="307" y="125" width="49" height="14"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" stretchType="RelativeToBandHeight" x="307" y="125" width="203" height="14"/>
 				<textElement>
 					<font fontName="標楷體" size="6" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="3"/>

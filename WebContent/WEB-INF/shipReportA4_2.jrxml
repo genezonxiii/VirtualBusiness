@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
 	<property name="ireport.zoom" value="3.7974983358324845"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="440"/>
+	<property name="ireport.x" value="580"/>
+	<property name="ireport.y" value="184"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -272,10 +272,10 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sender_address}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" x="29" y="135" width="49" height="12"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" stretchType="RelativeToBandHeight" x="29" y="135" width="164" height="12"/>
 				<textElement>
-					<font fontName="標楷體" size="7" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<font fontName="標楷體" size="7" isStrikeThrough="false" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sender_name}]]></textFieldExpression>
@@ -328,8 +328,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{receiver_name}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" x="222" y="111" width="49" height="11"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="998b6f92-440d-40c2-8679-470ba633eca1" stretchType="RelativeToBandHeight" x="222" y="111" width="189" height="11"/>
 				<textElement>
 					<font fontName="標楷體" size="6" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="3"/>
