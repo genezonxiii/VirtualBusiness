@@ -114,7 +114,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										<tr>
 											<td>發票日期：</td>
 											<td><input type="text" id="invoice_num_date"
-												class="input-date hasDatepicker"></td>
+												class="input-date"></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -613,7 +613,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                    $("#invoice_num_date").val(formatDate())
 	                    console.log(ids);
 
-
+	                    $.ui.dialog.prototype._focusTabbable = function(){};
 	                    var dialog_invoice = $("#dialog-invoice").dialog({
 	                        draggable: true,
 	                        resizable: false,
