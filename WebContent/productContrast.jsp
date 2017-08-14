@@ -405,7 +405,7 @@
 	                                	console.log(data);
 	                                	var json_obj = $.parseJSON(data);
 	                                    if (json_obj.error.length > 0) {
-	                                        alert(json_obj.error);
+	                                    	dialogMsg('警告',json_obj.error);
 	                                        return;
 	                                    }
 	                                    if (json_obj.isSuccess == false) {
@@ -415,7 +415,7 @@
 	                                    $("#dialog-form-post-insert").trigger("reset");
 	                                    insert_dialog.dialog("close");
 	                                    initc_product_id_platform();
-	                                    alert(json_obj.obj);
+	                                    dialogMsg('提示',json_obj.obj);
 	                                }
 	                            });
 	                        } else if (action === "update") {
@@ -457,7 +457,7 @@
 	                                	console.log(data);
 	                                	var json_obj = $.parseJSON(data);
 	                                    if (json_obj.error.length > 0) {
-	                                        alert(json_obj.error);
+		                                    dialogMsg('警告',json_obj.error);
 	                                        return;
 	                                    }
 	                                    if (json_obj.isSuccess == false) {
@@ -467,7 +467,7 @@
 	                                    $("#dialog-form-post-insert").trigger("reset");
 	                                    insert_dialog.dialog("close");
 	                                    initc_product_id_platform();
-	                                    alert(json_obj.obj);
+	                                    dialogMsg('警告',json_obj.error);
 	                                }
 	                            });
 	                        }
@@ -892,66 +892,73 @@
 	        e.preventDefault();
 
 	        var id = $(this).attr("id");
+	        var row = jQuery(this).closest('tr');
+	        var data = $("#product-contrast-table").dataTable().fnGetData(row);
 	        console.log(id);
-	        delete_dialog.data('contrast_id', id).dialog("open");
+	        
+	        var msg= "<table class='dialog-table'>"
+			+ "<tr><td>商品名稱</td><td>：</td><td><span >"
+			+ data.productName
+			+ "</span></td></tr>"					
+			+ "<tr><td>平台用自訂商品代碼</td><td>：</td><td><span >"
+			+ data.c_product_id_platform
+			+ "</span></td></tr>"
+			+ "<tr><td>平台用商品名稱</td><td>：</td><td><span >"
+			+ data.productNamePlatform
+			+ "</span></td></tr>"
+			+ "<tr><td>平台用商品規格</td><td>：</td><td><span>"
+			+ data.product_spec_platform
+			+ "</span></td></tr>"
+			+ "</table>";
+			
+			dialogDelete('是否刪除此商品對照資料?', msg,id,id);
 	    })
 
-	    delete_dialog =
-	        $("#dialog-form-delete").dialog({
-	            title: "確認刪除資料嗎?",
-	            draggable: true,
-	            resizable: false,
-	            autoOpen: false,
-	            height: "auto",
-	            width: "auto",
-	            modal: true,
-	            show: {
-	                effect: "blind",
-	                duration: 300
-	            },
-	            hide: {
-	                effect: "fade",
-	                duration: 300
-	            },
-	            width: 200,
-	            buttons: [{
-	                id: "delete",
-	                text: "確認",
-	                click: function(e) {
+		function dialogDelete(title, msg,id) {
+			$("<div></div>")
+			.html(msg)
+			.dialog({
+				title: title,
+				width: 'auto',
+				minHeight: 'auto',
+				modal : true,
+				create: function () {
+					$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+				},
+				buttons : [{
+					text: "確認刪除", 
+					click: function() { 
+						 if ($('#dialog-form-post-delete').valid()) {
+		                        $.ajax({
+		                            url: "productContrast.do",
+		                            type: "POST",
+		                            cache: false,
+		                            delay: 0,
+		                            data: {
+		                                action: "delete",
+		                                contrast_id: id
 
-	                    e.preventDefault();
-
-	                    if ($('#dialog-form-post-delete').valid()) {
-	                        $.ajax({
-	                            url: "productContrast.do",
-	                            type: "POST",
-	                            cache: false,
-	                            delay: 0,
-	                            data: {
-	                                action: "delete",
-	                                contrast_id: $(this).data("contrast_id")
-
-	                            },
-	                            success: function(data) {
-	                                table.ajax.reload();
-	                                delete_dialog.dialog("close");
-	                            }
-	                        });
-	                    }
-	                }
-	            }, {
-	                text: "取消",
-	                click: function() {
-	                    $("#dialog-form-post-delete").trigger("reset");
-	                    delete_dialog.dialog("close");
-	                }
-	            }],
-	            close: function() {
-	                $("#dialog-form-post-delete").trigger("reset");
-	            }
-	        });
+		                            },
+		                            success: function(data) {
+		                            	 dialogMsg('提示','刪除成功');
+		                                table.ajax.reload();
+		                            }
+		                        });
+		                    }
+						$(this).dialog("close");
+					}
+				},{
+					text: "取消刪除", 
+					click: function() { 
+						$(this).dialog("close");
+					}
+				}]
+			});
+		}
 
 	});
+
+	
 
 	function initc_product_id_platform() {
 	    $.ajax({
