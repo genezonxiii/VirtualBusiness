@@ -358,6 +358,11 @@ public class ship extends HttpServlet {
 				gson = new Gson();
 				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
+			} else if ("checkReport".equals(action)) {
+				/*p_group_id
+				p_order_no
+				p_suda7
+				p_egs_num*/
 			}
 
 		} catch (Exception e) {
@@ -399,6 +404,10 @@ public class ship extends HttpServlet {
 		public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos) {
 			return dao.getShipSFDeliveryInfoByOrderNo(groupId, orderNos);
 		}
+		
+		/*public Boolean checkReport(String groupId, String orderNos) {
+			return dao.checkReport(groupId, orderNos,);
+		}*/
 	}
 
 	class ShipDAO implements ship_interface {
