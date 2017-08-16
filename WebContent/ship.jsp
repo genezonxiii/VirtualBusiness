@@ -415,6 +415,7 @@
 		            input.type = 'checkbox';
 		            input.name = 'checkbox-group-select';
 		            input.id = ship_seq_no;
+		            input.className=row.order_no;
 
 		            var span = document.createElement("SPAN");
 		            span.className = 'form-label';
@@ -505,14 +506,20 @@
 		                var cells = $dtMaster.cells().nodes();
 		                var noArr = '';
 
+		                var order_noSet = new Set();
+		                
 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
+		                
+		                $checkboxs.each(function() {
+		                	order_noSet.add(this.className);
+		                });
+		                
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-		                if ($checkboxs.length > 20) {
-		                    alert('最多選擇二十筆資料');
+		                if (order_noSet.size > 20) {
+		                    alert('最多選擇二十筆訂單');
 		                    return false;
 		                }
 

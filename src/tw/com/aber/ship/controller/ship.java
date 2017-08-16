@@ -129,7 +129,7 @@ public class ship extends HttpServlet {
 
 					ship_seq_nos = "'" + ship_seq_nos + "'";
 
-					shipVOList = shipService.getShipByShipSeqNo(ship_seq_nos, "'" + groupId + "'");
+					shipVOList = shipService.getShipByShipSeqNoGroupByOrderNo(ship_seq_nos, "'" + groupId + "'");
 
 					SfApi sfApi = new SfApi();
 
@@ -388,6 +388,10 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
 			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 		}
+		
+		public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId) {
+			return dao.getShipByShipSeqNoGroupByOrderNo(shipSeqNos, groupId);
+		}
 
 		public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo) {
 			return dao.genSFDeliveryOrderService(info, groupId, totalWeight, seqNo);
@@ -424,6 +428,7 @@ public class ship extends HttpServlet {
 		private static final String sp_select_ship_delivery = "call sp_select_ship_delivery(?,?)";
 		private static final String sp_get_ship_sf_delivery_new_no = "call sp_get_ship_sf_delivery_new_no(?,?)";
 		private static final String sp_insert_ship_sf_delivery = "call sp_insert_ship_sf_delivery(?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_get_ship_by_shipseqno_group_by_order_no = "call sp_get_ship_by_shipseqno_group_by_order_no (?,?)";
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -903,6 +908,121 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
+		
+		@Override
+		public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId) {
+
+			List<ShipVO> shipVOList = new ArrayList<ShipVO>();
+			ShipVO shipVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			List<ShipDetail> shipDetailList = null;
+			ShipDetail shipDetail = null;
+
+			String ship_id_Record = null;
+			String ship_id_now = "";
+			String order_no_Record = null;
+			String order_no_now = "";
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_ship_by_shipseqno_group_by_order_no);
+
+				logger.debug("getShipByShipSeqNo groupId:" + groupId + "shipSeqNos:" + shipSeqNos);
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, shipSeqNos);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+
+					// sp 為ship sd 為shipDetail
+					shipDetail = new ShipDetail();
+					shipDetail.setC_product_id(rs.getString("sd_c_product_id"));
+					shipDetail.setDeliveryway(rs.getString("sd_deliveryway"));
+					shipDetail.setGroup_id(rs.getString("sd_group_id"));
+					shipDetail.setMemo(rs.getString("sd_memo"));
+					shipDetail.setPrice(rs.getString("sd_price"));
+					shipDetail.setProduct_id(rs.getString("sd_product_id"));
+					shipDetail.setProduct_name(rs.getString("sd_product_name"));
+
+					String sd_quantity = rs.getString("sd_quantity");
+
+					if (!(sd_quantity == null || "".equals(sd_quantity))) {
+						shipDetail.setQuantity(Integer.parseInt(sd_quantity));
+					}
+					shipDetail.setShip_id(rs.getString("sd_ship_id"));
+					shipDetail.setShipDetail_id(rs.getString("sd_shipDetail_id"));
+					shipDetail.setUser_id(rs.getString("sd_user_id"));
+
+					// 如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
+					// 所以要新增出貨明細
+					logger.debug("order_no_now:" + order_no_now);
+					logger.debug("order_no_Record:" + order_no_Record);
+					logger.debug("order_no_Record:" + shipDetail.getC_product_id());
+					logger.debug("order_no_Record:" + shipDetail.getProduct_name());
+
+					ship_id_now = rs.getString("sp_ship_id");
+					order_no_now = rs.getString("sp_order_no");
+					if ((!order_no_now.equals(order_no_Record)) || rs.isFirst()) {
+						shipDetailList = new ArrayList<ShipDetail>();
+
+						// 並且紀錄出貨明細
+						shipVO = new ShipVO();
+						shipVO.setShip_id(rs.getString("sp_ship_id"));
+
+						shipVO.setShip_seq_no(rs.getString("sp_ship_seq_no"));
+						shipVO.setGroup_id(rs.getString("sp_group_id"));
+						shipVO.setOrder_no(rs.getString("sp_order_no"));
+						shipVO.setUser_id(rs.getString("sp_user_id"));
+						shipVO.setCustomer_id(rs.getString("sp_customer_id"));
+						shipVO.setMemo(rs.getString("sp_memo"));
+						shipVO.setDeliveryway(rs.getString("sp_deliveryway"));
+						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
+						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
+						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
+						shipVO.setV_deliver_mobile(rs.getString("se_deliver_mobile"));
+						shipVO.setV_deliver_name(rs.getString("se_deliver_name"));
+						shipVO.setV_deliver_phone(rs.getString("se_deliver_phone"));
+						shipVO.setV_pay_kind(rs.getString("se_pay_kind"));
+						shipVO.setV_pay_status(rs.getString("se_pay_status"));
+						shipVO.setV_total_amt(rs.getString("se_total_amt"));
+						shipVO.setV_dis_date(rs.getDate("sm_dis_date"));
+						shipVO.setShipDetail(shipDetailList);
+						shipVOList.add(shipVO);
+
+						ship_id_Record = ship_id_now;
+						order_no_Record = order_no_now;
+					}
+
+					shipDetailList.add(shipDetail);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return shipVOList;
+		}
 	}
 
 }
@@ -923,4 +1043,5 @@ interface ship_interface {
 
 	public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos);
 
+	public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId);
 }
