@@ -591,14 +591,20 @@ public class SfApi {
 			SaleOrder saleOrder = new SaleOrder();
 			OrderCarrier orderCarrier = new OrderCarrier();
 			
-			/* 
-			 * CP:顺丰速运
-			 */
-			orderCarrier.setCarrier("CP");
-			/*
-			 * 43:島內件-批(80CM)
-			 */
-			orderCarrier.setCarrierProduct("43");
+			if (shipVO.getDeliveryway().equals("2") || shipVO.getDeliveryway().equals("3")) {
+				// 超取: 711及全家
+				orderCarrier.setCarrier("CP");
+				// 岛内件店取(80CM)
+				orderCarrier.setCarrierProduct("48");
+			} else if (shipVO.getDeliveryway().equals("1")){
+				// 宅配
+				orderCarrier.setCarrier("CP");
+				// 岛内件(80CM 0.5-1.5KG)
+				orderCarrier.setCarrierProduct("104");
+			} else {
+				orderCarrier.setCarrier("");
+				orderCarrier.setCarrierProduct("");
+			}
 			orderCarrier.setMonthlyAccount(groupSfVo.getMonthly_account());
 			orderCarrier.setPaymentOfcharge("寄付");
 			
