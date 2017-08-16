@@ -340,36 +340,36 @@ public class sale extends HttpServlet {
 				logger.debug("saleDetail_id:".concat(saleDetail_id));
 
 			} else if ("invoice".equals(action)) {
-				String result="";
-				String errorMsg="";
+				String result = "";
+				String errorMsg = "";
 				java.sql.Date invoice_date;
 				try {
 
 					String saleIds = (String) request.getParameter("ids");
 					String invoice_date_str = (String) request.getParameter("invoice_date");
-					
+
 					try {
-						//設定日期格式
+						// 設定日期格式
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-						//進行轉換
+						// 進行轉換
 						java.util.Date date = sdf.parse(invoice_date_str);
 
-						 invoice_date = new java.sql.Date(date.getTime()); 
+						invoice_date = new java.sql.Date(date.getTime());
 					} catch (ParseException e) {
-							errorMsg = "日期格式錯誤";
-							response.getWriter().write(errorMsg);
-							return;
+						errorMsg = "日期格式錯誤";
+						response.getWriter().write(errorMsg);
+						return;
 					}
-				
+
 					GroupVO groupVO = saleService.getGroupInvoiceInfo(group_id);
 					InvoiceApi api = new InvoiceApi();
 
 					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
-					
-					//確認資料都沒有發送過
-					for(int i =0;i<saleVOs.size();i++){
-						String invoice=saleVOs.get(i).getInvoice();
-						if(null!=invoice){
+
+					// 確認資料都沒有發送過
+					for (int i = 0; i < saleVOs.size(); i++) {
+						String invoice = saleVOs.get(i).getInvoice();
+						if (null != invoice) {
 							errorMsg = "很抱歉，該訂單已有發票，不可重複發送";
 							response.getWriter().write(errorMsg);
 							return;
@@ -379,16 +379,16 @@ public class sale extends HttpServlet {
 					// TODO 撈取發票號碼
 					InvoiceTrackVO invoiceTrackVO = saleService.getInvoiceTrack(group_id, invoice_date);
 					String invoiceNum = invoiceTrackVO.getInvoiceNum();
-					
-					logger.debug("invoiceNum: "+invoiceNum);
-					
-					if(invoiceNum==null ||"".equals(invoiceNum)){
+
+					logger.debug("invoiceNum: " + invoiceNum);
+
+					if (invoiceNum == null || "".equals(invoiceNum)) {
 						errorMsg = "發票字軌用罄，請洽系統管理員";
 						response.getWriter().write(errorMsg);
 						return;
 					}
-					
-					saleService.updateSaleInvoice(saleVOs,invoiceTrackVO,invoice_date);
+
+					saleService.updateSaleInvoice(saleVOs, invoiceTrackVO, invoice_date);
 
 					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
 					String resXml = api.sendXML(reqXml);
@@ -492,10 +492,10 @@ public class sale extends HttpServlet {
 		public void deleteDetailDB(String saleDetail_id);
 
 		public GroupVO getGroupInvoiceInfo(String groupId);
-		
-		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date);
-		
-		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date);
+
+		public InvoiceTrackVO getInvoiceTrack(String group_id, Date invoice_num_date);
+
+		public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date);
 
 	}
 
@@ -572,13 +572,13 @@ public class sale extends HttpServlet {
 		public GroupVO getGroupInvoiceInfo(String groupId) {
 			return dao.getGroupInvoiceInfo(groupId);
 		}
-		
-		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date){
+
+		public InvoiceTrackVO getInvoiceTrack(String group_id, Date invoice_num_date) {
 			return dao.getInvoiceTrack(group_id, invoice_num_date);
 		}
-		
-		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date){
-			dao.updateSaleInvoice(SaleVOs , invoiceTrackVO, invoice_num_date);
+
+		public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date) {
+			dao.updateSaleInvoice(SaleVOs, invoiceTrackVO, invoice_num_date);
 
 		}
 	}
@@ -1422,7 +1422,7 @@ public class sale extends HttpServlet {
 		}
 
 		@Override
-		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date)  {
+		public InvoiceTrackVO getInvoiceTrack(String group_id, Date invoice_num_date) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -1435,12 +1435,12 @@ public class sale extends HttpServlet {
 				pstmt = con.prepareStatement(sp_get_invoiceNum);
 				pstmt.setString(1, group_id);
 				pstmt.setDate(2, invoice_num_date);
-				 pstmt.execute();
-				 rs = pstmt.getResultSet();
+				pstmt.execute();
+				rs = pstmt.getResultSet();
 				if (rs.next()) {
 
 					InvoiceNum = rs.getString("invoiceNum");
-					if(InvoiceNum!=null){
+					if (InvoiceNum != null) {
 						invoiceTrackVO.setGroup_id(group_id);
 						invoiceTrackVO.setInvoice_beginno(rs.getString("invoice_beginno"));
 						invoiceTrackVO.setInvoice_endno(rs.getString("invoice_endno"));
@@ -1450,8 +1450,7 @@ public class sale extends HttpServlet {
 						invoiceTrackVO.setInvoiceNum(InvoiceNum);
 						invoiceTrackVO.setSeq(rs.getString("seq"));
 						invoiceTrackVO.setYear_month(rs.getString("year_month"));
-						
-						
+
 					}
 				}
 			} catch (SQLException se) {
@@ -1479,15 +1478,15 @@ public class sale extends HttpServlet {
 		}
 
 		@Override
-		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date) {
+		public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				
-				for(int i =0;i<SaleVOs.size();i++){
-					
+
+				for (int i = 0; i < SaleVOs.size(); i++) {
+
 					pstmt = con.prepareStatement(sp_update_sale_invoice);
 					pstmt.setString(1, SaleVOs.get(i).getGroup_id());
 					pstmt.setString(2, SaleVOs.get(i).getSale_id());
@@ -1498,10 +1497,7 @@ public class sale extends HttpServlet {
 
 					pstmt.executeUpdate();
 				}
-			
-			
 
-			
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {

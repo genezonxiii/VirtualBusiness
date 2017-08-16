@@ -15,7 +15,25 @@ public class InvManualVO implements Serializable {
 	private Date invoice_date;
 	private String title;
 	private String unicode;
-	private Float amount;
+	private Integer amount;
+	private Integer tax_type;
+	private Integer inv_flag;
+
+	public Integer getTax_type() {
+		return tax_type;
+	}
+
+	public void setTax_type(Integer tax_type) {
+		this.tax_type = tax_type;
+	}
+
+	public Integer getInv_flag() {
+		return inv_flag;
+	}
+
+	public void setInv_flag(Integer inv_flag) {
+		this.inv_flag = inv_flag;
+	}
 
 	public String getInv_manual_id() {
 		return inv_manual_id;
@@ -81,11 +99,11 @@ public class InvManualVO implements Serializable {
 		this.unicode = unicode;
 	}
 
-	public Float getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Float amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
 

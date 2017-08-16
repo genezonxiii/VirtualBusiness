@@ -1,6 +1,7 @@
 package tw.com.aber.invmanual.controller;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXB;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,9 +25,18 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import tw.com.aber.inv.vo.Amount;
+import tw.com.aber.inv.vo.Buyer;
+import tw.com.aber.inv.vo.Details;
+import tw.com.aber.inv.vo.Invoice;
+import tw.com.aber.inv.vo.Main;
+import tw.com.aber.inv.vo.ProductItem;
+import tw.com.aber.inv.vo.Seller;
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.InvManualDetailVO;
 import tw.com.aber.vo.InvManualVO;
+import tw.com.aber.vo.InvoiceTrackVO;
 
 public class InvManual extends HttpServlet {
 
@@ -72,44 +83,60 @@ public class InvManual extends HttpServlet {
 			String invoice_type = req.getParameter("invoice_type");
 			String title = req.getParameter("title");
 			String unicode = req.getParameter("unicode");
-			String invoice_no = req.getParameter("invoice_no");
+			String invoice_date_str = req.getParameter("invoice_date");
+			String tax_type = req.getParameter("tax_type");
+			String result = "OK";
 			String year_month = null;
-
-			java.util.Date date = new java.util.Date();
 			Date invoice_date = null;
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 			try {
-				invoice_date = new java.sql.Date(date.getTime());
+				invoice_date = new java.sql.Date(sdf.parse(invoice_date_str).getTime());
 				year_month = sdf.format(invoice_date);
 
-				year_month = year_month.substring(5, 7);
-				int year_month_int = Integer.valueOf(year_month);
+				String monthStr = year_month.substring(5, 7);
+				String yearStr = year_month.substring(0, 4);
 
-				Integer start = null, end = null;
-				if (year_month_int % 2 != 0) {
-					start = year_month_int;
-					end = year_month_int + 1;
+				int monthInt = Integer.valueOf(monthStr);
+
+				int yearInt = Integer.valueOf(yearStr);
+				yearInt = yearInt - 1911;
+
+				Integer end = null;
+				if (monthInt % 2 != 0) {
+					end = monthInt + 1;
 				} else {
-					start = year_month_int - 1;
-					end = year_month_int;
+					end = monthInt;
 				}
-				year_month = "" + start + "-" + end;
+				year_month = "";
+				if (yearInt < 100) {
+					year_month += "0" + yearInt;
+				} else {
+					year_month += yearInt;
+				}
+				if (end < 10) {
+					year_month += "0" + end;
+				} else {
+					year_month += end;
+				}
+				logger.debug("year_month: " + year_month);
+
+				InvManualVO invManualVO = new InvManualVO();
+				invManualVO.setGroup_id(groupId);
+				invManualVO.setInvoice_type(invoice_type);
+				invManualVO.setYear_month(year_month);
+				invManualVO.setInvoice_date(invoice_date);
+				invManualVO.setTitle(title);
+				invManualVO.setUnicode(unicode);
+				invManualVO.setTax_type(Integer.valueOf(tax_type));
+
+				service.insertInvManual(invManualVO);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
+				result = "ERROR";
 			}
-
-			Float amount = 0F;
-
-			InvManualVO invManualVO = new InvManualVO();
-			invManualVO.setGroup_id(groupId);
-			invManualVO.setInvoice_type(invoice_type);
-			invManualVO.setYear_month(year_month);
-			invManualVO.setInvoice_no(invoice_no);
-			invManualVO.setInvoice_date(invoice_date);
-			invManualVO.setTitle(title);
-			invManualVO.setUnicode(unicode);
-			invManualVO.setAmount(amount);
-			service.insertInvManual(invManualVO);
+			resp.getWriter().write(result);
 
 		} else if ("query_invoice_detail".equals(action)) {
 			String inv_manual_id = req.getParameter("inv_manual_id");
@@ -131,16 +158,23 @@ public class InvManual extends HttpServlet {
 			String quantity = req.getParameter("quantity");
 			String description = req.getParameter("description");
 			String subtotal = req.getParameter("subtotal");
+			String result = "OK";
 			logger.debug("inv_manual_id: {} \\ price: {} \\ quantity: {} \\ description: {} \\ subtotal: {}",
 					inv_manual_id, price, quantity, description, subtotal);
-			InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
-			invManualDetailVO.setGroup_id(groupId);
-			invManualDetailVO.setInv_manual_id(inv_manual_id);
-			invManualDetailVO.setPrice(Integer.valueOf(price));
-			invManualDetailVO.setQuantity(Integer.valueOf(quantity));
-			invManualDetailVO.setDescription(description);
-			invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
-			service.insertInvManualDetail(invManualDetailVO);
+			try {
+				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+				invManualDetailVO.setGroup_id(groupId);
+				invManualDetailVO.setInv_manual_id(inv_manual_id);
+				invManualDetailVO.setPrice(Integer.valueOf(price));
+				invManualDetailVO.setQuantity(Integer.valueOf(quantity));
+				invManualDetailVO.setDescription(description);
+				invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
+				service.insertInvManualDetail(invManualDetailVO);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result = "ERROR";
+			}
+			resp.getWriter().write(result);
 
 		} else if ("delete_invoice_detail".equals(action)) {
 			String[] detail_ids = req.getParameter("inv_manual_detail_id").split(",");
@@ -183,42 +217,60 @@ public class InvManual extends HttpServlet {
 			String title = req.getParameter("title");
 			String unicode = req.getParameter("unicode");
 			String invoice_no = req.getParameter("invoice_no");
-			String year_month = null;
+			String invoice_date_str = req.getParameter("invoice_date");
+			String tax_type = req.getParameter("tax_type");
+			String year_month = null, result = "OK";
 
-			java.util.Date date = new java.util.Date();
 			Date invoice_date = null;
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			try {
-				invoice_date = new java.sql.Date(date.getTime());
+				invoice_date = new java.sql.Date(sdf.parse(invoice_date_str).getTime());
 				year_month = sdf.format(invoice_date);
 
-				year_month = year_month.substring(5, 7);
-				int year_month_int = Integer.valueOf(year_month);
+				String monthStr = year_month.substring(5, 7);
+				String yearStr = year_month.substring(0, 4);
 
-				Integer start = null, end = null;
-				if (year_month_int % 2 != 0) {
-					start = year_month_int;
-					end = year_month_int + 1;
+				int monthInt = Integer.valueOf(monthStr);
+
+				int yearInt = Integer.valueOf(yearStr);
+				yearInt = yearInt - 1911;
+
+				Integer end = null;
+				if (monthInt % 2 != 0) {
+					end = monthInt + 1;
 				} else {
-					start = year_month_int - 1;
-					end = year_month_int;
+					end = monthInt;
 				}
-				year_month = "" + start + "-" + end;
+				year_month = "";
+				if (yearInt < 100) {
+					year_month += "0" + yearInt;
+				} else {
+					year_month += yearInt;
+				}
+				if (end < 10) {
+					year_month += "0" + end;
+				} else {
+					year_month += end;
+				}
+				logger.debug("year_month: " + year_month);
+
+				InvManualVO invManualVO = new InvManualVO();
+				invManualVO.setInv_manual_id(inv_manual_id);
+				invManualVO.setGroup_id(groupId);
+				invManualVO.setInvoice_type(invoice_type);
+				invManualVO.setYear_month(year_month);
+				invManualVO.setInvoice_no(invoice_no);
+				invManualVO.setInvoice_date(invoice_date);
+				invManualVO.setTitle(title);
+				invManualVO.setUnicode(unicode);
+				invManualVO.setTax_type(Integer.valueOf(tax_type));
+
+				service.updateInvManual(invManualVO);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
+				result = "ERROR";
 			}
-
-			InvManualVO invManualVO = new InvManualVO();
-			invManualVO.setInv_manual_id(inv_manual_id);
-			invManualVO.setGroup_id(groupId);
-			invManualVO.setInvoice_type(invoice_type);
-			invManualVO.setYear_month(year_month);
-			invManualVO.setInvoice_no(invoice_no);
-			invManualVO.setInvoice_date(invoice_date);
-			invManualVO.setTitle(title);
-			invManualVO.setUnicode(unicode);
-
-			service.updateInvManual(invManualVO);
+			resp.getWriter().write(result);
 
 		} else if ("updateDetail".equals(action)) {
 			String inv_manual_detail_id = req.getParameter("inv_manual_detail_id");
@@ -227,18 +279,140 @@ public class InvManual extends HttpServlet {
 			String quantity = req.getParameter("quantity");
 			String description = req.getParameter("description");
 			String subtotal = req.getParameter("subtotal");
+			String result = "OK";
 			logger.debug(
 					"inv_manual_detail_id:{} \\inv_manual_id: {} \\ price: {} \\ quantity: {} \\ description: {} \\ subtotal: {}",
 					inv_manual_detail_id, inv_manual_id, price, quantity, description, subtotal);
-			InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
-			invManualDetailVO.setGroup_id(groupId);
-			invManualDetailVO.setInv_manual_detail_id(inv_manual_detail_id);
-			invManualDetailVO.setInv_manual_id(inv_manual_id);
-			invManualDetailVO.setPrice(Integer.valueOf(price));
-			invManualDetailVO.setQuantity(Integer.valueOf(quantity));
-			invManualDetailVO.setDescription(description);
-			invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
-			service.updateInvManualDetail(invManualDetailVO);
+			try {
+				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+				invManualDetailVO.setGroup_id(groupId);
+				invManualDetailVO.setInv_manual_detail_id(inv_manual_detail_id);
+				invManualDetailVO.setInv_manual_id(inv_manual_id);
+				invManualDetailVO.setPrice(Integer.valueOf(price));
+				invManualDetailVO.setQuantity(Integer.valueOf(quantity));
+				invManualDetailVO.setDescription(description);
+				invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
+				service.updateInvManualDetail(invManualDetailVO);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result = "ERROR";
+			}
+			resp.getWriter().write(result);
+		} else if ("issueTheInvoice".equals(action)) {
+			String ids = req.getParameter("ids");
+			String[] idsArr = req.getParameter("ids").split(",");
+			ids = "";
+
+			InvManualVO invManualVO = null;
+
+			GroupVO groupVO = service.getGroupInvoiceInfo(groupId);
+
+			for (String inv_manual_id : idsArr) {
+				invManualVO = service.selectInvManualByInvManualId(groupId, inv_manual_id);
+
+				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+				invManualDetailVO.setGroup_id(groupId);
+				invManualDetailVO.setInv_manual_id(inv_manual_id);
+				List<InvManualDetailVO> detailVOs = service.searchInvManualDetailByInvManualId(invManualDetailVO);
+
+				List<ProductItem> productItems = new ArrayList<ProductItem>();
+
+				for (int i = 0; i < detailVOs.size(); i++) {
+
+					ProductItem productItem = new ProductItem();
+					productItem.setDescription(detailVOs.get(i).getDescription());
+					productItem.setQuantity(util.null2str(detailVOs.get(i).getQuantity()));
+					productItem.setUnitPrice(util.null2str(detailVOs.get(i).getPrice()));
+					productItem.setAmount(util.null2str(detailVOs.get(i).getSubtotal()));
+					productItem.setSequenceNumber(util.null2str(i + 1));
+
+					productItems.add(productItem);
+				}
+				Details details = new Details();
+				details.setProductItem(productItems);
+
+				Amount amount = new Amount();
+				Integer amountVal = invManualVO.getAmount();
+				amount.setSalesAmount(util.null2str(amountVal));
+
+				Integer taxType = invManualVO.getTax_type();
+				Float taxRate = 0F;
+				if (taxType == 1) {
+					taxRate = 0.05F;
+				}
+				Integer taxAmount = 0;
+				taxAmount = Math.round(amountVal * taxRate);
+
+				amount.setTaxType(util.null2str(taxType));
+				amount.setTaxRate(util.null2str(taxRate));
+				amount.setTaxAmount(util.null2str(taxAmount));
+				amount.setTotalAmount(util.null2str(amountVal + taxAmount));
+
+				Seller seller = new Seller();
+				seller.setIdentifier(groupVO.getGroup_unicode());
+				seller.setName(groupVO.getGroup_name());
+
+				Buyer buyer = new Buyer();
+				buyer.setIdentifier(invManualVO.getUnicode());
+				buyer.setName(invManualVO.getTitle());
+
+				// 發票號碼
+				InvoiceTrackVO invoiceTrackVO = service.getInvoiceNum(groupId, invManualVO.getInvoice_date());
+				String invoiceNum = invoiceTrackVO.getInvoiceNum();
+
+				logger.debug("invoiceNum: " + invoiceNum);
+
+				if (invoiceNum == null || "".equals(invoiceNum)) {
+					resp.getWriter().write("發票字軌用罄，請洽系統管理員");
+					return;
+				}
+
+				Main main = new Main();
+				main.setInvoiceNumber(invoiceNum);
+				main.setInvoiceDate(util.null2str(invManualVO.getInvoice_date()));
+				main.setInvoiceTime("00:00:00");
+
+				String voiceType = "0";
+				if (invManualVO.getInvoice_type() == "1") {
+					voiceType += "2";
+				}
+				if (invManualVO.getInvoice_type() == "2") {
+					voiceType += "1";
+				}
+				main.setInvoiceType(voiceType);
+				main.setDonateMark("0");
+				main.setPrintMark("Y");
+
+				main.setSeller(seller);
+				main.setBuyer(buyer);
+
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				java.util.Date date = new java.util.Date();
+				String ymdhms = sdf.format(date);
+
+				Invoice invoice = new Invoice();
+				invoice.setInvoiceCode("A0401");
+				invoice.setPosSn(groupVO.getInvoice_key());
+				invoice.setPosId(groupVO.getInvoice_posno());
+				invoice.setSysTime(ymdhms);
+
+				invoice.setMain(main);
+				invoice.setDetails(details);
+				invoice.setAmount(amount);
+
+				StringWriter sw = new StringWriter();
+				JAXB.marshal(invoice, sw);
+				logger.debug(sw.toString());
+				String reqXml = sw.toString();
+
+				ids += ",'" + inv_manual_id + "'";
+			}
+			ids = ids.substring(1, ids.length());
+			invManualVO = new InvManualVO();
+			invManualVO.setGroup_id(groupId);
+			invManualVO.setInv_manual_id(ids);
+			invManualVO.setInv_flag(1);
+			service.updateInvManualInvFlag(invManualVO);
 		}
 	}
 
@@ -284,6 +458,22 @@ public class InvManual extends HttpServlet {
 		public void updateInvManualDetail(InvManualDetailVO invManualDetailVO) {
 			dao.updateInvManualDetail(invManualDetailVO);
 		}
+
+		public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id) {
+			return dao.selectInvManualByInvManualId(groupId, inv_manual_id);
+		}
+
+		public GroupVO getGroupInvoiceInfo(String groupId) {
+			return dao.getGroupInvoiceInfo(groupId);
+		}
+
+		public InvoiceTrackVO getInvoiceNum(String groupId, Date invoice_date) {
+			return dao.getInvoiceNum(groupId, invoice_date);
+		}
+
+		public void updateInvManualInvFlag(InvManualVO invManualVO) {
+			dao.updateInvManualInvFlag(invManualVO);
+		}
 	}
 
 	class InvManualDao implements InvManual_interface {
@@ -295,13 +485,17 @@ public class InvManual extends HttpServlet {
 
 		private static final String sp_select_all_inv_manual = "call sp_select_all_inv_manual (?)";
 		private static final String sp_select_inv_manual_by_invoice_date = "call sp_select_inv_manual_by_invoice_date (?,?,?)";
-		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?,?,?)";
+		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?)";
 		private static final String sp_select_inv_manual_detail_by_inv_manual_id = "call sp_select_inv_manual_detail_by_inv_manual_id(?,?)";
 		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?)";
 		private static final String sp_del_inv_manual_detail = "call sp_del_inv_manual_detail(?,?,?)";
 		private static final String sp_del_inv_manual = "call sp_del_inv_manual(?,?)";
-		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?)";
+		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?)";
 		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?)";
+		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
+		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
+		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
+		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?)";
 
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
@@ -329,7 +523,9 @@ public class InvManual extends HttpServlet {
 					row.setInvoice_date(rs.getDate("invoice_date"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
-					row.setAmount(rs.getFloat("amount"));
+					row.setAmount(rs.getInt("amount"));
+					row.setTax_type(rs.getInt("tax_type"));
+					row.setInv_flag(rs.getInt("inv_flag"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -384,7 +580,8 @@ public class InvManual extends HttpServlet {
 					row.setInvoice_date(rs.getDate("invoice_date"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
-					row.setAmount(rs.getFloat("amount"));
+					row.setAmount(rs.getInt("amount"));
+					row.setInv_flag(rs.getInt("inv_flag"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -424,11 +621,9 @@ public class InvManual extends HttpServlet {
 				cs.setString(1, invManualVO.getGroup_id());
 				cs.setString(2, invManualVO.getInvoice_type());
 				cs.setString(3, invManualVO.getYear_month());
-				cs.setString(4, invManualVO.getInvoice_no());
-				cs.setDate(5, invManualVO.getInvoice_date());
-				cs.setString(6, invManualVO.getTitle());
-				cs.setString(7, invManualVO.getUnicode());
-				cs.setFloat(8, invManualVO.getAmount());
+				cs.setDate(4, invManualVO.getInvoice_date());
+				cs.setString(5, invManualVO.getTitle());
+				cs.setString(6, invManualVO.getUnicode());
 
 				cs.execute();
 			} catch (SQLException se) {
@@ -627,6 +822,7 @@ public class InvManual extends HttpServlet {
 				cs.setDate(6, invManualVO.getInvoice_date());
 				cs.setString(7, invManualVO.getTitle());
 				cs.setString(8, invManualVO.getUnicode());
+				cs.setInt(9, invManualVO.getTax_type());
 
 				cs.execute();
 			} catch (SQLException se) {
@@ -692,6 +888,198 @@ public class InvManual extends HttpServlet {
 			}
 		}
 
+		@Override
+		public InvoiceTrackVO getInvoiceNum(String groupId, Date invoice_date) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String InvoiceNum = null;
+			InvoiceTrackVO invoiceTrackVO = new InvoiceTrackVO();
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_invoiceNum);
+				pstmt.setString(1, groupId);
+				pstmt.setDate(2, invoice_date);
+				pstmt.execute();
+				rs = pstmt.getResultSet();
+
+				if (rs.next()) {
+
+					InvoiceNum = rs.getString("invoiceNum");
+
+					if (InvoiceNum != null) {
+						invoiceTrackVO.setGroup_id(groupId);
+						invoiceTrackVO.setInvoice_beginno(rs.getString("invoice_beginno"));
+						invoiceTrackVO.setInvoice_endno(rs.getString("invoice_endno"));
+						invoiceTrackVO.setInvoice_id(rs.getString("invoice_id"));
+						invoiceTrackVO.setInvoice_track(rs.getString("invoice_track"));
+						invoiceTrackVO.setInvoice_type(rs.getString("invoice_type"));
+						invoiceTrackVO.setInvoiceNum(InvoiceNum);
+						invoiceTrackVO.setSeq(rs.getString("seq"));
+						invoiceTrackVO.setYear_month(rs.getString("year_month"));
+
+					}
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return invoiceTrackVO;
+		}
+
+		@Override
+		public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id) {
+			InvManualVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_inv_manual_by_inv_manual_id);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, inv_manual_id);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new InvManualVO();
+					row.setInv_manual_id(rs.getString("inv_manual_id"));
+					row.setGroup_id(rs.getString("group_id"));
+					row.setInvoice_type(rs.getString("invoice_type"));
+					row.setYear_month(rs.getString("year_month"));
+					row.setInvoice_no(rs.getString("invoice_no"));
+					row.setInvoice_date(rs.getDate("invoice_date"));
+					row.setTitle(rs.getString("title"));
+					row.setUnicode(rs.getString("unicode"));
+					row.setAmount(rs.getInt("amount"));
+					row.setInv_flag(rs.getInt("inv_flag"));
+					row.setTax_type(rs.getInt("tax_type"));
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return row;
+		}
+
+		@Override
+		public GroupVO getGroupInvoiceInfo(String groupId) {
+			GroupVO groupVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_group_invoice_info);
+				pstmt.setString(1, groupId);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					groupVO = new GroupVO();
+					groupVO.setGroup_unicode(rs.getString("group_unicode"));
+					groupVO.setInvoice_key(rs.getString("invoice_key"));
+					groupVO.setInvoice_posno(rs.getString("invoice_posno"));
+					groupVO.setGroup_name(rs.getString("group_name"));
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return groupVO;
+		}
+
+		@Override
+		public void updateInvManualInvFlag(InvManualVO invManualVO) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_update_inv_manual_inv_flag);
+
+				cs.setString(1, invManualVO.getGroup_id());
+				cs.setInt(2, invManualVO.getInv_flag());
+				cs.setString(3, invManualVO.getInv_manual_id());
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
 	}
 }
 
@@ -714,4 +1102,11 @@ interface InvManual_interface {
 
 	public void updateInvManualDetail(InvManualDetailVO invManualDetailVO);
 
+	public InvoiceTrackVO getInvoiceNum(String groupId, Date invoice_date);
+
+	public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id);
+
+	public GroupVO getGroupInvoiceInfo(String groupId);
+
+	public void updateInvManualInvFlag(InvManualVO invManualVO);
 }

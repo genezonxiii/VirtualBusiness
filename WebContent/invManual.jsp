@@ -65,12 +65,6 @@
 			<fieldset>
 				<table class='form-table'>
 					<tr>
-						<td>買受人</td><td><input type="text" name="title"></td>
-					</tr>
-					<tr>
-						<td>發票號碼</td><td><input type="text" name="invoice_no"></td>
-					</tr>
-					<tr>
 						<td>發票類別</td>
 						<td>
 							<input id="invoice-type-radio-1" type="radio" name="invoice-type-radio-group">
@@ -85,7 +79,42 @@
 						</td>
 					</tr>
 					<tr>
+						<td>買受人</td><td><input type="text" name="title" placeholder="選擇三聯式方可輸入" disabled></td>
+					</tr>
+					<tr>
 						<td>統一編號</td><td><input type="text" name="unicode" placeholder="選擇三聯式方可輸入" disabled></td>
+					</tr>
+					<tr>
+						<td>課稅別</td>
+						<td>
+							<input id="invoice-tax-type-radio-1" type="radio" name="invoice-tax-type-radio-group">
+							<label for="invoice-tax-type-radio-1">
+								<span class="form-label">應稅</span>
+							</label>
+		          			<input id="invoice-tax-type-radio-2" type="radio" name="invoice-tax-type-radio-group">
+		          			<label for="invoice-tax-type-radio-2">
+								<span class="form-label">零稅率</span>
+		          			</label>
+		          			<input id="invoice-tax-type-radio-3" type="radio" name="invoice-tax-type-radio-group">
+		          			<label for="invoice-tax-type-radio-3">
+								<span class="form-label">免稅</span>
+		          			</label>
+<!-- 		          			<input id="invoice-tax-type-radio-4" type="radio" name="invoice-tax-type-radio-group"> -->
+<!-- 		          			<label for="invoice-tax-type-radio-4"> -->
+<!-- 								<span class="form-label">應稅(特種稅率)</span> -->
+<!-- 		          			</label> -->
+<!-- 		          			<input id="invoice-tax-type-radio-9" type="radio" name="invoice-tax-type-radio-group"> -->
+<!-- 		          			<label for="invoice-tax-type-radio-9"> -->
+<!-- 								<span class="form-label">混合應稅與免稅或零稅率(限收銀機發票無法分辨時使用)</span> -->
+<!-- 		          			</label> -->
+		          			<div id = 'validate-invoice-tax-type-radio'></div>
+						</td>
+					</tr>
+					<tr>
+						<td>發票日期</td>
+						<td>
+							<input type="text" name="invoice_date" class="input-date">
+						</td>
 					</tr>
 				</table>
 			</fieldset>
@@ -117,6 +146,13 @@
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
 	<script type="text/javascript" src="js/buttons.colVis.min.js"></script>
 
+	<!-- Initialization -->
+	<script type="text/javascript">
+		$(function(){
+			$("#dialog-invoice .input-date").datepicker("option", "minDate", new Date());
+		});
+	</script>
+	
 	<!-- Global Variables -->
 	<script type="text/javascript">
 		var $masterTable; //master datatable
@@ -127,28 +163,28 @@
 	
 	<!-- Jquery Validate -->
 	<script type="text/javascript">
+
 		$.extend(jQuery.validator.messages, {
 		    required: "必填欄位"
 		});
 		
 		var validator_insert_invoice = $('#dialog-invoice').find('form').validate({
 	        rules: {
-	        	'title': {
-	                required: true
-	            },
 	            'invoice_no': {
 	                required: true
 	            },
 	            'invoice-type-radio-group': {
 	                required: true
+	            },
+	            'invoice_date': {
+	                required: true
+	            },
+	            'invoice-tax-type-radio-group': {
+	                required: true
 	            }
 	        },
 	        errorPlacement: function(error, element) {
-	        	  if (element.attr("name") == "invoice-type-radio-group") {
-	        	     error.insertAfter("#validate-invoice-type-radio");
-	        	  } else {
-	        	     error.insertAfter(element);
-	        	  }
+	        	error.insertAfter(element.closest("td"));
 	    	}
 	    });
 		
@@ -197,15 +233,23 @@
 			event.preventDefault();
 			
 			var $dialog = $('#dialog-invoice');
-			
+		
 			$('input:radio[name="invoice-type-radio-group"]').change(
 				function(){
-					console.log(this);
 				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
 				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
+				    	$dialog.find('input[name="title"]').prop("disabled", false);
+				    	
+				    	$dialog.find('input[name="title"]').rules("add", "required");
+						$dialog.find('input[name="unicode"]').rules("add", "required");
 				    }else{
 				    	$dialog.find('input[name="unicode"]').val('');
+				    	$dialog.find('input[name="title"]').val('');
 				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
+				    	$dialog.find('input[name="title"]').prop("disabled", true);
+				    	
+				    	$dialog.find('input[name="title"]').rules('remove', 'required');
+				    	$dialog.find('input[name="unicode"]').rules('remove', 'required');
 				    }
 				}
 			);
@@ -220,19 +264,23 @@
 				buttons : [{
 							text : "儲存",
 							click : function() {
-
+								
 								if($('#dialog-invoice').find('form').valid()){
 									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
 									
+									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
+									tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
+									
 									var title = $( "input[name='title']", $dialog ).val();
 									var unicode = $( "input[name='unicode']", $dialog ).val();
-									var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
+									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
 									
 									console.log('invoice_type: '+ invoice_type);
+									console.log('tax_type: '+ tax_type);
 									console.log('title: '+ title);
 									console.log('unicode: '+ unicode);
-									console.log('invoice_no: '+ invoice_no);
+									console.log('invoice_date: '+ invoice_date);
 									
 									$.ajax({
 										url: 'InvManual.do',
@@ -242,7 +290,8 @@
 											invoice_type: invoice_type,
 											title: title,
 											unicode:  unicode,
-											invoice_no: invoice_no
+											invoice_date: invoice_date,
+											tax_type: tax_type
 										},
 										beforeSend: function(){
 										    $(':hover').css('cursor','progress');
@@ -251,9 +300,22 @@
 											$(':hover').css('cursor','default');
 										},
 										success: function (response) {
-											$masterTable.ajax.reload();
+											var text = '新增失敗';
+											if(response == 'OK'){
+												if ($masterTable instanceof $.fn.dataTable.Api) {
+													$masterTable.ajax.reload();
+												}
+												text = '新增成功';
+											}
 											$dialog.find('form').trigger("reset");
 											$dialog.dialog("close");
+											$('<div/>').dialog({
+												title: '提示訊息',
+												draggable : true,
+												resizable : false,
+												width : "140px",
+												modal : true
+											}).text(text);
 										}
 									});
 								}
@@ -317,6 +379,7 @@
 									title: '提示訊息',
 									draggable : true,
 									resizable : false,
+									width : "140px",
 									modal : true
 								}).append($('<p>', {text: result }));
 							}
@@ -400,12 +463,24 @@
 											$(':hover').css('cursor','default');
 										},
 										success: function (response) {
+											var text = '修改失敗';
+											if(response == 'OK'){
+												if ($detailTable instanceof $.fn.dataTable.Api) {
+													$detailTable.ajax.reload();
+												}
+												text = '修改成功';
+											}
 											$dialog.find('form').trigger("reset");
 											$dialog.dialog("close");
+											$('<div/>').dialog({
+												title: '提示訊息',
+												draggable : true,
+												resizable : false,
+												width : "140px",
+												modal : true
+											}).text(text);
 										}
 									});
-									
-									$detailTable.ajax.reload();
 								}
 								}
 						}, {
@@ -464,6 +539,7 @@
 									title: '提示訊息',
 									draggable : true,
 									resizable : false,
+									width : "140px",
 									modal : true
 								}).append($('<p>', {text: result }));
 							}
@@ -509,20 +585,29 @@
 		    inv_manual_id = data.inv_manual_id;
 		    
 			var $dialog = $('#dialog-invoice');
-
+			$dialog.find('input[name=invoice_date]').val(data.invoice_date);
 			$dialog.find('input[name=title]').val(data.title);
 			$dialog.find('input[name=invoice_no]').val(data.invoice_no);
 			$dialog.find('input[name=unicode]').val(data.unicode);
 			$( '#invoice-type-radio-'+ data.invoice_type ).prop("checked", true);
+			$( '#invoice-tax-type-radio-'+ data.tax_type ).prop("checked", true);
 			
 			$('input:radio[name="invoice-type-radio-group"]').change(
 				function(){
-					console.log(this);
 				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
 				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
+				    	$dialog.find('input[name="title"]').prop("disabled", false);
+				    	
+				    	$dialog.find('input[name="title"]').rules("add", "required");
+						$dialog.find('input[name="unicode"]').rules("add", "required");
 				    }else{
 				    	$dialog.find('input[name="unicode"]').val('');
+				    	$dialog.find('input[name="title"]').val('');
 				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
+				    	$dialog.find('input[name="title"]').prop("disabled", true);
+				    	
+				    	$dialog.find('input[name="title"]').rules('remove', 'required');
+				    	$dialog.find('input[name="unicode"]').rules('remove', 'required');
 				    }
 				}
 			);
@@ -542,9 +627,13 @@
 									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
 									
+									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
+									tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
+									
 									var title = $( "input[name='title']", $dialog ).val();
 									var unicode = $( "input[name='unicode']", $dialog ).val();
 									var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
+									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
 									
 									console.log('invoice_type: '+ invoice_type);
 									console.log('title: '+ title);
@@ -560,7 +649,9 @@
 											invoice_type: invoice_type,
 											title: title,
 											unicode:  unicode,
-											invoice_no: invoice_no
+											invoice_no: invoice_no,
+											invoice_date: invoice_date,
+											tax_type: tax_type
 										},
 										beforeSend: function(){
 										    $(':hover').css('cursor','progress');
@@ -569,9 +660,22 @@
 											$(':hover').css('cursor','default');
 										},
 										success: function (response) {
-											$masterTable.ajax.reload();
+											var text = '修改失敗';
+											if(response == 'OK'){
+												if ($masterTable instanceof $.fn.dataTable.Api) {
+													$masterTable.ajax.reload();
+												}
+												text = '修改成功';
+											}
 											$dialog.find('form').trigger("reset");
 											$dialog.dialog("close");
+											$('<div/>').dialog({
+												title: '提示訊息',
+												draggable : true,
+												resizable : false,
+												width : "140px",
+												modal : true
+											}).text(text);
 										}
 									});
 								}
@@ -643,8 +747,12 @@
 			        "data": null,
 			        "defaultContent": ""
 			    },{
+					"title" : "課稅別",
+					"data" : null,
+					"defaultContent" : ""
+				},{
 					"title" : "發票類別",
-					"data" : "invoice_type",
+					"data" : null,
 					"defaultContent" : ""
 				},{
 					"title" : "發票期別",
@@ -664,7 +772,7 @@
 					"defaultContent" : ""
 				},{
 					"title" : "統一編號",
-					"data" : "unicode",
+					"data" : null,
 					"defaultContent" : ""
 				},{
 					"title" : "總金額",
@@ -706,11 +814,43 @@
 			            return options.html();
 			        }
 			    },{
-			        targets: 8,
+			        targets: 1,
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
-			        	
+			        	console.log(data.tax_type);
+			        	console.log((data.tax_type == '1'));
+			        	var result = '';
+			        	if(data.tax_type == '1') {
+			            	return '應稅';
+			        	}else if (data.tax_type == '2'){
+			            	return '零稅率';
+			        	}else if (data.tax_type == '3'){
+			            	return '免稅';
+			        	}
+			        }
+			    },{
+			        targets: 2,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+
+			        	return data.invoice_type == 1 ? '二聯式' : '三聯式';
+			        }
+			    },{
+			        targets: 7,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+
+			        	return data.unicode == '' ? '無' : data.unicode;
+			        }
+			    },{
+			        targets: 9,
+			        searchable: false,
+			        orderable: false,
+			        render: function(data, type, row) {
+			        	return data.inv_flag == 0 ? '否' : '是';
 			        }
 			    },{
 			        targets: -1,
@@ -829,6 +969,7 @@
 		    									title: '提示訊息',
 		    									draggable : true,
 		    									resizable : false,
+												width : "140px",
 		    									modal : true
 		    								}).append($('<p>', {text: result }));
 		    							}
@@ -843,6 +984,81 @@
 		    					}
 		    				}
 		    			}).text("確認刪除嗎?");
+		            }
+				},{
+		            text: '開立發票',
+		            action: function(e, dt, node, config) {
+		            	var arr = [];
+		            	var data;
+		            	
+		                var cells = $masterTable.cells().nodes();
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-inv-master-select]:checked');
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+						
+		    			$('<div/>').dialog({
+		    				title: '提示訊息',
+		    				draggable : true,
+		    				resizable : false,
+		    				height : "auto",
+		    				width : "auto",
+		    				modal : true,
+		    				buttons : {
+		    					"開立" : function() {
+		    						var ids = '';
+
+		    						$checkboxs.each(function(index) {
+		    							data = $masterTable.row( $(this).closest("tr") ).data();
+// 		    							arr.push(JSON.stringify(data));
+					                    ids += ',' + data.inv_manual_id ;
+		    						});
+
+		    						if (ids.length != 0) {
+		    							ids = ids.substring(1, ids.length);
+		    						}
+		    						
+		    						console.log('ids: '+ids);
+		    						  
+		    						$.ajax({
+		    							url: 'InvManual.do',
+// 		    							async: false,
+		    							type: 'post',
+		    							data: {
+		    								action : 'issueTheInvoice',
+		    								ids : ids
+		    							},
+		    			                beforeSend: function(){
+		    			                    $(':hover').css('cursor','progress');
+		    			                },
+		    			                complete: function(){
+		    			                	$(':hover').css('cursor','default');
+		    			                },
+		    							success: function (response) {
+		    								$masterTable.ajax.reload();
+// 		    								var result = 'OK' == response ? '刪除成功!': '刪除失敗!';
+
+// 		    								$('<div/>').dialog({
+// 		    									title: '提示訊息',
+// 		    									draggable : true,
+// 		    									resizable : false,
+// 		    									modal : true
+// 		    								}).append($('<p>', {text: result }));
+		    							}
+		    						});
+		    						
+// 		    						$masterTable.ajax.reload();
+		    						
+		    						$(this).dialog("close");
+		    					},
+		    					"取消" : function() {
+		    						$(this).dialog("close");
+		    					}
+		    				}
+		    			}).text("是否確認要開立發票?");
 		            }
 				}]
 			});		
