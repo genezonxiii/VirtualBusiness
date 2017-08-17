@@ -1,3 +1,4 @@
+<!-- 二聯式功能先註解起來，未來需要再開啟 -->	
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 
@@ -64,25 +65,27 @@
 		<form>
 			<fieldset>
 				<table class='form-table'>
+<!-- 					<tr> -->
+<!-- 						<td>發票類別</td> -->
+<!-- 						<td> -->
+<!-- 							<input id="invoice-type-radio-1" type="radio" name="invoice-type-radio-group"> -->
+<!-- 							<label for="invoice-type-radio-1"> -->
+<!-- 								<span class="form-label">二聯式</span> -->
+<!-- 							</label> -->
+<!-- 		          			<input id="invoice-type-radio-2" type="radio" name="invoice-type-radio-group"> -->
+<!-- 		          			<label for="invoice-type-radio-2"> -->
+<!-- 								<span class="form-label">三聯式</span> -->
+<!-- 		          			</label> -->
+<!-- 		          			<div id = 'validate-invoice-type-radio'></div> -->
+<!-- 						</td> -->
+<!-- 					</tr> -->
 					<tr>
-						<td>發票類別</td>
-						<td>
-							<input id="invoice-type-radio-1" type="radio" name="invoice-type-radio-group">
-							<label for="invoice-type-radio-1">
-								<span class="form-label">二聯式</span>
-							</label>
-		          			<input id="invoice-type-radio-2" type="radio" name="invoice-type-radio-group">
-		          			<label for="invoice-type-radio-2">
-								<span class="form-label">三聯式</span>
-		          			</label>
-		          			<div id = 'validate-invoice-type-radio'></div>
-						</td>
+<!-- 						<td>買受人</td><td><input type="text" name="title" placeholder="選擇三聯式方可輸入" disabled></td> -->
+						<td>買受人</td><td><input type="text" name="title"></td>
 					</tr>
 					<tr>
-						<td>買受人</td><td><input type="text" name="title" placeholder="選擇三聯式方可輸入" disabled></td>
-					</tr>
-					<tr>
-						<td>統一編號</td><td><input type="text" name="unicode" placeholder="選擇三聯式方可輸入" disabled></td>
+<!-- 						<td>統一編號</td><td><input type="text" name="unicode" placeholder="選擇三聯式方可輸入" disabled></td> -->
+						<td>統一編號</td><td><input type="text" name="unicode"></td>
 					</tr>
 					<tr>
 						<td>課稅別</td>
@@ -170,12 +173,18 @@
 		
 		var validator_insert_invoice = $('#dialog-invoice').find('form').validate({
 	        rules: {
+	            'unicode': {
+	                required: true
+	            },
+	            'title': {
+	                required: true
+	            },
 	            'invoice_no': {
 	                required: true
 	            },
-	            'invoice-type-radio-group': {
-	                required: true
-	            },
+// 	            'invoice-type-radio-group': {
+// 	                required: true
+// 	            },
 	            'invoice_date': {
 	                required: true
 	            },
@@ -234,25 +243,25 @@
 			
 			var $dialog = $('#dialog-invoice');
 		
-			$('input:radio[name="invoice-type-radio-group"]').change(
-				function(){
-				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
-				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
-				    	$dialog.find('input[name="title"]').prop("disabled", false);
+// 			$('input:radio[name="invoice-type-radio-group"]').change(
+// 				function(){
+// 				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
+// 				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
+// 				    	$dialog.find('input[name="title"]').prop("disabled", false);
 				    	
-				    	$dialog.find('input[name="title"]').rules("add", "required");
-						$dialog.find('input[name="unicode"]').rules("add", "required");
-				    }else{
-				    	$dialog.find('input[name="unicode"]').val('');
-				    	$dialog.find('input[name="title"]').val('');
-				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
-				    	$dialog.find('input[name="title"]').prop("disabled", true);
+// 				    	$dialog.find('input[name="title"]').rules("add", "required");
+// 						$dialog.find('input[name="unicode"]').rules("add", "required");
+// 				    }else{
+// 				    	$dialog.find('input[name="unicode"]').val('');
+// 				    	$dialog.find('input[name="title"]').val('');
+// 				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
+// 				    	$dialog.find('input[name="title"]').prop("disabled", true);
 				    	
-				    	$dialog.find('input[name="title"]').rules('remove', 'required');
-				    	$dialog.find('input[name="unicode"]').rules('remove', 'required');
-				    }
-				}
-			);
+// 				    	$dialog.find('input[name="title"]').rules('remove', 'required');
+// 				    	$dialog.find('input[name="unicode"]').rules('remove', 'required');
+// 				    }
+// 				}
+// 			);
 			
 			$dialog.dialog({
 				draggable : true,
@@ -266,8 +275,9 @@
 							click : function() {
 								
 								if($('#dialog-invoice').find('form').valid()){
-									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
-									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+// 									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
+// 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+									invoice_type ='2';
 									
 									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
 									tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
@@ -589,28 +599,28 @@
 			$dialog.find('input[name=title]').val(data.title);
 			$dialog.find('input[name=invoice_no]').val(data.invoice_no);
 			$dialog.find('input[name=unicode]').val(data.unicode);
-			$( '#invoice-type-radio-'+ data.invoice_type ).prop("checked", true);
+// 			$( '#invoice-type-radio-'+ data.invoice_type ).prop("checked", true);
 			$( '#invoice-tax-type-radio-'+ data.tax_type ).prop("checked", true);
 			
-			$('input:radio[name="invoice-type-radio-group"]').change(
-				function(){
-				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
-				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
-				    	$dialog.find('input[name="title"]').prop("disabled", false);
+// 			$('input:radio[name="invoice-type-radio-group"]').change(
+// 				function(){
+// 				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
+// 				    	$dialog.find('input[name="unicode"]').prop("disabled", false);
+// 				    	$dialog.find('input[name="title"]').prop("disabled", false);
 				    	
-				    	$dialog.find('input[name="title"]').rules("add", "required");
-						$dialog.find('input[name="unicode"]').rules("add", "required");
-				    }else{
-				    	$dialog.find('input[name="unicode"]').val('');
-				    	$dialog.find('input[name="title"]').val('');
-				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
-				    	$dialog.find('input[name="title"]').prop("disabled", true);
+// 				    	$dialog.find('input[name="title"]').rules("add", "required");
+// 						$dialog.find('input[name="unicode"]').rules("add", "required");
+// 				    }else{
+// 				    	$dialog.find('input[name="unicode"]').val('');
+// 				    	$dialog.find('input[name="title"]').val('');
+// 				    	$dialog.find('input[name="unicode"]').prop("disabled", true);
+// 				    	$dialog.find('input[name="title"]').prop("disabled", true);
 				    	
-				    	$dialog.find('input[name="title"]').rules('remove', 'required');
-				    	$dialog.find('input[name="unicode"]').rules('remove', 'required');
-				    }
-				}
-			);
+// 				    	$dialog.find('input[name="title"]').rules('remove', 'required');
+// 				    	$dialog.find('input[name="unicode"]').rules('remove', 'required');
+// 				    }
+// 				}
+// 			);
 			
 			$dialog.dialog({
 				draggable : true,
@@ -624,8 +634,9 @@
 							click : function() {
 
 								if($('#dialog-invoice').find('form').valid()){
-									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
-									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+// 									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
+// 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+									invoice_type = '2';
 									
 									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
 									tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
@@ -792,34 +803,33 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
-			        	
-			        	var inv_manual_id = data.inv_manual_id;
 
-			            var input = document.createElement("INPUT");
-			            input.type = 'checkbox';
-			            input.name = 'checkbox-inv-master-select';
-			            input.id = inv_manual_id;
-
-			            var span = document.createElement("SPAN");
-			            span.className = 'form-label';
-
-			            var label = document.createElement("LABEL");
-			            label.htmlFor = inv_manual_id;
-			            label.name = 'checkbox-inv-master-select';
-			            label.style.marginLeft = '45%';
-			            label.appendChild(span);
-
-			            var options = $("<div/>").append(input, label);
-
-			            return options.html();
+						var inv_manual_id = data.inv_manual_id;
+						
+						var input = document.createElement("INPUT");
+						input.type = 'checkbox';
+						input.name = 'checkbox-inv-master-select';
+						input.id = inv_manual_id;
+						input.disabled = data.inv_flag == 0 ? false : true;
+						
+						var span = document.createElement("SPAN");
+						span.className = 'form-label';
+						
+						var label = document.createElement("LABEL");
+						label.htmlFor = inv_manual_id;
+						label.name = 'checkbox-inv-master-select';
+						label.style.marginLeft = '45%';
+						label.appendChild(span);
+						
+						var options = $("<div/>").append(input, label);
+						
+						return options.html();
 			        }
 			    },{
 			        targets: 1,
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
-			        	console.log(data.tax_type);
-			        	console.log((data.tax_type == '1'));
 			        	var result = '';
 			        	if(data.tax_type == '1') {
 			            	return '應稅';
@@ -857,6 +867,33 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
+			        	
+			        	var $div =
+			        		$("<div/>", {
+			        			"class": "table-function-list"
+                            });
+
+			        	if(data.inv_flag == 0){
+		        			$div.append(
+		        					$("<button/>", {
+										"class": "btn-in-table btn-alert btn_delete",
+										"title": "刪除"
+									}).append($("<i/>", {"class": "fa fa-trash"}))
+								).append( 
+									$("<button/>", {
+										"class": "btn-in-table btn-darkblue btn_update",
+										"title": "修改"
+									}).append( $("<i/>", {"class": "fa fa-pencil"}) )
+								);			        		
+			        	}
+			        	
+	        			$div.append(
+	        					$("<button/>", {
+									"class": "btn-in-table btn-green btn_list",
+									"title": "清單"
+								}).append( $("<i/>", {"class": "fa fa-pencil-square-o"}) )
+								);
+	        			
 			            var options = $("<div/>")
 			                .append($("<div/>", {
 			                        "class": "table-row-func btn-in-table btn-gray"
@@ -864,32 +901,7 @@
 			                    .append($("<i/>", {
 			                        "class": "fa fa-ellipsis-h"
 			                    }))
-			                    .append(
-			                        $("<div/>", {
-			                            "class": "table-function-list"
-			                        })
-									.append( 
-										$("<button/>", {
-											"class": "btn-in-table btn-alert btn_delete",
-											"title": "刪除"
-										})
-										.append( $("<i/>", {"class": "fa fa-trash"}) )
-									)
-									.append( 
-										$("<button/>", {
-											"class": "btn-in-table btn-darkblue btn_update",
-											"title": "修改"
-										})
-										.append( $("<i/>", {"class": "fa fa-pencil"}) )
-									)
-									.append( 
-										$("<button/>", {
-											"class": "btn-in-table btn-green btn_list",
-											"title": "清單"
-										})
-										.append( $("<i/>", {"class": "fa fa-pencil-square-o"}) )
-									)
-			                    )
+			                    .append( $div )
 			                );
 
 			            return options.html();
@@ -904,14 +916,18 @@
 
 		                selectCount % 2 != 1 ?
 		                    $checkboxs.each(function() {
-		                        $(this).prop("checked", false);
-		                        $(this).removeClass("toggleon");
-		                        $(this).closest("tr").removeClass("selected");
+		                    	if(!$(this).is(':disabled')){
+			                        $(this).prop("checked", false);
+			                        $(this).removeClass("toggleon");
+			                        $(this).closest("tr").removeClass("selected");
+		                    	}
 		                    }) :
 		                    $checkboxs.each(function() {
-		                        $(this).prop("checked", true);
-		                        $(this).addClass("toggleon");
-		                        $(this).closest("tr").addClass("selected");
+		                    	if(!$(this).is(':disabled')){
+			                        $(this).prop("checked", true);
+			                        $(this).addClass("toggleon");
+			                        $(this).closest("tr").addClass("selected");
+		                    	}
 		                    });
 		            }
 		        },{
@@ -1013,7 +1029,6 @@
 
 		    						$checkboxs.each(function(index) {
 		    							data = $masterTable.row( $(this).closest("tr") ).data();
-// 		    							arr.push(JSON.stringify(data));
 					                    ids += ',' + data.inv_manual_id ;
 		    						});
 
@@ -1025,7 +1040,6 @@
 		    						  
 		    						$.ajax({
 		    							url: 'InvManual.do',
-// 		    							async: false,
 		    							type: 'post',
 		    							data: {
 		    								action : 'issueTheInvoice',
@@ -1038,19 +1052,34 @@
 		    			                	$(':hover').css('cursor','default');
 		    			                },
 		    							success: function (response) {
-		    								$masterTable.ajax.reload();
-// 		    								var result = 'OK' == response ? '刪除成功!': '刪除失敗!';
+		    								
+		    								var $div =
+		    									$('<div/>').dialog({
+			    									title: '提示訊息',
+			    									draggable : true,
+			    									resizable : false,
+													width : "auto",
+			    									modal : true
+			    								});
+		    								try {
+			    								var json_obj = $.parseJSON(response);
+			    								var result = '';
 
-// 		    								$('<div/>').dialog({
-// 		    									title: '提示訊息',
-// 		    									draggable : true,
-// 		    									resizable : false,
-// 		    									modal : true
-// 		    								}).append($('<p>', {text: result }));
+			    				                $.each(json_obj, function(i, item) {
+			    				                	result += '<br>' + item.invoice_no + ' / ' + item.message + '<hr>'
+			    				                });
+
+			    				                $div.append( result );
+			    								$masterTable.ajax.reload();
+			    								
+		    								}catch(e) {
+		    									
+		    									$div.append($('<p>', {text: '開立失敗' }));
+
+		    								}
+				    						
 		    							}
 		    						});
-		    						
-// 		    						$masterTable.ajax.reload();
 		    						
 		    						$(this).dialog("close");
 		    					},
@@ -1133,6 +1162,7 @@
 			            input.type = 'checkbox';
 			            input.name = 'checkbox-inv-detail-select';
 			            input.id = inv_manual_detail_id;
+						input.disabled = data.inv_flag == 0 ? false : true;
 
 			            var span = document.createElement("SPAN");
 			            span.className = 'form-label';
@@ -1152,6 +1182,26 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
+			        	
+			        	var $div =
+			        		$("<div/>", {
+			        			"class": "table-function-list"
+                            });
+
+			        	if(data.inv_flag == 0){
+		        			$div.append(
+		        					$("<button/>", {
+										"class": "btn-in-table btn-alert btn_delete",
+										"title": "刪除"
+									}).append($("<i/>", {"class": "fa fa-trash"}))
+								).append( 
+									$("<button/>", {
+										"class": "btn-in-table btn-darkblue btn_update",
+										"title": "修改"
+									}).append( $("<i/>", {"class": "fa fa-pencil"}) )
+								);			        		
+			        	}
+			        	
 			            var options = $("<div/>")
 			                .append($("<div/>", {
 			                        "class": "table-row-func btn-in-table btn-gray"
@@ -1159,25 +1209,7 @@
 			                    .append($("<i/>", {
 			                        "class": "fa fa-ellipsis-h"
 			                    }))
-			                    .append(
-			                        $("<div/>", {
-			                            "class": "table-function-list"
-			                        })
-									.append( 
-										$("<button/>", {
-											"class": "btn-in-table btn-alert btn_delete",
-											"title": "刪除"
-										})
-										.append( $("<i/>", {"class": "fa fa-trash"}) )
-									)
-									.append( 
-										$("<button/>", {
-											"class": "btn-in-table btn-darkblue btn_update",
-											"title": "修改"
-										})
-										.append( $("<i/>", {"class": "fa fa-pencil"}) )
-									)
-			                    )
+			                    .append( $div )
 			                );
 			            return options.html();
 			        }
@@ -1191,14 +1223,18 @@
 
 		                selectCount % 2 != 1 ?
 		                    $checkboxs.each(function() {
-		                        $(this).prop("checked", false);
-		                        $(this).removeClass("toggleon");
-		                        $(this).closest("tr").removeClass("selected");
+		                    	if(!$(this).is(':disabled')){
+			                        $(this).prop("checked", false);
+			                        $(this).removeClass("toggleon");
+			                        $(this).closest("tr").removeClass("selected");
+		                    	}
 		                    }) :
 		                    $checkboxs.each(function() {
-		                        $(this).prop("checked", true);
-		                        $(this).addClass("toggleon");
-		                        $(this).closest("tr").addClass("selected");
+		                    	if(!$(this).is(':disabled')){
+			                        $(this).prop("checked", true);
+			                        $(this).addClass("toggleon");
+			                        $(this).closest("tr").addClass("selected");
+		                    	}
 		                    });
 		            }
 		        },{

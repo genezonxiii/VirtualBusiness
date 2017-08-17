@@ -2,6 +2,7 @@ package tw.com.aber.invmanual.controller;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Type;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -11,7 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,15 +27,19 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
+import tw.com.aber.inv.controller.InvoiceApi;
 import tw.com.aber.inv.vo.Amount;
 import tw.com.aber.inv.vo.Buyer;
 import tw.com.aber.inv.vo.Details;
+import tw.com.aber.inv.vo.Index;
 import tw.com.aber.inv.vo.Invoice;
 import tw.com.aber.inv.vo.Main;
 import tw.com.aber.inv.vo.ProductItem;
 import tw.com.aber.inv.vo.Seller;
 import tw.com.aber.util.Util;
+import tw.com.aber.vo.AllocInvVo;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.InvManualDetailVO;
 import tw.com.aber.vo.InvManualVO;
@@ -300,119 +307,147 @@ public class InvManual extends HttpServlet {
 			resp.getWriter().write(result);
 		} else if ("issueTheInvoice".equals(action)) {
 			String ids = req.getParameter("ids");
-			String[] idsArr = req.getParameter("ids").split(",");
-			ids = "";
+			String[] idsArr = ids.split(",");
 
 			InvManualVO invManualVO = null;
+			
+			List<Map<String, String>>list = new ArrayList<Map<String,String>>();
+			
+			try {
+				GroupVO groupVO = service.getGroupInvoiceInfo(groupId);
 
-			GroupVO groupVO = service.getGroupInvoiceInfo(groupId);
+				for (String inv_manual_id : idsArr) {
+					invManualVO = service.selectInvManualByInvManualId(groupId, inv_manual_id);
 
-			for (String inv_manual_id : idsArr) {
-				invManualVO = service.selectInvManualByInvManualId(groupId, inv_manual_id);
+					InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+					invManualDetailVO.setGroup_id(groupId);
+					invManualDetailVO.setInv_manual_id(inv_manual_id);
+					List<InvManualDetailVO> detailVOs = service.searchInvManualDetailByInvManualId(invManualDetailVO);
 
-				InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
-				invManualDetailVO.setGroup_id(groupId);
-				invManualDetailVO.setInv_manual_id(inv_manual_id);
-				List<InvManualDetailVO> detailVOs = service.searchInvManualDetailByInvManualId(invManualDetailVO);
+					List<ProductItem> productItems = new ArrayList<ProductItem>();
 
-				List<ProductItem> productItems = new ArrayList<ProductItem>();
+					for (int i = 0; i < detailVOs.size(); i++) {
 
-				for (int i = 0; i < detailVOs.size(); i++) {
+						ProductItem productItem = new ProductItem();
+						productItem.setDescription(detailVOs.get(i).getDescription());
+						productItem.setQuantity(util.null2str(detailVOs.get(i).getQuantity()));
+						productItem.setUnitPrice(util.null2str(detailVOs.get(i).getPrice()));
+						productItem.setAmount(util.null2str(detailVOs.get(i).getSubtotal()));
+						productItem.setSequenceNumber(util.null2str(i + 1));
 
-					ProductItem productItem = new ProductItem();
-					productItem.setDescription(detailVOs.get(i).getDescription());
-					productItem.setQuantity(util.null2str(detailVOs.get(i).getQuantity()));
-					productItem.setUnitPrice(util.null2str(detailVOs.get(i).getPrice()));
-					productItem.setAmount(util.null2str(detailVOs.get(i).getSubtotal()));
-					productItem.setSequenceNumber(util.null2str(i + 1));
+						productItems.add(productItem);
+					}
+					Details details = new Details();
+					details.setProductItem(productItems);
 
-					productItems.add(productItem);
+					Amount amount = new Amount();
+					Integer amountVal = invManualVO.getAmount();
+					amount.setSalesAmount(util.null2str(amountVal));
+
+					Integer taxType = invManualVO.getTax_type();
+					Float taxRate = 0F;
+					if (taxType == 1) {
+						taxRate = 0.05F;
+					}
+					Integer taxAmount = 0;
+					taxAmount = Math.round(amountVal * taxRate);
+
+					amount.setTaxType(util.null2str(taxType));
+					amount.setTaxRate(util.null2str(taxRate));
+					amount.setTaxAmount(util.null2str(taxAmount));
+					amount.setTotalAmount(util.null2str(amountVal + taxAmount));
+
+					String sellerId = null, sellerName = null, buyerId = null, buyName = null;
+					// 二聯式
+					if ("1".equals(invManualVO.getInvoice_type())) {
+						sellerId = "";
+						sellerName = "";
+						buyerId = "";
+						buyName = "";
+					}
+					// 三聯式
+					if ("2".equals(invManualVO.getInvoice_type())) {
+						sellerId = groupVO.getGroup_unicode();
+						sellerName = groupVO.getGroup_name();
+						buyerId = invManualVO.getUnicode();
+						buyName = invManualVO.getTitle();
+					}
+					Seller seller = new Seller();
+					seller.setIdentifier(sellerId);
+					seller.setName(sellerName);
+
+					Buyer buyer = new Buyer();
+					buyer.setIdentifier(buyerId);
+					buyer.setName(buyName);
+
+					// 發票號碼
+					InvoiceTrackVO invoiceTrackVO = service.getInvoiceNum(groupId, invManualVO.getInvoice_date());
+					String invoiceNum = invoiceTrackVO.getInvoiceNum();
+
+					logger.debug("invoiceNum: " + invoiceNum);
+
+					if (invoiceNum == null || "".equals(invoiceNum)) {
+						resp.getWriter().write("發票字軌用罄，請洽系統管理員");
+						return;
+					}
+
+					Main main = new Main();
+					main.setInvoiceNumber(invoiceNum);
+					main.setInvoiceDate(util.null2str(invManualVO.getInvoice_date()));
+					main.setInvoiceTime("00:00:00");
+
+					if (taxType == 2) {
+						main.setCustomsClearanceMark("1");
+					}
+
+					String voiceType = "07";
+
+					main.setInvoiceType(voiceType);
+					main.setDonateMark("0");
+					main.setPrintMark("Y");
+
+					main.setSeller(seller);
+					main.setBuyer(buyer);
+
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					java.util.Date date = new java.util.Date();
+					String ymdhms = sdf.format(date);
+
+					Invoice invoice = new Invoice();
+					invoice.setInvoiceCode("A0401");
+					invoice.setPosSn(groupVO.getInvoice_key());
+					invoice.setPosId(groupVO.getInvoice_posno());
+					invoice.setSysTime(ymdhms);
+
+					invoice.setMain(main);
+					invoice.setDetails(details);
+					invoice.setAmount(amount);
+
+					StringWriter sw = new StringWriter();
+					JAXB.marshal(invoice, sw);
+					logger.debug(sw.toString());
+					String reqXml = sw.toString();
+					InvoiceApi api = new InvoiceApi();
+
+					String resXml =api.sendXML(reqXml);
+
+					invManualVO = new InvManualVO();
+					invManualVO.setGroup_id(groupId);
+					invManualVO.setInvoice_no(invoiceNum);
+					invManualVO.setInv_manual_id(inv_manual_id);
+					invManualVO.setInv_flag(1);
+					service.updateInvManualInvFlag(invManualVO);
+					
+					Index index = api.getIndexResponse(resXml);
+					Map<String, String> map = new HashMap<String, String>();
+					map.put("invoice_no", invoiceNum);
+					map.put("message", index.getMessage());
+					list.add(map);
 				}
-				Details details = new Details();
-				details.setProductItem(productItems);
-
-				Amount amount = new Amount();
-				Integer amountVal = invManualVO.getAmount();
-				amount.setSalesAmount(util.null2str(amountVal));
-
-				Integer taxType = invManualVO.getTax_type();
-				Float taxRate = 0F;
-				if (taxType == 1) {
-					taxRate = 0.05F;
-				}
-				Integer taxAmount = 0;
-				taxAmount = Math.round(amountVal * taxRate);
-
-				amount.setTaxType(util.null2str(taxType));
-				amount.setTaxRate(util.null2str(taxRate));
-				amount.setTaxAmount(util.null2str(taxAmount));
-				amount.setTotalAmount(util.null2str(amountVal + taxAmount));
-
-				Seller seller = new Seller();
-				seller.setIdentifier(groupVO.getGroup_unicode());
-				seller.setName(groupVO.getGroup_name());
-
-				Buyer buyer = new Buyer();
-				buyer.setIdentifier(invManualVO.getUnicode());
-				buyer.setName(invManualVO.getTitle());
-
-				// 發票號碼
-				InvoiceTrackVO invoiceTrackVO = service.getInvoiceNum(groupId, invManualVO.getInvoice_date());
-				String invoiceNum = invoiceTrackVO.getInvoiceNum();
-
-				logger.debug("invoiceNum: " + invoiceNum);
-
-				if (invoiceNum == null || "".equals(invoiceNum)) {
-					resp.getWriter().write("發票字軌用罄，請洽系統管理員");
-					return;
-				}
-
-				Main main = new Main();
-				main.setInvoiceNumber(invoiceNum);
-				main.setInvoiceDate(util.null2str(invManualVO.getInvoice_date()));
-				main.setInvoiceTime("00:00:00");
-
-				String voiceType = "0";
-				if (invManualVO.getInvoice_type() == "1") {
-					voiceType += "2";
-				}
-				if (invManualVO.getInvoice_type() == "2") {
-					voiceType += "1";
-				}
-				main.setInvoiceType(voiceType);
-				main.setDonateMark("0");
-				main.setPrintMark("Y");
-
-				main.setSeller(seller);
-				main.setBuyer(buyer);
-
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				java.util.Date date = new java.util.Date();
-				String ymdhms = sdf.format(date);
-
-				Invoice invoice = new Invoice();
-				invoice.setInvoiceCode("A0401");
-				invoice.setPosSn(groupVO.getInvoice_key());
-				invoice.setPosId(groupVO.getInvoice_posno());
-				invoice.setSysTime(ymdhms);
-
-				invoice.setMain(main);
-				invoice.setDetails(details);
-				invoice.setAmount(amount);
-
-				StringWriter sw = new StringWriter();
-				JAXB.marshal(invoice, sw);
-				logger.debug(sw.toString());
-				String reqXml = sw.toString();
-
-				ids += ",'" + inv_manual_id + "'";
+			} catch (Exception e) {
+				logger.error(e.getMessage());
 			}
-			ids = ids.substring(1, ids.length());
-			invManualVO = new InvManualVO();
-			invManualVO.setGroup_id(groupId);
-			invManualVO.setInv_manual_id(ids);
-			invManualVO.setInv_flag(1);
-			service.updateInvManualInvFlag(invManualVO);
+			resp.getWriter().write(new Gson().toJson(list));
 		}
 	}
 
@@ -495,7 +530,7 @@ public class InvManual extends HttpServlet {
 		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
-		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?)";
+		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?)";
 
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
@@ -673,6 +708,7 @@ public class InvManual extends HttpServlet {
 					row.setQuantity(rs.getInt("quantity"));
 					row.setPrice(rs.getInt("price"));
 					row.setSubtotal(rs.getInt("subtotal"));
+					row.setInv_flag(rs.getInt("inv_flag"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -1055,8 +1091,9 @@ public class InvManual extends HttpServlet {
 				cs = con.prepareCall(sp_update_inv_manual_inv_flag);
 
 				cs.setString(1, invManualVO.getGroup_id());
-				cs.setInt(2, invManualVO.getInv_flag());
-				cs.setString(3, invManualVO.getInv_manual_id());
+				cs.setString(2, invManualVO.getInvoice_no());
+				cs.setInt(3, invManualVO.getInv_flag());
+				cs.setString(4, invManualVO.getInv_manual_id());
 				cs.execute();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());

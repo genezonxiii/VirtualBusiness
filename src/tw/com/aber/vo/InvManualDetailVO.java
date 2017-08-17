@@ -13,6 +13,16 @@ public class InvManualDetailVO implements Serializable {
 	private Integer quantity;
 	private Integer subtotal;
 
+	private Integer inv_flag;// tb_invManual
+
+	public Integer getInv_flag() {
+		return inv_flag;
+	}
+
+	public void setInv_flag(Integer inv_flag) {
+		this.inv_flag = inv_flag;
+	}
+
 	public String getInv_manual_detail_id() {
 		return inv_manual_detail_id;
 	}

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "Main")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = { "invoiceNumber", "invoiceDate", "invoiceTime", "seller", "buyer", "invoiceType", "donateMark",
-		"printMark" })
+		"printMark","customsClearanceMark" })
 public class Main {
 	private static final long serialVersionUID = 1L;
 	
@@ -60,6 +60,20 @@ public class Main {
 	 */
 	@XmlElement(name = "PrintMark")
 	public String printMark;
+
+	/*
+	 * A0401
+	 */
+	@XmlElement(name = "CustomsClearanceMark")
+	public String customsClearanceMark;
+	
+	public String getCustomsClearanceMark() {
+		return customsClearanceMark;
+	}
+
+	public void setCustomsClearanceMark(String customsClearanceMark) {
+		this.customsClearanceMark = customsClearanceMark;
+	}
 
 	public String getInvoiceNumber() {
 		return invoiceNumber;
