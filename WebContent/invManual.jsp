@@ -1182,6 +1182,10 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
+			        	var $drawer =
+			        		$("<div/>", {
+		                        "class": "table-row-func btn-in-table btn-gray"
+		                    });
 			        	
 			        	var $div =
 			        		$("<div/>", {
@@ -1199,13 +1203,13 @@
 										"class": "btn-in-table btn-darkblue btn_update",
 										"title": "修改"
 									}).append( $("<i/>", {"class": "fa fa-pencil"}) )
-								);			        		
+								);
+			        	}else{
+		        			$drawer.attr('title', '因為主單已開立發票，功能禁用!')
 			        	}
 			        	
 			            var options = $("<div/>")
-			                .append($("<div/>", {
-			                        "class": "table-row-func btn-in-table btn-gray"
-			                    })
+			                .append( $drawer
 			                    .append($("<i/>", {
 			                        "class": "fa fa-ellipsis-h"
 			                    }))
