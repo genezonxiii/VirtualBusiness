@@ -1205,7 +1205,7 @@
 									}).append( $("<i/>", {"class": "fa fa-pencil"}) )
 								);
 			        	}else{
-		        			$drawer.attr('title', '因為主單已開立發票，功能禁用!')
+		        			$drawer.attr('title', '已開立發票，功能禁用!')
 			        	}
 			        	
 			            var options = $("<div/>")
