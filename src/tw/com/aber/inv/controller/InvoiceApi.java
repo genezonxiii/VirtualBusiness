@@ -8,11 +8,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -502,10 +502,18 @@ public class InvoiceApi {
 
 		for (int i = 0; i < saleVOsAll_classification.size(); i++) {
 			List<SaleVO> saleVOs = saleVOsAll_classification.get(i);
-			String invoiceNum = saleVOs.get(0).getInvoice();
+			SaleVO saleVO=saleVOs.get(0);
+			String invoiceNum = saleVO.getInvoice();
+			Date invoice_date = saleVO.getInvoice_date();
+			String invoice_vcode = saleVO.getInvoice_vcode();
+			Time invoice_time =saleVO.getInvoice_time();
+			
 			String xmlStr = genRequestForC0401(invoiceNum, saleVOs, groupVO);
-			logger.debug("xmlStr: "+xmlStr);
 
+			xmlStr=this.getInvoicePrintXml(xmlStr, invoice_date, invoice_time, invoice_vcode);
+			
+			logger.debug("printxmlStr: "+xmlStr);
+			
 			printStrList.add(xmlStr);
 
 		}
@@ -526,6 +534,7 @@ public class InvoiceApi {
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm:ss");
 		SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		Date date = new Date();
 		String ymd = dt1.format(date);
 		String hms = dt2.format(date);
@@ -645,7 +654,52 @@ public class InvoiceApi {
 		result = sw.toString();
 		return result;
 	}
+	
 
+	/**********************
+	 * 取得列印發票xml號碼
+	 * 
+	 **********************/
+	public String getInvoicePrintXml(String invoiceXml,Date invoice_date,Time invoice_time,String invoice_vcode) {
+		
+		Invoice invoice=JAXB.unmarshal(new StringReader(invoiceXml), Invoice.class);
+
+		SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm:ss");
+		
+		String ymd = dt1.format(invoice_date);
+		String hms = dt2.format(invoice_time);
+
+		invoice.setA3(ymd);// 發票開立日期
+		invoice.setA4(hms);// 發票開立時間
+		invoice.setA30(invoice_vcode);// 發票防偽隨機碼
+		
+		StringWriter sw = new StringWriter();
+		JAXB.marshal(invoice, sw);
+		sw.toString();
+		
+		return sw.toString();
+	}
+	
+	/**********************
+	 * 取得C0401發票驗證碼
+	 * 
+	 **********************/
+	public String getInvoiceInvoiceVcode(String invoiceXml) {
+		Invoice invoice=JAXB.unmarshal(new StringReader(invoiceXml), Invoice.class);
+		return invoice.getA30();
+	}
+	
+	/**********************
+	 * 取得C0401發票開立時間
+	 * 
+	 **********************/
+	public String getInvoiceInvoice_time(String invoiceXml) {
+		Invoice invoice=JAXB.unmarshal(new StringReader(invoiceXml), Invoice.class);
+		return invoice.getA4();
+	}
+	
+	
 	/*
 	 * 電文加密前置作業
 	 */

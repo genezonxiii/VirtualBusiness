@@ -15,6 +15,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 <title>訂單管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
+<link rel="stylesheet" href="css/buttons.dataTables.min.css">
 <jsp:include page="template/common_css.jsp" flush="true"/>
 </head>
 <body>
@@ -587,27 +588,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                    ids += "'" + this.id + "',";
 	                    row = $(this).closest("tr");
 	                    data = $table.DataTable().row(row).data();
-	                    saleMap.set(data.order_no, (index + 1));
+	                    //saleMap.set(data.order_no, (index + 1));
 	                });
 
-	                if (saleMap.size > 1) {
-	                    message = message.concat('以下為您所勾選的訂單號↓<br><br>');
-	                    var table = document.createElement('table');
-	                    saleMap.forEach(function(value, key, fullArray) {
-	                        var tr = document.createElement('tr');
-	                        var text = document.createTextNode(key);
-	                        tr.appendChild(text);
-	                        table.appendChild(tr);
-	                    });
-	                    var $mes = $('#message #text');
-	                    $mes.val('').html(message).append(table);
-	                    $('#message')
-	                        .dialog()
-	                        .dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-	                        .dialog('option', 'width', '322.6px')
-	                        .dialog('option', 'minHeight', 'auto')
-	                        .dialog("open");
-	                } else { //修改Dialog相關設定
 	                    ids = ids.slice(0, -1);
 	                    var Today = new Date();
 	                    $("#invoice_num_date").val(formatDate())
@@ -646,7 +629,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                                    },
 	                                    success: function(response) {
 	                                        var $mes = $('#message #text');
-	                                        var text = '成功發送<br><br>執行結果為: ' + response;
+	                                        var text = '成功發送<br><br>執行結果為: <br>' + response;
 
 	                                        $mes.val('').html(text);
 
@@ -685,7 +668,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                    });
 	                    dialog_invoice.dialog("open");
 
-	                }
 	            },
 	        }, {
 	            text: '作廢發票',

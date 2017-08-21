@@ -1,6 +1,7 @@
 package tw.com.aber.vo;
 
 import java.sql.Date;
+import java.sql.Time;
 
 public class SaleVO implements java.io.Serializable {
 
@@ -28,6 +29,8 @@ public class SaleVO implements java.io.Serializable {
 	private Boolean isreturn;
 	private String deliveryway;
 	private String message;// 此參數用來存放錯誤訊息
+	private String invoice_vcode;
+	private Time invoice_time;
 
 	public String getMessage() {
 		return message;
@@ -212,4 +215,21 @@ public class SaleVO implements java.io.Serializable {
 	public void setDeliveryway(String deliveryway) {
 		this.deliveryway = deliveryway;
 	}
+
+	public String getInvoice_vcode() {
+		return invoice_vcode;
+	}
+
+	public void setInvoice_vcode(String invoice_vcode) {
+		this.invoice_vcode = invoice_vcode;
+	}
+
+	public Time getInvoice_time() {
+		return invoice_time;
+	}
+
+	public void setInvoice_time(Time invoice_time) {
+		this.invoice_time = invoice_time;
+	}
+	
 }

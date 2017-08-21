@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -344,6 +346,7 @@ public class sale extends HttpServlet {
 				String result = "";
 				String errorMsg = "";
 				java.sql.Date invoice_date;
+				List<InvoiceTrackVO> invoiceTrackVOList = null;
 				try {
 
 					String saleIds = (String) request.getParameter("ids");
@@ -368,39 +371,61 @@ public class sale extends HttpServlet {
 
 					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
 
+					List<List<SaleVO>> groupBySaleVOsList = getGroupBySaleVOsList(saleVOs);
+
 					// 確認資料都沒有發送過
 					for (int i = 0; i < saleVOs.size(); i++) {
 						String invoice = saleVOs.get(i).getInvoice();
-						if ((null != invoice)&&(!"".equals(invoice))) {
-							errorMsg = "很抱歉，該訂單已有發票，不可重複發送";
+						if ((null != invoice) && (!"".equals(invoice))) {
+							String order_no = saleVOs.get(i).getOrder_no();
+							errorMsg = "很抱歉，訂單編號:" + order_no + "已有發票，不可重複發送";
 							response.getWriter().write(errorMsg);
 							return;
 						}
 					}
 
-					// TODO 撈取發票號碼
-					InvoiceTrackVO invoiceTrackVO = saleService.getInvoiceTrack(group_id, invoice_date);
-					String invoiceNum = invoiceTrackVO.getInvoiceNum();
-
-					logger.debug("invoiceNum: " + invoiceNum);
-
-					if (invoiceNum == null || "".equals(invoiceNum)) {
-						errorMsg = "發票字軌用罄，請洽系統管理員";
-						response.getWriter().write(errorMsg);
-						return;
+					try {
+						// TODO 撈取發票號碼
+						invoiceTrackVOList = saleService.getInvoiceTrack(group_id, invoice_date, groupBySaleVOsList);
+					} catch (Exception e) {
+						logger.debug("發票撈取失敗:" + e.getMessage());
+						result = "執行失敗";
 					}
 
-					String reqXml = api.genRequestForC0401(invoiceNum, saleVOs, groupVO);
-					String resXml = api.sendXML(reqXml);
-					Index index = api.getIndexResponse(resXml);
+					// groupBySaleVOsList.size=invoiceTrackVOList.size=order_no數量
+					for (int i = 0; i < invoiceTrackVOList.size(); i++) {
+						InvoiceTrackVO invoiceTrackVO = invoiceTrackVOList.get(i);
+						List<SaleVO> sameOrderNoSaleVOList = groupBySaleVOsList.get(i);
+						String invoiceNum = invoiceTrackVO.getInvoiceNum();
 
-					if ("1".equals(index.getReply())) {// 0失敗 1 成功
-						saleService.updateSaleInvoice(saleVOs, invoiceTrackVO, invoice_date);
+						logger.debug("invoiceNum: " + invoiceNum);
+
+						if (invoiceNum == null || "".equals(invoiceNum)) {
+							errorMsg = "發票字軌用罄，請洽系統管理員";
+							response.getWriter().write(errorMsg);
+							return;
+						}
+
+						String reqXml = api.genRequestForC0401(invoiceNum, sameOrderNoSaleVOList, groupVO);
+						String resXml = api.sendXML(reqXml);
+						Index index = api.getIndexResponse(resXml);
+
+						if ("1".equals(index.getReply())) {// 0失敗 1 成功
+							String InvoiceVcode = api.getInvoiceInvoiceVcode(reqXml);
+
+							String invoice_time = api.getInvoiceInvoice_time(reqXml);
+
+							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, InvoiceVcode,invoice_time);
+							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date);
+							
+						}
+						result = result + "訂單編號:" + sameOrderNoSaleVOList.get(0).getOrder_no() + index.getMessage()
+								+ "<br/>";
 					}
 
-					result = index.getMessage();
 				} catch (Exception e) {
-					result = "false";
+					logger.debug("error:" + e.getMessage());
+					result = "執行失敗";
 				}
 				response.getWriter().write(result);
 			} else if ("invoice_cancel".equals(action)) {
@@ -540,6 +565,35 @@ public class sale extends HttpServlet {
 		}
 		return responseVO;
 	}
+	
+	public List<List<SaleVO>> getGroupBySaleVOsList(List<SaleVO> saleVOs) {
+		List<List<SaleVO>> groupBySaleVOsList = new ArrayList<List<SaleVO>>();
+		List<SaleVO> sameOrderNoList = new ArrayList<SaleVO>();
+
+		String order_no_record = "";
+		String order_no_now = "";
+
+		for (int i = 0; i < saleVOs.size(); i++) {
+			SaleVO saleVO = saleVOs.get(i);
+			order_no_now = saleVO.getOrder_no();
+			if(i==0){
+				order_no_record = order_no_now;
+			}
+
+			if (!(order_no_now.equals(order_no_record))) {
+				order_no_record = order_no_now;
+				groupBySaleVOsList.add(sameOrderNoList);
+				sameOrderNoList = new ArrayList<SaleVO>();
+			}
+			sameOrderNoList.add(saleVO);
+
+			if (i == (saleVOs.size() - 1)) {
+				groupBySaleVOsList.add(sameOrderNoList);
+			}
+		}
+
+		return groupBySaleVOsList;
+	}
 
 	interface sale_interface {
 
@@ -581,6 +635,9 @@ public class sale extends HttpServlet {
 		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date);
 		
 		public void invoiceCancel(String group_id,String sale_ids);
+		
+		public void updateSaleInvoiceVcodeAndInvoice_time(List<SaleVO> SaleVOs,String InvoiceVcode,String Invoice_time);
+		
 
 	}
 
@@ -658,8 +715,20 @@ public class sale extends HttpServlet {
 			return dao.getGroupInvoiceInfo(groupId);
 		}
 		
-		public InvoiceTrackVO getInvoiceTrack(String group_id,Date invoice_num_date){
-			return dao.getInvoiceTrack(group_id, invoice_num_date);
+		public List <InvoiceTrackVO> getInvoiceTrack(String group_id,Date invoice_num_date,List<List<SaleVO>> groupBySaleVOsList){
+			List <InvoiceTrackVO> invoiceTrackVOList = new ArrayList<InvoiceTrackVO>();
+			
+			for (int i = 0; i < groupBySaleVOsList.size(); i++) {
+				InvoiceTrackVO invoiceTrackVO = dao.getInvoiceTrack(group_id, invoice_num_date);
+				
+				invoiceTrackVOList.add(invoiceTrackVO);
+			}	
+			
+			return invoiceTrackVOList;
+		}
+		public void updateSaleInvoiceVcodeAndInvoice_time(List<SaleVO> SaleVOs,String InvoiceVcode,String Invoice_time){
+			dao.updateSaleInvoiceVcodeAndInvoice_time(SaleVOs , InvoiceVcode, Invoice_time);
+
 		}
 		
 		public void updateSaleInvoice(List<SaleVO> SaleVOs,InvoiceTrackVO invoiceTrackVO,Date invoice_num_date){
@@ -716,6 +785,8 @@ public class sale extends HttpServlet {
 		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 		private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
 		private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?)";
+		private static final String sp_update_sale_invoice_vcode_and_invoice_time = "call sp_update_sale_invoice_vcode_and_invoice_time(?,?,?,?)";
+		
 
 
 		@Override
@@ -1460,6 +1531,9 @@ public class sale extends HttpServlet {
 					saleVO.setOrder_source(rs.getString("order_source"));
 					saleVO.setCustomer_id(rs.getString("customer_id"));
 					saleVO.setName(rs.getString("name"));
+					saleVO.setInvoice_date(rs.getDate("invoice_date"));
+					saleVO.setInvoice_vcode(rs.getString("invoice_vcode"));
+					saleVO.setInvoice_time(rs.getTime("invoice_time"));
 					list.add(saleVO); // Store the row in the list
 				}
 			} catch (SQLException se) {
@@ -1643,6 +1717,56 @@ public class sale extends HttpServlet {
 				pstmt.setString(2, sale_ids);
 				pstmt.execute();
 
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+		}
+
+		@Override
+		public void updateSaleInvoiceVcodeAndInvoice_time(List<SaleVO> SaleVOs, String InvoiceVcode,String Invoice_time) {
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			Time timeValue = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				
+				DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+		
+				try {
+					timeValue = new Time(formatter.parse(Invoice_time).getTime());
+				} catch (ParseException e) {
+					logger.debug("time_error:"+e.getMessage());
+				}
+				
+				for(int i =0;i<SaleVOs.size();i++){
+					
+					pstmt = con.prepareStatement(sp_update_sale_invoice_vcode_and_invoice_time);
+					pstmt.setString(1, SaleVOs.get(i).getGroup_id());
+					pstmt.setString(2, SaleVOs.get(i).getSale_id());
+					pstmt.setString(3, InvoiceVcode);
+					pstmt.setTime(4, timeValue);
+					pstmt.executeUpdate();
+				}
+			
+			
+
+			
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
