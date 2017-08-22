@@ -213,7 +213,7 @@
 	            },
 	            'price': {
 	                required: true,
-	                digits:true
+	                number:true
 	            },
 	            'quantity': {
 	                required: true,
@@ -1166,6 +1166,10 @@
 				},{
 					"title" : "小計",
 					"data" : "subtotal",
+					"defaultContent" : ""
+				},{
+					"title" : "備註",
+					"data" : "memo",
 					"defaultContent" : ""
 				}, {
 			        "title": "功能",
