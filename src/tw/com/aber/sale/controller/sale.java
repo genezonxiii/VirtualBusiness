@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -347,6 +348,8 @@ public class sale extends HttpServlet {
 				String errorMsg = "";
 				java.sql.Date invoice_date;
 				List<InvoiceTrackVO> invoiceTrackVOList = null;
+				HashSet<String> order_noSet = new HashSet<String>();
+				HashSet<SaleVO> revomeSet = new HashSet<SaleVO>();;
 				try {
 
 					String saleIds = (String) request.getParameter("ids");
@@ -371,18 +374,24 @@ public class sale extends HttpServlet {
 
 					List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByIds(group_id, saleIds);
 
-					List<List<SaleVO>> groupBySaleVOsList = getGroupBySaleVOsList(saleVOs);
-
 					// 確認資料都沒有發送過
 					for (int i = 0; i < saleVOs.size(); i++) {
 						String invoice = saleVOs.get(i).getInvoice();
 						if ((null != invoice) && (!"".equals(invoice))) {
 							String order_no = saleVOs.get(i).getOrder_no();
-							errorMsg = "很抱歉，訂單編號:" + order_no + "已有發票，不可重複發送";
-							response.getWriter().write(errorMsg);
-							return;
+							// 已有發票的order_no
+							order_noSet.add(order_no);
+							// 紀錄要移除的
+							revomeSet.add(saleVOs.get(i));
 						}
 					}
+
+					// 移除有開發票的
+					for (SaleVO saleVO : revomeSet) {
+						saleVOs.remove(saleVO);
+					}
+
+					List<List<SaleVO>> groupBySaleVOsList = getGroupBySaleVOsList(saleVOs);
 
 					try {
 						// TODO 撈取發票號碼
@@ -415,9 +424,16 @@ public class sale extends HttpServlet {
 
 							String invoice_time = api.getInvoiceInvoice_time(reqXml);
 
-							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, InvoiceVcode,invoice_time);
+							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, InvoiceVcode,
+									invoice_time);
 							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date);
-							
+
+						}
+
+						if (order_noSet.size() > 0) {
+							for (String order_no : order_noSet) {
+								result = result + "很抱歉，訂單編號:" + order_no + "已有發票，不可重複發送<br/>";
+							}
 						}
 						result = result + "訂單編號:" + sameOrderNoSaleVOList.get(0).getOrder_no() + index.getMessage()
 								+ "<br/>";

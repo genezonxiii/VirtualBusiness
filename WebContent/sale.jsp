@@ -580,7 +580,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 
 	                if ($checkboxs.length == 0) {
-	                    alert('請至少選擇一筆資料');
+						dialogMsg('提示','請選擇一筆資料');
 	                    return false;
 	                }
 
@@ -685,7 +685,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 
 	                if ($checkboxs.length == 0) {
-	                    alert('請至少選擇一筆資料');
+						dialogMsg('提示','請選擇一筆資料');
 	                    return false;
 	                }
 
@@ -812,7 +812,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 
 	                if ($checkboxs.length == 0) {
-	                    alert('請至少選擇一筆資料');
+						dialogMsg('提示','請選擇一筆資料');
 	                    return false;
 	                }
 
@@ -843,7 +843,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                        var json_obj = $.parseJSON(response);
 
 	                        if (json_obj.error.length > 0) {
-	                            alert(json_obj.error);
+								dialogMsg('提示',json_obj.error);
 	                            return;
 	                        }
 	                        if (json_obj.isSuccess == false) {
@@ -1135,9 +1135,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                        }
 	                        if (cus_id.length < 1 &&
 	                            $("#dialog-form-insert input[name='name']").val().length > 0) {
-	                            alert("查無客戶: '" +
-	                                $("#dialog-form-insert input[name='name']").val() +
-	                                "'\n 請先至客戶管理介面新增");
+	                        	dialogMsg('提示',"查無客戶: '" +
+		                                $("#dialog-form-insert input[name='name']").val() +
+		                                "'\n 請先至客戶管理介面新增");     
 	                            return;
 	                        }
 
@@ -1246,9 +1246,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 	                        if (cus_id.length < 1 &&
 	                            $("#dialog-form-update input[name='name']").val().length > 0) {
-	                            alert("查無客戶: '" +
-	                                $("#dialog-form-update input[name='name']").val() +
-	                                "'\n 請先至客戶管理介面新增");
+	                        	dialogMsg('提示',"查無客戶: '" +
+		                                $("#dialog-form-update input[name='name']").val() +
+		                                "'\n 請先至客戶管理介面新增");
 	                            return;
 	                        }
 
