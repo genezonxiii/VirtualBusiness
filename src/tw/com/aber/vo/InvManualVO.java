@@ -15,6 +15,8 @@ public class InvManualVO implements Serializable {
 	private Date invoice_date;
 	private String title;
 	private String unicode;
+	private String address;
+	private String memo;
 	private Integer amount;
 	private Integer tax_type;
 	private Integer inv_flag;
@@ -109,6 +111,22 @@ public class InvManualVO implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 
 }

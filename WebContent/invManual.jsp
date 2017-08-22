@@ -88,6 +88,12 @@
 						<td>統一編號</td><td><input type="text" name="unicode"></td>
 					</tr>
 					<tr>
+						<td>地址</td><td><input type="text" name="address"></td>
+					</tr>
+					<tr>
+						<td>備註</td><td><input type="text" name="memo"></td>
+					</tr>
+					<tr>
 						<td>課稅別</td>
 						<td>
 							<input id="invoice-tax-type-radio-1" type="radio" name="invoice-tax-type-radio-group">
@@ -139,6 +145,9 @@
 					</tr>
 					<tr>
 						<td>小計</td><td><input type="text" name="subtotal" placeholder="系統自動產生" disabled></td>
+					</tr>
+					<tr>
+						<td>備註</td><td><input type="text" name="memo"></td>
 					</tr>
 				</table>
 			</fieldset>
@@ -284,6 +293,8 @@
 									
 									var title = $( "input[name='title']", $dialog ).val();
 									var unicode = $( "input[name='unicode']", $dialog ).val();
+									var address = $( "input[name='address']", $dialog ).val();
+									var memo = $( "input[name='memo']", $dialog ).val();
 									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
 									
 									console.log('invoice_type: '+ invoice_type);
@@ -300,6 +311,8 @@
 											invoice_type: invoice_type,
 											title: title,
 											unicode:  unicode,
+											address: address,
+											memo: memo,
 											invoice_date: invoice_date,
 											tax_type: tax_type
 										},
@@ -422,11 +435,13 @@
         	var $quantity = $dialog.find('input[name=quantity]');
         	var $description = $dialog.find('input[name=description]');
         	var $subtotal = $dialog.find('input[name=subtotal]');
+        	var $memo = $dialog.find('input[name=memo]');
 
         	$price.val(data.price);
 			$quantity.val(data.quantity);
 			$description.val(data.description);
 			$subtotal.val(data.subtotal);
+			$memo.val(data.memo);
 			
         	$dialog.find('input[name=price],input[name=quantity]').change(function(){
         		var subtotalVal = $price.val()* $quantity.val();
@@ -464,7 +479,8 @@
 											price: $price.val(),
 											quantity: $quantity.val(),
 											description: $description.val(),
-											subtotal: $subtotal.val()
+											subtotal: $subtotal.val(),
+											memo: $memo.val()
 										},
 										beforeSend: function(){
 										    $(':hover').css('cursor','progress');
@@ -599,6 +615,8 @@
 			$dialog.find('input[name=title]').val(data.title);
 			$dialog.find('input[name=invoice_no]').val(data.invoice_no);
 			$dialog.find('input[name=unicode]').val(data.unicode);
+			$dialog.find('input[name=address]').val(data.address);
+			$dialog.find('input[name=memo]').val(data.memo);
 // 			$( '#invoice-type-radio-'+ data.invoice_type ).prop("checked", true);
 			$( '#invoice-tax-type-radio-'+ data.tax_type ).prop("checked", true);
 			
@@ -643,6 +661,8 @@
 									
 									var title = $( "input[name='title']", $dialog ).val();
 									var unicode = $( "input[name='unicode']", $dialog ).val();
+									var address = $( "input[name='address']", $dialog ).val();
+									var memo = $( "input[name='memo']", $dialog ).val();
 									var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
 									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
 									
@@ -660,6 +680,8 @@
 											invoice_type: invoice_type,
 											title: title,
 											unicode:  unicode,
+											address: address,
+											memo: memo,
 											invoice_no: invoice_no,
 											invoice_date: invoice_date,
 											tax_type: tax_type
@@ -1321,6 +1343,7 @@
 		            	var $quantity = $dialog.find('input[name=quantity]');
 		            	var $description = $dialog.find('input[name=description]');
 		            	var $subtotal = $dialog.find('input[name=subtotal]');
+		            	var $memo = $dialog.find('input[name=memo]');
 
 
 		            	$dialog.find('input[name=price],input[name=quantity]').change(function(){
@@ -1358,7 +1381,8 @@
 			    										price: $price.val(),
 			    										quantity: $quantity.val(),
 			    										description: $description.val(),
-			    										subtotal: $subtotal.val()
+			    										subtotal: $subtotal.val(),
+			    										memo: $memo.val()
 			    									},
 			    									beforeSend: function(){
 			    									    $(':hover').css('cursor','progress');

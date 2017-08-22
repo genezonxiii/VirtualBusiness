@@ -90,6 +90,8 @@ public class InvManual extends HttpServlet {
 			String invoice_type = req.getParameter("invoice_type");
 			String title = req.getParameter("title");
 			String unicode = req.getParameter("unicode");
+			String address = req.getParameter("address");
+			String memo = req.getParameter("memo");
 			String invoice_date_str = req.getParameter("invoice_date");
 			String tax_type = req.getParameter("tax_type");
 			String result = "OK";
@@ -136,6 +138,8 @@ public class InvManual extends HttpServlet {
 				invManualVO.setInvoice_date(invoice_date);
 				invManualVO.setTitle(title);
 				invManualVO.setUnicode(unicode);
+				invManualVO.setAddress(address);
+				invManualVO.setMemo(memo);
 				invManualVO.setTax_type(Integer.valueOf(tax_type));
 
 				service.insertInvManual(invManualVO);
@@ -165,6 +169,7 @@ public class InvManual extends HttpServlet {
 			String quantity = req.getParameter("quantity");
 			String description = req.getParameter("description");
 			String subtotal = req.getParameter("subtotal");
+			String memo = req.getParameter("memo");
 			String result = "OK";
 			logger.debug("inv_manual_id: {} \\ price: {} \\ quantity: {} \\ description: {} \\ subtotal: {}",
 					inv_manual_id, price, quantity, description, subtotal);
@@ -176,6 +181,7 @@ public class InvManual extends HttpServlet {
 				invManualDetailVO.setQuantity(Integer.valueOf(quantity));
 				invManualDetailVO.setDescription(description);
 				invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
+				invManualDetailVO.setMemo(memo);
 				service.insertInvManualDetail(invManualDetailVO);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
@@ -223,6 +229,8 @@ public class InvManual extends HttpServlet {
 			String invoice_type = req.getParameter("invoice_type");
 			String title = req.getParameter("title");
 			String unicode = req.getParameter("unicode");
+			String address = req.getParameter("address");
+			String memo = req.getParameter("memo");
 			String invoice_no = req.getParameter("invoice_no");
 			String invoice_date_str = req.getParameter("invoice_date");
 			String tax_type = req.getParameter("tax_type");
@@ -270,6 +278,8 @@ public class InvManual extends HttpServlet {
 				invManualVO.setInvoice_date(invoice_date);
 				invManualVO.setTitle(title);
 				invManualVO.setUnicode(unicode);
+				invManualVO.setAddress(address);
+				invManualVO.setMemo(memo);
 				invManualVO.setTax_type(Integer.valueOf(tax_type));
 
 				service.updateInvManual(invManualVO);
@@ -286,6 +296,7 @@ public class InvManual extends HttpServlet {
 			String quantity = req.getParameter("quantity");
 			String description = req.getParameter("description");
 			String subtotal = req.getParameter("subtotal");
+			String memo = req.getParameter("memo");
 			String result = "OK";
 			logger.debug(
 					"inv_manual_detail_id:{} \\inv_manual_id: {} \\ price: {} \\ quantity: {} \\ description: {} \\ subtotal: {}",
@@ -299,6 +310,7 @@ public class InvManual extends HttpServlet {
 				invManualDetailVO.setQuantity(Integer.valueOf(quantity));
 				invManualDetailVO.setDescription(description);
 				invManualDetailVO.setSubtotal(Integer.valueOf(subtotal));
+				invManualDetailVO.setMemo(memo);
 				service.updateInvManualDetail(invManualDetailVO);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
@@ -520,13 +532,13 @@ public class InvManual extends HttpServlet {
 
 		private static final String sp_select_all_inv_manual = "call sp_select_all_inv_manual (?)";
 		private static final String sp_select_inv_manual_by_invoice_date = "call sp_select_inv_manual_by_invoice_date (?,?,?)";
-		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?)";
+		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?,?,?,?)";
 		private static final String sp_select_inv_manual_detail_by_inv_manual_id = "call sp_select_inv_manual_detail_by_inv_manual_id(?,?)";
-		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?)";
+		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?,?)";
 		private static final String sp_del_inv_manual_detail = "call sp_del_inv_manual_detail(?,?,?)";
 		private static final String sp_del_inv_manual = "call sp_del_inv_manual(?,?)";
-		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?)";
-		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?)";
+		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?,?)";
 		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
@@ -558,6 +570,8 @@ public class InvManual extends HttpServlet {
 					row.setInvoice_date(rs.getDate("invoice_date"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
+					row.setAddress(rs.getString("address"));
+					row.setMemo(rs.getString("memo"));
 					row.setAmount(rs.getInt("amount"));
 					row.setTax_type(rs.getInt("tax_type"));
 					row.setInv_flag(rs.getInt("inv_flag"));
@@ -615,6 +629,8 @@ public class InvManual extends HttpServlet {
 					row.setInvoice_date(rs.getDate("invoice_date"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
+					row.setAddress(rs.getString("address"));
+					row.setMemo(rs.getString("memo"));
 					row.setAmount(rs.getInt("amount"));
 					row.setInv_flag(rs.getInt("inv_flag"));
 					rows.add(row);
@@ -659,6 +675,9 @@ public class InvManual extends HttpServlet {
 				cs.setDate(4, invManualVO.getInvoice_date());
 				cs.setString(5, invManualVO.getTitle());
 				cs.setString(6, invManualVO.getUnicode());
+				cs.setString(7, invManualVO.getAddress());
+				cs.setString(8, invManualVO.getMemo());
+				cs.setInt(9, invManualVO.getTax_type());
 
 				cs.execute();
 			} catch (SQLException se) {
@@ -709,6 +728,7 @@ public class InvManual extends HttpServlet {
 					row.setPrice(rs.getInt("price"));
 					row.setSubtotal(rs.getInt("subtotal"));
 					row.setInv_flag(rs.getInt("inv_flag"));
+					row.setMemo(rs.getString("memo"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -751,6 +771,7 @@ public class InvManual extends HttpServlet {
 				cs.setInt(4, invManualDetailVO.getPrice());
 				cs.setInt(5, invManualDetailVO.getQuantity());
 				cs.setInt(6, invManualDetailVO.getSubtotal());
+				cs.setString(7, invManualDetailVO.getMemo());
 
 				cs.execute();
 			} catch (SQLException se) {
@@ -858,7 +879,9 @@ public class InvManual extends HttpServlet {
 				cs.setDate(6, invManualVO.getInvoice_date());
 				cs.setString(7, invManualVO.getTitle());
 				cs.setString(8, invManualVO.getUnicode());
-				cs.setInt(9, invManualVO.getTax_type());
+				cs.setString(9, invManualVO.getAddress());
+				cs.setString(10, invManualVO.getMemo());
+				cs.setInt(11, invManualVO.getTax_type());
 
 				cs.execute();
 			} catch (SQLException se) {
@@ -900,6 +923,7 @@ public class InvManual extends HttpServlet {
 				cs.setInt(5, invManualDetailVO.getPrice());
 				cs.setInt(6, invManualDetailVO.getQuantity());
 				cs.setInt(7, invManualDetailVO.getSubtotal());
+				cs.setString(8, invManualDetailVO.getMemo());
 
 				cs.execute();
 			} catch (SQLException se) {

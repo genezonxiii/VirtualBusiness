@@ -12,6 +12,7 @@ public class InvManualDetailVO implements Serializable {
 	private Integer price;
 	private Integer quantity;
 	private Integer subtotal;
+	private String memo;
 
 	private Integer inv_flag;// tb_invManual
 
@@ -81,6 +82,14 @@ public class InvManualDetailVO implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
 
 }
