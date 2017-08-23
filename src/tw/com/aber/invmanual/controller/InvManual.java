@@ -3,6 +3,7 @@ package tw.com.aber.invmanual.controller;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -322,9 +323,9 @@ public class InvManual extends HttpServlet {
 			String[] idsArr = ids.split(",");
 
 			InvManualVO invManualVO = null;
-			
-			List<Map<String, String>>list = new ArrayList<Map<String,String>>();
-			
+
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
 			try {
 				GroupVO groupVO = service.getGroupInvoiceInfo(groupId);
 
@@ -362,7 +363,7 @@ public class InvManual extends HttpServlet {
 						taxRate = 0.05F;
 					}
 					Integer taxAmount = 0;
-					taxAmount = Math.round(amountVal * taxRate);
+					taxAmount = new BigDecimal(amountVal * taxRate).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
 
 					amount.setTaxType(util.null2str(taxType));
 					amount.setTaxRate(util.null2str(taxRate));
@@ -441,7 +442,7 @@ public class InvManual extends HttpServlet {
 					String reqXml = sw.toString();
 					InvoiceApi api = new InvoiceApi();
 
-					String resXml =api.sendXML(reqXml);
+					String resXml = api.sendXML(reqXml);
 
 					invManualVO = new InvManualVO();
 					invManualVO.setGroup_id(groupId);
@@ -449,7 +450,7 @@ public class InvManual extends HttpServlet {
 					invManualVO.setInv_manual_id(inv_manual_id);
 					invManualVO.setInv_flag(1);
 					service.updateInvManualInvFlag(invManualVO);
-					
+
 					Index index = api.getIndexResponse(resXml);
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("invoice_no", invoiceNum);
