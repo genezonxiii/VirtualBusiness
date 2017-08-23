@@ -8,53 +8,58 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Main")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "invoiceNumber", "invoiceDate", "invoiceTime", "seller", "buyer", "invoiceType", "donateMark",
-		"printMark","customsClearanceMark" })
+@XmlType(propOrder = { "invoiceNumber", "invoiceDate", "invoiceTime", "seller", "buyer", "mainRemark", "invoiceType",
+		"donateMark", "printMark", "customsClearanceMark" })
 public class Main {
 	private static final long serialVersionUID = 1L;
-	
+
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "InvoiceNumber")
 	private String invoiceNumber;
-	
+
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "InvoiceDate")
 	public String invoiceDate;
-	
+
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "InvoiceTime")
 	public String invoiceTime;
-	
+
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "Seller")
 	private Seller seller;
-	
+
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "Buyer")
 	private Buyer buyer;
-	
+
+	/*
+	 * A0401
+	 */
+	@XmlElement(name = "MainRemark")
+	private String mainRemark;
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "InvoiceType")
 	private String invoiceType;
-	
+
 	/*
 	 * A0401
 	 */
 	@XmlElement(name = "DonateMark")
 	public String donateMark;
-	
+
 	/*
 	 * A0401
 	 */
@@ -66,7 +71,7 @@ public class Main {
 	 */
 	@XmlElement(name = "CustomsClearanceMark")
 	public String customsClearanceMark;
-	
+
 	public String getCustomsClearanceMark() {
 		return customsClearanceMark;
 	}
@@ -115,6 +120,14 @@ public class Main {
 		this.buyer = buyer;
 	}
 
+	public String getMainRemark() {
+		return mainRemark;
+	}
+
+	public void setMainRemark(String mainRemark) {
+		this.mainRemark = mainRemark;
+	}
+
 	public String getInvoiceType() {
 		return invoiceType;
 	}
@@ -142,5 +155,5 @@ public class Main {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+
 }

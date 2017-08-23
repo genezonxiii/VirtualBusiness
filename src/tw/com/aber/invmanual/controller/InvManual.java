@@ -347,6 +347,7 @@ public class InvManual extends HttpServlet {
 						productItem.setUnitPrice(util.null2str(detailVOs.get(i).getPrice()));
 						productItem.setAmount(util.null2str(detailVOs.get(i).getSubtotal()));
 						productItem.setSequenceNumber(util.null2str(i + 1));
+						productItem.setRemark(util.null2str(detailVOs.get(i).getMemo()));
 
 						productItems.add(productItem);
 					}
@@ -392,6 +393,7 @@ public class InvManual extends HttpServlet {
 					Buyer buyer = new Buyer();
 					buyer.setIdentifier(buyerId);
 					buyer.setName(buyName);
+					buyer.setAddress(invManualVO.getAddress());
 
 					// 發票號碼
 					InvoiceTrackVO invoiceTrackVO = service.getInvoiceNum(groupId, invManualVO.getInvoice_date());
@@ -421,6 +423,7 @@ public class InvManual extends HttpServlet {
 
 					main.setSeller(seller);
 					main.setBuyer(buyer);
+					main.setMainRemark(invManualVO.getMemo());
 
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					java.util.Date date = new java.util.Date();
@@ -1036,6 +1039,8 @@ public class InvManual extends HttpServlet {
 					row.setAmount(rs.getInt("amount"));
 					row.setInv_flag(rs.getInt("inv_flag"));
 					row.setTax_type(rs.getInt("tax_type"));
+					row.setAddress(rs.getString("address"));
+					row.setMemo(rs.getString("memo"));
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());

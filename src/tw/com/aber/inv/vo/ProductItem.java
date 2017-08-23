@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "ProductItem")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "description", "quantity", "unitPrice", "amount", "sequenceNumber" })
+@XmlType(propOrder = { "description", "quantity", "unitPrice", "amount", "sequenceNumber", "remark" })
 public class ProductItem {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +41,20 @@ public class ProductItem {
 	 */
 	@XmlElement(name = "SequenceNumber")
 	private String sequenceNumber;
+
+	/*
+	 * A0401
+	 */
+	@XmlElement(name = "Remark")
+	private String remark;
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getDescription() {
 		return description;

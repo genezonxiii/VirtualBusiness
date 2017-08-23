@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Buyer")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "identifier", "name", "customerNumber" })
+@XmlType(propOrder = { "identifier", "name", "address", "customerNumber" })
 public class Buyer {
 	private static final long serialVersionUID = 1L;
 	/*
@@ -26,8 +26,22 @@ public class Buyer {
 	/*
 	 * A0401
 	 */
+	@XmlElement(name = "Address")
+	private String address;
+
+	/*
+	 * A0401
+	 */
 	@XmlElement(name = "CustomerNumber")
 	private String customerNumber;
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public String getIdentifier() {
 		return identifier;
