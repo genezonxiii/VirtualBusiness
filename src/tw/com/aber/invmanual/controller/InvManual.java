@@ -60,6 +60,7 @@ public class InvManual extends HttpServlet {
 
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
+		
 
 		String groupId = (String) req.getSession().getAttribute("group_id");
 		String userId = (String) req.getSession().getAttribute("user_id");
