@@ -370,9 +370,7 @@
 		    var data = $detailTable.row(row).data();
 		    var inv_manual_id = data.inv_manual_id;
 		    var inv_manual_detail_id = data.inv_manual_detail_id;
-		    
-		    console.log(data);
-		    
+
 			var parameter = {
 					action: 'delete_invoice_detail',
 					inv_manual_id: inv_manual_id,
