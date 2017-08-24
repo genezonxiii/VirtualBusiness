@@ -636,6 +636,7 @@ public class InvManual extends HttpServlet {
 					row.setAddress(rs.getString("address"));
 					row.setMemo(rs.getString("memo"));
 					row.setAmount(rs.getInt("amount"));
+					row.setTax_type(rs.getInt("tax_type"));
 					row.setInv_flag(rs.getInt("inv_flag"));
 					rows.add(row);
 				}
