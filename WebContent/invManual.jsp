@@ -233,12 +233,13 @@
 		$('.input-field-wrap').on('click', '.btn-darkblue', function(event){
 			event.preventDefault();
 
-			if ($detailTable instanceof $.fn.dataTable.Api) {
+// 			if ($detailTable instanceof $.fn.dataTable.Api) {
 // 				$detailTable.destroy();
 // 			    $('#invoice-detail-table').empty();
-			    $('#detailTable').hide();
-			}
-			
+// 			}
+
+			divControl(true, false);
+		    
 			var $form = $('form');
 			var startDate = $form.find('input[type=text]:eq(0)').val();
 			var endDate = $form.find('input[type=text]:eq(1)').val();
@@ -594,12 +595,13 @@
 		    var data = $masterTable.row(row).data();
 		    inv_manual_id = data.inv_manual_id;
 
-			if ($masterTable instanceof $.fn.dataTable.Api) {
+// 			if ($masterTable instanceof $.fn.dataTable.Api) {
 // 			    $masterTable.destroy();
 // 			    $('#invoice-master-table').empty();
-			    $('#masterTable').hide();
-			    $('#detailTable').show();
-			}
+// 			}
+			
+			divControl(false, true);
+		    
 			var parameter = {
 					action: 'query_invoice_detail',
 					inv_manual_id: inv_manual_id
@@ -1426,12 +1428,12 @@
 		            text: '返回主單',
 		            action: function(e, dt, node, config) {
 
-		    			if ($detailTable instanceof $.fn.dataTable.Api) {
+// 		    			if ($detailTable instanceof $.fn.dataTable.Api) {
 // 		    				$detailTable.destroy();
 // 		    			    $('#invoice-detail-table').empty();
-		    			    $('#detailable').hide();
-		    			    $('#masterTable').show();
-		    			}	 
+// 		    			}
+						
+						divControl(true, false);
 		    		    
 		    			var parameter = {
 		    					action: 'query_invoice'
@@ -1440,7 +1442,21 @@
 		            }
 				}]
 			});		
-		};		
+		};
+		
+		function divControl(master, detail){
+			
+			if(master){
+				$('#masterTable').show()
+			}else{
+				$('#masterTable').hide()
+			};
+			if(detail){
+				$('#detailTable').show()
+			}else{
+				$('#detailTable').hide()
+			};
+		}
 	</script>	
 </body>
 </html>
