@@ -977,7 +977,7 @@
 							data = $masterTable.row( $(this).closest("tr") ).data();
 
 		                    if(data.inv_flag!=0){
-		                    	error_msg=error_msg+'<br/> 很抱歉，發票號碼: '+data.invoice_no+'已開立，無法刪除已開立發票。<br/>';
+		                    	error_msg=error_msg+'<br/> 發票號碼: '+data.invoice_no+'已開立，無法刪除已開立發票。<br/>';
 		                    }
 						});
 		                console.log("error_msg :"+error_msg);
@@ -1066,7 +1066,7 @@
 							data = $masterTable.row( $(this).closest("tr") ).data();
 
 		                    if(data.inv_flag!=0){
-		                    	error_msg=error_msg+'<br/> 很抱歉，發票號碼: '+data.invoice_no+'已開立，請勿重複開立發票。<br/>';
+		                    	error_msg=error_msg+'<br/> 發票號碼: '+data.invoice_no+'已開立，請勿重複開立發票。<br/>';
 		                    }
 						});
 		                console.log("error_msg :"+error_msg);
@@ -1172,7 +1172,7 @@
 							data = $masterTable.row( $(this).closest("tr") ).data();
 
 		                    if(data.inv_flag==0){
-		                    	error_msg=error_msg+'<br/> 很抱歉，發票日期: '+data.invoice_date+'，買受人:'+data.title+'未開立，請先開立發票。<br/>';
+		                    	error_msg=error_msg+'<br/> 發票日期: '+data.invoice_date+'，買受人:'+data.title+'未開立，請先開立發票。<br/>';
 		                    }
 						});
 		                console.log("error_msg :"+error_msg);
