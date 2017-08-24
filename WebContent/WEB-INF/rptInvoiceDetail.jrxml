@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoiceDetail" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="7d558491-c0a9-403b-8226-a5ce5ff588d5">
-	<property name="ireport.zoom" value="2.7320538214602847"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="3.0052592036063137"/>
+	<property name="ireport.x" value="364"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -226,7 +226,7 @@
 				<text><![CDATA[V]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="33" width="383" height="24"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="33" width="383" height="35"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.5"/>
@@ -460,7 +460,7 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="45" width="45" height="11"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="45" width="27" height="11"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -468,7 +468,7 @@
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement verticalAlignment="Top">
+				<textElement textAlignment="Justified" verticalAlignment="Top">
 					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
@@ -504,7 +504,7 @@
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="428" y="45" width="96" height="11"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="410" y="45" width="114" height="23"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -512,7 +512,7 @@
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
+				<textElement textAlignment="Justified" verticalAlignment="Top">
 					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="1"/>
 				</textElement>
@@ -549,7 +549,7 @@
 				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="66" y="33" width="317" height="24"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="66" y="33" width="317" height="35"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -579,7 +579,7 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="0" width="141" height="57"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="11" width="141" height="57"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.5"/>

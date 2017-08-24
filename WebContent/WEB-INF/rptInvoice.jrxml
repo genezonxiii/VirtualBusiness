@@ -149,30 +149,30 @@
 					<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").format($F{invoice_date})]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="63" width="144" height="20"/>
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="63" width="241" height="20"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{invoice_no}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="83" width="144" height="20"/>
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="83" width="241" height="20"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="103" width="144" height="20"/>
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="103" width="241" height="20"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{unicode}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="123" width="144" height="20"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="123" width="241" height="28"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 				</textField>
