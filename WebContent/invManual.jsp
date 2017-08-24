@@ -51,8 +51,12 @@
 					<div class="panel-content">
 						<div class="datalistWrap">
 							<div class="row search-result-wrap">
-								<table id="invoice-master-table" class="result-table"></table>
-								<table id="invoice-detail-table" class="result-table"></table>
+								<div id = "masterTable">
+									<table id="invoice-master-table" class="result-table"></table>
+								</div>
+								<div id = "detailTable">
+									<table id="invoice-detail-table" class="result-table"></table>
+								</div>
 							</div>
 						</div>
 					</div>					
@@ -230,8 +234,9 @@
 			event.preventDefault();
 
 			if ($detailTable instanceof $.fn.dataTable.Api) {
-				$detailTable.destroy();
-			    $('#invoice-detail-table').empty();
+// 				$detailTable.destroy();
+// 			    $('#invoice-detail-table').empty();
+			    $('#detailTable').hide();
 			}
 			
 			var $form = $('form');
@@ -592,8 +597,10 @@
 		    inv_manual_id = data.inv_manual_id;
 
 			if ($masterTable instanceof $.fn.dataTable.Api) {
-			    $masterTable.destroy();
-			    $('#invoice-master-table').empty();
+// 			    $masterTable.destroy();
+// 			    $('#invoice-master-table').empty();
+			    $('#masterTable').hide();
+			    $('#detailTable').show();
 			}
 			var parameter = {
 					action: 'query_invoice_detail',
@@ -1422,8 +1429,10 @@
 		            action: function(e, dt, node, config) {
 
 		    			if ($detailTable instanceof $.fn.dataTable.Api) {
-		    				$detailTable.destroy();
-		    			    $('#invoice-detail-table').empty();
+// 		    				$detailTable.destroy();
+// 		    			    $('#invoice-detail-table').empty();
+		    			    $('#detailable').hide();
+		    			    $('#masterTable').show();
 		    			}	 
 		    		    
 		    			var parameter = {
