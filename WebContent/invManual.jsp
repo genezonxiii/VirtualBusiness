@@ -835,38 +835,22 @@
 
 						var inv_manual_id = data.inv_manual_id;
 						
-						var $input =
-						$('<input>').attr({
-						    type: 'checkbox',
-						    id: inv_manual_id,
-						    name: 'checkbox-inv-master-select',
-						    disabled : data.inv_flag == 0 ? false : true
-						});
-// 						var input = document.createElement("INPUT");
-// 						input.type = 'checkbox';
-// 						input.name = 'checkbox-inv-master-select';
-// 						input.id = inv_manual_id;
-// 						input.disabled = data.inv_flag == 0 ? false : true;
+						var input = document.createElement("INPUT");
+						input.type = 'checkbox';
+						input.name = 'checkbox-inv-master-select';
+						input.id = inv_manual_id;
+						input.disabled = data.inv_flag == 0 ? false : true;
 						
 						var span = document.createElement("SPAN");
 						span.className = 'form-label';
-
-
-						var $label =
-							$('<label>').attr({
-								'for': inv_manual_id,
-							    id: inv_manual_id,
-							    name: 'checkbox-inv-master-select',
-							    disabled : data.inv_flag == 0 ? false : true
-							}).css('marginLeft', '45%');;
-						$label.append(span);
-// 						var label = document.createElement("LABEL");
-// 						label.htmlFor = inv_manual_id;
-// 						label.name = 'checkbox-inv-master-select';
-// 						label.style.marginLeft = '45%';
-// 						label.appendChild(span);
 						
-						var options = $("<div/>").append($input, $label);
+						var label = document.createElement("LABEL");
+						label.htmlFor = inv_manual_id;
+						label.name = 'checkbox-inv-master-select';
+						label.style.marginLeft = '45%';
+						label.appendChild(span);
+						
+						var options = $("<div/>").append(input, label);
 						
 						return options.html();
 			        }
