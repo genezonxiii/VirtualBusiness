@@ -104,7 +104,11 @@
 				</table>
 			</fieldset>
 		</form>
-	</div> 
+	</div>
+	<!-- 順豐出貨狀態對話窗-->
+	<div id="dialog-sf-status" style="display:none">
+		<table id="dialog-sf-status-table" class="result-table"></table>
+	</div>	
 	<!-- 下訂單對話窗-->
 	<div id="dialog-sf-delivery-order" style="display:none">
 		<form id ="dialog-sf-delivery-order-form">
@@ -471,6 +475,15 @@
 		                                "class": "fa fa-file-pdf-o"
 		                            }))
 		                        )
+								.append(
+			                            $("<button/>", {
+				                            "class": "btn-in-table btn-green btn_sf_list",
+			                                "title": "順豐出貨狀態"
+			                            })
+			                            .append($("<i/>", {
+				                            "class": "fa fa-list"
+			                            }))
+			                        )
 		                        
 		                    )
 		                );
@@ -1447,8 +1460,66 @@
 			
 			$("#dialog-sale-detail")
 				.data("sale_id", data.sale_id);
-		})
-	</script>
+		});
+
+	$("#dt_master_ship").delegate(".btn_sf_list", "click", function(e) {
+		
+		event.preventDefault();
+		
+		var row = $(this).closest("tr");
+	    var data = $("#dt_master_ship").DataTable().row(row).data();
+	    console.log(data);
+	    $('#dialog-sf-status-table').dialog({
+			title: '順豐出貨狀態',
+			draggable : true,
+			resizable : false,
+			width : "140px",
+			modal : true
+		});
+// 	    var tblDetail = $("#dialog-sale-detail-table").DataTable({
+// 			dom : "lfr<t>ip",
+// 			destroy : true,
+// 			language : {
+// 				"url" : "js/dataTables_zh-tw.txt"
+// 			},
+// 			ajax : {
+// 				url : "realsale.do",
+// 				dataSrc : "",
+// 				type : "POST",
+// 				data : {
+// 					"action" : "getRealSaleDetail",
+// 					"realsale_id" : data.realsale_id
+// 				}
+// 			},
+// 			columns : [ 				
+// 				{"data" : "order_no", "defaultContent" : ""},
+// 				{"data" : "c_product_id", "defaultContent" : ""},
+// 				{"data" : "product_name", "defaultContent" : ""},
+// 				{"data" : "quantity", "defaultContent" : ""},
+// 				{"data" : "price", "defaultContent" : ""},
+// 				{"data" : "memo", "defaultContent" : ""}
+// 			]})
+			
+// 			$("#dialog-sale-detail").dialog({
+// 				title: "順豐出貨狀態",
+// 				draggable : true,
+// 				resizable : false,
+// 				modal : true,
+// 				autoOpen: true,
+// 					show : {
+// 						effect : "blind",
+// 						duration : 500
+// 					},
+// 				width : 1200,
+// 				close : function() {
+// 					$("#dialog-form-sale-detail").trigger("reset");
+// 				}
+// 			});
+			
+// 			$("#dialog-sale-detail")
+// 				.data("sale_id", data.sale_id);
+	});
 	
+	</script>
 </body>
 </html>
