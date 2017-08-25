@@ -42,8 +42,10 @@ import tw.com.aber.sftransfer.controller.ValueService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.DeliveryVO;
 import tw.com.aber.vo.RealSaleDetailVO;
+import tw.com.aber.vo.SFDeliveryVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipSFDeliveryVO;
+import tw.com.aber.vo.ShipSFStatusVO;
 import tw.com.aber.vo.ShipVO;
 
 public class ship extends HttpServlet {
@@ -121,7 +123,7 @@ public class ship extends HttpServlet {
 
 				try {
 					String ship_seq_nos = request.getParameter("ship_seq_nos");
-					
+
 					logger.debug("ship_seq_nos:" + ship_seq_nos);
 
 					shipService = new ShipService();
@@ -318,8 +320,8 @@ public class ship extends HttpServlet {
 				response.getWriter().write(result);
 			} else if ("SFDeliveryRouteService".equals(action)) {
 				String orderNos = request.getParameter("orderNos");
-				
-				//前端參數控制後端傳遞 1:託運單號 2:訂單號
+
+				// 前端參數控制後端傳遞 1:託運單號 2:訂單號
 				String type = request.getParameter("type");
 
 				SfDeliveryApi api = new SfDeliveryApi();
@@ -347,8 +349,8 @@ public class ship extends HttpServlet {
 						orderNos = orderNos + vo.getOrder_no() + ",";
 					}
 				}
-				orderNos = orderNos.substring(0, orderNos.length()-1);
-				
+				orderNos = orderNos.substring(0, orderNos.length() - 1);
+
 				ValueService valueService = util.getValueService(request, response);
 
 				String reqXml = api.genRouteService(orderNos, type, valueService);
@@ -359,10 +361,28 @@ public class ship extends HttpServlet {
 				result = gson.toJson(responseObj);
 				response.getWriter().write(result);
 			} else if ("checkReport".equals(action)) {
-				/*p_group_id
-				p_order_no
-				p_suda7
-				p_egs_num*/
+				/*
+				 * p_group_id p_order_no p_suda7 p_egs_num
+				 */
+			} else if ("selectShipSfStatus".equals(action)) {
+
+				try {
+					String ship_id = request.getParameter("ship_id");
+					String order_no = request.getParameter("order_no");
+
+					ShipSFStatusVO shipSFStatusVO = new ShipSFStatusVO();
+					shipSFStatusVO.setGroup_id(groupId);
+					shipSFStatusVO.setV_ship_id(ship_id);
+					shipSFStatusVO.setOrder_no(order_no);
+
+					shipService = new ShipService();
+					List<ShipSFStatusVO> sfStatusVOs = shipService.selectShipSfStatus(shipSFStatusVO);
+					result = new Gson().toJson(sfStatusVOs);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					result = "{}";
+				}
+				response.getWriter().write(result);
 			}
 
 		} catch (Exception e) {
@@ -388,7 +408,7 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
 			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 		}
-		
+
 		public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId) {
 			return dao.getShipByShipSeqNoGroupByOrderNo(shipSeqNos, groupId);
 		}
@@ -408,10 +428,14 @@ public class ship extends HttpServlet {
 		public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos) {
 			return dao.getShipSFDeliveryInfoByOrderNo(groupId, orderNos);
 		}
-		
-		/*public Boolean checkReport(String groupId, String orderNos) {
-			return dao.checkReport(groupId, orderNos,);
-		}*/
+
+		public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO) {
+			return dao.selectShipSfStatus(shipSFStatusVO);
+		}
+		/*
+		 * public Boolean checkReport(String groupId, String orderNos) { return
+		 * dao.checkReport(groupId, orderNos,); }
+		 */
 	}
 
 	class ShipDAO implements ship_interface {
@@ -429,6 +453,7 @@ public class ship extends HttpServlet {
 		private static final String sp_get_ship_sf_delivery_new_no = "call sp_get_ship_sf_delivery_new_no(?,?)";
 		private static final String sp_insert_ship_sf_delivery = "call sp_insert_ship_sf_delivery(?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_ship_by_shipseqno_group_by_order_no = "call sp_get_ship_by_shipseqno_group_by_order_no (?,?)";
+		private static final String sp_select_ship_sf_status = "call sp_select_ship_sf_status (?,?,?)";
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -908,7 +933,7 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
-		
+
 		@Override
 		public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId) {
 
@@ -1024,6 +1049,61 @@ public class ship extends HttpServlet {
 			}
 			return shipVOList;
 		}
+
+		@Override
+		public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO) {
+
+			List<ShipSFStatusVO> rows = new ArrayList<ShipSFStatusVO>();
+			ShipSFStatusVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_ship_sf_status);
+
+				pstmt.setString(1, shipSFStatusVO.getGroup_id());
+				pstmt.setString(2, shipSFStatusVO.getV_ship_id());
+				pstmt.setString(3, shipSFStatusVO.getOrder_no());
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new ShipSFStatusVO();
+					row.setOrder_no(rs.getString("order_no"));
+					row.setWaybill_no(rs.getString("waybill_no"));
+					row.setShipment_id(rs.getString("shipment_id"));
+					row.setEvent_time(rs.getString("event_time"));
+					row.setStatus(rs.getString("status"));
+					row.setNote(rs.getString("note"));
+
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
 	}
 
 }
@@ -1045,4 +1125,6 @@ interface ship_interface {
 	public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos);
 
 	public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId);
+
+	public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO);
 }

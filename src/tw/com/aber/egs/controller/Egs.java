@@ -881,7 +881,6 @@ public class Egs extends HttpServlet {
 				resultMap.put("orderNo", orderNo);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error(e.getMessage());
 			resultMap = new HashMap<String, String>();
 			resultMap.put("status", "ERR");
