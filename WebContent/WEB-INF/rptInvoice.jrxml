@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="bc1bbc7a-969e-4e15-805b-d9c531b25a9d">
-	<property name="ireport.zoom" value="4.594972986357231"/>
-	<property name="ireport.x" value="108"/>
+	<property name="ireport.zoom" value="5.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["D:\\北祥\\CSI\\20170822\\"]]></defaultValueExpression>
@@ -61,7 +61,7 @@
 	<group name="GRP_1" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{inv_manual_id}]]></groupExpression>
 		<groupHeader>
-			<band height="157">
+			<band height="167">
 				<staticText>
 					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="13" y="103" width="59" height="20"/>
 					<box>
@@ -168,7 +168,7 @@
 					<textFieldExpression><![CDATA[$F{unicode}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" stretchType="RelativeToBandHeight" x="72" y="123" width="241" height="20"/>
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" stretchType="RelativeToBandHeight" x="72" y="123" width="400" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 					</textElement>
@@ -188,6 +188,27 @@
 					</textElement>
 					<text><![CDATA[格式:25]]></text>
 				</staticText>
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="13" y="143" width="59" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[備註：]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="143" width="241" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{memo}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>
