@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="bc1bbc7a-969e-4e15-805b-d9c531b25a9d">
-	<property name="ireport.zoom" value="2.3579476910000063"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="4.594972986357231"/>
+	<property name="ireport.x" value="108"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["D:\\北祥\\CSI\\20170822\\"]]></defaultValueExpression>
@@ -13,9 +13,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[call db_virtualbusiness.sp_make_rpt_invoice($P{p_group_id},$P{p_inv_manual_ids});
-
-]]>
+		<![CDATA[call db_virtualbusiness.sp_make_rpt_invoice($P{p_group_id},$P{p_inv_manual_ids});]]>
 	</queryString>
 	<field name="inv_manual_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -170,8 +168,8 @@
 					<textFieldExpression><![CDATA[$F{unicode}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="123" width="241" height="28"/>
-					<textElement verticalAlignment="Top">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" stretchType="RelativeToBandHeight" x="72" y="123" width="241" height="20"/>
+					<textElement verticalAlignment="Middle">
 						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
