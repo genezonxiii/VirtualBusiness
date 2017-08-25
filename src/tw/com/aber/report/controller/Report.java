@@ -283,6 +283,50 @@ public class Report extends HttpServlet {
 				fileIn.close();
 				out.flush();
 				out.close();
+			} else if ("rptInvManual".equals(request.getParameter("action"))){
+				logger.debug("action: "+request.getParameter("action"));
+				
+				String reportName = "rptInvoice";
+				String reportDetailName = "rptInvoiceDetail";
+
+				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
+				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
+				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				
+				String ids=request.getParameter("ids");
+				String group_id=(String) request.getSession().getAttribute("group_id");
+
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
+
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id",group_id);
+				hm.put("p_inv_manual_ids",ids);
+				logger.debug("ids: "+ids);
+				
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+
+				response.setContentType("APPLICATION/PDF");
+				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+				response.setHeader("Content-Disposition", disHeader);
+
+				File file = new File(pdfFileName);
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+
+				fileIn.close();
+				out.flush();
+				out.close();
 			}
 
 		} catch (Exception e) {

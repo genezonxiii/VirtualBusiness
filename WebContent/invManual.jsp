@@ -157,6 +157,12 @@
 			</fieldset>
 		</form>
 	</div>
+	
+	<!-- 報表 對話窗 -->
+	<div id="dialog_report" class="dialog" align="center" style="display:none">
+		<iframe src="" frameborder="0" id="dialog_report_iframe" width="850" height="450"></iframe>
+	</div>
+	
 	<jsp:include page="template/common_js.jsp" flush="true" />
 	<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 	<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
@@ -839,7 +845,8 @@
 						input.type = 'checkbox';
 						input.name = 'checkbox-inv-master-select';
 						input.id = inv_manual_id;
-						input.disabled = data.inv_flag == 0 ? false : true;
+						
+						//input.disabled = data.inv_flag == 0 ? false : true;
 						
 						var span = document.createElement("SPAN");
 						span.className = 'form-label';
@@ -968,9 +975,25 @@
 		                console.log($checkboxs)
 		                
 		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
+		                	dialogMsg("提示", '請至少選擇一筆資料');
 		                    return false;
 		                }
+		                
+		                var error_msg='';
+		                $checkboxs.each(function(index) {
+							data = $masterTable.row( $(this).closest("tr") ).data();
+
+		                    if(data.inv_flag!=0){
+		                    	error_msg=error_msg+'<br/> 發票號碼: '+data.invoice_no+'已開立，無法刪除已開立發票。<br/>';
+		                    }
+						});
+		                console.log("error_msg :"+error_msg);
+		                if(error_msg.length>0){
+		                	dialogMsg("提示", error_msg);
+		                	 return false;
+		                }
+		                
+		                
 		                var inv_manual_ids = '';
 
 		                $checkboxs.each(function() {
@@ -1041,9 +1064,25 @@
 		                var $checkboxs = $(cells).find('input[name=checkbox-inv-master-select]:checked');
 
 		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
+		                	dialogMsg("提示", '請至少選擇一筆資料');
 		                    return false;
 		                }
+		                
+		                var error_msg='';
+		                $checkboxs.each(function(index) {
+							data = $masterTable.row( $(this).closest("tr") ).data();
+
+		                    if(data.inv_flag!=0){
+		                    	error_msg=error_msg+'<br/> 發票號碼: '+data.invoice_no+'已開立，請勿重複開立發票。<br/>';
+		                    }
+						});
+		                console.log("error_msg :"+error_msg);
+		                if(error_msg.length>0){
+		                	dialogMsg("提示", error_msg);
+		                	 return false;
+		                }
+		          
+		                
 						
 		    			$('<div/>').dialog({
 		    				title: '提示訊息',
@@ -1117,6 +1156,68 @@
 		    					}
 		    				}
 		    			}).text("是否確認要開立發票?");
+		            }
+				},{
+
+		            text: '列印發票',
+		            action: function(e, dt, node, config) {
+		            	var arr = [];
+		            	var data;
+		            	
+		                var cells = $masterTable.cells().nodes();
+
+		                var $checkboxs = $(cells).find('input[name=checkbox-inv-master-select]:checked');
+
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
+		                
+		                
+		                var error_msg='';
+		                $checkboxs.each(function(index) {
+							data = $masterTable.row( $(this).closest("tr") ).data();
+
+		                    if(data.inv_flag==0){
+		                    	error_msg=error_msg+'<br/> 發票日期: '+data.invoice_date+'，買受人:'+data.title+'未開立，請先開立發票。<br/>';
+		                    }
+						});
+		                console.log("error_msg :"+error_msg);
+		                if(error_msg.length>0){
+		                	dialogMsg("提示", error_msg);
+		                	 return false;
+		                }
+		                
+						
+		    			$('<div/>').dialog({
+		    				title: '提示訊息',
+		    				draggable : true,
+		    				resizable : false,
+		    				height : "auto",
+		    				width : "auto",
+		    				modal : true,
+		    				buttons : {
+		    					"列印" : function() {
+		    						var ids = '';
+
+		    						$checkboxs.each(function(index) {
+		    							data = $masterTable.row( $(this).closest("tr") ).data();
+					                    ids += ',' + data.inv_manual_id ;
+		    						});
+
+		    						if (ids.length != 0) {
+		    							ids = ids.substring(1, ids.length);
+		    						}
+		    						console.log('ids: '+ids);
+		    						open_report(ids);  
+
+		    						$(this).dialog("close");
+		    					},
+		    					"取消" : function() {
+		    						$(this).dialog("close");
+		    					}
+		    				}
+		    			}).text("是否確認要列印發票?");
 		            }
 				}]
 			});		
@@ -1456,6 +1557,33 @@
 			}else{
 				$('#detailTable').hide()
 			};
+		}
+		
+		function open_report(ids){
+			
+			var iframUrl="./report.do?action=rptInvManual&ids="+encodeURIComponent(ids);
+
+			console.log(iframUrl);
+			$("#dialog_report_iframe").attr("src",iframUrl );
+			 $("#dialog_report").dialog({
+					draggable : true,
+					resizable : false,
+					autoOpen : false,
+					height : "600",
+					width : "900",
+					modal : true, 
+					closeOnEscape: false,
+				    open: function(event, ui) {
+				        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+				    },
+					buttons : [{
+							text : "關閉",
+							click : function() {
+								$("#dialog_report").dialog("close");
+							}
+							}]
+			 })
+			 $("#dialog_report").dialog("open"); 	
 		}
 	</script>	
 </body>

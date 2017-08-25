@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="bc1bbc7a-969e-4e15-805b-d9c531b25a9d">
+	<property name="ireport.zoom" value="2.3579476910000063"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\北祥\\CSI\\20170822\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_group_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_inv_manual_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call db_virtualbusiness.sp_make_rpt_invoice($P{p_group_id},$P{p_inv_manual_ids});
+
+]]>
+	</queryString>
+	<field name="inv_manual_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="group_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="invoice_type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="year_month" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="invoice_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="invoice_date" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="title" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="unicode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="memo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tax_type" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inv_flag" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="create_time" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="p_group_name" class="java.lang.String"/>
+	<group name="GRP_1" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{inv_manual_id}]]></groupExpression>
+		<groupHeader>
+			<band height="157">
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="13" y="103" width="59" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[統一編號：]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="13" y="83" width="59" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[買方名稱：]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="13" y="63" width="59" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[發票號碼：]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="13" y="123" width="59" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[地址：]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="213" y="4" width="100" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{p_group_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="213" y="24" width="100" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[電子發票證明聯 ]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="213" y="44" width="100" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").format($F{invoice_date})]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="63" width="241" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{invoice_no}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="83" width="241" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="103" width="241" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{unicode}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="72" y="123" width="241" height="28"/>
+					<textElement verticalAlignment="Top">
+						<font fontName="標楷體" size="10" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="387" y="63" width="37" height="20"/>
+					<box>
+						<pen lineWidth="0.0"/>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="標楷體" size="6" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[格式:25]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="3e8c67d4-672b-4a7f-b5d4-5c33b147a934" x="14" y="0" width="525" height="32"/>
+				<subreportParameter name="p_inv_manual_id">
+					<subreportParameterExpression><![CDATA[$F{inv_manual_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_group_id">
+					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["rptInvoiceDetail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>
