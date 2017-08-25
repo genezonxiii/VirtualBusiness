@@ -277,7 +277,11 @@ function sendFileToServer(formData,status){
 						$.each(json_obj,function(i, item) {
 				        	console.log('item '+i);
 				        	if(i == 'duplicate'){
-				        		duplicate = item.split(',');
+				        		if( item.length == 0 ){
+					        		duplicate = "";
+				        		}else{
+					        		duplicate = item.split(',');
+				        		}
 				        	}
 				        	console.log('duplicate');
 				        	console.log(duplicate);
