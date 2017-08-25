@@ -477,7 +477,7 @@
 		                        )
 								.append(
 			                            $("<button/>", {
-				                            "class": "btn-in-table btn-green btn_sf_list",
+				                            "class": "btn-in-table btn-primary btn_sf_list",
 			                                "title": "順豐出貨狀態"
 			                            })
 			                            .append($("<i/>", {
