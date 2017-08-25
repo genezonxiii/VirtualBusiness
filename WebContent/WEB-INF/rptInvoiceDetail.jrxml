@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoiceDetail" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="7d558491-c0a9-403b-8226-a5ce5ff588d5">
 	<property name="ireport.zoom" value="6.44204000000001"/>
-	<property name="ireport.x" value="1828"/>
+	<property name="ireport.x" value="2387"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -37,6 +37,7 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="p_group_name" class="java.lang.String"/>
+	<field name="p_group_unicode" class="java.lang.String"/>
 	<field name="p_group_address" class="java.lang.String"/>
 	<field name="p_group_master" class="java.lang.String"/>
 	<field name="unicode" class="java.lang.String">
@@ -398,7 +399,7 @@
 					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph leftIndent="1"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{unicode}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{p_group_unicode}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="32" width="45" height="11"/>
