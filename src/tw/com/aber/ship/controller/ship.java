@@ -366,17 +366,22 @@ public class ship extends HttpServlet {
 				 */
 			} else if ("selectShipSfStatus".equals(action)) {
 
-				String ship_id = request.getParameter("ship_id");
-				String order_no = request.getParameter("order_no");
+				try {
+					String ship_id = request.getParameter("ship_id");
+					String order_no = request.getParameter("order_no");
 
-				ShipSFStatusVO shipSFStatusVO = new ShipSFStatusVO();
-				shipSFStatusVO.setGroup_id(groupId);
-				shipSFStatusVO.setV_ship_id(ship_id);
-				shipSFStatusVO.setOrder_no(order_no);
+					ShipSFStatusVO shipSFStatusVO = new ShipSFStatusVO();
+					shipSFStatusVO.setGroup_id(groupId);
+					shipSFStatusVO.setV_ship_id(ship_id);
+					shipSFStatusVO.setOrder_no(order_no);
 
-				shipService = new ShipService();
-				List<ShipSFStatusVO> sfStatusVOs = shipService.selectShipSfStatus(shipSFStatusVO);
-				result = new Gson().toJson(sfStatusVOs);
+					shipService = new ShipService();
+					List<ShipSFStatusVO> sfStatusVOs = shipService.selectShipSfStatus(shipSFStatusVO);
+					result = new Gson().toJson(sfStatusVOs);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					result = "{}";
+				}
 				response.getWriter().write(result);
 			}
 

@@ -1469,13 +1469,77 @@
 		var row = $(this).closest("tr");
 	    var data = $("#dt_master_ship").DataTable().row(row).data();
 	    console.log(data);
-	    $('#dialog-sf-status-table').dialog({
+	    $('#dialog-sf-status').dialog({
 			title: '順豐出貨狀態',
 			draggable : true,
 			resizable : false,
-			width : "140px",
+			width : "900px",
 			modal : true
 		});
+	    
+		$("#dialog-sf-status-table").DataTable({
+		    dom: "fr<t>ip",
+		    lengthChange: false,
+		    pageLength: 20,
+		    scrollY: "340px",
+		    width: 'auto',
+		    scrollCollapse: true,
+		    destroy: true,
+			language : {
+				"url" : "js/dataTables_zh-tw.txt",
+				"emptyTable" : "查無資料",
+			},
+		    initComplete: function(settings, json) {
+		        $('div .dt-buttons').css({
+		            'float': 'left',
+		            'margin-left': '10px'
+		        });
+		        $('div .dt-buttons a').css('margin-left', '10px');
+		    },
+			ajax : {
+				url : "ship.do",
+				dataSrc : "",
+				type : "POST",
+				data : {
+					action: 'selectShipSfStatus',
+					ship_id: data.ship_id,
+					order_no: data.order_no
+				},
+                beforeSend: function(){
+                    $(':hover').css('cursor','progress');
+                },
+                complete: function(){
+                	$(':hover').css('cursor','default');
+                }
+			},
+			columns : [{
+		        "title": "訂單編號",
+		        "data": "order_no",
+		        "defaultContent": ""
+		    },{
+				"title" : "運單號",
+				"data" : "waybill_no",
+				"defaultContent" : ""
+			},{
+				"title" : "出庫單號",
+				"data" : "shipment_id",
+				"defaultContent" : ""
+			},{
+				"title" : "處理時間",
+				"data" : "event_time",
+				"defaultContent" : ""
+			},{
+				"title" : "處理狀態",
+				"data" : "status",
+				"defaultContent" : ""
+			},{
+				"title" : "描述",
+				"data" : "note",
+				"defaultContent" : ""
+			}]
+		});		 
+	    
+	    
 // 	    var tblDetail = $("#dialog-sale-detail-table").DataTable({
 // 			dom : "lfr<t>ip",
 // 			destroy : true,
