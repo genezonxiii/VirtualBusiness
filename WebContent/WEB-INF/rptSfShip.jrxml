@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSfShip" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ee270b1a-fa10-40b4-bbe7-32d24e38e8af">
+	<property name="ireport.zoom" value="2.3579476910000023"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\北祥\\CSI\\20170825\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_group_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_ship_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call sp_make_rpt_sf_ship($P{p_group_id},$P{p_ship_ids});]]>
+	</queryString>
+	<field name="order_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_to" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="group_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="group_1" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{order_no}]]></groupExpression>
+		<groupHeader>
+			<band height="114">
+				<textField>
+					<reportElement uuid="c72d5dae-7b01-40d7-8594-418de53c00d1" stretchType="RelativeToBandHeight" x="67" y="53" width="217" height="20"/>
+					<box bottomPadding="1"/>
+					<textElement>
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="383d9996-f4be-433a-8255-36d4beccca8e" stretchType="RelativeToBandHeight" x="3" y="53" width="64" height="20"/>
+					<box bottomPadding="1"/>
+					<textElement>
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[訂單編號:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="383d9996-f4be-433a-8255-36d4beccca8e" stretchType="RelativeToBandHeight" x="3" y="73" width="64" height="20"/>
+					<box bottomPadding="1"/>
+					<textElement>
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[收件者:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="383d9996-f4be-433a-8255-36d4beccca8e" stretchType="RelativeToBandHeight" x="3" y="93" width="64" height="20"/>
+					<box bottomPadding="1"/>
+					<textElement>
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[交付地址:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="c72d5dae-7b01-40d7-8594-418de53c00d1" stretchType="RelativeToBandHeight" x="67" y="73" width="217" height="20"/>
+					<box bottomPadding="1"/>
+					<textElement>
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{deliver_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="c72d5dae-7b01-40d7-8594-418de53c00d1" stretchType="RelativeToBandHeight" x="67" y="93" width="488" height="20"/>
+					<box bottomPadding="1"/>
+					<textElement>
+						<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{deliver_to}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="383d9996-f4be-433a-8255-36d4beccca8e" x="205" y="8" width="182" height="45"/>
+					<textElement>
+						<font fontName="標楷體" size="24" pdfFontName="標楷體" pdfEncoding="Identity-V" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[訂單出貨報表]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="8a975e2e-8da8-4dc6-aae3-a91fa4dec505" x="0" y="0" width="555" height="32"/>
+				<subreportParameter name="p_order_no">
+					<subreportParameterExpression><![CDATA[$F{order_no}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_group_id">
+					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptShipDetail1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="35">
+			<subreport>
+				<reportElement uuid="3d7953d8-bc18-4372-a23b-e7790a7f1937" x="0" y="0" width="555" height="35"/>
+				<subreportParameter name="p_order_no">
+					<subreportParameterExpression><![CDATA[$F{order_no}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_group_id">
+					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptShipSfDetail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="42">
+			<subreport>
+				<reportElement uuid="d52d2101-b0cc-405a-b31e-741344531ef6" x="0" y="0" width="555" height="42"/>
+				<subreportParameter name="p_order_no">
+					<subreportParameterExpression><![CDATA[$F{order_no}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_group_id">
+					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptShipSfStatus.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>
