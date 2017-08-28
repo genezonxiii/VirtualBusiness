@@ -109,7 +109,7 @@
 	<div id="dialog-sf-status" style="display:none">
 		<table id="dialog-sf-status-table" class="result-table"></table>
 	</div>
-	<!-- 順豐明細出貨狀態對話窗-->
+	<!-- 順豐出貨明細對話窗-->
 	<div id="dialog-sf-detail-status" style="display:none">
 		<table id="dialog-sf-detail-status-table" class="result-table"></table>
 	</div>		
@@ -491,7 +491,7 @@
 								.append(
 			                            $("<button/>", {
 				                            "class": "btn-in-table btn-exec btn_sf_detail_list",
-			                                "title": "順豐明細出貨狀態"
+			                                "title": "順豐出貨明細"
 			                            })
 			                            .append($("<i/>", {
 				                            "class": "fa fa-list"
@@ -1560,7 +1560,7 @@
 	    var data = $("#dt_master_ship").DataTable().row(row).data();
 	    console.log(data);
 	    $('#dialog-sf-detail-status').dialog({
-			title: '順豐明細出貨狀態',
+			title: '順豐出貨明細',
 			draggable : true,
 			resizable : false,
 			width : "1200px",
