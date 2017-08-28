@@ -45,6 +45,7 @@ import tw.com.aber.vo.RealSaleDetailVO;
 import tw.com.aber.vo.SFDeliveryVO;
 import tw.com.aber.vo.ShipDetail;
 import tw.com.aber.vo.ShipSFDeliveryVO;
+import tw.com.aber.vo.ShipSFDetailVO;
 import tw.com.aber.vo.ShipSFStatusVO;
 import tw.com.aber.vo.ShipVO;
 
@@ -383,6 +384,26 @@ public class ship extends HttpServlet {
 					result = "{}";
 				}
 				response.getWriter().write(result);
+			} else if ("selectShipSfDetailStatus".equals(action)) {
+
+				try {
+					String ship_id = request.getParameter("ship_id");
+					String order_no = request.getParameter("order_no");
+
+					ShipSFDetailVO shipSFDetailVO = new ShipSFDetailVO();
+					shipSFDetailVO.setGroup_id(groupId);
+					shipSFDetailVO.setV_ship_id(ship_id);
+					shipSFDetailVO.setOrder_no(order_no);
+
+					shipService = new ShipService();
+					List<ShipSFDetailVO> sfDetailVOs = shipService.selectShipSfDetailStatus(shipSFDetailVO);
+					result = new Gson().toJson(sfDetailVOs);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+					result = "{}";
+				}
+				logger.debug("result: {}", result);
+				response.getWriter().write(result);
 			}
 
 		} catch (Exception e) {
@@ -432,6 +453,10 @@ public class ship extends HttpServlet {
 		public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO) {
 			return dao.selectShipSfStatus(shipSFStatusVO);
 		}
+
+		public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO) {
+			return dao.selectShipSfDetailStatus(shipSFDetailVO);
+		}
 		/*
 		 * public Boolean checkReport(String groupId, String orderNos) { return
 		 * dao.checkReport(groupId, orderNos,); }
@@ -454,6 +479,7 @@ public class ship extends HttpServlet {
 		private static final String sp_insert_ship_sf_delivery = "call sp_insert_ship_sf_delivery(?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_ship_by_shipseqno_group_by_order_no = "call sp_get_ship_by_shipseqno_group_by_order_no (?,?)";
 		private static final String sp_select_ship_sf_status = "call sp_select_ship_sf_status (?,?,?)";
+		private static final String sp_select_ship_sf_detail_status = "call sp_select_ship_sf_detail_status (?,?,?)";
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -1104,6 +1130,63 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
+
+		@Override
+		public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO) {
+			List<ShipSFDetailVO> rows = new ArrayList<ShipSFDetailVO>();
+			ShipSFDetailVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_ship_sf_detail_status);
+
+				pstmt.setString(1, shipSFDetailVO.getGroup_id());
+				pstmt.setString(2, shipSFDetailVO.getV_ship_id());
+				pstmt.setString(3, shipSFDetailVO.getOrder_no());
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new ShipSFDetailVO();
+					row.setDetail_id(rs.getString("detail_id"));
+					row.setGroup_id(rs.getString("group_id"));
+					row.setOrder_no(rs.getString("order_no"));
+					row.setWaybill_no(rs.getString("waybill_no"));
+					row.setShipment_id(rs.getString("shipment_id"));
+					row.setActual_ship_time(rs.getString("actual_ship_time"));
+					row.setStatus(rs.getString("status"));
+					row.setSku_no(rs.getString("sku_no"));
+					row.setActual_qty(rs.getString("actual_qty"));
+
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
 	}
 
 }
@@ -1127,4 +1210,7 @@ interface ship_interface {
 	public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId);
 
 	public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO);
+
+	public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO);
+
 }
