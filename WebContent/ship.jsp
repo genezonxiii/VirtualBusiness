@@ -96,7 +96,8 @@
 							<th>商品名稱</th>
 							<th>數量</th>
 							<th>單價</th>
-							<th>備註</th>															
+							<th>備註</th>
+							<th>功能</th>															
 						</tr>
 					</thead>
 					<tfoot></tfoot>
@@ -108,7 +109,11 @@
 	<!-- 順豐出貨狀態對話窗-->
 	<div id="dialog-sf-status" style="display:none">
 		<table id="dialog-sf-status-table" class="result-table"></table>
-	</div>	
+	</div>
+	<!-- 順豐明細出貨狀態對話窗-->
+	<div id="dialog-sf-detail-status" style="display:none">
+		<table id="dialog-sf-detail-status-table" class="result-table"></table>
+	</div>		
 	<!-- 下訂單對話窗-->
 	<div id="dialog-sf-delivery-order" style="display:none">
 		<form id ="dialog-sf-delivery-order-form">
@@ -1439,8 +1444,41 @@
 				{"data" : "product_name", "defaultContent" : ""},
 				{"data" : "quantity", "defaultContent" : ""},
 				{"data" : "price", "defaultContent" : ""},
-				{"data" : "memo", "defaultContent" : ""}
-			]})
+				{"data" : "memo", "defaultContent" : ""},
+				{"data" : null, "defaultContent" : ""}
+			],
+		    columnDefs: [{
+		        //功能
+		        targets: -1,
+		        searchable: false,
+		        orderable: false,
+		        render: function(data, type, row) {
+		            var options = $("<div/>")
+		                .append($("<div/>", {
+		                        "class": "table-row-func btn-in-table btn-gray"
+		                    })
+		                    .append($("<i/>", {
+		                        "class": "fa fa-ellipsis-h"
+		                    }))
+		                    .append(
+		                        $("<div/>", {
+		                            "class": "table-function-list"
+		                        })
+								.append(
+			                            $("<button/>", {
+				                            "class": "btn-in-table btn-primary btn_sf_list",
+			                                "title": "順豐出貨狀態"
+			                            })
+			                            .append($("<i/>", {
+				                            "class": "fa fa-list"
+			                            }))
+			                        )
+		                    )
+		                );
+
+		            return options.html();
+		        }
+		    }]})
 			
 			$("#dialog-sale-detail").dialog({
 				title: "資料明細",
@@ -1473,7 +1511,7 @@
 			title: '順豐出貨狀態',
 			draggable : true,
 			resizable : false,
-			width : "900px",
+			width : "1200px",
 			modal : true
 		});
 	    
@@ -1537,53 +1575,89 @@
 				"data" : "note",
 				"defaultContent" : ""
 			}]
-		});		 
-	    
-	    
-// 	    var tblDetail = $("#dialog-sale-detail-table").DataTable({
-// 			dom : "lfr<t>ip",
-// 			destroy : true,
-// 			language : {
-// 				"url" : "js/dataTables_zh-tw.txt"
-// 			},
-// 			ajax : {
-// 				url : "realsale.do",
-// 				dataSrc : "",
-// 				type : "POST",
-// 				data : {
-// 					"action" : "getRealSaleDetail",
-// 					"realsale_id" : data.realsale_id
-// 				}
-// 			},
-// 			columns : [ 				
-// 				{"data" : "order_no", "defaultContent" : ""},
-// 				{"data" : "c_product_id", "defaultContent" : ""},
-// 				{"data" : "product_name", "defaultContent" : ""},
-// 				{"data" : "quantity", "defaultContent" : ""},
-// 				{"data" : "price", "defaultContent" : ""},
-// 				{"data" : "memo", "defaultContent" : ""}
-// 			]})
-			
-// 			$("#dialog-sale-detail").dialog({
-// 				title: "順豐出貨狀態",
-// 				draggable : true,
-// 				resizable : false,
-// 				modal : true,
-// 				autoOpen: true,
-// 					show : {
-// 						effect : "blind",
-// 						duration : 500
-// 					},
-// 				width : 1200,
-// 				close : function() {
-// 					$("#dialog-form-sale-detail").trigger("reset");
-// 				}
-// 			});
-			
-// 			$("#dialog-sale-detail")
-// 				.data("sale_id", data.sale_id);
+		});
 	});
-	
+	$("#dialog-sale-detail-table").delegate(".btn_sf_list", "click", function(e) {
+		
+		event.preventDefault();
+		
+		var row = $(this).closest("tr");
+	    var data = $("#dt_master_ship").DataTable().row(row).data();
+	    console.log(data);
+	    $('#dialog-sf-detail-status').dialog({
+			title: '順豐出貨狀態',
+			draggable : true,
+			resizable : false,
+			width : "1200px",
+			modal : true
+		});
+	    
+		$("#dialog-sf-detail-status-table").DataTable({
+		    dom: "fr<t>ip",
+		    lengthChange: false,
+		    pageLength: 20,
+		    scrollY: "340px",
+		    width: 'auto',
+		    scrollCollapse: true,
+		    destroy: true,
+			language : {
+				"url" : "js/dataTables_zh-tw.txt",
+				"emptyTable" : "查無資料",
+			},
+		    initComplete: function(settings, json) {
+		        $('div .dt-buttons').css({
+		            'float': 'left',
+		            'margin-left': '10px'
+		        });
+		        $('div .dt-buttons a').css('margin-left', '10px');
+		    },
+			ajax : {
+				url : "ship.do",
+				dataSrc : "",
+				type : "POST",
+				data : {
+					action: 'selectShipSfDetailStatus',
+					ship_id: data.ship_id,
+					order_no: data.order_no
+				},
+                beforeSend: function(){
+                    $(':hover').css('cursor','progress');
+                },
+                complete: function(){
+                	$(':hover').css('cursor','default');
+                }
+			},
+			columns : [{
+		        "title": "訂單編號",
+		        "data": "order_no",
+		        "defaultContent": ""
+		    },{
+				"title" : "運單號",
+				"data" : "waybill_no",
+				"defaultContent" : ""
+			},{
+				"title" : "出庫單號",
+				"data" : "shipment_id",
+				"defaultContent" : ""
+			},{
+				"title" : "發貨時間",
+				"data" : "actual_ship_time",
+				"defaultContent" : ""
+			},{
+				"title" : "處理狀態",
+				"data" : "status",
+				"defaultContent" : ""
+			},{
+				"title" : "料號",
+				"data" : "sku_no",
+				"defaultContent" : ""
+			},{
+				"title" : "實發數量",
+				"data" : "actual_qty",
+				"defaultContent" : ""
+			}]
+		});
+	});	
 	</script>
 </body>
 </html>
