@@ -96,8 +96,7 @@
 							<th>商品名稱</th>
 							<th>數量</th>
 							<th>單價</th>
-							<th>備註</th>
-							<th>功能</th>															
+							<th>備註</th>														
 						</tr>
 					</thead>
 					<tfoot></tfoot>
@@ -488,7 +487,16 @@
 			                            .append($("<i/>", {
 				                            "class": "fa fa-list"
 			                            }))
-			                        )
+			                    )
+								.append(
+			                            $("<button/>", {
+				                            "class": "btn-in-table btn-exec btn_sf_detail_list",
+			                                "title": "順豐明細出貨狀態"
+			                            })
+			                            .append($("<i/>", {
+				                            "class": "fa fa-list"
+			                            }))
+			                    )
 		                        
 		                    )
 		                );
@@ -1444,41 +1452,8 @@
 				{"data" : "product_name", "defaultContent" : ""},
 				{"data" : "quantity", "defaultContent" : ""},
 				{"data" : "price", "defaultContent" : ""},
-				{"data" : "memo", "defaultContent" : ""},
-				{"data" : null, "defaultContent" : ""}
-			],
-		    columnDefs: [{
-		        //功能
-		        targets: -1,
-		        searchable: false,
-		        orderable: false,
-		        render: function(data, type, row) {
-		            var options = $("<div/>")
-		                .append($("<div/>", {
-		                        "class": "table-row-func btn-in-table btn-gray"
-		                    })
-		                    .append($("<i/>", {
-		                        "class": "fa fa-ellipsis-h"
-		                    }))
-		                    .append(
-		                        $("<div/>", {
-		                            "class": "table-function-list"
-		                        })
-								.append(
-			                            $("<button/>", {
-				                            "class": "btn-in-table btn-primary btn_sf_list",
-			                                "title": "順豐出貨狀態"
-			                            })
-			                            .append($("<i/>", {
-				                            "class": "fa fa-list"
-			                            }))
-			                        )
-		                    )
-		                );
-
-		            return options.html();
-		        }
-		    }]})
+				{"data" : "memo", "defaultContent" : ""}
+			]})
 			
 			$("#dialog-sale-detail").dialog({
 				title: "資料明細",
@@ -1577,7 +1552,7 @@
 			}]
 		});
 	});
-	$("#dialog-sale-detail-table").delegate(".btn_sf_list", "click", function(e) {
+	$("#dt_master_ship").delegate(".btn_sf_detail_list", "click", function(e) {
 		
 		event.preventDefault();
 		
@@ -1585,7 +1560,7 @@
 	    var data = $("#dt_master_ship").DataTable().row(row).data();
 	    console.log(data);
 	    $('#dialog-sf-detail-status').dialog({
-			title: '順豐出貨狀態',
+			title: '順豐明細出貨狀態',
 			draggable : true,
 			resizable : false,
 			width : "1200px",
