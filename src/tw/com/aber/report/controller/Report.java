@@ -331,7 +331,7 @@ public class Report extends HttpServlet {
 				logger.debug("action: " + request.getParameter("action"));
 
 				String reportName = "rptSfShip";
-				String reportDetailName1 = "rptShipDetail1";
+				String reportDetailName1 = "rptShipDetailForSF";
 				String reportDetailName2 = "rptShipSfDetail";
 				String reportDetailName3 = "rptShipSfStatus";
 

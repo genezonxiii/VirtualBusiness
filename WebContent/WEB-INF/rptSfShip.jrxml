@@ -109,7 +109,7 @@
 					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptShipDetail1.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["rptShipDetailForSF.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 		<band height="35">
@@ -122,7 +122,7 @@
 					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptShipSfDetail.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["rptShipSfDetail.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 		<band height="42">
@@ -135,7 +135,7 @@
 					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rptShipSfStatus.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["rptShipSfStatus.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
