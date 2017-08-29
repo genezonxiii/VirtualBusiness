@@ -60,6 +60,10 @@
 				</div>
 			</div>
 		</div>
+		<!-- 報表 對話窗 -->
+		<div id="dialog_report" class="dialog" align="center" style="display:none">
+			<iframe src="" frameborder="0" id="dialog_report_iframe" width="850" height="450"></iframe>
+		</div>
 		<jsp:include page="template/common_js.jsp" flush="true" />
 		<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
 		<script type="text/javascript" src="js/buttons.jqueryui.min.js"></script>
@@ -67,25 +71,38 @@
 		<script type="text/javascript">
 		$(function() {
 		    $('#form_no').on("click", "button", function(e) {
+		    	e.preventDefault();
 		        var order_no = $('#form_no input[name=order_no]').val();
+		        if(order_no==""){
+			        console.log("q"+order_no+"q");
+		        	dialogMsg('提示','請輸入訂單編號');
+		        	return;
+		        }
+		        
 		        var start_date = '';
 		        var end_date = '';
-
 		        open_sf_report(order_no, start_date, end_date);
 		    });
 
 		    $('#form_date').on("click", "button", function(e) {
+		    	e.preventDefault();
 		        var order_no = '';
-		        var start_date = $('#form_no input[name=start_date]').val();
-		        var end_date = $('#form_no input[name=end_date]').val();
+		        var start_date = $('#form_date input[name=start_date]').val();
+		        var end_date = $('#form_date input[name=end_date]').val();
+		        
+		        if(!dateValidationCheck(start_date)||!dateValidationCheck(end_date)){
+					dialogMsg('提示','起日格式不符!');
+					return;
+				}
+		        
 		        open_sf_report(order_no, start_date, end_date);
 		    });
 
 		    function open_sf_report(order_no, start_date, end_date) {
 
-		        var iframUrl = "./report.do?action=rptSfShip&start_date=" + start_date + "&start_date=" + end_date + "&ids=" + encodeURIComponent(order_no);
+		        var iframUrl = "./report.do?action=rptSfShip&start_date=" + start_date + "&end_date=" + end_date + "&order_no=" + encodeURIComponent(order_no);
 
-		        console.log(iframUrl);
+		        console.log("iframUrl:"+iframUrl);
 		        $("#dialog_report_iframe").attr("src", iframUrl);
 		        $("#dialog_report").dialog({
 		            draggable: true,
@@ -107,6 +124,30 @@
 		        })
 		        $("#dialog_report").dialog("open");
 		    }
+		  //驗證日期格式
+			function dateValidationCheck(str) {
+				  var re = new RegExp("^([0-9]{4})[.-]{1}([0-9]{1,2})[.-]{1}([0-9]{1,2})$");
+				  var strDataValue;
+				  var infoValidation = true;
+				  if ((strDataValue = re.exec(str)) != null) {
+				    var i;
+				    i = parseFloat(strDataValue[1]);
+				    if (i <= 0 || i > 9999) { /*年*/
+				      infoValidation = false;
+				    }
+				    i = parseFloat(strDataValue[2]);
+				    if (i <= 0 || i > 12) { /*月*/
+				      infoValidation = false;
+				    }
+				    i = parseFloat(strDataValue[3]);
+				    if (i <= 0 || i > 31) { /*日*/
+				      infoValidation = false;
+				    }
+				  } else {
+				    infoValidation = false;
+				  }
+				  return infoValidation;
+			}
 
 		});
 		

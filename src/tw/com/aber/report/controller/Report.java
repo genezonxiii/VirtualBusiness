@@ -346,8 +346,8 @@ public class Report extends HttpServlet {
 				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
 
 				String order_no = request.getParameter("order_no");
-				String start_date = request.getParameter("p_start_date");
-				String end_date = request.getParameter("p_end_date");
+				String start_date = request.getParameter("start_date");
+				String end_date = request.getParameter("end_date");
 				String group_id = (String) request.getSession().getAttribute("group_id");
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
