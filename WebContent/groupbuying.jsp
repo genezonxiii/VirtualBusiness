@@ -46,7 +46,7 @@
 		</div>
 		<div id ="choose-order-type"></div>		
 		<div id="message">
-			<div id="text" align="center"></div>
+			<div id="text"></div>
 		</div>		
 		<div id="status">
 			<div id="text" align="center"></div>

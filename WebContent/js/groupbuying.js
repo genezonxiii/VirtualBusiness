@@ -266,6 +266,7 @@ function sendFileToServer(formData,status){
 		        data: formData,
 		        success: function(result){
 		        	console.log('result: '+result);
+		        	var message = '';
 		        	
 		        	var duplicate = [];
 		        	
@@ -287,81 +288,85 @@ function sendFileToServer(formData,status){
 				        	console.log(duplicate);
 						});
 			    	}
-			    	
-			    	if ((sendCountTime == sendCount) && (sendStatus == 0)&&(duplicate.length==0)){
-				    	status_dialog.dialog("close");
-				    	$('#message').find("#text").val('').html("匯入成功!");
-						message_dialog.dialog("open");
-						$("#download").html("");
-		            	var json_obj = $.parseJSON(result);
-		            	var file_path = json_obj.download;
-		            	var file_name = $('input[name=ec-radio-group]:checked').next('label').find('span').text();
-						createDlBtn(file_path,file_name);
-			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)&&(duplicate.length==0)){
-				    	status_dialog.dialog("close");
-//			    		$(btnArea).find('#downloadBtn').remove();
-						$('#message').find("#text").val('').html("轉檔失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
-						message_dialog.dialog('option','width','auto').dialog("open");
+			    	if ((sendCountTime == sendCount) && (sendStatus == 0)){
+			    		var json_obj = $.parseJSON(result);
+
+			    		message += json_obj.successDB ? '<br>產生下載檔: 成功<hr>': '<br>產生下載檔: 失敗<hr>';
+			    		message += json_obj.success ? '<br>拋轉: 成功<hr>': '<br>拋轉: 失敗<hr>';
 			    	}
-			    	console.log('duplicate uploadURL ');
-			    	console.log(duplicate);
-			    	console.log(duplicate.length);
-			    	if ((sendCountTime == sendCount) && (duplicate.length!=0)){
-				    	status_dialog.dialog("close");
-				    	
-						var data = document.createElement("DIV");
+			    	
+				    if ((sendCountTime == sendCount) && (sendStatus == 0)){
+			    		message += ( duplicate.length != 0 ) ? '<br>資料重複，請確認以下訂單編號↓<br><br>': '';
+			    		
+			    		if(duplicate.length != 0){
+							var data = document.createElement("DIV");
 							data.style.overflowY = 'auto';
 							data.style.overflowX = 'hidden';
 							data.style.maxHeight = '200px';
 							
-						var title = document.createElement("DIV");						
-						
-						var table = document.createElement("TABLE");
-							table.className = 'duplicate_table'
-								
-						var tr = document.createElement("TR");
-						var br = document.createElement("BR");
+							var title = document.createElement("DIV");						
 							
-						var td ;
-						var para;
-						var text;
-						
-						for(var i =0; i<duplicate.length; i++){
-							if( i%3 == 0 ){
-								text = document.createTextNode(duplicate[i]);
-								para = document.createElement("P");
-								td = document.createElement("TD");
-								tr = document.createElement("TR");
-							}else{
-								text = document.createTextNode(duplicate[i]);
-								para = document.createElement("P");
-								td = document.createElement("TD");
+							var table = document.createElement("TABLE");
+								table.className = 'duplicate_table'
+									
+							var tr = document.createElement("TR");
+							var br = document.createElement("BR");
+								
+							var td ;
+							var para;
+							var text;
+							
+							for(var i =0; i<duplicate.length; i++){
+								if( i%2 == 0 ){
+									text = document.createTextNode(duplicate[i]);
+									para = document.createElement("P");
+									td = document.createElement("TD");
+									tr = document.createElement("TR");
+								}else{
+									text = document.createTextNode(duplicate[i]);
+									para = document.createElement("P");
+									td = document.createElement("TD");
+								}
+								para.appendChild(text);
+								td.appendChild(para);
+								tr.appendChild(td);
+								table.appendChild(tr);
 							}
+	
+							para = document.createElement("P");
+							text = document.createTextNode('轉檔失敗');
+							
 							para.appendChild(text);
-							td.appendChild(para);
-							tr.appendChild(td);
-							table.appendChild(tr);
+							title.appendChild(para);
+							title.appendChild(br);
+	
+							para = document.createElement("P");
+							text = document.createTextNode('資料重複，請確認以下訂單編號↓');
+	
+							para.appendChild(text);
+							title.appendChild(para);
+							title.appendChild(br);
+	
+							data.appendChild(table);
+							
+							$('#message').find("#text").html('').append(message,data);			    			
+			    		}else{
+					    	$('#message').find("#text").val('').html(message);
+			    		}
+
+				    	status_dialog.dialog("close");
+						message_dialog.dialog( "option", "width", 'auto' ).dialog("open");
+						
+						if( $.parseJSON(result).success ){
+							$("#download").html("");
+			            	var json_obj = $.parseJSON(result);
+			            	var file_path = json_obj.download;
+			            	var file_name = $('input[name=ec-radio-group]:checked').next('label').find('span').text();
+							createDlBtn(file_path,file_name);
 						}
-
-						para = document.createElement("P");
-						text = document.createTextNode('轉檔失敗');
-						
-						para.appendChild(text);
-						title.appendChild(para);
-						title.appendChild(br);
-
-						para = document.createElement("P");
-						text = document.createTextNode('資料重複，請確認以下訂單編號↓');
-
-						para.appendChild(text);
-						title.appendChild(para);
-						title.appendChild(br);
-
-						data.appendChild(table);
-						
-						$('#message').find("#text").html('').append(title,data);;
-						message_dialog.dialog('option','width','auto').dialog("open");
-			    	} 
+			    	}
+			    	console.log('duplicate uploadURL ');
+			    	console.log(duplicate);
 		        }
 		    }); 
  
