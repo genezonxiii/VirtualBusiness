@@ -157,7 +157,8 @@
 			</fieldset>
 		</form>
 	</div>
-	
+	<!-- 辦別是否開立 flag-->
+	<input type="hidden" id="inv_flag">
 	<!-- 報表 對話窗 -->
 	<div id="dialog_report" class="dialog" align="center" style="display:none">
 		<iframe src="" frameborder="0" id="dialog_report_iframe" width="850" height="450"></iframe>
@@ -605,7 +606,8 @@
 // 			    $masterTable.destroy();
 // 			    $('#invoice-master-table').empty();
 // 			}
-			
+
+			$('#inv_flag').val(data.inv_flag);
 			divControl(false, true);
 		    
 			var parameter = {
@@ -1242,6 +1244,10 @@
 			            'margin-left': '10px'
 			        });
 			        $('div .dt-buttons a').css('margin-left', '10px');
+			      
+			       if($('#inv_flag').val()=='1'){
+			        	$('.hiddenClass').hide();
+			       }
 			    },
 				ajax : {
 					url : "InvManual.do",
@@ -1448,6 +1454,7 @@
 		            }
 				},{
 		            text: '新增明細',
+		            className: 'hiddenClass',
 		            action: function(e, dt, node, config) {
 		            	var $dialog = $('#dialog-invoice-detail');
 		            	
