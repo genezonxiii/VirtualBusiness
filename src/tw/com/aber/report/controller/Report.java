@@ -327,6 +327,67 @@ public class Report extends HttpServlet {
 				fileIn.close();
 				out.flush();
 				out.close();
+			} else if ("rptSfShip".equals(request.getParameter("action"))) {
+				logger.debug("action: " + request.getParameter("action"));
+
+				String reportName = "rptSfShip";
+				String reportDetailName1 = "rptShipDetailForSF";
+				String reportDetailName2 = "rptShipSfDetail";
+				String reportDetailName3 = "rptShipSfStatus";
+
+				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+				String jrxmlFileDetailName1 = reportSourcePath + "/" + reportDetailName1 + ".jrxml";
+				String jasperFileDetailName1 = reportGeneratePath + "/" + reportDetailName1 + ".jasper";
+				String jrxmlFileDetailName2 = reportSourcePath + "/" + reportDetailName2 + ".jrxml";
+				String jasperFileDetailName2 = reportGeneratePath + "/" + reportDetailName2 + ".jasper";
+				String jrxmlFileDetailName3 = reportSourcePath + "/" + reportDetailName3 + ".jrxml";
+				String jasperFileDetailName3 = reportGeneratePath + "/" + reportDetailName3 + ".jasper";
+				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+
+				String order_no = request.getParameter("order_no");
+				String start_date = request.getParameter("start_date");
+				String end_date = request.getParameter("end_date");
+				String group_id = (String) request.getSession().getAttribute("group_id");
+
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+				JasperCompileManager.compileReportToFile(jrxmlFileDetailName1, jasperFileDetailName1);
+				JasperCompileManager.compileReportToFile(jrxmlFileDetailName2, jasperFileDetailName2);
+				JasperCompileManager.compileReportToFile(jrxmlFileDetailName3, jasperFileDetailName3);
+
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_order_no", order_no);
+				hm.put("p_start_date", start_date);
+				hm.put("p_end_date", end_date);
+
+				logger.debug("order_no: " + order_no);
+				logger.debug("p_group_id: " + group_id);
+				logger.debug("p_start_date: " + start_date);
+				logger.debug("p_end_date: " + end_date);
+
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+
+				response.setContentType("APPLICATION/PDF");
+				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+				response.setHeader("Content-Disposition", disHeader);
+
+				File file = new File(pdfFileName);
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+
+				fileIn.close();
+				out.flush();
+				out.close();
+
 			}
 
 		} catch (Exception e) {
