@@ -9,11 +9,17 @@
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="p_ship_ids" class="java.lang.String">
+	<parameter name="p_order_no" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_end_date" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[call sp_make_rpt_sf_ship($P{p_group_id},$P{p_ship_ids});]]>
+		<![CDATA[call sp_make_rpt_sf_ship($P{p_group_id},$P{p_order_no},$P{p_start_date},$P{p_end_date});]]>
 	</queryString>
 	<field name="order_no" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>

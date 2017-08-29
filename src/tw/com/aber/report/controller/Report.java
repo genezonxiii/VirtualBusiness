@@ -327,9 +327,9 @@ public class Report extends HttpServlet {
 				fileIn.close();
 				out.flush();
 				out.close();
-			} else if ("rptSfShip".equals(request.getParameter("action"))){
-				logger.debug("action: "+request.getParameter("action"));
-				
+			} else if ("rptSfShip".equals(request.getParameter("action"))) {
+				logger.debug("action: " + request.getParameter("action"));
+
 				String reportName = "rptSfShip";
 				String reportDetailName1 = "rptShipDetail1";
 				String reportDetailName2 = "rptShipSfDetail";
@@ -344,9 +344,11 @@ public class Report extends HttpServlet {
 				String jrxmlFileDetailName3 = reportSourcePath + "/" + reportDetailName3 + ".jrxml";
 				String jasperFileDetailName3 = reportGeneratePath + "/" + reportDetailName3 + ".jasper";
 				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
-				
-				String ids=request.getParameter("ids");
-				String group_id=(String) request.getSession().getAttribute("group_id");
+
+				String order_no = request.getParameter("order_no");
+				String start_date = request.getParameter("p_start_date");
+				String end_date = request.getParameter("p_end_date");
+				String group_id = (String) request.getSession().getAttribute("group_id");
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 				JasperCompileManager.compileReportToFile(jrxmlFileDetailName1, jasperFileDetailName1);
@@ -355,12 +357,18 @@ public class Report extends HttpServlet {
 
 				Class.forName("com.mysql.jdbc.Driver");
 				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				
+
 				hm = new HashMap<String, Object>();
-				hm.put("p_group_id",group_id);
-				hm.put("p_ship_ids",ids);
-				logger.debug("ids: "+ids);
-				
+				hm.put("p_group_id", group_id);
+				hm.put("p_order_no", order_no);
+				hm.put("p_start_date", start_date);
+				hm.put("p_end_date", end_date);
+
+				logger.debug("order_no: " + order_no);
+				logger.debug("p_group_id: " + group_id);
+				logger.debug("p_start_date: " + start_date);
+				logger.debug("p_end_date: " + end_date);
+
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
@@ -379,6 +387,7 @@ public class Report extends HttpServlet {
 				fileIn.close();
 				out.flush();
 				out.close();
+
 			}
 
 		} catch (Exception e) {
