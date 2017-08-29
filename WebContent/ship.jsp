@@ -1432,7 +1432,7 @@
 		var row = $(this).closest("tr");
 	    var data = $("#dt_master_ship").DataTable().row(row).data();
 	    var tblDetail = $("#dialog-sale-detail-table").DataTable({
-			dom : "lfr<t>ip",
+			dom : "fr<t>ip",
 			destroy : true,
 			language : {
 				"url" : "js/dataTables_zh-tw.txt"
@@ -1468,7 +1468,13 @@
 				width : 1200,
 				close : function() {
 					$("#dialog-form-sale-detail").trigger("reset");
-				}
+				},
+				buttons: [{
+			        text: "關閉",
+			        click: function() {
+			            $(this).dialog("close");
+			        }
+			    }]
 			});
 			
 			$("#dialog-sale-detail")
@@ -1487,7 +1493,13 @@
 			draggable : true,
 			resizable : false,
 			width : "1200px",
-			modal : true
+			modal : true,
+			buttons: [{
+		        text: "關閉",
+		        click: function() {
+		            $(this).dialog("close");
+		        }
+		    }]
 		});
 	    
 		$("#dialog-sf-status-table").DataTable({
@@ -1564,7 +1576,13 @@
 			draggable : true,
 			resizable : false,
 			width : "1200px",
-			modal : true
+			modal : true,
+			buttons: [{
+		        text: "關閉",
+		        click: function() {
+		            $(this).dialog("close");
+		        }
+		    }]
 		});
 	    
 		$("#dialog-sf-detail-status-table").DataTable({

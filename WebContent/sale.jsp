@@ -283,7 +283,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			<fieldset>
 				<table id="dialog-sale-detail-table" class="result-table">
 					<thead></thead>
-					<tfoot></tfoot>
 					<tbody></tbody>
 				</table>
 			</fieldset>
@@ -442,7 +441,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                                "title": "清單"
 	                            })
 	                            .append($("<i/>", {
-	                                "class": "fa fa-pencil-square-o"
+	                                "class": "fa fa-list"
 	                            }))
 	                        )
 	                    )
@@ -1746,10 +1745,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 			$(table).find("thead").find("tr").remove();
 			$(table).find("thead")
 					.append($("<tr></tr>").val("").html(tableThs));
-
-			$(table).find("tfoot").find('tr').remove();
-			$(table).find("tfoot")
-					.append($("<tr></tr>").val("").html(tableThs));
 		}
 
 		function drawDialog(dialogId, oUrl, oWidth, formId) {
@@ -1762,6 +1757,15 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 				resizable : false,
 				autoOpen : false,
 				modal : true,
+				open: function(event, ui) {
+			        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+			    },
+				buttons: [{
+			        text: "關閉",
+			        click: function() {
+			            $(this).dialog("close");
+			        }
+			    }],
 // 				show : {
 // 					effect : "blind",
 // 					duration : 300
