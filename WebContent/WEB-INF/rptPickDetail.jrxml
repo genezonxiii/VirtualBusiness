@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptPickReport" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8bbac5f4-e692-4b87-b2af-d676f6e98d1a">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="274"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_pick_id" class="java.lang.String"/>
 	<queryString>
@@ -17,6 +17,9 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="quantity" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="userdef1" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<columnHeader>
@@ -37,7 +40,7 @@
 				<text><![CDATA[商品名稱]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="665" y="0" width="100" height="24" backcolor="#F5F5F5"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="567" y="0" width="100" height="24" backcolor="#F5F5F5"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -66,7 +69,7 @@
 				<text><![CDATA[自訂商品代碼]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="565" y="0" width="100" height="24" backcolor="#F5F5F5"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="467" y="0" width="100" height="24" backcolor="#F5F5F5"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -79,12 +82,26 @@
 				</textElement>
 				<text><![CDATA[儲位代碼]]></text>
 			</staticText>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="667" y="0" width="100" height="24" backcolor="#F5F5F5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[備註]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="26" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="169" y="0" width="396" height="26"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="169" y="0" width="298" height="26"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -99,7 +116,7 @@
 				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3b0d63be-23c9-4e83-8d6b-a925b1c9d8a9" x="665" y="0" width="100" height="26"/>
+				<reportElement uuid="3b0d63be-23c9-4e83-8d6b-a925b1c9d8a9" x="567" y="0" width="100" height="26"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -126,7 +143,7 @@
 				<textFieldExpression><![CDATA[$F{c_product_id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3b0d63be-23c9-4e83-8d6b-a925b1c9d8a9" x="565" y="0" width="100" height="26"/>
+				<reportElement uuid="3b0d63be-23c9-4e83-8d6b-a925b1c9d8a9" x="467" y="0" width="100" height="26"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -136,6 +153,18 @@
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{location_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3b0d63be-23c9-4e83-8d6b-a925b1c9d8a9" x="667" y="0" width="100" height="26"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{userdef1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
