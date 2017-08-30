@@ -1334,54 +1334,6 @@
 
 							
 		            }
-		        },{
-		        	  text: '託運狀態列印',
-			            action: function(e, dt, node, config) {
-			            
-			            var $table = $('#dt_master_ship');
-
-				        var cells = $dtMaster.cells().nodes();
-		            	
-		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-		                if ($checkboxs.length == 0) {
-		                    alert('請至少選擇一筆資料');
-		                    return false;
-		                }
-		                
-		    			$('<div/>').dialog({
-		    				title: '提示訊息',
-		    				draggable : true,
-		    				resizable : false,
-		    				height : "auto",
-		    				width : "auto",
-		    				modal : true,
-		    				buttons : {
-		    					"列印" : function() {
-		    						var ids = '';
-
-		    						$checkboxs.each(function(index) {
-		    							data = $dtMaster.row( $(this).closest("tr") ).data();
-					                    ids += ',' + data.ship_id;
-		    						});
-
-		    						if (ids.length != 0) {
-		    							ids = ids.substring(1, ids.length);
-		    						}
-		    						console.log('ids: '+ids);
-		    						open_sf_report(ids);  
-
-		    						$(this).dialog("close");
-		    					},
-		    					"取消" : function() {
-		    						$(this).dialog("close");
-		    					}
-		    				}
-		    			}).text("是否確認要列印?");
-		            
-			            }
-		        	
-		        	
 		        }
 		    ]
 		});
@@ -1412,33 +1364,6 @@
 		  return infoValidation;
 	}
 	
-	
-	function open_sf_report(ids){
-		
-		var iframUrl="./report.do?action=rptSfShip&ids="+encodeURIComponent(ids);
-
-		console.log(iframUrl);
-		$("#dialog_report_iframe").attr("src",iframUrl );
-		 $("#dialog_report").dialog({
-				draggable : true,
-				resizable : false,
-				autoOpen : false,
-				height : "600",
-				width : "900",
-				modal : true, 
-				closeOnEscape: false,
-			    open: function(event, ui) {
-			        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-			    },
-				buttons : [{
-						text : "關閉",
-						click : function() {
-							$("#dialog_report").dialog("close");
-						}
-						}]
-		 })
-		 $("#dialog_report").dialog("open"); 	
-	}
 	function open_report(key,value,key1,value1,modeltype){
 		
 		var iframUrl="./report.do?"+key+"="+encodeURIComponent(value)+"&"+key1+"="+value1+"&type=ship_report&modeltype="+modeltype;
