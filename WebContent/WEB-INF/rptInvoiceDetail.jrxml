@@ -36,10 +36,6 @@
 	<field name="memo" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="p_group_name" class="java.lang.String"/>
-	<field name="p_group_unicode" class="java.lang.String"/>
-	<field name="p_group_address" class="java.lang.String"/>
-	<field name="p_group_master" class="java.lang.String"/>
 	<field name="p_invoice_path" class="java.lang.String"/>
 	<field name="unicode" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
