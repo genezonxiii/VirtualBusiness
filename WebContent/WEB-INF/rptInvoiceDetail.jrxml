@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoiceDetail" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="7d558491-c0a9-403b-8226-a5ce5ff588d5">
-	<property name="ireport.zoom" value="6.44204000000001"/>
-	<property name="ireport.x" value="2387"/>
+	<property name="ireport.zoom" value="3.636363636363642"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -40,6 +40,7 @@
 	<field name="p_group_unicode" class="java.lang.String"/>
 	<field name="p_group_address" class="java.lang.String"/>
 	<field name="p_group_master" class="java.lang.String"/>
+	<field name="p_invoice_path" class="java.lang.String"/>
 	<field name="unicode" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -271,21 +272,6 @@
 				<text><![CDATA[營業稅]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="22" width="45" height="10"/>
-				<box>
-					<pen lineWidth="0.0"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<text><![CDATA[統一編號：]]></text>
-			</staticText>
-			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="77" y="11" width="60" height="11"/>
 				<box>
 					<pen lineWidth="0.0"/>
@@ -327,21 +313,6 @@
 				</textElement>
 				<text><![CDATA[銷售額合計]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="383" y="11" width="141" height="12"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{p_group_name}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="231" y="11" width="60" height="11"/>
 				<box>
@@ -386,51 +357,6 @@
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="428" y="22" width="96" height="10"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="1"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{p_group_unicode}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="32" width="45" height="11"/>
-				<box>
-					<pen lineWidth="0.0"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<text><![CDATA[負責人：]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="428" y="32" width="96" height="11"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="1"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{p_group_master}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="291" y="11" width="21" height="11">
 					<printWhenExpression><![CDATA[$F{tax_type}.equals("3") ? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
@@ -477,21 +403,6 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="43" width="27" height="25"/>
-				<box>
-					<pen lineWidth="0.0"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<text><![CDATA[地址：]]></text>
-			</staticText>
-			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="154" y="11" width="60" height="11"/>
 				<box>
 					<pen lineWidth="0.0"/>
@@ -519,21 +430,6 @@
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" stretchType="RelativeToBandHeight" x="410" y="43" width="114" height="25"/>
-				<box>
-					<pen lineWidth="0.5"/>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="0.0"/>
-					<rightPen lineWidth="0.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="1"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{p_group_address}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="312" y="11" width="71" height="11"/>
@@ -595,6 +491,10 @@
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<image hAlign="Center">
+				<reportElement uuid="6badce52-af58-4429-b713-3557751f6c08" x="384" y="12" width="139" height="55"/>
+				<imageExpression><![CDATA[$F{p_invoice_path}]]></imageExpression>
+			</image>
 		</band>
 	</columnFooter>
 </jasperReport>
