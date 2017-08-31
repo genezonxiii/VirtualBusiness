@@ -638,6 +638,14 @@
 		<servlet-name>InvManual</servlet-name>
 		<url-pattern>/InvManual.do</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>InvBuyer</servlet-name>
+		<servlet-class>tw.com.aber.invbuyer.controller.InvBuyer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>InvBuyer</servlet-name>
+		<url-pattern>/InvBuyer.do</url-pattern>
+	</servlet-mapping>
 
 	<filter>
 		<filter-name>loginFilter</filter-name>
