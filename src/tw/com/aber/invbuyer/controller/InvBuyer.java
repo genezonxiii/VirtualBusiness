@@ -178,7 +178,7 @@ public class InvBuyer extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		private static final String sp_insert_inv_buyer = "call sp_insert_inv_buyer (?,?,?,?,?)";
-		private static final String sp_select_inv_buyer_by_create_date = "call sp_select_inv_buyer_by_unicode_or_title (?,?,?)";
+		private static final String sp_select_inv_buyer_by_unicode_or_title = "call sp_select_inv_buyer_by_unicode_or_title (?,?,?)";
 		private static final String sp_del_inv_buyer = "call sp_del_inv_buyer (?,?)";
 		private static final String sp_update_inv_buyer = "call sp_update_inv_buyer (?,?,?,?,?,?)";
 
@@ -232,7 +232,7 @@ public class InvBuyer extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_inv_buyer_by_create_date);
+				pstmt = con.prepareStatement(sp_select_inv_buyer_by_unicode_or_title);
 
 				pstmt.setString(1, invBuyerVO.getGroup_id());
 				pstmt.setString(2, invBuyerVO.getUnicode());

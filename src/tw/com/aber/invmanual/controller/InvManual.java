@@ -42,6 +42,7 @@ import tw.com.aber.inv.vo.Seller;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.AllocInvVo;
 import tw.com.aber.vo.GroupVO;
+import tw.com.aber.vo.InvBuyerVO;
 import tw.com.aber.vo.InvManualDetailVO;
 import tw.com.aber.vo.InvManualVO;
 import tw.com.aber.vo.InvoiceTrackVO;
@@ -61,7 +62,6 @@ public class InvManual extends HttpServlet {
 
 		req.setCharacterEncoding("UTF-8");
 		resp.setCharacterEncoding("UTF-8");
-		
 
 		String groupId = (String) req.getSession().getAttribute("group_id");
 		String userId = (String) req.getSession().getAttribute("user_id");
@@ -465,6 +465,32 @@ public class InvManual extends HttpServlet {
 				logger.error(e.getMessage());
 			}
 			resp.getWriter().write(new Gson().toJson(list));
+		} else if ("getInvBuyerData".equals(action)) {
+			String term = req.getParameter("term");
+			String type = req.getParameter("type");
+			String result = "";
+
+			logger.error("term: {} \\ type: {} ", term, type);
+
+			try {
+				InvBuyerVO invBuyerVO = new InvBuyerVO();
+				invBuyerVO.setGroup_id(groupId);
+
+				if ("title".equals(type)) {
+					invBuyerVO.setTitle(term);
+					invBuyerVO.setUnicode("");
+				} else if ("unicode".equals(type)) {
+					invBuyerVO.setUnicode(term);
+					invBuyerVO.setTitle("");
+				}
+				List<InvBuyerVO> list = service.getInvBuyerData(invBuyerVO);
+
+				result = new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(list);
+				logger.error("result: {}", result);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+			resp.getWriter().write(result);
 		}
 	}
 
@@ -526,6 +552,10 @@ public class InvManual extends HttpServlet {
 		public void updateInvManualInvFlag(InvManualVO invManualVO) {
 			dao.updateInvManualInvFlag(invManualVO);
 		}
+
+		public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO) {
+			return dao.getInvBuyerData(invBuyerVO);
+		}
 	}
 
 	class InvManualDao implements InvManual_interface {
@@ -548,6 +578,7 @@ public class InvManual extends HttpServlet {
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
 		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?)";
+		private static final String sp_select_inv_buyer_by_unicode_or_title = "call sp_select_inv_buyer_by_unicode_or_title (?,?,?)";
 
 		@Override
 		public List<InvManualVO> searchAllInvManual(String groupId) {
@@ -1149,6 +1180,59 @@ public class InvManual extends HttpServlet {
 			}
 		}
 
+		@Override
+		public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO) {
+			List<InvBuyerVO> rows = new ArrayList<InvBuyerVO>();
+			InvBuyerVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_inv_buyer_by_unicode_or_title);
+
+				pstmt.setString(1, invBuyerVO.getGroup_id());
+				pstmt.setString(2, invBuyerVO.getUnicode());
+				pstmt.setString(3, invBuyerVO.getTitle());
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new InvBuyerVO();
+					row.setInv_buyer_id(rs.getString("inv_buyer_id"));
+					row.setGroup_id(rs.getString("group_id"));
+					row.setTitle(rs.getString("title"));
+					row.setUnicode(rs.getString("unicode"));
+					row.setAddress(rs.getString("address"));
+					row.setMemo(rs.getString("memo"));
+					row.setCreate_time(rs.getDate("create_time"));
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
+
 	}
 }
 
@@ -1178,4 +1262,6 @@ interface InvManual_interface {
 	public GroupVO getGroupInvoiceInfo(String groupId);
 
 	public void updateInvManualInvFlag(InvManualVO invManualVO);
+
+	public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO);
 }
