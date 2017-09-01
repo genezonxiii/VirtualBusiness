@@ -41,8 +41,10 @@
 										<input type="text">
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
-									<button class="btn btn-exec">新增買受人</button>
 								</form>
+							</div>
+							<div class="form-row">
+									<button class="btn btn-exec">新增買受人</button>
 							</div>
 						</div>
 					</div>
@@ -120,9 +122,9 @@
 				height : "auto",
 				width : "500px",
 				modal : true,
-				title : '新增發票',
+				title : '新增買受人',
 				buttons : [{
-							text : "儲存",
+							text : "新增",
 							click : function() {
 								if( $('#dialog-inv-buyer').find('form').valid() ){
 									var title = $( "input[name='title']", $dialog ).val();
@@ -170,7 +172,16 @@
 												draggable : true,
 												resizable : false,
 												width : "140px",
-												modal : true
+												modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 											}).text( result );
 										}
 									});
@@ -252,7 +263,16 @@
 									draggable : true,
 									resizable : false,
 									width : "140px",
-									modal : true
+									modal : true,
+									create: function () {
+										$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+									},
+									buttons : [{
+										text : "確認",
+										click : function() {
+											$(this).dialog("close");
+										}
+									}]
 								}).append($('<p>', {text: result }));
 							}
 						});
@@ -339,7 +359,16 @@
 												draggable : true,
 												resizable : false,
 												width : "140px",
-												modal : true
+												modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 											}).text( result );
 										}
 									});									
@@ -567,7 +596,16 @@
 		    									draggable : true,
 		    									resizable : false,
 												width : "140px",
-		    									modal : true
+		    									modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 		    								}).append($('<p>', {text: result }));
 		    							}
 		    						});
