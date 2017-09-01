@@ -19,17 +19,20 @@
 		<link rel="stylesheet" href="css/jquery.dataTables.min.css" />
 		<link rel="stylesheet" href="css/buttons.dataTables.min.css"/>
 		<link rel="stylesheet" href="vendor/css/jquery-ui.min.css">
+		<link rel="stylesheet" href="dist/themes/default/style.min.css" />
 		<link rel="stylesheet" href="css/styles.css">
 	
 		<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
 		<script type="text/javascript" src="js/dataTables.buttons.min.js"></script>
+		<script type="text/javascript" src="js/virtual_business/common.js"></script>
+
 		<!-- validation -->
 		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="js/additional-methods.min.js"></script>
 		<script type="text/javascript" src="js/messages_zh_TW.min.js"></script>
-				
+		<script src="dist/jstree.min.js"></script>		
 		<!-- for default parameters -->
 		<script>
 			
@@ -136,6 +139,8 @@
 								"	<div class='table-function-list' >"+
 								"		<button class='btn-in-table  btn-darkblue btn_update' title='修改' id = '" + row.user_id + "'>" +
 								"		<i class='fa fa-pencil'></i></button>"+
+								"		<button class='btn-in-table  btn-green btn_authority' title='權限' value = '" + row.user_id + "'>" +
+								"		<i class='fa fa-toggle-on'></i></button>"+
 								"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id = '" + row.user_id + "'>" +
 								"		<i class='fa fa-trash'></i></button>"+
 								"	</div>"+
@@ -209,7 +214,7 @@
 						modal : true,
 						show : {
 							effect : "blind",
-							duration : 300
+							duration : 500
 						},
 						hide : {
 							effect : "fade",
@@ -444,6 +449,34 @@
 				});
 			}
 			
+			 function createJSTrees(jsonData) {
+				 $("#jstree")
+	             .on('select_node.jstree', function (e, data) {
+	                 if (data.event) {
+	                	 //select_node 讓子節點勾選
+	                     data.instance.select_node(data.node.children_d);
+	                     //select_node 讓父節點勾選
+	                     data.instance.select_node(data.node.parents);
+	                 }
+	             }) //deselect 讓子節點取消
+	             .on('deselect_node.jstree', function (e, data) {
+	                 if (data.event) {
+	                     data.instance.deselect_node(data.node.children_d);
+	                 }
+	             })
+	             .jstree({
+	                 core: { data: jsonData,check_callback: true },
+	                 plugins: ["checkbox"],
+	                 checkbox: { cascade: "", three_state: false },
+	                 expand_selected_onload: true
+	             });
+				 
+			  }
+			 
+			 function initDialogDataTree(){
+				 $("#dialog-data-tree").empty();
+				 $("#dialog-data-tree").append("<div id=\"jstree\"></div>");
+			 }
 		
 		</script>
 		
@@ -466,6 +499,79 @@
 		<!-- button listener -->
 		<script>
 		$(function(){
+
+			//delete
+			$("#group-users-table").delegate(".btn_authority", "click", function(e) {
+				e.preventDefault();
+				initDialogDataTree();
+				
+				var user_id=$(this).attr("value");
+			
+				  var dialog_tree = $("#dialog-data-tree").dialog({
+						draggable : true, resizable : false, autoOpen : false,
+						height :500, width : 800, modal : true,
+						title:"權限管理",
+						overflow: "auto",
+						show : {effect : "blind",duration : 300},
+						hide : {effect : "fade",duration : 300},
+						open : function(event, ui) {
+							$(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+						},
+						buttons : [{
+									id : "update",
+									text : "確定",
+									click : function() {
+									 	var selectedElmsIds = $('#jstree').jstree("get_selected");
+								    	var arrString = selectedElmsIds.join(",");
+								    	console.log(arrString);
+								    	
+								 	   $.ajax({
+						                    url : "Authority.do",
+						                    type : "POST",
+						                    cache : false,
+						                    data : {
+						                    	action : "upDateAuthority",
+						                    	user_id : user_id,
+						                    	ids : arrString
+						                    },
+						                    success: function(data) {
+						                      	var json_obj = $.parseJSON(data);
+						                    	console.log(json_obj);
+						                      	if(json_obj.isSuccess){
+						                    		dialogMsg('提示',json_obj.obj);
+						                      	}else{
+						                      		dialogMsg('提示',json_obj.error);
+						                      	}
+
+						                    }
+						                });
+										 dialog_tree.dialog("close");
+									}
+								}, {
+									text : "取消",
+									click : function() {
+										dialog_tree.dialog("close");
+									}
+								} ]
+					}).css("width", "10%");
+				
+		    	   $.ajax({
+	                    url : "Authority.do",
+	                    type : "POST",
+	                    cache : false,
+	                    data : {
+	                    	action : "getAllMenu",
+	                    	user_id: user_id
+	                    },
+	                    success: function(data) {
+	                    	var json_obj = $.parseJSON(data);
+	                    	createJSTrees(json_obj);
+	                    	dialog_tree.dialog("open");
+	                    }
+	                });
+
+			});
+			
 			
 			//delete
 			$("#group-users-table").delegate(".btn_delete", "click", function(e) {
@@ -583,6 +689,7 @@
 			});			
 		});
 		</script>
+		
 	</head>
 	<body>
 		<div >
@@ -614,6 +721,11 @@
 					</table>
 				</fieldset>
 			</form>
-		</div>			
+		</div>
+		
+		<!-- 對話窗 -->
+		<div id="dialog-data-tree" class="dialog" style="display:none;">
+		</div>		
+					
 	</body>
 </html>
