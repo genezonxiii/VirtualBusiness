@@ -57,7 +57,7 @@
 							<div class="form-row">
 								<form id ="form_waybill">
 									<label for=""> 
-										<span class="block-label">託運單號</span> 
+										<span class="block-label">順豐託運單號</span> 
 										<input type="text" name="waybill_no"/>
 									</label>
 										<button class="btn btn-darkblue">查詢</button>
