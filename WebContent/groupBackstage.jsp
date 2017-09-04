@@ -113,7 +113,7 @@
 								"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id = '" + row.group_id + "'>" +
 								"		<i class='fa fa-trash'></i></button>"+
 								"		<button class='btn-in-table btn-green btn_list' title='清單' id = '" + row.group_id + "'>" +
-								"		<i class='fa fa-pencil-square-o'></i></button>"+
+								"		<i class='fa fa-list'></i></button>"+
 								"	</div>"+
 								"</div>";
 							   
