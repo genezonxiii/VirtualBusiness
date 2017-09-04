@@ -43,8 +43,10 @@
 										<input type="text" class="input-date">
 									</label>
 									<button class="btn btn-darkblue">查詢</button>
-									<button class="btn btn-exec">新增發票</button>
 								</form>
+							</div>
+							<div class="form-row">
+									<button class="btn btn-exec">新增發票</button>
 							</div>
 						</div>
 					</div>
@@ -65,7 +67,8 @@
 		</div>
 	</div>
 
-	<div id="dialog-invoice" style="display:none">
+<!-- 	<div id="dialog-invoice" style="display:none"> -->
+	<div id="dialog-invoice">
 		<form>
 			<fieldset>
 				<table class='form-table'>
@@ -173,6 +176,50 @@
 	<script type="text/javascript">
 		$(function(){
 			$("#dialog-invoice .input-date").datepicker("option", "minDate", new Date());
+			
+			var $dialog = $('#dialog-invoice');
+			var $title = $dialog.find('input[name=title]');
+			var $unicode = $dialog.find('input[name=unicode]');
+			var $address = $dialog.find('input[name=address]');
+
+			$title.autocomplete({
+		        minLength: 1,
+		        source: function(request, response) {
+		        	getInvBuyerData(request, response, "title");
+		        },
+		        open:function(event){
+
+		            var target = $(event.target); 
+		            var widget = target.autocomplete("widget");
+		            widget.zIndex(target.zIndex() + 1); 
+		        },
+		        select: function (event, ui) {
+		            var unicode = ui.item.unicode;
+		            var address = ui.item.address;
+		            
+		            $unicode.val(unicode);
+		            $address.val(address);
+		        }
+		    });
+			
+			$unicode.autocomplete({
+		        minLength: 1,
+		        source: function(request, response) {
+		        	getInvBuyerData(request, response, "unicode");
+		        },
+		        open:function(event){
+		            var target = $(event.target); 
+		            var widget = target.autocomplete("widget");
+		            widget.zIndex(target.zIndex() + 1); 
+		        },
+		        select: function (event, ui) {
+		            var title = ui.item.title;
+		            var address = ui.item.address;
+		            
+		            $title.val(title);
+		          	$address.val(address);
+		        }
+		    });
 		});
 	</script>
 	
@@ -264,7 +311,7 @@
 			event.preventDefault();
 			
 			var $dialog = $('#dialog-invoice');
-		
+			
 // 			$('input:radio[name="invoice-type-radio-group"]').change(
 // 				function(){
 // 				    if ($(this).is(':checked') && this.id == 'invoice-type-radio-2') {
@@ -350,7 +397,16 @@
 												draggable : true,
 												resizable : false,
 												width : "140px",
-												modal : true
+												modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 											}).text(text);
 										}
 									});
@@ -414,7 +470,16 @@
 									draggable : true,
 									resizable : false,
 									width : "140px",
-									modal : true
+									modal : true,
+									create: function () {
+										$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+									},
+									buttons : [{
+										text : "確認",
+										click : function() {
+											$(this).dialog("close");
+										}
+									}]
 								}).append($('<p>', {text: result }));
 							}
 						});
@@ -514,7 +579,16 @@
 												draggable : true,
 												resizable : false,
 												width : "140px",
-												modal : true
+												modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 											}).text(text);
 										}
 									});
@@ -577,7 +651,16 @@
 									draggable : true,
 									resizable : false,
 									width : "140px",
-									modal : true
+									modal : true,
+									create: function () {
+										$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+									},
+									buttons : [{
+										text : "確認",
+										click : function() {
+											$(this).dialog("close");
+										}
+									}]
 								}).append($('<p>', {text: result }));
 							}
 						});
@@ -722,7 +805,16 @@
 												draggable : true,
 												resizable : false,
 												width : "140px",
-												modal : true
+												modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 											}).text(text);
 										}
 									});
@@ -1040,7 +1132,16 @@
 		    									draggable : true,
 		    									resizable : false,
 												width : "140px",
-		    									modal : true
+		    									modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 		    								}).append($('<p>', {text: result }));
 		    							}
 		    						});
@@ -1129,7 +1230,16 @@
 			    									draggable : true,
 			    									resizable : false,
 													width : "auto",
-			    									modal : true
+			    									modal : true,
+													create: function () {
+														$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+													},
+													buttons : [{
+														text : "確認",
+														click : function() {
+															$(this).dialog("close");
+														}
+													}]
 			    								});
 		    								try {
 			    								var json_obj = $.parseJSON(response);
@@ -1437,7 +1547,16 @@
 		    									title: '提示訊息',
 		    									draggable : true,
 		    									resizable : false,
-		    									modal : true
+		    									modal : true,
+												create: function () {
+													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+												},
+												buttons : [{
+													text : "確認",
+													click : function() {
+														$(this).dialog("close");
+													}
+												}]
 		    								}).append($('<p>', {text: result }));
 		    							}
 		    						});
@@ -1592,6 +1711,55 @@
 			 })
 			 $("#dialog_report").dialog("open"); 	
 		}
+		
+	    function getInvBuyerData(request, response, type) {
+	        $.ajax({
+	            url: "InvManual.do",
+	            type: "POST",
+				async: false,
+	            data: {
+	                action: "getInvBuyerData",
+	                type: type,
+	                term: request.term
+	            },
+	            success: function(data) {
+	                console.log("getInvBuyerData By " + type);
+	                var json_obj = $.parseJSON(data);
+	                var result = [];
+
+	                console.log('json_obj');
+	                console.log(json_obj);
+	                
+	                if (!json_obj.length) {
+	                    result = [{
+	                        label: '找不到符合資料',
+	                        value: request.term
+	                    }];
+	                } else {
+	                    result = $.map(json_obj, function(item) {
+	                        var label = "",
+	                            value = "";
+	                        if (type == "title") {
+	                            label = item.title;
+	                            value = item.title;
+	                        } else if (type == "unicode") {
+	                            label = item.unicode;
+	                            value = item.unicode;
+	                        }
+
+	                        return {
+	                            label: label,
+	                            value: value,
+	                            title: item.title,
+	                            unicode: item.unicode,
+	                            address: item.address
+	                        }
+	                    });
+	                }
+	                return response(result);
+	            }
+	        });
+	    }		
 	</script>	
 </body>
 </html>

@@ -638,7 +638,6 @@
 		<servlet-name>InvManual</servlet-name>
 		<url-pattern>/InvManual.do</url-pattern>
 	</servlet-mapping>
-	
 	<servlet>
 		<servlet-name>Authority</servlet-name>
 		<servlet-class>tw.com.aber.authority.controller.Authority</servlet-class>
@@ -646,6 +645,14 @@
 	<servlet-mapping>
 		<servlet-name>Authority</servlet-name>
 		<url-pattern>/Authority.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>InvBuyer</servlet-name>
+		<servlet-class>tw.com.aber.invbuyer.controller.InvBuyer</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>InvBuyer</servlet-name>
+		<url-pattern>/InvBuyer.do</url-pattern>
 	</servlet-mapping>
 
 	<filter>
