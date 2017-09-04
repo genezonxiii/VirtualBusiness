@@ -62,6 +62,7 @@ public class Authority extends HttpServlet {
 				String userIdForPrivilege  = request.getParameter("user_id");
 				
 				logger.debug("userIdForPrivilege: "+userIdForPrivilege);
+				logger.debug("update by userId: " + userId);
 				
 				AuthorityService authorityService = new AuthorityService();
 				List<MenuForJsTreeVO> menuForJsTreeVOList = authorityService.getMenuForJsTreeVOList(userIdForPrivilege);

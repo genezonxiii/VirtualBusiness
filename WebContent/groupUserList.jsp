@@ -139,10 +139,10 @@
 								"	<div class='table-function-list' >"+
 								"		<button class='btn-in-table  btn-darkblue btn_update' title='修改' id = '" + row.user_id + "'>" +
 								"		<i class='fa fa-pencil'></i></button>"+
-								"		<button class='btn-in-table  btn-green btn_authority' title='權限' value = '" + row.user_id + "'>" +
-								"		<i class='fa fa-toggle-on'></i></button>"+
 								"		<button class='btn-in-table btn-alert btn_delete' title='刪除' id = '" + row.user_id + "'>" +
 								"		<i class='fa fa-trash'></i></button>"+
+								"		<button class='btn-in-table  btn-green btn_authority' title='權限' value = '" + row.user_id + "'>" +
+								"		<i class='fa fa-toggle-on'></i></button>"+
 								"	</div>"+
 								"</div>";
 							   
