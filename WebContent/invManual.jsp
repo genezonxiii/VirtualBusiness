@@ -310,20 +310,6 @@
 			event.preventDefault();
 			
 			var $dialog = $('#dialog-invoice');
-
-// 			$dialog.find('input[name=title]').autocomplete({
-// 		        minLength: 1,
-// 		        source: function(request, response) {
-// 		        	getInvBuyerData(request, response, "title");
-// 		        }
-// 		    });
-			
-// 			$dialog.find('input[name=unicode]').autocomplete({
-// 		        minLength: 1,
-// 		        source: function(request, response) {
-// 		        	getInvBuyerData(request, response, "unicode");
-// 		        }
-// 		    });
 			
 // 			$('input:radio[name="invoice-type-radio-group"]').change(
 // 				function(){
