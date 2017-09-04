@@ -118,7 +118,20 @@ public class ship extends HttpServlet {
 				result = gson.toJson(rows);
 
 				response.getWriter().write(result);
-			} else if ("sendToTelegraph".equals(action)) {
+			}  else if ("searchByWaybill_no".equals(action)) {
+				String waybill_no = request.getParameter("waybill_no");
+				
+				logger.debug("waybill_no:" + waybill_no);
+				logger.debug("groupId:" + groupId);
+
+				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				service = new ShipService();
+			
+				rows = service.getSearchShipByWaybillNo(groupId, waybill_no);
+				result = gson.toJson(rows);
+
+				response.getWriter().write(result);
+			}else if ("sendToTelegraph".equals(action)) {
 
 				List<ShipVO> shipVOList = null;
 
@@ -425,7 +438,10 @@ public class ship extends HttpServlet {
 		public List<ShipVO> getSearchShipByOrderNo(ShipVO shipVO) {
 			return dao.searchShipByOrderNo(shipVO);
 		}
-
+		public List<ShipVO> getSearchShipByWaybillNo(String groupId,String waybill) {
+			return dao.getSearchShipByWaybillNo(groupId,waybill);
+		}
+		
 		public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
 			return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 		}
@@ -472,6 +488,7 @@ public class ship extends HttpServlet {
 
 		private static final String sp_get_ship_sf_delivery_info_by_order_no = "call sp_get_ship_sf_delivery_info_by_order_no(?, ?)";
 		private static final String sp_select_ship_by_sale_date = "call sp_select_ship_by_sale_date (?,?,?)";
+		private static final String sp_select_ship_by_waybill_no = "call sp_select_ship_by_waybill_no (?,?)";
 		private static final String sp_select_ship_by_order_no = "call sp_select_ship_by_order_no (?,?)";
 		private static final String sp_get_ship_by_shipseqno = "call sp_get_ship_by_shipseqno(?,?)";
 		private static final String sp_select_ship_delivery = "call sp_select_ship_delivery(?,?)";
@@ -480,6 +497,7 @@ public class ship extends HttpServlet {
 		private static final String sp_get_ship_by_shipseqno_group_by_order_no = "call sp_get_ship_by_shipseqno_group_by_order_no (?,?)";
 		private static final String sp_select_ship_sf_status = "call sp_select_ship_sf_status (?,?,?)";
 		private static final String sp_select_ship_sf_detail_status = "call sp_select_ship_sf_detail_status (?,?,?)";
+		
 
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
@@ -1187,6 +1205,67 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
+
+		@Override
+		public List<ShipVO> getSearchShipByWaybillNo(String groupId, String waybill) {
+			List<ShipVO> rows = new ArrayList<ShipVO>();
+			ShipVO row = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_ship_by_waybill_no);
+
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, waybill);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new ShipVO();
+					row.setShip_id(rs.getString("ship_id"));
+					row.setShip_seq_no(rs.getString("ship_seq_no"));
+					row.setGroup_id(rs.getString("group_id"));
+					row.setOrder_no(rs.getString("order_no"));
+					row.setUser_id(rs.getString("user_id"));
+					row.setCustomer_id(rs.getString("customer_id"));
+					row.setMemo(rs.getString("memo"));
+					row.setDeliveryway(rs.getString("deliveryway"));
+					row.setTotal_amt(rs.getFloat("total_amt"));
+					row.setDeliver_name(rs.getString("deliver_name"));
+					row.setDeliver_to(rs.getString("deliver_to"));
+					row.setRealsale_id(rs.getString("realsale_id"));
+					row.setV_sale_date(rs.getDate("sale_date"));
+					row.setV_c_product_id(rs.getString("c_product_id"));
+					row.setV_product_name(rs.getString("product_name"));
+
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
 	}
 
 }
@@ -1212,5 +1291,7 @@ interface ship_interface {
 	public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO);
 
 	public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO);
+	
+	public List<ShipVO> getSearchShipByWaybillNo(String groupId,String waybill_no);
 
 }

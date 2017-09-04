@@ -54,6 +54,15 @@
 									<button class="btn btn-darkblue">查詢</button>
 								</form>
 							</div>
+							<div class="form-row">
+								<form id ="form_waybill">
+									<label for=""> 
+										<span class="block-label">託運單號</span> 
+										<input type="text" name="waybill_no"/>
+									</label>
+										<button class="btn btn-darkblue">查詢</button>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -289,7 +298,8 @@
 			};
 			
 			drawMasterTable(parameter);
-		});		
+		});
+		
 		$('#form_date').on("click", "button", function(e) {
 			e.preventDefault();
 			var $startDate = $('#form_date input:eq(0)').val();
@@ -332,11 +342,43 @@
 			
 			drawMasterTable(parameter);
 		});
+		
+		$('#form_waybill').on("click", "button", function(e) {
+			e.preventDefault();
+		
+			var errorMes = '';
+			var $mes = $('#message #text');
+			var $waybill_no = $('#form_waybill input[name=waybill_no]').val();
+			
+			if($waybill_no.length<=0){
+				errorMes='請輸入託運單號';
+			}
+
+			if(errorMes.length > 0){
+				$mes.val('').html(errorMes);
+				$('#message')
+					.dialog()
+					.dialog('option', 'title', '警告')
+					.dialog('option', 'width', 'auto')
+					.dialog('option', 'minHeight', 'auto')
+					.dialog("open");
+				return false;
+			}
+			var parameter = {
+				action : "searchByWaybill_no",
+				waybill_no : $waybill_no,
+			};
+			
+			drawMasterTable(parameter);
+		});
+		
 	    $('#dt_master_ship').on('change', ':checkbox', function() {
 	        $(this).is(":checked")?
 	        	$(this).closest("tr").addClass("selected"):
 	        	$(this).closest("tr").removeClass("selected");
 	    });
+	    
+	    
 	});
 	</script>
 	<script type="text/javascript">
