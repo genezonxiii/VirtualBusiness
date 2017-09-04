@@ -42,7 +42,7 @@
 	<title>
 		<band height="24">
 			<staticText>
-				<reportElement uuid="97fd276e-4622-4a69-8362-e576e420541d" mode="Opaque" x="0" y="0" width="384" height="24" backcolor="#F5F5F5"/>
+				<reportElement uuid="97fd276e-4622-4a69-8362-e576e420541d" mode="Opaque" x="0" y="0" width="468" height="24" backcolor="#F5F5F5"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -103,6 +103,20 @@
 				</textElement>
 				<text><![CDATA[出貨狀態]]></text>
 			</staticText>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" mode="Opaque" x="384" y="0" width="84" height="24" backcolor="#F5F5F5"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="標楷體" size="12" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[託運單號]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -120,8 +134,7 @@
 					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[
-new SimpleDateFormat("yyyy-MM-dd HH:ss").format($F{event_time})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd HH:ss").format($F{event_time})]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" stretchType="RelativeToBandHeight" x="100" y="0" width="170" height="20"/>
@@ -153,12 +166,27 @@ new SimpleDateFormat("yyyy-MM-dd HH:ss").format($F{event_time})]]></textFieldExp
 				</textElement>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" stretchType="RelativeToBandHeight" x="384" y="0" width="84" height="20"/>
+				<box bottomPadding="1">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="標楷體" size="8" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{waybill_no}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
 		<band height="1">
 			<line>
-				<reportElement uuid="5ca5911a-0ea1-4d53-97d6-3917d5d9541f" x="0" y="0" width="384" height="1"/>
+				<reportElement uuid="5ca5911a-0ea1-4d53-97d6-3917d5d9541f" x="0" y="0" width="468" height="1"/>
 			</line>
 		</band>
 	</columnFooter>
