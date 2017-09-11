@@ -365,7 +365,7 @@ line-height: 25px;
 		            top: '40%',
 		            left: '43%'
 		        },
-		        timeout: 30000
+		        timeout: 60000
 		    });
 		}
 
