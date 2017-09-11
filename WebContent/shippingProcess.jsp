@@ -232,6 +232,7 @@ line-height: 25px;
 	</div>
 
 	<jsp:include page="template/common_js.jsp" flush="true" />
+	<script type="text/javascript" src="js/jquery.blockUI.js"></script>
 
 	<script>
 		$(function() {
