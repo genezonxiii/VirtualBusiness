@@ -11,4 +11,5 @@
 <script type="text/javascript" src="js/scripts.js"></script>
 <script type="text/javascript" src="js/virtual_business/common.js"></script>
 <script type="text/javascript" src="js/virtual_business/menu.js"></script>
+<script type="text/javascript" src="js/jquery.blockUI.js"></script>
 <jsp:include page="common_logout.jsp" flush="true"/>

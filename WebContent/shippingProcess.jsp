@@ -80,6 +80,7 @@ button:disabled, button[disabled] {
 .fast_div{
     padding: 50px;
 }
+
 #dialog-form-fast{
 line-height: 25px;
 }
@@ -239,8 +240,6 @@ line-height: 25px;
 			$("#import_order_count").attr('disabled', true);
 			$("#import_picking").attr('disabled', true);
 			$("#import_ship").attr('disabled', true);
-			//$(".fast_div").hide();
-			
 		});
 			
          
@@ -354,6 +353,20 @@ line-height: 25px;
 			}, 300);
 
 			dialogMsg(process_name, msg);
+		}
+
+		function showBlockUI() {
+		    $.blockUI({
+		        message: '<table><tr><td valign="middle" style="height:150px;width:200px" >'+
+		        	'<img src="images/ajax-loader.gif" />處理中,請稍候...</td></tr></table>',
+		        css: {
+		            width: '200px',
+		            height: '150px',
+		            top: '40%',
+		            left: '43%'
+		        },
+		        timeout: 30000
+		    });
 		}
 
 		var scan_exist = 0, new_or_edit = 0; //1: insert, 2: update
@@ -590,20 +603,15 @@ line-height: 25px;
 					.click(
 							function(e) {
 								e.preventDefault();
+								$("#import_resale").attr('disabled', true);
 								if ($("#import_trans_list_date_begin").val() == ''
 										|| $("#import_trans_list_date_end")
 												.val() == '') {
 									dialogMsg('提醒', '請輸入日期');
+									$("#import_resale").attr('disabled', false);
 									return;
-									//             } else {
-									//                 var tmp = {
-									//                     action: "importData",
-									//                     import_trans_list_date_begin: $("#import_trans_list_date_begin").val(),
-									//                     import_trans_list_date_end: $("#import_trans_list_date_end").val()
-									//                 };
-									//                 draw_sale(tmp, "轉入銷貨", "轉入銷貨作業：成功");
 								}
-
+							
 								$
 										.ajax({
 											type : 'POST',
@@ -616,8 +624,14 @@ line-height: 25px;
 												import_trans_list_date_end : $(
 														"#import_trans_list_date_end")
 														.val()
+											},beforeSend : function(){
+												showBlockUI();
+												$("#import_resale").attr('disabled', false);
+											},complete:function(){
+												$.unblockUI();
 											},
 											success : function(result) {
+										
 												var obj = jQuery
 														.parseJSON(result);
 												var order_no_cnt = "轉入訂單數："
@@ -654,10 +668,7 @@ line-height: 25px;
 			$("#import_alloc_inv").click(
 					function(e) {
 						e.preventDefault();
-						//             var tmp = {
-						//                 action: "importallocinvData"
-						//             };
-						//             draw_sale(tmp, "轉入待出庫", "轉入待出庫作業：成功");
+						$("#import_alloc_inv").attr('disabled', true);
 
 						$
 								.ajax({
@@ -665,6 +676,11 @@ line-height: 25px;
 									url : 'shippingProcess.do',
 									data : {
 										action : "importallocinvData"
+									},beforeSend : function(){
+										showBlockUI();
+										$("#import_alloc_inv").attr('disabled', true);
+									},complete:function(){
+										$.unblockUI();
 									},
 									success : function(result) {
 										var obj = jQuery.parseJSON(result);
@@ -700,11 +716,17 @@ line-height: 25px;
 			//20170504 做配庫alloc_inv---------------------------------
 			$("#statistics_alloc_inv").click(
 					function(e) {
+						$("#statistics_alloc_inv").attr('disabled', false);
 						$.ajax({
 							type : 'POST',
 							url : 'shippingProcess.do',
 							data : {
 								action : "statisticsAllocinvData"
+							},beforeSend : function(){
+								showBlockUI();
+								$("#statistics_alloc_inv").attr('disabled', true);
+							},complete:function(){
+								$.unblockUI();
 							},
 							success : function(result) {
 								var obj = jQuery.parseJSON(result);
@@ -734,6 +756,7 @@ line-height: 25px;
 			$("#import_picking")
 					.click(
 							function(e) {
+								$("#import_picking").attr('disabled', true);
 								var import_order_count = $(
 										"#import_order_count").val();
 								if (!(import_order_count == "")) {
@@ -744,6 +767,11 @@ line-height: 25px;
 												data : {
 													order_no_count : import_order_count,
 													action : "importPicking"
+												},beforeSend : function(){
+													showBlockUI();
+													$("#import_picking").attr('disabled', false);
+												},complete:function(){
+													$.unblockUI();
 												},
 												success : function(result) {
 													var obj = jQuery
@@ -788,12 +816,18 @@ line-height: 25px;
 			$("#import_ship")
 					.click(
 							function(e) {
+								$("#import_ship").attr('disabled', true);
 								$
 										.ajax({
 											type : 'POST',
 											url : 'shippingProcess.do',
 											data : {
 												action : "importShip"
+											},beforeSend : function(){
+												showBlockUI();
+												$("#import_ship").attr('disabled', false);
+											},complete:function(){
+												$.unblockUI();
 											},
 											success : function(result) {
 												var obj = jQuery
