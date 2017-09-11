@@ -423,6 +423,12 @@ public class ShippingProcess extends HttpServlet {
 				cs.setString(3, order_count);
 				isSuccess = cs.execute();
 				jsonObject.put("update_count", updateCount);
+				
+				rs = cs.getResultSet();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
@@ -469,6 +475,13 @@ public class ShippingProcess extends HttpServlet {
 				cs.setString(1, group_id);
 				cs.setString(2, user_id);
 				isSuccess = cs.execute();
+				
+				rs = cs.getResultSet();
+				if (rs.next()) {
+					jsonObject.put("order_no_cnt", rs.getString("order_no_cnt"));
+					jsonObject.put("item_cnt", rs.getString("item_cnt"));
+					jsonObject.put("total_cnt", rs.getString("total_cnt"));
+				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {

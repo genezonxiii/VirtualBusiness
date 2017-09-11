@@ -777,10 +777,13 @@ line-height: 25px;
 												success : function(result) {
 													var obj = jQuery
 															.parseJSON(result);
-													var isSuccess = obj.isSuccess ? "成功"
-															: "失敗";
-													dialogMsg('轉入揀貨', "轉入揀貨作業："
-															+ isSuccess);
+													var order_no_cnt = "揀貨訂單數："
+														+ obj.order_no_cnt;
+													var total_cnt = "<br/> 揀貨商品明細數："
+															+ obj.total_cnt;
+	
+													dialogMsg('轉入揀貨', order_no_cnt
+															+ total_cnt);
 
 													$(
 															"#import_trans_list_date_begin")
@@ -833,10 +836,15 @@ line-height: 25px;
 											success : function(result) {
 												var obj = jQuery
 														.parseJSON(result);
-												var isSuccess = obj.isSuccess ? "成功"
-														: "失敗";
-												dialogMsg('轉入出貨', "轉入出貨作業："
-														+ isSuccess);
+												var order_no_cnt = "出貨訂單數："
+													+ obj.order_no_cnt;
+												var item_cnt = "<br/> 出貨商品明細數(組合商品)："
+													+ obj.item_cnt;
+												var total_cnt = "<br/> 出貨商品明細數："
+														+ obj.total_cnt;
+
+												dialogMsg('轉入出貨', order_no_cnt + item_cnt
+														+ total_cnt);
 
 												$(
 														"#import_trans_list_date_begin")
