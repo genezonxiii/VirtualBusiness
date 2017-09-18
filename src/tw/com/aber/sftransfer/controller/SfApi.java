@@ -615,8 +615,8 @@ public class SfApi {
 			List<CarrierAddedService> carrierAddedServicesList = new ArrayList<CarrierAddedService>();
 			if (shipVO.getV_pay_kind() != null && 
 					(shipVO.getV_pay_kind().equals("宅配-貨到付款") 
-					|| shipVO.getV_pay_kind().equals("7-11代收")
-					|| shipVO.getV_pay_kind().equals("全家-代收") )
+					|| shipVO.getV_pay_kind().startsWith("7-11代收")
+					|| shipVO.getV_pay_kind().startsWith("全家-代收") )
 					&& shipVO.getV_pay_status() != null && shipVO.getV_pay_status().equals("未付款")) {
 				CarrierAddedService carrierAddedService = new CarrierAddedService();
 				carrierAddedService.setServiceCode("VA0019");
