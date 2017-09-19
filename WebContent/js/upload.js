@@ -23,8 +23,6 @@ function buildHiddField(){
 var platform_map = new Object();
 
 function getPlatformMap(){
-	console.log('==================================================');
-	console.log('getPlatformMap start');
 	platform_map ={};
 	var key = "";
 	var value = "";
@@ -35,7 +33,6 @@ function getPlatformMap(){
 			action :"select_way_of_platform"
 		},
 		success : function(result) {
-			console.log('result : '+result);
 			var json_obj = $.parseJSON(result);
 			$.each (json_obj, function (i,item) {
 				key = item.throwfile_platform;
@@ -46,17 +43,11 @@ function getPlatformMap(){
 				}
 				platform_map[key]=value;			
 			});
-			console.log(platform_map['yohopower']);
-			console.log(platform_map);
-			console.log('getPlatformMap end');
-			console.log('==================================================\n\n');
 		}
 	});	
 }
 
 function buildIconBtns(){
-	console.log('==================================================');
-	console.log('buildIconBtns start');
 	var iconBtns = document.getElementById('iconBtns');
 	var detail = document.createElement('DIV');
 	
@@ -109,10 +100,6 @@ function buildIconBtns(){
 			});
 			
 			getPlatformMap();
-			console.log('platform_map ↓');
-			console.log(platform_map);
-			console.log('buildIconBtns end');
-			console.log('==================================================\n\n');
 		}
 	});
 }
@@ -221,7 +208,6 @@ function sendFileToServer(formData,status){
 		        cache: false,
 		        data: formData,
 		        success: function(result){
-		        	console.log('result: '+result);
 		        	
 		        	var duplicate = [];
 		        	
@@ -231,16 +217,12 @@ function sendFileToServer(formData,status){
 			    	}else{
 		            	var json_obj = $.parseJSON(result);
 						$.each(json_obj,function(i, item) {
-				        	console.log('item '+i);
-				        	console.log(item);
 				        	if(i == 'duplicate' && (item.length) != 0){
 				        		duplicate = item.split(',');
 				        		if(item == null){
 				        			duplicate = [];
 				        		}
 				        	}
-				        	console.log('duplicate');
-				        	console.log(duplicate);
 						});
 			    	}
 			    	
@@ -249,16 +231,11 @@ function sendFileToServer(formData,status){
 				    	$('#message').find("#text").val('').html("匯入成功!");
 						message_dialog.dialog("open");
 						$("#download").html("");
-//						createDlBtn(result);
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)&&(duplicate.length==0)){
 				    	status_dialog.dialog("close");
-//			    		$(btnArea).find('#downloadBtn').remove();
 						$('#message').find("#text").val('').html("拋轉失敗!<br/>請確認檔案!<br/><br/>"+sendNames+"<br/>是否正確!");
 						message_dialog.dialog('option','width','auto').dialog("open");
 			    	}
-			    	console.log('duplicate uploadURL ');
-			    	console.log(duplicate);
-			    	console.log(duplicate.length);
 			    	if ((sendCountTime == sendCount) && (duplicate.length!=0)){
 				    	status_dialog.dialog("close");
 				    	
@@ -382,9 +359,7 @@ function handleFileUpload(files){
 		return false;
 	}
 	var master, detail, img, assets, info, ul, li, para, name, size, br;
-	console.log('==================================================');
-	console.log('handleFileUpload start');
-	console.log(files);
+	
 	$(files).each(function( index ,item) {
 		name = item.name;
 		size = Math.floor(((item.size)/1024)*10)/10 + 'KB';
@@ -434,17 +409,8 @@ function handleFileUpload(files){
 		
 		$('#filesEdit').append(master);
 	});
-	console.log('handleFileUpload end');
-	console.log('==================================================\n\n');
 }
-function fileUpload(files,obj){
-	console.log('==================================================');
-	console.log('fileUpload start');
-	console.log('fileBuffer ↓');
-	console.log(fileBuffer);
-	console.log('files ↓');
-	console.log(files);
-	
+function fileUpload( fileBuffer, obj){
 	//reset statusbarDiv
 	$('.statusbarDiv').html('');
 
@@ -462,8 +428,7 @@ function fileUpload(files,obj){
 	var ext_exist = false;
 	var ext;
 	var accept = $('input[name="type-radio-group"]:checked').attr('restrict').split(',');
-	console.log('accept');
-	console.log(accept);
+
 	//判斷副檔名是否允許
 	for (var i = 0; i < fileBuffer.length; i++){
         var filename = fileBuffer[i].name;
@@ -485,75 +450,33 @@ function fileUpload(files,obj){
 	sendCount = fileBuffer.length;
 
 	var platform = $('input[name="ec-radio-group"]:checked').val();
-	console.log('platform: '+platform);
-	console.log($('input[name="ec-radio-group"]:checked'));
+
 	var deliveryMethod = $('#deliveryMethod').val();
 	
 	for (var i = 0; i < fileBuffer.length; i++){
-		console.log('第'+(1+i)+'筆');
+
         var fd = new FormData();
         
-        fd.append('file', files[i]);
+        fd.append('file', fileBuffer[i]);
         fd.append('action', 'upload');
         fd.append('platform', platform);
         fd.append('deliveryMethod', deliveryMethod);
         
-    	console.log('files['+i+']');
-    	console.log(files[i]);
         var status = new createStatusbar(obj); //Using this we can set progress.
-        status.setFileNameSize(files[i].name,files[i].size);
+        status.setFileNameSize( fileBuffer[i].name, fileBuffer[i].size );
         
-        sendFileToServer(fd,status);
+        sendFileToServer( fd, status );
    }
-	console.log('fileUpload end');
-	console.log('==================================================\n\n');
 }
 
 var fileBuffer =[];
 
 function setFiles(files){
-	console.log('==================================================');
-	console.log('setFiles start');
-	console.log('before fileBuffer ↓');
-	console.log(fileBuffer);
-	var tmp = [];
 	Array.prototype.push.apply(fileBuffer, files);
-	//fileBuffer.push(tmp);
-	console.log('after fileBuffer ↓');
-	console.log(fileBuffer);
-	console.log('setFiles end');
-	console.log('==================================================\n\n');
 }
-function getFiles(){
-	if(fileBuffer.length>1){
-		$('#message').find("#text").val('').html("只能選擇一筆檔案拋轉!");
-		message_dialog.dialog("open");
-		return false;
-	}
-	console.log('==================================================');
-	console.log('getFiles start');
-	var input= document.createElement('INPUT');
-	
-	input.type = "file";
-	input.accept = ".csv,.xls,.xml,.pdf";
-	//input.multiple = "multiple";
-	var files = $(input).context.files;
-	
-	console.log('getFiles fileBuffer ↓');
-	console.log(fileBuffer);
-	
-	for(var i=0;i<fileBuffer.length;i++){
-		files[i] = fileBuffer[i];
-	}
-	console.log('getFiles files ↓');
-	console.log(files);
-	console.log('getFiles end');
-	console.log('==================================================\n\n');
-	return files;
-}
+
 function clearFiles(){
 	fileBuffer = [];
-//	$(btnArea).find('#downloadBtn').remove();
 }
 function clearAll(){
 	fileBuffer = [];
@@ -583,9 +506,10 @@ function createUpBtn(){
         sendStatus = 0;
         
         folderName = getFormatDate();
-        var files = getFiles();
+
         var obj = $(".dragandrophandler");
-	    fileUpload(files,obj);
+        
+	    fileUpload( fileBuffer, obj );
 	    $('#clearBtn').trigger('click');
 	});
 	return uploadBtn;
@@ -612,20 +536,6 @@ function createClBtn(){
 	});
 	return clearBtn;
 }
-//build the download button, depending on the type and return this object
-//function createDlBtn(type){
-//	var downloadBtn= document.createElement('A');
-//	var text = document.createTextNode('範本下載');
-//	downloadBtn.id = "downloadBtn";
-//	downloadBtn.className = "btn btn-exec";
-//	downloadBtn.href = "./basicDataImport.do?action=download&type=" + type
-//	downloadBtn.appendChild(text);
-//	
-//	$(btnArea).find('#downloadBtn').remove();
-// 	$(btnArea).append(downloadBtn);
-//
-//	return downloadBtn;
-//}
 function transDate(str){
 	str = "" + str;
 	if(str.length<2){
@@ -684,21 +594,12 @@ $(document).ready(function() {
 			}
 		});	
 	var obj = $(".dragandrophandler");
-	
-//	var radios = $('input[name=ec-radio-group');
-//	for (var i=0; i<radios.length; i++){
-//	   if (radios[i].checked){
-//		   $('#fileDiv').show();
-//	   }else{
-//		   $('#fileDiv').hide();
-//	   }
-//	}
+
 	$('input[type=radio]').on('change', function() {
 		clearAll();
 		if(this.value != 0){
 			$('#fileDiv').show();
 			var type = $('#select-type').val();
-//			createDlBtn(type);
 		}else{
 			$('#fileDiv').hide();
 		}
@@ -708,7 +609,6 @@ $(document).ready(function() {
 	{
 	    e.stopPropagation();
 	    e.preventDefault();
-	    //$(this).css('border', '2px solid #0B85A1');
 	});
 	obj.on('dragover', function (e) 
 	{
@@ -717,13 +617,10 @@ $(document).ready(function() {
 	});
 	obj.on('drop', function (e) 
 	{
-	     //$(this).css('border', '2px dotted #0B85A1');
 	     e.preventDefault();
 	     var files = e.originalEvent.dataTransfer.files;
 	     createUpBtn();
 	     createClBtn();
-	     console.log('drop files:');
-	     console.log(files);
 	     //need to send dropped files to Server
 	     handleFileUpload(files);
 	     setFiles(files);
@@ -768,7 +665,6 @@ $(document).ready(function() {
 	{
 	  e.stopPropagation();
 	  e.preventDefault();
-	  //obj.css('border', '2px dotted #0B85A1');
 	});
 	$(document).on('drop', function (e) 
 	{

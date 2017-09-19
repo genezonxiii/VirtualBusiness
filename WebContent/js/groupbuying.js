@@ -25,8 +25,6 @@ function buildHiddField(){
 var platform_map = new Object();
 
 function getPlatformMap(){
-	console.log('==================================================');
-	console.log('getPlatformMap start');
 	platform_map ={};
 	var key = "";
 	var value = "";
@@ -47,15 +45,11 @@ function getPlatformMap(){
 				}
 				platform_map[key]=value;			
 			});
-			console.log('getPlatformMap end');
-			console.log('==================================================\n\n');
 		}
 	});	
 }
 
 function buildIconBtns(){
-	console.log('==================================================');
-	console.log('buildIconBtns start');
 	var iconBtns = document.getElementById('iconBtns');
 	var detail = document.createElement('DIV');
 	
@@ -108,10 +102,6 @@ function buildIconBtns(){
 			});
 			
 			getPlatformMap();
-			console.log('platform_map ↓');
-			console.log(platform_map);
-			console.log('buildIconBtns end');
-			console.log('==================================================\n\n');
 		}
 	});
 }
@@ -265,7 +255,6 @@ function sendFileToServer(formData,status){
 		        cache: false,
 		        data: formData,
 		        success: function(result){
-		        	console.log('result: '+result);
 		        	var message = '';
 		        	
 		        	var duplicate = [];
@@ -276,7 +265,6 @@ function sendFileToServer(formData,status){
 			    	}else{
 		            	var json_obj = $.parseJSON(result);
 						$.each(json_obj,function(i, item) {
-				        	console.log('item '+i);
 				        	if(i == 'duplicate'){
 				        		if( item.length == 0 ){
 					        		duplicate = "";
@@ -284,15 +272,13 @@ function sendFileToServer(formData,status){
 					        		duplicate = item.split(',');
 				        		}
 				        	}
-				        	console.log('duplicate');
-				        	console.log(duplicate);
 						});
 			    	}
 			    	if ((sendCountTime == sendCount) && (sendStatus == 0)){
 			    		var json_obj = $.parseJSON(result);
 
-			    		message += json_obj.successDB ? '<br>產生下載檔: 成功<hr>': '<br>產生下載檔: 失敗<hr>';
-			    		message += json_obj.success ? '<br>拋轉: 成功<hr>': '<br>拋轉: 失敗<hr>';
+			    		message += json_obj.successDB ? '<br>拋轉: 成功<hr>': '<br>拋轉: 失敗<hr>';
+			    		message += json_obj.success ? '<br>產生下載檔: 成功<hr>': '<br>產生下載檔: 失敗<hr>';
 			    	}
 			    	
 				    if ((sendCountTime == sendCount) && (sendStatus == 0)){
@@ -365,8 +351,6 @@ function sendFileToServer(formData,status){
 							createDlBtn(file_path,file_name);
 						}
 			    	}
-			    	console.log('duplicate uploadURL ');
-			    	console.log(duplicate);
 		        }
 		    }); 
  
@@ -386,7 +370,6 @@ function createStatusbar(obj)
      this.abort = $("<div class='abort'>Abort</div>").appendTo(this.statusbar);
      
      $('.statusbarDiv').append(this.statusbar);
-     //obj.after(this.statusbar);
  
     this.setFileNameSize = function(name,size)
     {
@@ -434,9 +417,7 @@ function handleFileUpload(files){
 		return false;
 	}
 	var master, detail, img, assets, info, ul, li, para, name, size, br;
-	console.log('==================================================');
-	console.log('handleFileUpload start');
-	console.log(files);
+	
 	$(files).each(function( index ,item) {
 		name = item.name;
 		size = Math.floor(((item.size)/1024)*10)/10 + 'KB';
@@ -486,16 +467,8 @@ function handleFileUpload(files){
 		
 		$('#filesEdit').append(master);
 	});
-	console.log('handleFileUpload end');
-	console.log('==================================================\n\n');
 }
-function fileUpload(files,obj){
-	console.log('==================================================');
-	console.log('fileUpload start');
-	console.log('fileBuffer ↓');
-	console.log(fileBuffer);
-	console.log('files ↓');
-	console.log(files);
+function fileUpload( fileBuffer, obj ){
 	
 	//reset statusbarDiv
 	$('.statusbarDiv').html('');
@@ -514,8 +487,7 @@ function fileUpload(files,obj){
 	var ext_exist = false;
 	var ext;
 	var accept = $('input[name="ec-radio-group"]:checked').attr('custom-restrict').split(',');
-	console.log('accept');
-	console.log(accept);
+
 	//判斷副檔名是否允許
 	for (var i = 0; i < fileBuffer.length; i++){
         var filename = fileBuffer[i].name;
@@ -537,8 +509,7 @@ function fileUpload(files,obj){
 	sendCount = fileBuffer.length;
 
 	var platform = $('input[name="ec-radio-group"]:checked').val();
-	console.log('platform: '+platform);
-	console.log($('input[name="ec-radio-group"]:checked'));
+
 	var deliveryMethod = $('#deliveryMethod').val();
 	var tdpl, pdcd , selectArr=[];
 	$('#selectDiv select option:selected').each(function(i,item){
@@ -548,41 +519,30 @@ function fileUpload(files,obj){
 	pdcd = selectArr[1];
 	
 	for (var i = 0; i < fileBuffer.length; i++){
-		console.log('第'+(1+i)+'筆');
+
         var fd = new FormData();
         
-        fd.append('file', files[i]);
+        fd.append('file', fileBuffer[i]);
         fd.append('action', 'upload');
         fd.append('platform', platform);
         fd.append('deliveryMethod', deliveryMethod);
         fd.append('tdpl', tdpl);
         fd.append('pdcd', pdcd);
-        
-    	console.log('files['+i+']');
-    	console.log(files[i]);
+
         var status = new createStatusbar(obj); //Using this we can set progress.
-        status.setFileNameSize(files[i].name,files[i].size);
+        status.setFileNameSize( fileBuffer[i].name, fileBuffer[i].size );
         
-        sendFileToServer(fd,status);
+        sendFileToServer( fd, status );
    }
-	console.log('fileUpload end');
-	console.log('==================================================\n\n');
 }
 
 var fileBuffer =[];
 
 function setFiles(files){
-	console.log('==================================================');
 	console.log('setFiles start');
-	console.log('before fileBuffer ↓');
-	console.log(fileBuffer);
-	var tmp = [];
 	Array.prototype.push.apply(fileBuffer, files);
-	//fileBuffer.push(tmp);
-	console.log('after fileBuffer ↓');
 	console.log(fileBuffer);
 	console.log('setFiles end');
-	console.log('==================================================\n\n');
 }
 function getFiles(){
 	if(fileBuffer.length>1){
@@ -590,8 +550,6 @@ function getFiles(){
 		message_dialog.dialog("open");
 		return false;
 	}
-	console.log('==================================================');
-	console.log('getFiles start');
 	var input= document.createElement('INPUT');
 	
 	input.type = "file";
@@ -599,21 +557,13 @@ function getFiles(){
 	//input.multiple = "multiple";
 	var files = $(input).context.files;
 	
-	console.log('getFiles fileBuffer ↓');
-	console.log(fileBuffer);
-	
 	for(var i=0;i<fileBuffer.length;i++){
 		files[i] = fileBuffer[i];
 	}
-	console.log('getFiles files ↓');
-	console.log(files);
-	console.log('getFiles end');
-	console.log('==================================================\n\n');
 	return files;
 }
 function clearFiles(){
 	fileBuffer = [];
-//	$(btnArea).find('#downloadBtn').remove();
 }
 function clearAll(){
 	fileBuffer = [];
@@ -647,9 +597,10 @@ function createUpBtn(){
         sendStatus = 0;
         
         folderName = getFormatDate();
-        var files = getFiles();
+
         var obj = $(".dragandrophandler");
-	    fileUpload(files,obj);
+        
+	    fileUpload( fileBuffer, obj );
 	    $('#clearBtn').trigger('click');
 	});
 	return uploadBtn;
@@ -776,7 +727,6 @@ $(document).ready(function() {
 			$('#fileDiv').show();
 			$('#selectDiv').show();
 			var type = $('#select-type').val();
-//			createDlBtn(type);
 		}else{
 			$('#fileDiv').hide();
 			$('#selectDiv').hide();
@@ -787,7 +737,6 @@ $(document).ready(function() {
 	{
 	    e.stopPropagation();
 	    e.preventDefault();
-	    //$(this).css('border', '2px solid #0B85A1');
 	});
 	obj.on('dragover', function (e) 
 	{
@@ -801,8 +750,6 @@ $(document).ready(function() {
 	    var files = e.originalEvent.dataTransfer.files;
 	    createUpBtn();
 	    createClBtn();
-	    console.log('drop files:');
-	    console.log(files);
 	    //need to send dropped files to Server
 	    handleFileUpload(files);
 	    setFiles(files);
@@ -846,7 +793,6 @@ $(document).ready(function() {
 	{
 	  e.stopPropagation();
 	  e.preventDefault();
-	  //obj.css('border', '2px dotted #0B85A1');
 	});
 	$(document).on('drop', function (e) 
 	{

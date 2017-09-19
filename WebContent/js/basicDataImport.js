@@ -3,6 +3,10 @@ var sendNames = "";
 var sendCount = 0; //要寄送幾次
 var sendCountTime = 0; //實際寄送幾次
 var sendStatus = 0; //寄送狀態，用來判斷是否有檔案失敗 (0:成功)
+var fileBuffer =[];
+var rowCount=0;
+var folderName = "";
+
 function sendFileToServer(formData,status){
 	sendCountTime ++;
     var uploadURL ="basicDataImport.do"; //Upload URL
@@ -36,7 +40,6 @@ function sendFileToServer(formData,status){
 		        cache: false,
 		        data: formData,
 		        success: function(result){
-		        	console.log('result: '+result);
 			    	if(result=="false"){
 			        	sendNames += "<p alert='left'>["+formData.get('file').name+"]</p><br>";
 			        	sendStatus ++;
@@ -46,7 +49,6 @@ function sendFileToServer(formData,status){
 				    	$('#message').find("#text").val('').html("匯入成功!");
 						message_dialog.dialog("open");
 						$("#download").html("");
-//						createDlBtn(result);
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){
 				    	status_dialog.dialog("close");
 			    		$(btnArea).find('#downloadBtn').remove();
@@ -59,7 +61,6 @@ function sendFileToServer(formData,status){
     status.setAbort(jqXHR);
 }
  
-var rowCount=0;
 function createStatusbar(obj)
 {
      rowCount++;
@@ -120,9 +121,7 @@ function handleFileUpload(files){
 		return false;
 	}
 	var master, detail, img, assets, info, ul, li, para, name, size, br;
-	console.log('==================================================');
-	console.log('handleFileUpload start');
-	console.log(files);
+	
 	$(files).each(function( index ,item) {
 		name = item.name;
 		size = Math.floor(((item.size)/1024)*10)/10 + 'KB';
@@ -172,16 +171,8 @@ function handleFileUpload(files){
 		
 		$('#filesEdit').append(master);
 	});
-	console.log('handleFileUpload end');
-	console.log('==================================================\n\n');
 }
-function fileUpload(files,obj){
-	console.log('==================================================');
-	console.log('fileUpload start');
-	console.log('fileBuffer ↓');
-	console.log(fileBuffer);
-	console.log('files ↓');
-	console.log(files);
+function fileUpload(fileBuffer,obj){
 	
 	//reset statusbarDiv
 	$('.statusbarDiv').html('');
@@ -220,66 +211,25 @@ function fileUpload(files,obj){
     var type = $('#select-type').val().replace('Template','');
     
 	for (var i = 0; i < fileBuffer.length; i++){
-		console.log('第'+(1+i)+'筆');
         var fd = new FormData();
         
-        fd.append('file', files[i]);
+        fd.append('file', fileBuffer[i]);
         fd.append('action', 'upload');
         fd.append('type', type);
         fd.append('folderName', folderName);
         
-    	console.log('files['+i+']');
-    	console.log(files[i]);
         var status = new createStatusbar(obj); //Using this we can set progress.
-        status.setFileNameSize(files[i].name,files[i].size);
+        status.setFileNameSize( fileBuffer[i].name, fileBuffer[i].size );
         
-        sendFileToServer(fd,status);
+        sendFileToServer( fd, status );
    }
-	console.log('fileUpload end');
-	console.log('==================================================\n\n');
 }
-
-var fileBuffer =[];
 
 function setFiles(files){
-	console.log('==================================================');
 	console.log('setFiles start');
-	console.log('before fileBuffer ↓');
-	console.log(fileBuffer);
-	var tmp = [];
 	Array.prototype.push.apply(fileBuffer, files);
-	//fileBuffer.push(tmp);
-	console.log('after fileBuffer ↓');
 	console.log(fileBuffer);
 	console.log('setFiles end');
-	console.log('==================================================\n\n');
-}
-function getFiles(){
-	if(fileBuffer.length>1){
-		$('#message').find("#text").val('').html("只能選擇一筆檔案上傳!");
-		message_dialog.dialog("open");
-		return false;
-	}
-	console.log('==================================================');
-	console.log('getFiles start');
-	var input= document.createElement('INPUT');
-	
-	input.type = "file";
-	input.accept = ".csv,.xls,.xlsx";
-	//input.multiple = "multiple";
-	var files = $(input).context.files;
-	
-	console.log('getFiles fileBuffer ↓');
-	console.log(fileBuffer);
-	
-	for(var i=0;i<fileBuffer.length;i++){
-		files[i] = fileBuffer[i];
-	}
-	console.log('getFiles files ↓');
-	console.log(files);
-	console.log('getFiles end');
-	console.log('==================================================\n\n');
-	return files;
 }
 function clearFiles(){
 	fileBuffer = [];
@@ -291,7 +241,7 @@ function clearAll(){
 	$('#filesEdit').html('');
 	$('#statusbarDiv').html('');
 }
-var folderName = "";
+
 //build upload button and return this object
 function createUpBtn(){
 	var uploadBtn= document.createElement('BUTTON');
@@ -314,9 +264,8 @@ function createUpBtn(){
         sendStatus = 0;
         
         folderName = getFormatDate();
-        var files = getFiles();
         var obj = $(".dragandrophandler");
-	    fileUpload(files,obj);
+	    fileUpload(fileBuffer,obj);
 	});
 	return uploadBtn;
 }
@@ -394,7 +343,6 @@ $(document).ready(function(){
 	{
 	    e.stopPropagation();
 	    e.preventDefault();
-	    //$(this).css('border', '2px solid #0B85A1');
 	});
 	obj.on('dragover', function (e) 
 	{
@@ -403,13 +351,10 @@ $(document).ready(function(){
 	});
 	obj.on('drop', function (e) 
 	{
-	     //$(this).css('border', '2px dotted #0B85A1');
 	     e.preventDefault();
 	     var files = e.originalEvent.dataTransfer.files;
 	     createUpBtn();
 	     createClBtn();
-	     console.log('drop files:');
-	     console.log(files);
 	     //need to send dropped files to Server
 	     handleFileUpload(files);
 	     setFiles(files);
@@ -453,7 +398,6 @@ $(document).ready(function(){
 	{
 	  e.stopPropagation();
 	  e.preventDefault();
-	  //obj.css('border', '2px dotted #0B85A1');
 	});
 	$(document).on('drop', function (e) 
 	{
