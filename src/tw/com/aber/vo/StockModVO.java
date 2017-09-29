@@ -22,6 +22,25 @@ public class StockModVO implements Serializable {
 	private String startDate;
 	private String endDate;
 
+	private String main_reason; // tb_stock_mod_type
+	private String second_reason; // tb_stock_mod_type
+
+	public String getMain_reason() {
+		return main_reason;
+	}
+
+	public void setMain_reason(String main_reason) {
+		this.main_reason = main_reason;
+	}
+
+	public String getSecond_reason() {
+		return second_reason;
+	}
+
+	public void setSecond_reason(String second_reason) {
+		this.second_reason = second_reason;
+	}
+
 	public String getStartDate() {
 		return startDate;
 	}

@@ -48,6 +48,7 @@ public class stockMod extends HttpServlet {
 		StockModDetailVO stockModDetailVO = null;
 		List<StockModVO> master_rows = null;
 		List<StockModDetailVO> detail_rows = null;
+		List<StockModTypeVO> type_rows = null;
 		Gson gson = null;
 		String jsonStr = null;
 
@@ -104,16 +105,22 @@ public class stockMod extends HttpServlet {
 				stockModVO.setEndDate(endDate);
 
 				master_rows = stockModService.getSearchDBByDate(stockModVO);
-
 				jsonStr = gson.toJson(master_rows);
+
 				response.getWriter().write(jsonStr);
 			} catch (Exception e) {
 				logger.error("search exception: ".concat(e.getMessage()));
 			}
 		} else if ("getModType".equals(action)) {
-			stockModService = new StockModService();
-			jsonStr = stockModService.getModType();
-			response.getWriter().write(jsonStr);
+			try {
+				stockModService = new StockModService();
+				type_rows = stockModService.getModType();
+				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				jsonStr = gson.toJson(type_rows);
+				response.getWriter().write(jsonStr);
+			} catch (Exception e) {
+				logger.error("getModType exception: ".concat(e.getMessage()));
+			}
 		} else if ("insertStockMod".equals(action)) {
 			stockModService = new StockModService();
 			stockModVO = new StockModVO();
@@ -364,7 +371,7 @@ public class stockMod extends HttpServlet {
 		
 		public String deleteStockModByStockmodDetailId(String stockmodDetailIds);
 
-		public String searchModType();
+		public List<StockModTypeVO> searchModType();
 
 		public String getNewNo(StockModVO stockModVO);
 
@@ -408,7 +415,7 @@ public class stockMod extends HttpServlet {
 			return dao.searchDBByDate(stockModVO);
 		}
 
-		public String getModType() {
+		public List<StockModTypeVO> getModType() {
 			return dao.searchModType();
 		}
 
@@ -493,6 +500,8 @@ public class stockMod extends HttpServlet {
 					row.setCreate_time(rs.getDate("create_time"));
 					row.setProcess_user(rs.getString("process_user"));
 					row.setProcess_time(rs.getDate("process_time"));
+					row.setMain_reason(rs.getString("main_reason"));
+					row.setSecond_reason(rs.getString("second_reason"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -551,6 +560,8 @@ public class stockMod extends HttpServlet {
 					row.setCreate_time(rs.getDate("create_time"));
 					row.setProcess_user(rs.getString("process_user"));
 					row.setProcess_time(rs.getDate("process_time"));
+					row.setMain_reason(rs.getString("main_reason"));
+					row.setSecond_reason(rs.getString("second_reason"));
 
 					rows.add(row);
 				}
@@ -576,7 +587,7 @@ public class stockMod extends HttpServlet {
 		}
 
 		@Override
-		public String searchModType() {
+		public List<StockModTypeVO> searchModType() {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -595,10 +606,10 @@ public class stockMod extends HttpServlet {
 				while (rs.next()) {
 					row = new StockModTypeVO();
 					row.setMod_type(rs.getString("mod_type"));
+					row.setMain_reason(rs.getString("main_reason"));
+					row.setSecond_reason(rs.getString("second_reason"));
 					rows.add(row);
 				}
-
-				jsonStr = new Gson().toJson(rows);
 
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -618,7 +629,7 @@ public class stockMod extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
-			return jsonStr;
+			return rows;
 		}
 
 		@Override
@@ -661,6 +672,8 @@ public class stockMod extends HttpServlet {
 					row.setCreate_time(rs.getDate("create_time"));
 					row.setProcess_user(rs.getString("process_user"));
 					row.setProcess_time(rs.getDate("process_time"));
+					row.setMain_reason(rs.getString("main_reason"));
+					row.setSecond_reason(rs.getString("second_reason"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {

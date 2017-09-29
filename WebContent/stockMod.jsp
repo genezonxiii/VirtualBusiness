@@ -125,9 +125,18 @@
 					}));
 					
 					$(json_obj).each(function(i, item) {
+
+						var reason = '';
+						var mod_type = item.mod_type;
+						var main_reason = item.main_reason;
+						var second_reason = item.second_reason;
+						
+						reason +=  main_reason != null ? (main_reason + "/"): '';
+						reason +=  second_reason != null ? second_reason: '';
+						
 						$(select).append($("<option>", {
-							value : item.mod_type,
-							html : item.mod_type
+							value : mod_type,
+							html : reason
 						}));
 					});
 					modType = select;
@@ -363,7 +372,7 @@
 					+ "<input type='text' name='stockmod_time' class='input-date'>"
 					+ "</label></td>";
 
-			var stockmod_type = "<td>&nbsp;儲位異動型態&nbsp;</td>";
+			var stockmod_type = "<td>&nbsp;儲位異動原因&nbsp;</td>";
 					
 			var memo = "<td>&nbsp;備忘&nbsp;</td>" + "<td>"
 					+ "<input type='text' name='memo' placeholder='請填寫備忘'>"
@@ -615,8 +624,8 @@
 					"defaultContent" : ""
 				}
 				, {
-					"title" : "儲位異動型態",
-					"data" : "stockmod_type",
+					"title" : "儲位異動原因",
+					"data" : null,
 					"defaultContent" : ""
 				}, {
 					"title" : "處理狀態",
@@ -656,6 +665,20 @@
 						var options = $("<div/>").append(input, label);
 
 						return options.html();
+					}
+				},{
+					targets : 3,
+					searchable : false,
+					orderable : false,
+					render : function(data, type, row) {
+						var result = '';
+						var main_reason = row.main_reason;
+						var second_reason = row.second_reason;
+
+						result +=  main_reason != null ? (main_reason + "/"): '';
+						result +=  second_reason != null ? second_reason: '';
+						
+						return result;
 					}
 				}, {
 					//功能
