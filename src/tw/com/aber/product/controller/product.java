@@ -348,7 +348,38 @@ public class product extends HttpServlet {
 			}
 
 		}
-
+		if("sp_select_product_by_c_product_id".equals(action)) {
+			String c_product_id = request.getParameter("c_product_id");
+			
+				productService = new ProductService();
+				ProductBean productBean = new ProductBean();
+				
+				productBean.setGroup_id(group_id);
+				productBean.setC_product_id(c_product_id);
+				
+				List<ProductBean> list = productService.selectProductByCProductId(productBean);
+				
+				String jsonStrList = new Gson().toJson(list);
+				response.getWriter().write(jsonStrList);
+				logger.debug("jsonStrList:" + jsonStrList);
+				return;
+		}
+		if("sp_select_product_by_product_name".equals(action)) {
+			String product_name = request.getParameter("product_name");
+			
+			productService = new ProductService();
+			ProductBean productBean = new ProductBean();
+			
+			productBean.setGroup_id(group_id);
+			productBean.setProduct_name(product_name);
+			
+			List<ProductBean> list = productService.selectProductByProductName(productBean);
+			
+			String jsonStrList = new Gson().toJson(list);
+			response.getWriter().write(jsonStrList);
+			logger.debug("jsonStrList:" + jsonStrList);
+			return;
+		}
 	}
 
 	/************************* 對應資料庫表格格式 **************************************/
@@ -538,6 +569,10 @@ public class product extends HttpServlet {
 
 		public void deleteDB(String product_id, String user_id);
 
+		public List<ProductBean>selectProductByCProductId(ProductBean productBean);
+
+		public List<ProductBean>selectProductByProductName(ProductBean productBean);
+		
 		public List<ProductBean> searchAllDB(String group_id);
 
 		public List<SupplyVO> getSupplyname(String group_id, String supply_name);
@@ -564,7 +599,13 @@ public class product extends HttpServlet {
 		public ProductService() {
 			dao = new ProductDAO();
 		}
+		public List<ProductBean>selectProductByCProductId(ProductBean productBean){
+			return dao.selectProductByCProductId(productBean);
+		}
 
+		public List<ProductBean>selectProductByProductName(ProductBean productBean){
+			return dao.selectProductByProductName(productBean);
+		}
 		public ProductBean addProduct(String group_id, String c_product_id, String product_name, String supply_id,
 				String supply_name, String type_id, String unit_id, Float cost, Float price, int current_stock,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
@@ -677,7 +718,11 @@ public class product extends HttpServlet {
 		private static final String sp_get_unit_byname = "call sp_select_unit_byname (?,?)";
 		private static final String sp_check_ProductName = "call sp_check_ProductName (?,?,?)";
 		private static final String sp_getProductbyc_Product_id = "call sp_getProductbyc_Product_id(?,?)";
-
+		private static final String sp_select_product_by_product_name= "call sp_select_product_by_product_name(?,?)";
+		private static final String sp_select_product_by_c_product_id= "call sp_select_product_by_c_product_id(?,?)";
+		
+		
+		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
 		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
@@ -1316,6 +1361,142 @@ public class product extends HttpServlet {
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
 					list.add(productBean);
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
+		}
+
+		@Override
+		public List<ProductBean> selectProductByCProductId(ProductBean productBean) {
+			List<ProductBean> list = new ArrayList<ProductBean>();
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_product_by_c_product_id);
+				pstmt.setString(1, productBean.getGroup_id());
+				pstmt.setString(2, productBean.getC_product_id());
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					productBean = new ProductBean();
+					productBean.setProduct_id(rs.getString("product_id"));
+					productBean.setGroup_id(rs.getString("group_id"));
+					productBean.setC_product_id(rs.getString("c_product_id"));
+					productBean.setProduct_name(rs.getString("product_name"));
+					productBean.setSupply_id(rs.getString("supply_id"));
+					productBean.setSupply_name(rs.getString("supply_name"));
+					productBean.setType_id(rs.getString("type_id"));
+					productBean.setUnit_id(rs.getString("unit_id"));
+					productBean.setCost(rs.getFloat("cost"));
+					productBean.setPrice(rs.getFloat("price"));
+					productBean.setKeep_stock(rs.getInt("keep_stock"));
+					productBean.setPhoto(rs.getString("photo"));
+					productBean.setPhoto1(rs.getString("photo1"));
+					productBean.setDescription(rs.getString("description"));
+					productBean.setBarcode(rs.getString("barcode"));
+					productBean.setIspackage(rs.getString("package"));
+					
+					list.add(productBean); // Store the row in the list
+				}
+				// Handle any driver errors
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+				// Clean up JDBC resources
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
+		}
+
+		@Override
+		public List<ProductBean> selectProductByProductName(ProductBean productBean) {
+			List<ProductBean> list = new ArrayList<ProductBean>();
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_product_by_product_name);
+				pstmt.setString(1, productBean.getGroup_id());
+				pstmt.setString(2, productBean.getProduct_name());
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					productBean = new ProductBean();
+					productBean.setProduct_id(rs.getString("product_id"));
+					productBean.setGroup_id(rs.getString("group_id"));
+					productBean.setC_product_id(rs.getString("c_product_id"));
+					productBean.setProduct_name(rs.getString("product_name"));
+					productBean.setSupply_id(rs.getString("supply_id"));
+					productBean.setSupply_name(rs.getString("supply_name"));
+					productBean.setType_id(rs.getString("type_id"));
+					productBean.setUnit_id(rs.getString("unit_id"));
+					productBean.setCost(rs.getFloat("cost"));
+					productBean.setPrice(rs.getFloat("price"));
+					productBean.setKeep_stock(rs.getInt("keep_stock"));
+					productBean.setPhoto(rs.getString("photo"));
+					productBean.setPhoto1(rs.getString("photo1"));
+					productBean.setDescription(rs.getString("description"));
+					productBean.setBarcode(rs.getString("barcode"));
+					productBean.setIspackage(rs.getString("package"));
+					
+					list.add(productBean); // Store the row in the list
 				}
 				// Handle any driver errors
 			} catch (SQLException se) {

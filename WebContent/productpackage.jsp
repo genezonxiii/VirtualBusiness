@@ -795,7 +795,10 @@
 			source: function (request, response) {
 				$.ajax({
 					url : "product.do",
-					data :{action : "search"},
+					data :{
+						action : "sp_select_product_by_c_product_id",
+						c_product_id : request.term
+                    },
 					type: "POST",
 					dataType: "JSON",
 					success: function (data) {
@@ -844,7 +847,10 @@
 			source: function (request, response) {
 				$.ajax({
 					url : "product.do",
-					data :{action : "search"},
+					data :{
+						action : "sp_select_product_by_product_name",
+						product_name : request.term
+                    },
 					type: "POST",
 					dataType: "JSON",
 					success: function (data) {
