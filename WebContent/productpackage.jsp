@@ -450,7 +450,7 @@
 		$("#dialog-insert-package-form").validate({
 			rules : {
 				c_product_id : {maxlength : 40 , required : true},
-				package_type:{maxlength : 80 , required : true},
+				package_type:{maxlength : 80 , required : false},
 				product_name : {maxlength : 80 , required : true},
 				price: {digits: true, required : true},
 				barcode: {},
@@ -461,7 +461,7 @@
 		$("#dialog-update-package-form").validate({
 			rules : {
 				c_product_id : {maxlength : 40 , required : true},
-				package_type:{maxlength : 80 , required : true},
+				package_type:{maxlength : 80 , required : false},
 				product_name : {maxlength : 80 , required : true},
 				price: {digits: true, required : true},
 				barcode: {},
