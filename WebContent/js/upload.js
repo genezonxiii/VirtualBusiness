@@ -44,7 +44,8 @@ function getPlatformMap(){
 				platform_map[key]=value;			
 			});
 		}
-	});	
+	});
+	
 }
 
 function buildIconBtns(){
@@ -427,8 +428,18 @@ function fileUpload( fileBuffer, obj){
 	//判斷副檔名是否存在	 false為不存在
 	var ext_exist = false;
 	var ext;
-	var accept = $('input[name="type-radio-group"]:checked').attr('restrict').split(',');
+	var accept;
+	
+	if( $('input[name="type-radio-group"]:checked').length == 0){
+		accept = $('input[name="ec-radio-group"]:checked').attr('custom-restrict').split(',');
+	}else{
+		accept = $('input[name="type-radio-group"]:checked').attr('restrict').split(',');
+	}
 
+	$('input[name="type-radio-group"]').each(function() {
+        $(this).prop("checked", false);
+    });
+	
 	//判斷副檔名是否允許
 	for (var i = 0; i < fileBuffer.length; i++){
         var filename = fileBuffer[i].name;
@@ -561,7 +572,9 @@ $(document).ready(function() {
 	init();
 	
 	$("#iconBtns").delegate(":radio[name='ec-radio-group']", "click", function(e) {
-		
+			$('input[name="type-radio-group"]').each(function() {
+		        $(this).prop("checked", false);
+		    });
 			var dialog = $("#choose-order-type");
 			var key = $(this).val();
 			var value = platform_map[key];
