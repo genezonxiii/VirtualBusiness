@@ -407,7 +407,16 @@
 						effect : "blind",
 						duration : 500
 					},
-				width : 1200,
+					open: function(event, ui) {
+				        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+				    },
+					width : 1200,
+					buttons : [{
+					text : "關閉",
+					click : function() {
+						$("#dialog-sale-detail").dialog("close");
+					}
+					}],
 				close : function() {
 					$("#dialog-form-sale-detail").trigger("reset");
 				}
