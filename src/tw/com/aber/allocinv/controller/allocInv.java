@@ -94,6 +94,11 @@ public class allocInv extends HttpServlet {
 				List<AllocInvVo> allocInvVos = gson.fromJson(jsonList, type);
 
 				String supplyId = allocInvVos.get(0).getSupply_id();
+				
+				if (supplyId == null) {
+					response.getWriter().write("供應商資料尚未建立");
+					return;
+				}
 
 				PurchaseVO purchaseVO = new PurchaseVO();
 				purchaseVO.setSeq_no(seqNo);

@@ -613,10 +613,12 @@
 									if (json_obj.response) {
 										if (json_obj.response.head == "OK" || json_obj.response.head == "PART") {
 											var sale = json_obj.response.body.saleOrderResponse.saleOrders.saleOrder;
-											
+											if (json_obj.response.head == "PART") {
+												msg += "<font color='red'><b>注意：部分訂單需特別注意！若有疑問，請洽系統人員！</b></font><br/><br/>";
+											}
 											$.each(sale, function(key, value) {
 												var suc = value.result == 1? "/" + "出庫單號：" + value.shipmentId:"/" + "失敗";
-												var note = value.result == 1? "": "/" + value.note;
+												var note = value.result == 1? "": "/<font color='red'><b>" + value.note + '</b></font>';
 												msg += "訂單編號：" + value.erpOrder + suc + note + "<br/>";
 											});
 										} else if (json_obj.response.head == "ERR") {
