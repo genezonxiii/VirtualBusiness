@@ -103,7 +103,6 @@ public class ship extends HttpServlet {
 				rows = service.getSearchShipBySaleDate(groupId, startDate, endDate);
 				result = gson.toJson(rows);
 				response.getWriter().write(result);
-
 			} else if ("searchByOrderNo".equals(action)) {
 				String orderNo = request.getParameter("orderNo");
 
@@ -209,6 +208,124 @@ public class ship extends HttpServlet {
 
 					ValueService valueService = util.getValueService(request, response);
 
+					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
+					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+
+					if (responseUtil.getResponse() != null) {
+						if (responseUtil.getResponse().getHead().equals("OK")) {
+							List<SaleOrder> saleOrder = responseUtil.getResponse().getBody()
+									.getSaleOrderOutboundDetailResponse().getSaleOrders().getSaleOrder();
+
+							if (saleOrder != null) {
+								for (SaleOrder tmp : saleOrder) {
+									if (tmp.getResult().equals("1")) {
+										tmp.getHeader().setDataStatus(tmp.getHeader().getDataStatus());
+									}
+								}
+							}
+						}
+					}
+
+					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+					String gresult = gson.toJson(responseUtil);
+					response.getWriter().write(gresult);
+				} catch (Exception e) {
+					response.getWriter().write("失敗");
+					e.printStackTrace();
+					logger.error(e.getMessage());
+				}
+			} else if ("searchBySaleDateGroup".equals(action)) {
+				String startStr = request.getParameter("startDate");
+				String endStr = request.getParameter("endDate");
+
+				java.util.Date date = null;
+				Date startDate = null, endDate = null;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				try {
+					date = sdf.parse(startStr);
+					startDate = new java.sql.Date(date.getTime());
+					date = sdf.parse(endStr);
+					endDate = new java.sql.Date(date.getTime());
+				} catch (ParseException e) {
+					logger.error("search date convert :".concat(e.getMessage()));
+				}
+				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				service = new ShipService();
+
+				rows = service.getShipGroupByOrderNo(groupId, startDate, endDate);
+				result = gson.toJson(rows);
+				response.getWriter().write(result);
+			}else if ("sendToTelegraphGroup".equals(action)) {
+				List<ShipVO> shipVOList = null;
+				try {
+					String order_nos = request.getParameter("order_nos");
+
+					logger.debug("order_nos:" + order_nos);
+
+					order_nos = order_nos.replace(",", "','");
+
+					order_nos = "'" + order_nos + "'";
+					shipService = new ShipService();
+					shipVOList = shipService.getShipByShipSeqNoGroupByOrderNoNew(order_nos, "'" + groupId + "'");
+
+					ValueService valueService = util.getValueService(request, response);
+					SfApi sfApi = new SfApi();
+					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
+					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+					String gresult = gson.toJson(responseUtil);
+					response.getWriter().write(gresult);
+				} catch (Exception e) {
+					e.printStackTrace();
+					logger.debug(e.getMessage());
+				}
+			} else if ("sendToCancelSaleOrderServiceGroup".equals(action)) {
+				List<ShipVO> shipVOList = null;
+				try {
+					/***************************
+					 * 1.接收請求參數
+					 ***************************************/
+					String orderNos = request.getParameter("orderNos");
+					logger.debug("orderNos =" + orderNos);
+					String[] orderList = orderNos.split(",");
+					
+					shipVOList = new ArrayList<ShipVO>();
+					for(String order : orderList){
+						shipVO = new ShipVO();
+						shipVO.setOrder_no(order);
+						shipVOList.add(shipVO);
+					}
+					
+					ValueService valueService = util.getValueService(request, response);
+					SfApi sfApi = new SfApi();
+					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
+					String resXml = sfApi.sendXML(reqXml);
+					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+					String gresult = gson.toJson(responseUtil);
+					response.getWriter().write(gresult);
+				} catch (Exception e) {
+					logger.error(e.getMessage());
+				}
+			} else if ("saleOrderOutboundDetailQueryServiceGroup".equals(action)) {
+				List<ShipVO> shipVOList = null;
+				try {
+					String orderNos = request.getParameter("orderNos");
+					logger.debug("orderNos =" + orderNos);
+					String[] orderList = orderNos.split(",");
+					
+					shipVOList = new ArrayList<ShipVO>();
+					for(String order : orderList){
+						shipVO = new ShipVO();
+						shipVO.setOrder_no(order);
+						shipVOList.add(shipVO);
+					}
+					
+					ValueService valueService = util.getValueService(request, response);
+					
+					SfApi sfApi = new SfApi();
 					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
@@ -473,6 +590,14 @@ public class ship extends HttpServlet {
 		public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO) {
 			return dao.selectShipSfDetailStatus(shipSFDetailVO);
 		}
+		
+		public List<ShipVO> getShipGroupByOrderNo(String groupId, Date startDate, Date endDate) {
+			return dao.getShipGroupByOrderNo(groupId, startDate, endDate);
+		}
+
+		public List<ShipVO> getShipByShipSeqNoGroupByOrderNoNew(String orderNos, String groupId) {
+			return dao.getShipByShipSeqNoGroupByOrderNoNew(orderNos, groupId);
+		}
 		/*
 		 * public Boolean checkReport(String groupId, String orderNos) { return
 		 * dao.checkReport(groupId, orderNos,); }
@@ -497,8 +622,9 @@ public class ship extends HttpServlet {
 		private static final String sp_get_ship_by_shipseqno_group_by_order_no = "call sp_get_ship_by_shipseqno_group_by_order_no (?,?)";
 		private static final String sp_select_ship_sf_status = "call sp_select_ship_sf_status (?,?,?)";
 		private static final String sp_select_ship_sf_detail_status = "call sp_select_ship_sf_detail_status (?,?,?)";
+		private static final String sp_getShipGroupByOrderNo = "call sp_getShipGroupByOrderNo (?,?,?)";
+		private static final String sp_get_ship_by_orderno_group_by_order_no = "call sp_get_ship_by_orderno_group_by_order_no (?,?)";
 		
-
 		@Override
 		public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
 			List<ShipVO> rows = new ArrayList<ShipVO>();
@@ -1095,6 +1221,122 @@ public class ship extends HttpServlet {
 		}
 
 		@Override
+		public List<ShipVO> getShipByShipSeqNoGroupByOrderNoNew(String shipSeqNos, String groupId) {
+
+			List<ShipVO> shipVOList = new ArrayList<ShipVO>();
+			ShipVO shipVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			List<ShipDetail> shipDetailList = null;
+			ShipDetail shipDetail = null;
+
+			String ship_id_Record = null;
+			String ship_id_now = "";
+			String order_no_Record = null;
+			String order_no_now = "";
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_ship_by_orderno_group_by_order_no);
+
+				logger.debug("getShipByShipSeqNo groupId:" + groupId + "shipSeqNos:" + shipSeqNos);
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, shipSeqNos);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+
+					// sp 為ship sd 為shipDetail
+					shipDetail = new ShipDetail();
+					shipDetail.setC_product_id(rs.getString("sd_c_product_id"));
+					shipDetail.setDeliveryway(rs.getString("sd_deliveryway"));
+					shipDetail.setGroup_id(rs.getString("sd_group_id"));
+					shipDetail.setMemo(rs.getString("sd_memo"));
+					shipDetail.setPrice(rs.getString("sd_price"));
+					shipDetail.setProduct_id(rs.getString("sd_product_id"));
+					shipDetail.setProduct_name(rs.getString("sd_product_name"));
+
+					String sd_quantity = rs.getString("sd_quantity");
+
+					if (!(sd_quantity == null || "".equals(sd_quantity))) {
+						shipDetail.setQuantity(Integer.parseInt(sd_quantity));
+					}
+					shipDetail.setShip_id(rs.getString("sd_ship_id"));
+					shipDetail.setShipDetail_id(rs.getString("sd_shipDetail_id"));
+					shipDetail.setUser_id(rs.getString("sd_user_id"));
+
+					// 如果現在跑的ship_id跟紀錄的ship_id不相等 那代表已經換出貨單
+					// 所以要新增出貨明細
+					logger.debug("order_no_now:" + order_no_now);
+					logger.debug("order_no_Record:" + order_no_Record);
+					logger.debug("order_no_Record:" + shipDetail.getC_product_id());
+					logger.debug("order_no_Record:" + shipDetail.getProduct_name());
+
+					ship_id_now = rs.getString("sp_ship_id");
+					order_no_now = rs.getString("sp_order_no");
+					if ((!order_no_now.equals(order_no_Record)) || rs.isFirst()) {
+						shipDetailList = new ArrayList<ShipDetail>();
+
+						// 並且紀錄出貨明細
+						shipVO = new ShipVO();
+						shipVO.setShip_id(rs.getString("sp_ship_id"));
+
+						shipVO.setShip_seq_no(rs.getString("sp_ship_seq_no"));
+						shipVO.setGroup_id(rs.getString("sp_group_id"));
+						shipVO.setOrder_no(rs.getString("sp_order_no"));
+						shipVO.setUser_id(rs.getString("sp_user_id"));
+						shipVO.setCustomer_id(rs.getString("sp_customer_id"));
+						shipVO.setMemo(rs.getString("sp_memo"));
+						shipVO.setDeliveryway(rs.getString("sp_deliveryway"));
+						shipVO.setTotal_amt(rs.getFloat("sp_total_amt"));
+						shipVO.setDeliver_name(rs.getString("sp_deliver_name"));
+						shipVO.setDeliver_to(rs.getString("sp_deliver_to"));
+						shipVO.setV_deliver_mobile(rs.getString("se_deliver_mobile"));
+						shipVO.setV_deliver_name(rs.getString("se_deliver_name"));
+						shipVO.setV_ext_deliver_note(rs.getString("se_deliver_note"));
+						shipVO.setV_deliver_phone(rs.getString("se_deliver_phone"));
+						shipVO.setV_pay_kind(rs.getString("se_pay_kind"));
+						shipVO.setV_pay_status(rs.getString("se_pay_status"));
+						shipVO.setV_total_amt(rs.getString("se_total_amt"));
+						shipVO.setV_dis_date(rs.getDate("sm_dis_date"));
+						shipVO.setShipDetail(shipDetailList);
+						shipVOList.add(shipVO);
+
+						ship_id_Record = ship_id_now;
+						order_no_Record = order_no_now;
+					}
+
+					shipDetailList.add(shipDetail);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return shipVOList;
+		}
+
+		@Override
 		public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO) {
 
 			List<ShipSFStatusVO> rows = new ArrayList<ShipSFStatusVO>();
@@ -1266,6 +1508,61 @@ public class ship extends HttpServlet {
 			}
 			return rows;
 		}
+
+		@Override
+		public List<ShipVO> getShipGroupByOrderNo(String groupId, Date startDate, Date endDate) {
+			List<ShipVO> rows = new ArrayList<ShipVO>();
+			
+			ShipVO row = null;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_getShipGroupByOrderNo);
+
+				pstmt.setString(1, groupId);
+				pstmt.setDate(2, startDate);
+				pstmt.setDate(3, endDate);
+
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					row = new ShipVO();
+					row.setGroup_id(rs.getString("group_id"));
+					row.setOrder_no(rs.getString("order_no"));
+					row.setTotal_amt(rs.getFloat("total_amt"));
+					row.setDeliver_name(rs.getString("deliver_name"));
+					row.setDeliver_to(rs.getString("deliver_to"));
+					row.setV_sale_date(rs.getDate("sale_date"));
+					row.setV_trans_list_date(rs.getDate("trans_list_date"));
+					row.setV_order_source(rs.getString("order_source"));
+
+					rows.add(row);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return rows;
+		}
 	}
 
 }
@@ -1293,5 +1590,9 @@ interface ship_interface {
 	public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO);
 	
 	public List<ShipVO> getSearchShipByWaybillNo(String groupId,String waybill_no);
+
+	public List<ShipVO> getShipByShipSeqNoGroupByOrderNoNew(String orderNos, String groupId);
+	
+	public List<ShipVO> getShipGroupByOrderNo(String groupId, Date startDate, Date endDate);
 
 }
