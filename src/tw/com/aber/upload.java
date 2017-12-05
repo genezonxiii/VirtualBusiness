@@ -5,18 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-//import org.apache.http.HttpResponse;
-//import org.apache.http.client.ClientProtocolException;
-//import org.apache.http.config.Lookup;
-//import org.apache.http.client.HttpClient;
-//import org.apache.http.client.methods.HttpGet;
-//import org.apache.http.impl.client.BasicResponseHandler;
-//import org.apache.http.impl.client.HttpClientBuilder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -82,6 +76,7 @@ public class upload extends HttpServlet {
 
 		private static final String sp_select_upload_throwfile_platform = "call sp_select_upload_throwfile_platform ()";
 		private static final String sp_select_upload_throwfile_platform_way = "call sp_select_upload_throwfile_platform_way ()";
+		private static final String sp_insert_upload = "call sp_insert_upload(?,?,?,?,?)";
 
 		public List<Throwfile> searchPlatformDB() {
 
@@ -197,6 +192,45 @@ public class upload extends HttpServlet {
 			}
 			return list;
 		}
+		
+		public void insertUpload(String groupId, String orderSource, String delivery, String oriName, String uuidName) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_insert_upload);
+
+				cs.setString(1, groupId);
+				cs.setString(2, orderSource);
+				cs.setString(3, delivery);
+				cs.setString(4, oriName);
+				cs.setString(5, uuidName);
+
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				// Clean up JDBC resources
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
 	}
 
 	class UploadService {
@@ -232,6 +266,14 @@ public class upload extends HttpServlet {
 				logger.debug("getPlatformWayJson erroe: " + e.getMessage());
 			}
 			return jsonStrList;
+		}
+		
+		public void insertUpload(String groupId, String orderSource, String delivery, String oriName, String uuidName) {
+			try {
+				dao.insertUpload(groupId, orderSource, delivery, oriName, uuidName);
+			} catch (Exception e) {
+				logger.debug("insertUpload error: " + e.getMessage());
+			}
 		}
 	}
 
@@ -341,6 +383,10 @@ public class upload extends HttpServlet {
 						if (!file.exists()) {
 							file.mkdirs();
 						}
+						
+						UploadService service = new UploadService();
+						service.insertUpload(group_id, platform, deliveryMethod, fileName, _uid + "." + ext);
+						
 						logger.debug("\nfileName:{}\nsavePath:{}\nfullPath:{}", fileName, savePath, fullPath);
 						InputStream is = fi.getInputStream();
 						FileOutputStream fos = new FileOutputStream(fullPath);
@@ -407,11 +453,6 @@ public class upload extends HttpServlet {
 						+ new String(Base64.encodeBase64String(user_id.getBytes()));
 				logger.debug("conString : " + conString);
 				ret = webService(request, response, conString);
-				if("false".equals(ret)){
-					File file = new File(fullPath);
-					file.delete();
-					logger.debug("file delete:" + fullPath);
-				}
 				response.getWriter().write(ret);
 			} catch (FileUploadException e) {
 				logger.debug("Cannot parse multipart request");
