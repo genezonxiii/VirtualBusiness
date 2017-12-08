@@ -36,7 +36,7 @@
 		<div class="content-wrap" >
 			<h2 align="center">請選擇拋轉平台</h2>
 			<div class="dragandrophandler" id="fileDiv">
-				<p align="center">Drag & Click Files Here</p>
+				<p align="center">請拖拉檔案至此或直接點擊後選擇檔案</p>
 				<div class="form-row" id ="filesEdit"></div>
 			</div>
 			<div class="statusbarDiv" id ="statusbarDiv"></div>
