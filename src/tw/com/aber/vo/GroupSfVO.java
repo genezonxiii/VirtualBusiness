@@ -11,8 +11,7 @@ public class GroupSfVO implements Serializable{
 	private String company_code;
 	private String monthly_account;
 	private String vendor_code;
-	
-	
+	private String env;
 	
 	public String getGroup_id() {
 		return group_id;
@@ -49,6 +48,16 @@ public class GroupSfVO implements Serializable{
 	}
 	public void setVendor_code(String vendor_code) {
 		this.vendor_code = vendor_code;
+	}
+	public String getEnv() {
+		return env;
+	}
+	public void setEnv(String env) {
+		if (env == null) {
+			this.env = "";
+		} else {
+			this.env = env;
+		}
 	}
 
 }

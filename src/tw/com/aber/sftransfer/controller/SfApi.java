@@ -75,6 +75,8 @@ import tw.com.aber.vo.WarehouseVO;
 
 public class SfApi {
 	private static final Logger logger = LogManager.getLogger(SfApi.class);
+	private static final String productction = "http://bsp.sf-express.com/bsp-wms/OmsCommons";
+	private static final String testing = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
 	
 	/******************
 	 * 商品接口
@@ -920,35 +922,29 @@ public class SfApi {
 	/* 
 	 * 電文加密前置作業
 	 */
-	public String sendXML(String reqXml) {
-		String targetURL = 
-				/*
-				 * Testing
-				 */
-//				"http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
-				/*
-				 * Production
-				 */
-				"http://bsp.sf-express.com/bsp-wms/OmsCommons";
+	public String sendXML(String env, String reqXml) {		
 		String urlParameters = "";
-
-		SfApi api = new SfApi();
-
 		String logisticsInterface = reqXml;
 		String dataDigest = reqXml + "123456";
-
-		Md5Base64 enMd5Base64 = new Md5Base64();
-		dataDigest = enMd5Base64.encode(dataDigest);
+		
+		//default testing
+		String targetURL = testing;
+		
+		if (env != null && env.equals("PRD")) {
+			targetURL = productction;
+		}
+		
+		dataDigest = Md5Base64.encode(dataDigest);
 		logger.debug("md5 + Base64:" + dataDigest);
-		dataDigest = enMd5Base64.urlEncode(dataDigest);
+		dataDigest = Md5Base64.urlEncode(dataDigest);
 		logger.debug("md5 + Base64 > urlEncode:" + dataDigest);
 
-		logisticsInterface = enMd5Base64.urlEncode(logisticsInterface);
+		logisticsInterface = Md5Base64.urlEncode(logisticsInterface);
 		logger.debug("logisticsInterface:" + logisticsInterface);
 
 		urlParameters = "logistics_interface=" + logisticsInterface + "&data_digest=" + dataDigest;
 
-		String returnValue = api.executePost(targetURL, urlParameters);
+		String returnValue = SfApi.executePost(targetURL, urlParameters);
 		logger.debug("returnValue:" + returnValue);
 		return returnValue;
 	}

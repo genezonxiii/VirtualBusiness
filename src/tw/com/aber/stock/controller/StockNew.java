@@ -97,13 +97,14 @@ public class StockNew extends HttpServlet {
 			SfApi sfApi = new SfApi();
 
 			ValueService valueService = util.getValueService(request, response);
-
+			String env = valueService.getGroupSfVO().getEnv();
+			
 			logger.debug("stockNewList.size():" + stockNewList.size());
 			logger.debug("valueService:" + valueService);
 			logger.debug("inventory_status:" + inventory_status);
 
 			String reqXml = sfApi.genRtInventoryQueryService(stockNewList, valueService, inventory_status);
-			String resXml = sfApi.sendXML(reqXml);
+			String resXml = sfApi.sendXML(env, reqXml);
 
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 			

@@ -300,8 +300,9 @@ public class product extends HttpServlet {
 				SfApi sfApi = new SfApi();
 
 				ValueService valueService = util.getValueService(request, response);
+				String env = valueService.getGroupSfVO().getEnv();
 				String reqXml = sfApi.genItemService(productList, valueService);
-				String resXml = sfApi.sendXML(reqXml);
+				String resXml = sfApi.sendXML(env, reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);
@@ -337,8 +338,9 @@ public class product extends HttpServlet {
 				SfApi sfApi = new SfApi();
 
 				ValueService valueService = util.getValueService(request, response);
+				String env = valueService.getGroupSfVO().getEnv();
 				String reqXml = sfApi.genItemQueryService(productList, valueService);
-				String resXml = sfApi.sendXML(reqXml);
+				String resXml = sfApi.sendXML(env, reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);

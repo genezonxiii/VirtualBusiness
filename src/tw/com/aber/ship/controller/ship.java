@@ -149,8 +149,9 @@ public class ship extends HttpServlet {
 					SfApi sfApi = new SfApi();
 
 					ValueService valueService = util.getValueService(request, response);
+					String env = valueService.getGroupSfVO().getEnv();
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
-					String resXml = sfApi.sendXML(reqXml);
+					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
@@ -180,9 +181,10 @@ public class ship extends HttpServlet {
 					logger.debug("ship_seq_nos =" + ship_seq_nos);
 
 					ValueService valueService = util.getValueService(request, response);
-
+					String env = valueService.getGroupSfVO().getEnv();
+					
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
-					String resXml = sfApi.sendXML(reqXml);
+					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
@@ -207,9 +209,10 @@ public class ship extends HttpServlet {
 					logger.debug("ship_seq_nos =" + ship_seq_nos);
 
 					ValueService valueService = util.getValueService(request, response);
-
+					String env = valueService.getGroupSfVO().getEnv();
+					
 					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
-					String resXml = sfApi.sendXML(reqXml);
+					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 
 					if (responseUtil.getResponse() != null) {
@@ -270,9 +273,10 @@ public class ship extends HttpServlet {
 					shipVOList = shipService.getShipByShipSeqNoGroupByOrderNoNew(order_nos, "'" + groupId + "'");
 
 					ValueService valueService = util.getValueService(request, response);
+					String env = valueService.getGroupSfVO().getEnv();
 					SfApi sfApi = new SfApi();
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
-					String resXml = sfApi.sendXML(reqXml);
+					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
@@ -299,9 +303,10 @@ public class ship extends HttpServlet {
 					}
 					
 					ValueService valueService = util.getValueService(request, response);
+					String env = valueService.getGroupSfVO().getEnv();
 					SfApi sfApi = new SfApi();
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
-					String resXml = sfApi.sendXML(reqXml);
+					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
@@ -324,10 +329,11 @@ public class ship extends HttpServlet {
 					}
 					
 					ValueService valueService = util.getValueService(request, response);
+					String env = valueService.getGroupSfVO().getEnv();
 					
 					SfApi sfApi = new SfApi();
 					String reqXml = sfApi.genSaleOrderOutboundDetailQueryService(shipVOList, valueService);
-					String resXml = sfApi.sendXML(reqXml);
+					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 
 					if (responseUtil.getResponse() != null) {

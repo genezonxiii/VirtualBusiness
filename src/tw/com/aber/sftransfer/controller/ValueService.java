@@ -176,6 +176,7 @@ public class ValueService {
 					groupSfVO.setGroup_id(rs.getString("group_id"));
 					groupSfVO.setMonthly_account(rs.getString("monthly_account"));
 					groupSfVO.setVendor_code(rs.getString("vendor_code"));
+					groupSfVO.setEnv(rs.getString("env"));
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());

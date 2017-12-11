@@ -172,9 +172,10 @@ public class productpackage extends HttpServlet {
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
 			
 			ValueService valueService = util.getValueService(request, response);
+			String env = valueService.getGroupSfVO().getEnv();
 			SfApi sfApi = new SfApi();
 			String reqXml = sfApi.genBomService(packageVOList, valueService);
-			String resXml = sfApi.sendXML(reqXml);
+			String resXml = sfApi.sendXML(env, reqXml);
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String gresult = gson.toJson(responseUtil);
@@ -184,10 +185,10 @@ public class productpackage extends HttpServlet {
 			List<tw.com.aber.vo.PackageVO> packageVOList = dao.getAllPackageInfo(group_id, packageIds);
 
 			ValueService valueService = util.getValueService(request, response);
-			SfApi sfApi = new SfApi();
-		
+			String env = valueService.getGroupSfVO().getEnv();
+			SfApi sfApi = new SfApi();		
 			String reqXml = sfApi.genItemServiceForPackage(packageVOList, valueService);
-			String resXml = sfApi.sendXML(reqXml);
+			String resXml = sfApi.sendXML(env, reqXml);
 			ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			String gresult = gson.toJson(responseUtil);
@@ -200,8 +201,9 @@ public class productpackage extends HttpServlet {
 				SfApi sfApi = new SfApi();
 
 				ValueService valueService = util.getValueService(request, response);
+				String env = valueService.getGroupSfVO().getEnv();
 				String reqXml = sfApi.genItemQueryService(arr_c_product_id, valueService);
-				String resXml = sfApi.sendXML(reqXml);
+				String resXml = sfApi.sendXML(env, reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);				
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);

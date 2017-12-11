@@ -582,9 +582,9 @@ public class purchase extends HttpServlet {
 						purchase_ids);
 
 				ValueService valueService = util.getValueService(request, response);
-
+				String env = valueService.getGroupSfVO().getEnv();
 				String reqXml = sfApi.genPurchaseOrderService(purchaseList, valueService);
-				String resXml = sfApi.sendXML(reqXml);
+				String resXml = sfApi.sendXML(env, reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);
@@ -610,8 +610,9 @@ public class purchase extends HttpServlet {
 				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
 						purchase_ids);
 				ValueService valueService = util.getValueService(request, response);
+				String env = valueService.getGroupSfVO().getEnv();
 				String reqXml =sfApi.genCancelPurchaseOrderInboundQueryService(purchaseList, valueService);
-				String resXml = sfApi.sendXML(reqXml);
+				String resXml = sfApi.sendXML(env, reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);
@@ -636,8 +637,9 @@ public class purchase extends HttpServlet {
 				List<PurchaseVO> purchaseList = purchaseService.getPurchasesByPurchaseIDs("'" + group_id + "'",
 						purchase_ids);
 				ValueService valueService = util.getValueService(request, response);
+				String env = valueService.getGroupSfVO().getEnv();
 				String reqXml =sfApi.genPurchaseOrderInboundQueryService(purchaseList, valueService);
-				String resXml = sfApi.sendXML(reqXml);
+				String resXml = sfApi.sendXML(env, reqXml);
 				ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 				String gresult = gson.toJson(responseUtil);
