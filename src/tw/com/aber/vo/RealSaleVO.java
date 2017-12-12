@@ -26,6 +26,8 @@ public class RealSaleVO implements java.io.Serializable{
 	private String order_status;
 	private String deliver_name;
 	private String deliver_to;
+	private Date upload_date;
+	
 	public String getRealsale_id() {
 		return realsale_id;
 	}
@@ -151,6 +153,12 @@ public class RealSaleVO implements java.io.Serializable{
 	}
 	public void setDeliver_to(String deliver_to) {
 		this.deliver_to = deliver_to;
+	}
+	public Date getUpload_date() {
+		return upload_date;
+	}
+	public void setUpload_date(Date upload_date) {
+		this.upload_date = upload_date;
 	}
 
 }

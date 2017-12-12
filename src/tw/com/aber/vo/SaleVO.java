@@ -21,6 +21,7 @@ public class SaleVO implements java.io.Serializable {
 	private String invoice;
 	private Date invoice_date;
 	private Date trans_list_date;
+	private Date upload_date;
 	private Date dis_date;
 	private String memo;
 	private Date sale_date;
@@ -230,6 +231,14 @@ public class SaleVO implements java.io.Serializable {
 
 	public void setInvoice_time(Time invoice_time) {
 		this.invoice_time = invoice_time;
+	}
+
+	public Date getUpload_date() {
+		return upload_date;
+	}
+
+	public void setUpload_date(Date upload_date) {
+		this.upload_date = upload_date;
 	}
 	
 }

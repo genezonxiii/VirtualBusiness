@@ -160,6 +160,13 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 							id="trans_list_date_end" name="trans_list_date_end"></td>
 					</tr>
 					<tr>
+						<td>上傳日期區間：</td>
+						<td><input type="text" class="input-date"
+							id="upload_date_begin" name="upload_date_begin"></td>
+						<td><input type="text" class="input-date"
+							id="upload_date_end" name="upload_date_end"></td>
+					</tr>
+					<tr>
 						<td>出貨日期區間：</td>
 						<td><input type="text" class="input-date" id="dis_date_begin"
 							name="dis_date_begin"></td>
@@ -595,6 +602,8 @@ String privilege = (String) request.getSession().getAttribute("privilege");
  					trans_list_date_end : $("#trans_list_date_end").val(),
  					dis_date_begin : $("#dis_date_begin").val(),
  					dis_date_end : $("#dis_date_end").val(),
+ 					upload_date_begin : $("#upload_date_begin").val(),
+ 					upload_date_end : $("#upload_date_end").val(),
  					order_source : $("#order_source").val(),
  					deliveryway : $("#deliveryway").val(),
  					customerid : $("#customerid").val()

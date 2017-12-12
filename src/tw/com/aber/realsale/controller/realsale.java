@@ -64,6 +64,8 @@ public class realsale extends HttpServlet {
 				String c_order_source = request.getParameter("order_source");
 				String c_deliveryway = request.getParameter("deliveryway");
 				String c_customerid = request.getParameter("customerid");
+				String c_upload_date_begin = request.getParameter("upload_date_begin");
+				String c_upload_date_end = request.getParameter("upload_date_end");
 				
 //				if ((c_order_no_begin.trim()).length() > 0 && (c_order_no_end.trim()).length() > 0) {
 //					saleList = saleService.getSearchDB(group_id, c_order_no_begin, c_order_no_end);
@@ -80,7 +82,7 @@ public class realsale extends HttpServlet {
 //				} else {
 //					saleList = saleService.getSearchAllDB(group_id);					
 //				}
-				realsaleList = realsaleService.getSearchMuliDB(group_id, c_order_no_begin, c_order_no_end,c_customerid,c_trans_list_date_begin,c_trans_list_date_end,c_dis_date_begin,c_dis_date_end,c_order_source,c_deliveryway);
+				realsaleList = realsaleService.getSearchMuliDB(group_id, c_order_no_begin, c_order_no_end,c_customerid,c_trans_list_date_begin,c_trans_list_date_end,c_dis_date_begin,c_dis_date_end,c_order_source,c_deliveryway, c_upload_date_begin, c_upload_date_end);
 				String jsonStrList = gson.toJson(realsaleList);
 				logger.info(jsonStrList);
 				response.getWriter().write(jsonStrList);
@@ -313,7 +315,7 @@ public class realsale extends HttpServlet {
 		
 		public List<RealSaleDetailVO> getRealSaleDetail(RealSaleDetailVO saleRealDetailVO);
 		
-		public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway);
+		public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway, String upload_date_begin, String upload_date_end);
 	
 		public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end);
 		
@@ -367,8 +369,8 @@ public class realsale extends HttpServlet {
 			return dao.getRealSaleDetail(realsaleDetailVO);
 		}
 		
-		public List<RealSaleVO> getSearchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway) {
-			return dao.searchMuliDB(group_id,c_order_no_begin,c_order_no_end,c_customerid,c_trans_list_date_begin,c_trans_list_date_end,c_dis_date_begin,c_dis_date_end,c_order_source,c_deliveryway);
+		public List<RealSaleVO> getSearchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway, String upload_date_begin, String upload_date_end) {
+			return dao.searchMuliDB(group_id,c_order_no_begin,c_order_no_end,c_customerid,c_trans_list_date_begin,c_trans_list_date_end,c_dis_date_begin,c_dis_date_end,c_order_source,c_deliveryway, upload_date_begin, upload_date_end);
 		}
 		
 		public JSONObject importRealSale(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
@@ -755,7 +757,7 @@ public class realsale extends HttpServlet {
 		}
 	
 		@Override
-		public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway) {
+		public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway, String upload_begin, String upload_end) {
 			List<RealSaleVO> list = new ArrayList<RealSaleVO>();
 			RealSaleVO realSaleVO = null;
 
@@ -766,7 +768,7 @@ public class realsale extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				String sqlString="SELECT RS.order_no,RS.order_source,RS.customer_id,RS.total_amt,RS.invoice,RS.invoice_date,RS.trans_list_date,RS.sale_date,RS.dis_date,RS.order_source,RS.memo,RS.realsale_id,C.name as name FROM tb_realsale RS "
+				String sqlString="SELECT RS.order_no,RS.order_source,RS.customer_id,RS.total_amt,RS.invoice,RS.invoice_date,RS.trans_list_date,RS.sale_date,RS.dis_date,RS.order_source,RS.memo,RS.realsale_id,C.name as name, RS.upload_date FROM tb_realsale RS "
 								+ "LEFT JOIN tmp.tb_customer C ON RS.customer_id=C.customer_id and RS.group_id=C.group_id "
 								+ "WHERE isreturn=false";
 				  
@@ -782,6 +784,9 @@ public class realsale extends HttpServlet {
 				if ((c_dis_date_begin.trim()).length() > 0 && (c_dis_date_end.trim()).length() > 0) {
 					sqlString+=" and RS.dis_date between '"+ c_dis_date_begin +"' and '"+ c_dis_date_end +"'";
 				}	
+				if ((upload_begin.trim()).length() > 0 && (upload_end.trim()).length() > 0) {
+					sqlString+=" and RS.upload_date between '"+ upload_begin +"' and '"+ upload_begin +"'";
+				}
 				if ((c_order_source.trim()).length() > 0) {
 					sqlString+=" and RS.order_source = '"+ c_order_source +"'";
 				}
@@ -808,6 +813,8 @@ public class realsale extends HttpServlet {
 					realSaleVO.setInvoice(rs.getString("invoice"));
 					realSaleVO.setTotal_amt(rs.getFloat("total_amt"));
 					realSaleVO.setInvoice_date(rs.getDate("invoice_date"));
+					realSaleVO.setUpload_date(rs.getDate("upload_date"));
+					
 					list.add(realSaleVO); // Store the row in the list
 				}
 			} catch (SQLException se) {

@@ -73,16 +73,25 @@ public class sale extends HttpServlet {
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
 			} else if ("search_trans_list_date".equals(action)) {
+				String type = request.getParameter("type");
 				String start_date = request.getParameter("trans_list_start_date");
 				String end_date = request.getParameter("trans_list_end_date");
+				String upload_start_date = request.getParameter("upload_start_date");
+				String upload_end_date = request.getParameter("upload_end_date");
 
-				logger.debug("start_date:".concat(start_date));
-				logger.debug("end_date:".concat(end_date));
+				logger.debug("type:" + type);
+				logger.debug("trans_list_date start_date:" + start_date);
+				logger.debug("end_date:" + end_date);
+				logger.debug("upload_date start_date:" + upload_start_date);
+				logger.debug("end_date:" + upload_end_date);
 
-				if (start_date.trim().length() == 0 && end_date.trim().length() == 0) {
+				if (start_date.trim().length() == 0 && end_date.trim().length() == 0
+						&& upload_start_date.trim().length() == 0 && upload_end_date.trim().length() == 0) {
 					saleList = saleService.getSearchAllDB(group_id);
-				} else if (start_date.trim().length() > 0 && end_date.trim().length() > 0) {
+				} else if (type.equals("searh-trans-list-date") && start_date.trim().length() > 0 && end_date.trim().length() > 0) {
 					saleList = saleService.getSearchTransListDateDB(group_id, start_date, end_date);
+				} else if (type.equals("search-upload-date") && upload_start_date.trim().length() > 0 && upload_end_date.trim().length() > 0) {
+					saleList = saleService.searchUploadDateDB(group_id, upload_start_date, upload_end_date);
 				}
 
 				String jsonStrList = gson.toJson(saleList);
@@ -654,7 +663,9 @@ public class sale extends HttpServlet {
 		
 		public void updateSaleInvoiceVcodeAndInvoice_time(List<SaleVO> SaleVOs,String InvoiceVcode,String Invoice_time);
 		
-
+		public List<SaleVO> searchUploadDateDB(String group_id, String startDate,
+				String endDate);
+		
 	}
 
 	class SaleService {
@@ -693,6 +704,11 @@ public class sale extends HttpServlet {
 		public List<SaleVO> getSearchTransListDateDB(String group_id, String trans_list_start_date,
 				String trans_list_end_date) {
 			return dao.searchTransListDateDB(group_id, trans_list_start_date, trans_list_end_date);
+		}
+		
+		public List<SaleVO> searchUploadDateDB(String group_id, String startDate,
+				String endDate) {
+			return dao.searchUploadDateDB(group_id, startDate, endDate);
 		}
 
 		public List<SaleVO> getSearchDisDateDB(String group_id, String dis_start_date, String dis_end_date) {
@@ -786,6 +802,7 @@ public class sale extends HttpServlet {
 		private static final String sp_selectall_sale = "call sp_selectall_sale (?)";
 		private static final String sp_select_sale_bycproductid = "call sp_select_sale_bycproductid (?,?)";
 		private static final String sp_select_sale_bytranslistdate = "call sp_select_sale_bytranslistdate(?,?,?)";
+		private static final String sp_select_sale_by_upload_date = "call sp_select_sale_by_upload_date(?,?,?)";
 		private static final String sp_select_sale_bydisdate = "call sp_select_sale_bydisdate(?,?,?)";
 		private static final String sp_get_sale_newseqno = "call sp_get_sale_seqno(?)";
 		private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -1086,6 +1103,71 @@ public class sale extends HttpServlet {
 					saleVO.setInvoice(rs.getString("invoice"));
 					saleVO.setInvoice_date(rs.getDate("invoice_date"));
 					saleVO.setTrans_list_date(rs.getDate("trans_list_date"));
+					saleVO.setDis_date(rs.getDate("dis_date"));
+					saleVO.setMemo(rs.getString("memo"));
+					saleVO.setSale_date(rs.getDate("sale_date"));
+					saleVO.setOrder_source(rs.getString("order_source"));
+					saleVO.setCustomer_id(rs.getString("customer_id"));
+					saleVO.setName(rs.getString("name"));
+					saleVO.setUpload_date(rs.getDate("upload_date"));
+					
+					list.add(saleVO);
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return list;
+		}
+		
+		@Override
+		public List<SaleVO> searchUploadDateDB(String group_id, String startDate,
+				String endDate) {
+			List<SaleVO> list = new ArrayList<SaleVO>();
+			SaleVO saleVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_select_sale_by_upload_date);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, startDate);
+				pstmt.setString(3, endDate);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					saleVO = new SaleVO();
+					saleVO.setSale_id(rs.getString("sale_id"));
+					saleVO.setSeq_no(rs.getString("seq_no"));
+					saleVO.setOrder_no(rs.getString("order_no"));
+					saleVO.setProduct_name(rs.getString("product_name"));
+					saleVO.setC_product_id(rs.getString("c_product_id"));
+					saleVO.setQuantity(rs.getInt("quantity"));
+					saleVO.setPrice(rs.getFloat("price"));
+					saleVO.setInvoice(rs.getString("invoice"));
+					saleVO.setInvoice_date(rs.getDate("invoice_date"));
+					saleVO.setTrans_list_date(rs.getDate("trans_list_date"));
+					saleVO.setUpload_date(rs.getDate("upload_date"));
 					saleVO.setDis_date(rs.getDate("dis_date"));
 					saleVO.setMemo(rs.getString("memo"));
 					saleVO.setSale_date(rs.getDate("sale_date"));

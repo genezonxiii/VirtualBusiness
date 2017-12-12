@@ -211,15 +211,6 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 						<div class="input-field-wrap">
 							<div class="form-wrap">
 								<div class="form-row">
-									<label for=""> <span class="block-label">自訂商品 ID
-											查詢</span> <input type="text" id="search_c_product_id"
-										name="search_c_product_id">
-									</label>
-									<button class="btn btn-darkblue" id="search-sale"
-										c_product_id_error="">查詢</button>
-								</div>
-	
-								<div class="form-row">
 									<form id="trans_list_date_form" name="trans_list_date_form">
 										<label for=""> <span class="block-label">轉單起日</span> <input
 											type="text" class="input-date" id="trans_list_start_date"
@@ -231,6 +222,21 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											name="trans_list_end_date">
 										</label>
 										<button class="btn btn-darkblue" id="searh-trans-list-date">查詢</button>
+									</form>
+								</div>
+
+								<div class="form-row">
+									<form id="upload_date_form" name="upload_date_form">
+										<label for=""> <span class="block-label">上傳起日</span> <input
+											type="text" class="input-date" id="upload_start_date"
+											name="upload_start_date">
+										</label>
+										<div class="forward-mark"></div>
+										<label for=""> <span class="block-label">上傳迄日</span> <input
+											type="text" class="input-date" id="upload_end_date"
+											name="upload_end_date">
+										</label>
+										<button class="btn btn-darkblue" id="search-upload-date">查詢</button>
 									</form>
 								</div>
 	
@@ -255,6 +261,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<th style="min-width: 110px">發票</th>
 											<th>轉單日</th>
 											<th>銷/出貨日期</th>
+											<th>上傳日期</th>
 											<th>銷售平台</th>
 											<th style="background-image: none !important;">註</th>
 											<th style="background-image: none !important;">功能</th>
@@ -452,70 +459,61 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	    }];
 
 	    var oColumns = [{
-	            "data": null,
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "seq_no",
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "order_no",
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": null,
-	            "width": "20%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "quantity",
-	            "width": "5%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "price",
-	            "width": "5%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": null,
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "invoice",
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "trans_list_date",
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "sale_date",
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "order_source",
-	            "width": "5%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": "memo",
-	            "width": "10%",
-	            "defaultContent": ""
-	        },
-	        {
-	            "data": null,
-	            "width": "10%",
-	            "defaultContent": ""
-	        }
-	    ];
+            "data": null,
+            "defaultContent": ""
+        },{
+            "data": "seq_no",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "order_no",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": null,
+            "width": "20%",
+            "defaultContent": ""
+        },{
+            "data": "quantity",
+            "width": "5%",
+            "defaultContent": ""
+        },{
+            "data": "price",
+            "width": "5%",
+            "defaultContent": ""
+        },{
+            "data": null,
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "invoice",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "trans_list_date",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "sale_date",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "upload_date",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "order_source",
+            "width": "5%",
+            "defaultContent": ""
+        },{
+            "data": "memo",
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": null,
+            "width": "10%",
+            "defaultContent": ""
+        }];
 
 	    var dataTableObj = $("#sales").DataTable({
 	        dom: "frB<t>ip",
@@ -1093,13 +1091,16 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	    });
 
 	    //轉單日查詢相關設定
-	    $("#searh-trans-list-date").click(function(e) {
+	    $("#searh-trans-list-date, #search-upload-date").click(function(e) {
 	        e.preventDefault();
 	        if ($("#trans_list_date_form").valid()) {
 	            var tmp = {
 	                action: "search_trans_list_date",
+	                type: this.id,
 	                trans_list_start_date: $("#trans_list_start_date").val(),
-	                trans_list_end_date: $("#trans_list_end_date").val()
+	                trans_list_end_date: $("#trans_list_end_date").val(),
+	                upload_start_date: $("#upload_start_date").val(),
+	                upload_end_date: $("#upload_end_date").val()
 	            };
 	            draw_sale(tmp);
 	        }
@@ -1345,8 +1346,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 	        //清空查詢條件
 	        $("input[name='search_c_product_id']").val("");
-	        $("#trans_list_start_date").val("");
-	        $("#trans_list_end_date").val("");
+	        $("#trans_list_start_date, #trans_list_end_date, #upload_start_date, #upload_end_date").val("");
 
 	        var dialogA = document.getElementById("dialog-form-update");
 	        var dialogB = $("#dialog-form-update");

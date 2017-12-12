@@ -105,7 +105,7 @@ line-height: 25px;
 							<div class="form-wrap">
 								<div class="form-row fast_div">
 									<label for=""> <span class="block-label">合併訂單數量：</span> <input type="number" id="fast_order_count" name="import_order_count" class="ui-autocomplete-input" value="5">
-									</label><br/> <label for=""> <span class="block-label">轉單日期區間：</span> <input type="text" class="input-date" id="fast_trans_list_date_begin" name="fast_trans_list_date_begin">
+									</label><br/> <label for=""> <span class="block-label">上傳日期區間：</span> <input type="text" class="input-date" id="fast_trans_list_date_begin" name="fast_trans_list_date_begin">
 										<div class="forward-mark"></div> <input type="text" class="input-date" id="fast_trans_list_date_end" name="import_trans_list_date_end">
 									</label> <br /> <br />
 									<button class="btn btn-exec btn-wide" id="fast_button">快速出貨</button>
@@ -116,7 +116,7 @@ line-height: 25px;
 
 									<div class="side_by_side_div">
 										<div class="on_div">
-											<label for=""> <span class="block-label">轉單日期區間：</span> <input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin">
+											<label for=""> <span class="block-label">上傳日期區間：</span> <input type="text" class="input-date" id="import_trans_list_date_begin" name="import_trans_list_date_begin">
 												<div class="down_div">
 													<img src="./images/downdown.png">
 												</div> <input type="text" class="input-date" id="import_trans_list_date_end" name="import_trans_list_date_end">
