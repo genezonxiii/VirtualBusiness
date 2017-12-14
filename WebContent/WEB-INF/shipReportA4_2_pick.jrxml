@@ -24,6 +24,9 @@
 	<field name="customer_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="waybill_type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="tracking_number" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -110,6 +113,8 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="delivery_timezone_str" class="java.lang.String"/>
+	<field name="package_size_str" class="java.lang.String"/>
+	<field name="temperature_str" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -1648,6 +1653,22 @@ $F{tracking_number}.substring(8,12)]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[客代]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="d52cb4ec-131a-42e0-a0f4-33bf0d38ce4b" x="539" y="13" width="36" height="64"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="標楷體" size="26" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{temperature_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d52cb4ec-131a-42e0-a0f4-33bf0d38ce4b" x="539" y="85" width="36" height="64">
+					<printWhenExpression><![CDATA[$F{waybill_type}.equals("B")? Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="標楷體" size="26" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["代收"]]></textFieldExpression>
+			</textField>
 		</band>
 		<band height="50">
 			<subreport>

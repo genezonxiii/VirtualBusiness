@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="A4_3" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ffe50f8d-8ab9-4597-bd58-4ce61a0a9231">
-	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.zoom" value="3.0052592036063106"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="810"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -22,6 +22,9 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="customer_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="waybill_type" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="tracking_number" class="java.lang.String">
@@ -111,6 +114,7 @@
 	</field>
 	<field name="delivery_timezone_str" class="java.lang.String"/>
 	<field name="package_size_str" class="java.lang.String"/>
+	<field name="temperature_str" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -1649,6 +1653,22 @@ $F{tracking_number}.substring(8,12)]]></textFieldExpression>
 				</textElement>
 				<text><![CDATA[客代]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="d52cb4ec-131a-42e0-a0f4-33bf0d38ce4b" x="539" y="14" width="36" height="64"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="標楷體" size="26" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{temperature_str}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d52cb4ec-131a-42e0-a0f4-33bf0d38ce4b" x="539" y="86" width="36" height="64">
+					<printWhenExpression><![CDATA[$F{waybill_type}.equals("B")? Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="標楷體" size="26" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["代收"]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<noData>
