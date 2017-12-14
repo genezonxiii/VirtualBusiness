@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="shipReportA4_2_pick_main" language="groovy" columnCount="2" pageWidth="555" pageHeight="802" columnWidth="277" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5f3828a2-1ee7-4c10-9652-633c16dd45b9">
+	<property name="ireport.zoom" value="3.797498335832415"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="group_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="order_no" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select detail.group_id, detail.c_product_id, detail.product_name, detail.quantity,
+pf.platform_name, ext.deliver_name, ext.deliver_note, rs.order_no
+from tb_shipDetail detail
+left join tb_realsaleDetail rsDetail on detail.realsaleDetail_id = rsDetail.realsaleDetail_id
+left join tb_realsale rs on rs.realsale_id = rsDetail.realsale_id
+left join tb_sale_ext ext on ext.sale_id = rs.realsale_id
+left join tb_platform pf on pf.platform_code = rs.order_source
+where detail.group_id = $P{group_id}
+and rsDetail.order_no = $P{order_no}]]>
+	</queryString>
+	<field name="group_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="c_product_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="product_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="platform_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_note" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="order_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement uuid="ba78bfbd-4756-4fbb-8bdd-da51ea266d75" x="355" y="7" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{platform_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9ab16cb6-2f64-413f-b2d5-881eb313d32b" x="50" y="7" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9d8fdd66-ea14-425c-8918-eb213e97a3eb" x="50" y="29" width="270" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_note}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4e572473-1dc1-46bd-8713-3d41081459da" x="209" y="7" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="14" y="7" width="36" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[姓名：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="150" y="7" width="59" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[訂單編號：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="14" y="29" width="36" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[備註：]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="309" y="7" width="36" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[平台：]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="0b3ac1a1-8145-45f2-b39f-0edaef0bb192" x="0" y="48" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="14" y="0" width="68" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[貨號]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="480eb34d-7219-4222-898a-54882341b075" x="82" y="0" width="157" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[產品名稱]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2f257a86-03b5-4d68-bbd0-d0d39056f43d" x="239" y="0" width="38" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[數量]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="b29ebf24-08ac-4487-acee-301c7848d3f2" x="0" y="17" width="277" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6e5a26c9-ffbb-47a4-a129-fd5101f1ad78" stretchType="RelativeToBandHeight" x="14" y="0" width="68" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{c_product_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="66a96d6a-0990-4bc0-b3e8-20d2071171bc" stretchType="RelativeToBandHeight" x="82" y="0" width="157" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="26ecdfb9-5993-451e-b123-7eb9ccffe26e" stretchType="RelativeToBandHeight" x="239" y="0" width="35" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="45" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="118ca71c-8923-491b-b3a5-fab470ee9676" x="14" y="3" width="112" height="42"/>
+				<subreportParameter name="group_id">
+					<subreportParameterExpression><![CDATA[$F{group_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="order_no">
+					<subreportParameterExpression><![CDATA[$F{order_no}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["shipReportA4_2_pick_delivery.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement uuid="545273f1-4dcc-4d0b-bf53-934320cd5a5f" x="0" y="0" width="277" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
