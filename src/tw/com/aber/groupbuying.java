@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -118,6 +119,7 @@ public class groupbuying extends HttpServlet {
 
 		private static final String sp_select_groupbuying_throwfile_platform = "call sp_select_groupbuying_throwfile_platform ()";
 		private static final String sp_select_groupbuying_throwfile_platform_way = "call sp_select_groupbuying_throwfile_platform_way ()";
+		private static final String sp_insert_upload = "call sp_insert_upload(?,?,?,?,?)";
 
 		public List<Throwfile> searchPlatformDB() {
 
@@ -233,6 +235,45 @@ public class groupbuying extends HttpServlet {
 			}
 			return list;
 		}
+
+		public void insertUpload(String groupId, String orderSource, String delivery, String oriName, String uuidName) {
+			Connection con = null;
+			CallableStatement cs = null;
+
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_insert_upload);
+
+				cs.setString(1, groupId);
+				cs.setString(2, orderSource);
+				cs.setString(3, delivery);
+				cs.setString(4, oriName);
+				cs.setString(5, uuidName);
+
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				// Clean up JDBC resources
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
 	}
 
 	class UploadService {
@@ -268,6 +309,14 @@ public class groupbuying extends HttpServlet {
 				logger.debug("getPlatformWayJson erroe: " + e.getMessage());
 			}
 			return jsonStrList;
+		}		
+
+		public void insertUpload(String groupId, String orderSource, String delivery, String oriName, String uuidName) {
+			try {
+				dao.insertUpload(groupId, orderSource, delivery, oriName, uuidName);
+			} catch (Exception e) {
+				logger.debug("insertUpload error: " + e.getMessage());
+			}
 		}
 	}
 
@@ -380,7 +429,9 @@ public class groupbuying extends HttpServlet {
 						}
 
 						fullPath = savePath + "/" + _uid + "." + ext;
-
+						UploadService service = new UploadService();
+						service.insertUpload(group_id, platform, deliveryMethod, fileName, _uid + "." + ext);
+						
 						logger.debug("\nfileName:{}\nsavePath:{}\nfullPath:{}", fileName, savePath, fullPath);
 
 						moveTheFile(fi, fullPath);
@@ -405,14 +456,7 @@ public class groupbuying extends HttpServlet {
 
 				conString = getConString(fullPath, user_id, tdpl, pdcd);
 				logger.debug("conString : " + conString);
-
 				ret = webService(request, response, conString);
-
-				// If the error is returned, delete the file
-				if ("false".equals(ret)) {
-					File falseFile = new File(fullPath);
-					falseFile.delete();
-				}
 				response.getWriter().write(ret);
 			} catch (FileUploadException e) {
 				logger.debug("Cannot parse multipart request");
