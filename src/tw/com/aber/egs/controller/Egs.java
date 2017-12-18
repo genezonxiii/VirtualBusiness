@@ -51,7 +51,7 @@ public class Egs extends HttpServlet {
 		String action = (String) request.getParameter("action");
 
 		logger.debug("Action:".concat(action));
-		logger.debug("groupId:".concat(action));
+		logger.debug("groupId:".concat(groupId));
 
 		if ("transfer_waybill".equals(action)) {
 			String result = "{\"status\": \"ERR\"}";
@@ -60,6 +60,10 @@ public class Egs extends HttpServlet {
 			EgsVO egsVO = null;
 
 			try {
+				// 份數
+				String copy = request.getParameter("copy");
+				logger.debug("copy: " + copy);
+
 				EgsService service = new EgsService();
 
 				// 溫層
@@ -130,6 +134,7 @@ public class Egs extends HttpServlet {
 
 				egsVO.setGroup_id(groupId);
 				egsVO.setCustomer_id(customer_id);
+				egsVO.setWaybill_type(waybill_type);
 				egsVO.setEgs_comment(comment);
 				egsVO.setPackage_size(package_size);
 				egsVO.setTemperature(temperature);
@@ -145,8 +150,10 @@ public class Egs extends HttpServlet {
 				logger.debug("批次產生託運單，並記錄於資料庫開始");
 				for (String orderNo : orderNoArr) {
 					logger.debug("[目前執行訂單編號] orderNo: " + orderNo);
-					resultMap = egs.genConsignmentNote(orderNo, egsVO, service, waybill_type);
-					resultMapList.add(resultMap);
+					for(int i = 1; i <= Integer.valueOf(copy); i++) {
+						resultMap = egs.genConsignmentNote(orderNo, egsVO, service);
+						resultMapList.add(resultMap);
+					}
 				}
 				logger.debug("批次產生託運單，並記錄於資料庫結束");
 
@@ -186,7 +193,7 @@ public class Egs extends HttpServlet {
 		private static final String sp_get_egs_total_amt = "call sp_get_egs_total_amt(?)";
 		private static final String sp_get_egs_receiver_info = "call sp_get_egs_receiver_info(?)";
 		private static final String sp_get_ship_by_order_no = "call sp_get_ship_by_order_no(?,?)";
-		private static final String sp_insert_egs = "call sp_insert_egs(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_insert_egs = "call sp_insert_egs(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_select_egs_by_orderno_or_trackingno = "call sp_select_egs_by_orderno_or_trackingno(?,?,?)";
 
 		@Override
@@ -470,6 +477,7 @@ public class Egs extends HttpServlet {
 				cs.setString(26, egsVO.getMember_no());
 				cs.setString(27, egsVO.getTaxin());
 				cs.setString(28, egsVO.getInsurance());
+				cs.setString(29, egsVO.getWaybill_type());
 
 				cs.execute();
 			} catch (SQLException se) {
@@ -577,7 +585,6 @@ public class Egs extends HttpServlet {
 			}
 			return rows;
 		}
-
 	}
 
 	public class EgsService {
@@ -633,8 +640,7 @@ public class Egs extends HttpServlet {
 		public void insertEgs(EgsVO egsVO);
 	}
 
-	public Map<String, String> genConsignmentNote(String orderNo, EgsVO egsVO, EgsService service,
-			String waybill_type) {
+	public Map<String, String> genConsignmentNote(String orderNo, EgsVO egsVO, EgsService service) {
 
 		String command = null, params = null;
 		String[] paramsArr = null;
@@ -646,7 +652,8 @@ public class Egs extends HttpServlet {
 			// 連線契客代號
 			String customer_id = egsVO.getCustomer_id();
 			logger.debug("[連線契客代號] customer_id: " + customer_id);
-
+			String waybill_type = egsVO.getWaybill_type();
+			
 			/*
 			 * 託運單類別 A:一般 B:代收 G:報值
 			 */
@@ -847,6 +854,7 @@ public class Egs extends HttpServlet {
 				egsVO = new EgsVO();
 				egsVO.setGroup_id(groupId);
 				egsVO.setCustomer_id(customer_id);
+				egsVO.setWaybill_type(waybill_type);
 				egsVO.setTracking_number(tracking_number);
 				egsVO.setOrder_no(orderNo);
 				egsVO.setReceiver_name(receiver_name);

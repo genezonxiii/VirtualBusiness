@@ -283,6 +283,55 @@ public class Report extends HttpServlet {
 				fileIn.close();
 				out.flush();
 				out.close();
+			} else if ("reportEzcat".equals(request.getParameter("type"))) {
+				String track_list = request.getParameter("track_list");
+				String modeltype = request.getParameter("modeltype");
+				String reportName ="";
+				
+				logger.debug("group_id"+request.getSession().getAttribute("group_id").toString());
+				logger.debug("track_list:"+track_list);
+				logger.debug("modeltype"+modeltype);
+
+				if("ezcat".equals(modeltype)){
+					reportName = "shipReport_ezcat";
+				}else if("ezcat_a4_2".equals(modeltype)){
+					reportName = "shipReport_ezcat_A4_2";
+				}else if("ezcat_a4_2_pick".equals(modeltype)){
+					reportName = "shipReport_ezcat_A4_2_pick";
+				}else{
+					return;
+				}
+
+				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
+				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
+				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+
+				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
+
+				Class.forName("com.mysql.jdbc.Driver");
+				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", request.getSession().getAttribute("group_id").toString());
+				hm.put("p_tracking_number_list", track_list);
+				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
+				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
+				
+				response.setContentType("APPLICATION/PDF");
+				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
+				response.setHeader("Content-Disposition", disHeader);
+
+				File file = new File(pdfFileName);
+				FileInputStream fileIn = new FileInputStream(file);
+				ServletOutputStream out = response.getOutputStream();
+				byte[] outputByte = new byte[4096];
+				while (fileIn.read(outputByte, 0, 4096) != -1) {
+					out.write(outputByte, 0, 4096);
+				}
+
+				fileIn.close();
+				out.flush();
+				out.close();
 			} else if ("rptInvManual".equals(request.getParameter("action"))){
 				logger.debug("action: "+request.getParameter("action"));
 				

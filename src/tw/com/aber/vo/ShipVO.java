@@ -34,6 +34,10 @@ public class ShipVO implements Serializable {
 	private String v_product_name;// tb_realsale
 	private String v_ext_deliver_note;// tb_sale_ext
 	private String v_order_source;
+	private String v_waybill_type;
+	private String v_tracking_number;
+	private String v_temperature;
+	private String v_package_size;
 	private List<ShipDetail> shipDetail;
 	
 	
@@ -198,6 +202,30 @@ public class ShipVO implements Serializable {
 	}
 	public void setV_order_source(String v_order_source) {
 		this.v_order_source = v_order_source;
+	}
+	public String getV_tracking_number() {
+		return v_tracking_number;
+	}
+	public void setV_tracking_number(String v_tracking_number) {
+		this.v_tracking_number = v_tracking_number;
+	}
+	public String getV_waybill_type() {
+		return v_waybill_type;
+	}
+	public void setV_waybill_type(String v_waybill_type) {
+		this.v_waybill_type = v_waybill_type;
+	}
+	public String getV_temperature() {
+		return v_temperature;
+	}
+	public void setV_temperature(String v_temperature) {
+		this.v_temperature = v_temperature;
+	}
+	public String getV_package_size() {
+		return v_package_size;
+	}
+	public void setV_package_size(String v_package_size) {
+		this.v_package_size = v_package_size;
 	}
 
 }

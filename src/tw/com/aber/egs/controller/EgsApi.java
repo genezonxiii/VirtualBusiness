@@ -146,7 +146,6 @@ public class EgsApi {
 			return "";
 		}
 		if (suda7 != null) {
-			suda7 = suda7.replace("+", "");
 			return suda7;
 		} else {
 			return "";

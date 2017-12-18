@@ -137,33 +137,30 @@
 	<!-- 黑貓對話窗-->
 	<div id="dialog-egs" style="display:none">
 		<form id ="dialog-egs-form">
+			<h4>份數</h4>
+			<input type="text" name="copy" value="1">
+						
 			<section>
-				<hr><h4>指定配達時段</h4>
+				<hr><h4>託運單類別</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group" checked>
-						<label for="delivery-timezone-1">
-							<span class="form-label">9~12時</span>
+						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group" checked>
+						<label for="waybill-type-A">
+							<span class="form-label">一般</span>
 						</label>
-	          			<input id="delivery-timezone-2" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-2">
-							<span class="form-label">12~17時</span>
+	          			<input id="waybill-type-B" type="radio" name="waybill-type-radio-group">
+	          			<label for="waybill-type-B">
+							<span class="form-label">代收</span>
 	          			</label>
-	          			
-	          			<input id="delivery-timezone-3" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-3">
-							<span class="form-label">17~20時</span>
+	          			<!-- 報值先關起來
+	          			<input id="waybill-type-G" type="radio" name="waybill-type-radio-group">
+	          			<label for="waybill-type-G">
+							<span class="form-label">報值</span>
 	          			</label>
-	          			
-	          			<input id="delivery-timezone-4" type="radio" name="delivery-timezone-radio-group">
-	          			<label for="delivery-timezone-4">
-							<span class="form-label">不限時</span>
-	          			</label>
+	          			 -->
 					</div>
 				</div>
 			</section>
-			<hr><h4>指定配達日期</h4>
-			<input type="text" name="delivery-date" class="self-date">
 			
 			<section>
 				<hr><h4>尺寸</h4>
@@ -214,34 +211,35 @@
 					</div>
 				</div>
 			</section>
-						
+			
 			<section>
-				<hr><h4>託運單類別</h4>
+				<hr><h4>指定配達時段</h4>
 				<div class="form-wrap">
 					<div class="form-row">
-						<input id="waybill-type-A" type="radio" name="waybill-type-radio-group" checked>
-						<label for="waybill-type-A">
-							<span class="form-label">一般</span>
+						<input id="delivery-timezone-1" type="radio" name="delivery-timezone-radio-group" checked>
+						<label for="delivery-timezone-1">
+							<span class="form-label">13時前</span>
 						</label>
-	          			<input id="waybill-type-B" type="radio" name="waybill-type-radio-group">
-	          			<label for="waybill-type-B">
-							<span class="form-label">代收</span>
+	          			<input id="delivery-timezone-2" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-2">
+							<span class="form-label">14~18時</span>
 	          			</label>
-	          			<!-- 報值先關起來
-	          			<input id="waybill-type-G" type="radio" name="waybill-type-radio-group">
-	          			<label for="waybill-type-G">
-							<span class="form-label">報值</span>
+	          			
+	          			<input id="delivery-timezone-4" type="radio" name="delivery-timezone-radio-group">
+	          			<label for="delivery-timezone-4">
+							<span class="form-label">不指定</span>
 	          			</label>
-	          			 -->
 					</div>
 				</div>
 			</section>
 			
+			<hr><h4>指定配達日期</h4>
+			<input type="text" name="delivery-date" class="self-date">
+			
 			<hr><h4>備註</h4>
 			<input type="text" name="comment">
 		</form>
-	</div> 
-	
+	</div> 	
 	
 	<!--對話窗樣式-新增 -->
 	<div id="dialog-form-select" title="請選擇託運單" style="display:none;">
@@ -438,16 +436,24 @@
 // 		        "data": "deliveryway",
 // 		        "defaultContent": ""
 		    }, {
-		        "title": "訂單總額",
-		        "data": "total_amt",
-		        "defaultContent": ""
-		    }, {
 		        "title": "收件人姓名",
 		        "data": "deliver_name",
 		        "defaultContent": ""
 		    }, {
 		        "title": "收件地點",
 		        "data": "deliver_to",
+		        "defaultContent": ""
+		    }, {
+		        "title": "訂單總額",
+		        "data": "total_amt",
+		        "defaultContent": ""
+		    }, {
+		        "title": "付款方式",
+		        "data": "v_pay_kind",
+		        "defaultContent": ""
+		    }, {
+		        "title": "付款狀態",
+		        "data": "v_pay_status",
 		        "defaultContent": ""
 // 		    }, {
 // 		        "title": "功能",
@@ -1256,156 +1262,157 @@
 // 		                    }
 // 						});	
 // 		            }
-// 		        },{
-// 		            text: '黑貓託運',
-// 		            action: function(e, dt, node, config) {
-// 		                var $table = $('#dt_master_ship');
+		        },{
+		            text: '黑貓託運',
+		            action: function(e, dt, node, config) {
+		                var $table = $('#dt_master_ship');
 
-// 		            	var orders = new Map(); //儲存訂單
-// 		            	var order_nos = '';
+		            	var orders = new Map(); //儲存訂單
+		            	var order_nos = '';
 		            	
-// 		                var cells = $dtMaster.cells().nodes();
-// 						var row;
-// 						var data;
-// 						var message = '';
+		                var cells = $dtMaster.cells().nodes();
+						var row;
+						var data;
+						var message = '';
 
-// 		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+		                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
 
-// 		                if ($checkboxs.length == 0) {
-// 		                    alert('請至少選擇一筆資料');
-// 		                    return false;
-// 		                }
+		                if ($checkboxs.length == 0) {
+		                    alert('請至少選擇一筆資料');
+		                    return false;
+		                }
 
-// 						$checkboxs.each(function() {
-// 							row = $(this).closest("tr");
-// 							data = $table.DataTable().row(row).data();
-// 							orders.set( data.order_no, data.order_no );
-// 						});
+						$checkboxs.each(function() {
+							row = $(this).closest("tr");
+							data = $table.DataTable().row(row).data();
+							orders.set( data.order_no, data.order_no );
+						});
 
-// 						orders.forEach(function(value, index, fullArray){
-// 							order_nos+= (','+ value);
-// 						});
-// 						if(order_nos.length != 0){
-// 							order_nos = order_nos.substring( 1, order_nos.length);
-// 						}
-// 						console.log('order_nos');
-// 						console.log(order_nos);
-// 						console.log('orders');
-// 						console.log(orders);
+						orders.forEach(function(value, index, fullArray){
+							order_nos+= (','+ value);
+						});
+						if(order_nos.length != 0){
+							order_nos = order_nos.substring( 1, order_nos.length);
+						}
+						console.log('order_nos');
+						console.log(order_nos);
+						console.log('orders');
+						console.log(orders);
 
-// 							var opt = {
-// 									   dayNamesMin:["日","一","二","三","四","五","六"],
-// 									   monthNames:["1","2","3","4","5","6","7","8","9","10","11","12"],
-// 									   monthNamesShort:["1","2","3","4","5","6","7","8","9","10","11","12"],
-// 									   prevText:"上月",
-// 									   nextText:"次月",
-// 									   weekHeader:"週",
-// 									   showMonthAfterYear:true,
-// 									   dateFormat:"yy-mm-dd",
-// 									   changeYear: true,
-// 									   changeMonth: true,
-// 									   minDate : 0
-// 									   };
-// 							$("#dialog-egs-form").find("input[name=delivery-date]" ).datepicker(opt);
-// 							$("#dialog-egs-form").find("input[name=delivery-date]" ).val(new Date().toJSON().slice(0,10));
-// 							$('#dialog-egs').dialog({
-// 								autoOpen: false,
-// 								draggable : true,
-// 								resizable : false,
-// 								overflow: 'auto',
-// 								width : 'auto',
-// 								height : 530,
-// 								modal : true,
-// 								title : '傳送託運單資料',
-// 								buttons : [{
-// 											text : "確認",
-// 											click : function() {
+							var opt = {
+									   dayNamesMin:["日","一","二","三","四","五","六"],
+									   monthNames:["1","2","3","4","5","6","7","8","9","10","11","12"],
+									   monthNamesShort:["1","2","3","4","5","6","7","8","9","10","11","12"],
+									   prevText:"上月",
+									   nextText:"次月",
+									   weekHeader:"週",
+									   showMonthAfterYear:true,
+									   dateFormat:"yy-mm-dd",
+									   changeYear: true,
+									   changeMonth: true,
+									   minDate : 0
+									   };
+							$("#dialog-egs-form").find("input[name=delivery-date]" ).datepicker(opt);
+							$("#dialog-egs-form").find("input[name=delivery-date]" ).val(new Date().toJSON().slice(0,10));
+							$('#dialog-egs').dialog({
+								autoOpen: false,
+								draggable : true,
+								resizable : false,
+								overflow: 'auto',
+								width : 'auto',
+								height : 530,
+								modal : true,
+								title : '傳送託運單資料',
+								buttons : [{
+											text : "確認",
+											click : function() {
 												
-// 												var timezone_type_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
-// 												var waybill_type_str = $("input[name='waybill-type-radio-group']:checked", '#dialog-egs-form').attr("id");
-// 												var temperature_str = $("input[name='temperature-radio-group']:checked", '#dialog-egs-form').attr("id");
-// 												var package_size_str = $("input[name='package-size-radio-group']:checked", '#dialog-egs-form').attr("id");
-// 												var delivery_timezone_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var timezone_type_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var waybill_type_str = $("input[name='waybill-type-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var temperature_str = $("input[name='temperature-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var package_size_str = $("input[name='package-size-radio-group']:checked", '#dialog-egs-form').attr("id");
+												var delivery_timezone_str = $("input[name='delivery-timezone-radio-group']:checked", '#dialog-egs-form').attr("id");
 												
 												
-// 												console.log('timezone_type_str: ' + timezone_type_str);
-// 												console.log('waybill_type_str: ' + waybill_type_str);
-// 												console.log('temperature_str: ' + temperature_str);
+												console.log('timezone_type_str: ' + timezone_type_str);
+												console.log('waybill_type_str: ' + waybill_type_str);
+												console.log('temperature_str: ' + temperature_str);
 
-// 								                $.ajax({
-// 								                    url: 'Egs.do',
-// 								                    type: 'post',
-// 								                    data: {
-// 								                        action: 'transfer_waybill',
-// 					 			                        orderNo: data.order_no,
-// 					 			                        order_nos: order_nos,
-// 								                        realsale_id: data.realsale_id,
-// 					 			                        receiver_name: data.deliver_name,
-// 								                        receiver_address: data.deliver_to,
-// 								                        service_type: timezone_type_str.substring( timezone_type_str.length, timezone_type_str.length -1 ),
-// 								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 ),
-// 								                        temperature : temperature_str.substring( temperature_str.length, temperature_str.length -1 ),
-// 								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -1 ),
-// 								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
-// 								                        delivery_date : $("#dialog-egs-form input[name='delivery-date']").val(),
-// 								                        comment : $("input[name='comment']", '#dialog-egs-form').val()
-// 								                    },
-// 									                beforeSend: function(){
-// 								                		 $(':hover').css('cursor','progress');
-// 									                },
-// 									                complete: function(){
-// 								                		 $(':hover').css('cursor','default');
-// 									                },
-// 								                    error: function(xhr) {},
-// 								                    success: function(response) {
+								                $.ajax({
+								                    url: 'Egs.do',
+								                    type: 'post',
+								                    data: {
+								                        action: 'transfer_waybill',
+					 			                        orderNo: data.order_no,
+					 			                        order_nos: order_nos,
+								                        realsale_id: data.realsale_id,
+					 			                        receiver_name: data.deliver_name,
+								                        receiver_address: data.deliver_to,
+								                        service_type: timezone_type_str.substring( timezone_type_str.length, timezone_type_str.length -1 ),
+								                        waybill_type: waybill_type_str.substring( waybill_type_str.length, waybill_type_str.length -1 ),
+								                        temperature : temperature_str.substring( temperature_str.length, temperature_str.length -4 ),
+								                        package_size : package_size_str.substring( package_size_str.length, package_size_str.length -4 ),
+								                        delivery_timezone : delivery_timezone_str.substring( delivery_timezone_str.length, delivery_timezone_str.length -1 ),
+								                        delivery_date : $("#dialog-egs-form input[name='delivery-date']").val(),
+								                        comment : $("input[name='comment']", '#dialog-egs-form').val(),
+								                        copy : $("input[name='copy']", '#dialog-egs-form').val()
+								                    },
+									                beforeSend: function(){
+								                		 $(':hover').css('cursor','progress');
+									                },
+									                complete: function(){
+								                		 $(':hover').css('cursor','default');
+									                },
+								                    error: function(xhr) {},
+								                    success: function(response) {
 								                    	
-// 								                    	console.log('response: '+ response);
-// 								                    	var json_obj = $.parseJSON(response);
-// 								                    	var text = '';
+								                    	console.log('response: '+ response);
+								                    	var json_obj = $.parseJSON(response);
+								                    	var text = '';
 								                    	
-// 														$("#dialog-egs-form").trigger("reset");
-// 														$('#dialog-egs').dialog("close");
+														$("#dialog-egs-form").trigger("reset");
+														$('#dialog-egs').dialog("close");
 								                    	
-// 								                    	console.log('json_obj');
-// 								                    	console.log(json_obj);
+								                    	console.log('json_obj');
+								                    	console.log(json_obj);
 								                    	
-// 								                    	$.each(json_obj, function(i, item){
-// 								                    		console.log(i);
-// 								                    		console.log(item);
-// 								                    		if(item.status == 'OK'){
-// 																text += ('傳送託運單: 成功 / 訂單編號: '+ item.orderNo +' / 託運單號碼: '+ item.trackingNo + '<br><hr>');
-// 								                    		}else{
-// 																text += '傳送託運單: 失敗/ 訂單編號: '+ item.orderNo;
-// 																if(item.message!=null){
-// 																	text += (' / 訊息: ' + item.message );
-// 																}
-// 																text += '<br><hr>';
-// 															}
-// 								                    	});
+								                    	$.each(json_obj, function(i, item){
+								                    		console.log(i);
+								                    		console.log(item);
+								                    		if(item.status == 'OK'){
+																text += ('傳送託運單: 成功 / 訂單編號: '+ item.orderNo +' / 託運單號碼: '+ item.trackingNo + '<br><hr>');
+								                    		}else{
+																text += '傳送託運單: 失敗/ 訂單編號: '+ item.orderNo;
+																if(item.message!=null){
+																	text += (' / 訊息: ' + item.message );
+																}
+																text += '<br><hr>';
+															}
+								                    	});
 								                    	
-// 														var $mes = $('#message #text');
-// 								                        $mes.val('').html(text);
-// 								                        $('#message')
-// 								                            .dialog()
-// 								                            .dialog('option', 'title', '訊息')
-// 								                            .dialog('option', 'width', 'auto')
-// 								                            .dialog('option', 'minHeight', 'auto')
-// 								                            .dialog("open");
-// 								                    }
-// 												});													
-// 											}
-// 										}, {
-// 											text : "取消",
-// 											click : function() {
-// 												$("#dialog-egs-form").trigger("reset");
-// 												$(this).dialog("close");
-// 											}
-// 										} ],
-// 								close : function() {
-// 									$("#dialog-egs-form").trigger("reset");
-// 								}
-// 							}).dialog( 'open' );
-// 		            }
+														var $mes = $('#message #text');
+								                        $mes.val('').html(text);
+								                        $('#message')
+								                            .dialog()
+								                            .dialog('option', 'title', '訊息')
+								                            .dialog('option', 'width', 'auto')
+								                            .dialog('option', 'minHeight', 'auto')
+								                            .dialog("open");
+								                    }
+												});													
+											}
+										}, {
+											text : "取消",
+											click : function() {
+												$("#dialog-egs-form").trigger("reset");
+												$(this).dialog("close");
+											}
+										} ],
+								close : function() {
+									$("#dialog-egs-form").trigger("reset");
+								}
+							}).dialog( 'open' );
+		            }
 		        }
 		    ]
 		});

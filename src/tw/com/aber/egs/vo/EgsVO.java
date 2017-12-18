@@ -10,6 +10,7 @@ public class EgsVO implements Serializable {
 	private String egs_id;
 	private String group_id;
 	private String customer_id;
+	private String waybill_type;
 	private String tracking_number;
 	private String order_no;
 	private String receiver_name;
@@ -280,6 +281,14 @@ public class EgsVO implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getWaybill_type() {
+		return waybill_type;
+	}
+
+	public void setWaybill_type(String waybill_type) {
+		this.waybill_type = waybill_type;
 	}
 
 }
