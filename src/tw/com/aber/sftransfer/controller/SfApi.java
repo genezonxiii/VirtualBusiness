@@ -353,7 +353,6 @@ public class SfApi {
 							null : purchaseDetailVO.getQuantity().toString());
 					//入庫暫定為正品
 					item.setInventoryStatus("10");
-					item.setLot(purchaseVO.getSeq_no());
 					
 					logger.debug("purchaseDetailVO");
 					logger.debug("c_product_id:" + purchaseDetailVO.getC_product_id());
