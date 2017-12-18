@@ -182,8 +182,8 @@ function buildDialog(){
 //							var top = (lab.offset().top)+'px';
 							var left =  lab.offset().left - lab.width()*1/2.2 +"px";
 							var top = $("#iconBtns").offset().top - lab.offset().top + 
-										$(".ec-radio-group-wrap").height() * ($(".ec-radio-group-wrap").length +1.8)
-										-25 +'px';
+										$(".ec-radio-group-wrap").height() * ($(".ec-radio-group-wrap").length +2.2)
+										-80 +'px';
 							var hidden = $('#deliveryMethod');
 							
 							var img = document.createElement('IMG');
@@ -704,8 +704,8 @@ $(document).ready(function() {
 				var lab = $( "label[for='" + id + "']" );
 				var left =  lab.offset().left - lab.width()*1/2.2 +"px";
 				var top = $("#iconBtns").offset().top - lab.offset().top + 
-							$(".ec-radio-group-wrap").height() * ($(".ec-radio-group-wrap").length +1.8)
-							-25 +'px';
+							$(".ec-radio-group-wrap").height() * ($(".ec-radio-group-wrap").length +2.2)
+							-80 +'px';
 
 				var img = document.createElement('IMG');
 				img.id = 'typeImg'
