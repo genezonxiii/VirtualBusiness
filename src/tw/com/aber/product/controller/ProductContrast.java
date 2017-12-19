@@ -755,6 +755,7 @@ public class ProductContrast extends HttpServlet {
 				while (rs.next()) {
 					result = new DataTableBean();
 					result.setId(null2str(rs.getString("product_id")));
+					result.setC_product_id(null2str(rs.getString("c_product_id")));
 					result.setName(null2str(rs.getString("product_name")));
 					result.setDesc(null2str(rs.getString("description")));
 					list.add(result); // Store the row in the list
@@ -811,6 +812,7 @@ public class ProductContrast extends HttpServlet {
 				while (rs.next()) {
 					result = new DataTableBean();
 					result.setId(null2str(rs.getString("package_id")));
+					result.setC_product_id(null2str(rs.getString("c_package_id")));
 					result.setName(null2str(rs.getString("package_name")));
 					result.setDesc(null2str(rs.getString("package_spec")));
 					list.add(result); // Store the row in the list

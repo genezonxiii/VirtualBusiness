@@ -7,6 +7,7 @@ public class DataTableBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
+	private String c_product_id;
 	private String name;
 	private String desc;
 
@@ -32,6 +33,14 @@ public class DataTableBean implements Serializable {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+	public String getC_product_id() {
+		return c_product_id;
+	}
+
+	public void setC_product_id(String c_product_id) {
+		this.c_product_id = c_product_id;
 	}
 
 }

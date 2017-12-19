@@ -493,8 +493,8 @@
 	            draggable: true,
 	            resizable: false,
 	            autoOpen: false,
-	            height: "auto",
-	            width: "auto",
+	            height: 500,
+	            width: 800,
 	            modal: true,
 	            show: {
 	                effect: "blind",
@@ -504,7 +504,6 @@
 	                effect: "fade",
 	                duration: 300
 	            },
-	            width: 800,
 	            buttons: [{
 	                id: "insert",
 	                text: "確認",
@@ -684,13 +683,14 @@
 
 	            $("#dialog-select-table").dataTable().fnDestroy();
 	            table = $("#dialog-select-table").DataTable({
-	                dom: 'lfrB<t>ip',
+	                dom: 'frB<t>ip',
 	                paging: true,
 	                ordering: false,
 	                info: false,
 	                bLengthChange: false,
-	                pageLength: 5,
-	                show: {
+	                pageLength: 10,
+	                scrollY:"250px",
+			        show: {
 	                    effect: "blind",
 	                    duration: 300
 	                },
@@ -720,13 +720,16 @@
 	                            "<label for='" + row.id + "'><span class='form-label'>選取</span></label>";
 
 	                        return rad;
-	                    },
-	                    "targets": 0
+	                    }
 	                }],
 	                columns: [
 
 	                    {
 	                        "data": null,
+	                        "defaultContent": ""
+	                    },
+	                    {
+	                        "data": "c_product_id",
 	                        "defaultContent": ""
 	                    },
 	                    {
@@ -1121,21 +1124,15 @@
 	<div id="dialog-form-select" style="display:none;">
 		<form name="dialog-form-post-select" id="dialog-form-post-select">
 			<fieldset>
-				<table class="form-table" id="dialog-select-table">
+				<table class="result-table" id="dialog-select-table">
 					<thead>
 						<tr>
 							<th></th>
+							<th>自訂商品ID</th>
 							<th>商品名稱</th>
 							<th>規格名稱</th>
 						</tr>
 					</thead>
-					<tfoot>
-						<tr>
-							<th></th>
-							<th>商品名稱</th>
-							<th>規格名稱</th>
-						</tr>
-					</tfoot>
 					<tbody>
 					</tbody>
 				</table>
