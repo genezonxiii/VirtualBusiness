@@ -423,8 +423,10 @@ public class sale extends HttpServlet {
 							response.getWriter().write(errorMsg);
 							return;
 						}
-
-						String reqXml = api.genRequestForC0401(invoiceNum, sameOrderNoSaleVOList, groupVO);
+						/* 20171219 將列印明細包成單一"商品"的mask*/
+						List<SaleVO> sameOrderNoSaleVOListAfterMask = saleService.maskOverviewByExt(group_id, sameOrderNoSaleVOList);
+						
+						String reqXml = api.genRequestForC0401(invoiceNum, sameOrderNoSaleVOListAfterMask, groupVO);
 						String resXml = api.sendXML(reqXml);
 						Index index = api.getIndexResponse(resXml);
 
@@ -508,7 +510,21 @@ public class sale extends HttpServlet {
 					return;
 				}
 
-				List<String> reqXmlList = api.getPrintStr(saleVOs, groupVO);
+				
+				/* 20171219 將列印明細包成單一"商品"的mask*/
+				List<SaleVO> saleVOsAfterMask =new ArrayList<SaleVO>();
+				List<List<SaleVO>> saleVOsAll_classification = api.classification(saleVOs);
+				
+				for(List<SaleVO> sameOrderSaleVOlist : saleVOsAll_classification){
+					
+					List<SaleVO> sameOrderNoSaleVOListAfterMask = saleService.maskOverviewByExt(group_id, sameOrderSaleVOlist);
+					for(SaleVO saleVO : sameOrderNoSaleVOListAfterMask){
+						
+						saleVOsAfterMask.add(saleVO);
+					}
+				}
+				
+				List<String> reqXmlList = api.getPrintStr(saleVOsAfterMask, groupVO);
 				responseVO.setList(reqXmlList);
 				responseVO.setSuccess(true);
 
@@ -666,6 +682,8 @@ public class sale extends HttpServlet {
 		public List<SaleVO> searchUploadDateDB(String group_id, String startDate,
 				String endDate);
 		
+		public SaleVO getSaleInvoiceInfoByOrderNo(String group_id, String order_no);
+		
 	}
 
 	class SaleService {
@@ -788,6 +806,18 @@ public class sale extends HttpServlet {
 			return errorMsg;
 		}
 		
+		//給sale[action='invoice'和 action='invoice_print']使用
+		public List<SaleVO> maskOverviewByExt(String group_id, List<SaleVO> SaleVOs){
+			String order_no = null;
+			for(SaleVO saleVO : SaleVOs){
+				order_no = saleVO.getOrder_no();
+			}
+			
+			List<SaleVO> afterMaskVOs = new ArrayList<SaleVO>();
+			afterMaskVOs.add(dao.getSaleInvoiceInfoByOrderNo(group_id,order_no));
+			
+			return afterMaskVOs;
+		}
 	}
 
 	class SaleDAO implements sale_interface {
@@ -819,8 +849,7 @@ public class sale extends HttpServlet {
 		private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
 		private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?)";
 		private static final String sp_update_sale_invoice_vcode_and_invoice_time = "call sp_update_sale_invoice_vcode_and_invoice_time(?,?,?,?)";
-		
-
+		private static final String sp_get_sale_invoice_info_by_orderno = "call sp_get_sale_invoice_info_by_orderno(?,?)";
 
 		@Override
 		public void insertDB(SaleVO saleVO) {
@@ -1883,6 +1912,56 @@ public class sale extends HttpServlet {
 					logger.error("Exception:".concat(e.getMessage()));
 				}
 			}
+		}
+
+		@Override
+		public SaleVO getSaleInvoiceInfoByOrderNo(String groupId, String orderNo) {
+			SaleVO saleVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_sale_invoice_info_by_orderno);
+				pstmt.setString(1, groupId);
+				pstmt.setString(2, orderNo);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					saleVO = new SaleVO();
+					saleVO.setProduct_name("商品");
+					saleVO.setQuantity( Integer.valueOf("1"));
+					saleVO.setPrice(rs.getFloat("total_amount"));
+					saleVO.setOrder_no(rs.getString("order_no"));
+					saleVO.setInvoice(rs.getString("invoice"));
+					saleVO.setInvoice_date(rs.getDate("invoice_date"));
+					saleVO.setInvoice_vcode(rs.getString("invoice_vcode"));
+					saleVO.setInvoice_time(rs.getTime("invoice_time"));
+					
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return saleVO;
 		}
 
 	}
