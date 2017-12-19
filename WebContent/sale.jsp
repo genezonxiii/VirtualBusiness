@@ -640,7 +640,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                                        var tmp = {
 	                                            action: "search_trans_list_date",
 	                                            trans_list_start_date: $("#trans_list_start_date").val(),
-	                                            trans_list_end_date: $("#trans_list_end_date").val()
+	                                            trans_list_end_date: $("#trans_list_end_date").val(),
+	                                            upload_start_date: $("#upload_start_date").val(),
+	                        	                upload_end_date: $("#upload_end_date").val()
 	                                        };
 	                                        draw_sale(tmp);
 
@@ -765,7 +767,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                                        var tmp = {
 	                                            action: "search_trans_list_date",
 	                                            trans_list_start_date: $("#trans_list_start_date").val(),
-	                                            trans_list_end_date: $("#trans_list_end_date").val()
+	                                            trans_list_end_date: $("#trans_list_end_date").val(),
+	                                            upload_start_date: $("#upload_start_date").val(),
+	                        	                upload_end_date: $("#upload_end_date").val()
 	                                        };
 	                                        draw_sale(tmp);
 
