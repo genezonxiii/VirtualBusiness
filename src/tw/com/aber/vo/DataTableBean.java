@@ -10,6 +10,7 @@ public class DataTableBean implements Serializable {
 	private String c_product_id;
 	private String name;
 	private String desc;
+	private String price;
 
 	public String getId() {
 		return id;
@@ -43,4 +44,11 @@ public class DataTableBean implements Serializable {
 		this.c_product_id = c_product_id;
 	}
 
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
 }

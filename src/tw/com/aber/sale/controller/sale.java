@@ -136,7 +136,10 @@ public class sale extends HttpServlet {
 				String product_name = request.getParameter("product_name");
 				String c_product_id = request.getParameter("c_product_id");
 				Integer quantity = Integer.valueOf(request.getParameter("quantity"));
-
+				String contrast_type = request.getParameter("contrast_type");
+				String deliveryway = request.getParameter("deliveryway");
+				Float total_amt = Float.valueOf(request.getParameter("total_amt"));
+				
 				Float price = Float.valueOf(request.getParameter("price"));
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -190,6 +193,9 @@ public class sale extends HttpServlet {
 				saleVO.setMemo(memo);
 				saleVO.setSale_date(sale_date);
 				saleVO.setOrder_source(order_source);
+				saleVO.setContrast_type(contrast_type);
+				saleVO.setDeliveryway(deliveryway);
+				saleVO.setTotal_amt(total_amt);
 
 				logger.debug("order_no:".concat(order_no));
 				logger.debug("product_id:".concat(product_id));
@@ -205,6 +211,9 @@ public class sale extends HttpServlet {
 				logger.debug("sale_date:".concat(sale_date == null ? "" : sale_date.toString()));
 				logger.debug("memo:".concat(memo));
 				logger.debug("order_source:".concat(order_source));
+				logger.debug("contrast_type:".concat(contrast_type));
+				logger.debug("deliveryway:".concat(deliveryway));
+				logger.debug("total_amt:".concat(total_amt.toString()));
 
 				saleService.addSale(saleVO);
 
@@ -222,6 +231,9 @@ public class sale extends HttpServlet {
 				String product_id = request.getParameter("product_id");
 				String product_name = request.getParameter("product_name");
 				String c_product_id = request.getParameter("c_product_id");
+				String contrast_type = request.getParameter("contrast_type");
+				String deliveryway = request.getParameter("deliveryway");
+				Float total_amt = Float.valueOf(request.getParameter("total_amt"));
 
 				Integer quantity = Integer.valueOf(request.getParameter("quantity"));
 
@@ -263,6 +275,9 @@ public class sale extends HttpServlet {
 				saleVO.setMemo(memo);
 				saleVO.setSale_date(sale_date);
 				saleVO.setOrder_source(order_source);
+				saleVO.setContrast_type(contrast_type);
+				saleVO.setDeliveryway(deliveryway);
+				saleVO.setTotal_amt(total_amt);
 
 				logger.debug("sale_id:".concat(sale_id));
 				logger.debug("order_no:".concat(order_no));
@@ -279,6 +294,9 @@ public class sale extends HttpServlet {
 				logger.debug("sale_date:".concat(sale_date == null ? "" : sale_date.toString()));
 				logger.debug("memo:".concat(memo));
 				logger.debug("order_source:".concat(order_source));
+				logger.debug("contrast_type:".concat(contrast_type));
+				logger.debug("deliveryway:".concat(deliveryway));
+				logger.debug("total_amt:".concat(total_amt.toString()));
 
 				saleService.updateSale(saleVO);
 
@@ -835,9 +853,9 @@ public class sale extends HttpServlet {
 		private static final String sp_select_sale_by_upload_date = "call sp_select_sale_by_upload_date(?,?,?)";
 		private static final String sp_select_sale_bydisdate = "call sp_select_sale_bydisdate(?,?,?)";
 		private static final String sp_get_sale_newseqno = "call sp_get_sale_seqno(?)";
-		private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		private static final String sp_del_sale = "call sp_del_sale (?,?)";
-		private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 		private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
 		private static final String sp_insert_saleDetail = "call sp_insert_saleDetail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -878,6 +896,9 @@ public class sale extends HttpServlet {
 				pstmt.setString(16, saleVO.getMemo());
 				pstmt.setDate(17, saleVO.getSale_date());
 				pstmt.setString(18, saleVO.getOrder_source());
+				pstmt.setString(19, saleVO.getContrast_type());
+				pstmt.setString(20, saleVO.getDeliveryway());
+				pstmt.setFloat(21, saleVO.getTotal_amt());
 
 				pstmt.executeUpdate();
 			} catch (SQLException se) {
@@ -928,7 +949,10 @@ public class sale extends HttpServlet {
 				pstmt.setString(17, saleVO.getMemo());
 				pstmt.setDate(18, saleVO.getSale_date());
 				pstmt.setString(19, saleVO.getOrder_source());
-
+				pstmt.setString(20, saleVO.getContrast_type());
+				pstmt.setString(21, saleVO.getDeliveryway());
+				pstmt.setFloat(22, saleVO.getTotal_amt());
+				
 				pstmt.executeUpdate();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());

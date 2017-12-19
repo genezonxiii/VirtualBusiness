@@ -758,6 +758,7 @@ public class ProductContrast extends HttpServlet {
 					result.setC_product_id(null2str(rs.getString("c_product_id")));
 					result.setName(null2str(rs.getString("product_name")));
 					result.setDesc(null2str(rs.getString("description")));
+					result.setPrice(null2str(rs.getString("price")));
 					list.add(result); // Store the row in the list
 				}
 				// Handle any driver errors
@@ -815,6 +816,7 @@ public class ProductContrast extends HttpServlet {
 					result.setC_product_id(null2str(rs.getString("c_package_id")));
 					result.setName(null2str(rs.getString("package_name")));
 					result.setDesc(null2str(rs.getString("package_spec")));
+					result.setPrice(null2str(rs.getString("price")));
 					list.add(result); // Store the row in the list
 				}
 				// Handle any driver errors
