@@ -32,6 +32,8 @@ public class SaleVO implements java.io.Serializable {
 	private String message;// 此參數用來存放錯誤訊息
 	private String invoice_vcode;
 	private Time invoice_time;
+	private String contrast_type;
+	private Float total_amt; 
 
 	public String getMessage() {
 		return message;
@@ -239,6 +241,22 @@ public class SaleVO implements java.io.Serializable {
 
 	public void setUpload_date(Date upload_date) {
 		this.upload_date = upload_date;
+	}
+
+	public String getContrast_type() {
+		return contrast_type;
+	}
+
+	public void setContrast_type(String contrast_type) {
+		this.contrast_type = contrast_type;
+	}
+
+	public Float getTotal_amt() {
+		return total_amt;
+	}
+
+	public void setTotal_amt(Float total_amt) {
+		this.total_amt = total_amt;
 	}
 	
 }

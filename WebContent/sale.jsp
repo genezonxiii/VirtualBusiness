@@ -16,6 +16,12 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <link rel="stylesheet" href="css/buttons.dataTables.min.css">
+<style>
+#dialog-select-table td {
+    text-align: center; /* center checkbox horizontally */
+    vertical-align: middle; /* center checkbox vertically */
+}
+</style>
 <jsp:include page="template/common_css.jsp" flush="true"/>
 </head>
 <body>
@@ -50,6 +56,18 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 												placeholder="輸入客戶名字"></td>
 										</tr>
 										<tr>
+		        <td>對照類別</td>
+	            <td>
+		            <section>
+			            <input id='update-radio-1' type='radio' name='radio-group-type' value='PRD'>
+			            <label for='update-radio-1'><span class='form-label'>商品</span></label>
+		
+			            <input id='update-radio-2' type='radio' name='radio-group-type' value='PKG'>
+			            <label for='update-radio-2'><span class='form-label'>組合包</span></label>
+		            </section>
+	            </td>
+										</tr>
+										<tr>
 											<td>自訂商品ID：</td>
 											<td><input type="text" id="update_c_product_id"
 												name="c_product_id" placeholder="輸入自訂商品ID"></td>
@@ -69,6 +87,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<td>總金額：</td>
 											<td><input type="text" id="update_product_price"
 												name="update_product_price" disabled></td>
+										</tr>
+										<tr>
+											<td>訂單總金額：</td>
+											<td><input type="text" id="update_total_amt"
+												name="total_amt"></td>
 										</tr>
 										<tr>
 											<td>發票號碼：</td>
@@ -155,6 +178,18 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<td><input type="text" name="name" placeholder="輸入客戶名字"></td>
 										</tr>
 										<tr>
+		        <td>對照類別</td>
+	            <td>
+		            <section>
+			            <input id='insert-radio-1' type='radio' name='radio-group-type' value='PRD'>
+			            <label for='insert-radio-1'><span class='form-label'>商品</span></label>
+		
+			            <input id='insert-radio-2' type='radio' name='radio-group-type' value='PKG'>
+			            <label for='insert-radio-2'><span class='form-label'>組合包</span></label>
+		            </section>
+	            </td>
+										</tr>
+										<tr>
 											<td>自訂商品ID：</td>
 											<td><input type="text" id="insert_c_product_id"
 												name="c_product_id" placeholder="輸入自訂商品ID"></td>
@@ -170,11 +205,15 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 											<td><input type="text" id="insert_price" name="price"
 												placeholder="輸入單價"></td>
 										</tr>
-										<tr>
-											<td>總金額：</td>
-											<td><input type="text" id="insert_product_price"
+										<tr style="display: none;">
+											<td>小計：</td>
+											<td><input type="hidden" id="insert_product_price"
 												name="insert_product_price" placeholder="系統自動產生金額" disabled></td>
-	
+										</tr>
+										<tr>
+											<td>訂單總金額：</td>
+											<td><input type="text" id="insert_total_amt"
+												name="total_amt"></td>
 										</tr>
 										<tr>
 											<td>發票號碼：</td>
@@ -203,6 +242,23 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 												name="dis_date" placeholder="輸入配送日" class="input-date"
 												value="2000-01-01"></td>
 										</tr>
+									</table>
+								</fieldset>
+							</form>
+						</div>
+						
+						<div id="dialog-form-select" style="display:none;">
+							<form name="dialog-form-post-select" id="dialog-form-post-select" >
+								<fieldset>
+									<table class='result-table' id="dialog-select-table">
+										<thead>
+											<tr>
+												<th></th>
+												<th>自訂商品ID</th>
+												<th>商品名稱</th>
+												<th>規格名稱</th>
+											</tr>
+										</thead>									
 									</table>
 								</fieldset>
 							</form>
@@ -640,7 +696,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                                        var tmp = {
 	                                            action: "search_trans_list_date",
 	                                            trans_list_start_date: $("#trans_list_start_date").val(),
-	                                            trans_list_end_date: $("#trans_list_end_date").val()
+	                                            trans_list_end_date: $("#trans_list_end_date").val(),
+	                        	                upload_start_date: $("#upload_start_date").val(),
+	                        	                upload_end_date: $("#upload_end_date").val()
 	                                        };
 	                                        draw_sale(tmp);
 
@@ -765,7 +823,9 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                                        var tmp = {
 	                                            action: "search_trans_list_date",
 	                                            trans_list_start_date: $("#trans_list_start_date").val(),
-	                                            trans_list_end_date: $("#trans_list_end_date").val()
+	                                            trans_list_end_date: $("#trans_list_end_date").val(),
+	                        	                upload_start_date: $("#upload_start_date").val(),
+	                        	                upload_end_date: $("#upload_end_date").val()
 	                                        };
 	                                        draw_sale(tmp);
 
@@ -1158,7 +1218,10 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                            dis_date: $insert.find("input[name='dis_date']").val(),
 	                            memo: $insert.find("input[name='memo']").val(),
 	                            sale_date: $insert.find("input[name='sale_date']").val(),
-	                            order_source: $insert.find("input[name='order_source']").val()
+	                            order_source: $insert.find("input[name='order_source']").val(),
+	                            contrast_type: $("input[name='radio-group-type']:checked").val(),
+	                            deliveryway: '1',
+	                            total_amt: $insert.find("input[name='total_amt']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1271,7 +1334,10 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	                            dis_date: $update.find("input[name='dis_date']").val(),
 	                            memo: $update.find("input[name='memo']").val(),
 	                            sale_date: $update.find("input[name='sale_date']").val(),
-	                            order_source: $update.find("input[name='order_source']").val()
+	                            order_source: $update.find("input[name='order_source']").val(),
+	                            contrast_type: $("input[name='radio-group-type']:checked").val(),
+	                            deliveryway: '1',
+	                            total_amt: $update.find("input[name='total_amt']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1633,7 +1699,129 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	        }
 	    });
 	    $("#warning").show();
+	    
+	    $("input[name='radio-group-type']").on("click", function(e) {
+	    	$("#dialog-select-table").dataTable().fnDestroy();
+            
+	    	var table = $("#dialog-select-table").DataTable({
+                dom: 'fr<t>ip',
+                paging: true,
+                ordering: false,
+                info: false,
+                bLengthChange: false,
+                pageLength: 10,
+                scrollY:"250px",
+                width: 800,
+		        show: {
+                    effect: "blind",
+                    duration: 300
+                },
+                hide: {
+                    effect: "fade",
+                    duration: 300
+                },
+                language: {
+                    "url": "js/dataTables_zh-tw.txt"
+                },
+                ajax: {
+                    url: "productContrast.do",
+                    dataSrc: "",
+                    type: "POST",
+                    data: {
+                        "action": "search-product-type-list",
+                        "type": $("input[name='radio-group-type']:checked").val()
+                    }
+                },
+                columnDefs: [{
+                    targets: 0,
+                    searchable: false,
+                    orderable: false,
+                    render: function(data, type, row) {
+                        var rad =
+                            "<input type='radio' name='radio-group-select' value='" + 
+                            row.name + ";" + row.desc + "' id = '" + row.id + "'>" +
+                            "<label for='" + row.id + "'><span class='form-label'>選取</span></label>";
 
+                        return rad;
+                    }
+                }],
+                columns: [{
+				    "data": null,
+				    "defaultContent": ""
+				}, {
+				    "data": "c_product_id",
+				    "defaultContent": ""
+				}, {
+				    "data": "name",
+				    "defaultContent": ""
+				}, {
+				    "data": "desc",
+				    "defaultContent": ""
+				}]
+            });
+            
+	    	select_dialog.dialog("open");
+	    });
+
+	    var select_dialog = $("#dialog-form-select").dialog({
+	    	title: "商品/組合包選擇",
+            draggable: true,
+	        resizable: false,
+	        autoOpen: false,
+	        height: "auto",
+	        width: "auto",
+	        modal: true,
+	        buttons: [{
+                text: "確認",
+                click: function(e) {
+                	e.preventDefault();
+                	if ($("input[name='radio-group-select']:checked").length === 0) {
+                        $("<div></div>")
+                        .text("請選擇一筆資料 !")
+                       	.dialog({
+                            title: "訊息",
+                            resizable: false,
+                            modal: true
+                        });
+                    } else {
+                        var row = $("input[name='radio-group-select']:checked").closest('tr');
+                        var row_data = $("#dialog-select-table").dataTable().fnGetData(row);
+                        
+                        $this = $(["#insert_c_product_id",
+                	        "#update_c_product_id",
+                	        "#insert_product_name",
+                	        "#update_product_name"
+                	    ].join(",")).closest("div");
+                        
+            	        $this.find("input[name=c_product_id]").val(row_data.c_product_id);
+            	        $this.find("input[name=product_name]").val(row_data.name);
+            	        $this.find("input[name=price]").val(row_data.price);
+            	        $this.find("input[name$=product_price]").val(row_data.price);
+            	        $this.find("input[name=quantity]").val("1");
+            	        
+            	        $("#dialog-form-select").data("product_id", row_data.id);
+            	        product_id = row_data.id;
+            	        
+                    	select_dialog.dialog("close");
+                    }
+                }
+            }, {
+                text: "取消",
+                click: function() {
+                	var $radios = $("input[name='radio-group-type']");
+                    if ($radios.is(':checked') === true) {
+                        $radios.prop('checked', false);
+                    }
+                    $("#dialog-form-post-select").trigger("reset");
+                    select_dialog.dialog("close");
+                }
+            }],
+	        close: function() {
+	        	select_dialog.dialog("close");
+                $("#dialog-form-post-select").trigger("reset");
+	        }
+	    });
+	    
 	    //查詢條件版面折疊
 	    $(".input-field-wrap")
 	        .append("<div class='div_right_bottom upup'><img src='./images/upup.png'></div>")
