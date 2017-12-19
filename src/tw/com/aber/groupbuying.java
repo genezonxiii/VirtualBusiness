@@ -348,11 +348,7 @@ public class groupbuying extends HttpServlet {
 
 			logger.debug("isJson: " + isJson);
 			if (isJson == 1) {
-				if ("true".equals(jsonobj.success)) {
-					ret = content;
-				} else {
-					ret = "false";
-				}
+				ret = content;
 			} else {
 				if (content.length() > 100) {
 					content = content.substring(0, 90) + "....";
