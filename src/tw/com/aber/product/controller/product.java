@@ -716,8 +716,8 @@ public class product extends HttpServlet {
 		private static final String sp_get_product_bysupplyname = "call sp_get_product_bysupplyname (?,?)";
 		private static final String sp_get_product_byproductname = "call sp_get_product_byproductname (?,?)";
 		private static final String sp_get_supplyname = "call sp_get_supplyname (?,?)";
-		private static final String sp_get_type_byname = "call sp_select_type_byname (?,?)";
-		private static final String sp_get_unit_byname = "call sp_select_unit_byname (?,?)";
+		private static final String sp_select_type_byname = "call sp_select_type_byname (?,?)";
+		private static final String sp_select_unit_byname = "call sp_select_unit_byname (?,?)";
 		private static final String sp_check_ProductName = "call sp_check_ProductName (?,?,?)";
 		private static final String sp_getProductbyc_Product_id = "call sp_getProductbyc_Product_id(?,?)";
 		private static final String sp_select_product_by_product_name= "call sp_select_product_by_product_name(?,?)";
@@ -1012,7 +1012,7 @@ public class product extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_type_byname);
+				pstmt = con.prepareStatement(sp_select_type_byname);
 				pstmt.setString(1, group_id);
 				pstmt.setString(2, type_id);
 				rs = pstmt.executeQuery();
@@ -1067,7 +1067,7 @@ public class product extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_unit_byname);
+				pstmt = con.prepareStatement(sp_select_unit_byname);
 				pstmt.setString(1, group_id);
 				pstmt.setString(2, unit_id);
 				rs = pstmt.executeQuery();

@@ -413,11 +413,6 @@ public class realsale extends HttpServlet {
 		// 會使用到的Stored procedure
 		// 查詢
 		private static final String sp_selectall_realsale = "call sp_selectall_realsale(?)";
-		//private static final String sp_select_realsale_byorder_no = "call sp_select_realsale_byorder_no (?,?,?)";
-		//private static final String sp_select_realsale_bytranslistdate = "call sp_select_realsale_bytranslistdate(?,?,?)";
-		//private static final String sp_select_realsale_bydisdate = "call sp_select_realsale_bydisdate(?,?,?)";
-		//private static final String sp_select_realsale_byordersource = "call sp_select_realsale_byordersource(?,?)";
-		//private static final String sp_select_realsale_bydeliveryway = "call sp_select_realsale_bydeliveryway(?,?)";
 		// 刪除
 		private static final String sp_del_realsale = "call sp_del_realsale (?,?,?)";
 		// 新增

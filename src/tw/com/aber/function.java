@@ -213,12 +213,7 @@ public class function extends HttpServlet {
 
 	/*************************** 操作資料庫 ****************************************/
 	class FunctionDAO  {
-		// 會使用到的Stored procedure
-//		private static final String sp_selectall_exchange = "call sp_selectall_exchange(?)";
-//		private static final String sp_insert_exchange = "call sp_insert_exchange(?,?,?)";
-//		private static final String sp_update_exchange = "call sp_update_exchange(?,?,?,?)";
-//		private static final String sp_del_exchange  = "call sp_del_exchange (?,?)";
-		
+		// 會使用到的Stored procedure		
 		private static final String sp_insert_supply = "call sp_insert_supply(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_insert_product_unit = "call sp_insert_product_unit(?,?,?)";
 		private static final String sp_insert_product_type = "call sp_insert_product_type(?,?,?)";

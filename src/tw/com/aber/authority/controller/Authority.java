@@ -144,7 +144,7 @@ public class Authority extends HttpServlet {
 
 		private static final String sp_get_all_menu = "call sp_get_all_menu()";
 		private static final String sp_get_menu_ids_by_user_id = "call sp_get_menu_ids_by_user_id(?)";
-		private static final String sp_udpate_authority = "call sp_udpate_authority_by_user_id(?,?)";
+		private static final String sp_udpate_authority_by_user_id = "call sp_udpate_authority_by_user_id(?,?)";
 		
 		@Override
 		public List<MenuVO> getAllMenuVO() {
@@ -264,7 +264,7 @@ public class Authority extends HttpServlet {
 			try {
 				Class.forName(jdbcDriver);
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_udpate_authority);
+				pstmt = con.prepareStatement(sp_udpate_authority_by_user_id);
 				pstmt.setString(1, user_id);
 				pstmt.setString(2, privilege);
 				pstmt.executeUpdate();
