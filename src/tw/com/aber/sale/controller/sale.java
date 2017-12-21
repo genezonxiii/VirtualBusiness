@@ -88,10 +88,12 @@ public class sale extends HttpServlet {
 				if (start_date.trim().length() == 0 && end_date.trim().length() == 0
 						&& upload_start_date.trim().length() == 0 && upload_end_date.trim().length() == 0) {
 					saleList = saleService.getSearchAllDB(group_id);
-				} else if (type.equals("searh-trans-list-date") && start_date.trim().length() > 0 && end_date.trim().length() > 0) {
-					saleList = saleService.getSearchTransListDateDB(group_id, start_date, end_date);
-				} else if (type.equals("search-upload-date") && upload_start_date.trim().length() > 0 && upload_end_date.trim().length() > 0) {
+				} else if ((type.equals("search-upload-date") || type.equals("invoice")) 
+						&& upload_start_date.trim().length() > 0 && upload_end_date.trim().length() > 0) {
 					saleList = saleService.searchUploadDateDB(group_id, upload_start_date, upload_end_date);
+				} else if ((type.equals("searh-trans-list-date") || type.equals("invoice")) 
+						&& start_date.trim().length() > 0 && end_date.trim().length() > 0) {
+					saleList = saleService.getSearchTransListDateDB(group_id, start_date, end_date);
 				}
 
 				String jsonStrList = gson.toJson(saleList);

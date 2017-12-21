@@ -213,7 +213,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										<tr>
 											<td>訂單總金額：</td>
 											<td><input type="text" id="insert_total_amt"
-												name="total_amt"></td>
+												name="total_amt" value="0"></td>
 										</tr>
 										<tr>
 											<td>發票號碼：</td>
@@ -695,6 +695,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 	                                        var tmp = {
 	                                            action: "search_trans_list_date",
+	                                            type: "invoice",
 	                                            trans_list_start_date: $("#trans_list_start_date").val(),
 	                                            trans_list_end_date: $("#trans_list_end_date").val(),
 	                                            upload_start_date: $("#upload_start_date").val(),
@@ -822,6 +823,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 
 	                                        var tmp = {
 	                                            action: "search_trans_list_date",
+	                                            type: "invoice",
 	                                            trans_list_start_date: $("#trans_list_start_date").val(),
 	                                            trans_list_end_date: $("#trans_list_end_date").val(),
 	                                            upload_start_date: $("#upload_start_date").val(),
@@ -1081,7 +1083,11 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	            required: true
 	        },
 	        c_product_id: {
-	            stringMaxLength: 40
+	            stringMaxLength: 40,
+	            required: true
+	        },
+	        total_amt: {
+	            required: true
 	        },
 	        name: {
 	            stringMaxLength: 80
