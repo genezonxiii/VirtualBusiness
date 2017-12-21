@@ -51,7 +51,11 @@ public class ShippingProcess extends HttpServlet {
 		try {
 			if ("statisticsAllocinvData".equals(action)) {
 				// 配庫
-				JSONObject jsonObject = service.statisticsAlloc(group_id, user_id);
+				String warehouse_id = request.getParameter("import_warehouse_id");
+				
+				logger.debug("warehouse_id: " + warehouse_id);
+				
+				JSONObject jsonObject = service.statisticsAlloc(group_id, user_id,warehouse_id);
 
 				response.getWriter().write(jsonObject.toString());
 				
@@ -82,10 +86,12 @@ public class ShippingProcess extends HttpServlet {
 			} else if ("importPicking".equals(action)) {
 				// 揀貨
 				String order_no_count = request.getParameter("order_no_count");
+				String warehouse_id = request.getParameter("import_warehouse_id");
 				
 				logger.debug("order_no_count: " + order_no_count);
+				logger.debug("warehouse_id: " + warehouse_id);
 
-				JSONObject jsonObject = service.importPicking(group_id, user_id, order_no_count);
+				JSONObject jsonObject = service.importPicking(group_id, user_id, order_no_count,warehouse_id);
 				
 				logger.debug("jsonObject: " + jsonObject.toString());
 				
@@ -104,10 +110,13 @@ public class ShippingProcess extends HttpServlet {
 				String fast_trans_list_date_begin = request.getParameter("fast_trans_list_date_begin");
 				String fast_trans_list_date_end = request.getParameter("fast_trans_list_date_end");
 				String order_no_count = request.getParameter("fast_order_count");
+				String warehouse_id = request.getParameter("fast_warehouse_id");
+				
 
 				logger.debug("fast_trans_list_date_begin:" + fast_trans_list_date_begin);
 				logger.debug("fast_trans_list_date_end:" + fast_trans_list_date_end);
 				logger.debug("order_no_count:" + order_no_count);
+				logger.debug("warehouse_id:" + warehouse_id);
 
 				// 匯入銷貨
 				JSONObject jsonObject = service.importRealSale(group_id, user_id, fast_trans_list_date_begin,
@@ -133,7 +142,7 @@ public class ShippingProcess extends HttpServlet {
 				}
 
 				// 配庫
-				jsonObject = service.statisticsAlloc(group_id, user_id);
+				jsonObject = service.statisticsAlloc(group_id, user_id,warehouse_id);
 
 				isSucess = checkData(jsonObject, 1);
 				if (!isSucess) {
@@ -144,7 +153,7 @@ public class ShippingProcess extends HttpServlet {
 				}
 
 				// 檢貨
-				jsonObject = service.importPicking(group_id, user_id, order_no_count);
+				jsonObject = service.importPicking(group_id, user_id, order_no_count,warehouse_id);
 
 				isSucess = checkData(jsonObject, 2);
 				if (!isSucess) {
@@ -216,11 +225,11 @@ public class ShippingProcess extends HttpServlet {
 			return dao.searchAllDB(group_id);
 		}
 
-		public JSONObject statisticsAlloc(String group_id, String user_id) {
-			return dao.statisticsAlloc(group_id, user_id);
+		public JSONObject statisticsAlloc(String group_id, String user_id, String warehouse_id) {
+			return dao.statisticsAlloc(group_id, user_id, warehouse_id);
 		}
-		public JSONObject importPicking(String group_id, String user_id, String order_count) {
-			return dao.importPicking(group_id, user_id,order_count);
+		public JSONObject importPicking(String group_id, String user_id, String order_count, String warehouse_id) {
+			return dao.importPicking(group_id, user_id, order_count, warehouse_id);
 		}
 		
 		public JSONObject importShip(String group_id, String user_id) {
@@ -243,9 +252,9 @@ public class ShippingProcess extends HttpServlet {
 		// 查詢
 		private static final String sp_selectall_realsale = "call sp_selectall_realsale(?)";
 		// 配庫
-		private static final String sp_statistics_alloc_inv = "call sp_statistics_alloc_inv(?,?,?)";		
+		private static final String sp_statistics_alloc_inv = "call sp_statistics_alloc_inv(?,?,?,?)";		
 		// 撿貨
-		private static final String sp_importData_picking = "call sp_importData_picking(?,?,?)";
+		private static final String sp_importData_picking = "call sp_importData_picking(?,?,?,?)";
 		// 出貨
 		private static final String sp_importData_ship = "call sp_importData_ship(?,?)";
 		
@@ -253,7 +262,7 @@ public class ShippingProcess extends HttpServlet {
 
 
 		@Override
-		public JSONObject statisticsAlloc(String group_id, String user_id) {
+		public JSONObject statisticsAlloc(String group_id, String user_id,String warehouse_id) {
 			Connection con = null;
 			CallableStatement cs = null;
 			ResultSet rs = null;
@@ -267,10 +276,11 @@ public class ShippingProcess extends HttpServlet {
 				cs = con.prepareCall(sp_statistics_alloc_inv);
 				cs.setString(1, group_id);
 				cs.setString(2, user_id);
-				cs.registerOutParameter(3, Types.BOOLEAN);
+				cs.setString(3, warehouse_id);
+				cs.registerOutParameter(4, Types.BOOLEAN);
 				
 				isSuccess = cs.execute();
-				updateCount = cs.getString(3);
+				updateCount = cs.getString(4);
 				
 				jsonObject.put("update_count", updateCount);
 				
@@ -406,7 +416,7 @@ public class ShippingProcess extends HttpServlet {
 		}
 
 		@Override
-		public JSONObject importPicking(String group_id, String user_id, String order_count) {
+		public JSONObject importPicking(String group_id, String user_id, String order_count, String warehouse_id) {
 			Connection con = null;
 			CallableStatement cs = null;
 			ResultSet rs = null;
@@ -421,6 +431,7 @@ public class ShippingProcess extends HttpServlet {
 				cs.setString(1, group_id);
 				cs.setString(2, user_id);
 				cs.setString(3, order_count);
+				cs.setString(4, warehouse_id);
 				isSuccess = cs.execute();
 				jsonObject.put("update_count", updateCount);
 				
@@ -559,9 +570,9 @@ public class ShippingProcess extends HttpServlet {
 
 		public List<RealSaleVO> searchAllDB(String group_id);
 
-		public JSONObject statisticsAlloc(String group_id, String user_id);
+		public JSONObject statisticsAlloc(String group_id, String user_id, String warehouse_id);
 		
-		public JSONObject importPicking(String group_id, String user_id,String order_count);
+		public JSONObject importPicking(String group_id, String user_id, String order_count, String warehouse_id);
 		
 		public JSONObject importShip(String group_id, String user_id);
 		

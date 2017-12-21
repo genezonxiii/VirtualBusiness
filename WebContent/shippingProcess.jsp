@@ -105,8 +105,14 @@ line-height: 25px;
 							<div class="form-wrap">
 								<div class="form-row fast_div">
 									<label for=""> <span class="block-label">合併訂單數量：</span> <input type="number" id="fast_order_count" name="import_order_count" class="ui-autocomplete-input" value="5">
-									</label><br/> <label for=""> <span class="block-label">上傳日期區間：</span> <input type="text" class="input-date" id="fast_trans_list_date_begin" name="fast_trans_list_date_begin">
+									</label>
+									<br/> 
+									<label for=""> <span class="block-label">上傳日期區間：</span> <input type="text" class="input-date" id="fast_trans_list_date_begin" name="fast_trans_list_date_begin">
 										<div class="forward-mark"></div> <input type="text" class="input-date" id="fast_trans_list_date_end" name="import_trans_list_date_end">
+									</label> <br />
+									<label for=""> 
+										<span class="block-label">配庫倉儲：</span> 
+										<select name="fast_chooseWarehouse" id="fast_chooseWarehouse"></select>
 									</label> <br /> <br />
 									<button class="btn btn-exec btn-wide" id="fast_button">快速出貨</button>
 								</div>
@@ -139,7 +145,12 @@ line-height: 25px;
 										</div>
 									</div>
 									<div class="side_by_side_div">
-										<div class="on_div"></div>
+										<div class="on_div">
+											<label for="">
+												<span class="block-label">配庫倉儲：</span> 
+												<select name="import_chooseWarehouse" id="import_chooseWarehouse"></select>
+											</label>
+										</div>
 										<div class="under_div">
 											<button class="btn btn-exec btn-wide" id="statistics_alloc_inv">執行配庫</button>
 											<span class="forward-mark"></span>
@@ -203,8 +214,9 @@ line-height: 25px;
 	
 		<!--對話窗樣式-快速出貨 -->
 			<div id="dialog-form-fast" title="快速出貨" style="display: none;">
-				您將快速出貨，轉單日期區間為:<br/>
+				您將快速出貨，轉單日期區間:<br/>
 				<sapn id="dialog_fast_trans_list_date_begin"></sapn>到<sapn id=dialog_fast_trans_list_date_end></sapn>訂單。<br/>
+				配庫倉儲:<sapn id="dialog_fast_chooseWarehouse"></sapn><br/>
 				合併訂單數量:	<sapn id="dialog_fast_order_count"></sapn><br/>
 				
 			</div>
@@ -241,6 +253,7 @@ line-height: 25px;
 			$("#import_order_count").attr('disabled', true);
 			$("#import_picking").attr('disabled', true);
 			$("#import_ship").attr('disabled', true);
+			$("#import_chooseWarehouse").attr('disabled', true);
 		});
 			
          
@@ -654,6 +667,8 @@ line-height: 25px;
 														'disabled', false);
 												$("#statistics_alloc_inv")
 														.attr('disabled', true);
+												$("#import_chooseWarehouse")
+														.attr('disabled', true);
 												$("#import_order_count").attr(
 														'disabled', true);
 												$("#import_picking").attr(
@@ -703,6 +718,8 @@ line-height: 25px;
 												true);
 										$("#statistics_alloc_inv").attr(
 												'disabled', false);
+										$("#import_chooseWarehouse").attr(
+												'disabled', false);
 										$("#import_order_count").attr(
 												'disabled', true);
 										$("#import_picking").attr('disabled',
@@ -718,39 +735,47 @@ line-height: 25px;
 			$("#statistics_alloc_inv").click(
 					function(e) {
 						$("#statistics_alloc_inv").attr('disabled', false);
-						$.ajax({
-							type : 'POST',
-							url : 'shippingProcess.do',
-							data : {
-								action : "statisticsAllocinvData"
-							},beforeSend : function(){
-								showBlockUI();
-								$("#statistics_alloc_inv").attr('disabled', true);
-							},complete:function(){
-								$.unblockUI();
-							},
-							success : function(result) {
-								var obj = jQuery.parseJSON(result);
-								var order_no_cnt = "出庫訂單數：" + obj.order_no_cnt;
-								var total_cnt = "<br/>  出庫商品明細數："
-										+ obj.total_cnt;
-
-								dialogMsg('執行配庫', order_no_cnt + total_cnt);
-								$("#import_trans_list_date_begin").attr(
-										'disabled', true);
-								$("#import_trans_list_date_end").attr(
-										'disabled', true);
-								$("#import_resale").attr('disabled', true);
-								$("#import_alloc_inv").attr('disabled', true);
-								$("#statistics_alloc_inv").attr('disabled',
-										true);
-								$("#import_order_count")
-										.attr('disabled', false);
-								$("#import_picking").attr('disabled', false);
-								$("#import_ship").attr('disabled', true);
-							},
-						});
-
+						$("#import_chooseWarehouse").attr('disabled', false);
+						if (!($("#import_chooseWarehouse").val() == "")) {
+							$.ajax({
+								type : 'POST',
+								url : 'shippingProcess.do',
+								data : {
+									action : "statisticsAllocinvData",
+									import_warehouse_id : $("#import_chooseWarehouse").val(),
+								},beforeSend : function(){
+									showBlockUI();
+									$("#statistics_alloc_inv").attr('disabled', true);
+									$("#import_chooseWarehouse").attr('disabled', true);
+								},complete:function(){
+									$.unblockUI();
+								},
+								success : function(result) {
+									var obj = jQuery.parseJSON(result);
+									var order_no_cnt = "出庫訂單數：" + obj.order_no_cnt;
+									var total_cnt = "<br/>  出庫商品明細數："
+											+ obj.total_cnt;
+	
+									dialogMsg('執行配庫', order_no_cnt + total_cnt);
+									$("#import_trans_list_date_begin").attr(
+											'disabled', true);
+									$("#import_trans_list_date_end").attr(
+											'disabled', true);
+									$("#import_resale").attr('disabled', true);
+									$("#import_alloc_inv").attr('disabled', true);
+									$("#statistics_alloc_inv").attr('disabled',
+											true);
+									$("#import_chooseWarehouse").attr('disabled', 
+											true);
+									$("#import_order_count")
+											.attr('disabled', false);
+									$("#import_picking").attr('disabled', false);
+									$("#import_ship").attr('disabled', true);
+								},
+							});
+						}else{
+							dialogMsg("警告","請先選擇配庫倉儲");
+						}
 					});
 
 			//20170504 揀貨---------------------------------
@@ -767,7 +792,8 @@ line-height: 25px;
 												url : 'shippingProcess.do',
 												data : {
 													order_no_count : import_order_count,
-													action : "importPicking"
+													action : "importPicking",
+													import_warehouse_id : $("#import_chooseWarehouse").val(),
 												},beforeSend : function(){
 													showBlockUI();
 													$("#import_picking").attr('disabled', false);
@@ -800,6 +826,9 @@ line-height: 25px;
 																	true);
 													$("#statistics_alloc_inv")
 															.attr('disabled',
+																	true);
+													$("#import_chooseWarehouse")
+															.attr('disabled', 
 																	true);
 													$("#import_order_count")
 															.attr('disabled',
@@ -857,6 +886,8 @@ line-height: 25px;
 														'disabled', true);
 												$("#statistics_alloc_inv")
 														.attr('disabled', true);
+												$("#import_chooseWarehouse")
+														.attr('disabled', true);
 												$("#import_order_count").attr(
 														'disabled', true);
 												$("#import_picking").attr(
@@ -885,10 +916,14 @@ line-height: 25px;
 					dialogMsg("警告","請填入核定訂單數量");
 					return;
 				}
-				
+				if(""==$("#fast_chooseWarehouse").val()) {
+					dialogMsg("警告","請先選擇配庫倉儲");
+					return;
+				}
 				
 				$("#dialog_fast_trans_list_date_begin").text($("#fast_trans_list_date_begin").val());
 				$("#dialog_fast_trans_list_date_end").text($("#fast_trans_list_date_end").val());
+				$("#dialog_fast_chooseWarehouse").text($("#fast_chooseWarehouse option:selected").text());
 				$("#dialog_fast_order_count").text($("#fast_order_count").val());
 
 				
@@ -923,6 +958,7 @@ line-height: 25px;
 		        						fast_trans_list_date_begin:$("#fast_trans_list_date_begin").val(),
 		        						fast_trans_list_date_end:$("#fast_trans_list_date_end").val(),
 		        						fast_order_count:$("#fast_order_count").val(),
+		        						fast_warehouse_id:$("#fast_chooseWarehouse").val(),
 		        					},
 		        					success : function(result) {
 		        						var obj = jQuery.parseJSON(result);
@@ -1366,6 +1402,33 @@ line-height: 25px;
 					});
 				}
 			});
+			//20171221  增加配庫倉儲 取得倉儲列表---------------------------------
+			$.ajax({
+				type: "POST",
+	            url: "Warehouse.do",
+	            dataSrc: "warehouseVOList",
+	            delay: 1500,
+	            data: {
+	            	action : "getAllWarehouseVOList",
+	            },
+	            success : function(data) {
+	            	var json_obj = $.parseJSON(data);
+
+	 	            console.log("warehouseList");
+	 	            console.log(data);
+	 	            $("#import_chooseWarehouse").append("<option value=''>請選擇倉庫</option>");
+	 	          	$("#fast_chooseWarehouse").append("<option value=''>請選擇倉庫</option>");
+
+	 	            $.map(json_obj.warehouseVOList, function(item) {
+	 	                if (item.warehouse_code != '' && ('undefined' != typeof(item.warehouse_code))) {
+	 	                    $("#import_chooseWarehouse").append("<option value='" + item.warehouse_id + "'>" + item.warehouse_code + '-' + item.warehouse_name + "</option>");
+	 	                   	$("#fast_chooseWarehouse").append("<option value='" + item.warehouse_id + "'>" + item.warehouse_code + '-' + item.warehouse_name + "</option>");
+	 	                }
+
+	 	            });
+				}
+	        });
+				
 
 			$(
 					[ "#search_c_product_id", "#update_c_product_id",
