@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptPickReport" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8bbac5f4-e692-4b87-b2af-d676f6e98d1a">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
-	<property name="ireport.x" value="274"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_pick_id" class="java.lang.String"/>
 	<queryString>
@@ -154,7 +154,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{location_id}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement uuid="3b0d63be-23c9-4e83-8d6b-a925b1c9d8a9" x="667" y="0" width="100" height="26"/>
 				<box>
 					<pen lineWidth="0.5"/>
