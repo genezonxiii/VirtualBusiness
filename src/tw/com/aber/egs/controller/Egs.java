@@ -30,6 +30,7 @@ import com.google.gson.GsonBuilder;
 
 import tw.com.aber.egs.vo.EgsVO;
 import tw.com.aber.vo.GroupVO;
+import tw.com.aber.vo.SaleVO;
 import tw.com.aber.vo.ShipVO;
 
 public class Egs extends HttpServlet {
@@ -195,7 +196,8 @@ public class Egs extends HttpServlet {
 		private static final String sp_get_ship_by_order_no = "call sp_get_ship_by_order_no(?,?)";
 		private static final String sp_insert_egs = "call sp_insert_egs(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_select_egs_by_orderno_or_trackingno = "call sp_select_egs_by_orderno_or_trackingno(?,?,?)";
-
+		private static final String sp_get_sale_invoice_info_by_orderno = "call sp_get_sale_invoice_info_by_orderno(?,?)";
+		
 		@Override
 		public GroupVO getGroupByGroupId(String groupId) {
 			GroupVO row = null;
@@ -585,6 +587,55 @@ public class Egs extends HttpServlet {
 			}
 			return rows;
 		}
+		
+		//Same As The Function In SaleDAO
+		public SaleVO getSaleInvoiceInfoByOrderNo(String groupId, String orderNo) {
+			SaleVO saleVO = null;
+
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_sale_invoice_info_by_orderno);
+				pstmt.setString(1, groupId); 
+				pstmt.setString(2, orderNo);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					saleVO = new SaleVO();
+					saleVO.setProduct_name("商品");
+					saleVO.setQuantity( Integer.valueOf("1"));
+					saleVO.setPrice(rs.getFloat("total_amount"));
+					saleVO.setOrder_no(rs.getString("order_no"));
+					saleVO.setInvoice(rs.getString("invoice"));
+					saleVO.setInvoice_date(rs.getDate("invoice_date"));
+					saleVO.setInvoice_vcode(rs.getString("invoice_vcode"));
+					saleVO.setInvoice_time(rs.getTime("invoice_time"));
+				}
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (rs != null) {
+						rs.close();
+					}
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (con != null) {
+						con.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				} catch (Exception e) {
+					logger.error("Exception:".concat(e.getMessage()));
+				}
+			}
+			return saleVO;
+		}
 	}
 
 	public class EgsService {
@@ -621,6 +672,17 @@ public class Egs extends HttpServlet {
 		public List<EgsVO> getEgsByOrderNoOrTrackingNo(String groupId, String orderNo, String trackingNo) {
 			return dao.getEgsByOrderNoOrTrackingNo(groupId, orderNo, trackingNo);
 		}
+		
+		public String getEgsTotalAmtByExt(String groupId, String orderNo) {
+			SaleVO saleVO = ((EgsDao)dao).getSaleInvoiceInfoByOrderNo(groupId, orderNo);
+
+			String amount = null;
+			if (saleVO != null) {
+				amount = String.valueOf( saleVO.getPrice().intValue() );
+			}
+			return amount;
+		}
+		
 	}
 
 	interface egs_interface {
@@ -801,7 +863,7 @@ public class Egs extends HttpServlet {
 			logger.debug("[距離] distance: " + distance);
 
 			// 代收貨款金額
-			String product_price = service.getEgsTotalAmt(realsaleIds);
+			String product_price = service.getEgsTotalAmtByExt(groupId, orderNo);
 			logger.debug("[代收貨款金額] product_price: " + product_price);
 
 			// 組合傳送單筆託運單資料電文
