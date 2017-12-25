@@ -19,7 +19,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.GroupVO;
+import tw.com.aber.vo.WarehouseVO;
 
 public class group extends HttpServlet {
 
@@ -45,13 +47,13 @@ public class group extends HttpServlet {
 		if ("searh".equals(action)) {
 			try {
 				/***************************
-				 * 1.±µ¦¬½Ð¨D°Ñ¼Æ
+				 * 1.ï¿½ï¿½ï¿½ï¿½ï¿½Ð¨Dï¿½Ñ¼ï¿½
 				 ****************************************/
 				String group_id2 = request.getParameter("group_id");
 				/***************************
-				 * 2.¶}©l¬d¸ß¸ê®Æ
+				 * 2.ï¿½}ï¿½lï¿½dï¿½ß¸ï¿½ï¿½
 				 ****************************************/
-				// °²¦pµL¬d¸ß±ø¥ó¡A«h¬O¬d¸ß¥þ³¡
+				// ï¿½ï¿½ï¿½pï¿½Lï¿½dï¿½ß±ï¿½ï¿½ï¿½Aï¿½hï¿½Oï¿½dï¿½ß¥ï¿½ï¿½ï¿½
 				if (group_id2 == null || (group_id2.trim()).length() == 0) {
 					groupService = new GroupService();
 					List<GroupVO> list = groupService.getSearchAllDB(group_id);
@@ -60,9 +62,9 @@ public class group extends HttpServlet {
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
-					return;// µ{¦¡¤¤Â_
+					return;// ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½_
 				}
-				/*************************** ¨ä¥L¥i¯àªº¿ù»~³B²z **********************************/
+				/*************************** ï¿½ï¿½Lï¿½iï¿½àªºï¿½ï¿½ï¿½~ï¿½Bï¿½z **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -70,7 +72,7 @@ public class group extends HttpServlet {
 		if ("update".equals(action)) {
 			try {
 				/***************************
-				 * 1.±µ¦¬½Ð¨D°Ñ¼Æ
+				 * 1.ï¿½ï¿½ï¿½ï¿½ï¿½Ð¨Dï¿½Ñ¼ï¿½
 				 ***************************************/
 				String group_name = request.getParameter("group_name");
 				String group_unicode = request.getParameter("group_unicode");
@@ -92,34 +94,34 @@ public class group extends HttpServlet {
 				logger.debug("master: " + master);
 				logger.debug("invoice_path: " + invoice_path);
 				/***************************
-				 * 2.¶}©l­×§ï¸ê®Æ
+				 * 2.ï¿½}ï¿½lï¿½×§ï¿½ï¿½ï¿½
 				 ***************************************/
 				groupService = new GroupService();
 				groupService.updateGroup(user_id, group_id, group_name, group_unicode, address, phone, fax, mobile,
 						email, master, invoice_path);
 				/***************************
-				 * 3.­×§ï§¹¦¨,·Ç³ÆÂà¥æ(Send the Success view)
+				 * 3.ï¿½×§ï§¹ï¿½ï¿½,ï¿½Ç³ï¿½ï¿½ï¿½ï¿½(Send the Success view)
 				 ***********/
 				groupService = new GroupService();
 				List<GroupVO> list = groupService.getSearchAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
-				/*************************** ¨ä¥L¥i¯àªº¿ù»~³B²z **********************************/
+				/*************************** ï¿½ï¿½Lï¿½iï¿½àªºï¿½ï¿½ï¿½~ï¿½Bï¿½z **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	/*************************** ¨î©w³W³¹¤èªk ****************************************/
+	/*************************** ï¿½ï¿½wï¿½Wï¿½ï¿½ï¿½ï¿½k ****************************************/
 	interface Group_interface {
 		public void updateDB(GroupVO groupVO);
 
 		public List<GroupVO> searchAllDB(String group_id);
 	}
 
-	/*************************** ³B²z·~°ÈÅÞ¿è ****************************************/
+	/*************************** ï¿½Bï¿½zï¿½~ï¿½ï¿½ï¿½Þ¿ï¿½ ****************************************/
 	class GroupService {
 		private Group_interface dao;
 
@@ -151,9 +153,9 @@ public class group extends HttpServlet {
 		}
 	}
 
-	/*************************** ¾Þ§@¸ê®Æ®w ****************************************/
+	/*************************** ï¿½Þ§@ï¿½ï¿½Æ®w ****************************************/
 	class GroupDAO implements Group_interface {
-		// ·|¨Ï¥Î¨ìªºStored procedure
+		// ï¿½|ï¿½Ï¥Î¨ìªºStored procedure
 		private static final String sp_selectall_group = "call sp_selectall_group(?)";
 		private static final String sp_update_group = "call sp_update_group(?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -238,6 +240,18 @@ public class group extends HttpServlet {
 					groupVO.setEmail(rs.getString("email"));
 					groupVO.setMaster(rs.getString("master"));
 					groupVO.setInvoice_path(rs.getString("invoice_path"));
+					groupVO.setInvoice_posno(rs.getString("invoice_posno"));
+					groupVO.setInvoice_key(rs.getString("invoice_key"));
+					groupVO.setCustomer_id(rs.getString("customer_id"));
+					
+					GroupSfVO sf = new GroupSfVO(group_id, rs.getString("access_code"), rs.getString("check_word"),
+							rs.getString("company_code"), rs.getString("monthly_account"), rs.getString("vendor_code"), "");
+					groupVO.setSf(sf);
+					
+					WarehouseVO wh = new WarehouseVO();
+					wh.setGroup_id(group_id);
+					wh.setSf_warehouse_code(rs.getString("sf_warehouse_code"));
+					groupVO.setWh(wh);
 
 					list.add(groupVO); // Store the row in the list
 				}

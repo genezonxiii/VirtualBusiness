@@ -77,7 +77,7 @@ table.result-table td:nth-child(2n){
 					maxlength : 10
 				},
 				invoice_path : {
-					maxlength : 50
+					maxlength : 60
 				}
 			},
 			messages : {
@@ -116,16 +116,43 @@ table.result-table td:nth-child(2n){
 						var json_obj = $.parseJSON(result);
 						var result_table = "";
 						$.each(json_obj,function(i, item) {
+							var inv = "";
+							var ezcat = "";
+							var sf = "";
+							var wh = "";
+							
+							if (item.invoice_posno != ""){
+								inv = "<tr><td>"+"盟立：POS機編號"+"</td><td>"+ item.invoice_posno+"</td></tr>"
+									+ "<tr><td>"+"通道金鑰"+"</td><td>"+ item.invoice_key+"</td></tr>"
+							}
+							if (item.customer_id != ""){
+								ezcat = "<tr><td>"+"黑貓：契客代號"+"</td><td>"+ item.customer_id+"</td></tr>"
+							}
+							if (item.sf.access_code != ""){
+								sf = "<tr><td>"+"順豐倉儲：接入編碼"+"</td><td>" + item.sf.access_code + "</td></tr>"
+									+ "<tr><td>"+"校驗碼"+"</td><td>" + item.sf.check_word + "</td></tr>"
+									+ "<tr><td>"+"貨主代碼"+"</td><td>" + item.sf.company_code + "</td></tr>"
+									+ "<tr><td>"+"月結帳號"+"</td><td>" + item.sf.monthly_account + "</td></tr>"
+									+ "<tr><td>"+"供應商"+"</td><td>" + item.sf.vendor_code + "</td></tr>"
+							}
+							if (item.wh.sf_warehouse_code != ""){
+								wh = "<tr><td>"+"倉庫代碼"+"</td><td>" + item.wh.sf_warehouse_code + "</td></tr>"
+							}
+							
 							result_table += 
-								"<tr><td>"+"公司名稱"+"</td><td>"+json_obj[i].group_name +"</td>"
-								+"<tr><td>"+"統一編號"+"</td><td>"+ json_obj[i].group_unicode+"</td>"
-								+ "<tr><td>"+"公司地址"+"</td><td>"+ json_obj[i].address+"</td>"
-								+ "<tr><td>"+"公司電話"+"</td><td>"+ json_obj[i].phone+ "</td>"
-								+ "<tr><td>"+"公司傳真"+ "</td><td>"+ json_obj[i].fax+"</td>"
-								+ "<tr><td>"+ "負責人"+"</td><td>"+json_obj[i].master+"</td>"
-								+ "<tr><td>"+"負責人Email"+"</td><td>"+ json_obj[i].email+ "</td>"
-								+ "<tr><td>"+"負責人手機"+"</td><td>"+ json_obj[i].mobile+"</td></tr>"
-								+ "<tr><td>"+"電子發票路徑"+"</td><td>"+ json_obj[i].invoice_path+"</td></tr>"
+								"<tr><td>"+"公司名稱"+"</td><td>" + item.group_name + "</td>"
+								+"<tr><td>"+"統一編號"+"</td><td>" + item.group_unicode + "</td>"
+								+ "<tr><td>"+"公司地址"+"</td><td>" + item.address + "</td>"
+								+ "<tr><td>"+"公司電話"+"</td><td>" + item.phone + "</td>"
+								+ "<tr><td>"+"公司傳真"+ "</td><td>" + item.fax + "</td>"
+								+ "<tr><td>"+ "負責人"+"</td><td>" + item.master+"</td>"
+								+ "<tr><td>"+"負責人Email"+"</td><td>" + item.email + "</td>"
+								+ "<tr><td>"+"負責人手機"+"</td><td>" + item.mobile + "</td></tr>"
+								+ "<tr><td>"+"電子發票路徑"+"</td><td>" + item.invoice_path + "</td></tr>"
+								+ inv
+								+ ezcat
+								+ sf
+								+ wh
 								+ "<tr><td>"+ "功能"+"</td><td>"
 								+ "<div class='table-row-func btn-in-table btn-gray'><i class='fa fa-ellipsis-h'></i>"
 								+ "	<div class='table-function-list'>"

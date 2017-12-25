@@ -20,13 +20,20 @@ public class GroupVO implements java.io.Serializable {
 	private Date expired;
 	private String invoice_posno;
 	private String invoice_key;
+	private String customer_id;
+	private GroupSfVO sf;
+	private WarehouseVO wh;
 
 	public String getInvoice_posno() {
 		return invoice_posno;
 	}
 
 	public void setInvoice_posno(String invoice_posno) {
-		this.invoice_posno = invoice_posno;
+		if (invoice_posno == null) {
+			this.invoice_posno = "";
+		} else {
+			this.invoice_posno = invoice_posno;
+		}
 	}
 
 	public String getInvoice_key() {
@@ -131,6 +138,34 @@ public class GroupVO implements java.io.Serializable {
 
 	public void setExpired(Date expired) {
 		this.expired = expired;
+	}
+
+	public GroupSfVO getSf() {
+		return sf;
+	}
+
+	public void setSf(GroupSfVO sf) {
+		this.sf = sf;
+	}
+
+	public String getCustomer_id() {
+		return customer_id;
+	}
+
+	public void setCustomer_id(String customer_id) {
+		if (customer_id == null) {
+			this.customer_id = "";
+		} else {
+			this.customer_id = customer_id;
+		}
+	}
+
+	public WarehouseVO getWh() {
+		return wh;
+	}
+
+	public void setWh(WarehouseVO wh) {
+		this.wh = wh;
 	}
 
 }

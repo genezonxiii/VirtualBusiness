@@ -48,7 +48,11 @@ public class WarehouseVO implements Serializable{
 		return sf_warehouse_code;
 	}
 	public void setSf_warehouse_code(String sf_warehouse_code) {
-		this.sf_warehouse_code = sf_warehouse_code;
+		if (sf_warehouse_code == null){
+			this.sf_warehouse_code = "";
+		} else {
+			this.sf_warehouse_code = sf_warehouse_code;
+		}
 	}
 
 	
