@@ -21,6 +21,13 @@ String privilege = (String) request.getSession().getAttribute("privilege");
     text-align: center; /* center checkbox horizontally */
     vertical-align: middle; /* center checkbox vertically */
 }
+input.error[type=radio] + label {
+    color: red;
+	font-size: 15px;
+	margin-top: 5px;
+	border: 1px solid #e92500;
+	background: rgb(255, 213, 204);
+}
 </style>
 <jsp:include page="template/common_css.jsp" flush="true"/>
 </head>
@@ -91,7 +98,7 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 										<tr>
 											<td>訂單總金額：</td>
 											<td><input type="text" id="update_total_amt"
-												name="total_amt"></td>
+												name="total_amt" value="0"></td>
 										</tr>
 										<tr>
 											<td>發票號碼：</td>
@@ -1029,7 +1036,14 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	        }
 	        return this.optional(element) || (length <= param);
 	    }, $.validator.format("長度不能大於{0}!"));
-
+	    jQuery.validator.addMethod("radiobutton", function(value, element, param) {
+			if (value == null) {
+				return false;
+			} else {
+				return true;
+			}
+	    }, $.validator.format("*"));
+	    
 	    //字母數字
 	    jQuery.validator.addMethod("alnum", function(value, element) {
 	        return this.optional(element) || /^[a-zA-Z0-9]+$/.test(value);
@@ -1123,15 +1137,32 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	        },
 	        order_source: {
 	            stringMaxLength: 30
-	        }
+	        },
+	        "radio-group-type" : {
+	        	radiobutton : true
+			}
 	    };
 
 	    var validator_insert = $("#insert-dialog-form-post").validate({
-	        rules: oRules
+	        rules: oRules,
+			errorPlacement : function(error, element) {
+				if (element.is(":radio")) {
+					error.appendTo(element.parents("td"));
+				} else { 
+					error.insertAfter(element);
+				}
+			}
 	    });
 
 	    var validator_update = $("#update-dialog-form-post").validate({
-	        rules: oRules
+	        rules: oRules,
+	        errorPlacement : function(error, element) {
+				if (element.is(":radio")) {
+					error.appendTo(element.parents("td"));
+				} else { 
+					error.insertAfter(element);
+				}
+			}
 	    });
 
 	    //自訂商品ID查詢相關設定
@@ -1439,6 +1470,28 @@ String privilege = (String) request.getSession().getAttribute("privilege");
 	        $("#dialog-form-update input[name='sale_date']").val(data.sale_date);
 	        $("#dialog-form-update input[name='order_source']").val(data.order_source);
 
+	        $.ajax({
+				url : "sale.do",
+				type : "POST",
+				async : false,
+				delay : 1500,
+				data : {
+					action : "get_amount_from_ext",
+					orderNo : data.order_no,
+				},
+				success : function(data) {
+					var json_obj = $.parseJSON(data);
+					$.each(json_obj, function(i, item) {
+		                if (item.price != null) {
+		                	$("#dialog-form-update input[name='total_amt']").val(
+		                			parseInt(item.price)
+		                		);
+		                }
+		            });
+				}
+	        });
+	        
+	        
 	        console.log(dialogA);
 	        console.log(dialogB);
 

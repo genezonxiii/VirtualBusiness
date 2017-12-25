@@ -758,7 +758,19 @@ public class sale extends HttpServlet {
 				String jsonResponse = gson.toJson(responseVO);
 				logger.debug("jsonStrList: " + jsonResponse);
 				response.getWriter().write(jsonResponse);
+				
+			} else if ("get_amount_from_ext".equals(action)) {
+				String orderNo = (String) request.getParameter("orderNo");
+				orderNo = "'" + orderNo + "'";
+				
+				logger.debug("orderNo: " + orderNo);
 
+				List<SaleVO> saleVOs = saleService.getSaleOrdernoInfoByOrdernos(group_id,orderNo);
+				saleVOs = saleService.maskOverviewByExt(group_id, saleVOs);
+				
+				String jsonResponse = gson.toJson(saleVOs);
+				logger.debug("jsonStrList: " + jsonResponse);
+				response.getWriter().write(jsonResponse);
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
