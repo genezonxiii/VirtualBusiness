@@ -1101,7 +1101,8 @@ input.error[type=radio] + label {
 	            required: true
 	        },
 	        total_amt: {
-	            required: true
+	            required: true,
+	            number: true
 	        },
 	        name: {
 	            stringMaxLength: 80
