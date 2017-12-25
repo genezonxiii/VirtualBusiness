@@ -597,6 +597,8 @@ public class InvoiceApi {
 		invoice.setC5("0.05");// 稅率
 		invoice.setC6(String.valueOf(sum.subtract(c1Total)));// 營業稅額
 		invoice.setC7(String.valueOf(sum));// 總計
+		invoice.setC12("訂單編號：" + saleVOs.get(0).getOrder_no());
+		invoice.setC13("訂單編號：" + saleVOs.get(0).getOrder_no());
 		
 		//買方統編有填寫
 		if(true){
