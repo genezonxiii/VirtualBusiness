@@ -1341,6 +1341,7 @@ public class sale extends HttpServlet {
 					saleVO.setOrder_source(rs.getString("order_source"));
 					saleVO.setCustomer_id(rs.getString("customer_id"));
 					saleVO.setName(rs.getString("name"));
+					saleVO.setContrast_type(rs.getString("contrast_type"));
 					list.add(saleVO); // Store the row in the list
 				}
 			} catch (SQLException se) {
@@ -1404,6 +1405,7 @@ public class sale extends HttpServlet {
 					saleVO.setCustomer_id(rs.getString("customer_id"));
 					saleVO.setName(rs.getString("name"));
 					saleVO.setUpload_date(rs.getDate("upload_date"));
+					saleVO.setContrast_type(rs.getString("contrast_type"));
 					
 					list.add(saleVO);
 				}
@@ -1468,7 +1470,8 @@ public class sale extends HttpServlet {
 					saleVO.setOrder_source(rs.getString("order_source"));
 					saleVO.setCustomer_id(rs.getString("customer_id"));
 					saleVO.setName(rs.getString("name"));
-
+					saleVO.setContrast_type(rs.getString("contrast_type"));
+					
 					list.add(saleVO);
 				}
 			} catch (SQLException se) {

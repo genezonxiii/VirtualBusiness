@@ -1470,6 +1470,7 @@ input.error[type=radio] + label {
 	        $("#dialog-form-update input[name='memo']").val(data.memo);
 	        $("#dialog-form-update input[name='sale_date']").val(data.sale_date);
 	        $("#dialog-form-update input[name='order_source']").val(data.order_source);
+	        $("#dialog-form-update input:radio[name='radio-group-type'][value='"+data.contrast_type+"']").prop("checked", true);
 
 	        $.ajax({
 				url : "sale.do",
