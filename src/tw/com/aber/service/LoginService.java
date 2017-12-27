@@ -28,10 +28,6 @@ public class LoginService {
 		return dao.checkuser(p_email);
 	}
 
-	public Boolean checkconnect() {
-		return dao.checkconnect();
-	}
-
 	public Boolean checkunicode(String unicode) {
 		return dao.checkunicode(unicode);
 	}

@@ -34,11 +34,6 @@ public class login extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		LoginService loginserver=new LoginService();
-		if(loginserver.checkconnect()==false){
-			response.getWriter().write("{\"message\":\"connect_error\"}");
-			return;
-		}
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");

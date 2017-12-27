@@ -92,19 +92,6 @@ public class LoginDao {
 		return rs;
 	}
 
-	public Boolean checkconnect() {
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			pstmt = connection.prepareStatement("SELECT DISTINCT(fax) FROM tb_group");
-			rs = pstmt.executeQuery();
-			return true;
-		} catch (Exception e) {
-			logger.error(e.toString());
-			return false;
-		}
-	}
-
 	public Boolean checkunicode(String unicode) {
 		CallableStatement cs = null;
 		Boolean rs = null;
@@ -218,9 +205,9 @@ public class LoginDao {
 		return list;
 	}
 
-	public static void main(String[] args) {
-		LoginDao dao = new LoginDao();
-		List<UserVO> list = dao.loginDB("", "", "");
-		logger.debug(list);
-	}
+//	public static void main(String[] args) {
+//		LoginDao dao = new LoginDao();
+//		List<UserVO> list = dao.loginDB("", "", "");
+//		logger.debug(list);
+//	}
 }
