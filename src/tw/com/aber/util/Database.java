@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Database {
 	private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://localhost:3306/db_virtualbusiness";
+	private static final String URL = "jdbc:mysql://localhost:3306/db_virtualbusiness?useSSL=false";
 	private static final String PASSWORD = "mysql";
 	private static final String USER_NAME = "root";
 	private static final Logger logger = LogManager.getLogger(Database.class);
