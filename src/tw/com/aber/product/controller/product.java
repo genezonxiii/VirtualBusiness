@@ -190,13 +190,18 @@ public class product extends HttpServlet {
 				String description = request.getParameter("description");
 				String barcode = request.getParameter("barcode");
 				String ispackage = request.getParameter("ispackage");
+				String userdef1 = request.getParameter("userdef1");
+				
+				logger.debug("c_product_id:" + c_product_id);
+				logger.debug("supply_id:" + supply_id);
+				logger.debug("supply_name:" + supply_name);
 				/***************************
 				 * 2.開始新增資料
 				 ***************************************/
 				productService = new ProductService();
 				productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id,
 						unit_id, cost, price, current_stock, keep_stock, photo, photo1, description, barcode, ispackage,
-						user_id);
+						userdef1, user_id);
 				/***************************
 				 * 3.新增完成,準備轉交(Send the Success view)
 				 ***********/
@@ -254,13 +259,14 @@ public class product extends HttpServlet {
 				String description = request.getParameter("description");
 				String barcode = request.getParameter("barcode");
 				String ispackage = request.getParameter("ispackage");
+				String userdef1 = request.getParameter("userdef1");
 				/***************************
 				 * 2.開始修改資料
 				 ***************************************/
 				productService = new ProductService();
 				productService.updateProduct(product_id, group_id, c_product_id, product_name, supply_id, supply_name,
 						type_id, unit_id, cost, price, keep_stock, photo, photo1, description, barcode, ispackage,
-						user_id);
+						userdef1, user_id);
 				/***************************
 				 * 3.修改完成,準備轉alert(json_obj)交(Send the Success view)
 				 ***********/
@@ -407,6 +413,7 @@ public class product extends HttpServlet {
 		private String user_id;
 		private String message;
 		private String ispackage;
+		private String userdef1;
 
 		public String getProduct_id() {
 			return product_id;
@@ -560,6 +567,14 @@ public class product extends HttpServlet {
 			this.ispackage = ispackage;
 		}
 
+		public String getUserdef1() {
+			return userdef1;
+		}
+
+		public void setUserdef1(String userdef1) {
+			this.userdef1 = userdef1;
+		}
+
 	}
 
 	/*************************** 制定規章方法 ****************************************/
@@ -611,7 +626,7 @@ public class product extends HttpServlet {
 		public ProductBean addProduct(String group_id, String c_product_id, String product_name, String supply_id,
 				String supply_name, String type_id, String unit_id, Float cost, Float price, int current_stock,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
-				String user_id) {
+				String userdef1, String user_id) {
 			ProductBean productBean = new ProductBean();
 			productBean.setGroup_id(group_id);
 			productBean.setC_product_id(c_product_id);
@@ -621,7 +636,6 @@ public class product extends HttpServlet {
 			productBean.setType_id(type_id);
 			productBean.setUnit_id(unit_id);
 			productBean.setCost(cost);
-			;
 			productBean.setPrice(price);
 			productBean.setCurrent_stock(current_stock);
 			productBean.setKeep_stock(keep_stock);
@@ -631,6 +645,7 @@ public class product extends HttpServlet {
 			productBean.setBarcode(barcode);
 			productBean.setUser_id(user_id);
 			productBean.setIspackage(ispackage);
+			productBean.setUserdef1(userdef1);
 			dao.insertDB(productBean);
 			return productBean;
 		}
@@ -638,7 +653,7 @@ public class product extends HttpServlet {
 		public ProductBean updateProduct(String product_id, String group_id, String c_product_id, String product_name,
 				String supply_id, String supply_name, String type_id, String unit_id, Float cost, Float price,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
-				String user_id) {
+				String userdef1, String user_id) {
 			ProductBean productBean = new ProductBean();
 
 			productBean.setProduct_id(product_id);
@@ -650,7 +665,6 @@ public class product extends HttpServlet {
 			productBean.setType_id(type_id);
 			productBean.setUnit_id(unit_id);
 			productBean.setCost(cost);
-			;
 			productBean.setPrice(price);
 			productBean.setKeep_stock(keep_stock);
 			productBean.setPhoto(photo);
@@ -659,6 +673,7 @@ public class product extends HttpServlet {
 			productBean.setBarcode(barcode);
 			productBean.setUser_id(user_id);
 			productBean.setIspackage(ispackage);
+			productBean.setUserdef1(userdef1);
 			dao.updateDB(productBean);
 			return productBean;
 		}
@@ -710,9 +725,9 @@ public class product extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_get_product_bybarcode = "call sp_get_product_bybarcode(?,?)";
 		private static final String sp_selectall_product = "call sp_selectall_product (?)";
-		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
+		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
 		private static final String sp_del_product = "call sp_del_product (?,?)";
-		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
 		private static final String sp_get_product_bysupplyname = "call sp_get_product_bysupplyname (?,?)";
 		private static final String sp_get_product_byproductname = "call sp_get_product_byproductname (?,?)";
 		private static final String sp_get_supplyname = "call sp_get_supplyname (?,?)";
@@ -757,7 +772,8 @@ public class product extends HttpServlet {
 				pstmt.setString(15, productBean.getUser_id());
 				pstmt.setInt(16, productBean.getCurrent_stock());
 				pstmt.setString(17, productBean.getIspackage());
-
+				pstmt.setString(18, productBean.getUserdef1());
+				
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -811,6 +827,7 @@ public class product extends HttpServlet {
 				pstmt.setString(15, productBean.getBarcode());
 				pstmt.setString(16, productBean.getUser_id());
 				pstmt.setString(17, productBean.getIspackage());
+				pstmt.setString(18, productBean.getUserdef1());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -909,6 +926,7 @@ public class product extends HttpServlet {
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
 					productBean.setIspackage(rs.getString("package"));
+					productBean.setUserdef1(rs.getString("userdef1"));
 					
 					list.add(productBean); // Store the row in the list
 				}
@@ -1143,6 +1161,7 @@ public class product extends HttpServlet {
 					productBean.setPhoto1(rs.getString("photo1"));
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
+					productBean.setUserdef1(rs.getString("userdef1"));
 					list.add(productBean);
 				}
 				// Handle any driver errors
@@ -1210,6 +1229,7 @@ public class product extends HttpServlet {
 					productBean.setPhoto1(rs.getString("photo1"));
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
+					productBean.setUserdef1(rs.getString("userdef1"));
 					list.add(productBean);
 				}
 				// Handle any driver errors

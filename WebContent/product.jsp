@@ -672,7 +672,8 @@
 										photo1 : $("#photo1").val(),
 										description : $("#dialog-form-insert input[name='description']").val(),
 										barcode : $("#dialog-form-insert input[name='barcode']").val(),
-										ispackage : "0"
+										ispackage : "0",
+										userdef1 : $("#dialog-form-insert input[name='userdef1']").val()
 									};
 								draw_product(information);
 								
@@ -788,7 +789,7 @@
 							product_id : product_id,
  							c_product_id : $("#dialog-form-update input[name='c_product_id']").val(),
 							product_name : $("#dialog-form-update input[name='product_name']").val(),
-							supply_id : $("#dialog-form-update input[name='supply_id']").val(),
+							supply_id : supply_id,
 							supply_name : $("#dialog-form-update input[name='supply_name']").val(),
 							type_id : $("#dialog-form-update select[name='select_update_type_id']").val(),
 							unit_id : $("#dialog-form-update select[name='select_update_unit_id']").val(),
@@ -799,7 +800,8 @@
 							photo1 : ($("#photo1-update").val() === '' ? $(this).data("photo1") : $("#photo1-update").val()),
 							description : $("#dialog-form-update input[name='description']").val(),
 							barcode : $("#dialog-form-update input[name='barcode']").val(),
-							ispackage : "0"
+							ispackage : "0",
+							userdef1 : $("#dialog-form-update input[name='userdef1']").val()
 						};
 						draw_product(information);
 						$("#update-dialog-form-post").trigger("reset");
@@ -873,6 +875,7 @@
 			uuid = $(this).val();
 			
 			product_id = $(this).attr("id");
+			supply_id = data.supply_id;
 			
 			$("#dialog-form-update").val(data.product_name);
 			$("#dialog-form-update input[name='product_id']").val(data.product_id);
@@ -884,6 +887,7 @@
 			$("#dialog-form-update select[name='select_update_unit_id']").val(data.unit_id);
 			$("#dialog-form-update input[name='tmp_cost']").val(data.cost);
 			$("#dialog-form-update input[name='cost']").val(data.cost);
+			$("#dialog-form-update input[name='userdef1']").val(data.userdef1);
 			
 			$("#update_exchange_cost").html(
 					currency_unit($("#update_currency").find("option:selected").text())+
@@ -1744,6 +1748,8 @@
 								</tr><tr>
 									<td>安全庫存：</td>
 									<td><input type="text" name="keep_stock" /></td>
+									<td>自定義：</td>
+									<td><input type="text" name="userdef1" /></td>
 								</tr>
 							</tbody>
 						</table>
@@ -1813,6 +1819,10 @@
 								</tr><tr>
 									<td>庫存量：</td><td><input type="text" name="current_stock" /></td>
 									<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
+								</tr>
+								<tr>
+									<td>自定義：</td>
+									<td><input type="text" name="userdef1" /></td>
 								</tr>
 							</tbody>
 						</table>		
