@@ -57,7 +57,7 @@ input.error[type=radio] + label {
 										<tr>
 											<td>平台訂單號：</td>
 											<td><input type="text" name="order_no"
-												placeholder="輸入訂單號"></td>
+												placeholder="輸入訂單號" disabled></td>
 											<td>客戶名字：</td>
 											<td><input type="text" name="name" 
 												placeholder="輸入客戶名字"></td>
@@ -100,7 +100,7 @@ input.error[type=radio] + label {
 											<td><input type="text" id="update_total_amt"
 												name="total_amt" value="0"></td>
 										</tr>
-										<tr>
+										<tr  style="display:none;">
 											<td>發票號碼：</td>
 											<td><input type="text" name="invoice"
 												placeholder="輸入發票號碼"></td>
@@ -222,7 +222,7 @@ input.error[type=radio] + label {
 											<td><input type="text" id="insert_total_amt"
 												name="total_amt" value="0"></td>
 										</tr>
-										<tr>
+										<tr style="display:none;">
 											<td>發票號碼：</td>
 											<td><input type="text" name="invoice"
 												placeholder="輸入發票號碼"></td>
@@ -247,7 +247,7 @@ input.error[type=radio] + label {
 											<td style="display: none">配送日：</td>
 											<td style="display: none"><input type="text"
 												name="dis_date" placeholder="輸入配送日" class="input-date"
-												value="2000-01-01"></td>
+												value=""></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -623,323 +623,6 @@ input.error[type=radio] + label {
 	                        $(this).addClass("toggleon");
 	                        $(this).closest("tr").addClass("selected");
 	                    });
-	            },
-	        }, {
-	            text: '開立發票',
-	            action: function(e, dt, node, config) {
-	                var $table = $('#sales');
-
-	                var cells = dataTableObj.cells().nodes();
-	                var saleMap = new Map();
-	                var ids = '';
-	                var row;
-	                var data;
-	                var message = '';
-
-	                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-
-	                if ($checkboxs.length == 0) {
-						dialogMsg('提示','請選擇一筆資料');
-	                    return false;
-	                }
-
-	                $checkboxs.each(function(index) {
-	                    ids += "'" + this.id + "',";
-	                    row = $(this).closest("tr");
-	                    data = $table.DataTable().row(row).data();
-	                    //saleMap.set(data.order_no, (index + 1));
-	                });
-
-	                    ids = ids.slice(0, -1);
-	                    var Today = new Date();
-	                    $("#invoice_num_date").val(formatDate())
-	                    console.log(ids);
-
-	                    $.ui.dialog.prototype._focusTabbable = function(){};
-	                    var dialog_invoice = $("#dialog-invoice").dialog({
-	                        draggable: true,
-	                        resizable: false,
-	                        autoOpen: false,
-	                        height: "auto",
-	                        width: "auto",
-	                        modal: true,
-	                        open: function(event, ui) {
-	                            $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
-	                        },
-	                        buttons: [{
-	                            id: "dialog_invoice_enter",
-	                            text: "確定",
-	                            click: function() {
-
-
-	                                $.ajax({
-	                                    url: 'sale.do',
-	                                    type: 'post',
-	                                    beforeSend: function() {
-	                                        $(':hover').css('cursor', 'progress');
-	                                    },
-	                                    complete: function() {
-	                                        $(':hover').css('cursor', 'default');
-	                                    },
-	                                    data: {
-	                                        action: 'invoice',
-	                                        ids: ids,
-	                                        invoice_date: $("#invoice_num_date").val()
-	                                    },
-	                                    success: function(response) {
-	                                        var $mes = $('#message #text');
-	                                        var text = '成功發送<br><br>執行結果為: <br>' + response;
-
-	                                        $mes.val('').html(text);
-
-	                                        $('#message')
-	                                            .dialog()
-	                                            .dialog('option', 'title', '提示訊息')
-	                                            .dialog('option', 'width', 'auto')
-	                                            .dialog('option', 'minHeight', 'auto')
-	                                            .dialog("open");
-
-	                                        var tmp = {
-	                                            action: "search_trans_list_date",
-	                                            type: "invoice",
-	                                            trans_list_start_date: $("#trans_list_start_date").val(),
-	                                            trans_list_end_date: $("#trans_list_end_date").val(),
-	                                            upload_start_date: $("#upload_start_date").val(),
-	                        	                upload_end_date: $("#upload_end_date").val()
-	                                        };
-	                                        draw_sale(tmp);
-
-	                                    }
-	                                });
-
-
-
-	                                $("#dialog-invoice").trigger("reset");
-	                                dialog_invoice.dialog("close");
-	                            }
-	                        }, {
-	                            text: "取消",
-	                            click: function() {
-	                                $("#dialog-invoice").trigger("reset");
-	                                dialog_invoice.dialog("close");
-	                            }
-	                        }],
-	                        close: function() {
-	                            $("#dialog-invoice").trigger("reset");
-	                        }
-	                    });
-	                    dialog_invoice.dialog("open");
-
-	            },
-	        }, {
-	            text: '作廢發票',
-	            action: function(e, dt, node, config) {
-	                var $table = $('#sales');
-
-	                var cells = dataTableObj.cells().nodes();
-	                var saleMap = new Map();
-	                var ids = '';
-	                var row;
-	                var data;
-	                var message = '';
-
-	                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-
-	                if ($checkboxs.length == 0) {
-						dialogMsg('提示','請選擇一筆資料');
-	                    return false;
-	                }
-
-	                $checkboxs.each(function(index) {
-	                    ids += "'" + this.id + "',";
-	                    row = $(this).closest("tr");
-	                    data = $table.DataTable().row(row).data();
-	                    saleMap.set(data.order_no, (index + 1));
-	                });
-
-	                if (saleMap.size > 1) {
-	                    message = message.concat('以下為您所勾選的訂單號↓<br><br>');
-	                    var table = document.createElement('table');
-	                    saleMap.forEach(function(value, key, fullArray) {
-	                        var tr = document.createElement('tr');
-	                        var text = document.createTextNode(key);
-	                        tr.appendChild(text);
-	                        table.appendChild(tr);
-	                    });
-	                    var $mes = $('#message #text');
-	                    $mes.val('').html(message).append(table);
-	                    $('#message')
-	                        .dialog()
-	                        .dialog('option', 'title', '警告訊息(只允許同一張訂單)')
-	                        .dialog('option', 'width', '322.6px')
-	                        .dialog('option', 'minHeight', 'auto')
-	                        .dialog("open");
-	                } else {
-	                    ids = ids.slice(0, -1);
-	                    console.log(ids);
-
-	                 
-	                    var dialog_invoice_cancel = $("#dialog-invoice-cancel").dialog({
-	                        draggable: true,
-	                        resizable: false,
-	                        autoOpen: false,
-	                        height: "auto",
-	                        width: "auto",
-	                        modal: true,
-	                        open: function(event, ui) {
-	                            $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
-	                            $("#invoice_cancel_reason").val("");
-	                        },
-	                        buttons: [{
-	                            id: "dialog_invoice_cancel_enter",
-	                            text: "確定",
-	                            click: function() {
-	                            	
-	                            	if($("#invoice_cancel_reason").val()==""){
-	                            		$("#invoice_cancel_reason").val("無");
-	                            	}
-
-	                                $.ajax({
-	                                    url: 'sale.do',
-	                                    type: 'post',
-	                                    beforeSend: function() {
-	                                        $(':hover').css('cursor', 'progress');
-	                                    },
-	                                    complete: function() {
-	                                        $(':hover').css('cursor', 'default');
-	                                    },
-	                                    data: {
-	                                        action: 'invoice_cancel',
-	                                        ids: ids,
-	                                        reason: $("#invoice_cancel_reason").val()
-	                                    },
-	                                    success: function(response) {
-	                                        var $mes = $('#message #text');
-	                                        var text = '成功發送<br><br>執行結果為: ' + response;
-
-	                                        $mes.val('').html(text);
-
-	                                        $('#message')
-	                                            .dialog()
-	                                            .dialog('option', 'title', '提示訊息')
-	                                            .dialog('option', 'width', 'auto')
-	                                            .dialog('option', 'minHeight', 'auto')
-	                                            .dialog("open");
-
-	                                        var tmp = {
-	                                            action: "search_trans_list_date",
-	                                            type: "invoice",
-	                                            trans_list_start_date: $("#trans_list_start_date").val(),
-	                                            trans_list_end_date: $("#trans_list_end_date").val(),
-	                                            upload_start_date: $("#upload_start_date").val(),
-	                        	                upload_end_date: $("#upload_end_date").val()
-	                                        };
-	                                        draw_sale(tmp);
-
-	                                    }
-	                                });
-
-
-
-	                                $("#dialog-invoice-cancel").trigger("reset");
-	                                dialog_invoice_cancel.dialog("close");
-	                            }
-
-
-	                        }, {
-	                            text: "取消",
-	                            click: function() {
-	                                $("#dialog-invoice-cancel").trigger("reset");
-	                                dialog_invoice_cancel.dialog("close");
-	                            }
-	                        }],
-	                        close: function() {
-	                            $("#dialog-invoice-cancel").trigger("reset");
-	                        }
-	                    });
-	                    dialog_invoice_cancel.dialog("open");
-	                }
-	            }
-	        }, {
-	            text: '列印發票',
-	            action: function(e, dt, node, config) {
-	                var $table = $('#sales');
-
-	                var cells = dataTableObj.cells().nodes();
-	                var saleMap = new Map();
-	                var ids = '';
-	                var row;
-	                var data;
-	                var message = '';
-
-	                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
-
-
-	                if ($checkboxs.length == 0) {
-						dialogMsg('提示','請選擇一筆資料');
-	                    return false;
-	                }
-
-	                $checkboxs.each(function(index) {
-	                    ids += "'" + this.id + "',";
-	                    row = $(this).closest("tr");
-	                    data = $table.DataTable().row(row).data();
-	                    saleMap.set(data.order_no, (index + 1));
-	                });
-
-	                //修改Dialog相關設定
-	                ids = ids.slice(0, -1);
-
-	                $.ajax({
-	                    url: 'sale.do',
-	                    type: 'post',
-	                    beforeSend: function() {
-	                        $(':hover').css('cursor', 'progress');
-	                    },
-	                    complete: function() {
-	                        $(':hover').css('cursor', 'default');
-	                    },
-	                    data: {
-	                        action: 'invoice_print',
-	                        ids: ids,
-	                    },
-	                    success: function(response) {
-	                        var json_obj = $.parseJSON(response);
-
-	                        if (json_obj.error.length > 0) {
-								dialogMsg('提示',json_obj.error);
-	                            return;
-	                        }
-	                        if (json_obj.isSuccess == false) {
-	                            return;
-	                        }
-	                        console.log('json_obj: ' + json_obj);
-
-	                        console.log(json_obj);
-	                        $.each(json_obj.list, function(i, item) {
-	                        	console.log(item);
-	                            $.ajax({
-	                                url: "http://127.0.0.1:55180/receiver.php",
-	                                data: item,
-	                                type: 'POST',
-	                                crossDomain: true,
-	                                success: function(a, b, c) {
-	                                    console.log("Success:");
-	                                    console.log(a);
-	                                    console.log(b);
-	                                    console.log(c);
-	                                },
-	                                error: function(xhr, ajaxOptions, thrownError) {
-	                                    console.log("Error:");
-	                                    console.log(xhr.status);
-	                                    console.log(thrownError);
-	                                }
-	                            });
-	                        });
-	                    }
-	                });
 	            }
 	        }]
 	    });
