@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.egs.vo.EgsVO;
+import tw.com.aber.service.SaleService;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.SaleVO;
 import tw.com.aber.vo.ShipVO;
@@ -127,7 +128,7 @@ public class Egs extends HttpServlet {
 				logger.debug("[關稅] taxin: " + taxin);
 				logger.debug("[報值金額] insurance: " + insurance);
 
-				//訂單編號
+				// 訂單編號
 				String[] orderNoArr = request.getParameter("order_nos").split(",");
 
 				Egs egs = new Egs();
@@ -151,7 +152,7 @@ public class Egs extends HttpServlet {
 				logger.debug("批次產生託運單，並記錄於資料庫開始");
 				for (String orderNo : orderNoArr) {
 					logger.debug("[目前執行訂單編號] orderNo: " + orderNo);
-					for(int i = 1; i <= Integer.valueOf(copy); i++) {
+					for (int i = 1; i <= Integer.valueOf(copy); i++) {
 						resultMap = egs.genConsignmentNote(orderNo, egsVO, service);
 						resultMapList.add(resultMap);
 					}
@@ -197,7 +198,7 @@ public class Egs extends HttpServlet {
 		private static final String sp_insert_egs = "call sp_insert_egs(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_select_egs_by_orderno_or_trackingno = "call sp_select_egs_by_orderno_or_trackingno(?,?,?)";
 		private static final String sp_get_sale_invoice_info_by_orderno = "call sp_get_sale_invoice_info_by_orderno(?,?)";
-		
+
 		@Override
 		public GroupVO getGroupByGroupId(String groupId) {
 			GroupVO row = null;
@@ -587,55 +588,7 @@ public class Egs extends HttpServlet {
 			}
 			return rows;
 		}
-		
-		//Same As The Function In SaleDAO
-		public SaleVO getSaleInvoiceInfoByOrderNo(String groupId, String orderNo) {
-			SaleVO saleVO = null;
 
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_sale_invoice_info_by_orderno);
-				pstmt.setString(1, groupId); 
-				pstmt.setString(2, orderNo);
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					saleVO = new SaleVO();
-					saleVO.setProduct_name("商品");
-					saleVO.setQuantity( Integer.valueOf("1"));
-					saleVO.setPrice(rs.getFloat("total_amount"));
-					saleVO.setOrder_no(rs.getString("order_no"));
-					saleVO.setInvoice(rs.getString("invoice"));
-					saleVO.setInvoice_date(rs.getDate("invoice_date"));
-					saleVO.setInvoice_vcode(rs.getString("invoice_vcode"));
-					saleVO.setInvoice_time(rs.getTime("invoice_time"));
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return saleVO;
-		}
 	}
 
 	public class EgsService {
@@ -672,17 +625,23 @@ public class Egs extends HttpServlet {
 		public List<EgsVO> getEgsByOrderNoOrTrackingNo(String groupId, String orderNo, String trackingNo) {
 			return dao.getEgsByOrderNoOrTrackingNo(groupId, orderNo, trackingNo);
 		}
-		
+
 		public String getEgsTotalAmtByExt(String groupId, String orderNo) {
-			SaleVO saleVO = ((EgsDao)dao).getSaleInvoiceInfoByOrderNo(groupId, orderNo);
 
 			String amount = null;
-			if (saleVO != null) {
-				amount = String.valueOf( saleVO.getPrice().intValue() );
+
+			SaleService saleService = new SaleService();
+			List<SaleVO> saleVOs = saleService.maskOverviewByExt(groupId,
+					saleService.getSaleOrdernoInfoByOrdernos(groupId, orderNo)
+				);
+
+			for (SaleVO saleVO : saleVOs) {
+				amount = String.valueOf(saleVO.getPrice().intValue());
 			}
+
 			return amount;
 		}
-		
+
 	}
 
 	interface egs_interface {
@@ -715,7 +674,7 @@ public class Egs extends HttpServlet {
 			String customer_id = egsVO.getCustomer_id();
 			logger.debug("[連線契客代號] customer_id: " + customer_id);
 			String waybill_type = egsVO.getWaybill_type();
-			
+
 			/*
 			 * 託運單類別 A:一般 B:代收 G:報值
 			 */
