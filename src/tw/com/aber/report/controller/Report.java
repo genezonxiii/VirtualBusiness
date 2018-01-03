@@ -3,6 +3,7 @@ package tw.com.aber.report.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,7 +27,6 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import tw.com.aber.egs.controller.EgsApi;
-import tw.com.aber.ship.controller.ship;
 
 public class Report extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -50,21 +50,20 @@ public class Report extends HttpServlet {
 		String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
 		String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
-		String reportSourcePath = ("" + this.getClass().getResource("/")).substring(5)
+		final String reportSourcePath = ("" + this.getClass().getResource("/")).substring(5)
 				.replace("VirtualBusiness/WEB-INF/classes/", "VirtualBusiness/WEB-INF/");
-		if ('C' == ("" + this.getClass().getResource("/")).charAt(6)) {
-			reportSourcePath = ("" + this.getClass().getResource("/")).substring(6)
-					.replace("VirtualBusiness/WEB-INF/classes/", "VirtualBusiness/WEB-INF/");
-		}
-		String reportGeneratePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/report";
+		final String reportGeneratePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/report";
 		new File(reportGeneratePath).mkdir();
 		try {
 			if (request.getParameter("dis_date") != null) {
-				String reportName = "rptPickReport";
-
+				String disDate = request.getParameter("dis_date");
+				logger.debug("dis_date:"+disDate);
+				final String reportName = "rptPickReport";
+				final String reportCName = URLEncoder.encode("揀貨單", "UTF-8");;
+				
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 
@@ -73,32 +72,20 @@ public class Report extends HttpServlet {
 
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
-				hm.put("p_dis_date", request.getParameter("dis_date"));
+				hm.put("p_dis_date", disDate);
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
-
+				writeToClient(request, response, reportCName, pdfFileName);
 			} else if (request.getParameter("sale_id") != null) {
+				String saleId = request.getParameter("sale_id");
+				logger.debug("sale_id:"+saleId);
 				String reportName = "rptDistributeReport";
-
+				final String reportCName = URLEncoder.encode("出貨單", "UTF-8");;
+				
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 
@@ -107,34 +94,23 @@ public class Report extends HttpServlet {
 
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
-				hm.put("p_sale_id", request.getParameter("sale_id"));
+				hm.put("p_sale_id", saleId);
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
+				writeToClient(request, response, reportCName, pdfFileName);
 			} else if (request.getParameter("pick_id") != null) {
+				String pickId = request.getParameter("pick_id");
+				logger.debug("pick_id:"+pickId);
 				String reportName = "rptPick";
+				final String reportCName = URLEncoder.encode("揀貨單", "UTF-8");;
 				String reportDetailName = "rptPickDetail";
 
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
 				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
 				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
@@ -142,39 +118,26 @@ public class Report extends HttpServlet {
 				Class.forName("com.mysql.jdbc.Driver");
 				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				
-				String pick_id = request.getParameter("pick_id");
-				
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
-				hm.put("p_pick_id", pick_id);
+				hm.put("p_pick_id", pickId);
 				
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
+				writeToClient(request, response, reportCName, pdfFileName);
 			} else if (request.getParameter("pick_no") != null) {
-				String reportName = "rptShip";
+				String pickNo = request.getParameter("pick_no");
+				logger.debug("pick_no:"+pickNo);
+				final String reportName = "rptShip";
+				final String reportCName = URLEncoder.encode("出貨單", "UTF-8");;
 				String reportDetailName = "rptShipDetail";
 
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
 				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
 				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
@@ -184,28 +147,15 @@ public class Report extends HttpServlet {
 				
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id",request.getSession().getAttribute("group_id"));
-				hm.put("p_pick_no",request.getParameter("pick_no"));
+				hm.put("p_pick_no", pickNo);
 				
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
+				writeToClient(request, response, reportCName, pdfFileName);
 			}else if (request.getParameter("date") != null) {
 				String date = request.getParameter("date");
+				logger.debug("date:"+date);
 				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
@@ -226,34 +176,38 @@ public class Report extends HttpServlet {
 					throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 				}
 			} else if ("ship_report".equals(request.getParameter("type"))) {
+				logger.debug("type:"+request.getParameter("type"));
 				String address = request.getParameter("address");
 				String order_no = request.getParameter("order_no");
 				String modeltype = request.getParameter("modeltype");
 				String reportName ="";
+				String reportCName = "";
 
 				EgsApi egsApi = new EgsApi();
 				String suda7 = egsApi.getQuerySuda7(address);
 				EgsApi api = new EgsApi();
 				String eGSNum = api.getEGSNum();
 				
-				logger.debug("address"+address);
-				logger.debug("suda7"+suda7);
-				logger.debug("eGSNum"+eGSNum);
-				logger.debug("group_id"+request.getSession().getAttribute("group_id").toString());
-				logger.debug("order_no"+order_no);
-				logger.debug("modeltype"+modeltype);
+				logger.debug("address:"+address);
+				logger.debug("suda7:"+suda7);
+				logger.debug("eGSNum:"+eGSNum);
+				logger.debug("group_id:"+request.getSession().getAttribute("group_id").toString());
+				logger.debug("order_no:"+order_no);
+				logger.debug("modeltype:"+modeltype);
 
 				if("a4_2".equals(modeltype)){
 					reportName = "shipReportA4_2";
+					reportCName = URLEncoder.encode("黑貓二模", "UTF-8");
 				}else if("a4_3".equals(modeltype)){
 					reportName = "shipReportA4_3";
+					reportCName = URLEncoder.encode("黑貓模", "UTF-8");
 				}else{
 					return;
 				}
 
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 
@@ -268,43 +222,34 @@ public class Report extends HttpServlet {
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 				
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
+				writeToClient(request, response, reportCName, pdfFileName);
 			} else if ("reportEzcat".equals(request.getParameter("type"))) {
+				logger.debug("type:"+request.getParameter("type"));
 				String track_list = request.getParameter("track_list");
 				String modeltype = request.getParameter("modeltype");
 				String reportName ="";
+				String reportCName = "";
 				
-				logger.debug("group_id"+request.getSession().getAttribute("group_id").toString());
+				logger.debug("group_id:"+request.getSession().getAttribute("group_id").toString());
 				logger.debug("track_list:"+track_list);
-				logger.debug("modeltype"+modeltype);
+				logger.debug("modeltype:"+modeltype);
 
 				if("ezcat".equals(modeltype)){
 					reportName = "shipReport_ezcat";
+					reportCName = URLEncoder.encode("黑貓", "UTF-8");
 				}else if("ezcat_a4_2".equals(modeltype)){
 					reportName = "shipReport_ezcat_A4_2";
+					reportCName = URLEncoder.encode("黑貓二模", "UTF-8");
 				}else if("ezcat_a4_2_pick".equals(modeltype)){
 					reportName = "shipReport_ezcat_A4_2_pick";
+					reportCName = URLEncoder.encode("黑貓二模含揀貨單", "UTF-8");
 				}else{
 					return;
 				}
 
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
 
@@ -317,32 +262,19 @@ public class Report extends HttpServlet {
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 				
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
+				writeToClient(request, response, reportCName, pdfFileName);
 			} else if ("rptInvManual".equals(request.getParameter("action"))){
-				logger.debug("action: "+request.getParameter("action"));
+				logger.debug("action:"+request.getParameter("action"));
 				
-				String reportName = "rptInvoice";
+				final String reportName = "rptInvoice";
+				final String reportCName = URLEncoder.encode("B2C發票", "UTF-8");
 				String reportDetailName = "rptInvoiceDetail";
 
 				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
 				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
 				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
 				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportCName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 				
 				String ids=request.getParameter("ids");
 				String group_id=(String) request.getSession().getAttribute("group_id");
@@ -356,30 +288,17 @@ public class Report extends HttpServlet {
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id",group_id);
 				hm.put("p_inv_manual_ids",ids);
-				logger.debug("ids: "+ids);
+				logger.debug("ids:"+ids);
 				
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
+				writeToClient(request, response, reportCName, pdfFileName);
 			} else if ("rptSfShip".equals(request.getParameter("action"))) {
-				logger.debug("action: " + request.getParameter("action"));
+				logger.debug("action:" + request.getParameter("action"));
 
-				String reportName = "rptSfShip";
+				final String reportName = "rptSfShip";
+				final String reportCName = URLEncoder.encode("順豐整合", "UTF-8");
 				String reportDetailName1 = "rptShipDetailForSF";
 				String reportDetailName2 = "rptShipSfDetail";
 				String reportDetailName3 = "rptShipSfStatus";
@@ -392,7 +311,7 @@ public class Report extends HttpServlet {
 				String jasperFileDetailName2 = reportGeneratePath + "/" + reportDetailName2 + ".jasper";
 				String jrxmlFileDetailName3 = reportSourcePath + "/" + reportDetailName3 + ".jrxml";
 				String jasperFileDetailName3 = reportGeneratePath + "/" + reportDetailName3 + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + ".pdf";
+				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
 
 				String order_no = request.getParameter("order_no");
 				String start_date = request.getParameter("start_date");
@@ -413,35 +332,48 @@ public class Report extends HttpServlet {
 				hm.put("p_start_date", start_date);
 				hm.put("p_end_date", end_date);
 
-				logger.debug("order_no: " + order_no);
-				logger.debug("p_group_id: " + group_id);
-				logger.debug("p_start_date: " + start_date);
-				logger.debug("p_end_date: " + end_date);
+				logger.debug("order_no:" + order_no);
+				logger.debug("p_group_id:" + group_id);
+				logger.debug("p_start_date:" + start_date);
+				logger.debug("p_end_date:" + end_date);
 
 				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
 				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 
-				response.setContentType("APPLICATION/PDF");
-				String disHeader = "inline;Filename=\"" + reportName + ".pdf" + "\"";
-				response.setHeader("Content-Disposition", disHeader);
-
-				File file = new File(pdfFileName);
-				FileInputStream fileIn = new FileInputStream(file);
-				ServletOutputStream out = response.getOutputStream();
-				byte[] outputByte = new byte[4096];
-				while (fileIn.read(outputByte, 0, 4096) != -1) {
-					out.write(outputByte, 0, 4096);
-				}
-
-				fileIn.close();
-				out.flush();
-				out.close();
-
+				writeToClient(request, response, reportCName, pdfFileName);
 			}
 
 		} catch (Exception e) {
-			System.out.print("Exception:" + e);
+			logger.error("Exception:" + e);
 		}
 	}
+	
+	private static String genDateFormat(String format){
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		return sdf.format(new Date());
+	}
+	
+	private static void writeToClient(HttpServletRequest request, HttpServletResponse response, String reportCName, String pdfFileName) throws IOException{
+		String browserType = request.getHeader("User-Agent");
+		logger.debug("User-Agent:" + browserType);
+		response.setContentType("APPLICATION/PDF; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
+		if (browserType.contains("IE")||browserType.contains("Chrome")){
+			response.setHeader("Content-Disposition", "inline;Filename=\"" + reportCName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "\"");
+		} else if(browserType.contains("Firefox")){
+			response.setHeader("Content-Disposition", "inline;Filename*=UTF-8''" + reportCName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "");
+		}
 
+		File file = new File(pdfFileName);
+		FileInputStream fileIn = new FileInputStream(file);
+		ServletOutputStream out = response.getOutputStream();
+		byte[] outputByte = new byte[4096];
+		while (fileIn.read(outputByte, 0, 4096) != -1) {
+			out.write(outputByte, 0, 4096);
+		}
+		fileIn.close();
+		out.flush();
+		out.close();
+	}
 }

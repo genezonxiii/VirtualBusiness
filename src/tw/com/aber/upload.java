@@ -391,21 +391,7 @@ public class upload extends HttpServlet {
 						InputStream is = fi.getInputStream();
 						FileOutputStream fos = new FileOutputStream(fullPath);
 
-						int len = 0;
-						byte[] buffer = new byte[1024];
-
-						try {
-							while ((len = is.read(buffer)) != -1) {
-								fos.write(buffer, 0, len);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							is.close();
-							fos.flush();
-							fos.close();
-						}
-
+						moveTheFile(fi, fullPath);
 					} else if (!fi.getFieldName().equals("action") && !fi.getFieldName().equals("platform")
 							&& !fi.getFieldName().equals("deliveryMethod")) {
 
@@ -432,20 +418,7 @@ public class upload extends HttpServlet {
 						InputStream is = fi.getInputStream();
 						FileOutputStream fos = new FileOutputStream(fullPath);
 
-						int len = 0;
-						byte[] buffer = new byte[1024];
-
-						try {
-							while ((len = is.read(buffer)) != -1) {
-								fos.write(buffer, 0, len);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						} finally {
-							is.close();
-							fos.flush();
-							fos.close();
-						}
+						moveTheFile(fi, fullPath);
 					}
 				}
 				conString = getServletConfig().getServletContext().getInitParameter("pythonwebservice")
@@ -462,6 +435,26 @@ public class upload extends HttpServlet {
 		}
 
 		return conString;
+	}
+	
+	public void moveTheFile(FileItem fi, String fullPath) throws IOException {
+		InputStream is = fi.getInputStream();
+		FileOutputStream fos = new FileOutputStream(fullPath);
+
+		int len = 0;
+		byte[] buffer = new byte[1024];
+
+		try {
+			while ((len = is.read(buffer)) != -1) {
+				fos.write(buffer, 0, len);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			is.close();
+			fos.flush();
+			fos.close();
+		}
 	}
 
 	class Throwfile {
