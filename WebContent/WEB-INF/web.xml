@@ -39,24 +39,28 @@
 		<param-value>admin123</param-value>
 	</context-param>
 	<context-param>
-		<param-name>email</param-name>
-		<param-value>10506002@pershing.com.tw</param-value>
-	</context-param>
-	<context-param>
-		<param-name>emailpwd</param-name>
-		<param-value>ykTNycTNjhnW</param-value>
-	</context-param>
-	<context-param>
-		<param-name>smtphost</param-name>
-		<param-value>mail.pershing.com.tw</param-value>
-	</context-param>
-	<context-param>
 		<param-name>pythonwebservice</param-name>
 		<param-value>http://192.168.112.164:8090</param-value>
 	</context-param>
 	<context-param>
 		<param-name>basicImport</param-name>
 		<param-value>/data/vbBasicData/</param-value>
+	</context-param>
+	<context-param>
+		<param-name>uploadpath</param-name>
+		<param-value>/data/vbupload</param-value>
+	</context-param>
+	<context-param>
+		<param-name>groupbuypath</param-name>
+		<param-value>/data/vbGroupbuy</param-value>
+	</context-param>
+	<context-param>
+		<param-name>groupbuyoutputpath</param-name>
+		<param-value>/data/vbGroupbuy_output</param-value>
+	</context-param>
+	<context-param>
+		<param-name>photopath</param-name>
+		<param-value>/data/productpic</param-value>
 	</context-param>
 	<context-param>
 		<param-name>videopath</param-name>
@@ -76,20 +80,16 @@
 		<param-value>/data/vbSF/outbound</param-value>
 	</context-param>
 	<context-param>
-		<param-name>uploadpath</param-name>
-		<param-value>/data/vbupload</param-value>
+		<param-name>email</param-name>
+		<param-value>10506002@pershing.com.tw</param-value>
 	</context-param>
 	<context-param>
-		<param-name>groupbuypath</param-name>
-		<param-value>/data/vbGroupbuy</param-value>
+		<param-name>emailpwd</param-name>
+		<param-value>ykTNycTNjhnW</param-value>
 	</context-param>
 	<context-param>
-		<param-name>groupbuyoutputpath</param-name>
-		<param-value>/data/vbGroupbuy_output</param-value>
-	</context-param>
-	<context-param>
-		<param-name>photopath</param-name>
-		<param-value>/data/productpic</param-value>
+		<param-name>smtphost</param-name>
+		<param-value>mail.pershing.com.tw</param-value>
 	</context-param>
 
 	<servlet>
