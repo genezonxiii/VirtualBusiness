@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.ship.controller.ship;
-import tw.com.aber.ship.controller.ship.ShipService;
+import tw.com.aber.service.ShipService;
 import tw.com.aber.util.Util;
 import tw.com.aber.vo.MenuForJsTreeVO;
 import tw.com.aber.vo.MenuVO;

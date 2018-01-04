@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import tw.com.aber.ship.controller.ship.ShipService;
+import tw.com.aber.service.ShipService;
 import tw.com.aber.vo.GroupSfDelivery;
 import tw.com.aber.vo.GroupSfVO;
 import tw.com.aber.vo.ShipVO;
