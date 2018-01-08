@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import tw.com.aber.service.LogisticService;
 import tw.com.aber.service.ShipService;
 import tw.com.aber.sf.vo.ResponseUtil;
 import tw.com.aber.sf.vo.SaleOrder;
@@ -53,6 +54,7 @@ public class ship extends HttpServlet {
 		util.ConfirmLoginAgain(request, response);
 
 		String groupId = (String) request.getSession().getAttribute("group_id");
+		String userId = (String) request.getSession().getAttribute("user_id");
 
 		ShipService shipService = null;
 
@@ -282,6 +284,18 @@ public class ship extends HttpServlet {
 					String reqXml = sfApi.genSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					
+					LogisticService logisticService = new LogisticService();
+					List<SaleOrder> saleOrders = responseUtil.getResponse().getBody()
+							.getSaleOrderResponse().getSaleOrders().getSaleOrder();
+					
+					for(SaleOrder saleOrder : saleOrders){
+						if("1".equals(saleOrder.getResult())){
+							logisticService.logisticRecordSf(groupId, userId, 
+									saleOrder.getErpOrder(),saleOrder.getShipmentId());
+						}
+					}
+					
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
 					response.getWriter().write(gresult);
@@ -312,6 +326,17 @@ public class ship extends HttpServlet {
 					String reqXml = sfApi.genCancelSaleOrderService(shipVOList, valueService);
 					String resXml = sfApi.sendXML(env, reqXml);
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
+					
+					LogisticService logisticService = new LogisticService();
+					List<SaleOrder> saleOrders = responseUtil.getResponse().getBody()
+							.getCancelSaleOrderResponse().getSaleOrders().getSaleOrder();
+					
+					for(SaleOrder saleOrder : saleOrders){
+						if("1".equals(saleOrder.getResult())){
+							logisticService.logisticRecordSf(groupId, userId
+									, saleOrder.getErpOrder(),null);
+						}
+					}
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 					String gresult = gson.toJson(responseUtil);
 					response.getWriter().write(gresult);

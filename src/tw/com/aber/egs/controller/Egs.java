@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import tw.com.aber.egs.vo.EgsVO;
+import tw.com.aber.service.LogisticService;
 import tw.com.aber.service.SaleService;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.SaleVO;
@@ -50,6 +51,7 @@ public class Egs extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 
 		String groupId = (String) request.getSession().getAttribute("group_id");
+		String userId = (String) request.getSession().getAttribute("user_id");
 		String action = (String) request.getParameter("action");
 
 		logger.debug("Action:".concat(action));
@@ -155,6 +157,15 @@ public class Egs extends HttpServlet {
 					for (int i = 1; i <= Integer.valueOf(copy); i++) {
 						resultMap = egs.genConsignmentNote(orderNo, egsVO, service);
 						resultMapList.add(resultMap);
+					}
+					
+					String status = resultMap.get("status");
+					if("OK".equals(status)){
+						String trackingNo = resultMap.get("trackingNo");
+						
+						LogisticService logisticService = new LogisticService();
+						logisticService.logisticRecordEzcat(groupId, userId, 
+								orderNo,trackingNo);
 					}
 				}
 				logger.debug("批次產生託運單，並記錄於資料庫結束");
@@ -632,7 +643,7 @@ public class Egs extends HttpServlet {
 
 			SaleService saleService = new SaleService();
 			List<SaleVO> saleVOs = saleService.maskOverviewByExt(groupId,
-					saleService.getSaleOrdernoInfoByOrdernos(groupId, orderNo)
+					saleService.getSaleOrdernoInfoByOrdernos(groupId, "'"+orderNo+"'")
 				);
 
 			for (SaleVO saleVO : saleVOs) {
