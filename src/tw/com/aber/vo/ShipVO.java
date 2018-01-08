@@ -39,7 +39,9 @@ public class ShipVO implements Serializable {
 	private String v_temperature;
 	private String v_package_size;
 	private List<ShipDetail> shipDetail;
-	
+	private String v_sf_whflag;
+	private String v_ezcat_flag;
+	private String v_shipment_id;
 	
 	public String getShip_id() {
 		return ship_id;
@@ -227,5 +229,23 @@ public class ShipVO implements Serializable {
 	public void setV_package_size(String v_package_size) {
 		this.v_package_size = v_package_size;
 	}
-
+	public String getV_sf_whflag() {
+		return v_sf_whflag;
+	}
+	public void setV_sf_whflag(String v_sf_whflag) {
+		this.v_sf_whflag = v_sf_whflag;
+	}
+	public String getV_ezcat_flag() {
+		return v_ezcat_flag;
+	}
+	public void setV_ezcat_flag(String v_ezcat_flag) {
+		this.v_ezcat_flag = v_ezcat_flag;
+	}
+	public String getV_shipment_id() {
+		return v_shipment_id;
+	}
+	public void setV_shipment_id(String v_shipment_id) {
+		this.v_shipment_id = v_shipment_id;
+	}
+	
 }

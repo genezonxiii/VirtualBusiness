@@ -833,7 +833,10 @@ public class ShipDao {
 				row.setV_pay_status(rs.getString("pay_status"));
 				row.setV_sale_date(rs.getDate("sale_date"));
 				row.setV_trans_list_date(rs.getDate("trans_list_date"));
-				row.setV_order_source(rs.getString("order_source"));
+				row.setV_sf_whflag(rs.getString("sf_whflag"));
+				row.setV_shipment_id(rs.getString("shipment_id"));
+				row.setV_ezcat_flag(rs.getString("ezcat_flag"));
+				row.setV_tracking_number(rs.getString("tracking_number"));
 
 				rows.add(row);
 			}

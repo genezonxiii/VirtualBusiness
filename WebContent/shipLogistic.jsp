@@ -455,6 +455,14 @@
 		        "title": "付款狀態",
 		        "data": "v_pay_status",
 		        "defaultContent": ""
+		    }, {
+		        "title": "順豐出庫單號",
+		        "data": "v_shipment_id",
+		        "defaultContent": ""
+		    }, {
+		        "title": "黑貓託運單號",
+		        "data": "v_tracking_number",
+		        "defaultContent": ""
 // 		    }, {
 // 		        "title": "功能",
 // 		        "data": null,
@@ -642,7 +650,13 @@
 										msg = json_obj.responseFail.remark;
 									}										
 								}
-
+								
+								drawMasterTable({
+									action : "searchBySaleDateGroup",
+									startDate : $('#form_date input:eq(0)').val(),
+									endDate : $('#form_date input:eq(1)').val()
+								});
+								
 								dialogMsg("順豐出庫", msg);
 		                    }
 		                });
@@ -713,7 +727,13 @@
 										msg = json_obj.responseFail.remark;
 									}										
 								}
-
+								
+								drawMasterTable({
+									action : "searchBySaleDateGroup",
+									startDate : $('#form_date input:eq(0)').val(),
+									endDate : $('#form_date input:eq(1)').val()
+								});
+								
 								dialogMsg("順豐出庫取消", msg);
 		                    }
 		                });
@@ -1392,6 +1412,13 @@
 								                    	
 														var $mes = $('#message #text');
 								                        $mes.val('').html(text);
+								                        
+								                        drawMasterTable({
+															action : "searchBySaleDateGroup",
+															startDate : $('#form_date input:eq(0)').val(),
+															endDate : $('#form_date input:eq(1)').val()
+														});
+								                        
 								                        $('#message')
 								                            .dialog()
 								                            .dialog('option', 'title', '訊息')
