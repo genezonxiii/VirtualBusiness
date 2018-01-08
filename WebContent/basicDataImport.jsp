@@ -45,6 +45,7 @@
 								<option value="productTemplate">商品</option>
 								<option value="packageTemplate">商品組合</option>
 								<option value="contrastTemplate">商品對照</option>
+								<option value="purchaseTemplate">進貨</option>
 							</select>
 						</div>
 					</div>
