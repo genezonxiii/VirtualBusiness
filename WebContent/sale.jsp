@@ -315,6 +315,7 @@ input.error[type=radio] + label {
 									<thead>
 										<tr class="">
 											<th>批次請求</th>
+											<th>可轉銷單</th>
 											<th>銷貨單號</th>
 											<th>訂單號</th>
 											<th style="min-width: 120px">商品 ID/名稱</th>
@@ -428,8 +429,15 @@ input.error[type=radio] + label {
 	            return options.html();
 	        }
 	    }, {
+	        //可轉銷貨
+	        targets: 1,
+	        render: function(data, type, row) {
+	            var result = row.turnFlag == true ? "是" : "否";
+	            return result;
+	        }
+	    }, {
 	        //訂單編號 及 出貨單連結
-	        targets: 2,
+	        targets: 3,
 	        render: function(data, type, row) {
 	            var result = $("<div/>") //fake tag
 	                .append(
@@ -445,14 +453,14 @@ input.error[type=radio] + label {
 	        }
 	    }, {
 	        //自訂商品編號 + 商品名稱
-	        targets: 3,
+	        targets: 4,
 	        render: function(data, type, row) {
 	            var result = row.c_product_id + '<br>' + row.product_name;
 	            return result;
 	        }
 	    }, {
 	        //銷貨對象
-	        targets: 6,
+	        targets: 7,
 	        render: function(data, type, row) {
 
 	            var result = row.customer_id == null || row.customer_id == '' ? "" : customer_menu[row.customer_id];
@@ -460,7 +468,7 @@ input.error[type=radio] + label {
 	        }
 	    }, {
 	        //發票 + 發票日期
-	        targets: 7,
+	        targets: 8,
 	        render: function(data, type, row) {
 	            var result = row.invoice == null || row.invoice == '' ? "" : "號碼：" + row.invoice + "<br>日期：" + row.invoice_date;
 	            return result;
@@ -547,6 +555,10 @@ input.error[type=radio] + label {
             "defaultContent": ""
         },{
             "data": null,
+            "width": "10%",
+            "defaultContent": ""
+        },{
+            "data": "turn_flag",
             "width": "10%",
             "defaultContent": ""
         },{

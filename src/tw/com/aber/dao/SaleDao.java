@@ -246,6 +246,8 @@ public class SaleDao {
 				saleVO.setOrder_source(rs.getString("order_source"));
 				saleVO.setCustomer_id(rs.getString("customer_id"));
 				saleVO.setName(rs.getString("name"));
+				saleVO.setTurnFlag(rs.getBoolean("turn_flag"));
+				
 				list.add(saleVO); // Store the row in the list
 			}
 		} catch (SQLException se) {
@@ -298,7 +300,8 @@ public class SaleDao {
 				saleVO.setCustomer_id(rs.getString("customer_id"));
 				saleVO.setName(rs.getString("name"));
 				saleVO.setUpload_date(rs.getDate("upload_date"));
-
+				saleVO.setTurnFlag(rs.getBoolean("turn_flag"));
+				
 				list.add(saleVO);
 			}
 		} catch (SQLException se) {
@@ -350,7 +353,8 @@ public class SaleDao {
 				saleVO.setOrder_source(rs.getString("order_source"));
 				saleVO.setCustomer_id(rs.getString("customer_id"));
 				saleVO.setName(rs.getString("name"));
-
+				saleVO.setTurnFlag(rs.getBoolean("turn_flag"));
+				
 				list.add(saleVO);
 			}
 		} catch (SQLException se) {
