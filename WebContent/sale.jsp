@@ -395,6 +395,7 @@ input.error[type=radio] + label {
 	}
 
 	function draw_sale(parameter) {
+		last_parameter = parameter;
 	    $("#sales_contain_row").css({
 	        "opacity": "0"
 	    });
@@ -623,6 +624,60 @@ input.error[type=radio] + label {
 	                        $(this).addClass("toggleon");
 	                        $(this).closest("tr").addClass("selected");
 	                    });
+	            }
+	        },{
+	            text: '不轉銷貨',
+	            action: function(e, dt, node, config) {
+
+	                var cells = dataTableObj.cells().nodes();
+	                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+	                
+	                if ($checkboxs.length == 0) {
+	                	warningMsg('提示','請選擇至少一筆資料');
+	                    return false;
+	                }
+	                
+	                $checkboxs.each(function() {
+	                	var sale_id = this.id;
+						$.ajax({
+							url: 'sale.do',
+							type: 'post',
+							data: {
+							    action: 'update_turn_flag',
+							    sale_id: sale_id,
+							    turn_flag: "0"
+							}
+	                	});
+					});
+	                draw_sale(last_parameter);
+	                warningMsg("訊息","此"+$checkboxs.length+"筆已設定不轉銷貨");
+	            }
+	        },{
+	            text: '可轉銷貨',
+	            action: function(e, dt, node, config) {
+
+	            	var cells = dataTableObj.cells().nodes();
+	                var $checkboxs = $(cells).find('input[name=checkbox-group-select]:checked');
+	                
+	                if ($checkboxs.length == 0) {
+	                	warningMsg('提示','請選擇至少一筆資料');
+	                    return false;
+	                }
+	                
+	                $checkboxs.each(function() {
+	                	var sale_id = this.id;
+						$.ajax({
+							url: 'sale.do',
+							type: 'post',
+							data: {
+							    action: 'update_turn_flag',
+							    sale_id: sale_id,
+							    turn_flag: "1"
+							}
+	                	});
+					});
+	                draw_sale(last_parameter);
+	                warningMsg("訊息","此"+$checkboxs.length+"筆已設定可轉銷貨");
 	            }
 	        }]
 	    });

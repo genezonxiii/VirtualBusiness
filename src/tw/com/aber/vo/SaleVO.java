@@ -29,6 +29,7 @@ public class SaleVO implements java.io.Serializable {
 	private Date return_date;
 	private Boolean isreturn;
 	private String deliveryway;
+	private Boolean turnFlag;
 	private String message;// 此參數用來存放錯誤訊息
 	private String invoice_vcode;
 	private Time invoice_time;
@@ -219,6 +220,14 @@ public class SaleVO implements java.io.Serializable {
 		this.deliveryway = deliveryway;
 	}
 
+	public Boolean getTurnFlag() {
+		return turnFlag;
+	}
+
+	public void setTurnFlag(Boolean turnFlag) {
+		this.turnFlag = turnFlag;
+	}
+	
 	public String getInvoice_vcode() {
 		return invoice_vcode;
 	}

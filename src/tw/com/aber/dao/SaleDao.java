@@ -54,6 +54,8 @@ public class SaleDao {
 	private static final String sp_getSaleByUploadDate_GroupByOrderNo = "call sp_getSaleByUploadDate_GroupByOrderNo(?,?,?)";
 	private static final String sp_getSaleByTransDate_GroupByOrderNo = "call sp_getSaleByTransDate_GroupByOrderNo(?,?,?)";
 	private static final String sp_get_sale_orderno_info_by_orderno = "call sp_get_sale_orderno_info_by_orderno(?,?)";
+	private static final String sp_update_sale_turn_flag = "call sp_update_sale_turn_flag(?,?,?)";
+	
 	
 	private Connection connection;
 
@@ -1061,6 +1063,29 @@ public class SaleDao {
 			}
 		}
 		return list;
+	}
+	
+	public void updateTurnFlag(SaleVO saleVO) {
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sp_update_sale_turn_flag);
+
+			pstmt.setString(1, saleVO.getGroup_id());
+			pstmt.setString(2, saleVO.getSale_id());
+			pstmt.setBoolean(3, saleVO.getTurnFlag());
+
+			pstmt.executeUpdate();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException se) {
+				logger.error("SQLException:".concat(se.getMessage()));
+			}
+		}
 	}
 	
 	@Test

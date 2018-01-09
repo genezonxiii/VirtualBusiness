@@ -155,4 +155,9 @@ public class SaleService {
 	public List<SaleVO> getSaleOrdernoInfoByOrdernos(String groupId, String order_nos) {
 		return dao.getSaleOrdernoInfoByOrdernos(groupId, order_nos);
 	}
+
+	public void updateTurnFlag(SaleVO saleVO){
+		dao.updateTurnFlag(saleVO);
+	}
+	
 }

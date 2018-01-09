@@ -772,6 +772,19 @@ public class sale extends HttpServlet {
 				String jsonResponse = gson.toJson(saleVOs);
 				logger.debug("jsonStrList: " + jsonResponse);
 				response.getWriter().write(jsonResponse);
+			} else if ("update_turn_flag".equals(action)) {
+				String saleId = (String) request.getParameter("sale_id");
+				String turnFlag = (String) request.getParameter("turn_flag");
+				boolean blnTurnFlag = "1".equals(turnFlag);
+				
+				logger.debug("saleId: " + saleId);
+				logger.debug("turnFlag: " + turnFlag);
+				
+				SaleVO saleVO = new SaleVO();
+				saleVO.setGroup_id(group_id);
+				saleVO.setSale_id(saleId);
+				saleVO.setTurnFlag(blnTurnFlag);
+				saleService.updateTurnFlag(saleVO);
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));
