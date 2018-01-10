@@ -1072,8 +1072,9 @@ public class SaleDao {
 		return list;
 	}
 	
-	public void updateTurnFlag(SaleVO saleVO) {
+	public int updateTurnFlag(SaleVO saleVO) {
 		PreparedStatement pstmt = null;
+		int matchRow = 0;
 		try {
 			pstmt = connection.prepareStatement(sp_update_sale_turn_flag);
 
@@ -1081,7 +1082,8 @@ public class SaleDao {
 			pstmt.setString(2, saleVO.getSale_id());
 			pstmt.setBoolean(3, saleVO.getTurnFlag());
 
-			pstmt.executeUpdate();
+			matchRow = pstmt.executeUpdate();
+			
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
 		} finally {
@@ -1093,6 +1095,7 @@ public class SaleDao {
 				logger.error("SQLException:".concat(se.getMessage()));
 			}
 		}
+		return matchRow;
 	}
 	
 	@Test

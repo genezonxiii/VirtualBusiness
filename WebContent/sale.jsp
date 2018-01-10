@@ -649,20 +649,27 @@ input.error[type=radio] + label {
 	                    return false;
 	                }
 	                
+	                var matchRows = 0;
 	                $checkboxs.each(function() {
 	                	var sale_id = this.id;
 						$.ajax({
 							url: 'sale.do',
 							type: 'post',
+							async: false,
 							data: {
 							    action: 'update_turn_flag',
 							    sale_id: sale_id,
 							    turn_flag: "0"
+							},
+							success: function(result) {
+								nono = result;
+								var json_obj = $.parseJSON(result)[0];
+								matchRows += +json_obj.matchRows;
 							}
 	                	});
 					});
 	                draw_sale(last_parameter);
-	                warningMsg("訊息","此"+$checkboxs.length+"筆已設定不轉銷貨");
+	                warningMsg("訊息","已將"+matchRows+"筆設定不轉銷貨成功");
 	            }
 	        },{
 	            text: '可轉銷貨',
@@ -675,21 +682,27 @@ input.error[type=radio] + label {
 	                	warningMsg('提示','請選擇至少一筆資料');
 	                    return false;
 	                }
-	                
+	                var matchRows = 0;
 	                $checkboxs.each(function() {
 	                	var sale_id = this.id;
 						$.ajax({
 							url: 'sale.do',
 							type: 'post',
+							async: false,
 							data: {
 							    action: 'update_turn_flag',
 							    sale_id: sale_id,
 							    turn_flag: "1"
+							},
+							success: function(result) {
+								nono = result;
+								var json_obj = $.parseJSON(result)[0];
+								matchRows += +json_obj.matchRows;
 							}
 	                	});
 					});
 	                draw_sale(last_parameter);
-	                warningMsg("訊息","此"+$checkboxs.length+"筆已設定可轉銷貨");
+	                warningMsg("訊息","已將"+matchRows+"筆設定可轉銷貨");
 	            }
 	        }]
 	    });

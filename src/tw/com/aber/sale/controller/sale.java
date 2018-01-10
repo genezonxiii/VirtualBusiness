@@ -784,7 +784,10 @@ public class sale extends HttpServlet {
 				saleVO.setGroup_id(group_id);
 				saleVO.setSale_id(saleId);
 				saleVO.setTurnFlag(blnTurnFlag);
-				saleService.updateTurnFlag(saleVO);
+
+				int matchRows = saleService.updateTurnFlag(saleVO);
+				
+				response.getWriter().write("[{\"matchRows\":\""+matchRows+"\"}]");
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));

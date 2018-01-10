@@ -156,8 +156,8 @@ public class SaleService {
 		return dao.getSaleOrdernoInfoByOrdernos(groupId, order_nos);
 	}
 
-	public void updateTurnFlag(SaleVO saleVO){
-		dao.updateTurnFlag(saleVO);
+	public int updateTurnFlag(SaleVO saleVO){
+		return dao.updateTurnFlag(saleVO);
 	}
 	
 }
