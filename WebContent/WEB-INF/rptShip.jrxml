@@ -13,34 +13,17 @@
 	<queryString>
 		<![CDATA[call sp_rpt_ship_main($P{p_group_id}, $P{p_pick_no});]]>
 	</queryString>
+	<field name="pick_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="ship_id" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="ship_seq_no" class="java.lang.String">
+	<field name="contrast_type" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="group_id" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="realsale_sale_date" class="java.sql.Date"/>
 	<field name="order_no" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="user_id" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="customer_id" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="name" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="memo" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="deliveryway" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="total_amt" class="java.lang.Float">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="deliver_name" class="java.lang.String">
@@ -49,19 +32,21 @@
 	<field name="deliver_to" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="realsale_id" class="java.lang.String">
+	<field name="deliver_mobile" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_phone" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="group_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="group_unicode" class="java.lang.String">
+	<field name="address" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="sale_date" class="java.sql.Date">
+	<field name="mobile" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="realsale_sale_date" class="java.sql.Date"/>
 	<group name="group_ship_id" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{order_no}]]></groupExpression>
 		<groupHeader>
@@ -114,7 +99,7 @@
 		</groupHeader>
 	</group>
 	<pageHeader>
-		<band height="95">
+		<band height="178">
 			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="643" y="35" width="59" height="20"/>
 				<box>
@@ -135,7 +120,7 @@
 				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="75" width="59" height="20"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="75" width="74" height="20"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -149,7 +134,7 @@
 				<text><![CDATA[銷貨日期：]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="75" width="100" height="20"/>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="74" y="75" width="219" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd").format($F{realsale_sale_date})]]></textFieldExpression>
 			</textField>
@@ -161,7 +146,7 @@
 				<text><![CDATA[出貨單]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="55" width="59" height="20"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="55" width="74" height="20"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -175,19 +160,19 @@
 				<text><![CDATA[訂單編號：]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="55" width="100" height="20"/>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="74" y="55" width="219" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="59" y="35" width="100" height="20"/>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="537" y="55" width="219" height="20"/>
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{group_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="35" width="59" height="20"/>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="478" y="55" width="59" height="20"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -200,6 +185,132 @@
 				</textElement>
 				<text><![CDATA[公司名稱：]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="537" y="75" width="219" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="478" y="75" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[公司地址：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="537" y="95" width="219" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mobile}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="478" y="95" width="59" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[連絡電話：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="74" y="95" width="219" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="95" width="74" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[收件人姓名：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="74" y="115" width="219" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_to}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="115" width="74" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[收件人地址：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="74" y="155" width="219" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_mobile}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="155" width="74" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[收件人手機：]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8393580d-7574-4b2d-bda4-c56172d9722e" x="74" y="135" width="219" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_phone}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="135" width="74" height="20"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[收件人電話：]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
@@ -211,6 +322,17 @@
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["rptShipDetail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="27">
+			<printWhenExpression><![CDATA[$F{contrast_type}.equals("PKG")? Boolean.TRUE:Boolean.FALSE]]></printWhenExpression>
+			<subreport>
+				<reportElement uuid="c26cdefc-36a8-401c-8524-3d16fcaa2f89" x="0" y="4" width="291" height="19"/>
+				<subreportParameter name="p_ship_id">
+					<subreportParameterExpression><![CDATA[$F{ship_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["rptShipSubDetail.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
