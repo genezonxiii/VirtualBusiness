@@ -14,6 +14,7 @@ public class StockNewVO {
 	private Date valid_date;
 	private ProductVO productVO;
 	private LocationVO locationVO;
+	private int keepStock;
 	
 	public String getStock_id() {
 		return stock_id;
@@ -81,10 +82,11 @@ public class StockNewVO {
 	public void setLocationVO(LocationVO locationVO) {
 		this.locationVO = locationVO;
 	}
-	
-	
-	
-	
-
+	public int getKeepStock() {
+		return keepStock;
+	}
+	public void setKeepStock(int keepStock) {
+		this.keepStock = keepStock;
+	}
 
 }

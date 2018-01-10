@@ -236,8 +236,22 @@
 	</script>
 	<script type="text/javascript">
 	function drawMasterTable(parameter) {
-
+		
 		console.log("parameter: "+parameter);
+		
+		$.fn.dataTable.ext.search.push(
+		    function( settings, data, dataIndex ) {
+		    	if(!window.onlyInsufficient){
+		    		onlyInsufficient=false;
+		    	}
+		        if ( +data[4] < +data[5] || !onlyInsufficient){
+		            return true;
+		        }else{
+		        	return false;
+		        }
+		    }
+		);
+		
 		$dtMaster = $("#dt_master_stock_new").DataTable({
 			dom : "frB<t>ip",
 			lengthChange: false,
@@ -276,13 +290,13 @@
 				"title" : "供應商名稱",
 				"data" : "productVO.supply_name",
 				"defaultContent" : ""
-			}, {
-				"title" : "備註",
-				"data" : "memo",
-				"defaultContent" : ""
 			},{
 				"title" : "庫存量",
 				"data" : "quantity",
+				"defaultContent" : ""
+			},{
+				"title" : "安全庫存",
+				"data" : "keepStock",
 				"defaultContent" : ""
 			},{
 				"title" : "倉庫代號",
@@ -295,6 +309,10 @@
 			},{
 				"title" : "有效日期",
 				"data" : "valid_date",
+				"defaultContent" : ""
+			}, {
+				"title" : "備註",
+				"data" : "memo",
 				"defaultContent" : ""
 			} ],
 			columnDefs : [ {
@@ -321,6 +339,25 @@
 					var options = $("<div/>").append(input, label);
 
 					return options.html();
+				}
+			},{
+				targets : 4,
+				render : function(data, type, row) {
+					var quantityDisplay = null;
+					
+					if( +row.quantity < +row.keepStock ){
+						quantityDisplay = 
+							$("<div/>").html(
+								$("<b/>",{
+									"style":"color:red;",
+									"text":row.quantity
+								})
+							).html();
+					}else{
+						quantityDisplay = row.quantity ;
+					}
+					
+					return quantityDisplay;
 				}
 			} ],
 			buttons : [ {
@@ -450,6 +487,26 @@
 
 						}
 					});
+				}
+			},{
+				text : function(){
+					if(!window.onlyInsufficient){
+			    		onlyInsufficient=false;
+			    	}
+					if(onlyInsufficient){
+						return '還原';
+					}else{
+						return '低於安全庫存 ';
+					}
+				},
+				action : function(e, dt, node, config) {
+					onlyInsufficient = !onlyInsufficient;
+					if(onlyInsufficient){
+						this.text('還原');
+					}else{
+						this.text('低於安全庫存');
+					}
+					$dtMaster.draw();
 				}
 			}
 			]

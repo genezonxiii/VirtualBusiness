@@ -175,6 +175,8 @@ public class StockNew extends HttpServlet {
 					stockNewVO.setStock_time(rs.getDate("stock_time"));
 					stockNewVO.setUser_id(rs.getString("user_id"));
 					stockNewVO.setValid_date(rs.getDate("valid_date"));
+					stockNewVO.setKeepStock(rs.getInt("keep_stock"));
+					
 					stockNewVO.setProductVO(productVO);
 					stockNewVO.setLocationVO(locationVO);
 
@@ -251,6 +253,7 @@ public class StockNew extends HttpServlet {
 					stockNewVO.setStock_time(rs.getDate("stock_time"));
 					stockNewVO.setUser_id(rs.getString("user_id"));
 					stockNewVO.setValid_date(rs.getDate("valid_date"));
+					stockNewVO.setKeepStock(rs.getInt("keep_stock"));
 					stockNewVO.setProductVO(productVO);
 					stockNewVO.setLocationVO(locationVO);
 
