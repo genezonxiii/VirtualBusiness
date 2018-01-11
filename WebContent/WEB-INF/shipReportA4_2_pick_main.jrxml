@@ -116,21 +116,21 @@ and rsDetail.order_no = $P{order_no}]]>
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="14" y="0" width="68" height="20"/>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="14" y="0" width="84" height="20"/>
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<text><![CDATA[貨號]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="480eb34d-7219-4222-898a-54882341b075" x="82" y="0" width="157" height="20"/>
+				<reportElement uuid="480eb34d-7219-4222-898a-54882341b075" x="98" y="0" width="157" height="20"/>
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<text><![CDATA[產品名稱]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2f257a86-03b5-4d68-bbd0-d0d39056f43d" x="239" y="0" width="38" height="20"/>
+				<reportElement uuid="2f257a86-03b5-4d68-bbd0-d0d39056f43d" x="255" y="0" width="22" height="20"/>
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
@@ -145,23 +145,23 @@ and rsDetail.order_no = $P{order_no}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement uuid="6e5a26c9-ffbb-47a4-a129-fd5101f1ad78" stretchType="RelativeToBandHeight" x="14" y="0" width="68" height="20"/>
+		<band height="28" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="6e5a26c9-ffbb-47a4-a129-fd5101f1ad78" stretchType="RelativeToBandHeight" x="14" y="0" width="84" height="20"/>
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_product_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="66a96d6a-0990-4bc0-b3e8-20d2071171bc" stretchType="RelativeToBandHeight" x="82" y="0" width="157" height="20"/>
+				<reportElement uuid="66a96d6a-0990-4bc0-b3e8-20d2071171bc" stretchType="RelativeToBandHeight" x="98" y="0" width="157" height="20"/>
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="26ecdfb9-5993-451e-b123-7eb9ccffe26e" stretchType="RelativeToBandHeight" x="239" y="0" width="35" height="20"/>
+				<reportElement uuid="26ecdfb9-5993-451e-b123-7eb9ccffe26e" stretchType="RelativeToBandHeight" x="255" y="0" width="19" height="20"/>
 				<textElement textAlignment="Right">
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
