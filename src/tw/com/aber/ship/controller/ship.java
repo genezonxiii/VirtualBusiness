@@ -286,13 +286,15 @@ public class ship extends HttpServlet {
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					
 					LogisticService logisticService = new LogisticService();
-					List<SaleOrder> saleOrders = responseUtil.getResponse().getBody()
-							.getSaleOrderResponse().getSaleOrders().getSaleOrder();
-					
-					for(SaleOrder saleOrder : saleOrders){
-						if("1".equals(saleOrder.getResult())){
-							logisticService.logisticRecordSf(groupId, userId, 
-									saleOrder.getErpOrder(),saleOrder.getShipmentId());
+					if (responseUtil.getResponse() != null) {
+						List<SaleOrder> saleOrders = responseUtil.getResponse().getBody()
+								.getSaleOrderResponse().getSaleOrders().getSaleOrder();
+						
+						for(SaleOrder saleOrder : saleOrders){
+							if("1".equals(saleOrder.getResult())){
+								logisticService.logisticRecordSf(groupId, userId, 
+										saleOrder.getErpOrder(), saleOrder.getShipmentId());
+							}
 						}
 					}
 					
@@ -328,13 +330,15 @@ public class ship extends HttpServlet {
 					ResponseUtil responseUtil = sfApi.getResponseUtilObj(resXml);
 					
 					LogisticService logisticService = new LogisticService();
-					List<SaleOrder> saleOrders = responseUtil.getResponse().getBody()
-							.getCancelSaleOrderResponse().getSaleOrders().getSaleOrder();
-					
-					for(SaleOrder saleOrder : saleOrders){
-						if("1".equals(saleOrder.getResult())){
-							logisticService.logisticRecordSf(groupId, userId
-									, saleOrder.getErpOrder(),null);
+					if (responseUtil.getResponse() != null) {
+						List<SaleOrder> saleOrders = responseUtil.getResponse().getBody()
+								.getCancelSaleOrderResponse().getSaleOrders().getSaleOrder();
+						
+						for(SaleOrder saleOrder : saleOrders){
+							if("1".equals(saleOrder.getResult())){
+								logisticService.logisticRecordSf(groupId, userId, 
+										saleOrder.getErpOrder(), null);
+							}
 						}
 					}
 					gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
