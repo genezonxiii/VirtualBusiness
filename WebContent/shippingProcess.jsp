@@ -1418,14 +1418,25 @@ line-height: 25px;
 	 	            console.log(data);
 	 	            $("#import_chooseWarehouse").append("<option value=''>請選擇倉庫</option>");
 	 	          	$("#fast_chooseWarehouse").append("<option value=''>請選擇倉庫</option>");
-
+	 	          	
+					var wh_value = null;
 	 	            $.map(json_obj.warehouseVOList, function(item) {
+	 	            
+	 	            	if( item.seqNo == 1 && wh_value == null){
+	 	            		wh_value = item.warehouse_id;
+	 	            	}
+	 	            	
 	 	                if (item.warehouse_code != '' && ('undefined' != typeof(item.warehouse_code))) {
 	 	                    $("#import_chooseWarehouse").append("<option value='" + item.warehouse_id + "'>" + item.warehouse_code + '-' + item.warehouse_name + "</option>");
 	 	                   	$("#fast_chooseWarehouse").append("<option value='" + item.warehouse_id + "'>" + item.warehouse_code + '-' + item.warehouse_name + "</option>");
 	 	                }
 
 	 	            });
+	 	            if( wh_value != null ){
+	 	            	$("#import_chooseWarehouse").val(wh_value);
+	 	            	$("#fast_chooseWarehouse").val(wh_value);
+	 	            }
+	 	            
 				}
 	        });
 				
