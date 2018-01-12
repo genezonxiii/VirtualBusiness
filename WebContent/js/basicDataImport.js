@@ -60,7 +60,7 @@ function sendFileToServer(formData,status){
 			    			spec = "自訂商品ID<br/>";
 			    		} 
 			    		var dup = "";
-			    		if (json_obj.duplicate != "") {
+			    		if (typeof json_obj.duplicate != "undefined" && json_obj.duplicate != "") {
 			    			dup = "<br/><br/>匯入僅提供新增，錯誤資料如下:<br/>" 
 			    				+ spec + json_obj.duplicate.replace(/,/g, "<br/>");
 			    		}
