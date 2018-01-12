@@ -315,7 +315,7 @@ public class BasicDataImport extends HttpServlet {
 			logger.debug("isJson: " + isJson);
 			if (isJson == 1) {
 				if ("true".equals(jsonobj.success)) {
-					ret = "success";
+					ret = content;
 				} else {
 					ret = "false";
 				}

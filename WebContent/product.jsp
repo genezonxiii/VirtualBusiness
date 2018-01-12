@@ -129,6 +129,8 @@
 		$("#sales-contain").css({"opacity":"0"});
 		$("#packages-contain").css({"opacity":"0"});
 		warning_msg("---讀取中請稍候---");
+		
+		console.log(info.action);
 					
 		$("#sales").dataTable().fnDestroy();
 		
@@ -148,10 +150,15 @@
 					    $('div .dt-buttons a').css('margin-left','10px');
 					},
 			        ajax: {
-			            dataSrc: "",
 			            type: "POST",
 			            url: "product.do",
-			            data: info
+			            data: info,
+			            dataSrc: function ( json ) {
+			            	if (typeof json.result != "undefined") {
+			            		dialogMsg("警告", "自訂商品ID " + json.result + " 重複！");
+			            	}
+			            	return json.data;
+			            }
 			        },
 			        columnDefs: [{
 			            targets: 10,
@@ -492,7 +499,7 @@
 		            	var json_obj2 = $.parseJSON(result);
 		            	if(json_obj2.length>0){
 		            		information={
-									action : "search_name",
+									action : "search_nameNew",
 									product_name : json_obj2[0].product_name,
 								};
 		            		
@@ -626,7 +633,7 @@
 			e.preventDefault();
 			
 			information={
-				action : "search_name",
+				action : "search_nameNew",
 				product_name : $("#searh_name").val(),
 			};
 			
@@ -638,7 +645,7 @@
 			e.preventDefault();
 			
 			information={
-				action : "search",
+				action : "searchNew",
 				supply_name : $("input[name='searh_product_name'").val(),
 			};
 			draw_product(information);
@@ -1721,7 +1728,7 @@
 							<tbody>
 								<tr>
 									<td>自訂商品ID：</td>
-									<td><input type="text" id="c_p_id2" name="c_product_id"/></td>
+									<td><input type="text" id="c_p_id2" name="c_product_id" disabled/></td>
 									<td>商品類別：</td><td><select id="select_update_type_id" name="select_update_type_id"></select></td>
 								</tr><tr>
 									<td>供應商名稱：</td><td><input type="text" id="update_supply_name" name="supply_name"/></td>

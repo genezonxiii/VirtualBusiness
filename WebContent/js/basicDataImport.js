@@ -40,13 +40,32 @@ function sendFileToServer(formData,status){
 		        cache: false,
 		        data: formData,
 		        success: function(result){
-			    	if(result=="false"){
+		        	var json_obj = $.parseJSON(result);
+		        	if(result=="false"){
 			        	sendNames += "<p alert='left'>["+formData.get('file').name+"]</p><br>";
 			        	sendStatus ++;
 			    	}
 			    	if ((sendCountTime == sendCount) && (sendStatus == 0)){
+			    		var type = $('#select-type').val().replace('Template','');
+			    		var spec = "";
+			    		if (type == "supply") {
+			    			spec = "供應商名稱<br/>";
+			    		} else if (type == "product") {
+			    			spec = "自訂商品ID<br/>";
+			    		} else if (type == "package") {
+			    			spec = "自訂組合包ID<br/>";
+			    		} else if (type == "contrast") {
+			    			spec = "平台名稱/平台用自訂商品ID<br/>";
+			    		} else if (type == "purchase") {
+			    			spec = "自訂商品ID<br/>";
+			    		} 
+			    		var dup = "";
+			    		if (json_obj.duplicate != "") {
+			    			dup = "<br/><br/>匯入僅提供新增，錯誤資料如下:<br/>" 
+			    				+ spec + json_obj.duplicate.replace(/,/g, "<br/>");
+			    		}
 				    	status_dialog.dialog("close");
-				    	$('#message').find("#text").val('').html("匯入成功!");
+				    	$('#message').find("#text").val('').html("匯入成功!" + dup);
 						message_dialog.dialog("open");
 						$("#download").html("");
 			    	}else if ((sendCountTime == sendCount)&& (sendStatus != 0)){

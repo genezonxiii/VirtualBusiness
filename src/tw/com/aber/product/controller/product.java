@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -102,6 +105,43 @@ public class product extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
+		if ("search_nameNew".equals(action)) {
+			try {
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
+				String product_name = request.getParameter("product_name");
+				logger.debug("product_name:" + product_name);
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
+				// 假如無查詢條件，則是查詢全部
+				if (product_name == null || (product_name.trim()).length() == 0) {
+					productService = new ProductService();
+					List<ProductBean> list = productService.SearchAllDB(group_id);
+					Map<String, Object> map = new HashMap<>();
+					map.put("data", list);
+					JSONObject jsonObject = new JSONObject(map);
+					
+					response.getWriter().write(jsonObject.toString());
+					return;// 程式中斷
+				}
+				// 查詢指定Name 假如廠商名稱輸入不適空白 或是有東西 進入下面
+				if (product_name != null || (product_name.trim()).length() > 0) {
+					productService = new ProductService();
+					List<ProductBean> list = productService.getsearch_byname(group_id, product_name);
+					Map<String, Object> map = new HashMap<>();
+					map.put("data", list);
+					JSONObject jsonObject = new JSONObject(map);
+					
+					response.getWriter().write(jsonObject.toString());
+					return;// 程式中斷
+				}
+				/*************************** 其他可能的錯誤處理 **********************************/
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		if ("search".equals(action)) {
 			try {
 				/***************************
@@ -130,6 +170,43 @@ public class product extends HttpServlet {
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
 					logger.debug("jsonStrList:" + jsonStrList);
+					return;// 程式中斷
+				}
+				/*************************** 其他可能的錯誤處理 **********************************/
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if ("searchNew".equals(action)) {
+			try {
+				/***************************
+				 * 1.接收請求參數-格式檢查
+				 ****************************************/
+				String supply_name = request.getParameter("supply_name");
+				logger.debug("supply_name:" + supply_name);
+				/***************************
+				 * 2.開始查詢資料
+				 ****************************************/
+				// 假如無查詢條件，則是查詢全部
+				if (supply_name == null || (supply_name.trim()).length() == 0) {
+					productService = new ProductService();
+					List<ProductBean> list = productService.SearchAllDB(group_id);
+					Map<String, Object> map = new HashMap<>();
+					map.put("data", list);
+					JSONObject jsonObject = new JSONObject(map);
+					
+					response.getWriter().write(jsonObject.toString());
+					return;// 程式中斷
+				}
+				// 查詢指定Name 假如廠商名稱輸入不是空白 或是有東西 進入下面
+				if (supply_name != null || (supply_name.trim()).length() > 0) {
+					productService = new ProductService();
+					List<ProductBean> list = productService.getsearchSupplyname(group_id, supply_name);
+					Map<String, Object> map = new HashMap<>();
+					map.put("data", list);
+					JSONObject jsonObject = new JSONObject(map);
+					
+					response.getWriter().write(jsonObject.toString());
 					return;// 程式中斷
 				}
 				/*************************** 其他可能的錯誤處理 **********************************/
@@ -199,7 +276,7 @@ public class product extends HttpServlet {
 				 * 2.開始新增資料
 				 ***************************************/
 				productService = new ProductService();
-				productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id,
+				String result = productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id,
 						unit_id, cost, price, current_stock, keep_stock, photo, photo1, description, barcode, ispackage,
 						userdef1, user_id);
 				/***************************
@@ -207,9 +284,13 @@ public class product extends HttpServlet {
 				 ***********/
 				productService = new ProductService();
 				List<ProductBean> list = productService.SearchAllDB(group_id);
-				Gson gson = new Gson();
-				String jsonStrList = gson.toJson(list);
-				response.getWriter().write(jsonStrList);
+				
+				Map<String, Object> map = new HashMap<>();
+				map.put("result", result);
+				map.put("data", list);
+				JSONObject jsonObject = new JSONObject(map);
+				
+				response.getWriter().write(jsonObject.toString());
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -264,7 +345,7 @@ public class product extends HttpServlet {
 				 * 2.開始修改資料
 				 ***************************************/
 				productService = new ProductService();
-				productService.updateProduct(product_id, group_id, c_product_id, product_name, supply_id, supply_name,
+				String result = productService.updateProduct(product_id, group_id, c_product_id, product_name, supply_id, supply_name,
 						type_id, unit_id, cost, price, keep_stock, photo, photo1, description, barcode, ispackage,
 						userdef1, user_id);
 				/***************************
@@ -272,9 +353,13 @@ public class product extends HttpServlet {
 				 ***********/
 				productService = new ProductService();
 				List<ProductBean> list = productService.SearchAllDB(group_id);
-				Gson gson = new Gson();
-				String jsonStrList = gson.toJson(list);
-				response.getWriter().write(jsonStrList);
+				Map<String, Object> map = new HashMap<>();
+				map.put("result", result);
+				map.put("data", list);
+				JSONObject jsonObject = new JSONObject(map);
+				
+				response.getWriter().write(jsonObject.toString());
+
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -580,9 +665,9 @@ public class product extends HttpServlet {
 	/*************************** 制定規章方法 ****************************************/
 	interface product_interface {
 
-		public void insertDB(ProductBean productBean);
+		public String insertDB(ProductBean productBean);
 
-		public void updateDB(ProductBean productBean);
+		public String updateDB(ProductBean productBean);
 
 		public void deleteDB(String product_id, String user_id);
 
@@ -623,7 +708,7 @@ public class product extends HttpServlet {
 		public List<ProductBean>selectProductByProductName(ProductBean productBean){
 			return dao.selectProductByProductName(productBean);
 		}
-		public ProductBean addProduct(String group_id, String c_product_id, String product_name, String supply_id,
+		public String addProduct(String group_id, String c_product_id, String product_name, String supply_id,
 				String supply_name, String type_id, String unit_id, Float cost, Float price, int current_stock,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
 				String userdef1, String user_id) {
@@ -646,11 +731,11 @@ public class product extends HttpServlet {
 			productBean.setUser_id(user_id);
 			productBean.setIspackage(ispackage);
 			productBean.setUserdef1(userdef1);
-			dao.insertDB(productBean);
-			return productBean;
+			
+			return dao.insertDB(productBean);
 		}
 
-		public ProductBean updateProduct(String product_id, String group_id, String c_product_id, String product_name,
+		public String updateProduct(String product_id, String group_id, String c_product_id, String product_name,
 				String supply_id, String supply_name, String type_id, String unit_id, Float cost, Float price,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
 				String userdef1, String user_id) {
@@ -674,8 +759,8 @@ public class product extends HttpServlet {
 			productBean.setUser_id(user_id);
 			productBean.setIspackage(ispackage);
 			productBean.setUserdef1(userdef1);
-			dao.updateDB(productBean);
-			return productBean;
+			
+			return dao.updateDB(productBean);
 		}
 
 		public void deleteProduct(String product_id, String user_id) {
@@ -725,9 +810,9 @@ public class product extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_get_product_bybarcode = "call sp_get_product_bybarcode(?,?)";
 		private static final String sp_selectall_product = "call sp_selectall_product (?)";
-		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
+		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)";
 		private static final String sp_del_product = "call sp_del_product (?,?)";
-		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
+		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
 		private static final String sp_get_product_bysupplyname = "call sp_get_product_bysupplyname (?,?)";
 		private static final String sp_get_product_byproductname = "call sp_get_product_byproductname (?,?)";
 		private static final String sp_get_supplyname = "call sp_get_supplyname (?,?)";
@@ -746,36 +831,39 @@ public class product extends HttpServlet {
 		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
 
 		@Override
-		public void insertDB(ProductBean productBean) {
+		public String insertDB(ProductBean productBean) {
 
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
+			String result = "";
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_insert_product);
-
-				pstmt.setString(1, productBean.getGroup_id());
-				pstmt.setString(2, productBean.getC_product_id());
-				pstmt.setString(3, productBean.getProduct_name());
-				pstmt.setString(4, productBean.getSupply_id());
-				pstmt.setString(5, productBean.getSupply_name());
-				pstmt.setString(6, productBean.getType_id());
-				pstmt.setString(7, productBean.getUnit_id());
-				pstmt.setFloat(8, productBean.getCost());
-				pstmt.setFloat(9, productBean.getPrice());
-				pstmt.setInt(10, productBean.getKeep_stock());
-				pstmt.setString(11, productBean.getPhoto());
-				pstmt.setString(12, productBean.getPhoto1());
-				pstmt.setString(13, productBean.getDescription());
-				pstmt.setString(14, productBean.getBarcode());
-				pstmt.setString(15, productBean.getUser_id());
-				pstmt.setInt(16, productBean.getCurrent_stock());
-				pstmt.setString(17, productBean.getIspackage());
-				pstmt.setString(18, productBean.getUserdef1());
+				cs = con.prepareCall(sp_insert_product);
 				
-				pstmt.executeUpdate();
-
+				cs.setString(1, productBean.getGroup_id());
+				cs.setString(2, productBean.getC_product_id());
+				cs.setString(3, productBean.getProduct_name());
+				cs.setString(4, productBean.getSupply_id());
+				cs.setString(5, productBean.getSupply_name());
+				cs.setString(6, productBean.getType_id());
+				cs.setString(7, productBean.getUnit_id());
+				cs.setFloat(8, productBean.getCost());
+				cs.setFloat(9, productBean.getPrice());
+				cs.setInt(10, productBean.getKeep_stock());
+				cs.setString(11, productBean.getPhoto());
+				cs.setString(12, productBean.getPhoto1());
+				cs.setString(13, productBean.getDescription());
+				cs.setString(14, productBean.getBarcode());
+				cs.setString(15, productBean.getUser_id());
+				cs.setInt(16, productBean.getCurrent_stock());
+				cs.setString(17, productBean.getIspackage());
+				cs.setString(18, productBean.getUserdef1());
+				cs.registerOutParameter(19, Types.VARCHAR);
+				cs.execute();
+				
+				result = cs.getString(19);
+				
 				// Handle any SQL errors
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -783,9 +871,9 @@ public class product extends HttpServlet {
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			} finally {
-				if (pstmt != null) {
+				if (cs != null) {
 					try {
-						pstmt.close();
+						cs.close();
 					} catch (SQLException se) {
 						se.printStackTrace(System.err);
 					}
@@ -798,37 +886,42 @@ public class product extends HttpServlet {
 					}
 				}
 			}
+			return result;
 		}
 
 		@Override
-		public void updateDB(ProductBean productBean) {
+		public String updateDB(ProductBean productBean) {
 
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
+			String result = "";
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_update_product);
-
-				pstmt.setString(1, productBean.getProduct_id());
-				pstmt.setString(2, productBean.getGroup_id());
-				pstmt.setString(3, productBean.getC_product_id());
-				pstmt.setString(4, productBean.getProduct_name());
-				pstmt.setString(5, productBean.getSupply_id());
-				pstmt.setString(6, productBean.getSupply_name());
-				pstmt.setString(7, productBean.getType_id());
-				pstmt.setString(8, productBean.getUnit_id());
-				pstmt.setFloat(9, productBean.getCost());
-				pstmt.setFloat(10, productBean.getPrice());
-				pstmt.setInt(11, productBean.getKeep_stock());
-				pstmt.setString(12, productBean.getPhoto());
-				pstmt.setString(13, productBean.getPhoto1());
-				pstmt.setString(14, productBean.getDescription());
-				pstmt.setString(15, productBean.getBarcode());
-				pstmt.setString(16, productBean.getUser_id());
-				pstmt.setString(17, productBean.getIspackage());
-				pstmt.setString(18, productBean.getUserdef1());
-				pstmt.executeUpdate();
+				cs = con.prepareCall(sp_update_product);
+				
+				cs.setString(1, productBean.getProduct_id());
+				cs.setString(2, productBean.getGroup_id());
+				cs.setString(3, productBean.getC_product_id());
+				cs.setString(4, productBean.getProduct_name());
+				cs.setString(5, productBean.getSupply_id());
+				cs.setString(6, productBean.getSupply_name());
+				cs.setString(7, productBean.getType_id());
+				cs.setString(8, productBean.getUnit_id());
+				cs.setFloat(9, productBean.getCost());
+				cs.setFloat(10, productBean.getPrice());
+				cs.setInt(11, productBean.getKeep_stock());
+				cs.setString(12, productBean.getPhoto());
+				cs.setString(13, productBean.getPhoto1());
+				cs.setString(14, productBean.getDescription());
+				cs.setString(15, productBean.getBarcode());
+				cs.setString(16, productBean.getUser_id());
+				cs.setString(17, productBean.getIspackage());
+				cs.setString(18, productBean.getUserdef1());
+				cs.registerOutParameter(19, Types.VARCHAR);
+				cs.execute();
+				
+				result = cs.getString(19);
 
 				// Handle any SQL errors
 			} catch (SQLException se) {
@@ -837,9 +930,9 @@ public class product extends HttpServlet {
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			} finally {
-				if (pstmt != null) {
+				if (cs != null) {
 					try {
-						pstmt.close();
+						cs.close();
 					} catch (SQLException se) {
 						se.printStackTrace(System.err);
 					}
@@ -852,6 +945,7 @@ public class product extends HttpServlet {
 					}
 				}
 			}
+			return result;
 		}
 
 		@Override
