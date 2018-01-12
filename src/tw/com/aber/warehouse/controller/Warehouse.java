@@ -69,28 +69,22 @@ public class Warehouse extends HttpServlet {
 			} else if ("update_warehouse".equals(action)) {
 
 				String warehouse_id = request.getParameter("warehouse_id");
-				String warehouse_code = request.getParameter("warehouse_code");
 				String warehouse_name = request.getParameter("warehouse_name");
 				String warehouse_locate = request.getParameter("warehouse_locate");
+				String warehouse_seqNo = request.getParameter("warehouse_seqNo");
 
 				Boolean isSuccess = false;
-
-				String errorMsg = checkData(warehouse_id, warehouse_code, warehouse_name, warehouse_locate);
+				String errorMsg = checkData(warehouse_id, "", warehouse_name, warehouse_locate, warehouse_seqNo);
 
 				if (errorMsg.length() == 0) {
-					boolean isEXISTSByWarehouseCode = warehouseSerivce.checkWarehouseCode(group_id, warehouse_code);
-					if (!isEXISTSByWarehouseCode) {
-						WarehouseVO warehouseVO = new WarehouseVO();
-						warehouseVO.setGroup_id(group_id);
-						warehouseVO.setWarehouse_code(warehouse_code);
-						warehouseVO.setWarehouse_id(warehouse_id);
-						warehouseVO.setWarehouse_locate(warehouse_locate);
-						warehouseVO.setWarehouse_name(warehouse_name);
+					WarehouseVO warehouseVO = new WarehouseVO();
+					warehouseVO.setGroup_id(group_id);
+					warehouseVO.setWarehouse_id(warehouse_id);
+					warehouseVO.setWarehouse_locate(warehouse_locate);
+					warehouseVO.setWarehouse_name(warehouse_name);
+					warehouseVO.setSeqNo(Integer.parseInt(warehouse_seqNo));
 
-						isSuccess = warehouseSerivce.updateWarehouse(warehouseVO);
-					} else {
-						errorMsg = "此倉庫代碼已使用，請填入其他代碼。";
-					}
+					isSuccess = warehouseSerivce.updateWarehouse(warehouseVO);
 				}
 
 				if (isSuccess) {
@@ -104,10 +98,11 @@ public class Warehouse extends HttpServlet {
 				String warehouse_code = request.getParameter("warehouse_code");
 				String warehouse_name = request.getParameter("warehouse_name");
 				String warehouse_locate = request.getParameter("warehouse_locate");
+				String warehouse_seqNo = request.getParameter("warehouse_seqNo");
 
 				Boolean isSuccess = false;
 
-				String errorMsg = checkData(warehouse_code, warehouse_name, warehouse_locate);
+				String errorMsg = checkData(warehouse_code, warehouse_name, warehouse_locate, warehouse_seqNo);
 
 				if (errorMsg.length() == 0) {
 					boolean isEXISTSByWarehouseCode = warehouseSerivce.checkWarehouseCode(group_id, warehouse_code);
@@ -117,6 +112,7 @@ public class Warehouse extends HttpServlet {
 						warehouseVO.setWarehouse_code(warehouse_code);
 						warehouseVO.setWarehouse_locate(warehouse_locate);
 						warehouseVO.setWarehouse_name(warehouse_name);
+						warehouseVO.setSeqNo(Integer.parseInt(warehouse_seqNo));
 
 						isSuccess = warehouseSerivce.insertWarehouse(warehouseVO);
 					} else {
@@ -190,7 +186,7 @@ public class Warehouse extends HttpServlet {
 
 		private static final String sp_get_all_warehosevo_list = "call sp_get_all_warehosevo_list(?)";
 		private static final String sp_update_warehouse = "call sp_update_warehouse(?,?,?,?,?)";
-		private static final String sp_insert_warehouse = "call sp_insert_warehouse(?,?,?,?)";
+		private static final String sp_insert_warehouse = "call sp_insert_warehouse(?,?,?,?,?)";
 		private static final String sp_get_warehouse_by_warehouse_code = "call sp_get_warehouse_by_warehouse_code(?,?)";
 
 		@Override
@@ -218,6 +214,7 @@ public class Warehouse extends HttpServlet {
 					warehouseVO.setWarehouse_id(rs.getString("warehouse_id"));
 					warehouseVO.setWarehouse_locate(rs.getString("warehouse_locate"));
 					warehouseVO.setWarehouse_name(rs.getString("warehouse_name"));
+					warehouseVO.setSeqNo(rs.getInt("seq_no"));
 					warehouseVOList.add(warehouseVO);
 				}
 
@@ -258,9 +255,9 @@ public class Warehouse extends HttpServlet {
 				pstmt = con.prepareStatement(sp_update_warehouse);
 
 				pstmt.setString(1, warehouseVO.getGroup_id());
-				pstmt.setString(2, warehouseVO.getWarehouse_code());
-				pstmt.setString(3, warehouseVO.getWarehouse_name());
-				pstmt.setString(4, warehouseVO.getWarehouse_locate());
+				pstmt.setString(2, warehouseVO.getWarehouse_name());
+				pstmt.setString(3, warehouseVO.getWarehouse_locate());
+				pstmt.setInt(4, warehouseVO.getSeqNo());
 				pstmt.setString(5, warehouseVO.getWarehouse_id());
 
 				rs = pstmt.executeQuery();
@@ -302,6 +299,7 @@ public class Warehouse extends HttpServlet {
 				pstmt.setString(2, warehouseVO.getWarehouse_code());
 				pstmt.setString(3, warehouseVO.getWarehouse_name());
 				pstmt.setString(4, warehouseVO.getWarehouse_locate());
+				pstmt.setInt(5, warehouseVO.getSeqNo());
 
 				rs = pstmt.executeQuery();
 			} catch (SQLException se) {
@@ -382,10 +380,10 @@ public class Warehouse extends HttpServlet {
 	}
 
 	public String checkData(String warehouse_id, String warehouse_code, String warehouse_name,
-			String warehouse_locate) {
+			String warehouse_locate, String warehouse_seqNo) {
 		String errorMsg = "";
 
-		if (warehouse_id == null || warehouse_code == null || warehouse_name == null || warehouse_locate == null) {
+		if (warehouse_id == null || warehouse_code == null || warehouse_name == null || warehouse_locate == null || warehouse_seqNo == null ) {
 			errorMsg = "資料錯誤";
 			return errorMsg;
 		}
@@ -394,10 +392,6 @@ public class Warehouse extends HttpServlet {
 			errorMsg = "資料錯誤";
 			return errorMsg;
 		}
-		if ("".equals(warehouse_code.trim())) {
-			errorMsg = "倉庫編號不可為空";
-			return errorMsg;
-		}
 		if ("".equals(warehouse_name.trim())) {
 			errorMsg = "倉庫名稱不可為空";
 			return errorMsg;
@@ -407,14 +401,20 @@ public class Warehouse extends HttpServlet {
 			errorMsg = "倉庫地點不可為空";
 			return errorMsg;
 		}
+		
+		if ("".equals(warehouse_seqNo.trim())) {
+			errorMsg = "倉庫序號不可為空";
+			return errorMsg;
+		}
 
 		return errorMsg;
 	}
 
-	public String checkData(String warehouse_code, String warehouse_name, String warehouse_locate) {
+	public String checkData(String warehouse_code, String warehouse_name, String warehouse_locate,
+			 String warehouse_seqNo) {
 		String errorMsg = "";
 
-		if (warehouse_code == null || warehouse_name == null || warehouse_locate == null) {
+		if (warehouse_code == null || warehouse_name == null || warehouse_locate == null || warehouse_seqNo == null) {
 			errorMsg = "資料錯誤";
 			return errorMsg;
 		}
@@ -430,6 +430,11 @@ public class Warehouse extends HttpServlet {
 
 		if ("".equals(warehouse_locate.trim())) {
 			errorMsg = "倉庫地點不可為空";
+			return errorMsg;
+		}
+		
+		if ("".equals(warehouse_seqNo.trim())) {
+			errorMsg = "倉庫序號不可為空";
 			return errorMsg;
 		}
 

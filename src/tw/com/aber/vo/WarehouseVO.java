@@ -12,7 +12,7 @@ public class WarehouseVO implements Serializable{
 	private String warehouse_name;
 	private String warehouse_locate;
 	private String sf_warehouse_code;
-	
+	private int seqNo;
 	
 	public String getWarehouse_id() {
 		return warehouse_id;
@@ -53,6 +53,12 @@ public class WarehouseVO implements Serializable{
 		} else {
 			this.sf_warehouse_code = sf_warehouse_code;
 		}
+	}
+	public int getSeqNo() {
+		return seqNo;
+	}
+	public void setSeqNo(int seqNo) {
+		this.seqNo = seqNo;
 	}
 
 	

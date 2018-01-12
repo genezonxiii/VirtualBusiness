@@ -102,6 +102,10 @@ input[type="number"] {
 							<td>倉庫地點：</td>
 							<td><input type="text" name="dialog_warehouse_locate" /></td>
 						</tr>
+						<tr>
+							<td>倉庫序號：</td>
+							<td><input type="text" name="dialog_warehouse_seqNo" /></td>
+						</tr>
 					</tbody>
 				</table>
 			</fieldset>
@@ -126,6 +130,10 @@ input[type="number"] {
 						<tr>
 							<td>倉庫地點：</td>
 							<td><input type="text" name="dialog_warehouse_locate" /></td>
+						</tr>
+						<tr>
+							<td>倉庫序號：</td>
+							<td><input type="text" name="dialog_warehouse_seqNo" /></td>
 						</tr>
 					</tbody>
 				</table>
@@ -181,7 +189,8 @@ input[type="number"] {
 	                                action: 'insert_warehouse',
 	                                warehouse_code: $("#dialog-form-insert  input[name='dialog_warehouse_code']").val(),
 	                                warehouse_name:  $("#dialog-form-insert  input[name='dialog_warehouse_name']").val(),
-	                                warehouse_locate: $("#dialog-form-insert  input[name='dialog_warehouse_locate']").val()
+	                                warehouse_locate: $("#dialog-form-insert  input[name='dialog_warehouse_locate']").val(),
+	                                warehouse_seqNo: $("#dialog-form-insert  input[name='dialog_warehouse_seqNo']").val()
 	                            },
 	                            error: function(xhr) {
 	                                alere("error");
@@ -195,9 +204,9 @@ input[type="number"] {
 	                            			
 	                            	drawMasterTable(parameter);
 
-	                                    massageDialog('執行成功', '新增');
+	                                    warningMsg('新增','執行成功');
 	                                } else {
-	                                    massageDialog('執行失敗  ' + response, '新增');
+	                                	warningMsg('新增','執行失敗  ' + response);
 	                                }
 
 	                            }
@@ -223,12 +232,12 @@ input[type="number"] {
 			 initDialog();
             var row = $(this).closest("tr");
             var data = $("#dt_master").DataTable().row(row).data();
-
+            $("#dialog-form-update  input[name='dialog_warehouse_code']").prop("disabled", true);
             $("#dialog-form-update  input[name='dialog_warehouse_code']").val(data.warehouse_code);
             $("#dialog-form-update  input[name='dialog_warehouse_name']").val(data.warehouse_name);
             $("#dialog-form-update  input[name='dialog_warehouse_locate']").val(data.warehouse_locate);
+            $("#dialog-form-update  input[name='dialog_warehouse_seqNo']").val(data.seqNo);
             $("#hidwarehouse_id").val(data.warehouse_id);
-
 
             var dialog_form_update = $("#dialog-form-update").dialog({
                 draggable: true, //防止拖曳
@@ -260,7 +269,8 @@ input[type="number"] {
                                 warehouse_id: $("#hidwarehouse_id").val(),
                                 warehouse_code: $("#dialog-form-update  input[name='dialog_warehouse_code']").val(),
                                 warehouse_name:  $("#dialog-form-update  input[name='dialog_warehouse_name']").val(),
-                                warehouse_locate: $("#dialog-form-update  input[name='dialog_warehouse_locate']").val()
+                                warehouse_locate: $("#dialog-form-update  input[name='dialog_warehouse_locate']").val(),
+                                warehouse_seqNo: $("#dialog-form-update  input[name='dialog_warehouse_seqNo']").val()
                             },
                             error: function(xhr) {
                                 alere("error");
@@ -274,9 +284,9 @@ input[type="number"] {
                             			
                             	drawMasterTable(parameter);
 
-                                    massageDialog('執行成功', '修改');
+                                    warningMsg('修改','執行成功');
                                 } else {
-                                    massageDialog('執行失敗  ' + response, '修改');
+                                	warningMsg('修改','執行失敗  ' + response);
                                 }
 
                             }
@@ -343,6 +353,10 @@ input[type="number"] {
 	            "data": "warehouse_locate",
 	            "defaultContent": ""
 	        },{
+	            "title": "倉庫序號",
+	            "data": "seqNo",
+	            "defaultContent": ""
+	        },{
 	            "title": "功能",
 	            "data": null,
 	            "defaultContent": ""
@@ -399,10 +413,12 @@ input[type="number"] {
         $("#dialog-form-update  input[name='dialog_warehouse_code']").val("");
         $("#dialog-form-update  input[name='dialog_warehouse_name']").val("");
         $("#dialog-form-update  input[name='dialog_warehouse_locate']").val("");
+        $("#dialog-form-update  input[name='dialog_warehouse_seqNo']").val("");
         
         $("#dialog-form-insert  input[name='dialog_warehouse_code']").val("");
         $("#dialog-form-insert  input[name='dialog_warehouse_name']").val("");
         $("#dialog-form-insert  input[name='dialog_warehouse_locate']").val("");
+        $("#dialog-form-insert  input[name='dialog_warehouse_seqNo']").val("");
         $("#hidwarehouse_id").val("");
     }
 	
