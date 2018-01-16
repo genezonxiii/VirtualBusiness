@@ -518,7 +518,7 @@ public class Accept  extends HttpServlet {
 						locationVOList.add(locationVO);
 					}
 
-					if (!warehouse_id_now.equals(warehouse_id_record)) {
+					if (warehouse_id_now != null && !warehouse_id_now.equals(warehouse_id_record)) {
 
 						warehouseVO = new WarehouseVO();
 						warehouseVO.setWarehouse_name(rs.getString("warehouse_name"));
