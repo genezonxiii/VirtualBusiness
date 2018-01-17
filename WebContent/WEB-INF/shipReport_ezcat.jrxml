@@ -105,14 +105,18 @@
 	<columnHeader>
 		<band height="20">
 			<staticText>
-				<reportElement uuid="4926f585-fc3c-45a5-96b4-7c380fa83df7" x="100" y="0" width="100" height="20"/>
-				<textElement/>
-				<text><![CDATA[tracking_number]]></text>
+				<reportElement uuid="eef2f154-c738-4006-a3e2-16124e3cc4ac" x="0" y="0" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[訂單編號]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7e6d81c2-d330-4205-9f78-50ae20e4a76d" x="0" y="0" width="100" height="20"/>
-				<textElement/>
-				<text><![CDATA[order_no]]></text>
+				<reportElement uuid="82d1c0f4-02dd-4b38-9680-b823a154047a" x="100" y="0" width="100" height="20"/>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[託運單號]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

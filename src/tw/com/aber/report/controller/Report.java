@@ -3,9 +3,9 @@ package tw.com.aber.report.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,16 +22,36 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import tw.com.aber.egs.controller.EgsApi;
+import tw.com.aber.util.Database;
 
 public class Report extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sp_get_ship_sf_delivery_new_no = "call sp_delivery_report(?,?,?,?)";
 	private static final Logger logger = LogManager.getLogger(Report.class);
+	
+	private Connection connection;
+	private String sourcePath;
+	private String generatePath;
+	
+	private void setConnection(){
+		connection = Database.getConnection();
+	}
+	
+	private void setPath(){
+		final String reportSourcePath = ("" + this.getClass().getResource("/")).substring(5)
+				.replace("VirtualBusiness/WEB-INF/classes/", "VirtualBusiness/WEB-INF/");
+		final String reportGeneratePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/report";
+		new File(reportGeneratePath).mkdir();
+		
+		sourcePath = reportSourcePath;
+		generatePath = reportGeneratePath;
+	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -43,145 +63,100 @@ public class Report extends HttpServlet {
 		if (request.getSession().getAttribute("group_id") == null) {
 			return;
 		}
+		
+		final String group_id = (String) request.getSession().getAttribute("group_id");
+		
 		HashMap<String, Object> hm = null;
-
-		String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
-				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-		String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
-		String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
-
-		final String reportSourcePath = ("" + this.getClass().getResource("/")).substring(5)
-				.replace("VirtualBusiness/WEB-INF/classes/", "VirtualBusiness/WEB-INF/");
-		final String reportGeneratePath = getServletConfig().getServletContext().getInitParameter("uploadpath") + "/report";
-		new File(reportGeneratePath).mkdir();
+		setConnection();
+		setPath();
+		
 		try {
 			if (request.getParameter("dis_date") != null) {
 				String disDate = request.getParameter("dis_date");
 				logger.debug("dis_date:"+disDate);
+				
 				final String reportName = "rptPickReport";
-				final String reportCName = URLEncoder.encode("揀貨單", "UTF-8");;
-				
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				final String exportName = "揀貨單";
 
 				hm = new HashMap<String, Object>();
-				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
+				hm.put("p_group_id", group_id);
 				hm.put("p_dis_date", disDate);
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
-
-				writeToClient(request, response, reportCName, pdfFileName);
-			} else if (request.getParameter("sale_id") != null) {
-				String saleId = request.getParameter("sale_id");
-				logger.debug("sale_id:"+saleId);
-				String reportName = "rptDistributeReport";
-				final String reportCName = URLEncoder.encode("出貨單", "UTF-8");;
 				
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-
-				hm = new HashMap<String, Object>();
-				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
-				hm.put("p_sale_id", saleId);
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
-
-				writeToClient(request, response, reportCName, pdfFileName);
-			} else if (request.getParameter("pick_id") != null) {
-				String pickId = request.getParameter("pick_id");
-				logger.debug("pick_id:"+pickId);
-				String reportName = "rptPick";
-				final String reportCName = URLEncoder.encode("揀貨單", "UTF-8");;
-				String reportDetailName = "rptPickDetail";
-
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
-				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				
-				hm = new HashMap<String, Object>();
-				hm.put("p_group_id", request.getSession().getAttribute("group_id"));
-				hm.put("p_pick_id", pickId);
-				
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
-
-				writeToClient(request, response, reportCName, pdfFileName);
-			} else if (request.getParameter("pick_no") != null) {
-				String pickNo = request.getParameter("pick_no");
-				logger.debug("pick_no:"+pickNo);
-				final String reportName = "rptShip";
-				final String reportCName = URLEncoder.encode("出貨單", "UTF-8");;
-				String reportDetailName = "rptShipDetail";
-
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
-				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				
-				hm = new HashMap<String, Object>();
-				hm.put("p_group_id",request.getSession().getAttribute("group_id"));
-				hm.put("p_pick_no", pickNo);
-				
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
-
-				writeToClient(request, response, reportCName, pdfFileName);
-			}else if (request.getParameter("date") != null) {
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if (request.getParameter("date") != null) {
 				String date = request.getParameter("date");
 				logger.debug("date:"+date);
-				Connection con = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
 				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-					pstmt = con.prepareStatement(
+					pstmt = connection.prepareStatement(
 							"select count(sale_id) n from tb_sale where dis_date = ? and group_id = ?");
 					pstmt.setString(1, date);
-					pstmt.setString(2, request.getSession().getAttribute("group_id").toString());
+					pstmt.setString(2, group_id);
 					rs = pstmt.executeQuery();
 					while (rs.next()) {
 						response.getWriter().write(rs.getString("n"));
 					}
 				} catch (SQLException se) {
 					System.out.println("ERROR WITH: " + se);
-				} catch (ClassNotFoundException cnfe) {
-					throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 				}
+			} else if (request.getParameter("sale_id") != null) {
+				String saleId = request.getParameter("sale_id");
+				logger.debug("sale_id:"+saleId);
+				
+				final String reportName = "rptDistributeReport";
+				final String exportName = "出貨單";
+
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_sale_id", saleId);
+				
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if (request.getParameter("pick_id") != null) {
+				String pickId = request.getParameter("pick_id");
+				logger.debug("pick_id:"+pickId);
+				
+				final String reportName = "rptPick";
+				final String exportName = "揀貨單";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_pick_id", pickId);				
+				
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genJaserFile(setMyFile("rptPickDetail", ""));
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if (request.getParameter("pick_no") != null) {
+				String pickNo = request.getParameter("pick_no");
+				logger.debug("pick_no:"+pickNo);
+				final String reportName = "rptShip";
+				final String exportName = "出貨單";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id",group_id);
+				hm.put("p_pick_no", pickNo);
+				
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genJaserFile(setMyFile("rptShipDetail", ""));
+				genJaserFile(setMyFile("rptShipSubDetail", ""));
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
 			} else if ("ship_report".equals(request.getParameter("type"))) {
 				logger.debug("type:"+request.getParameter("type"));
 				String address = request.getParameter("address");
 				String order_no = request.getParameter("order_no");
 				String modeltype = request.getParameter("modeltype");
-				String reportName ="";
-				String reportCName = "";
+				String reportName = "";
+				String exportName = "";
 
 				EgsApi egsApi = new EgsApi();
 				String suda7 = egsApi.getQuerySuda7(address);
@@ -191,140 +166,92 @@ public class Report extends HttpServlet {
 				logger.debug("address:"+address);
 				logger.debug("suda7:"+suda7);
 				logger.debug("eGSNum:"+eGSNum);
-				logger.debug("group_id:"+request.getSession().getAttribute("group_id").toString());
+				logger.debug("group_id:"+group_id);
 				logger.debug("order_no:"+order_no);
 				logger.debug("modeltype:"+modeltype);
 
-				if("a4_2".equals(modeltype)){
+				if ("a4_2".equals(modeltype)) {
 					reportName = "shipReportA4_2";
-					reportCName = URLEncoder.encode("黑貓二模", "UTF-8");
-				}else if("a4_3".equals(modeltype)){
+					exportName = "黑貓二模";
+				} else if ("a4_3".equals(modeltype)) {
 					reportName = "shipReportA4_3";
-					reportCName = URLEncoder.encode("黑貓模", "UTF-8");
-				}else{
+					exportName = "黑貓三模";
+				} else {
 					return;
 				}
 
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-
 				hm = new HashMap<String, Object>();
-				hm.put("p_group_id", request.getSession().getAttribute("group_id").toString());
+				hm.put("p_group_id", group_id);
 				hm.put("p_order_no", order_no);
 				hm.put("p_suda7", suda7);
 				hm.put("p_egs_num", eGSNum);
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 				
-				writeToClient(request, response, reportCName, pdfFileName);
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
 			} else if ("reportEzcat".equals(request.getParameter("type"))) {
 				logger.debug("type:"+request.getParameter("type"));
 				String track_list = request.getParameter("track_list");
 				String modeltype = request.getParameter("modeltype");
-				String reportName ="";
-				String reportCName = "";
+				String reportName = "";
+				String exportName = "";
 				
-				logger.debug("group_id:"+request.getSession().getAttribute("group_id").toString());
+				logger.debug("group_id:"+group_id);
 				logger.debug("track_list:"+track_list);
 				logger.debug("modeltype:"+modeltype);
 
-				if("ezcat".equals(modeltype)){
+				if ("ezcat".equals(modeltype)) {
 					reportName = "shipReport_ezcat";
-					reportCName = URLEncoder.encode("黑貓", "UTF-8");
-				}else if("ezcat_a4_2".equals(modeltype)){
+					exportName = "黑貓";
+				} else if ("ezcat_a4_2".equals(modeltype)) {
 					reportName = "shipReport_ezcat_A4_2";
-					reportCName = URLEncoder.encode("黑貓二模", "UTF-8");
-				}else if("ezcat_a4_2_pick".equals(modeltype)){
+					exportName = "黑貓二模";
+				} else if ("ezcat_a4_2_pick".equals(modeltype)) {
 					reportName = "shipReport_ezcat_A4_2_pick";
-					reportCName = URLEncoder.encode("黑貓二模含揀貨單", "UTF-8");
-				}else{
+					exportName = "黑貓二模含揀貨單";
+				} else {
 					return;
 				}
-
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-
-				hm = new HashMap<String, Object>();
-				hm.put("p_group_id", request.getSession().getAttribute("group_id").toString());
-				hm.put("p_tracking_number_list", track_list);
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
 				
-				writeToClient(request, response, reportCName, pdfFileName);
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_tracking_number_list", track_list);
+
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genJaserFile(setMyFile("shipReport_ezcat_template", ""));
+				genJaserFile(setMyFile("shipReportA4_2_pick_main", ""));
+				genJaserFile(setMyFile("shipReportA4_2_pick_delivery", ""));
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
 			} else if ("rptInvManual".equals(request.getParameter("action"))){
 				logger.debug("action:"+request.getParameter("action"));
 				
 				final String reportName = "rptInvoice";
-				final String reportCName = URLEncoder.encode("B2C發票", "UTF-8");
-				String reportDetailName = "rptInvoiceDetail";
-
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String jrxmlFileDetailName = reportSourcePath + "/" + reportDetailName + ".jrxml";
-				String jasperFileDetailName = reportGeneratePath + "/" + reportDetailName + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportCName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
+				final String exportName = "B2B發票";
 				
 				String ids=request.getParameter("ids");
-				String group_id=(String) request.getSession().getAttribute("group_id");
 
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-				JasperCompileManager.compileReportToFile(jrxmlFileDetailName, jasperFileDetailName);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id",group_id);
 				hm.put("p_inv_manual_ids",ids);
 				logger.debug("ids:"+ids);
 				
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
-
-				writeToClient(request, response, reportCName, pdfFileName);
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genJaserFile(setMyFile("rptInvoiceDetail", ""));
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
 			} else if ("rptSfShip".equals(request.getParameter("action"))) {
 				logger.debug("action:" + request.getParameter("action"));
 
 				final String reportName = "rptSfShip";
-				final String reportCName = URLEncoder.encode("順豐整合", "UTF-8");
-				String reportDetailName1 = "rptShipDetailForSF";
-				String reportDetailName2 = "rptShipSfDetail";
-				String reportDetailName3 = "rptShipSfStatus";
-
-				String jrxmlFileName = reportSourcePath + "/" + reportName + ".jrxml";
-				String jasperFileName = reportGeneratePath + "/" + reportName + ".jasper";
-				String jrxmlFileDetailName1 = reportSourcePath + "/" + reportDetailName1 + ".jrxml";
-				String jasperFileDetailName1 = reportGeneratePath + "/" + reportDetailName1 + ".jasper";
-				String jrxmlFileDetailName2 = reportSourcePath + "/" + reportDetailName2 + ".jrxml";
-				String jasperFileDetailName2 = reportGeneratePath + "/" + reportDetailName2 + ".jasper";
-				String jrxmlFileDetailName3 = reportSourcePath + "/" + reportDetailName3 + ".jrxml";
-				String jasperFileDetailName3 = reportGeneratePath + "/" + reportDetailName3 + ".jasper";
-				String pdfFileName = reportGeneratePath + "/" + reportName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf";
-
+				final String exportName = "順豐整合";
+				
 				String order_no = request.getParameter("order_no");
 				String start_date = request.getParameter("start_date");
 				String end_date = request.getParameter("end_date");
-				String group_id = (String) request.getSession().getAttribute("group_id");
-
-				JasperCompileManager.compileReportToFile(jrxmlFileName, jasperFileName);
-				JasperCompileManager.compileReportToFile(jrxmlFileDetailName1, jasperFileDetailName1);
-				JasperCompileManager.compileReportToFile(jrxmlFileDetailName2, jasperFileDetailName2);
-				JasperCompileManager.compileReportToFile(jrxmlFileDetailName3, jasperFileDetailName3);
-
-				Class.forName("com.mysql.jdbc.Driver");
-				Connection conn = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 
 				hm = new HashMap<String, Object>();
 				hm.put("p_group_id", group_id);
@@ -337,35 +264,59 @@ public class Report extends HttpServlet {
 				logger.debug("p_start_date:" + start_date);
 				logger.debug("p_end_date:" + end_date);
 
-				JasperPrint jprint = (JasperPrint) JasperFillManager.fillReport(jasperFileName, hm, conn);
-				JasperExportManager.exportReportToPdfFile(jprint, pdfFileName);
-
-				writeToClient(request, response, reportCName, pdfFileName);
+				MyFile myFile = setMyFile(reportName, exportName);
+				genJaserFile(myFile);
+				genJaserFile(setMyFile("rptShipDetailForSF", ""));
+				genJaserFile(setMyFile("rptShipSfDetail", ""));
+				genJaserFile(setMyFile("rptShipSfStatus", ""));
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
 			}
 
 		} catch (Exception e) {
 			logger.error("Exception:" + e);
 		}
 	}
-	
+		
 	private static String genDateFormat(String format){
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
 		return sdf.format(new Date());
 	}
 	
-	private static void writeToClient(HttpServletRequest request, HttpServletResponse response, String reportCName, String pdfFileName) throws IOException{
+	private static void genJaserFile(MyFile myFile) throws JRException {
+		JasperCompileManager.compileReportToFile(myFile.getJrxml(), myFile.getJasper());
+	}
+	
+	private JasperPrint fillReport(MyFile myFile, HashMap<String, Object> hm) throws JRException {
+		return JasperFillManager.fillReport(myFile.getJasper(), hm, connection);
+	}
+	
+	private void genPdfFile(JasperPrint jasperPrint, MyFile myFile) throws JRException{
+		JasperExportManager.exportReportToPdfFile(jasperPrint, myFile.getPdf());
+	}
+	
+	private MyFile setMyFile(String reportName, String exportName) throws UnsupportedEncodingException {
+		MyFile myFile = new MyFile();
+		myFile.setJrxml(sourcePath + "/" + reportName);
+		myFile.setJasper(generatePath + "/" + reportName);
+		myFile.setPdf(generatePath + "/" + reportName);
+		myFile.setExportName(exportName);
+		return myFile;
+	}
+	
+	private static void writeToClient(HttpServletRequest request, HttpServletResponse response, MyFile myFile) throws IOException{
 		String browserType = request.getHeader("User-Agent");
 		logger.debug("User-Agent:" + browserType);
 		response.setContentType("APPLICATION/PDF; charset=UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
 		if (browserType.contains("IE")||browserType.contains("Chrome")){
-			response.setHeader("Content-Disposition", "inline;Filename=\"" + reportCName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "\"");
+			response.setHeader("Content-Disposition", "inline;Filename=\"" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "\"");
 		} else if(browserType.contains("Firefox")){
-			response.setHeader("Content-Disposition", "inline;Filename*=UTF-8''" + reportCName + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "");
+			response.setHeader("Content-Disposition", "inline;Filename*=UTF-8''" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "");
 		}
 
-		File file = new File(pdfFileName);
+		File file = new File(myFile.getPdf());
 		FileInputStream fileIn = new FileInputStream(file);
 		ServletOutputStream out = response.getOutputStream();
 		byte[] outputByte = new byte[4096];
@@ -375,5 +326,37 @@ public class Report extends HttpServlet {
 		fileIn.close();
 		out.flush();
 		out.close();
+	}
+	
+	class MyFile {
+		private String jrxml;
+		private String jasper;
+		private String pdf;
+		private String exportName;
+		
+		public String getJrxml() {
+			return jrxml;
+		}
+		public void setJrxml(String jrxml) {
+			this.jrxml = jrxml.concat(".jrxml");
+		}
+		public String getJasper() {
+			return jasper;
+		}
+		public void setJasper(String jasper) {
+			this.jasper = jasper.concat(".jasper");
+		}
+		public String getPdf() {
+			return pdf;
+		}
+		public void setPdf(String pdf) {
+			this.pdf = pdf.concat("_").concat( genDateFormat("yyyyMMddHHmmss") ).concat(".pdf");
+		}
+		public String getExportName() {
+			return exportName;
+		}
+		public void setExportName(String exportName) throws UnsupportedEncodingException {
+			this.exportName = URLEncoder.encode(exportName, "UTF-8");
+		}
 	}
 }
