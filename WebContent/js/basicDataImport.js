@@ -57,7 +57,7 @@ function sendFileToServer(formData,status){
 			    		} else if (type == "contrast") {
 			    			spec = "平台名稱/平台用自訂商品ID<br/>";
 			    		} else if (type == "purchase") {
-			    			spec = "自訂商品ID<br/>";
+			    			spec = "供應商名稱:採購日期<br/>";
 			    		} 
 			    		var dup = "";
 			    		if (typeof json_obj.duplicate != "undefined" && json_obj.duplicate != "") {
