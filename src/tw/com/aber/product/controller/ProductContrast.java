@@ -385,7 +385,7 @@ public class ProductContrast extends HttpServlet {
 		private static final String sp_get_product_contrast = "call sp_get_product_contrast(?,?,?,?,?)";
 		private static final String sp_get_product_product_list = "call sp_get_product_product_list(?)";
 		private static final String sp_get_package_package_list = "call sp_get_package_package_list(?)";
-		private static final String sp_check_c_product_id_platform_duplicate = "call sp_check_c_product_id_platform_duplicate(?,?,?,?,?)";
+		private static final String sp_check_c_product_id_platform_duplicate = "call sp_check_c_product_id_platform_duplicate(?,?,?,?)";
 		
 
 		@Override
@@ -917,9 +917,8 @@ public class ProductContrast extends HttpServlet {
 
 				pstmt.setString(1, paramVO.getGroupId());
 				pstmt.setString(2, paramVO.getPlatformId());
-				pstmt.setString(3, paramVO.getProductNamePlatform());
-				pstmt.setString(4, paramVO.getProduct_spec_platform());
-				pstmt.setString(5, paramVO.getC_product_id_platform());
+				pstmt.setString(3, paramVO.getContrastId());
+				pstmt.setString(4, paramVO.getC_product_id_platform());
 				rs = pstmt.executeQuery();
 				if(rs.next()) {
 					isSuccess=rs.getBoolean("isSuccess");

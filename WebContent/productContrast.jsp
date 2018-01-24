@@ -456,7 +456,7 @@
 	                                success: function(data) {
 	                                	console.log(data);
 	                                	var json_obj = $.parseJSON(data);
-	                                    if (json_obj.error.length > 0) {
+	                                    if (json_obj.error != "") {
 		                                    dialogMsg('警告',json_obj.error);
 	                                        return;
 	                                    }
@@ -467,7 +467,7 @@
 	                                    $("#dialog-form-post-insert").trigger("reset");
 	                                    insert_dialog.dialog("close");
 	                                    initc_product_id_platform();
-	                                    dialogMsg('警告',json_obj.error);
+	                                    dialogMsg('提示', json_obj.obj);
 	                                }
 	                            });
 	                        }
