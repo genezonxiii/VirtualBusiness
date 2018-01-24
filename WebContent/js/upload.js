@@ -435,10 +435,6 @@ function fileUpload( fileBuffer, obj){
 	}else{
 		accept = $('input[name="type-radio-group"]:checked').attr('restrict').split(',');
 	}
-
-	$('input[name="type-radio-group"]').each(function() {
-        $(this).prop("checked", false);
-    });
 	
 	//判斷副檔名是否允許
 	for (var i = 0; i < fileBuffer.length; i++){
