@@ -318,17 +318,17 @@ input.error[type=radio] + label {
 											<th>可轉銷單</th>
 											<th>銷貨單號</th>
 											<th>訂單號</th>
-											<th style="min-width: 120px">商品 ID/名稱</th>
+											<th>商品 ID/名稱</th>
 											<th>數量</th>
-											<th style="min-width: 60px">銷貨金額</th>
+											<th>銷貨金額</th>
 											<th>銷貨對象</th>
-											<th style="min-width: 110px">發票</th>
+											<th>發票</th>
 											<th>轉單日</th>
 											<th>銷/出貨日期</th>
 											<th>上傳日期</th>
 											<th>銷售平台</th>
-											<th style="background-image: none !important;">註</th>
-											<th style="background-image: none !important;">功能</th>
+											<th>註</th>
+											<th>功能</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -459,14 +459,6 @@ input.error[type=radio] + label {
 	            return result;
 	        }
 	    }, {
-	        //銷貨對象
-	        targets: 7,
-	        render: function(data, type, row) {
-
-	            var result = row.customer_id == null || row.customer_id == '' ? "" : customer_menu[row.customer_id];
-	            return result;
-	        }
-	    }, {
 	        //發票 + 發票日期
 	        targets: 8,
 	        render: function(data, type, row) {
@@ -534,60 +526,50 @@ input.error[type=radio] + label {
             "data": null,
             "defaultContent": ""
         },{
+            "data": null,
+            "defaultContent": ""
+        },{
             "data": "seq_no",
-            "width": "10%",
             "defaultContent": ""
         },{
             "data": "order_no",
-            "width": "10%",
             "defaultContent": ""
         },{
             "data": null,
-            "width": "20%",
             "defaultContent": ""
         },{
             "data": "quantity",
-            "width": "5%",
-            "defaultContent": ""
+            "defaultContent": "",
+            orderable: false
         },{
             "data": "price",
-            "width": "5%",
-            "defaultContent": ""
+            "defaultContent": "",
+            orderable: false
+        },{
+            "data": "name",
+            "defaultContent": "",
+            orderable: false
         },{
             "data": null,
-            "width": "10%",
-            "defaultContent": ""
-        },{
-            "data": "turn_flag",
-            "width": "10%",
-            "defaultContent": ""
-        },{
-            "data": "invoice",
-            "width": "10%",
             "defaultContent": ""
         },{
             "data": "trans_list_date",
-            "width": "10%",
             "defaultContent": ""
         },{
             "data": "sale_date",
-            "width": "10%",
             "defaultContent": ""
         },{
             "data": "upload_date",
-            "width": "10%",
             "defaultContent": ""
         },{
             "data": "order_source",
-            "width": "5%",
             "defaultContent": ""
         },{
             "data": "memo",
-            "width": "10%",
-            "defaultContent": ""
+            "defaultContent": "",
+            orderable: false
         },{
             "data": null,
-            "width": "10%",
             "defaultContent": ""
         }];
 
@@ -597,7 +579,9 @@ input.error[type=radio] + label {
 	        pageLength: 20,
 	        autoWidth: false,
 	        scrollY: "250px",
-	        destroy: true,
+	        scrollCollapse: true,
+	        scrollX: true,
+			destroy: true,
 	        language: {
 	            "url": "js/dataTables_zh-tw.txt",
 	            "emptyTable": "查無資料"
