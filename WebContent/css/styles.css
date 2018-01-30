@@ -958,8 +958,8 @@ table.dialog-table td{
 }
 table.form-table{
 	border-collapse: separate;
-	border-spacing: 10px 20px;
-	margin-right: 30px;
+	border-spacing: 6px 6px;
+	margin-right: 6px;
 	font-family: "微軟正黑體", "Microsoft JhengHei", 'LiHei Pro', Arial, Helvetica, sans-serif, \5FAE\8EDF\6B63\9ED1\9AD4,\65B0\7D30\660E\9AD4;
 }
 table.form-table tr td:nth-child(2n+1) {

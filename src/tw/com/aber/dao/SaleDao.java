@@ -24,6 +24,7 @@ import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.InvoiceTrackVO;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.SaleDetailVO;
+import tw.com.aber.vo.SaleExtVO;
 import tw.com.aber.vo.SaleVO;
 
 public class SaleDao {
@@ -36,9 +37,9 @@ public class SaleDao {
 	private static final String sp_select_sale_by_upload_date = "call sp_select_sale_by_upload_date(?,?,?)";
 	private static final String sp_select_sale_bydisdate = "call sp_select_sale_bydisdate(?,?,?)";
 	private static final String sp_get_sale_newseqno = "call sp_get_sale_seqno(?)";
-	private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String sp_del_sale = "call sp_del_sale (?,?)";
-	private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 	private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
 	private static final String sp_insert_saleDetail = "call sp_insert_saleDetail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -88,8 +89,18 @@ public class SaleDao {
 			pstmt.setString(18, saleVO.getOrder_source());
 			pstmt.setString(19, saleVO.getContrast_type());
 			pstmt.setString(20, saleVO.getDeliveryway());
-			pstmt.setFloat(21, saleVO.getTotal_amt());
-
+			pstmt.setFloat(21, saleVO.getSaleExtVO().getTotalAmt());
+			pstmt.setString(22, saleVO.getSaleExtVO().getDeliverName());
+			pstmt.setString(23, saleVO.getSaleExtVO().getDeliverTo());
+			pstmt.setString(24, saleVO.getSaleExtVO().getDeliverStore());
+			pstmt.setString(25, saleVO.getSaleExtVO().getDeliverNote());
+			pstmt.setString(26, saleVO.getSaleExtVO().getDeliverPhone());
+			pstmt.setString(27, saleVO.getSaleExtVO().getDeliverMobile());
+			pstmt.setString(28, saleVO.getSaleExtVO().getPayKind());
+			pstmt.setString(29, saleVO.getSaleExtVO().getPayStatus());
+			pstmt.setString(30, saleVO.getSaleExtVO().getInvName());
+			pstmt.setString(31, saleVO.getSaleExtVO().getInvTo());
+			
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -130,7 +141,17 @@ public class SaleDao {
 			pstmt.setString(19, saleVO.getOrder_source());
 			pstmt.setString(20, saleVO.getContrast_type());
 			pstmt.setString(21, saleVO.getDeliveryway());
-			pstmt.setFloat(22, saleVO.getTotal_amt());
+			pstmt.setFloat(22, saleVO.getSaleExtVO().getTotalAmt());
+			pstmt.setString(23, saleVO.getSaleExtVO().getDeliverName());
+			pstmt.setString(24, saleVO.getSaleExtVO().getDeliverTo());
+			pstmt.setString(25, saleVO.getSaleExtVO().getDeliverStore());
+			pstmt.setString(26, saleVO.getSaleExtVO().getDeliverNote());
+			pstmt.setString(27, saleVO.getSaleExtVO().getDeliverPhone());
+			pstmt.setString(28, saleVO.getSaleExtVO().getDeliverMobile());
+			pstmt.setString(29, saleVO.getSaleExtVO().getPayKind());
+			pstmt.setString(30, saleVO.getSaleExtVO().getPayStatus());
+			pstmt.setString(31, saleVO.getSaleExtVO().getInvName());
+			pstmt.setString(32, saleVO.getSaleExtVO().getInvTo());
 
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
@@ -246,8 +267,23 @@ public class SaleDao {
 				saleVO.setOrder_source(rs.getString("order_source"));
 				saleVO.setCustomer_id(rs.getString("customer_id"));
 				saleVO.setName(rs.getString("name"));
+				saleVO.setUpload_date(rs.getDate("upload_date"));
 				saleVO.setContrast_type(rs.getString("contrast_type"));
 				saleVO.setTurnFlag(rs.getBoolean("turn_flag"));
+				
+				SaleExtVO saleExtVO = new SaleExtVO();
+				saleExtVO.setTotalAmt(rs.getFloat("total_amt"));
+				saleExtVO.setDeliverName(rs.getString("deliver_name"));
+				saleExtVO.setDeliverTo(rs.getString("deliver_to"));
+				saleExtVO.setDeliverStore(rs.getString("deliver_store"));
+				saleExtVO.setDeliverNote(rs.getString("deliver_note"));
+				saleExtVO.setDeliverPhone(rs.getString("deliver_phone"));
+				saleExtVO.setDeliverMobile(rs.getString("deliver_mobile"));
+				saleExtVO.setPayKind(rs.getString("pay_kind"));
+				saleExtVO.setPayStatus(rs.getString("pay_status"));
+				saleExtVO.setInvName(rs.getString("inv_name"));
+				saleExtVO.setInvTo(rs.getString("inv_to"));
+				saleVO.setSaleExtVO(saleExtVO);
 				
 				list.add(saleVO); // Store the row in the list
 			}
@@ -287,6 +323,7 @@ public class SaleDao {
 				saleVO.setSale_id(rs.getString("sale_id"));
 				saleVO.setSeq_no(rs.getString("seq_no"));
 				saleVO.setOrder_no(rs.getString("order_no"));
+				saleVO.setProduct_id(rs.getString("product_id"));
 				saleVO.setProduct_name(rs.getString("product_name"));
 				saleVO.setC_product_id(rs.getString("c_product_id"));
 				saleVO.setQuantity(rs.getInt("quantity"));
@@ -303,6 +340,20 @@ public class SaleDao {
 				saleVO.setUpload_date(rs.getDate("upload_date"));
 				saleVO.setContrast_type(rs.getString("contrast_type"));
 				saleVO.setTurnFlag(rs.getBoolean("turn_flag"));
+				
+				SaleExtVO saleExtVO = new SaleExtVO();
+				saleExtVO.setTotalAmt(rs.getFloat("total_amt"));
+				saleExtVO.setDeliverName(rs.getString("deliver_name"));
+				saleExtVO.setDeliverTo(rs.getString("deliver_to"));
+				saleExtVO.setDeliverStore(rs.getString("deliver_store"));
+				saleExtVO.setDeliverNote(rs.getString("deliver_note"));
+				saleExtVO.setDeliverPhone(rs.getString("deliver_phone"));
+				saleExtVO.setDeliverMobile(rs.getString("deliver_mobile"));
+				saleExtVO.setPayKind(rs.getString("pay_kind"));
+				saleExtVO.setPayStatus(rs.getString("pay_status"));
+				saleExtVO.setInvName(rs.getString("inv_name"));
+				saleExtVO.setInvTo(rs.getString("inv_to"));
+				saleVO.setSaleExtVO(saleExtVO);
 				
 				list.add(saleVO);
 			}
@@ -341,6 +392,7 @@ public class SaleDao {
 				saleVO.setSale_id(rs.getString("sale_id"));
 				saleVO.setSeq_no(rs.getString("seq_no"));
 				saleVO.setOrder_no(rs.getString("order_no"));
+				saleVO.setProduct_id(rs.getString("product_id"));
 				saleVO.setProduct_name(rs.getString("product_name"));
 				saleVO.setC_product_id(rs.getString("c_product_id"));
 				saleVO.setQuantity(rs.getInt("quantity"));
@@ -348,15 +400,29 @@ public class SaleDao {
 				saleVO.setInvoice(rs.getString("invoice"));
 				saleVO.setInvoice_date(rs.getDate("invoice_date"));
 				saleVO.setTrans_list_date(rs.getDate("trans_list_date"));
-				saleVO.setUpload_date(rs.getDate("upload_date"));
 				saleVO.setDis_date(rs.getDate("dis_date"));
 				saleVO.setMemo(rs.getString("memo"));
 				saleVO.setSale_date(rs.getDate("sale_date"));
 				saleVO.setOrder_source(rs.getString("order_source"));
 				saleVO.setCustomer_id(rs.getString("customer_id"));
 				saleVO.setName(rs.getString("name"));
+				saleVO.setUpload_date(rs.getDate("upload_date"));
 				saleVO.setContrast_type(rs.getString("contrast_type"));
 				saleVO.setTurnFlag(rs.getBoolean("turn_flag"));
+				
+				SaleExtVO saleExtVO = new SaleExtVO();
+				saleExtVO.setTotalAmt(rs.getFloat("total_amt"));
+				saleExtVO.setDeliverName(rs.getString("deliver_name"));
+				saleExtVO.setDeliverTo(rs.getString("deliver_to"));
+				saleExtVO.setDeliverStore(rs.getString("deliver_store"));
+				saleExtVO.setDeliverNote(rs.getString("deliver_note"));
+				saleExtVO.setDeliverPhone(rs.getString("deliver_phone"));
+				saleExtVO.setDeliverMobile(rs.getString("deliver_mobile"));
+				saleExtVO.setPayKind(rs.getString("pay_kind"));
+				saleExtVO.setPayStatus(rs.getString("pay_status"));
+				saleExtVO.setInvName(rs.getString("inv_name"));
+				saleExtVO.setInvTo(rs.getString("inv_to"));
+				saleVO.setSaleExtVO(saleExtVO);
 				
 				list.add(saleVO);
 			}

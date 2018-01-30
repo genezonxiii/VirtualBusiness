@@ -1,14 +1,7 @@
 package tw.com.aber.sale.controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +29,7 @@ import tw.com.aber.vo.InvoiceTrackVO;
 import tw.com.aber.vo.ProductVO;
 import tw.com.aber.vo.ResponseVO;
 import tw.com.aber.vo.SaleDetailVO;
+import tw.com.aber.vo.SaleExtVO;
 import tw.com.aber.vo.SaleVO;
 
 public class sale extends HttpServlet {
@@ -175,6 +169,17 @@ public class sale extends HttpServlet {
 				}
 
 				logger.debug("seq_no:".concat(seq_no));
+				
+				String deliverName = request.getParameter("deliver_name");
+				String deliverTo = request.getParameter("deliver_to");
+				String deliverStore = request.getParameter("deliver_store");
+				String deliverNote = request.getParameter("deliver_note");
+				String deliverPhone = request.getParameter("deliver_phone");
+				String deliverMobile = request.getParameter("deliver_mobile");
+				String payKind = request.getParameter("pay_kind");
+				String payStatus = request.getParameter("pay_status");
+				String invName = request.getParameter("inv_name");
+				String invTo = request.getParameter("inv_to");
 
 				SaleVO saleVO = new SaleVO();
 
@@ -198,7 +203,21 @@ public class sale extends HttpServlet {
 				saleVO.setOrder_source(order_source);
 				saleVO.setContrast_type(contrast_type);
 				saleVO.setDeliveryway(deliveryway);
-				saleVO.setTotal_amt(total_amt);
+				
+				SaleExtVO saleExtVO = new SaleExtVO();
+				
+				saleExtVO.setTotalAmt(total_amt);
+				saleExtVO.setDeliverName(deliverName);
+				saleExtVO.setDeliverTo(deliverTo);
+				saleExtVO.setDeliverStore(deliverStore);
+				saleExtVO.setDeliverNote(deliverNote);
+				saleExtVO.setDeliverPhone(deliverPhone);
+				saleExtVO.setDeliverMobile(deliverMobile);
+				saleExtVO.setPayKind(payKind);
+				saleExtVO.setPayStatus(payStatus);
+				saleExtVO.setInvName(invName);
+				saleExtVO.setInvTo(invTo);
+				saleVO.setSaleExtVO(saleExtVO);
 
 				logger.debug("order_no:".concat(order_no));
 				logger.debug("product_id:".concat(product_id));
@@ -216,7 +235,7 @@ public class sale extends HttpServlet {
 				logger.debug("order_source:".concat(order_source));
 				logger.debug("contrast_type:".concat(contrast_type));
 				logger.debug("deliveryway:".concat(deliveryway));
-				logger.debug("total_amt:".concat(total_amt.toString()));
+				logger.debug("SaleExtVO:".concat(saleExtVO.toString()));
 
 				saleService.addSale(saleVO);
 
@@ -257,6 +276,17 @@ public class sale extends HttpServlet {
 				String memo = request.getParameter("memo");
 				String order_source = request.getParameter("order_source");
 
+				String deliverName = request.getParameter("deliver_name");
+				String deliverTo = request.getParameter("deliver_to");
+				String deliverStore = request.getParameter("deliver_store");
+				String deliverNote = request.getParameter("deliver_note");
+				String deliverPhone = request.getParameter("deliver_phone");
+				String deliverMobile = request.getParameter("deliver_mobile");
+				String payKind = request.getParameter("pay_kind");
+				String payStatus = request.getParameter("pay_status");
+				String invName = request.getParameter("inv_name");
+				String invTo = request.getParameter("inv_to");
+				
 				SaleVO saleVO = new SaleVO();
 
 				saleVO.setSale_id(sale_id);
@@ -282,6 +312,21 @@ public class sale extends HttpServlet {
 				saleVO.setDeliveryway(deliveryway);
 				saleVO.setTotal_amt(total_amt);
 
+				SaleExtVO saleExtVO = new SaleExtVO();
+				
+				saleExtVO.setTotalAmt(total_amt);
+				saleExtVO.setDeliverName(deliverName);
+				saleExtVO.setDeliverTo(deliverTo);
+				saleExtVO.setDeliverStore(deliverStore);
+				saleExtVO.setDeliverNote(deliverNote);
+				saleExtVO.setDeliverPhone(deliverPhone);
+				saleExtVO.setDeliverMobile(deliverMobile);
+				saleExtVO.setPayKind(payKind);
+				saleExtVO.setPayStatus(payStatus);
+				saleExtVO.setInvName(invName);
+				saleExtVO.setInvTo(invTo);
+				saleVO.setSaleExtVO(saleExtVO);
+				
 				logger.debug("sale_id:".concat(sale_id));
 				logger.debug("order_no:".concat(order_no));
 				logger.debug("product_id:".concat(product_id));
@@ -300,7 +345,8 @@ public class sale extends HttpServlet {
 				logger.debug("contrast_type:".concat(contrast_type));
 				logger.debug("deliveryway:".concat(deliveryway));
 				logger.debug("total_amt:".concat(total_amt.toString()));
-
+				logger.debug("SaleExtVO:".concat(saleExtVO.toString()));
+				
 				saleService.updateSale(saleVO);
 
 				saleList = saleService.getSearchAllDB(group_id);

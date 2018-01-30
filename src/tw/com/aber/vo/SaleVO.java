@@ -35,6 +35,7 @@ public class SaleVO implements java.io.Serializable {
 	private Time invoice_time;
 	private String contrast_type;
 	private Float total_amt; 
+	private SaleExtVO saleExtVO;
 
 	public String getMessage() {
 		return message;
@@ -89,7 +90,7 @@ public class SaleVO implements java.io.Serializable {
 	}
 
 	public void setProduct_id(String product_id) {
-		this.product_id = product_id;
+		this.product_id = product_id == null?"":product_id;
 	}
 
 	public String getProduct_name() {
@@ -260,12 +261,19 @@ public class SaleVO implements java.io.Serializable {
 		this.contrast_type = contrast_type;
 	}
 
+	public SaleExtVO getSaleExtVO() {
+		return saleExtVO;
+	}
+
+	public void setSaleExtVO(SaleExtVO saleExtVO) {
+		this.saleExtVO = saleExtVO;
+	}
+
 	public Float getTotal_amt() {
 		return total_amt;
 	}
 
 	public void setTotal_amt(Float total_amt) {
 		this.total_amt = total_amt;
-	}
-	
+	}	
 }

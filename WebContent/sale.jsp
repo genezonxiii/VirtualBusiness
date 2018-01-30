@@ -91,14 +91,9 @@ input.error[type=radio] + label {
 												placeholder="輸入單價"></td>
 										</tr>
 										<tr>
-											<td>總金額：</td>
+											<td>小計：</td>
 											<td><input type="text" id="update_product_price"
 												name="update_product_price" disabled></td>
-										</tr>
-										<tr>
-											<td>訂單總金額：</td>
-											<td><input type="text" id="update_total_amt"
-												name="total_amt" value="0"></td>
 										</tr>
 										<tr  style="display:none;">
 											<td>發票號碼：</td>
@@ -131,6 +126,46 @@ input.error[type=radio] + label {
 											<td>
 												<input type="text" name="memo" placeholder="輸入備註說明">
 											</td>
+										</tr>
+										<tr>
+											<td colspan="4">
+												<font color=red style="padding-left: 26px">※若訂單有多筆明細，請於訂單的最後一筆明細，完整填入下列資料。</font>
+											</td>
+										</tr>
+										<tr>
+											<td>訂單總金額：</td>
+											<td><input type="text" id="update_total_amt"
+												name="total_amt" value="0"></td>
+										</tr>
+										<tr>
+											<td>收件人姓名：</td>
+											<td><input type="text" name="deliver_name"></td>
+											<td>收件人地址：</td>
+											<td><input type="text" name="deliver_to"></td>
+										</tr>
+										<tr>
+											<td>超商門市名稱：</td>
+											<td><input type="text" name="deliver_store"></td>
+											<td>物流備註：</td>
+											<td><input type="text" name="deliver_note"></td>
+										</tr>
+										<tr>
+											<td>收件人電話：</td>
+											<td><input type="text" name="deliver_phone"></td>
+											<td>收件人手機：</td>
+											<td><input type="text" name="deliver_mobile"></td>
+										</tr>
+										<tr>
+											<td>付款方式：</td>
+											<td><input type="text" name="pay_kind"></td>
+											<td>付款狀態：</td>
+											<td><input type="text" name="pay_status"></td>
+										</tr>
+										<tr>
+											<td>發票收件人姓名：</td>
+											<td><input type="text" name="inv_name"></td>
+											<td>發票收件人地址：</td>
+											<td><input type="text" name="inv_to"></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -217,11 +252,6 @@ input.error[type=radio] + label {
 											<td><input type="hidden" id="insert_product_price"
 												name="insert_product_price" placeholder="系統自動產生金額" disabled></td>
 										</tr>
-										<tr>
-											<td>訂單總金額：</td>
-											<td><input type="text" id="insert_total_amt"
-												name="total_amt" value="0"></td>
-										</tr>
 										<tr style="display:none;">
 											<td>發票號碼：</td>
 											<td><input type="text" name="invoice"
@@ -248,6 +278,46 @@ input.error[type=radio] + label {
 											<td style="display: none"><input type="text"
 												name="dis_date" placeholder="輸入配送日" class="input-date"
 												value=""></td>
+										</tr>
+										<tr>
+											<td colspan="4">
+												<font color=red style="padding-left: 26px">※若訂單有多筆明細，請於訂單的最後一筆明細，完整填入下列資料。</font>
+											</td>
+										</tr>
+										<tr>
+											<td>訂單總金額：</td>
+											<td><input type="text" id="insert_total_amt"
+												name="total_amt" value="0"></td>
+										</tr>
+										<tr>
+											<td>收件人姓名：</td>
+											<td><input type="text" name="deliver_name"></td>
+											<td>收件人地址：</td>
+											<td><input type="text" name="deliver_to"></td>
+										</tr>
+										<tr>
+											<td>超商門市名稱：</td>
+											<td><input type="text" name="deliver_store"></td>
+											<td>物流備註：</td>
+											<td><input type="text" name="deliver_note"></td>
+										</tr>
+										<tr>
+											<td>收件人電話：</td>
+											<td><input type="text" name="deliver_phone"></td>
+											<td>收件人手機：</td>
+											<td><input type="text" name="deliver_mobile"></td>
+										</tr>
+										<tr>
+											<td>付款方式：</td>
+											<td><input type="text" name="pay_kind"></td>
+											<td>付款狀態：</td>
+											<td><input type="text" name="pay_status"></td>
+										</tr>
+										<tr>
+											<td>發票收件人姓名：</td>
+											<td><input type="text" name="inv_name"></td>
+											<td>發票收件人地址：</td>
+											<td><input type="text" name="inv_to"></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -402,7 +472,6 @@ input.error[type=radio] + label {
 	    });
 	    warning_msg("---讀取中請稍候---");
 
-	    console.log('ajax start');
 	    var oColumnDefs = [{
 	        targets: 0,
 	        searchable: false,
@@ -959,14 +1028,6 @@ input.error[type=radio] + label {
 	        height: "auto",
 	        width: "auto",
 	        modal: true,
-	        // 				show : {
-	        // 					effect : "blind",
-	        // 					duration : 300
-	        // 				},
-	        // 				hide : {
-	        // 					effect : "fade",
-	        // 					duration : 300
-	        // 				},
 	        buttons: [{
 	                id: "insert",
 	                text: "新增",
@@ -1006,7 +1067,17 @@ input.error[type=radio] + label {
 	                            order_source: $insert.find("input[name='order_source']").val(),
 	                            contrast_type: $("input[name='radio-group-type']:checked").val(),
 	                            deliveryway: '1',
-	                            total_amt: $insert.find("input[name='total_amt']").val()
+	                            total_amt: $insert.find("input[name='total_amt']").val(),
+	                            deliver_name: $insert.find("input[name='deliver_name']").val(),
+	                            deliver_to: $insert.find("input[name='deliver_to']").val(),
+	                            deliver_store: $insert.find("input[name='deliver_store']").val(),
+	                            deliver_note: $insert.find("input[name='deliver_note']").val(),
+	                            deliver_phone: $insert.find("input[name='deliver_phone']").val(),
+	                            deliver_mobile: $insert.find("input[name='deliver_mobile']").val(),
+	                            pay_kind: $insert.find("input[name='pay_kind']").val(),
+	                            pay_status: $insert.find("input[name='pay_status']").val(),
+	                            inv_name: $insert.find("input[name='inv_name']").val(),
+	                            inv_to: $insert.find("input[name='inv_to']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1029,7 +1100,6 @@ input.error[type=radio] + label {
 	            $("#insert-dialog-form-post").trigger("reset");
 	        }
 	    });
-	    // 			$("#dialog-form-insert").show();
 
 	    //確認Dialog相關設定(刪除功能)
 	    confirm_dialog = $("#dialog-confirm").dialog({
@@ -1039,14 +1109,6 @@ input.error[type=radio] + label {
 	        height: "auto",
 	        width: "auto",
 	        modal: true,
-	        // 				show : {
-	        // 					effect : "blind",
-	        // 					duration : 300
-	        // 				},
-	        // 				hide : {
-	        // 					effect : "fade",
-	        // 					duration : 300
-	        // 				},
 	        buttons: {
 	            "確認刪除": function() {
 	                var tmp = {
@@ -1063,7 +1125,6 @@ input.error[type=radio] + label {
 	            }
 	        }
 	    });
-	    // 			$("#dialog-confirm").show();
 
 	    //修改Dialog相關設定
 	    update_dialog = $("#dialog-form-update").dialog({
@@ -1073,14 +1134,6 @@ input.error[type=radio] + label {
 	        height: "auto",
 	        width: "auto",
 	        modal: true,
-	        // 				show : {
-	        // 					effect : "blind",
-	        // 					duration : 300
-	        // 				},
-	        // 				hide : {
-	        // 					effect : "fade",
-	        // 					duration : 300
-	        // 				},
 	        buttons: [{
 	                text: "修改",
 	                click: function() {
@@ -1122,7 +1175,17 @@ input.error[type=radio] + label {
 	                            order_source: $update.find("input[name='order_source']").val(),
 	                            contrast_type: $("input[name='radio-group-type']:checked").val(),
 	                            deliveryway: '1',
-	                            total_amt: $update.find("input[name='total_amt']").val()
+	                            total_amt: $update.find("input[name='total_amt']").val(),
+	                            deliver_name: $update.find("input[name='deliver_name']").val(),
+	                            deliver_to: $update.find("input[name='deliver_to']").val(),
+	                            deliver_store: $update.find("input[name='deliver_store']").val(),
+	                            deliver_note: $update.find("input[name='deliver_note']").val(),
+	                            deliver_phone: $update.find("input[name='deliver_phone']").val(),
+	                            deliver_mobile: $update.find("input[name='deliver_mobile']").val(),
+	                            pay_kind: $update.find("input[name='pay_kind']").val(),
+	                            pay_status: $update.find("input[name='pay_status']").val(),
+	                            inv_name: $update.find("input[name='inv_name']").val(),
+	                            inv_to: $update.find("input[name='inv_to']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1175,7 +1238,9 @@ input.error[type=radio] + label {
 	    //新增事件聆聽
 	    $("#create-sale").click(function() {
 	        new_or_edit = 1;
-	        insert_dialog.dialog("open");
+	        insert_dialog
+	        	.dialog("open")
+	        	.css({height:"350px", overflow:"auto"});
 	        $("#insert_c_product_id").focus();
 	        scan_exist = 1;
 	        if (!scan_exist) {
@@ -1194,15 +1259,13 @@ input.error[type=radio] + label {
 
 	        var row = $(this).closest("tr");
 	        var data = $("#sales").DataTable().row(row).data();
-
+	        
 	        //清空查詢條件
 	        $("input[name='search_c_product_id']").val("");
 	        $("#trans_list_start_date, #trans_list_end_date, #upload_start_date, #upload_end_date").val("");
 
-	        var dialogA = document.getElementById("dialog-form-update");
-	        var dialogB = $("#dialog-form-update");
-
-	        console.log(data);
+	        product_id = data.product_id;
+	        
 	        $("#dialog-form-update input[name='order_no']").val(data.order_no);
 	        $("#dialog-form-update input[name='product_name']").val(data.product_name);
 	        $("#dialog-form-update input[name='c_product_id']").val(data.c_product_id);
@@ -1218,7 +1281,18 @@ input.error[type=radio] + label {
 	        $("#dialog-form-update input[name='sale_date']").val(data.sale_date);
 	        $("#dialog-form-update input[name='order_source']").val(data.order_source);
 	        $("#dialog-form-update input:radio[name='radio-group-type'][value='"+data.contrast_type+"']").prop("checked", true);
-
+	        
+	        $("#dialog-form-update input[name='deliver_name']").val(data.saleExtVO.deliverName);
+	        $("#dialog-form-update input[name='deliver_to']").val(data.saleExtVO.deliverTo);
+	        $("#dialog-form-update input[name='deliver_store']").val(data.saleExtVO.deliverStore);
+	        $("#dialog-form-update input[name='deliver_note']").val(data.saleExtVO.deliverNote);
+	        $("#dialog-form-update input[name='deliver_phone']").val(data.saleExtVO.deliverPhone);
+	        $("#dialog-form-update input[name='deliver_mobile']").val(data.saleExtVO.deliverMobile);
+	        $("#dialog-form-update input[name='pay_kind']").val(data.saleExtVO.payKind);
+	        $("#dialog-form-update input[name='pay_status']").val(data.saleExtVO.payStatus);
+	        $("#dialog-form-update input[name='inv_name']").val(data.saleExtVO.invName);
+	        $("#dialog-form-update input[name='inv_to']").val(data.saleExtVO.invTo);
+	        
 	        $.ajax({
 				url : "sale.do",
 				type : "POST",
@@ -1240,14 +1314,9 @@ input.error[type=radio] + label {
 				}
 	        });
 	        
-	        
-	        console.log(dialogA);
-	        console.log(dialogB);
-
-	        console.log($(dialogA).find("input[name='order_no']"));
-	        console.log($(dialogB).find("input[name='order_no']"));
-
-	        update_dialog.dialog("open");
+	        update_dialog
+	        	.dialog("open")
+	        	.css({height:"350px", overflow:"auto"});
 	    });
 
 	    //處理初始的查詢autocomplete
@@ -1256,27 +1325,7 @@ input.error[type=radio] + label {
 	        source: function(request, response) {
 	            getProductData(request, response, "ID");
 	        }
-	        // 				change : function(event, ui) {
-	        // 					var source = $(this).val();
-	        // 					var arTemp = $(".ui-autocomplete li").map(function() {
-	        // 						return $(this).text();
-	        // 					});
-
-	        // 					var found = $.inArray(source, arTemp);
-
-	        // 					if (found < 0) {
-	        // 						$("#search-sale").attr("c_product_id_error", $(this).val());
-	        // 						$(this).val('');
-	        // 						$(this).attr("placeholder", "請輸入正確的商品ID名稱!");
-	        // 						setTimeout(function() {
-	        // 							$("#search-sale").attr("c_product_id_error", "");
-	        // 						}, 200);
-	        // 					}
-	        // 				}
 	    });
-	    // 			.bind('focus', function() {
-	    // 				$(this).attr("placeholder", "請輸入商品ID以供查詢");
-	    // 			});
 
 	    //處理新增的名稱autocomplete
 	    $("#insert_product_name").autocomplete({
@@ -1306,62 +1355,15 @@ input.error[type=radio] + label {
 	    $("#insert_c_product_id").autocomplete({
 	        minLength: 1,
 	        source: function(request, response) {
-	            console.log("source");
 	            getProductData(request, response, "ID");
 	        }
-	        // 				change : function(e, ui) {
-	        // 					console.log("change");
-	        // 					if (!ui.item) {
-	        // 						$(this)
-	        // 							.val("")
-	        // 							.attr("placeholder", "請輸入正確商品ID名稱!");
-	        // 					}
-	        // 				},
-	        // 				response : function(e, ui) {
-	        // 					console.log("response");
-	        // 					if (ui.content.length == 0) {
-	        // 						$(this)
-	        // 							.val("")
-	        // 							.attr("placeholder", "請輸入正確ID名稱!");
-	        // 					}
-	        // 				}
 	    });
-	    // 			.blur(function() {
-	    // 				console.log("blur");
-	    // 				$.ajax({
-	    // 					url : "sale.do",
-	    // 					type : "POST",
-	    // 					cache : false,
-	    // 					delay : 1500,
-	    // 					data : {
-	    // 						action : "search_product_data",
-	    // 						identity : "ID",
-	    // 						term : $("#insert_c_product_id").val()
-	    // 					},
-	    // 					success : function(data) {
-	    // 						var json_obj = $.parseJSON(data);
-	    // 						var resultRunTime = 0;
-	    // 						$.each(json_obj, function(i) {
-	    // 							resultRunTime += 1;
-	    // 						});
-	    // 						if (resultRunTime == 0) {
-	    // // 							$("#insert_c_product_id")
-	    // 							$("#dialog-form-insert")
-	    // 								.find("input[name=c_product_id]")
-	    // 								.val("")
-	    // 								.attr("placeholder", "請輸入正確ID名稱!");
-	    // 						}
-	    // 					}
-	    // 				});
-	    // 			});
 
 	    $(["#insert_c_product_id",
 	        "#update_c_product_id",
 	        "#insert_product_name",
 	        "#update_product_name"
 	    ].join(",")).bind('autocompleteselect', function(e, ui) {
-	        console.log("autocompleteselect");
-
 	        $this = $(this).closest("div");
 
 	        $this.find("input[name=c_product_id]").val(ui.item.c_product_id);
@@ -1421,27 +1423,6 @@ input.error[type=radio] + label {
 	        $(this).attr("placeholder", "請輸入ID名稱以供查詢");
 	    });
 
-	    // 			$("#update_quantity").change(function() {
-	    // 				$("#update_product_price").val(
-	    // 						$("#update_quantity").val() * $("#update_price").val() );
-	    // 			});
-
-	    // 			$("#update_price").change(function() {
-	    // 				$("#update_product_price").val(
-	    // 						$("#update_quantity").val() * $("#update_price").val() );
-	    // 			});
-
-	    // 			$("#insert_quantity").change(function() {
-	    // 				$("#insert_product_price").val(
-	    // 						$("#insert_quantity").val()
-	    // 								* $("#insert_price").val());
-	    // 			});
-
-	    // 			$("#insert_price").change(function() {
-	    // 				$("#insert_product_price").val(
-	    // 						$("#insert_quantity").val() * $("#insert_price").val() );
-	    // 			});
-
 	    $('#dialog-form-insert, #dialog-form-update').delegate('input[name=quantity], input[name=price]', 'change', function() {
 	        $this = $(this).closest("div");
 	        $this.find("input[name$=product_price]").val(
@@ -1457,8 +1438,7 @@ input.error[type=radio] + label {
 	        },
 	        success: function(result) {
 	            var json_obj = $.parseJSON(result);
-	            console.log("customer list");
-	            console.log(result);
+
 	            $.each(json_obj, function(i, item) {
 	                if (item.name != null) {
 	                    customer_tags[i] = json_obj[i].name;
@@ -1492,14 +1472,6 @@ input.error[type=radio] + label {
 	        autoOpen: false,
 	        height: "auto",
 	        modal: true,
-	        // 				show : {
-	        // 					effect : "bounce",
-	        // 					duration : 1000
-	        // 				},
-	        // 				hide : {
-	        // 					effect : "fade",
-	        // 					duration : 300
-	        // 				},
 	        buttons: {
 	            "確認": function() {
 	                $(this).dialog("close");
@@ -1644,11 +1616,8 @@ input.error[type=radio] + label {
 
 	    //點擊
 	    $('.sidenav').delegate('a', 'click', function() {
-	        console.log($(this).html());
-
 	        $(".content-wrap > .page-title").html($(this).html());
 	        $(".content-wrap").prepend($('<h2 class="test page-title">' + $(this).html() + '</h2>'));
-
 	    });
 
 	    function getProductData(request, response, kind) {
@@ -1663,7 +1632,6 @@ input.error[type=radio] + label {
 	                term: request.term
 	            },
 	            success: function(data) {
-	                console.log("getProductData By " + kind);
 	                var json_obj = $.parseJSON(data);
 	                var result = [];
 
@@ -1713,8 +1681,6 @@ input.error[type=radio] + label {
 	<!-- for common method -->
 	<script>
 		function drawDataTable(tableId, dom, oUrl, oData, oColumnDefs, oColumns) {
-			console.log("drawDataTable start");
-
 			var table = document.getElementById(tableId);
 
 			dataTableObj = $(table).DataTable({
@@ -1762,14 +1728,6 @@ input.error[type=radio] + label {
 			            $(this).dialog("close");
 			        }
 			    }],
-// 				show : {
-// 					effect : "blind",
-// 					duration : 300
-// 				},
-// 				hide : {
-// 					effect : "fade",
-// 					duration : 300
-// 				},
 				width : oWidth,
 				close : function() {
 					$(form).trigger("reset");
@@ -1813,8 +1771,7 @@ input.error[type=radio] + label {
 				var tableId = "dialog-sale-detail-table";
 				var tableThs = "<th>銷貨單號</th><th>平台訂單號</th><th>商品名稱</th>"
 						+ "<th>自訂商品ID</th><th>銷貨數量</th><th>單價</th>"
-						+ "<th>發票號碼</th><th>發票日期</th><th>轉單日</th>"
-						+ "<th>銷貨/出貨日期</th><th>銷售平台</th><th>備註說明</th>";
+						+ "<th>銷售平台</th><th>備註說明</th>";
 				var oColumnDefs = [];
 				var oColumns = [ {
 					"data" : "seq_no",
@@ -1833,18 +1790,6 @@ input.error[type=radio] + label {
 					"defaultContent" : ""
 				}, {
 					"data" : "price",
-					"defaultContent" : ""
-				}, {
-					"data" : "invoice",
-					"defaultContent" : ""
-				}, {
-					"data" : "invoice_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "trans_list_date",
-					"defaultContent" : ""
-				}, {
-					"data" : "sale_date",
 					"defaultContent" : ""
 				}, {
 					"data" : "order_source",
