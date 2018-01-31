@@ -906,7 +906,7 @@ input.error[type=radio] + label {
 
 	    var oRules = {
 	        order_no: {
-	            stringMaxLength: 20
+	            stringMaxLength: 40
 	        },
 	        product_name: {
 	            maxlength: 80,
@@ -949,7 +949,6 @@ input.error[type=radio] + label {
 	            stringMaxLength: 200
 	        },
 	        sale_date: {
-	            required: true,
 	            dateISO: true
 	        },
 	        order_source: {
