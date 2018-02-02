@@ -27,12 +27,16 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import tw.com.aber.egs.controller.EgsApi;
 import tw.com.aber.util.Database;
 
 public class Report extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sp_get_ship_sf_delivery_new_no = "call sp_delivery_report(?,?,?,?)";
+	private static final String pdf = "pdf";
+	private static final String xls = "xls";
 	private static final Logger logger = LogManager.getLogger(Report.class);
 	
 	private Connection connection;
@@ -82,7 +86,7 @@ public class Report extends HttpServlet {
 				hm.put("p_group_id", group_id);
 				hm.put("p_dis_date", disDate);
 				
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
@@ -114,7 +118,7 @@ public class Report extends HttpServlet {
 				hm.put("p_group_id", group_id);
 				hm.put("p_sale_id", saleId);
 				
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
@@ -129,9 +133,9 @@ public class Report extends HttpServlet {
 				hm.put("p_group_id", group_id);
 				hm.put("p_pick_id", pickId);				
 				
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
-				genJaserFile(setMyFile("rptPickDetail", ""));
+				genJaserFile(setMyFile("rptPickDetail", "", pdf));
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
 			} else if (request.getParameter("pick_no") != null) {
@@ -144,10 +148,10 @@ public class Report extends HttpServlet {
 				hm.put("p_group_id",group_id);
 				hm.put("p_pick_no", pickNo);
 				
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
-				genJaserFile(setMyFile("rptShipDetail", ""));
-				genJaserFile(setMyFile("rptShipSubDetail", ""));
+				genJaserFile(setMyFile("rptShipDetail", "", pdf));
+				genJaserFile(setMyFile("rptShipSubDetail", "", pdf));
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
 			} else if ("ship_report".equals(request.getParameter("type"))) {
@@ -186,7 +190,7 @@ public class Report extends HttpServlet {
 				hm.put("p_suda7", suda7);
 				hm.put("p_egs_num", eGSNum);
 				
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
@@ -218,11 +222,11 @@ public class Report extends HttpServlet {
 				hm.put("p_group_id", group_id);
 				hm.put("p_tracking_number_list", track_list);
 
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
-				genJaserFile(setMyFile("shipReport_ezcat_template", ""));
-				genJaserFile(setMyFile("shipReportA4_2_pick_main", ""));
-				genJaserFile(setMyFile("shipReportA4_2_pick_delivery", ""));
+				genJaserFile(setMyFile("shipReport_ezcat_template", "", pdf));
+				genJaserFile(setMyFile("shipReportA4_2_pick_main", "", pdf));
+				genJaserFile(setMyFile("shipReportA4_2_pick_delivery", "", pdf));
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
 			} else if ("rptInvManual".equals(request.getParameter("action"))){
@@ -238,9 +242,9 @@ public class Report extends HttpServlet {
 				hm.put("p_inv_manual_ids",ids);
 				logger.debug("ids:"+ids);
 				
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
-				genJaserFile(setMyFile("rptInvoiceDetail", ""));
+				genJaserFile(setMyFile("rptInvoiceDetail", "", pdf));
 				genPdfFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
 			} else if ("rptSfShip".equals(request.getParameter("action"))) {
@@ -264,12 +268,196 @@ public class Report extends HttpServlet {
 				logger.debug("p_start_date:" + start_date);
 				logger.debug("p_end_date:" + end_date);
 
-				MyFile myFile = setMyFile(reportName, exportName);
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
 				genJaserFile(myFile);
-				genJaserFile(setMyFile("rptShipDetailForSF", ""));
-				genJaserFile(setMyFile("rptShipSfDetail", ""));
-				genJaserFile(setMyFile("rptShipSfStatus", ""));
+				genJaserFile(setMyFile("rptShipDetailForSF", "", pdf));
+				genJaserFile(setMyFile("rptShipSfDetail", "", pdf));
+				genJaserFile(setMyFile("rptShipSfStatus", "", pdf));
 				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportProduct".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportProduct";
+				final String exportName = "商品報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportProductXls".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportProductXls";
+				final String exportName = "商品報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportPackage".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportPackage";
+				final String exportName = "組合商品報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportPackageXls".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportPackageXls";
+				final String exportName = "組合商品報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportPackageDetail".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportPackageDetail";
+				final String exportName = "組合商品明細報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportPackageDetailXls".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportPackageDetailXls";
+				final String exportName = "組合商品明細報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportContrast".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportContrast";
+				final String exportName = "商品對照報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportContrastXls".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportContrastXls";
+				final String exportName = "商品對照報表";
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportSale".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportSale";
+				final String exportName = "訂單報表";
+				
+				String start = request.getParameter("start");
+				String end = request.getParameter("end");
+				logger.debug("start:" + start);
+				logger.debug("end:" + end);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_start", start);
+				hm.put("p_end", end);
+
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportSaleXls".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportSaleXls";
+				final String exportName = "訂單報表";
+
+				String start = request.getParameter("start");
+				String end = request.getParameter("end");
+				logger.debug("start:" + start);
+				logger.debug("end:" + end);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_start", start);
+				hm.put("p_end", end);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportSaleDetail".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportSaleDetail";
+				final String exportName = "訂單明細報表";
+				
+				String start = request.getParameter("start");
+				String end = request.getParameter("end");
+				logger.debug("start:" + start);
+				logger.debug("end:" + end);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_start", start);
+				hm.put("p_end", end);
+
+				MyFile myFile = setMyFile(reportName, exportName, pdf);
+				genJaserFile(myFile);
+				genPdfFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
+			} else if ("exportSaleDetailXls".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptExportSaleDetailXls";
+				final String exportName = "訂單明細報表";
+
+				String start = request.getParameter("start");
+				String end = request.getParameter("end");
+				logger.debug("start:" + start);
+				logger.debug("end:" + end);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_start", start);
+				hm.put("p_end", end);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
 			}
 
@@ -295,28 +483,51 @@ public class Report extends HttpServlet {
 		JasperExportManager.exportReportToPdfFile(jasperPrint, myFile.getPdf());
 	}
 	
-	private MyFile setMyFile(String reportName, String exportName) throws UnsupportedEncodingException {
+	private void genXlsFile(JasperPrint jasperPrint, MyFile myFile) throws JRException{
+		JRXlsExporter exporter = new JRXlsExporter();
+        exporter.setParameter(JRXlsExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRXlsExporterParameter.OUTPUT_FILE_NAME, myFile.getXls());
+        exporter.exportReport();
+	}
+
+	private MyFile setMyFile(String reportName, String exportName, String kind) throws UnsupportedEncodingException {
 		MyFile myFile = new MyFile();
 		myFile.setJrxml(sourcePath + "/" + reportName);
 		myFile.setJasper(generatePath + "/" + reportName);
-		myFile.setPdf(generatePath + "/" + reportName);
+		if (kind.equals(pdf)){
+			myFile.setPdf(generatePath + "/" + reportName);
+		} else if (kind.equals(xls)){
+			myFile.setXls(generatePath + "/" + reportName);
+		}
 		myFile.setExportName(exportName);
+		myFile.setKind(kind);
 		return myFile;
 	}
 	
 	private static void writeToClient(HttpServletRequest request, HttpServletResponse response, MyFile myFile) throws IOException{
 		String browserType = request.getHeader("User-Agent");
 		logger.debug("User-Agent:" + browserType);
-		response.setContentType("APPLICATION/PDF; charset=UTF-8");
-		response.setCharacterEncoding("UTF-8");
 		
-		if (browserType.contains("IE")||browserType.contains("Chrome")){
-			response.setHeader("Content-Disposition", "inline;Filename=\"" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "\"");
-		} else if(browserType.contains("Firefox")){
-			response.setHeader("Content-Disposition", "inline;Filename*=UTF-8''" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + ".pdf" + "");
+		File file = null;
+		response.setCharacterEncoding("UTF-8");
+		if (myFile.getKind().equals(pdf)) {
+			response.setContentType("APPLICATION/PDF; charset=UTF-8");
+			if (browserType.contains("IE")||browserType.contains("Chrome")){
+				response.setHeader("Content-Disposition", "inline;Filename=\"" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + "." + pdf + "\"");
+			} else if(browserType.contains("Firefox")){
+				response.setHeader("Content-Disposition", "inline;Filename*=UTF-8''" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + "." + pdf + "");
+			}
+			file = new File(myFile.getPdf());
+		} else if (myFile.getKind().equals(xls)) {
+			response.setContentType("APPLICATION/vns.ms-excel; charset=UTF-8");
+			if (browserType.contains("IE")||browserType.contains("Chrome")){
+				response.setHeader("Content-Disposition", "inline;Filename=\"" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + "." + xls + "\"");
+			} else if(browserType.contains("Firefox")){
+				response.setHeader("Content-Disposition", "inline;Filename*=UTF-8''" + myFile.getExportName() + "_" + genDateFormat("yyyyMMddHHmmss") + "." + xls + "");
+			}
+			file = new File(myFile.getXls());
 		}
-
-		File file = new File(myFile.getPdf());
+		
 		FileInputStream fileIn = new FileInputStream(file);
 		ServletOutputStream out = response.getOutputStream();
 		byte[] outputByte = new byte[4096];
@@ -332,7 +543,9 @@ public class Report extends HttpServlet {
 		private String jrxml;
 		private String jasper;
 		private String pdf;
+		private String xls;
 		private String exportName;
+		private String kind;
 		
 		public String getJrxml() {
 			return jrxml;
@@ -352,11 +565,23 @@ public class Report extends HttpServlet {
 		public void setPdf(String pdf) {
 			this.pdf = pdf.concat("_").concat( genDateFormat("yyyyMMddHHmmss") ).concat(".pdf");
 		}
+		public String getXls() {
+			return xls;
+		}
+		public void setXls(String xls) {
+			this.xls = xls.concat("_").concat( genDateFormat("yyyyMMddHHmmss") ).concat(".xls");
+		}
 		public String getExportName() {
 			return exportName;
 		}
 		public void setExportName(String exportName) throws UnsupportedEncodingException {
 			this.exportName = URLEncoder.encode(exportName, "UTF-8");
+		}
+		public String getKind() {
+			return kind;
+		}
+		public void setKind(String kind) {
+			this.kind = kind;
 		}
 	}
 }
