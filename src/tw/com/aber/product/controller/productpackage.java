@@ -2,13 +2,17 @@
 package tw.com.aber.product.controller;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,9 +68,14 @@ public class productpackage extends HttpServlet {
 			logger.debug("word: " + word);
 
 			word = word == null ? "" : word;
-			ProductVO[] parents = dao.searchpackages(group_id, word);
-			Gson gson = new Gson();
-			response.getWriter().write(gson.toJson(parents));
+			List<ProductVO> parents = dao.searchPackagesList(group_id, word);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", null);
+			map.put("data", parents);
+			JSONObject jsonObject = new JSONObject(map);
+			logger.debug("After delete:" + jsonObject.toString());
+			response.getWriter().write(jsonObject.toString());
 			return;
 		} else if ("insert".equals(action)) {
 			String c_package_id = request.getParameter("c_package_id");
@@ -84,11 +94,15 @@ public class productpackage extends HttpServlet {
 			logger.debug("barcode:" + barcode);
 			logger.debug("description:" + description);
 
-			dao.insertpackages(group_id, c_package_id, package_name, supply_name, price, package_type, barcode,
+			String result = dao.insertpackages(group_id, c_package_id, package_name, supply_name, price, package_type, barcode,
 					description, user_id);
-			ProductVO[] parents = dao.searchpackages(group_id, "");
-			Gson gson = new Gson();
-			response.getWriter().write(gson.toJson(parents));
+			List<ProductVO> parents = dao.searchPackagesList(group_id, "");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", result);
+			map.put("data", parents);
+			JSONObject jsonObject = new JSONObject(map);
+			response.getWriter().write(jsonObject.toString());
 		} else if ("update".equals(action)) {
 			String package_id = request.getParameter("package_id");
 			String c_package_id = request.getParameter("c_package_id");
@@ -108,19 +122,27 @@ public class productpackage extends HttpServlet {
 			logger.debug("barcode:" + barcode);
 			logger.debug("description:" + description);
 
-			dao.updatepackages(package_id, group_id, c_package_id, package_name, supply_name, price, package_type,
+			String result = dao.updatepackages(package_id, group_id, c_package_id, package_name, supply_name, price, package_type,
 					barcode, description, user_id);
-			ProductVO[] parents = dao.searchpackages(group_id, "");
-			Gson gson = new Gson();
-			response.getWriter().write(gson.toJson(parents));
+			List<ProductVO> parents = dao.searchPackagesList(group_id, "");
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", result);
+			map.put("data", parents);
+			JSONObject jsonObject = new JSONObject(map);
+			response.getWriter().write(jsonObject.toString());
 		} else if ("delete".equals(action)) {
 			String package_id = request.getParameter("package_id");
 			logger.debug("Package ID:" + package_id);
 			logger.debug("User ID:" + user_id);
-			dao.deletepackages(package_id, user_id);
-			ProductVO[] parents = dao.searchpackages(group_id, "");
-			Gson gson = new Gson();
-			response.getWriter().write(gson.toJson(parents));
+			String result = dao.deletepackages(package_id, user_id);
+			List<ProductVO> parents = dao.searchPackagesList(group_id, "");
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("result", result);
+			map.put("data", parents);
+			JSONObject jsonObject = new JSONObject(map);
+			response.getWriter().write(jsonObject.toString());
 		} else if ("search_detail".equals(action)) {
 			String package_id = request.getParameter("package_id");
 			ProductVO[] parents = dao.searchpackagesdetail(package_id);
@@ -244,6 +266,150 @@ public class productpackage extends HttpServlet {
 		String parent_id;
 		String quantity;
 		String package_desc;
+		public String getProduct_id() {
+			return product_id;
+		}
+		public void setProduct_id(String product_id) {
+			this.product_id = product_id;
+		}
+		public String getGroup_id() {
+			return group_id;
+		}
+		public void setGroup_id(String group_id) {
+			this.group_id = group_id;
+		}
+		public String getC_product_id() {
+			return c_product_id;
+		}
+		public void setC_product_id(String c_product_id) {
+			this.c_product_id = c_product_id;
+		}
+		public String getProduct_name() {
+			return product_name;
+		}
+		public void setProduct_name(String product_name) {
+			this.product_name = product_name;
+		}
+		public String getSupply_id() {
+			return supply_id;
+		}
+		public void setSupply_id(String supply_id) {
+			this.supply_id = supply_id;
+		}
+		public String getSupply_name() {
+			return supply_name;
+		}
+		public void setSupply_name(String supply_name) {
+			this.supply_name = supply_name;
+		}
+		public String getType_id() {
+			return type_id;
+		}
+		public void setType_id(String type_id) {
+			this.type_id = type_id;
+		}
+		public String getUnit_id() {
+			return unit_id;
+		}
+		public void setUnit_id(String unit_id) {
+			this.unit_id = unit_id;
+		}
+		public String getCost() {
+			return cost;
+		}
+		public void setCost(String cost) {
+			this.cost = cost;
+		}
+		public String getPrice() {
+			return price;
+		}
+		public void setPrice(String price) {
+			this.price = price;
+		}
+		public String getCurrent_stock() {
+			return current_stock;
+		}
+		public void setCurrent_stock(String current_stock) {
+			this.current_stock = current_stock;
+		}
+		public String getKeep_stock() {
+			return keep_stock;
+		}
+		public void setKeep_stock(String keep_stock) {
+			this.keep_stock = keep_stock;
+		}
+		public String getPhoto() {
+			return photo;
+		}
+		public void setPhoto(String photo) {
+			this.photo = photo;
+		}
+		public String getPhoto1() {
+			return photo1;
+		}
+		public void setPhoto1(String photo1) {
+			this.photo1 = photo1;
+		}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		public String getBarcode() {
+			return barcode;
+		}
+		public void setBarcode(String barcode) {
+			this.barcode = barcode;
+		}
+		public String getUser_id() {
+			return user_id;
+		}
+		public void setUser_id(String user_id) {
+			this.user_id = user_id;
+		}
+		public String getMessage() {
+			return message;
+		}
+		public void setMessage(String message) {
+			this.message = message;
+		}
+		public String getIspackage() {
+			return ispackage;
+		}
+		public void setIspackage(String ispackage) {
+			this.ispackage = ispackage;
+		}
+		public String getContent() {
+			return content;
+		}
+		public void setContent(String content) {
+			this.content = content;
+		}
+		public String getPackage_id() {
+			return package_id;
+		}
+		public void setPackage_id(String package_id) {
+			this.package_id = package_id;
+		}
+		public String getParent_id() {
+			return parent_id;
+		}
+		public void setParent_id(String parent_id) {
+			this.parent_id = parent_id;
+		}
+		public String getQuantity() {
+			return quantity;
+		}
+		public void setQuantity(String quantity) {
+			this.quantity = quantity;
+		}
+		public String getPackage_desc() {
+			return package_desc;
+		}
+		public void setPackage_desc(String package_desc) {
+			this.package_desc = package_desc;
+		}
 	}
 
 	public class ProductPackageVO {
@@ -268,9 +434,9 @@ public class productpackage extends HttpServlet {
 		private static final String sp_delete_package_detail = "call sp_del_package_detail (?)";
 
 		private static final String sp_get_package_master = "call sp_get_package_master(?,?,?);";
-		private static final String sp_insert_package_master = "call sp_insert_package_master(?,?,?,?,?,?,?);";
-		private static final String sp_update_package_master = "call sp_update_package_master(?,?,?,?,?,?,?);";
-		private static final String sp_delete_package_master = "call sp_delete_package_master(?);";
+		private static final String sp_insert_package_master = "call sp_insert_package_master(?,?,?,?,?,?,?,?);";
+		private static final String sp_update_package_master = "call sp_update_package_master(?,?,?,?,?,?,?,?,?);";
+		private static final String sp_delete_package_master = "call sp_delete_package_master(?,?);";
 
 		private static final String sp_get_all_package_info = "call sp_get_all_package_info(?,?)";
 
@@ -456,73 +622,134 @@ public class productpackage extends HttpServlet {
 
 		// 以上是package_detail四指令
 		// 以下是package四指令
-		public void deletepackages(String package_id, String user_id) {
+		public String deletepackages(String package_id, String user_id) {
+			String result = "";
+			
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_delete_package_master);
-				pstmt.setString(1, package_id);
+				cs = con.prepareCall(sp_delete_package_master);
+				cs.setString(1, package_id);
+				cs.registerOutParameter(2, Types.VARCHAR);
 
-				pstmt.executeQuery();
+				cs.execute();
+				
+				result = cs.getString(2);
 			} catch (SQLException se) {
 				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
 				logger.error("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
 			}
-			return;
+			return result;
 		}
 
-		public void updatepackages(String package_id, String group_id, String c_package_id, String package_name,
+		public String updatepackages(String package_id, String group_id, String c_package_id, String package_name,
 				String supply_name, String price, String package_type, String barcode, String description,
 				String user_id) {
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
+			String result = "";
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_update_package_master);
-				pstmt.setString(1, package_id);
-				pstmt.setString(2, c_package_id);
-				pstmt.setString(3, package_name);
-				pstmt.setString(4, package_type);
-				pstmt.setString(5, price);
-				pstmt.setString(6, barcode);
-				pstmt.setString(7, description);
-				pstmt.executeQuery();
+				cs = con.prepareCall(sp_update_package_master);
+				
+				cs.setString(1, package_id);
+				cs.setString(2, group_id);
+				cs.setString(3, c_package_id);
+				cs.setString(4, package_name);
+				cs.setString(5, package_type);
+				cs.setString(6, price);
+				cs.setString(7, barcode);
+				cs.setString(8, description);
+				cs.registerOutParameter(9, Types.VARCHAR);
+				cs.execute();
+				
+				result = cs.getString(9);
 			} catch (SQLException se) {
 				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
 				logger.error("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
 			}
-			return;
+			return result;
 		}
 
-		public void insertpackages(String group_id, String c_package_id, String package_name, String supply_name,
+		public String insertpackages(String group_id, String c_package_id, String package_name, String supply_name,
 				String price, String package_type, String barcode, String description, String user_id) {
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
+			String result = "";
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_insert_package_master);
-				pstmt.setString(1, group_id);
-				pstmt.setString(2, c_package_id);
-				pstmt.setString(3, package_name);
-				pstmt.setString(4, package_type);
-				pstmt.setString(5, price);
-				pstmt.setString(6, barcode);
-				pstmt.setString(7, description);
-				pstmt.executeQuery();
+				cs = con.prepareCall(sp_insert_package_master);
+				
+				cs.setString(1, group_id);
+				cs.setString(2, c_package_id);
+				cs.setString(3, package_name);
+				cs.setString(4, package_type);
+				cs.setString(5, price);
+				cs.setString(6, barcode);
+				cs.setString(7, description);
+				cs.registerOutParameter(8, Types.VARCHAR);
+				cs.execute();
+				
+				result = cs.getString(8);
 			} catch (SQLException se) {
 				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
 				logger.error("A database error occured. " + cnfe.getMessage());
 			} catch (Exception e) {
 				logger.error(e.toString());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
 			}
-			return;
+			return result;
 		}
 
 		public ProductVO[] searchpackages(String group_id, String word) {
@@ -563,8 +790,88 @@ public class productpackage extends HttpServlet {
 				logger.error("ERROR WITH: " + se.getMessage());
 			} catch (ClassNotFoundException cnfe) {
 				logger.error("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
 			}
 			return packages;
+		}
+		
+		public List<ProductVO> searchPackagesList(String group_id, String word) {
+			List<ProductVO> list = new ArrayList<ProductVO>();
+			ProductVO productBean = null;
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_get_package_master);
+				pstmt.setString(1, group_id);
+				pstmt.setString(2, word);
+				pstmt.setString(3, word);
+				rs = pstmt.executeQuery();
+				
+				while (rs.next()) {
+					productBean = new ProductVO();
+					productBean.setProduct_id(rs.getString("package_id"));
+					productBean.setGroup_id(rs.getString("group_id"));
+					productBean.setC_product_id(rs.getString("c_package_id") == null ? "" : rs.getString("c_package_id"));
+					productBean.setProduct_name(rs.getString("package_name"));
+					productBean.setType_id(rs.getString("package_spec"));
+					productBean.setPrice(rs.getString("amount"));
+					productBean.setDescription(rs.getString("description") == null ? "" : rs.getString("description"));
+					productBean.setBarcode(rs.getString("barcode") == null ? "" : rs.getString("barcode"));
+					
+					list.add(productBean);
+				}
+			} catch (SQLException se) {
+				logger.error("ERROR WITH: " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				logger.error("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			return list;
 		}
 	}
 }

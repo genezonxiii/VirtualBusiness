@@ -155,7 +155,11 @@
 			            data: info,
 			            dataSrc: function ( json ) {
 			            	if (typeof json.result != "undefined") {
-			            		dialogMsg("警告", "自訂商品ID " + json.result + " 重複！");
+			            		if (info.action == "delete") {
+			            			dialogMsg("警告", "刪除失敗：" + json.result);
+			            		} else {
+			            			dialogMsg("警告", "自訂商品ID " + json.result + " 重複！");
+			            		}
 			            	}
 			            	return json.data;
 			            }

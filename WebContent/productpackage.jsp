@@ -79,7 +79,16 @@
 			url : "productpackage.do",
 			data : info,
 			success : function(result) {
-				var json_obj = $.parseJSON(result);
+				var allResult = $.parseJSON(result);
+				console.log(allResult);
+				if (typeof allResult.result != "undefined") {
+            		if (info.action == "delete") {
+            			dialogMsg("警告", "刪除失敗：" + allResult.result);
+            		} else {
+            			dialogMsg("警告", "自訂組合包ID " + allResult.result + " 重複！");
+            		}
+            	}
+				var json_obj = allResult.data;
 				
 				//判斷查詢結果
 				if(json_obj.length>0){

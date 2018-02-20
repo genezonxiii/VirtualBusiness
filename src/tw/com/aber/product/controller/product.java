@@ -306,15 +306,19 @@ public class product extends HttpServlet {
 				 * 2.開始刪除資料
 				 ***************************************/
 				productService = new ProductService();
-				productService.deleteProduct(product_id, user_id);
+				String result = productService.deleteProduct(product_id, user_id);
 				/***************************
 				 * 3.刪除完成,準備轉交(Send the Success view)
 				 ***********/
 				productService = new ProductService();
 				List<ProductBean> list = productService.SearchAllDB(group_id);
-				Gson gson = new Gson();
-				String jsonStrList = gson.toJson(list);
-				response.getWriter().write(jsonStrList);
+
+				Map<String, Object> map = new HashMap<>();
+				map.put("result", result);
+				map.put("data", list);
+				JSONObject jsonObject = new JSONObject(map);
+				
+				response.getWriter().write(jsonObject.toString());
 				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -669,7 +673,7 @@ public class product extends HttpServlet {
 
 		public String updateDB(ProductBean productBean);
 
-		public void deleteDB(String product_id, String user_id);
+		public String deleteDB(String product_id, String user_id);
 
 		public List<ProductBean>selectProductByCProductId(ProductBean productBean);
 
@@ -763,8 +767,8 @@ public class product extends HttpServlet {
 			return dao.updateDB(productBean);
 		}
 
-		public void deleteProduct(String product_id, String user_id) {
-			dao.deleteDB(product_id, user_id);
+		public String deleteProduct(String product_id, String user_id) {
+			return dao.deleteDB(product_id, user_id);
 		}
 
 		public List<ProductBean> SearchAllDB(String group_id) {
@@ -811,7 +815,7 @@ public class product extends HttpServlet {
 		private static final String sp_get_product_bybarcode = "call sp_get_product_bybarcode(?,?)";
 		private static final String sp_selectall_product = "call sp_selectall_product (?)";
 		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)";
-		private static final String sp_del_product = "call sp_del_product (?,?)";
+		private static final String sp_del_product = "call sp_del_product (?,?,?)";
 		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
 		private static final String sp_get_product_bysupplyname = "call sp_get_product_bysupplyname (?,?)";
 		private static final String sp_get_product_byproductname = "call sp_get_product_byproductname (?,?)";
@@ -949,18 +953,22 @@ public class product extends HttpServlet {
 		}
 
 		@Override
-		public void deleteDB(String product_id, String user_id) {
-
+		public String deleteDB(String product_id, String user_id) {
+			String result = "";
+			
 			Connection con = null;
-			PreparedStatement pstmt = null;
+			CallableStatement cs = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_del_product);
-				pstmt.setString(1, product_id);
-				pstmt.setString(2, user_id);
+				cs = con.prepareCall(sp_del_product);
+				cs.setString(1, product_id);
+				cs.setString(2, user_id);
+				cs.registerOutParameter(3, Types.VARCHAR);
 
-				pstmt.executeUpdate();
+				cs.execute();
+				
+				result = cs.getString(3);
 
 				// Handle any SQL errors
 			} catch (SQLException se) {
@@ -969,9 +977,9 @@ public class product extends HttpServlet {
 			} catch (ClassNotFoundException cnfe) {
 				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
 			} finally {
-				if (pstmt != null) {
+				if (cs != null) {
 					try {
-						pstmt.close();
+						cs.close();
 					} catch (SQLException se) {
 						se.printStackTrace(System.err);
 					}
@@ -984,6 +992,7 @@ public class product extends HttpServlet {
 					}
 				}
 			}
+			return result;
 		}
 
 		@Override
