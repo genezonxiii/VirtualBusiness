@@ -984,7 +984,10 @@ public class SaleDao {
 				saleVO.setInvoice_date(rs.getDate("invoice_date"));
 				saleVO.setInvoice_vcode(rs.getString("invoice_vcode"));
 				saleVO.setInvoice_time(rs.getTime("invoice_time"));
-
+				
+				SaleExtVO saleExtVO = new SaleExtVO();
+				saleExtVO.setEmail(rs.getString("email"));
+				saleVO.setSaleExtVO(saleExtVO);
 			}
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());

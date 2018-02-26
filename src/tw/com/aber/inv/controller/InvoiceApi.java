@@ -554,7 +554,14 @@ public class InvoiceApi {
 		invoice.setA21("");// 核准號
 		invoice.setA22("07");// 發票類別
 		invoice.setA24("0");// 捐贈註記
-		invoice.setA28("Y");// 紙本電子發票已列印標記
+		if (saleVOs.get(0).getSaleExtVO() != null && !saleVOs.get(0).getSaleExtVO().getEmail().equals("")) {
+			invoice.setA25("EM0015");// 載具類別號碼
+			invoice.setA26(saleVOs.get(0).getSaleExtVO().getEmail());// 載具顯碼id
+			invoice.setA27(saleVOs.get(0).getSaleExtVO().getEmail());// 載具隱碼id
+			invoice.setA28("N");// 紙本電子發票已列印標記
+		} else {
+			invoice.setA28("Y");// 紙本電子發票已列印標記
+		}
 		invoice.setA30(PINString);// 發票防偽隨機碼
 
 		List<B> bList = new ArrayList<B>();
