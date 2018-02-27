@@ -167,6 +167,10 @@ input.error[type=radio] + label {
 											<td>發票收件人地址：</td>
 											<td><input type="text" name="inv_to"></td>
 										</tr>
+										<tr>
+											<td>電子郵件信箱：</td>
+											<td><input type="text" name="email"></td>
+										</tr>
 									</table>
 								</fieldset>
 							</form>
@@ -318,6 +322,10 @@ input.error[type=radio] + label {
 											<td><input type="text" name="inv_name"></td>
 											<td>發票收件人地址：</td>
 											<td><input type="text" name="inv_to"></td>
+										</tr>
+										<tr>
+											<td>電子郵件信箱：</td>
+											<td><input type="text" name="email"></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -1076,7 +1084,8 @@ input.error[type=radio] + label {
 	                            pay_kind: $insert.find("input[name='pay_kind']").val(),
 	                            pay_status: $insert.find("input[name='pay_status']").val(),
 	                            inv_name: $insert.find("input[name='inv_name']").val(),
-	                            inv_to: $insert.find("input[name='inv_to']").val()
+	                            inv_to: $insert.find("input[name='inv_to']").val(),
+	                            email: $insert.find("input[name='email']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1184,7 +1193,8 @@ input.error[type=radio] + label {
 	                            pay_kind: $update.find("input[name='pay_kind']").val(),
 	                            pay_status: $update.find("input[name='pay_status']").val(),
 	                            inv_name: $update.find("input[name='inv_name']").val(),
-	                            inv_to: $update.find("input[name='inv_to']").val()
+	                            inv_to: $update.find("input[name='inv_to']").val(),
+	                            email: $update.find("input[name='email']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1291,6 +1301,7 @@ input.error[type=radio] + label {
 	        $("#dialog-form-update input[name='pay_status']").val(data.saleExtVO.payStatus);
 	        $("#dialog-form-update input[name='inv_name']").val(data.saleExtVO.invName);
 	        $("#dialog-form-update input[name='inv_to']").val(data.saleExtVO.invTo);
+	        $("#dialog-form-update input[name='email']").val(data.saleExtVO.email);
 	        
 	        $.ajax({
 				url : "sale.do",

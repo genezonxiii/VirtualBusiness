@@ -260,6 +260,10 @@
 		        "data": "invoice_date",
 		        "defaultContent": ""
 		    }, {
+		        "title": "E-mail",
+		        "data": "saleExtVO.email",
+		        "defaultContent": ""
+		    }, {
 		        "title": "銷售平台",
 		        "data": "order_source",
 		        "defaultContent": ""

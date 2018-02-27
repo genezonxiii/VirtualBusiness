@@ -787,8 +787,6 @@ public class InvoiceApi {
 			String json = new Gson().toJson(index);
 			JAXB.marshal(index, sw);
 			String xml = sw.toString();
-			logger.debug(json);
-			logger.debug(xml);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
