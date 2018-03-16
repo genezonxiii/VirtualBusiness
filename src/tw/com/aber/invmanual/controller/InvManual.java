@@ -236,6 +236,9 @@ public class InvManual extends HttpServlet {
 			String invoice_no = req.getParameter("invoice_no");
 			String invoice_date_str = req.getParameter("invoice_date");
 			String tax_type = req.getParameter("tax_type");
+			String amount = req.getParameter("amount");
+			String amount_plustax = req.getParameter("amount_plustax");
+			String tax = req.getParameter("tax");
 			String year_month = null, result = "OK";
 
 			Date invoice_date = null;
@@ -283,6 +286,9 @@ public class InvManual extends HttpServlet {
 				invManualVO.setAddress(address);
 				invManualVO.setMemo(memo);
 				invManualVO.setTax_type(Integer.valueOf(tax_type));
+				invManualVO.setAmount(Integer.valueOf(amount));
+				invManualVO.setAmount_plustax(Integer.valueOf(amount_plustax));
+				invManualVO.setTax(Integer.valueOf(tax));
 
 				service.updateInvManual(invManualVO);
 			} catch (Exception e) {
@@ -339,6 +345,15 @@ public class InvManual extends HttpServlet {
 					List<InvManualDetailVO> detailVOs = service.searchInvManualDetailByInvManualId(invManualDetailVO);
 
 					List<ProductItem> productItems = new ArrayList<ProductItem>();
+					
+					if (detailVOs == null || detailVOs.size() == 0) {
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("invoice_no", "");
+						map.put("message", "請新增明細。");
+						list.add(map);
+						resp.getWriter().write(new Gson().toJson(list));
+						return;
+					}
 
 					for (int i = 0; i < detailVOs.size(); i++) {
 
@@ -403,7 +418,11 @@ public class InvManual extends HttpServlet {
 					logger.debug("invoiceNum: " + invoiceNum);
 
 					if (invoiceNum == null || "".equals(invoiceNum)) {
-						resp.getWriter().write("發票字軌用罄，請洽系統管理員");
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("invoice_no", "");
+						map.put("message", "發票字軌用罄，請洽系統管理員");
+						list.add(map);
+						resp.getWriter().write(new Gson().toJson(list));
 						return;
 					}
 
@@ -447,22 +466,29 @@ public class InvManual extends HttpServlet {
 					InvoiceApi api = new InvoiceApi();
 
 					String resXml = api.sendXML(reqXml);
-
-					invManualVO = new InvManualVO();
-					invManualVO.setGroup_id(groupId);
-					invManualVO.setInvoice_no(invoiceNum);
-					invManualVO.setInv_manual_id(inv_manual_id);
-					invManualVO.setInv_flag(1);
-					service.updateInvManualInvFlag(invManualVO);
-
 					Index index = api.getIndexResponse(resXml);
+					
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("invoice_no", invoiceNum);
 					map.put("message", index.getMessage());
+					map.put("reply", index.getReply());
 					list.add(map);
+					
+					if (index != null && index.getReply().equals("1")) {
+						invManualVO = new InvManualVO();
+						invManualVO.setGroup_id(groupId);
+						invManualVO.setInvoice_no(invoiceNum);
+						invManualVO.setInv_manual_id(inv_manual_id);
+						invManualVO.setInv_flag(1);
+						service.updateInvManualInvFlag(invManualVO);
+					}
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage());
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("invoice_no", "");
+				map.put("message", "非預期錯誤");
+				list.add(map);
 			}
 			resp.getWriter().write(new Gson().toJson(list));
 		} else if ("getInvBuyerData".equals(action)) {
@@ -572,7 +598,7 @@ public class InvManual extends HttpServlet {
 		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?,?)";
 		private static final String sp_del_inv_manual_detail = "call sp_del_inv_manual_detail(?,?,?)";
 		private static final String sp_del_inv_manual = "call sp_del_inv_manual(?,?)";
-		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?,?)";
 		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
@@ -611,6 +637,8 @@ public class InvManual extends HttpServlet {
 					row.setAmount(rs.getInt("amount"));
 					row.setTax_type(rs.getInt("tax_type"));
 					row.setInv_flag(rs.getInt("inv_flag"));
+					row.setAmount_plustax(rs.getInt("amount_plustax"));
+					row.setTax(rs.getInt("tax"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -670,6 +698,8 @@ public class InvManual extends HttpServlet {
 					row.setAmount(rs.getInt("amount"));
 					row.setTax_type(rs.getInt("tax_type"));
 					row.setInv_flag(rs.getInt("inv_flag"));
+					row.setAmount_plustax(rs.getInt("amount_plustax"));
+					row.setTax(rs.getInt("tax"));
 					rows.add(row);
 				}
 			} catch (SQLException se) {
@@ -919,6 +949,9 @@ public class InvManual extends HttpServlet {
 				cs.setString(9, invManualVO.getAddress());
 				cs.setString(10, invManualVO.getMemo());
 				cs.setInt(11, invManualVO.getTax_type());
+				cs.setInt(12, invManualVO.getAmount());
+				cs.setInt(13, invManualVO.getAmount_plustax());
+				cs.setInt(14, invManualVO.getTax());
 
 				cs.execute();
 			} catch (SQLException se) {

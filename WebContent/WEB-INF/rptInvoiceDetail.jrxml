@@ -49,9 +49,11 @@
 	<field name="tax_type" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="tax" class="java.math.BigDecimal"/>
-	<field name="total" class="java.lang.String"/>
-	<field name="balance" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="tax" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="balance" class="java.math.BigDecimal"/>
 	<field name="ch_balance" class="java.lang.String"/>
 	<columnHeader>
 		<band height="24" splitType="Stretch">
@@ -175,7 +177,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="##,#00" isBlankWhenNull="true">
 				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="312" y="0" width="71" height="20"/>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -209,6 +211,21 @@
 	</detail>
 	<columnFooter>
 		<band height="90">
+			<staticText>
+				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="22" width="383" height="11"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="標楷體" size="7" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
 			<staticText>
 				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="383" y="11" width="141" height="57"/>
 				<box>
@@ -412,7 +429,7 @@
 				</textElement>
 				<text><![CDATA[零稅率]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="##,#00" isBlankWhenNull="true">
 				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="312" y="0" width="71" height="11"/>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -442,7 +459,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#,##0").format($F{tax})]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="##,#00" isBlankWhenNull="true">
 				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="312" y="22" width="71" height="11"/>
 				<box>
 					<pen lineWidth="0.5"/>
@@ -472,21 +489,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ch_balance}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement uuid="2a19dc63-6749-45e8-9cff-6dbff6d532ea" x="0" y="22" width="383" height="11"/>
-				<box>
-					<pen lineWidth="0.0"/>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="標楷體" size="7" pdfFontName="標楷體" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
 			<image hAlign="Center">
 				<reportElement uuid="6badce52-af58-4429-b713-3557751f6c08" x="384" y="12" width="139" height="55"/>
 				<imageExpression><![CDATA[$F{p_invoice_path}]]></imageExpression>

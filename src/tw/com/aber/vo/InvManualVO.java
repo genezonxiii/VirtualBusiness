@@ -18,6 +18,8 @@ public class InvManualVO implements Serializable {
 	private String address;
 	private String memo;
 	private Integer amount;
+	private Integer amount_plustax;
+	private Integer tax;
 	private Integer tax_type;
 	private Integer inv_flag;
 
@@ -127,6 +129,22 @@ public class InvManualVO implements Serializable {
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public Integer getTax() {
+		return tax;
+	}
+
+	public void setTax(Integer tax) {
+		this.tax = tax;
+	}
+
+	public Integer getAmount_plustax() {
+		return amount_plustax;
+	}
+
+	public void setAmount_plustax(Integer amount_plustax) {
+		this.amount_plustax = amount_plustax;
 	}
 
 }

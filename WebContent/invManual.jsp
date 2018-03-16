@@ -132,6 +132,24 @@
 							<input type="text" name="invoice_date" class="input-date">
 						</td>
 					</tr>
+					<tr>
+						<td>總計</td>
+						<td>
+							<input type="text" name="amount_plustax" disabled>
+						</td>
+					</tr>
+					<tr>
+						<td>銷售額合計(未稅)</td>
+						<td>
+							<input type="text" name="amount">
+						</td>
+					</tr>
+					<tr>
+						<td>營業稅額</td>
+						<td>
+							<input type="text" name="tax">
+						</td>
+					</tr>
 				</table>
 			</fieldset>
 		</form>
@@ -257,6 +275,14 @@
 	            },
 	            'invoice-tax-type-radio-group': {
 	                required: true
+	            },
+	            'amount': {
+	                required: true,
+	                number: true
+	            },
+	            'tax': {
+	                required: true,
+	                number: true
 	            }
 	        },
 	        errorPlacement: function(error, element) {
@@ -356,12 +382,6 @@
 									var address = $( "input[name='address']", $dialog ).val();
 									var memo = $( "input[name='memo']", $dialog ).val();
 									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
-									
-									console.log('invoice_type: '+ invoice_type);
-									console.log('tax_type: '+ tax_type);
-									console.log('title: '+ title);
-									console.log('unicode: '+ unicode);
-									console.log('invoice_date: '+ invoice_date);
 									
 									$.ajax({
 										url: 'InvManual.do',
@@ -526,8 +546,7 @@
 
         		$subtotal.val( subtotalVal );
     		});
-        	console.log('data');
-        	console.log(data);
+        	
 			$dialog.dialog({
 				draggable : true,
 				resizable : false,
@@ -536,70 +555,70 @@
 				modal : true,
 				title : '修改明細',
 				buttons : [{
-							text : "修改",
-							click : function() {
+					text : "修改",
+					click : function() {
 
-				            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
-				            		return false;
-				            	}
+		            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
+		            		return false;
+		            	}
 
-								if($('#dialog-invoice-detail').find('form').valid()){
-									$.ajax({
-										url: 'InvManual.do',
-										async : false,
-										type: 'post',
-										data : {
-											action: 'updateDetail',
-											inv_manual_detail_id: inv_manual_detail_id,
-											inv_manual_id: inv_manual_id,
-											price: $price.val(),
-											quantity: $quantity.val(),
-											description: $description.val(),
-											subtotal: $subtotal.val(),
-											memo: $memo.val()
-										},
-										beforeSend: function(){
-										    $(':hover').css('cursor','progress');
-										},
-										complete: function(){
-											$(':hover').css('cursor','default');
-										},
-										success: function (response) {
-											var text = '修改失敗';
-											if(response == 'OK'){
-												if ($detailTable instanceof $.fn.dataTable.Api) {
-													$detailTable.ajax.reload();
-												}
-												text = '修改成功';
-											}
-											$dialog.find('form').trigger("reset");
-											$dialog.dialog("close");
-											$('<div/>').dialog({
-												title: '提示訊息',
-												draggable : true,
-												resizable : false,
-												width : "140px",
-												modal : true,
-												create: function () {
-													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
-												},
-												buttons : [{
-													text : "確認",
-													click : function() {
-														$(this).dialog("close");
-													}
-												}]
-											}).text(text);
+						if($('#dialog-invoice-detail').find('form').valid()){
+							$.ajax({
+								url: 'InvManual.do',
+								async : false,
+								type: 'post',
+								data : {
+									action: 'updateDetail',
+									inv_manual_detail_id: inv_manual_detail_id,
+									inv_manual_id: inv_manual_id,
+									price: $price.val(),
+									quantity: $quantity.val(),
+									description: $description.val(),
+									subtotal: $subtotal.val(),
+									memo: $memo.val()
+								},
+								beforeSend: function(){
+								    $(':hover').css('cursor','progress');
+								},
+								complete: function(){
+									$(':hover').css('cursor','default');
+								},
+								success: function (response) {
+									var text = '修改失敗';
+									if(response == 'OK'){
+										if ($detailTable instanceof $.fn.dataTable.Api) {
+											$detailTable.ajax.reload();
 										}
-									});
+										text = '修改成功';
+									}
+									$dialog.find('form').trigger("reset");
+									$dialog.dialog("close");
+									$('<div/>').dialog({
+										title: '提示訊息',
+										draggable : true,
+										resizable : false,
+										width : "140px",
+										modal : true,
+										create: function () {
+											$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+										},
+										buttons : [{
+											text : "確認",
+											click : function() {
+												$(this).dialog("close");
+											}
+										}]
+									}).text(text);
 								}
-								}
-						}, {
-							text : "取消",
-							click : function() {
-								$(this).dialog("close");
-							}
-						} ],
+							});
+						}
+					}
+				}, {
+					text : "取消",
+					click : function() {
+						$(this).dialog("close");
+					}
+				} ],
 			    beforeClose: function() {
 			    	validator_insert_invoice_detail.resetForm();
 					$dialog.find('form').trigger("reset");
@@ -614,8 +633,6 @@
 			var row = $(this).closest("tr");
 		    var data = $masterTable.row(row).data();
 		    var inv_manual_id = data.inv_manual_id;
-		    
-		    console.log(data);
 		    
 			var parameter = {
 					action: 'delete_invoice',
@@ -715,6 +732,9 @@
 			$dialog.find('input[name=unicode]').val(data.unicode);
 			$dialog.find('input[name=address]').val(data.address);
 			$dialog.find('input[name=memo]').val(data.memo);
+			$dialog.find('input[name=amount]').val(data.amount);
+			$dialog.find('input[name=amount_plustax]').val(data.amount_plustax);
+			$dialog.find('input[name=tax]').val(data.tax);
 // 			$( '#invoice-type-radio-'+ data.invoice_type ).prop("checked", true);
 			$( '#invoice-tax-type-radio-'+ data.tax_type ).prop("checked", true);
 			
@@ -746,87 +766,88 @@
 				modal : true,
 				title : '修改發票',
 				buttons : [{
-							text : "儲存",
-							click : function() {
+					text : "儲存",
+					click : function() {
 
-								if($('#dialog-invoice').find('form').valid()){
-// 									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
-// 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
-									invoice_type = '2';
-									
-									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
-									tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
-									
-									var title = $( "input[name='title']", $dialog ).val();
-									var unicode = $( "input[name='unicode']", $dialog ).val();
-									var address = $( "input[name='address']", $dialog ).val();
-									var memo = $( "input[name='memo']", $dialog ).val();
-									var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
-									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
-									
-									console.log('invoice_type: '+ invoice_type);
-									console.log('title: '+ title);
-									console.log('unicode: '+ unicode);
-									console.log('invoice_no: '+ invoice_no);
-									
-									$.ajax({
-										url: 'InvManual.do',
-										type: 'post',
-										data : {
-											action: 'updateMaster',
-											inv_manual_id: inv_manual_id,
-											invoice_type: invoice_type,
-											title: title,
-											unicode:  unicode,
-											address: address,
-											memo: memo,
-											invoice_no: invoice_no,
-											invoice_date: invoice_date,
-											tax_type: tax_type
-										},
-										beforeSend: function(){
-										    $(':hover').css('cursor','progress');
-										},
-										complete: function(){
-											$(':hover').css('cursor','default');
-										},
-										success: function (response) {
-											var text = '修改失敗';
-											if(response == 'OK'){
-												if ($masterTable instanceof $.fn.dataTable.Api) {
-													$masterTable.ajax.reload();
-												}
-												text = '修改成功';
-											}
-											$dialog.find('form').trigger("reset");
-											$dialog.dialog("close");
-											$('<div/>').dialog({
-												title: '提示訊息',
-												draggable : true,
-												resizable : false,
-												width : "140px",
-												modal : true,
-												create: function () {
-													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
-												},
-												buttons : [{
-													text : "確認",
-													click : function() {
-														$(this).dialog("close");
-													}
-												}]
-											}).text(text);
+						if($('#dialog-invoice').find('form').valid()){
+// 							var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
+// 							invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
+							invoice_type = '2';
+							
+							var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
+							tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
+							
+							var title = $( "input[name='title']", $dialog ).val();
+							var unicode = $( "input[name='unicode']", $dialog ).val();
+							var address = $( "input[name='address']", $dialog ).val();
+							var memo = $( "input[name='memo']", $dialog ).val();
+							var invoice_no = $( "input[name='invoice_no']", $dialog ).val();
+							var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
+							var amount = $( "input[name='amount']", $dialog ).val();
+							var amount_plustax = $( "input[name='amount_plustax']", $dialog ).val();
+							var tax = $( "input[name='tax']", $dialog ).val();
+							
+							$.ajax({
+								url: 'InvManual.do',
+								type: 'post',
+								data : {
+									action: 'updateMaster',
+									inv_manual_id: inv_manual_id,
+									invoice_type: invoice_type,
+									title: title,
+									unicode:  unicode,
+									address: address,
+									memo: memo,
+									invoice_no: invoice_no,
+									invoice_date: invoice_date,
+									tax_type: tax_type,
+									amount: amount,
+									amount_plustax: amount_plustax,
+									tax: tax
+								},
+								beforeSend: function(){
+								    $(':hover').css('cursor','progress');
+								},
+								complete: function(){
+									$(':hover').css('cursor','default');
+								},
+								success: function (response) {
+									var text = '修改失敗';
+									if(response == 'OK'){
+										if ($masterTable instanceof $.fn.dataTable.Api) {
+											$masterTable.ajax.reload();
 										}
-									});
+										text = '修改成功';
+									}
+									$dialog.find('form').trigger("reset");
+									$dialog.dialog("close");
+									$('<div/>').dialog({
+										title: '提示訊息',
+										draggable : true,
+										resizable : false,
+										width : "140px",
+										modal : true,
+										create: function () {
+											$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+										},
+										buttons : [{
+											text : "確認",
+											click : function() {
+												$(this).dialog("close");
+											}
+										}]
+									}).text(text);
 								}
-							}
-						}, {
-							text : "取消",
-							click : function() {
-								validator_insert_invoice.resetForm();
-								$(this).dialog("close");
-							}
-						} ],
+							});
+						}
+					}
+				}, {
+					text : "取消",
+					click : function() {
+						validator_insert_invoice.resetForm();
+						$(this).dialog("close");
+					}
+				} ],
 			    beforeClose: function() {
 					validator_insert_invoice.resetForm();
 					$dialog.find('form').trigger("reset");
@@ -915,8 +936,16 @@
 					"data" : null,
 					"defaultContent" : ""
 				},{
-					"title" : "總金額",
+					"title" : "總計",
+					"data" : "amount_plustax",
+					"defaultContent" : ""
+				},{
+					"title" : "銷售額合計",
 					"data" : "amount",
+					"defaultContent" : ""
+				},{
+					"title" : "營業稅額",
+					"data" : "tax",
 					"defaultContent" : ""
 				},{
 					"title" : "已開立",
@@ -986,7 +1015,7 @@
 			        	return data.unicode == '' ? '無' : data.unicode;
 			        }
 			    },{
-			        targets: 9,
+			        targets: 11,
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
@@ -1021,7 +1050,7 @@
 	        					$("<button/>", {
 									"class": "btn-in-table btn-green btn_list",
 									"title": "清單"
-								}).append( $("<i/>", {"class": "fa fa-pencil-square-o"}) )
+								}).append( $("<i/>", {"class": "fa fa-list"}) )
 								);
 	        			
 			            var options = $("<div/>")
@@ -1066,8 +1095,6 @@
 
 		                var $checkboxs = $('#invoice-master-table input[name=checkbox-inv-master-select]:checked');
 		                
-		                console.log($checkboxs)
-		                
 		                if ($checkboxs.length == 0) {
 		                	dialogMsg("提示", '請至少選擇一筆資料');
 		                    return false;
@@ -1081,12 +1108,11 @@
 		                    	error_msg=error_msg+'<br/> 發票號碼: '+data.invoice_no+'已開立，無法刪除已開立發票。<br/>';
 		                    }
 						});
-		                console.log("error_msg :"+error_msg);
+
 		                if(error_msg.length>0){
 		                	dialogMsg("提示", error_msg);
-		                	 return false;
+	                		return false;
 		                }
-		                
 		                
 		                var inv_manual_ids = '';
 
@@ -1100,8 +1126,6 @@
 		    					action: 'delete_invoice',
 		    					inv_manual_id: inv_manual_ids
 		    			};
-		    		    
-		    		    console.log(parameter);
 		    		    
 		    			$('<div/>').dialog({
 		    				title: '警示訊息',
@@ -1179,13 +1203,11 @@
 		                    	error_msg=error_msg+'<br/> 發票號碼: '+data.invoice_no+'已開立，請勿重複開立發票。<br/>';
 		                    }
 						});
-		                console.log("error_msg :"+error_msg);
+		                
 		                if(error_msg.length>0){
 		                	dialogMsg("提示", error_msg);
-		                	 return false;
+		                	return false;
 		                }
-		          
-		                
 						
 		    			$('<div/>').dialog({
 		    				title: '提示訊息',
@@ -1206,8 +1228,6 @@
 		    						if (ids.length != 0) {
 		    							ids = ids.substring(1, ids.length);
 		    						}
-		    						
-		    						console.log('ids: '+ids);
 		    						  
 		    						$.ajax({
 		    							url: 'InvManual.do',
@@ -1246,16 +1266,15 @@
 			    								var result = '';
 
 			    				                $.each(json_obj, function(i, item) {
-			    				                	result += '<br>' + item.invoice_no + ' / ' + item.message + '<hr>'
+			    				                	result += item.invoice_no == ""? 
+			    				                			item.message:item.invoice_no + " / " + item.message;
 			    				                });
 
 			    				                $div.append( result );
 			    								$masterTable.ajax.reload();
 			    								
 		    								}catch(e) {
-		    									
 		    									$div.append($('<p>', {text: '開立失敗' }));
-
 		    								}
 				    						
 		    							}
@@ -1294,12 +1313,11 @@
 		                    	error_msg=error_msg+'<br/> 發票日期: '+data.invoice_date+'，買受人:'+data.title+'未開立，請先開立發票。<br/>';
 		                    }
 						});
-		                console.log("error_msg :"+error_msg);
-		                if(error_msg.length>0){
-		                	dialogMsg("提示", error_msg);
-		                	 return false;
-		                }
 		                
+						if(error_msg.length>0){
+							dialogMsg("提示", error_msg);
+							return false;
+						}
 						
 		    			$('<div/>').dialog({
 		    				title: '提示訊息',
@@ -1320,7 +1338,7 @@
 		    						if (ids.length != 0) {
 		    							ids = ids.substring(1, ids.length);
 		    						}
-		    						console.log('ids: '+ids);
+
 		    						open_report(ids);  
 
 		    						$(this).dialog("close");
@@ -1497,8 +1515,6 @@
 
 		                var $checkboxs = $('#invoice-detail-table input[name=checkbox-inv-detail-select]:checked');
 		                
-		                console.log($checkboxs)
-		                
 		                if ($checkboxs.length == 0) {
 		                    alert('請至少選擇一筆資料');
 		                    return false;
@@ -1516,8 +1532,6 @@
 		    					inv_manual_id: inv_manual_id,
 		    					inv_manual_detail_id: inv_manual_detail_ids
 		    			};
-		    		    
-		    		    console.log(parameter);
 		    		    
 		    			$('<div/>').dialog({
 		    				title: '警示訊息',
@@ -1663,8 +1677,19 @@
 						divControl(true, false);
 		    		    
 		    			var parameter = {
-		    					action: 'query_invoice'
+    						action: 'query_invoice'
 		    			};
+		    			
+		    			var startDate = $('form').find('input[type=text]:eq(0)').val();
+		    			var endDate = $('form').find('input[type=text]:eq(1)').val();
+		    			
+		    			if (startDate && endDate) {
+		    				parameter = {
+	    						action: 'query_invoice',
+								startDate: startDate,
+								endDate: endDate
+			    			};
+		    			}
 		    			drawInvMasTable(parameter);
 		            }
 				}]
@@ -1689,7 +1714,6 @@
 			
 			var iframUrl="./report.do?action=rptInvManual&ids="+encodeURIComponent(ids);
 
-			console.log(iframUrl);
 			$("#dialog_report_iframe").attr("src",iframUrl );
 			 $("#dialog_report").dialog({
 					draggable : true,
@@ -1723,12 +1747,8 @@
 	                term: request.term
 	            },
 	            success: function(data) {
-	                console.log("getInvBuyerData By " + type);
 	                var json_obj = $.parseJSON(data);
 	                var result = [];
-
-	                console.log('json_obj');
-	                console.log(json_obj);
 	                
 	                if (!json_obj.length) {
 	                    result = [{
@@ -1759,7 +1779,15 @@
 	                return response(result);
 	            }
 	        });
-	    }		
-	</script>	
+	    }
+	    
+	    $("#dialog-invoice").find('input[name=amount],input[name=tax]').change(function(){
+    		if ($("#dialog-invoice").find('form').valid()) {
+    			var amount = $("#dialog-invoice input[name=amount]").val();
+        		var tax = $("#dialog-invoice input[name=tax]").val();
+       			$("#dialog-invoice input[name=amount_plustax]").val(parseInt(amount) + parseInt(tax));
+    		}
+		});
+    </script>	
 </body>
 </html>
