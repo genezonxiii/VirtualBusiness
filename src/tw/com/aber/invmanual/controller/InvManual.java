@@ -2,7 +2,6 @@ package tw.com.aber.invmanual.controller;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -28,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import tw.com.aber.inv.controller.InvoiceApi;
 import tw.com.aber.inv.vo.Amount;
@@ -36,11 +34,11 @@ import tw.com.aber.inv.vo.Buyer;
 import tw.com.aber.inv.vo.Details;
 import tw.com.aber.inv.vo.Index;
 import tw.com.aber.inv.vo.Invoice;
+import tw.com.aber.inv.vo.InvoiceC0501;
 import tw.com.aber.inv.vo.Main;
 import tw.com.aber.inv.vo.ProductItem;
 import tw.com.aber.inv.vo.Seller;
 import tw.com.aber.util.Util;
-import tw.com.aber.vo.AllocInvVo;
 import tw.com.aber.vo.GroupVO;
 import tw.com.aber.vo.InvBuyerVO;
 import tw.com.aber.vo.InvManualDetailVO;
@@ -489,6 +487,82 @@ public class InvManual extends HttpServlet {
 				map.put("invoice_no", "");
 				map.put("message", "非預期錯誤");
 				list.add(map);
+			}
+			resp.getWriter().write(new Gson().toJson(list));
+		} else if ("cancelInvoice".equals(action)) {
+			String ids = req.getParameter("ids");
+			String reason = (String) req.getParameter("reason");
+			logger.debug("ids:" + ids);
+			logger.debug("reason:" + reason);
+			
+			String[] idsArr = ids.split(",");
+			
+			GroupVO groupVO = service.getGroupInvoiceInfo(groupId);
+			
+			InvManualVO invManualVO = null;
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+			
+			for (String inv_manual_id : idsArr) {
+				invManualVO = service.selectInvManualByInvManualId(groupId, inv_manual_id);
+				
+				SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat dt2 = new SimpleDateFormat("HH:mm:ss");
+				SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				java.util.Date date = new java.util.Date();
+				String ymd = dt1.format(date);
+				String hms = dt2.format(date);
+				String ymdhms = dt3.format(date);
+				
+				String cancelInvoiceNumber = invManualVO.getInvoice_no();
+				String invoiceDate = invManualVO.getInvoice_date().toString();
+				String buyerId = invManualVO.getUnicode();
+				String sellerId = groupVO.getGroup_unicode();
+				String cancelDate = ymd;
+				String cancelTime = hms;
+				String cancelReason = reason;
+				String returnTaxDocumentNumber = "";
+				String remark = "";
+				
+				InvoiceC0501 invoice = new InvoiceC0501();
+				invoice.setInvoiceCode("A0501");
+				invoice.setPosSn(groupVO.getInvoice_key());
+				invoice.setPosId(groupVO.getInvoice_posno());
+				invoice.setSysTime(ymdhms);
+
+				invoice.setCancelInvoiceNumber(cancelInvoiceNumber);
+				invoice.setInvoiceDate(invoiceDate);
+				invoice.setBuyerId(buyerId);
+				invoice.setSellerId(sellerId);
+				invoice.setCancelDate(cancelDate);
+				invoice.setCancelTime(cancelTime);
+				invoice.setCancelReason(cancelReason);
+				invoice.setReturnTaxDocumentNumber(returnTaxDocumentNumber);
+				invoice.setRemark(remark);
+				
+				StringWriter sw = new StringWriter();
+				JAXB.marshal(invoice, sw);
+				logger.debug(sw.toString());
+				
+				String reqXml = sw.toString();
+				InvoiceApi api = new InvoiceApi();
+						
+				String resXml = api.sendXML(reqXml);
+				Index index = api.getIndexResponse(resXml);
+				
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("invoice_no", cancelInvoiceNumber);
+				map.put("message", index.getMessage());
+				map.put("reply", index.getReply());
+				list.add(map);
+				
+				if (index != null && index.getReply().equals("1")) {
+					invManualVO = new InvManualVO();
+					invManualVO.setGroup_id(groupId);
+					invManualVO.setInvoice_no("");
+					invManualVO.setInv_manual_id(inv_manual_id);
+					invManualVO.setInv_flag(0);
+					service.updateInvManualInvFlag(invManualVO);
+				}
 			}
 			resp.getWriter().write(new Gson().toJson(list));
 		} else if ("getInvBuyerData".equals(action)) {

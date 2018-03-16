@@ -67,8 +67,7 @@
 		</div>
 	</div>
 
-<!-- 	<div id="dialog-invoice" style="display:none"> -->
-	<div id="dialog-invoice">
+	<div id="dialog-invoice" style="display:none">
 		<form>
 			<fieldset>
 				<table class='form-table'>
@@ -135,19 +134,19 @@
 					<tr>
 						<td>總計</td>
 						<td>
-							<input type="text" name="amount_plustax" disabled>
+							<input type="text" name="amount_plustax" value="0" disabled>
 						</td>
 					</tr>
 					<tr>
 						<td>銷售額合計(未稅)</td>
 						<td>
-							<input type="text" name="amount">
+							<input type="text" name="amount" value="0">
 						</td>
 					</tr>
 					<tr>
 						<td>營業稅額</td>
 						<td>
-							<input type="text" name="tax">
+							<input type="text" name="tax" value="0">
 						</td>
 					</tr>
 				</table>
@@ -178,6 +177,20 @@
 			</fieldset>
 		</form>
 	</div>
+	<!--對話窗樣式-作廢發票 -->
+	<div id="dialog-invoice-cancel" title="作廢發票" style="display:none;">
+		<form name="dialog-invoice-cancel-form-post" id="dialog-invoice-cancel-form-post" >
+			<fieldset>
+				<table class='form-table'>
+					<tr>
+						<td>作廢原因：</td>
+						<td><input type="text" id="invoice_cancel_reason"></td>
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
+
 	<!-- 辦別是否開立 flag-->
 	<input type="hidden" id="inv_flag">
 	<!-- 報表 對話窗 -->
@@ -1267,7 +1280,7 @@
 
 			    				                $.each(json_obj, function(i, item) {
 			    				                	result += item.invoice_no == ""? 
-			    				                			item.message:item.invoice_no + " / " + item.message;
+			    				                			item.message:item.invoice_no + " / " + item.message + "<br/>";
 			    				                });
 
 			    				                $div.append( result );
@@ -1349,6 +1362,9 @@
 		    				}
 		    			}).text("是否確認要列印發票?");
 		            }
+				},{
+		            text: '作廢發票',
+		            action: cancelInvoice
 				}]
 			});		
 		};
@@ -1780,6 +1796,119 @@
 	            }
 	        });
 	    }
+	    
+	    function cancelInvoice(e, dt, node, config) {
+        	var cells = dt.cells().nodes();
+            var checklist = $(cells).find('input[name=checkbox-inv-master-select]:checked');
+            var invMap = new Map();
+            
+            if (checklist.length == 0) {
+            	dialogMsg("提示", '請至少選擇一筆資料');
+                return false;
+            }
+            
+            var error_msg = '';
+            checklist.each(function(index) {
+				temp = dt.row( $(this).closest("tr") ).data();
+                if(temp.inv_flag == 0){
+                	error_msg = error_msg + '<br/> 未開立，請勿勾選！<br/>';
+                }
+                if(temp.invoice_no!=""){
+					invMap.set(temp.invoice_no, (index + 1));
+                }
+			});
+            
+            if(error_msg.length>0){
+            	dialogMsg("提示", error_msg);
+            	return false;
+            }
+            
+            if (invMap.size > 1) {
+            	dialogMsg("警告", '僅能單筆作廢');
+                return;
+            }
+        	
+            $("#dialog-invoice-cancel").dialog({
+				title: '作廢發票',
+				draggable : true,
+				resizable : false,
+				height : "auto",
+				width : "auto",
+				modal : true,
+				buttons : {
+					"作廢" : function() {
+						var ids = '';
+
+						checklist.each(function(index) {
+							data = dt.row( $(this).closest("tr") ).data();
+		                    ids += ',' + data.inv_manual_id ;
+						});
+
+						if (ids.length != 0) {
+							ids = ids.substring(1, ids.length);
+						}
+						  
+						$.ajax({
+							url: 'InvManual.do',
+							type: 'post',
+							data: {
+								action : 'cancelInvoice',
+								ids : ids,
+                                reason: $("#invoice_cancel_reason").val()
+							},
+			                beforeSend: function(){
+			                    $(':hover').css('cursor','progress');
+			                },
+			                complete: function(){
+			                	$(':hover').css('cursor','default');
+			                },
+							success: function (response) {
+								
+								var $div =
+									$('<div/>').dialog({
+    									title: '作廢發票',
+    									draggable : true,
+    									resizable : false,
+										width : "auto",
+    									modal : true,
+										create: function () {
+											$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+										},
+										buttons : [{
+											text : "確認",
+											click : function() {
+												$(this).dialog("close");
+											}
+										}]
+    								});
+								
+								try {
+    								var json_obj = $.parseJSON(response);
+    								var result = '';
+
+    				                $.each(json_obj, function(i, item) {
+    				                	result += item.invoice_no == ""? 
+    				                			item.message:item.invoice_no + " / " + item.message + "<br/>";
+    				                });
+
+    				                $div.append( result );
+    								dt.ajax.reload();
+								} catch(e) {
+									$div.append($('<p>', {text: '作廢失敗' }));
+								}
+							}
+						});
+						
+						$(this).dialog("close");
+					},
+					"取消" : function() {
+						$(this).dialog("close");
+					}
+				}
+			});
+            
+            $("#dialog-invoice-cancel").dialog("open");
+        }
 	    
 	    $("#dialog-invoice").find('input[name=amount],input[name=tax]').change(function(){
     		if ($("#dialog-invoice").find('form').valid()) {
