@@ -378,12 +378,12 @@ public class InvManual extends HttpServlet {
 						taxRate = 0.05F;
 					}
 					Integer taxAmount = 0;
-					taxAmount = new BigDecimal(amountVal * taxRate).setScale(0, BigDecimal.ROUND_HALF_UP).intValue();
+					taxAmount = invManualVO.getTax();
 
 					amount.setTaxType(util.null2str(taxType));
 					amount.setTaxRate(util.null2str(taxRate));
 					amount.setTaxAmount(util.null2str(taxAmount));
-					amount.setTotalAmount(util.null2str(amountVal + taxAmount));
+					amount.setTotalAmount(String.valueOf(invManualVO.getAmount_plustax()));
 
 					String sellerId = null, sellerName = null, buyerId = null, buyName = null;
 					// 二聯式
@@ -1181,6 +1181,8 @@ public class InvManual extends HttpServlet {
 					row.setTax_type(rs.getInt("tax_type"));
 					row.setAddress(rs.getString("address"));
 					row.setMemo(rs.getString("memo"));
+					row.setTax(rs.getInt("tax"));
+					row.setAmount_plustax(rs.getInt("amount_plustax"));
 				}
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
