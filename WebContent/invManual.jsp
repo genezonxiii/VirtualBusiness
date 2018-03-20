@@ -102,15 +102,15 @@
 					<tr>
 						<td>課稅別</td>
 						<td>
-							<input id="invoice-tax-type-radio-1" type="radio" name="invoice-tax-type-radio-group">
+							<input id="invoice-tax-type-radio-1" type="radio" name="invoice-tax-type-radio-group" value="1">
 							<label for="invoice-tax-type-radio-1">
 								<span class="form-label">應稅</span>
 							</label>
-		          			<input id="invoice-tax-type-radio-2" type="radio" name="invoice-tax-type-radio-group">
+		          			<input id="invoice-tax-type-radio-2" type="radio" name="invoice-tax-type-radio-group" value="2">
 		          			<label for="invoice-tax-type-radio-2">
 								<span class="form-label">零稅率</span>
 		          			</label>
-		          			<input id="invoice-tax-type-radio-3" type="radio" name="invoice-tax-type-radio-group">
+		          			<input id="invoice-tax-type-radio-3" type="radio" name="invoice-tax-type-radio-group" value="3">
 		          			<label for="invoice-tax-type-radio-3">
 								<span class="form-label">免稅</span>
 		          			</label>
@@ -140,7 +140,7 @@
 					<tr>
 						<td>銷售額合計(未稅)</td>
 						<td>
-							<input type="text" name="amount" value="0">
+							<input type="text" name="amount" value="0" disabled>
 						</td>
 					</tr>
 					<tr>
@@ -184,7 +184,7 @@
 				<table class='form-table'>
 					<tr>
 						<td>作廢原因：</td>
-						<td><input type="text" id="invoice_cancel_reason"></td>
+						<td><input type="text" id="invoice_cancel_reason" name="invoice_cancel_reason"></td>
 					</tr>
 				</table>
 			</fieldset>
@@ -318,6 +318,14 @@
 	            }
 	        }
 	    });		
+		
+		var valid_cancel_form = $( "#dialog-invoice-cancel" ).find('form').validate({
+			rules: {
+				'invoice_cancel_reason': {
+					required: true
+				}
+			}
+		});
 	</script>
 	<!-- Listener -->
 	<script type="text/javascript">
@@ -350,6 +358,10 @@
 			event.preventDefault();
 			
 			var $dialog = $('#dialog-invoice');
+			
+			$( "input[name='amount_plustax'], [name='amount'], [name='tax']" ).closest("tr").hide();
+			$( "#invoice-tax-type-radio-1" ).prop("checked", true);
+			$( "input[name='invoice_date']" ).datepicker('setDate', new Date());
 			
 // 			$('input:radio[name="invoice-type-radio-group"]').change(
 // 				function(){
@@ -387,9 +399,7 @@
 // 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
 									invoice_type ='2';
 									
-									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
-									tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
-									
+									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).val();
 									var title = $( "input[name='title']", $dialog ).val();
 									var unicode = $( "input[name='unicode']", $dialog ).val();
 									var address = $( "input[name='address']", $dialog ).val();
@@ -733,6 +743,8 @@
 		//主單功能-修改
 		$('#invoice-master-table').delegate(".btn_update", "click", function(e) {
 			event.preventDefault();
+			
+			$( "input[name='amount_plustax'], [name='amount'], [name='tax']" ).closest("tr").show();
 
 			var row = $(this).closest("tr");
 		    var data = $masterTable.row(row).data();
@@ -787,9 +799,7 @@
 // 							invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
 							invoice_type = '2';
 							
-							var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).attr("id");
-							tax_type = tax_type.substring( tax_type.length, tax_type.length -1 );
-							
+							var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).val();
 							var title = $( "input[name='title']", $dialog ).val();
 							var unicode = $( "input[name='unicode']", $dialog ).val();
 							var address = $( "input[name='address']", $dialog ).val();
@@ -799,6 +809,15 @@
 							var amount = $( "input[name='amount']", $dialog ).val();
 							var amount_plustax = $( "input[name='amount_plustax']", $dialog ).val();
 							var tax = $( "input[name='tax']", $dialog ).val();
+							
+							if (tax_type == 1) {
+								var standard_tax = Math.round(amount * 0.05);
+								var diff = standard_tax - tax;
+								if (!(diff == 0 || diff == 1)) {
+									dialogMsg("警告", '營業稅額只能為 ' + standard_tax + ' 或 ' + (standard_tax - 1) + '，請重新修正！！');
+									return;
+								}
+							}
 							
 							$.ajax({
 								url: 'InvManual.do',
@@ -1316,8 +1335,7 @@
 		                    alert('請至少選擇一筆資料');
 		                    return false;
 		                }
-		                
-		                
+
 		                var error_msg='';
 		                $checkboxs.each(function(index) {
 							data = $masterTable.row( $(this).closest("tr") ).data();
@@ -1612,8 +1630,9 @@
 		            	var $description = $dialog.find('input[name=description]');
 		            	var $subtotal = $dialog.find('input[name=subtotal]');
 		            	var $memo = $dialog.find('input[name=memo]');
-
-
+		            	
+		            	$quantity.val(1);
+		            	
 		            	$dialog.find('input[name=price],input[name=quantity]').change(function(){
 		            		var subtotalVal = $price.val()* $quantity.val();
 		            		
@@ -1835,6 +1854,11 @@
 				height : "auto",
 				width : "auto",
 				modal : true,
+			    beforeClose: function() {
+			    	valid_cancel_form.resetForm();
+			    	console.log(this);
+					$(this).find('form').trigger("reset");
+			    },
 				buttons : {
 					"作廢" : function() {
 						var ids = '';
@@ -1846,6 +1870,10 @@
 
 						if (ids.length != 0) {
 							ids = ids.substring(1, ids.length);
+						}
+						
+						if ( !$("#dialog-invoice-cancel").find('form').valid() ) {
+							return;
 						}
 						  
 						$.ajax({
