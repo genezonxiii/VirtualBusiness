@@ -21,6 +21,7 @@ public class SaleExtVO implements java.io.Serializable {
 	private String invName;
 	private String invTo;
 	private String email;
+	private String creditCard;
 	
 	public String toString(){
 		return "Total Amt:" + totalAmt + 
@@ -34,7 +35,8 @@ public class SaleExtVO implements java.io.Serializable {
 				", Pay Status:" + payStatus +
 				", Invoice Name:" + invName +
 				", Invoice To:" + invTo +
-				", E-mail:" + email;
+				", E-mail:" + email +
+				", Credit_card:" + creditCard;
 	}
 	public String getSale_id() {
 		return sale_id;
@@ -119,5 +121,11 @@ public class SaleExtVO implements java.io.Serializable {
 	}
 	public void setEmail(String email) {
 		this.email = email == null?"":email;
+	}
+	public String getCreditCard() {
+		return creditCard;
+	}
+	public void setCreditCard(String creditCard) {
+		this.creditCard = creditCard == null?"":creditCard;
 	}
 }

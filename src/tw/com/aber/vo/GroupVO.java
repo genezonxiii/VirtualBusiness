@@ -21,6 +21,7 @@ public class GroupVO implements java.io.Serializable {
 	private String invoice_posno;
 	private String invoice_key;
 	private String customer_id;
+	private String inv_product_name;
 	private GroupSfVO sf;
 	private WarehouseVO wh;
 
@@ -166,6 +167,14 @@ public class GroupVO implements java.io.Serializable {
 
 	public void setWh(WarehouseVO wh) {
 		this.wh = wh;
+	}
+
+	public String getInv_product_name() {
+		return inv_product_name;
+	}
+
+	public void setInv_product_name(String inv_product_name) {
+		this.inv_product_name = inv_product_name == null?"":inv_product_name;
 	}
 
 }

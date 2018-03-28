@@ -820,6 +820,7 @@ public class SaleDao {
 				groupVO.setGroup_unicode(rs.getString("group_unicode"));
 				groupVO.setInvoice_key(rs.getString("invoice_key"));
 				groupVO.setInvoice_posno(rs.getString("invoice_posno"));
+				groupVO.setInv_product_name(rs.getString("inv_product_name"));
 			}
 		} catch (SQLException se) {
 			throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -992,6 +993,7 @@ public class SaleDao {
 				
 				SaleExtVO saleExtVO = new SaleExtVO();
 				saleExtVO.setEmail(rs.getString("email"));
+				saleExtVO.setCreditCard(rs.getString("credit_card"));
 				saleVO.setSaleExtVO(saleExtVO);
 			}
 		} catch (SQLException se) {

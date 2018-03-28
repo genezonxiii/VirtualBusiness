@@ -585,7 +585,7 @@ public class Invoice {
 	}
 
 	public void setA16(String a16) {
-		A16 = a16;
+		this.A16 = a16 == null?"":a16;
 	}
 
 	public String getA17() {

@@ -549,6 +549,7 @@ public class InvoiceApi {
 		invoice.setA4(hms);// 發票開立時間
 		invoice.setA5("0000000000");// buyer識別碼(
 		invoice.setA6("0000");// buyer名稱
+		invoice.setA16(saleVOs.get(0).getSaleExtVO().getCreditCard());
 		invoice.setA19("");// 核准日
 		invoice.setA20("");// 核准文
 		invoice.setA21("");// 核准號
@@ -588,7 +589,7 @@ public class InvoiceApi {
 
 			b = new B();
 			b.setB1(String.valueOf(i + 1));// 商品項目資料
-			b.setB2(saleVOs.get(i).getProduct_name());// 品名
+			b.setB2(groupVO.getInv_product_name());// 品名
 			b.setB3(String.valueOf(saleVOs.get(i).getQuantity()));// 數量
 			b.setB5(String.valueOf(saleVOs.get(i).getPrice().intValue()));// 單價
 			b.setB6(String.valueOf(multiplyNum));// 金額
