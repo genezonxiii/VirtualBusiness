@@ -1,6 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-
 <%
 	request.setCharacterEncoding("UTF-8");
 	String groupId = (String) request.getSession().getAttribute("group_id");
@@ -9,7 +8,6 @@
 	String menu = (String) request.getSession().getAttribute("menu");
 	String privilege = (String) request.getSession().getAttribute("privilege");
 %>
-
 <html>
 <head>
 <title>買受人管理</title>
@@ -44,7 +42,7 @@
 								</form>
 							</div>
 							<div class="form-row">
-									<button class="btn btn-exec">新增買受人</button>
+								<button class="btn btn-exec">新增買受人</button>
 							</div>
 						</div>
 					</div>
@@ -101,6 +99,9 @@
 	        rules: {
 	            'title': {
 	                required: true
+	            },
+	            'unicode': {
+	                required: true
 	            }
 	        },
 	        errorPlacement: function(error, element) {
@@ -124,76 +125,71 @@
 				modal : true,
 				title : '新增買受人',
 				buttons : [{
-							text : "新增",
-							click : function() {
-								if( $('#dialog-inv-buyer').find('form').valid() ){
-									var title = $( "input[name='title']", $dialog ).val();
-									var unicode = $( "input[name='unicode']", $dialog ).val();
-									var address = $( "input[name='address']", $dialog ).val();
-									var memo = $( "input[name='memo']", $dialog ).val();
+					text : "新增",
+					click : function() {
+						if( $('#dialog-inv-buyer').find('form').valid() ){
+							var title = $( "input[name='title']", $dialog ).val();
+							var unicode = $( "input[name='unicode']", $dialog ).val();
+							var address = $( "input[name='address']", $dialog ).val();
+							var memo = $( "input[name='memo']", $dialog ).val();
+							
+							$.ajax({
+								url: 'InvBuyer.do',
+								type: 'post',
+								data : {
+									action: 'insertInvBuyer',
+									title: title,
+									unicode:  unicode,
+									address: address,
+									memo: memo
+								},
+								beforeSend: function(){
+								    $(':hover').css('cursor','progress');
+								},
+								complete: function(){
+									$(':hover').css('cursor','default');
+								},
+								success: function (response) {
 									
-									console.log('title: '+ title);
-									console.log('unicode: '+ unicode);
-									console.log('address: '+ title);
-									console.log('memo: '+ unicode);
+									var result = 'fail' != response ? 
+    										function(){
+												if ($buyerTable instanceof $.fn.dataTable.Api) {
+    												$buyerTable.ajax.reload();
+												}
+    											return '新增成功!'
+    										}: '新增失敗!';
+    											
+									$dialog.find('form').trigger("reset");
 									
-									$.ajax({
-										url: 'InvBuyer.do',
-										type: 'post',
-										data : {
-											action: 'insertInvBuyer',
-											title: title,
-											unicode:  unicode,
-											address: address,
-											memo: memo
+									$dialog.dialog("close");
+									
+									$('<div/>').dialog({
+										title: '提示訊息',
+										draggable : true,
+										resizable : false,
+										width : "140px",
+										modal : true,
+										create: function () {
+											$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
 										},
-										beforeSend: function(){
-										    $(':hover').css('cursor','progress');
-										},
-										complete: function(){
-											$(':hover').css('cursor','default');
-										},
-										success: function (response) {
-											
-											var result = 'fail' != response ? 
-		    										function(){
-														if ($buyerTable instanceof $.fn.dataTable.Api) {
-		    												$buyerTable.ajax.reload();
-														}
-		    											return '新增成功!'
-		    										}: '新增失敗!';
-		    											
-											$dialog.find('form').trigger("reset");
-											
-											$dialog.dialog("close");
-											
-											$('<div/>').dialog({
-												title: '提示訊息',
-												draggable : true,
-												resizable : false,
-												width : "140px",
-												modal : true,
-												create: function () {
-													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
-												},
-												buttons : [{
-													text : "確認",
-													click : function() {
-														$(this).dialog("close");
-													}
-												}]
-											}).text( result );
-										}
-									});
+										buttons : [{
+											text : "確認",
+											click : function() {
+												$(this).dialog("close");
+											}
+										}]
+									}).text( result );
 								}
-							}
-						}, {
-							text : "取消",
-							click : function() {
-								validator_insert_inv_buyer.resetForm();
-								$(this).dialog("close");
-							}
-						} ],
+							});
+						}
+					}
+				}, {
+					text : "取消",
+					click : function() {
+						validator_insert_inv_buyer.resetForm();
+						$(this).dialog("close");
+					}
+				} ],
 			    beforeClose: function() {
 					validator_insert_inv_buyer.resetForm();
 					$dialog.find('form').trigger("reset");
@@ -310,77 +306,72 @@
 				modal : true,
 				title : '修改買受人',
 				buttons : [{
-							text : "修改",
-							click : function() {
+					text : "修改",
+					click : function() {
 
-								if($('#dialog-inv-buyer').find('form').valid()){
+						if($('#dialog-inv-buyer').find('form').valid()){
+							
+							var title = $( "input[name='title']", $dialog ).val();
+							var unicode = $( "input[name='unicode']", $dialog ).val();
+							var address = $( "input[name='address']", $dialog ).val();
+							var memo = $( "input[name='memo']", $dialog ).val();
+							
+							$.ajax({
+								url: 'InvBuyer.do',
+								type: 'post',
+								data : {
+									action: 'updateInvBuyer',
+									inv_buyer_id: inv_buyer_id,
+									title: title,
+									unicode:  unicode,
+									address: address,
+									memo: memo,
+								},
+								beforeSend: function(){
+								    $(':hover').css('cursor','progress');
+								},
+								complete: function(){
+									$(':hover').css('cursor','default');
+								},
+								success: function (response) {
 									
-									var title = $( "input[name='title']", $dialog ).val();
-									var unicode = $( "input[name='unicode']", $dialog ).val();
-									var address = $( "input[name='address']", $dialog ).val();
-									var memo = $( "input[name='memo']", $dialog ).val();
-									
-									console.log('title: '+ title);
-									console.log('unicode: '+ unicode);
-									console.log('address: '+ address);
-									console.log('memo: '+ memo);
-
-									$.ajax({
-										url: 'InvBuyer.do',
-										type: 'post',
-										data : {
-											action: 'updateInvBuyer',
-											inv_buyer_id: inv_buyer_id,
-											title: title,
-											unicode:  unicode,
-											address: address,
-											memo: memo,
+									var result = 'fail' != response ? 
+    										function(){
+												if ($buyerTable instanceof $.fn.dataTable.Api) {
+    												$buyerTable.ajax.reload();
+												}
+    											return '修改成功!'
+    										}: '修改失敗!';
+    											
+									$dialog.find('form').trigger("reset");
+									$dialog.dialog("close");
+									$('<div/>').dialog({
+										title: '提示訊息',
+										draggable : true,
+										resizable : false,
+										width : "140px",
+										modal : true,
+										create: function () {
+											$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
 										},
-										beforeSend: function(){
-										    $(':hover').css('cursor','progress');
-										},
-										complete: function(){
-											$(':hover').css('cursor','default');
-										},
-										success: function (response) {
-											
-											var result = 'fail' != response ? 
-		    										function(){
-														if ($buyerTable instanceof $.fn.dataTable.Api) {
-		    												$buyerTable.ajax.reload();
-														}
-		    											return '修改成功!'
-		    										}: '修改失敗!';
-		    											
-											$dialog.find('form').trigger("reset");
-											$dialog.dialog("close");
-											$('<div/>').dialog({
-												title: '提示訊息',
-												draggable : true,
-												resizable : false,
-												width : "140px",
-												modal : true,
-												create: function () {
-													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
-												},
-												buttons : [{
-													text : "確認",
-													click : function() {
-														$(this).dialog("close");
-													}
-												}]
-											}).text( result );
-										}
-									});									
+										buttons : [{
+											text : "確認",
+											click : function() {
+												$(this).dialog("close");
+											}
+										}]
+									}).text( result );
 								}
-							}
-						}, {
-							text : "取消",
-							click : function() {
-								validator_insert_inv_buyer.resetForm();
-								$(this).dialog("close");
-							}
-						} ],
+							});									
+						}
+					}
+				}, {
+					text : "取消",
+					click : function() {
+						validator_insert_inv_buyer.resetForm();
+						$(this).dialog("close");
+					}
+				} ],
 			    beforeClose: function() {
 					validator_insert_inv_buyer.resetForm();
 					$dialog.find('form').trigger("reset");
@@ -464,7 +455,6 @@
 			        render: function(data, type, row) {
 
 						var inv_buyer_id = data.inv_buyer_id;
-						
 						var input = document.createElement("INPUT");
 						input.type = 'checkbox';
 						input.name = 'checkbox-inv-buyer-select';
@@ -542,8 +532,6 @@
 		            action: function(e, dt, node, config) {
 
 		                var $checkboxs = $('#inv-buyer-table input[name=checkbox-inv-buyer-select]:checked');
-		                
-		                console.log($checkboxs)
 		                
 		                if ($checkboxs.length == 0) {
 		                	dialogMsg("提示", '請至少選擇一筆資料');
