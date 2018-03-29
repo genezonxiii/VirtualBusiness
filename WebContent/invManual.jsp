@@ -1,7 +1,5 @@
-<!-- 二聯式功能先註解起來，未來需要再開啟 -->	
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-
 <%
 	request.setCharacterEncoding("UTF-8");
 	String groupId = (String) request.getSession().getAttribute("group_id");
@@ -10,10 +8,9 @@
 	String menu = (String) request.getSession().getAttribute("menu");
 	String privilege = (String) request.getSession().getAttribute("privilege");
 %>
-
 <html>
 <head>
-<title>手開發票</title>
+<title>B2B發票</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="Shortcut Icon" type="image/x-icon" href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true" />
@@ -27,8 +24,7 @@
 		<jsp:include page="template/common_headfoot.jsp" flush="true" />
 
 		<div class="content-wrap">
-			<h2 class="page-title">手開發票</h2>
-
+			<h2 class="page-title">B2B發票</h2>
 			<div class="panel-content">
 				<div class="datalistWrap">
 					<div class="input-field-wrap">
@@ -46,7 +42,7 @@
 								</form>
 							</div>
 							<div class="form-row">
-									<button class="btn btn-exec">新增發票</button>
+								<button class="btn btn-exec">新增發票</button>
 							</div>
 						</div>
 					</div>
@@ -219,7 +215,6 @@
 		        	getInvBuyerData(request, response, "title");
 		        },
 		        open:function(event){
-
 		            var target = $(event.target); 
 		            var widget = target.autocomplete("widget");
 		            widget.zIndex(target.zIndex() + 1); 
@@ -280,9 +275,6 @@
 	            'invoice_no': {
 	                required: true
 	            },
-// 	            'invoice-type-radio-group': {
-// 	                required: true
-// 	            },
 	            'invoice_date': {
 	                required: true
 	            },
@@ -333,11 +325,6 @@
 		//查詢
 		$('.input-field-wrap').on('click', '.btn-darkblue', function(event){
 			event.preventDefault();
-
-// 			if ($detailTable instanceof $.fn.dataTable.Api) {
-// 				$detailTable.destroy();
-// 			    $('#invoice-detail-table').empty();
-// 			}
 
 			divControl(true, false);
 		    
@@ -391,77 +378,75 @@
 				modal : true,
 				title : '新增發票',
 				buttons : [{
-							text : "儲存",
-							click : function() {
-								
-								if($('#dialog-invoice').find('form').valid()){
-// 									var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
-// 									invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
-									invoice_type ='2';
-									
-									var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).val();
-									var title = $( "input[name='title']", $dialog ).val();
-									var unicode = $( "input[name='unicode']", $dialog ).val();
-									var address = $( "input[name='address']", $dialog ).val();
-									var memo = $( "input[name='memo']", $dialog ).val();
-									var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
-									
-									$.ajax({
-										url: 'InvManual.do',
-										type: 'post',
-										data : {
-											action: 'insertMaster',
-											invoice_type: invoice_type,
-											title: title,
-											unicode:  unicode,
-											address: address,
-											memo: memo,
-											invoice_date: invoice_date,
-											tax_type: tax_type
-										},
-										beforeSend: function(){
-										    $(':hover').css('cursor','progress');
-										},
-										complete: function(){
-											$(':hover').css('cursor','default');
-										},
-										success: function (response) {
-											var text = '新增失敗';
-											if(response == 'OK'){
-												if ($masterTable instanceof $.fn.dataTable.Api) {
-													$masterTable.ajax.reload();
-												}
-												text = '新增成功';
-											}
-											$dialog.find('form').trigger("reset");
-											$dialog.dialog("close");
-											$('<div/>').dialog({
-												title: '提示訊息',
-												draggable : true,
-												resizable : false,
-												width : "140px",
-												modal : true,
-												create: function () {
-													$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
-												},
-												buttons : [{
-													text : "確認",
-													click : function() {
-														$(this).dialog("close");
-													}
-												}]
-											}).text(text);
+					text : "儲存",
+					click : function() {
+						
+						if($('#dialog-invoice').find('form').valid()){
+							var invoice_type ='2';
+							
+							var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).val();
+							var title = $( "input[name='title']", $dialog ).val();
+							var unicode = $( "input[name='unicode']", $dialog ).val();
+							var address = $( "input[name='address']", $dialog ).val();
+							var memo = $( "input[name='memo']", $dialog ).val();
+							var invoice_date = $( "input[name='invoice_date']", $dialog ).val();
+							
+							$.ajax({
+								url: 'InvManual.do',
+								type: 'post',
+								data : {
+									action: 'insertMaster',
+									invoice_type: invoice_type,
+									title: title,
+									unicode:  unicode,
+									address: address,
+									memo: memo,
+									invoice_date: invoice_date,
+									tax_type: tax_type
+								},
+								beforeSend: function(){
+								    $(':hover').css('cursor','progress');
+								},
+								complete: function(){
+									$(':hover').css('cursor','default');
+								},
+								success: function (response) {
+									var text = '新增失敗';
+									if(response == 'OK'){
+										if ($masterTable instanceof $.fn.dataTable.Api) {
+											$masterTable.ajax.reload();
 										}
-									});
+										text = '新增成功';
+									}
+									$dialog.find('form').trigger("reset");
+									$dialog.dialog("close");
+									$('<div/>').dialog({
+										title: '提示訊息',
+										draggable : true,
+										resizable : false,
+										width : "140px",
+										modal : true,
+										create: function () {
+											$(this).dialog("widget").find('.ui-dialog-titlebar-close').remove()
+										},
+										buttons : [{
+											text : "確認",
+											click : function() {
+												$(this).dialog("close");
+											}
+										}]
+									}).text(text);
 								}
-							}
-						}, {
-							text : "取消",
-							click : function() {
-								validator_insert_invoice.resetForm();
-								$(this).dialog("close");
-							}
-						} ],
+							});
+						}
+					}
+				}, {
+					text : "取消",
+					click : function() {
+						validator_insert_invoice.resetForm();
+						$(this).dialog("close");
+					}
+				}],
 			    beforeClose: function() {
 					validator_insert_invoice.resetForm();
 					$dialog.find('form').trigger("reset");
@@ -564,9 +549,7 @@
 			
         	$dialog.find('input[name=price],input[name=quantity]').change(function(){
         		var subtotalVal = $price.val()* $quantity.val();
-        		
         		subtotalVal = isNaN(subtotalVal) ? '資料錯誤，請檢查欄位': subtotalVal;
-
         		$subtotal.val( subtotalVal );
     		});
         	
@@ -725,11 +708,6 @@
 		    var data = $masterTable.row(row).data();
 		    inv_manual_id = data.inv_manual_id;
 
-// 			if ($masterTable instanceof $.fn.dataTable.Api) {
-// 			    $masterTable.destroy();
-// 			    $('#invoice-master-table').empty();
-// 			}
-
 			$('#inv_flag').val(data.inv_flag);
 			divControl(false, true);
 		    
@@ -797,7 +775,7 @@
 						if($('#dialog-invoice').find('form').valid()){
 // 							var invoice_type = $( "input[name='invoice-type-radio-group']:checked", $dialog ).attr("id");
 // 							invoice_type = invoice_type.substring( invoice_type.length, invoice_type.length -1 );
-							invoice_type = '2';
+							var invoice_type = '2';
 							
 							var tax_type = $( "input[name='invoice-tax-type-radio-group']:checked", $dialog ).val();
 							var title = $( "input[name='title']", $dialog ).val();
@@ -898,7 +876,6 @@
 	        	$(this).closest("tr").addClass("selected"):
 	        	$(this).closest("tr").removeClass("selected");
 	    });
-	    
 	</script>
 	
 	<!-- Method -->
@@ -1001,8 +978,6 @@
 						input.name = 'checkbox-inv-master-select';
 						input.id = inv_manual_id;
 						
-						//input.disabled = data.inv_flag == 0 ? false : true;
-						
 						var span = document.createElement("SPAN");
 						span.className = 'form-label';
 						
@@ -1035,7 +1010,6 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
-
 			        	return data.invoice_type == 1 ? '二聯式' : '三聯式';
 			        }
 			    },{
@@ -1043,7 +1017,6 @@
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
-
 			        	return data.unicode == '' ? '無' : data.unicode;
 			        }
 			    },{
@@ -1304,11 +1277,9 @@
 
 			    				                $div.append( result );
 			    								$masterTable.ajax.reload();
-			    								
 		    								}catch(e) {
 		    									$div.append($('<p>', {text: '開立失敗' }));
 		    								}
-				    						
 		    							}
 		    						});
 		    						
@@ -1703,12 +1674,6 @@
 				},{
 		            text: '返回主單',
 		            action: function(e, dt, node, config) {
-
-// 		    			if ($detailTable instanceof $.fn.dataTable.Api) {
-// 		    				$detailTable.destroy();
-// 		    			    $('#invoice-detail-table').empty();
-// 		    			}
-						
 						divControl(true, false);
 		    		    
 		    			var parameter = {
@@ -1732,7 +1697,6 @@
 		};
 		
 		function divControl(master, detail){
-			
 			if(master){
 				$('#masterTable').show()
 			}else{
@@ -1762,11 +1726,11 @@
 				        $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
 				    },
 					buttons : [{
-							text : "關閉",
-							click : function() {
-								$("#dialog_report").dialog("close");
-							}
-							}]
+						text : "關閉",
+						click : function() {
+							$("#dialog_report").dialog("close");
+						}
+					}]
 			 })
 			 $("#dialog_report").dialog("open"); 	
 		}
@@ -1856,7 +1820,6 @@
 				modal : true,
 			    beforeClose: function() {
 			    	valid_cancel_form.resetForm();
-			    	console.log(this);
 					$(this).find('form').trigger("reset");
 			    },
 				buttons : {

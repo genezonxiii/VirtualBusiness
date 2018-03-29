@@ -410,9 +410,8 @@ public class InvManual extends HttpServlet {
 					buyer.setAddress(invManualVO.getAddress());
 
 					// 發票號碼
-					InvoiceTrackVO invoiceTrackVO = service.getInvoiceNum(groupId, invManualVO.getInvoice_date());
+					InvoiceTrackVO invoiceTrackVO = service.getInvoiceTrack(groupId, invManualVO.getInvoice_date());
 					String invoiceNum = invoiceTrackVO.getInvoiceNum();
-
 					logger.debug("invoiceNum: " + invoiceNum);
 
 					if (invoiceNum == null || "".equals(invoiceNum)) {
@@ -420,8 +419,7 @@ public class InvManual extends HttpServlet {
 						map.put("invoice_no", "");
 						map.put("message", "發票字軌用罄，請洽系統管理員");
 						list.add(map);
-						resp.getWriter().write(new Gson().toJson(list));
-						return;
+						break;
 					}
 
 					Main main = new Main();
@@ -479,6 +477,9 @@ public class InvManual extends HttpServlet {
 						invManualVO.setInv_manual_id(inv_manual_id);
 						invManualVO.setInv_flag(1);
 						service.updateInvManualInvFlag(invManualVO);
+						service.increaseInvoiceTrack(invoiceTrackVO);
+					} else {
+						break;
 					}
 				}
 			} catch (Exception e) {
@@ -562,6 +563,8 @@ public class InvManual extends HttpServlet {
 					invManualVO.setInv_manual_id(inv_manual_id);
 					invManualVO.setInv_flag(0);
 					service.updateInvManualInvFlag(invManualVO);
+				} else {
+					break;
 				}
 			}
 			resp.getWriter().write(new Gson().toJson(list));
@@ -645,8 +648,12 @@ public class InvManual extends HttpServlet {
 			return dao.getGroupInvoiceInfo(groupId);
 		}
 
-		public InvoiceTrackVO getInvoiceNum(String groupId, Date invoice_date) {
-			return dao.getInvoiceNum(groupId, invoice_date);
+		public InvoiceTrackVO getInvoiceTrack(String groupId, Date invoice_date) {
+			return dao.getInvoiceTrack(groupId, invoice_date);
+		}
+		
+		public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO) {
+			return dao.increaseInvoiceTrack(invoiceTrackVO);
 		}
 
 		public void updateInvManualInvFlag(InvManualVO invManualVO) {
@@ -675,6 +682,7 @@ public class InvManual extends HttpServlet {
 		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?,?)";
 		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
+		private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
 		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?)";
@@ -1093,7 +1101,7 @@ public class InvManual extends HttpServlet {
 		}
 
 		@Override
-		public InvoiceTrackVO getInvoiceNum(String groupId, Date invoice_date) {
+		public InvoiceTrackVO getInvoiceTrack(String groupId, Date invoice_date) {
 			Connection con = null;
 			PreparedStatement pstmt = null;
 			ResultSet rs = null;
@@ -1123,7 +1131,6 @@ public class InvManual extends HttpServlet {
 						invoiceTrackVO.setInvoiceNum(InvoiceNum);
 						invoiceTrackVO.setSeq(rs.getString("seq"));
 						invoiceTrackVO.setYear_month(rs.getString("year_month"));
-
 					}
 				}
 			} catch (SQLException se) {
@@ -1149,7 +1156,35 @@ public class InvManual extends HttpServlet {
 			}
 			return invoiceTrackVO;
 		}
-
+		
+		@Override
+		public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO){
+			Connection con = null;
+			PreparedStatement pstmt = null;
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				pstmt = con.prepareStatement(sp_inc_invoice_track);
+				pstmt.setString(1, invoiceTrackVO.getGroup_id());
+				pstmt.setString(2, invoiceTrackVO.getInvoice_id());
+				pstmt.setString(3, invoiceTrackVO.getSeq());
+				pstmt.executeUpdate();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+				} catch (SQLException se) {
+					logger.error("SQLException:".concat(se.getMessage()));
+				}
+			}
+			return true;
+		}
+		
 		@Override
 		public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id) {
 			InvManualVO row = null;
@@ -1364,7 +1399,9 @@ interface InvManual_interface {
 
 	public void updateInvManualDetail(InvManualDetailVO invManualDetailVO);
 
-	public InvoiceTrackVO getInvoiceNum(String groupId, Date invoice_date);
+	public InvoiceTrackVO getInvoiceTrack(String groupId, Date invoice_date);
+	
+	public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO);
 
 	public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id);
 

@@ -677,53 +677,46 @@ public class sale extends HttpServlet {
 
 					List<List<SaleVO>> groupBySaleVOsList = getGroupBySaleVOsList(saleVOs);
 
-					try {
-						// TODO 撈取發票號碼
-						invoiceTrackVOList = saleService.getInvoiceTrack(group_id, invoice_date, groupBySaleVOsList);
-					} catch (Exception e) {
-						logger.debug("發票撈取失敗:" + e.getMessage());
-						result = "執行失敗";
-					}
-
-					// groupBySaleVOsList.size=invoiceTrackVOList.size=order_no數量
-					for (int i = 0; i < invoiceTrackVOList.size(); i++) {
-						InvoiceTrackVO invoiceTrackVO = invoiceTrackVOList.get(i);
+					for (int i = 0; i < groupBySaleVOsList.size(); i++) {
 						List<SaleVO> sameOrderNoSaleVOList = groupBySaleVOsList.get(i);
+						logger.debug("Order No:" + sameOrderNoSaleVOList.get(0).getOrder_no());
+						
+						invoiceTrackVOList = saleService.getInvoiceTrack(group_id, invoice_date, groupBySaleVOsList);
+						InvoiceTrackVO invoiceTrackVO = invoiceTrackVOList.get(0);
 						String invoiceNum = invoiceTrackVO.getInvoiceNum();
-
-						logger.debug("invoiceNum: " + invoiceNum);
-
+						logger.debug("Invoice No:" + invoiceNum);
 						if (invoiceNum == null || "".equals(invoiceNum)) {
-							errorMsg = "發票字軌用罄，請洽系統管理員";
-							response.getWriter().write(errorMsg);
-							return;
+							result = "發票字軌用罄，請洽系統管理員";
+							break;
 						}
+						
 						List<SaleVO> sameOrderNoSaleVOListAfterMask = saleService.maskOverviewByExt(group_id, sameOrderNoSaleVOList);
 						
 						String reqXml = api.genRequestForC0401(invoiceNum, sameOrderNoSaleVOListAfterMask, groupVO);
 						String resXml = api.sendXML(reqXml);
 						Index index = api.getIndexResponse(resXml);
 
+						result += "訂單編號：" + sameOrderNoSaleVOList.get(0).getOrder_no() 
+								+ "，" + index.getInvoiceNumber() + "，" + index.getMessage()
+								+ "<br/>";
+						
 						if ("1".equals(index.getReply())) {// 0失敗 1 成功
 							String InvoiceVcode = api.getInvoiceInvoiceVcode(reqXml);
-
 							String invoice_time = api.getInvoiceInvoice_time(reqXml);
-
-							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, InvoiceVcode,
-									invoice_time);
+							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, 
+									InvoiceVcode, invoice_time);
 							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date);
-
+							saleService.increaseInvoiceTrack(invoiceTrackVO);
+						} else {
+							break;
 						}
 
 						if (order_noSet.size() > 0) {
 							for (String order_no : order_noSet) {
-								result = result + "很抱歉，訂單編號:" + order_no + "已有發票，不可重複發送<br/>";
+								result += "很抱歉，訂單編號:" + order_no + "已有發票，不可重複發送<br/>";
 							}
 						}
-						result = result + "訂單編號:" + sameOrderNoSaleVOList.get(0).getOrder_no() + index.getMessage()
-								+ "<br/>";
 					}
-
 				} catch (Exception e) {
 					logger.debug("error:" + e.getMessage());
 					result = "執行失敗";

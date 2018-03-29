@@ -92,14 +92,13 @@ public class SaleService {
 	public List<InvoiceTrackVO> getInvoiceTrack(String group_id, Date invoice_num_date,
 			List<List<SaleVO>> groupBySaleVOsList) {
 		List<InvoiceTrackVO> invoiceTrackVOList = new ArrayList<InvoiceTrackVO>();
-
-		for (int i = 0; i < groupBySaleVOsList.size(); i++) {
-			InvoiceTrackVO invoiceTrackVO = dao.getInvoiceTrack(group_id, invoice_num_date);
-
-			invoiceTrackVOList.add(invoiceTrackVO);
-		}
-
+		InvoiceTrackVO invoiceTrackVO = dao.getInvoiceTrack(group_id, invoice_num_date);
+		invoiceTrackVOList.add(invoiceTrackVO);
 		return invoiceTrackVOList;
+	}
+	
+	public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO) {
+		return dao.increaseInvoiceTrack(invoiceTrackVO);
 	}
 
 	public void updateSaleInvoiceVcodeAndInvoice_time(List<SaleVO> SaleVOs, String InvoiceVcode, String Invoice_time) {

@@ -48,6 +48,7 @@ public class SaleDao {
 	private static final String sp_get_sale_orderno_info_by_ids = "call sp_get_sale_orderno_info_by_ids(?,?)";
 	private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
 	private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
+	private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
 	private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
 	private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?)";
 	private static final String sp_update_sale_invoice_vcode_and_invoice_time = "call sp_update_sale_invoice_vcode_and_invoice_time(?,?,?,?)";
@@ -864,7 +865,6 @@ public class SaleDao {
 					invoiceTrackVO.setInvoiceNum(InvoiceNum);
 					invoiceTrackVO.setSeq(rs.getString("seq"));
 					invoiceTrackVO.setYear_month(rs.getString("year_month"));
-
 				}
 			}
 		} catch (SQLException se) {
@@ -882,6 +882,28 @@ public class SaleDao {
 			}
 		}
 		return invoiceTrackVO;
+	}
+	
+	public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO){
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sp_inc_invoice_track);
+			pstmt.setString(1, invoiceTrackVO.getGroup_id());
+			pstmt.setString(2, invoiceTrackVO.getInvoice_id());
+			pstmt.setString(3, invoiceTrackVO.getSeq());
+			pstmt.executeUpdate();
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+		} finally {
+			try {
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException se) {
+				logger.error("SQLException:".concat(se.getMessage()));
+			}
+		}
+		return true;
 	}
 
 	public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date) {
