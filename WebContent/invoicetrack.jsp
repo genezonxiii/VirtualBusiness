@@ -103,6 +103,7 @@
 							<table id="products2" class="result-table">
 								<thead>
 									<tr>
+										<th style="display:none;">發票類型</th>
 										<th>發票期別</th>
 										<th>發票字軌</th>
 										<th style="background-image: none !important;">發票起號</th>
@@ -149,7 +150,8 @@
 						var result_table = "";
 						$.each(json_obj,function(i, item) {
 							result_table 
-							+="<tr><td name='year_month'>"+ item.year_month
+							+="<tr><td name='invoice_type' style='display:none;'>" + item.invoice_type
+							+ "</td><td name='year_month'>"+ item.year_month
 							+ "</td><td name='invoice_track'>"+ item.invoice_track
 							+ "</td><td name='invoice_beginno'>"+ item.invoice_beginno
 							+ "</td><td name='invoice_endno'>"+ item.invoice_endno
