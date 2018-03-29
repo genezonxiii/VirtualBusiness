@@ -216,7 +216,7 @@ function who(){
 		break;
 	case "invoicetrack.jsp":
 		side2.addClass("active");
-		return "發票字軌管理";
+		return "發票資訊管理";
 		break;
 	case "productContrast.jsp":
 		side2.addClass("active");
