@@ -258,6 +258,14 @@
 		        "data": "invoice_date",
 		        "defaultContent": ""
 		    }, {
+		        "title": "作廢原因",
+		        "data": "invoice_reason",
+		        "defaultContent": ""
+		    }, {
+		        "title": "收件人",
+		        "data": "saleExtVO.deliverName",
+		        "defaultContent": ""
+		    }, {
 		        "title": "E-mail",
 		        "data": "saleExtVO.email",
 		        "defaultContent": ""

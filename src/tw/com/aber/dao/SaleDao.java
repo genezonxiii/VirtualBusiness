@@ -50,7 +50,7 @@ public class SaleDao {
 	private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 	private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
 	private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
-	private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?)";
+	private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?,?)";
 	private static final String sp_update_sale_invoice_vcode_and_invoice_time = "call sp_update_sale_invoice_vcode_and_invoice_time(?,?,?,?)";
 	private static final String sp_get_sale_invoice_info_by_orderno = "call sp_get_sale_invoice_info_by_orderno(?,?)";
 	private static final String sp_getSaleByUploadDate_GroupByOrderNo = "call sp_getSaleByUploadDate_GroupByOrderNo(?,?,?)";
@@ -936,12 +936,13 @@ public class SaleDao {
 		}
 	}
 
-	public void invoiceCancel(String group_id, String sale_ids) {
+	public void invoiceCancel(String group_id, String sale_ids, String invoice_reason) {
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = connection.prepareStatement(sp_invoice_cancel);
-			pstmt.setString(1, "'" + group_id + "'");
+			pstmt.setString(1, group_id);
 			pstmt.setString(2, sale_ids);
+			pstmt.setString(3, invoice_reason);
 			pstmt.execute();
 
 		} catch (SQLException se) {
@@ -1057,9 +1058,11 @@ public class SaleDao {
 				saleVO.setInvoice(rs.getString("invoice"));
 				saleVO.setInvoice_date(rs.getDate("invoice_date"));
 				saleVO.setOrder_source(rs.getString("order_source"));
+				saleVO.setInvoice_reason(rs.getString("invoice_reason"));
 				
 				SaleExtVO saleExtVO = new SaleExtVO();
 				saleExtVO.setEmail(rs.getString("email"));
+				saleExtVO.setDeliverName(rs.getString("deliver_name"));
 				saleVO.setSaleExtVO(saleExtVO);
 				list.add(saleVO);
 			}
@@ -1102,9 +1105,11 @@ public class SaleDao {
 				saleVO.setInvoice(rs.getString("invoice"));
 				saleVO.setInvoice_date(rs.getDate("invoice_date"));
 				saleVO.setOrder_source(rs.getString("order_source"));
+				saleVO.setInvoice_reason(rs.getString("invoice_reason"));
 				
 				SaleExtVO saleExtVO = new SaleExtVO();
 				saleExtVO.setEmail(rs.getString("email"));
+				saleExtVO.setDeliverName(rs.getString("deliver_name"));
 				saleVO.setSaleExtVO(saleExtVO);
 				list.add(saleVO);
 			}

@@ -13,6 +13,7 @@ public class InvManualVO implements Serializable {
 	private String year_month;
 	private String invoice_no;
 	private Date invoice_date;
+	private String invoice_reason;
 	private String title;
 	private String unicode;
 	private String address;
@@ -145,6 +146,14 @@ public class InvManualVO implements Serializable {
 
 	public void setAmount_plustax(Integer amount_plustax) {
 		this.amount_plustax = amount_plustax;
+	}
+
+	public String getInvoice_reason() {
+		return invoice_reason;
+	}
+
+	public void setInvoice_reason(String invoice_reason) {
+		this.invoice_reason = invoice_reason;
 	}
 
 }

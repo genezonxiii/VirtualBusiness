@@ -111,8 +111,8 @@ public class SaleService {
 
 	}
 
-	public void invoiceCancel(String group_id, String sale_ids) {
-		dao.invoiceCancel(group_id, sale_ids);
+	public void invoiceCancel(String group_id, String sale_ids, String invoice_reason) {
+		dao.invoiceCancel(group_id, sale_ids, invoice_reason);
 	}
 
 	public String checkCancelDate(List<SaleVO> saleVOs) {

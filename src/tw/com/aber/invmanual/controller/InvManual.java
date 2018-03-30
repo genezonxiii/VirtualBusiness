@@ -562,6 +562,7 @@ public class InvManual extends HttpServlet {
 					invManualVO.setInvoice_no("");
 					invManualVO.setInv_manual_id(inv_manual_id);
 					invManualVO.setInv_flag(0);
+					invManualVO.setInvoice_reason(reason);
 					service.updateInvManualInvFlag(invManualVO);
 				} else {
 					break;
@@ -685,7 +686,7 @@ public class InvManual extends HttpServlet {
 		private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
-		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?)";
+		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?,?)";
 		private static final String sp_select_inv_buyer_by_unicode_or_title = "call sp_select_inv_buyer_by_unicode_or_title (?,?,?)";
 
 		@Override
@@ -712,6 +713,7 @@ public class InvManual extends HttpServlet {
 					row.setYear_month(rs.getString("year_month"));
 					row.setInvoice_no(rs.getString("invoice_no"));
 					row.setInvoice_date(rs.getDate("invoice_date"));
+					row.setInvoice_reason(rs.getString("invoice_reason"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
 					row.setAddress(rs.getString("address"));
@@ -773,6 +775,7 @@ public class InvManual extends HttpServlet {
 					row.setYear_month(rs.getString("year_month"));
 					row.setInvoice_no(rs.getString("invoice_no"));
 					row.setInvoice_date(rs.getDate("invoice_date"));
+					row.setInvoice_reason(rs.getString("invoice_reason"));
 					row.setTitle(rs.getString("title"));
 					row.setUnicode(rs.getString("unicode"));
 					row.setAddress(rs.getString("address"));
@@ -1301,6 +1304,7 @@ public class InvManual extends HttpServlet {
 				cs.setString(2, invManualVO.getInvoice_no());
 				cs.setInt(3, invManualVO.getInv_flag());
 				cs.setString(4, invManualVO.getInv_manual_id());
+				cs.setString(5, invManualVO.getInvoice_reason());
 				cs.execute();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());

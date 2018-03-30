@@ -33,6 +33,7 @@ public class SaleVO implements java.io.Serializable {
 	private String message;// 此參數用來存放錯誤訊息
 	private String invoice_vcode;
 	private Time invoice_time;
+	private String invoice_reason;
 	private String contrast_type;
 	private Float total_amt; 
 	private SaleExtVO saleExtVO;
@@ -275,5 +276,13 @@ public class SaleVO implements java.io.Serializable {
 
 	public void setTotal_amt(Float total_amt) {
 		this.total_amt = total_amt;
+	}
+
+	public String getInvoice_reason() {
+		return invoice_reason;
+	}
+
+	public void setInvoice_reason(String invoice_reason) {
+		this.invoice_reason = invoice_reason;
 	}	
 }

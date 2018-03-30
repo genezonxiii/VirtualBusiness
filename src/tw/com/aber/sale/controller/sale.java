@@ -553,7 +553,7 @@ public class sale extends HttpServlet {
 					Index index = api.getIndexResponse(resXml);
 
 					if ("1".equals(index.getReply())) {// 0失敗 1 成功
-						saleService.invoiceCancel(group_id, saleIds);
+						saleService.invoiceCancel(group_id, saleIds, reason);
 					}
 
 					result = index.getMessage();
@@ -754,7 +754,7 @@ public class sale extends HttpServlet {
 					}
 	
 					if ("1".equals(index.getReply())) {// 0失敗 1 成功
-						saleService.invoiceCancel(group_id, saleIdsStr);
+						saleService.invoiceCancel(group_id, saleIdsStr, reason);
 					}
 
 					result = index.getMessage();

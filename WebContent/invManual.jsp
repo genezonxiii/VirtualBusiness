@@ -937,6 +937,10 @@
 					"data" : "invoice_date",
 					"defaultContent" : ""
 				},{
+					"title" : "作廢原因",
+					"data" : "invoice_reason",
+					"defaultContent" : ""
+				},{
 					"title" : "買受人",
 					"data" : "title",
 					"defaultContent" : ""
@@ -1013,14 +1017,14 @@
 			        	return data.invoice_type == 1 ? '二聯式' : '三聯式';
 			        }
 			    },{
-			        targets: 7,
+			        targets: 8,
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
 			        	return data.unicode == '' ? '無' : data.unicode;
 			        }
 			    },{
-			        targets: 11,
+			        targets: 12,
 			        searchable: false,
 			        orderable: false,
 			        render: function(data, type, row) {
