@@ -2,7 +2,6 @@ package tw.com.aber.invmanual.controller;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -471,12 +470,11 @@ public class InvManual extends HttpServlet {
 					list.add(map);
 					
 					if (index != null && index.getReply().equals("1")) {
-						invManualVO = new InvManualVO();
-						invManualVO.setGroup_id(groupId);
-						invManualVO.setInvoice_no(invoiceNum);
-						invManualVO.setInv_manual_id(inv_manual_id);
-						invManualVO.setInv_flag(1);
-						service.updateInvManualInvFlag(invManualVO);
+						InvManualVO tempVO = new InvManualVO();
+						tempVO.setGroup_id(groupId);
+						tempVO.setInvoice_no(invoiceNum);
+						tempVO.setInv_manual_id(inv_manual_id);
+						service.updateInvManualInvFlag(tempVO, invoiceTrackVO, invoice);
 						service.increaseInvoiceTrack(invoiceTrackVO);
 					} else {
 						break;
@@ -557,13 +555,12 @@ public class InvManual extends HttpServlet {
 				list.add(map);
 				
 				if (index != null && index.getReply().equals("1")) {
-					invManualVO = new InvManualVO();
-					invManualVO.setGroup_id(groupId);
-					invManualVO.setInvoice_no("");
-					invManualVO.setInv_manual_id(inv_manual_id);
-					invManualVO.setInv_flag(0);
-					invManualVO.setInvoice_reason(reason);
-					service.updateInvManualInvFlag(invManualVO);
+					InvManualVO tempVO = new InvManualVO();
+					tempVO.setGroup_id(groupId);
+					tempVO.setInvoice_no(cancelInvoiceNumber);
+					tempVO.setInv_manual_id(inv_manual_id);
+					tempVO.setInvoice_reason(reason);
+					service.updateInvManualForCancelInvoice(tempVO);
 				} else {
 					break;
 				}
@@ -657,8 +654,12 @@ public class InvManual extends HttpServlet {
 			return dao.increaseInvoiceTrack(invoiceTrackVO);
 		}
 
-		public void updateInvManualInvFlag(InvManualVO invManualVO) {
-			dao.updateInvManualInvFlag(invManualVO);
+		public void updateInvManualInvFlag(InvManualVO invManualVO, InvoiceTrackVO invoiceTrackVO, Invoice invoice) {
+			dao.updateInvManualInvFlag(invManualVO, invoiceTrackVO, invoice);
+		}
+		
+		public void updateInvManualForCancelInvoice(InvManualVO invManualVO) {
+			dao.updateInvManualForCancelInvoice(invManualVO);
 		}
 
 		public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO) {
@@ -686,7 +687,8 @@ public class InvManual extends HttpServlet {
 		private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
 		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
 		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
-		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?,?)";
+		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?,?,?,?)";
+		private static final String sp_update_inv_manual_canel_invoice = "call sp_update_inv_manual_canel_invoice(?,?,?,?)";
 		private static final String sp_select_inv_buyer_by_unicode_or_title = "call sp_select_inv_buyer_by_unicode_or_title (?,?,?)";
 
 		@Override
@@ -1291,7 +1293,7 @@ public class InvManual extends HttpServlet {
 		}
 
 		@Override
-		public void updateInvManualInvFlag(InvManualVO invManualVO) {
+		public void updateInvManualInvFlag(InvManualVO invManualVO, InvoiceTrackVO invoiceTrackVO, Invoice invoice) {
 			Connection con = null;
 			CallableStatement cs = null;
 
@@ -1302,9 +1304,11 @@ public class InvManual extends HttpServlet {
 
 				cs.setString(1, invManualVO.getGroup_id());
 				cs.setString(2, invManualVO.getInvoice_no());
-				cs.setInt(3, invManualVO.getInv_flag());
-				cs.setString(4, invManualVO.getInv_manual_id());
-				cs.setString(5, invManualVO.getInvoice_reason());
+				cs.setString(3, invManualVO.getInv_manual_id());
+				cs.setString(4, invoiceTrackVO.getInvoice_type());
+				cs.setString(5, invoiceTrackVO.getYear_month());
+				cs.setString(6, invoice.getMain().getInvoiceDate());
+				cs.setString(7, invoice.getMain().getInvoiceTime());
 				cs.execute();
 			} catch (SQLException se) {
 				throw new RuntimeException("A database error occured. " + se.getMessage());
@@ -1327,7 +1331,44 @@ public class InvManual extends HttpServlet {
 				}
 			}
 		}
-
+		
+		@Override
+		public void updateInvManualForCancelInvoice(InvManualVO invManualVO){
+			Connection con = null;
+			CallableStatement cs = null;
+	
+			try {
+				Class.forName(jdbcDriver);
+				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
+				cs = con.prepareCall(sp_update_inv_manual_canel_invoice);
+	
+				cs.setString(1, invManualVO.getGroup_id());
+				cs.setString(2, invManualVO.getInvoice_no());
+				cs.setString(3, invManualVO.getInv_manual_id());
+				cs.setString(4, invManualVO.getInvoice_reason());
+				cs.execute();
+			} catch (SQLException se) {
+				throw new RuntimeException("A database error occured. " + se.getMessage());
+			} catch (ClassNotFoundException cnfe) {
+				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
+			} finally {
+				if (cs != null) {
+					try {
+						cs.close();
+					} catch (SQLException se) {
+						se.printStackTrace(System.err);
+					}
+				}
+				if (con != null) {
+					try {
+						con.close();
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+	
 		@Override
 		public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO) {
 			List<InvBuyerVO> rows = new ArrayList<InvBuyerVO>();
@@ -1411,7 +1452,9 @@ interface InvManual_interface {
 
 	public GroupVO getGroupInvoiceInfo(String groupId);
 
-	public void updateInvManualInvFlag(InvManualVO invManualVO);
+	public void updateInvManualInvFlag(InvManualVO invManualVO, InvoiceTrackVO invoiceTrackVO, Invoice invoice);
+	
+	public void updateInvManualForCancelInvoice(InvManualVO invManualVO);
 
 	public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO);
 }

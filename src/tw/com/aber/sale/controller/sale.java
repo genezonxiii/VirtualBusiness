@@ -502,14 +502,13 @@ public class sale extends HttpServlet {
 						Index index = api.getIndexResponse(resXml);
 
 						if ("1".equals(index.getReply())) {// 0失敗 1 成功
-							String InvoiceVcode = api.getInvoiceInvoiceVcode(reqXml);
-
+							String invoiceVcode = api.getInvoiceInvoiceVcode(reqXml);
 							String invoice_time = api.getInvoiceInvoice_time(reqXml);
 
-							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, InvoiceVcode,
+							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, invoiceVcode,
 									invoice_time);
-							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date);
-
+							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date,
+									invoice_time, invoiceVcode);
 						}
 
 						if (order_noSet.size() > 0) {
@@ -701,11 +700,12 @@ public class sale extends HttpServlet {
 								+ "<br/>";
 						
 						if ("1".equals(index.getReply())) {// 0失敗 1 成功
-							String InvoiceVcode = api.getInvoiceInvoiceVcode(reqXml);
+							String invoiceVcode = api.getInvoiceInvoiceVcode(reqXml);
 							String invoice_time = api.getInvoiceInvoice_time(reqXml);
 							saleService.updateSaleInvoiceVcodeAndInvoice_time(sameOrderNoSaleVOList, 
-									InvoiceVcode, invoice_time);
-							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date);
+									invoiceVcode, invoice_time);
+							saleService.updateSaleInvoice(sameOrderNoSaleVOList, invoiceTrackVO, invoice_date,
+									invoice_time, invoiceVcode);
 							saleService.increaseInvoiceTrack(invoiceTrackVO);
 						} else {
 							break;

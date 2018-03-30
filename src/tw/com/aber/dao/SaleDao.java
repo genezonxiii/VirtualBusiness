@@ -49,7 +49,7 @@ public class SaleDao {
 	private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
 	private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
 	private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
-	private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?)";
+	private static final String sp_update_sale_invoice = "call sp_update_sale_invoice(?,?,?,?,?,?,?,?)";
 	private static final String sp_invoice_cancel = "call sp_invoice_cancel(?,?,?)";
 	private static final String sp_update_sale_invoice_vcode_and_invoice_time = "call sp_update_sale_invoice_vcode_and_invoice_time(?,?,?,?)";
 	private static final String sp_get_sale_invoice_info_by_orderno = "call sp_get_sale_invoice_info_by_orderno(?,?)";
@@ -906,7 +906,8 @@ public class SaleDao {
 		return true;
 	}
 
-	public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date) {
+	public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date,
+			String invoice_time, String invoice_vcode) {
 		PreparedStatement pstmt = null;
 		try {
 
@@ -919,6 +920,8 @@ public class SaleDao {
 				pstmt.setString(4, invoiceTrackVO.getInvoice_type());
 				pstmt.setString(5, invoiceTrackVO.getYear_month());
 				pstmt.setDate(6, invoice_num_date);
+				pstmt.setString(7, invoice_time);
+				pstmt.setString(8, invoice_vcode);
 
 				pstmt.executeUpdate();
 			}

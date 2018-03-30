@@ -106,9 +106,9 @@ public class SaleService {
 
 	}
 
-	public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date) {
-		dao.updateSaleInvoice(SaleVOs, invoiceTrackVO, invoice_num_date);
-
+	public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date,
+			String invoice_time, String invoice_vcode) {
+		dao.updateSaleInvoice(SaleVOs, invoiceTrackVO, invoice_num_date, invoice_time, invoice_vcode);
 	}
 
 	public void invoiceCancel(String group_id, String sale_ids, String invoice_reason) {
