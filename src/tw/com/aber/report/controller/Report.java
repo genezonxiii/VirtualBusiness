@@ -459,6 +459,27 @@ public class Report extends HttpServlet {
 				genJaserFile(myFile);
 				genXlsFile(fillReport(myFile, hm), myFile);
 				writeToClient(request, response, myFile);
+			} else if ("rptSfSale".equals(request.getParameter("action"))) {
+				logger.debug("action:" + request.getParameter("action"));
+
+				final String reportName = "rptSfSale";
+				final String exportName = "順豐出庫";
+				
+				String start_date = request.getParameter("start_date");
+				String end_date = request.getParameter("end_date");
+				
+				logger.debug("start_date:" + start_date);
+				logger.debug("end_date:" + end_date);
+				
+				hm = new HashMap<String, Object>();
+				hm.put("p_group_id", group_id);
+				hm.put("p_start_date", start_date);
+				hm.put("p_end_date", end_date);
+
+				MyFile myFile = setMyFile(reportName, exportName, xls);
+				genJaserFile(myFile);
+				genXlsFile(fillReport(myFile, hm), myFile);
+				writeToClient(request, response, myFile);
 			}
 
 		} catch (Exception e) {
