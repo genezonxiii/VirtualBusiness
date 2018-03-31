@@ -170,6 +170,8 @@ input.error[type=radio] + label {
 										<tr>
 											<td>電子郵件信箱：</td>
 											<td><input type="text" name="email"></td>
+											<td>信用卡末四碼：</td>
+											<td><input type="text" name="credit_card"></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -326,6 +328,8 @@ input.error[type=radio] + label {
 										<tr>
 											<td>電子郵件信箱：</td>
 											<td><input type="text" name="email"></td>
+											<td>信用卡末四碼：</td>
+											<td><input type="text" name="credit_card"></td>
 										</tr>
 									</table>
 								</fieldset>
@@ -1085,7 +1089,8 @@ input.error[type=radio] + label {
 	                            pay_status: $insert.find("input[name='pay_status']").val(),
 	                            inv_name: $insert.find("input[name='inv_name']").val(),
 	                            inv_to: $insert.find("input[name='inv_to']").val(),
-	                            email: $insert.find("input[name='email']").val()
+	                            email: $insert.find("input[name='email']").val(),
+	                            credit_card: $insert.find("input[name='credit_card']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1194,7 +1199,8 @@ input.error[type=radio] + label {
 	                            pay_status: $update.find("input[name='pay_status']").val(),
 	                            inv_name: $update.find("input[name='inv_name']").val(),
 	                            inv_to: $update.find("input[name='inv_to']").val(),
-	                            email: $update.find("input[name='email']").val()
+	                            email: $update.find("input[name='email']").val(),
+	                            credit_card: $update.find("input[name='credit_card']").val()
 	                        };
 
 	                        draw_sale(tmp);
@@ -1302,6 +1308,7 @@ input.error[type=radio] + label {
 	        $("#dialog-form-update input[name='inv_name']").val(data.saleExtVO.invName);
 	        $("#dialog-form-update input[name='inv_to']").val(data.saleExtVO.invTo);
 	        $("#dialog-form-update input[name='email']").val(data.saleExtVO.email);
+	        $("#dialog-form-update input[name='credit_card']").val(data.saleExtVO.creditCard);
 	        
 	        $.ajax({
 				url : "sale.do",

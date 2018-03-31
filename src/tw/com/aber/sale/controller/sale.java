@@ -181,6 +181,7 @@ public class sale extends HttpServlet {
 				String invName = request.getParameter("inv_name");
 				String invTo = request.getParameter("inv_to");
 				String email = request.getParameter("email");
+				String creditCard = request.getParameter("credit_card");
 
 				SaleVO saleVO = new SaleVO();
 
@@ -219,6 +220,7 @@ public class sale extends HttpServlet {
 				saleExtVO.setInvName(invName);
 				saleExtVO.setInvTo(invTo);
 				saleExtVO.setEmail(email);
+				saleExtVO.setCreditCard(creditCard);
 				saleVO.setSaleExtVO(saleExtVO);
 
 				logger.debug("order_no:".concat(order_no));
@@ -289,6 +291,7 @@ public class sale extends HttpServlet {
 				String invName = request.getParameter("inv_name");
 				String invTo = request.getParameter("inv_to");
 				String email = request.getParameter("email");
+				String creditCard = request.getParameter("credit_card");
 				
 				SaleVO saleVO = new SaleVO();
 
@@ -329,6 +332,7 @@ public class sale extends HttpServlet {
 				saleExtVO.setInvName(invName);
 				saleExtVO.setInvTo(invTo);
 				saleExtVO.setEmail(email);
+				saleExtVO.setCreditCard(creditCard);
 				saleVO.setSaleExtVO(saleExtVO);
 				
 				logger.debug("sale_id:".concat(sale_id));

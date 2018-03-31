@@ -37,9 +37,9 @@ public class SaleDao {
 	private static final String sp_select_sale_by_upload_date = "call sp_select_sale_by_upload_date(?,?,?)";
 	private static final String sp_select_sale_bydisdate = "call sp_select_sale_bydisdate(?,?,?)";
 	private static final String sp_get_sale_newseqno = "call sp_get_sale_seqno(?)";
-	private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String sp_del_sale = "call sp_del_sale (?,?)";
-	private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
 	private static final String sp_get_product_byname = "call sp_get_product_byname (?,?)";
 	private static final String sp_insert_saleDetail = "call sp_insert_saleDetail(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -102,6 +102,7 @@ public class SaleDao {
 			pstmt.setString(30, saleVO.getSaleExtVO().getInvName());
 			pstmt.setString(31, saleVO.getSaleExtVO().getInvTo());
 			pstmt.setString(32, saleVO.getSaleExtVO().getEmail());
+			pstmt.setString(33, saleVO.getSaleExtVO().getCreditCard());
 			
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
@@ -155,6 +156,7 @@ public class SaleDao {
 			pstmt.setString(31, saleVO.getSaleExtVO().getInvName());
 			pstmt.setString(32, saleVO.getSaleExtVO().getInvTo());
 			pstmt.setString(33, saleVO.getSaleExtVO().getEmail());
+			pstmt.setString(34, saleVO.getSaleExtVO().getCreditCard());
 
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
@@ -287,6 +289,7 @@ public class SaleDao {
 				saleExtVO.setInvName(rs.getString("inv_name"));
 				saleExtVO.setInvTo(rs.getString("inv_to"));
 				saleExtVO.setEmail(rs.getString("email"));
+				saleExtVO.setCreditCard(rs.getString("credit_card"));
 				saleVO.setSaleExtVO(saleExtVO);
 				
 				list.add(saleVO); // Store the row in the list
@@ -358,6 +361,7 @@ public class SaleDao {
 				saleExtVO.setInvName(rs.getString("inv_name"));
 				saleExtVO.setInvTo(rs.getString("inv_to"));
 				saleExtVO.setEmail(rs.getString("email"));
+				saleExtVO.setCreditCard(rs.getString("credit_card"));
 				saleVO.setSaleExtVO(saleExtVO);
 				
 				list.add(saleVO);
@@ -428,6 +432,7 @@ public class SaleDao {
 				saleExtVO.setInvName(rs.getString("inv_name"));
 				saleExtVO.setInvTo(rs.getString("inv_to"));
 				saleExtVO.setEmail(rs.getString("email"));
+				saleExtVO.setCreditCard(rs.getString("credit_card"));
 				saleVO.setSaleExtVO(saleExtVO);
 				
 				list.add(saleVO);
