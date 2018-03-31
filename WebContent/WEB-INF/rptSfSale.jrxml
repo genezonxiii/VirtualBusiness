@@ -1,0 +1,1268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSfSale" language="groovy" pageWidth="2520" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="2520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f68732a1-6863-452d-bd26-f5e9b47ef327">
+	<property name="ireport.zoom" value="3.4522712143931193"/>
+	<property name="ireport.x" value="6311"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_group_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[call sp_export_rpt_sf_sale($P{p_group_id}, $P{p_start_date}, $P{p_end_date})]]>
+	</queryString>
+	<field name="order_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_to" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_amt" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_phone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_mobile" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deliver_note" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="c_product_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="product_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="company_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="monthly_account" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sf_warehouse_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<pageHeader>
+		<band height="95">
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" x="0" y="0" width="61" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[填寫說明]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="61" y="0" width="85" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[根據客戶的月結帳戶填寫]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="146" y="0" width="78" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[根據客戶的月結帳戶填寫]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="457" y="0" width="61" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[自行編排單號不可重覆]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="786" y="0" width="100" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[根據客戶公司名稱填寫，沒有收件公司填寫收件人姓名。]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1016" y="0" width="200" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[收件人完整地址]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1490" y="0" width="90" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[商品代碼(貨號)
+(國際條碼)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1925" y="0" width="100" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[收件人名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2025" y="0" width="90" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[根據市內電話為選擇性填寫，行動電話號碼為必填。]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2115" y="0" width="90" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[根據市內電話為選擇性填寫，行動電話號碼為必填。]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1580" y="0" width="141" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1721" y="0" width="73" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2315" y="0" width="61" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1863" y="0" width="62" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[系統已設定自動計算]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1794" y="0" width="69" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[單價金額，此欄位填入數據將會呈現購物清單上。]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1216" y="0" width="74" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[島內使用：填入大寫"N" or "Y"]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1290" y="0" width="80" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[島內使用：O欄位填入Y時，P欄位才需填入金額]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="224" y="0" width="61" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[標體為紅色:內容須簡體字]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="285" y="0" width="61" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[空格欄位不可刪除及填寫內容]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="346" y="0" width="111" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="518" y="0" width="111" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[標體為紅色:內容須簡體字]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="629" y="0" width="157" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[1. 貨件走項：
+    跨境商品-全球順。
+    島內商品-島內件-批(80CM)※島內件依實際材積計算。
+2. 標標體為紅色:內容須簡體字。
+3. 承運商ID為"自提出庫"，填入"自提"。]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2376" y="0" width="50" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2426" y="0" width="40" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2466" y="0" width="40" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="2205" y="0" width="110" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1370" y="0" width="60" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="1430" y="0" width="60" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="886" y="0" width="50" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="936" y="0" width="40" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" stretchType="RelativeToBandHeight" x="976" y="0" width="40" height="95"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1964813f-6604-4bdc-b8aa-b446414ce9ce" x="61" y="0" width="85" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[货主ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2635ba3c-b524-43eb-b912-54419fcc0fad" x="0" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[仓库ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="127d66e4-9597-4fc1-a9ac-bc4599489557" x="457" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[订单号码
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="049042b0-497b-4458-b9d5-fb260a66da07" x="786" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[收件公司]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a26cde87-fe54-4d5b-a049-6158ab173836" x="1016" y="0" width="200" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[地址]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8f942500-b403-4ecf-bf75-4421056cc006" x="2025" y="0" width="90" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[固定电话]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9e4b5bab-5769-449e-9bfa-194a85963040" x="2115" y="0" width="90" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[手机]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="2205" y="0" width="110" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[订单备注]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="03c8967b-619b-4169-936d-bcb1b1888435" x="1490" y="0" width="90" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[商品编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="36ac9a49-00d9-4c5f-8912-16fe3a18c8ac" x="1580" y="0" width="141" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[预留字段1/商品名称]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="16c0907c-102e-4eb5-8d28-0f33c6ba1b8d" x="1721" y="0" width="73" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[商品出库数量]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b324a903-c98f-4683-8860-bd41ce24c723" x="146" y="0" width="78" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[月结账号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="049042b0-497b-4458-b9d5-fb260a66da07" x="1925" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[收件人]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="2466" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[批次号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="2426" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[运单号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="2376" y="0" width="50" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[库存状态]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="2315" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[是否自取件]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="1863" y="0" width="62" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[订单总金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="1794" y="0" width="69" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[价格]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="1370" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[是否保价]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="1430" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[声明价值]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="1290" y="0" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[代收货款金额]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="1216" y="0" width="74" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[是否货到付款]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b324a903-c98f-4683-8860-bd41ce24c723" x="224" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[行号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b324a903-c98f-4683-8860-bd41ce24c723" x="285" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[订单类型ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b324a903-c98f-4683-8860-bd41ce24c723" x="346" y="0" width="111" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[客户支付SF运费方式ID
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b324a903-c98f-4683-8860-bd41ce24c723" x="518" y="0" width="111" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[承运商ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b324a903-c98f-4683-8860-bd41ce24c723" x="629" y="0" width="157" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[承运商服务ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="936" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[市]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="976" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[区/县]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe0ed78-7fd5-46da-b1f1-103a315fc5c3" x="886" y="0" width="50" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[省]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="515a7a9b-b3c2-4e6d-87f6-fcdf75509192" stretchType="RelativeToBandHeight" x="61" y="0" width="85" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="732bf630-2ae1-4404-918a-73bbfc445a6d" stretchType="RelativeToBandHeight" x="0" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sf_warehouse_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="e967b227-3873-428c-b5c8-082522d2f6b4" stretchType="RelativeToBandHeight" x="457" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c4263776-ae14-467d-a3b6-9c1c67fdc466" stretchType="RelativeToBandHeight" x="786" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="22cfb9c6-16ce-4dbe-a447-c3eb0b7a1a57" stretchType="RelativeToBandHeight" x="1016" y="0" width="200" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_to}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="288524fa-6b15-4c24-8bf6-385870633a48" stretchType="RelativeToBandHeight" x="2025" y="0" width="90" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_phone}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="11b60ffc-d0be-4c0e-a3fd-bdae38b6bead" stretchType="RelativeToBandHeight" x="2115" y="0" width="90" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_mobile}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="40bb7cac-d6fc-49a2-9e90-b19ed9558473" stretchType="RelativeToBandHeight" x="2205" y="0" width="110" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_note}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="755f63a5-2d3e-4d0e-9e4c-1d9fe4f0fd7b" stretchType="RelativeToBandHeight" x="1490" y="0" width="90" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{c_product_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="3270711e-1cbf-4e4d-818c-aa33c55f1870" stretchType="RelativeToBandHeight" x="1580" y="0" width="141" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="cfde6f05-0b9d-4714-9c26-1707078216fb" stretchType="RelativeToBandHeight" x="1721" y="0" width="73" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="146" y="0" width="78" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monthly_account}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c4263776-ae14-467d-a3b6-9c1c67fdc466" stretchType="RelativeToBandHeight" x="1925" y="0" width="100" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deliver_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="224" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="285" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="346" y="0" width="111" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="518" y="0" width="111" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="629" y="0" width="157" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="886" y="0" width="50" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="936" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="976" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1216" y="0" width="74" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1290" y="0" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1370" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1430" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1794" y="0" width="69" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1863" y="0" width="62" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="2315" y="0" width="61" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="2376" y="0" width="50" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="2426" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="2466" y="0" width="40" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement>
+					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
+				</textElement>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

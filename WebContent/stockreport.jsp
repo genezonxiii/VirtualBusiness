@@ -1,12 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ page import="tw.com.aber.productunit.controller.*"%>
-<%@ page import="java.util.*"%>
-<%@ page import="java.sql.DriverManager"%>
-<%@ page import="java.sql.Connection"%>
-<%@ page import="java.sql.Statement"%>
-<%@ page import="java.sql.ResultSet"%>
-<jsp:directive.page import="java.sql.SQLException" />
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,17 +42,16 @@
 		$(".bdyplane").animate({"opacity":"1"});
 		
 		$("#search_stock").click(function(){
-			var param = "action=report&kind=pdf";
+			var param = {url: "./stock.do?", option:"action=report&kind=pdf"};
 			open_report(param);
 		});
 		
 		$("#download_stock").click(function(){
-			var param = "action=report&kind=xls";
+			var param = {url: "./stock.do?", option:"action=report&kind=xls"};
 			download_report(param);
 		});
 		
 		function open_report(param){
-			
 			$("<div></div>")
 			.attr("align", "center")
 			.dialog({
@@ -67,7 +59,7 @@
 			    modal: true,
 			    width: "auto",
 			    open: function(event, ui) {
-			    	var iframeUrl="./stock.do?" + param;
+			    	var iframeUrl=param.url + param.option;
 			        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
 			        $iframe = $("<iframe></iframe>")
 			        	.attr("width", 850)
@@ -92,7 +84,7 @@
 			    title: "下載",
 			    modal: true,
 			    open: function(event, ui) {
-			    	var iframeUrl="./stock.do?" + param; 
+			    	var iframeUrl=param.url + param.option; 
 			    	$(this).parent().children().children('.ui-dialog-titlebar-close').hide();
 			        $iframe = $("<iframe></iframe>")
 			        	.attr("src", iframeUrl);
