@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSfSale" language="groovy" pageWidth="2520" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="2520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f68732a1-6863-452d-bd26-f5e9b47ef327">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSfSale" language="groovy" pageWidth="2520" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="2520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="f68732a1-6863-452d-bd26-f5e9b47ef327">
 	<property name="ireport.zoom" value="3.4522712143931193"/>
 	<property name="ireport.x" value="6311"/>
 	<property name="ireport.y" value="0"/>
