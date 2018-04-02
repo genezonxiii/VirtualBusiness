@@ -30,7 +30,6 @@ public class group extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		doPost(request, response);
 	}
 
@@ -47,13 +46,13 @@ public class group extends HttpServlet {
 		if ("searh".equals(action)) {
 			try {
 				/***************************
-				 * 1.�����ШD�Ѽ�
+				 * 1.接收請求參數
 				 ****************************************/
 				String group_id2 = request.getParameter("group_id");
 				/***************************
-				 * 2.�}�l�d�߸��
+				 * 2.開始查詢資料
 				 ****************************************/
-				// ���p�L�d�߱���A�h�O�d�ߥ���
+				// 假如無查詢條件，則是查詢全部
 				if (group_id2 == null || (group_id2.trim()).length() == 0) {
 					groupService = new GroupService();
 					List<GroupVO> list = groupService.getSearchAllDB(group_id);
@@ -62,9 +61,9 @@ public class group extends HttpServlet {
 					Gson gson = new Gson();
 					String jsonStrList = gson.toJson(list);
 					response.getWriter().write(jsonStrList);
-					return;// �{�����_
+					return;// 程式中斷
 				}
-				/*************************** ��L�i�઺���~�B�z **********************************/
+				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -72,7 +71,7 @@ public class group extends HttpServlet {
 		if ("update".equals(action)) {
 			try {
 				/***************************
-				 * 1.�����ШD�Ѽ�
+				 * 1.接收請求參數
 				 ***************************************/
 				String group_name = request.getParameter("group_name");
 				String group_unicode = request.getParameter("group_unicode");
@@ -83,6 +82,7 @@ public class group extends HttpServlet {
 				String email = request.getParameter("email");
 				String master = request.getParameter("master");
 				String invoice_path = request.getParameter("invoice_path");
+				String inv_product_name = request.getParameter("inv_product_name");
 
 				logger.debug("group_name: " + group_name);
 				logger.debug("group_unicode: " + group_unicode);
@@ -93,35 +93,36 @@ public class group extends HttpServlet {
 				logger.debug("email: " + email);
 				logger.debug("master: " + master);
 				logger.debug("invoice_path: " + invoice_path);
+				logger.debug("inv_product_name:" + inv_product_name);
 				/***************************
-				 * 2.�}�l�ק���
+				 * 2.開始修改資料
 				 ***************************************/
 				groupService = new GroupService();
 				groupService.updateGroup(user_id, group_id, group_name, group_unicode, address, phone, fax, mobile,
-						email, master, invoice_path);
+						email, master, invoice_path, inv_product_name);
 				/***************************
-				 * 3.�ק粒��,�ǳ����(Send the Success view)
+				 * 3.修改完成,準備轉交(Send the Success view)
 				 ***********/
 				groupService = new GroupService();
 				List<GroupVO> list = groupService.getSearchAllDB(group_id);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
-				/*************************** ��L�i�઺���~�B�z **********************************/
+				/*************************** 其他可能的錯誤處理 **********************************/
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	/*************************** ��w�W����k ****************************************/
+	/*************************** 制定規章方法 ****************************************/
 	interface Group_interface {
 		public void updateDB(GroupVO groupVO);
 
 		public List<GroupVO> searchAllDB(String group_id);
 	}
 
-	/*************************** �B�z�~���޿� ****************************************/
+	/*************************** 處理業務邏輯 ****************************************/
 	class GroupService {
 		private Group_interface dao;
 
@@ -131,7 +132,7 @@ public class group extends HttpServlet {
 
 		public GroupVO updateGroup(String user_id, String group_id, String group_name, String group_unicode,
 				String address, String phone, String fax, String mobile, String email, String master,
-				String invoice_path) {
+				String invoice_path, String inv_product_name) {
 			GroupVO groupVO = new GroupVO();
 			groupVO.setGroup_id(group_id);
 			groupVO.setGroup_name(group_name);
@@ -144,6 +145,7 @@ public class group extends HttpServlet {
 			groupVO.setMaster(master);
 			groupVO.setUser_id(user_id);
 			groupVO.setInvoice_path(invoice_path);
+			groupVO.setInv_product_name(inv_product_name);
 			dao.updateDB(groupVO);
 			return groupVO;
 		}
@@ -153,11 +155,11 @@ public class group extends HttpServlet {
 		}
 	}
 
-	/*************************** �ާ@��Ʈw ****************************************/
+	/*************************** 操作資料庫 ****************************************/
 	class GroupDAO implements Group_interface {
-		// �|�ϥΨ쪺Stored procedure
+		// 會使用到的Stored procedure
 		private static final String sp_selectall_group = "call sp_selectall_group(?)";
-		private static final String sp_update_group = "call sp_update_group(?,?,?,?,?,?,?,?,?,?,?,?)";
+		private static final String sp_update_group = "call sp_update_group(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -186,6 +188,7 @@ public class group extends HttpServlet {
 				pstmt.setString(10, groupVO.getMaster());
 				pstmt.setString(11, groupVO.getInvoice_path());
 				pstmt.setDate(12, groupVO.getExpired());
+				pstmt.setString(13, groupVO.getInv_product_name());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors
@@ -243,6 +246,7 @@ public class group extends HttpServlet {
 					groupVO.setInvoice_posno(rs.getString("invoice_posno"));
 					groupVO.setInvoice_key(rs.getString("invoice_key"));
 					groupVO.setCustomer_id(rs.getString("customer_id"));
+					groupVO.setInv_product_name(rs.getString("inv_product_name"));
 					
 					GroupSfVO sf = new GroupSfVO(group_id, rs.getString("access_code"), rs.getString("check_word"),
 							rs.getString("company_code"), rs.getString("monthly_account"), rs.getString("vendor_code"), "");
