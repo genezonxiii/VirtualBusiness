@@ -36,11 +36,11 @@
 							<div class="form-wrap">
 								<div class="form-row">
 									<form id = "sf_export">
-										<label for=""> <span class="block-label">銷售起日</span> <input
+										<label for=""> <span class="block-label">上傳起日</span> <input
 											type="text" name="start_date" class='input-date'>
 										</label>
 										<div class='forward-mark'></div>
-										<label for=""> <span class="block-label">銷售迄日</span> <input
+										<label for=""> <span class="block-label">上傳迄日</span> <input
 											type="text" name="end_date" class='input-date'>
 										</label>
 										<button class="btn btn-darkblue">查詢</button>
