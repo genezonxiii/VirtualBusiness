@@ -58,10 +58,21 @@ public class ShipDao {
 	
 	private Connection connection;
 
+	/**
+	 * <p>注入連線
+	 */
 	public ShipDao() {
 		connection = Database.getConnection();
 	}
 
+	/**
+	 * <p>依{@code group_id}和{@code sale_date}區間，撈取{@code tb_ship}
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<ShipVO> searchShipBySaleDate(String groupId, Date startDate, Date endDate) {
 		List<ShipVO> rows = new ArrayList<ShipVO>();
 		ShipVO row = null;
@@ -113,6 +124,13 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code ship_seq_no}撈取{@code tb_ship}
+	 * 
+	 * @param shipSeqNos
+	 * @param groupId
+	 * @return
+	 */
 	public List<ShipVO> getShipByShipSeqNo(String shipSeqNos, String groupId) {
 		List<ShipVO> shipVOList = new ArrayList<ShipVO>();
 		ShipVO shipVO = null;
@@ -217,6 +235,12 @@ public class ShipDao {
 		return shipVOList;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code order_no}撈取{@code tb_ship}
+	 * 
+	 * @param shipVO
+	 * @return
+	 */
 	public List<ShipVO> searchShipByOrderNo(ShipVO shipVO) {
 		List<ShipVO> rows = new ArrayList<ShipVO>();
 		ShipVO row = null;
@@ -270,6 +294,15 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code order_no}撈取出貨及順豐快遞資訊，產生電文格式
+	 * 
+	 * @param info
+	 * @param groupId
+	 * @param totalWeight
+	 * @param seqNo
+	 * @return
+	 */
 	public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo) {
 
 		Type type = new TypeToken<List<ShipSFDeliveryVO>>() {}.getType();
@@ -363,6 +396,12 @@ public class ShipDao {
 		return result;
 	}
 
+	/**
+	 * <p>依{@code group_id}撈取順豐快遞的最新流水號
+	 * 
+	 * @param groupId
+	 * @return
+	 */
 	public String getShipSFDeliveryNewSeqNo(String groupId) {
 		CallableStatement cs = null;
 		String seqNo = null;
@@ -389,6 +428,11 @@ public class ShipDao {
 		return seqNo;
 	}
 
+	/**
+	 * <p>新增順豐快遞
+	 * 
+	 * @param deliveryVO
+	 */
 	public void insertToShipSFDelivery(DeliveryVO deliveryVO) {
 		CallableStatement cs = null;
 
@@ -420,6 +464,13 @@ public class ShipDao {
 		}
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code order_no}撈取順豐快遞資訊
+	 * 
+	 * @param groupId
+	 * @param orderNos
+	 * @return
+	 */
 	public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos) {
 		List<DeliveryVO> rows = new ArrayList<DeliveryVO>();
 		DeliveryVO row = null;
@@ -458,6 +509,13 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code ship_seq_no}撈取出貨相關資訊
+	 * 
+	 * @param shipSeqNos
+	 * @param groupId
+	 * @return
+	 */
 	public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId) {
 
 		List<ShipVO> shipVOList = new ArrayList<ShipVO>();
@@ -563,6 +621,13 @@ public class ShipDao {
 		return shipVOList;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code ship_seq_no}撈取出貨相關資訊
+	 * 
+	 * @param shipSeqNos
+	 * @param groupId
+	 * @return
+	 */
 	public List<ShipVO> getShipByShipSeqNoGroupByOrderNoNew(String shipSeqNos, String groupId) {
 
 		List<ShipVO> shipVOList = new ArrayList<ShipVO>();
@@ -668,6 +733,12 @@ public class ShipDao {
 		return shipVOList;
 	}
 
+	/**
+	 * <p>依{@code group_id}、{@code ship_id}及{@code order_no}撈取順豐回推出庫狀態
+	 * 
+	 * @param shipSFStatusVO
+	 * @return
+	 */
 	public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO) {
 
 		List<ShipSFStatusVO> rows = new ArrayList<ShipSFStatusVO>();
@@ -712,6 +783,12 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}、{@code ship_id}及{@code order_no}撈取順豐回推出庫明細
+	 * 
+	 * @param shipSFDetailVO
+	 * @return
+	 */
 	public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO) {
 		List<ShipSFDetailVO> rows = new ArrayList<ShipSFDetailVO>();
 		ShipSFDetailVO row = null;
@@ -758,6 +835,13 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code waybill_no}撈取出貨資訊
+	 * 
+	 * @param groupId
+	 * @param waybill
+	 * @return
+	 */
 	public List<ShipVO> getSearchShipByWaybillNo(String groupId, String waybill) {
 		List<ShipVO> rows = new ArrayList<ShipVO>();
 		ShipVO row = null;
@@ -808,6 +892,14 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code sale_date}區間，撈取出貨相關資訊
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<ShipVO> getShipGroupByOrderNo(String groupId, Date startDate, Date endDate) {
 		List<ShipVO> rows = new ArrayList<ShipVO>();
 		
@@ -857,6 +949,14 @@ public class ShipDao {
 		return rows;
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code sale_date}區間，撈取黑貓出貨相關資訊
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<ShipVO> getEgsShipGroupByOrderNo(String groupId, Date startDate, Date endDate) {
 		List<ShipVO> rows = new ArrayList<ShipVO>();
 		

@@ -32,10 +32,19 @@ public class AllocInvDao {
 	
 	private Connection connection;
 
+	/**
+	 * <p>注入連線
+	 */
 	public AllocInvDao() {
 		connection = Database.getConnection();
 	}
 	
+	/**
+	 * <p>依{@code group_id}撈取{@code tb_alloc_inv}
+	 * 
+	 * @param group_id
+	 * @return
+	 */
 	public List<AllocInvVo> getAllData(String group_id) {
 		List<AllocInvVo> list = new ArrayList<AllocInvVo>();
 		AllocInvVo allocInvVo = null;
@@ -82,6 +91,12 @@ public class AllocInvDao {
 		return list;
 	}
 
+	/**
+	 * <p>依{@code group_id}撈取{@code tb_alloc_inv}，並依{@code product_id}彙總數量
+	 * 
+	 * @param group_id
+	 * @return
+	 */
 	public List<AllocInvVo> getGroupData(String group_id) {
 		List<AllocInvVo> list = new ArrayList<AllocInvVo>();
 		AllocInvVo allocInvVo = null;
@@ -120,6 +135,12 @@ public class AllocInvDao {
 		return list;
 	}
 
+	/**
+	 * <p>建立進貨單{@code tb_purchase}
+	 * 
+	 * @param purchaseVO
+	 * @return
+	 */
 	public String doPurchase(PurchaseVO purchaseVO) {
 		CallableStatement cs = null;
 		String result = null;
@@ -149,6 +170,12 @@ public class AllocInvDao {
 		return result;
 	}
 
+	/**
+	 * <p>取得最新流水號{@code seq_no}
+	 * 
+	 * @param groupId
+	 * @return
+	 */
 	public String getPurchaseSeqNo(String groupId) {
 		CallableStatement cs = null;
 		String result = null;
@@ -175,6 +202,11 @@ public class AllocInvDao {
 		return result;
 	}
 
+	/**
+	 * <p>建立進貨明細{@code tb_purchasedetail}
+	 * 
+	 * @param purchaseDetailVOs
+	 */
 	public void doPurchaseDetail(List<PurchaseDetailVO> purchaseDetailVOs) {
 
 		String sql = "VALUES";
@@ -209,6 +241,11 @@ public class AllocInvDao {
 		}
 	}
 
+	/**
+	 * <p>刪除進貨單{@code tb_purchase}及其明細{@code tb_purchasedetail}
+	 * 
+	 * @param purchaseId
+	 */
 	public void delPurchase(String purchaseId) {
 		CallableStatement cs = null;
 		try {

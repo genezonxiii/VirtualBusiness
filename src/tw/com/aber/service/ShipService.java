@@ -25,58 +25,155 @@ public class ShipService {
 		dao = new ShipDao();
 	}
 
+	/**
+	 * <p>依{@code group_id}和{@code sale_date}區間，撈取{@code tb_ship}
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<ShipVO> getSearchShipBySaleDate(String groupId, Date startDate, Date endDate) {
 		return dao.searchShipBySaleDate(groupId, startDate, endDate);
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code order_no}撈取{@code tb_ship}
+	 * 
+	 * @param shipVO
+	 * @return
+	 */
 	public List<ShipVO> getSearchShipByOrderNo(ShipVO shipVO) {
 		return dao.searchShipByOrderNo(shipVO);
 	}
 	
+	/**
+	 * <p>依{@code group_id}及{@code waybill_no}撈取出貨資訊
+	 * 
+	 * @param groupId
+	 * @param waybill
+	 * @return
+	 */
 	public List<ShipVO> getSearchShipByWaybillNo(String groupId,String waybill) {
 		return dao.getSearchShipByWaybillNo(groupId,waybill);
 	}
 	
+	/**
+	 * <p>依{@code group_id}及{@code ship_seq_no}撈取{@code tb_ship}
+	 * 
+	 * @param shipSeqNo
+	 * @param groupId
+	 * @return
+	 */
 	public List<ShipVO> getShipByShipSeqNo(String shipSeqNo, String groupId) {
 		return dao.getShipByShipSeqNo(shipSeqNo, groupId);
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code ship_seq_no}撈取出貨相關資訊
+	 * 
+	 * @param shipSeqNos
+	 * @param groupId
+	 * @return
+	 */
 	public List<ShipVO> getShipByShipSeqNoGroupByOrderNo(String shipSeqNos, String groupId) {
 		return dao.getShipByShipSeqNoGroupByOrderNo(shipSeqNos, groupId);
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code order_no}撈取出貨及順豐快遞資訊，產生電文格式
+	 * 
+	 * @param info
+	 * @param groupId
+	 * @param totalWeight
+	 * @param seqNo
+	 * @return
+	 */
 	public String genSFDeliveryOrderService(String info, String groupId, String totalWeight, String seqNo) {
 		return dao.genSFDeliveryOrderService(info, groupId, totalWeight, seqNo);
 	}
 
+	/**
+	 * <p>依{@code group_id}撈取順豐快遞的最新流水號
+	 * 
+	 * @param groupId
+	 * @return
+	 */
 	public String getShipSFDeliveryNewSeqNo(String groupId) {
 		return dao.getShipSFDeliveryNewSeqNo(groupId);
 	}
 
+	/**
+	 * <p>新增順豐快遞
+	 * 
+	 * @param deliveryVO
+	 */
 	public void insertToShipSFDelivery(DeliveryVO deliveryVO) {
 		dao.insertToShipSFDelivery(deliveryVO);
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code order_no}撈取順豐快遞資訊
+	 * 
+	 * @param groupId
+	 * @param orderNos
+	 * @return
+	 */
 	public List<DeliveryVO> getShipSFDeliveryInfoByOrderNo(String groupId, String orderNos) {
 		return dao.getShipSFDeliveryInfoByOrderNo(groupId, orderNos);
 	}
 
+	/**
+	 * <p>依{@code group_id}、{@code ship_id}及{@code order_no}撈取順豐回推出庫狀態
+	 * 
+	 * @param shipSFStatusVO
+	 * @return
+	 */
 	public List<ShipSFStatusVO> selectShipSfStatus(ShipSFStatusVO shipSFStatusVO) {
 		return dao.selectShipSfStatus(shipSFStatusVO);
 	}
 
+	/**
+	 * <p>依{@code group_id}、{@code ship_id}及{@code order_no}撈取順豐回推出庫明細
+	 * 
+	 * @param shipSFDetailVO
+	 * @return
+	 */
 	public List<ShipSFDetailVO> selectShipSfDetailStatus(ShipSFDetailVO shipSFDetailVO) {
 		return dao.selectShipSfDetailStatus(shipSFDetailVO);
 	}
 	
+	/**
+	 * <p>依{@code group_id}及{@code sale_date}區間，撈取出貨相關資訊
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<ShipVO> getShipGroupByOrderNo(String groupId, Date startDate, Date endDate) {
 		return dao.getShipGroupByOrderNo(groupId, startDate, endDate);
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code ship_seq_no}撈取出貨相關資訊
+	 * 
+	 * @param orderNos
+	 * @param groupId
+	 * @return
+	 */
 	public List<ShipVO> getShipByShipSeqNoGroupByOrderNoNew(String orderNos, String groupId) {
 		return dao.getShipByShipSeqNoGroupByOrderNoNew(orderNos, groupId);
 	}
 
+	/**
+	 * <p>依{@code group_id}及{@code sale_date}區間，撈取黑貓出貨相關資訊
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<ShipVO> getEgsShipGroupByOrderNo(String groupId, Date startDate, Date endDate){
 		return dao.getEgsShipGroupByOrderNo(groupId, startDate, endDate);
 	}

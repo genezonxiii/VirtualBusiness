@@ -41,10 +41,18 @@ public class RealSaleDao {
 	
 	private Connection connection;
 
+	/**
+	 * <p>注入連線
+	 */
 	public RealSaleDao() {
 		connection = Database.getConnection();
 	}
 	
+	/**
+	 * <p>新增{@code tb_realsale}
+	 * 
+	 * @param realSaleVO
+	 */
 	public void insertDB(RealSaleVO realSaleVO) {
 		PreparedStatement pstmt = null;
 		try {
@@ -78,6 +86,11 @@ public class RealSaleDao {
 		}
 	}
 
+	/**
+	 * <p>修改{@code tb_realsale}
+	 * 
+	 * @param realSaleVO
+	 */
 	public void updateDB(RealSaleVO realSaleVO) {
 		PreparedStatement pstmt = null;
 		try {
@@ -110,6 +123,13 @@ public class RealSaleDao {
 		}
 	}
 
+	/**
+	 * <p>刪除{@code tb_realsale}
+	 * 
+	 * @param realsale_id
+	 * @param user_id
+	 * @param group_id
+	 */
 	public void deleteDB(String realsale_id,String user_id,String group_id) {
 		PreparedStatement pstmt = null;
 		try {
@@ -132,6 +152,12 @@ public class RealSaleDao {
 		}
 	}
 
+	/**
+	 * <p>以{@code group_id}撈取{@code tb_realsale}
+	 * 
+	 * @param group_id
+	 * @return
+	 */
 	public List<RealSaleVO> searchAllDB(String group_id) {
 		List<RealSaleVO> list = new ArrayList<RealSaleVO>();
 		RealSaleVO realSaleVO = null;
@@ -177,6 +203,12 @@ public class RealSaleDao {
 		return list;
 	}
 	
+	/**
+	 * <p>取得{@code tb_realsale}最新流水號
+	 * 
+	 * @param group_id
+	 * @return
+	 */
 	public List<RealSaleVO> getNewSaleSeqNo(String group_id) {
 		List<RealSaleVO> list = new ArrayList<RealSaleVO>();
 		RealSaleVO realSaleVO = null;
@@ -210,6 +242,12 @@ public class RealSaleDao {
 		return list;
 	}
 	
+	/**
+	 * <p>以{@code name}，撈取{@code tb_customer}
+	 * @param group_id
+	 * @param name
+	 * @return
+	 */
 	public List<CustomerVO> getCustomerByName(String group_id, String name) {
 		List<CustomerVO> list = new ArrayList<CustomerVO>();
 		CustomerVO customerVO = null;
@@ -245,6 +283,11 @@ public class RealSaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code realsale_id}撈取{@code tb_realsale}
+	 * @param realsaleDetailVO
+	 * @return
+	 */
 	public List<RealSaleDetailVO> getRealSaleDetail(RealSaleDetailVO realsaleDetailVO) {
 		List<RealSaleDetailVO> list = new ArrayList<RealSaleDetailVO>();
 		RealSaleDetailVO result = null;
@@ -294,6 +337,23 @@ public class RealSaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以多種組合方式撈取{@code tb_realsale}
+	 * 
+	 * @param group_id
+	 * @param c_order_no_begin
+	 * @param c_order_no_end
+	 * @param c_customerid
+	 * @param c_trans_list_date_begin
+	 * @param c_trans_list_date_end
+	 * @param c_dis_date_begin
+	 * @param c_dis_date_end
+	 * @param c_order_source
+	 * @param c_deliveryway
+	 * @param upload_begin
+	 * @param upload_end
+	 * @return
+	 */
 	public List<RealSaleVO> searchMuliDB(String group_id,String c_order_no_begin, String c_order_no_end,String c_customerid,String c_trans_list_date_begin,String c_trans_list_date_end,String c_dis_date_begin,String c_dis_date_end,String c_order_source,String c_deliveryway, String upload_begin, String upload_end) {
 		List<RealSaleVO> list = new ArrayList<RealSaleVO>();
 		RealSaleVO realSaleVO = null;
@@ -367,6 +427,15 @@ public class RealSaleDao {
 		return list;
 	}
 	
+	/**
+	 * <p>依{@code trans_list_date}區間，將訂單轉入銷單
+	 * 
+	 * @param group_id
+	 * @param user_id
+	 * @param trans_list_date_begin
+	 * @param trans_list_date_end
+	 * @return
+	 */
 	public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -401,6 +470,13 @@ public class RealSaleDao {
 		return jsonObject;
 	}
 	
+	/**
+	 * <p>銷單轉入配庫，{@code tb_realsale.order_status}等於{@code A2}
+	 * 
+	 * @param group_id
+	 * @param user_id
+	 * @return
+	 */
 	public JSONObject importAllocInvDB(String group_id,String user_id) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

@@ -23,14 +23,36 @@ public class PickService{
 		dao = new PickDao();
 	}
 	
+	/**
+	 * <p>依{@code group_id}及{@code pick_time}區間，撈取{@code tb_pick}
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<PickVO> searchPickByPickTimeDate(String groupId, Date startDate, Date endDate) {
 		return dao.searchPickByPickTimeDate(groupId, startDate, endDate);
 	}
 
+	/**
+	 * <p>{@code group_id}及{@code order_no}撈取揀貨單明細{@code tb_pickDetail}
+	 * 
+	 * @param groupId
+	 * @param OrderNo
+	 * @return
+	 */
 	public List<PickVO> searchPickByOrderNo(String groupId,String OrderNo) {
 		return dao.searchPickByOrderNo(groupId, OrderNo);
 	}
 	
+	/**
+	 * <p>依{@code group_id}和{@code pick_id}撈取揀貨單明細{@code tb_pickDetail}
+	 * 
+	 * @param groupId
+	 * @param pickId
+	 * @return
+	 */
 	public List<PickDetailVO> searchPickDetailByPickId(String groupId,String pickId) {
 		return dao.searchPickDetailByPickId(groupId, pickId);
 	}

@@ -217,8 +217,10 @@ public class realsale extends HttpServlet {
 	}
 
 	/*************************** 自訂方法 ****************************************/
-
-	// 獲得格式過的今年金月今日
+	/**
+	 * <p>獲得格式過的今年今月今日
+	 * @return
+	 */
 	public String getThisYearMonthDate() {
 		Calendar cal = Calendar.getInstance();
 		String year = String.valueOf(cal.get(Calendar.YEAR));
@@ -227,7 +229,11 @@ public class realsale extends HttpServlet {
 		return year + formatTime(month) + formatTime(date);
 	}
 
-	// 處理個位數月份以及日
+	/**
+	 * <p>處理個位數月份以及日
+	 * @param str
+	 * @return
+	 */
 	private String formatTime(String str) {
 		int counter = 0;
 		for (int i = str.length() - 1; i >= 0; i--) {
@@ -239,7 +245,12 @@ public class realsale extends HttpServlet {
 		return str;
 	}
 
-	// 格式化單號，不足四位補位
+	/**
+	 * <p>格式化單號，不足四位補位
+	 * 
+	 * @param str
+	 * @return
+	 */
 	private String formatSeqNo(int str) {
 		String seqNo = String.valueOf(str);
 		StringBuffer buf = new StringBuffer();
@@ -256,6 +267,12 @@ public class realsale extends HttpServlet {
 		return buf.toString();
 	}
 
+	/**
+	 * <p> 格式化流水號
+	 * 
+	 * @param str
+	 * @return
+	 */
 	public String getGenerateSeqNo(String str) {
 		str = str.substring(str.length() - 4);
 		return getThisYearMonthDate() + formatSeqNo((Integer.valueOf(str) + 1));

@@ -30,10 +30,21 @@ public class PickDao {
 
 	private Connection connection;
 
+	/**
+	 * <p>注入連線
+	 */
 	public PickDao() {
 		connection = Database.getConnection();
 	}
 	
+	/**
+	 * <p>依{@code group_id}及{@code pick_time}區間，撈取{@code tb_pick}
+	 * 
+	 * @param groupId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<PickVO> searchPickByPickTimeDate(String groupId, Date startDate, Date endDate) {
 		List<PickVO> pickVOList = new ArrayList<PickVO>();
 		PickVO pickVO = null;
@@ -74,6 +85,13 @@ public class PickDao {
 		return pickVOList;
 	}
 
+	/**
+	 * <p>{@code group_id}及{@code order_no}撈取揀貨單明細{@code tb_pickDetail}
+	 * 
+	 * @param groupId
+	 * @param orderNo
+	 * @return
+	 */
 	public List<PickVO> searchPickByOrderNo(String groupId, String orderNo) {
 		List<PickVO> pickVOList = new ArrayList<PickVO>();
 		PickVO pickVO = null;
@@ -113,6 +131,13 @@ public class PickDao {
 		return pickVOList;
 	}
 
+	/**
+	 * <p>依{@code group_id}和{@code pick_id}撈取揀貨單明細{@code tb_pickDetail}
+	 * 
+	 * @param groupId
+	 * @param pickId
+	 * @return
+	 */
 	public List<PickDetailVO> searchPickDetailByPickId(String groupId, String pickId) {
 		List<PickDetailVO> pickDetailVOList = new ArrayList<PickDetailVO>();
 		PickDetailVO pickDetailVO = null;

@@ -842,7 +842,12 @@ public class sale extends HttpServlet {
 	}
 
 	/*************************** 自訂方法 ****************************************/
-	// 處理傳過來的日期格式
+	/**
+	 * <p>處理傳過來的日期格式
+	 * 
+	 * @param Date
+	 * @return
+	 */
 	public int DateConversionToDigital(String Date) {
 		StringBuffer str = new StringBuffer();
 		String[] dateArray = Date.split("-");
@@ -852,7 +857,11 @@ public class sale extends HttpServlet {
 		return Integer.parseInt(str.toString());
 	}
 
-	// 獲得格式過的今年金月今日
+	/**
+	 * <p>獲得格式過的今年今月今日
+	 * 
+	 * @return
+	 */
 	public String getThisYearMonthDate() {
 		Calendar cal = Calendar.getInstance();
 		String year = String.valueOf(cal.get(Calendar.YEAR));
@@ -861,7 +870,12 @@ public class sale extends HttpServlet {
 		return year + formatTime(month) + formatTime(date);
 	}
 
-	// 處理個位數月份以及日
+	/**
+	 * <p>處理個位數月份以及日
+	 * 
+	 * @param str
+	 * @return
+	 */
 	private String formatTime(String str) {
 		int counter = 0;
 		for (int i = str.length() - 1; i >= 0; i--) {
@@ -873,7 +887,12 @@ public class sale extends HttpServlet {
 		return str;
 	}
 
-	// 格式化單號，不足四位補位
+	/**
+	 * <p>格式化單號，不足四位補位
+	 * 
+	 * @param str
+	 * @return
+	 */
 	private String formatSeqNo(int str) {
 		String seqNo = String.valueOf(str);
 		StringBuffer buf = new StringBuffer();
@@ -895,6 +914,12 @@ public class sale extends HttpServlet {
 		return getThisYearMonthDate() + formatSeqNo((Integer.valueOf(str) + 1));
 	}
 	
+	/**
+	 * <p>檢查開立發票，沒有開立，則填入錯誤原因
+	 * 
+	 * @param saleVOsAll
+	 * @return
+	 */
 	public ResponseVO checkData(List<SaleVO> saleVOsAll){
 		ResponseVO responseVO = new ResponseVO();
 		for (int i = 0; i < saleVOsAll.size(); i++) {
@@ -910,6 +935,12 @@ public class sale extends HttpServlet {
 		return responseVO;
 	}
 	
+	/**
+	 * <p>取得訂單資料
+	 * 
+	 * @param saleVOs
+	 * @return
+	 */
 	public List<List<SaleVO>> getGroupBySaleVOsList(List<SaleVO> saleVOs) {
 		List<List<SaleVO>> groupBySaleVOsList = new ArrayList<List<SaleVO>>();
 		List<SaleVO> sameOrderNoList = new ArrayList<SaleVO>();

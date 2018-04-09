@@ -61,10 +61,18 @@ public class SaleDao {
 	
 	private Connection connection;
 
+	/**
+	 * <p>注入連線
+	 */
 	public SaleDao() {
 		connection = Database.getConnection();
 	}
 
+	/**
+	 * <p>新增{@code tb_sale}
+	 * 
+	 * @param saleVO
+	 */
 	public void insertDB(SaleVO saleVO) {
 		PreparedStatement pstmt = null;
 		try {
@@ -118,6 +126,11 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>修改{@code tb_sale}
+	 * 
+	 * @param saleVO
+	 */
 	public void updateDB(SaleVO saleVO) {
 		PreparedStatement pstmt = null;
 		try {
@@ -172,6 +185,12 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>刪除{@code tb_sale}
+	 * 
+	 * @param sale_id
+	 * @param user_id
+	 */
 	public void deleteDB(String sale_id, String user_id) {
 		PreparedStatement pstmt = null;
 		try {
@@ -193,6 +212,13 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>以{@code c_product_id}撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param c_product_id
+	 * @return
+	 */
 	public List<SaleVO> searchDB(String group_id, String c_product_id) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -243,6 +269,12 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @return
+	 */
 	public List<SaleVO> searchAllDB(String group_id) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -311,6 +343,14 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code trans_list_date}區間，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param trans_list_start_date
+	 * @param trans_list_end_date
+	 * @return
+	 */
 	public List<SaleVO> searchTransListDateDB(String group_id, String trans_list_start_date,
 			String trans_list_end_date) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
@@ -383,6 +423,14 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code upload_date}區間，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	public List<SaleVO> searchUploadDateDB(String group_id, String startDate, String endDate) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -454,6 +502,12 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}，撈取最新流水號{@code tb_sale.seq_no}
+	 * 
+	 * @param group_id
+	 * @return
+	 */
 	public List<SaleVO> getNewSaleSeqNo(String group_id) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -487,6 +541,14 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code dis_date}區間，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param dis_start_date
+	 * @param dis_end_date
+	 * @return
+	 */
 	public List<SaleVO> searchDisDateDB(String group_id, String dis_start_date, String dis_end_date) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -538,6 +600,13 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code product_name}，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param product_name
+	 * @return
+	 */
 	public List<ProductVO> getProductByName(String group_id, String product_name) {
 		List<ProductVO> list = new ArrayList<ProductVO>();
 		ProductVO productVO = null;
@@ -576,6 +645,13 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code c_product_id}，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param c_product_id
+	 * @return
+	 */
 	public List<ProductVO> getProductById(String group_id, String c_product_id) {
 		List<ProductVO> list = new ArrayList<ProductVO>();
 		ProductVO productVO = null;
@@ -614,6 +690,12 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code sale_id}，撈取{@code tb_saleDetail}
+	 * 
+	 * @param saleDetailVO
+	 * @return
+	 */
 	public List<SaleDetailVO> getSaleDetail(SaleDetailVO saleDetailVO) {
 		List<SaleDetailVO> list = new ArrayList<SaleDetailVO>();
 		SaleDetailVO result = null;
@@ -675,6 +757,11 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>新增{@code tb_saleDetail}
+	 * 
+	 * @param paramVO
+	 */
 	public void insertDetailDB(SaleDetailVO paramVO) {
 		PreparedStatement pstmt = null;
 		try {
@@ -714,6 +801,11 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>修改{@code tb_saleDetail}
+	 * 
+	 * @param paramVO
+	 */
 	public void updateDetailDB(SaleDetailVO paramVO) {
 		PreparedStatement pstmt = null;
 		try {
@@ -739,6 +831,11 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>刪除{@code tb_saleDetail}
+	 * 
+	 * @param saleDetail_id
+	 */
 	public void deleteDetailDB(String saleDetail_id) {
 		PreparedStatement pstmt = null;
 		try {
@@ -759,6 +856,13 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code sale_id}，撈取{@code tb_sale}
+	 * 
+	 * @param groupId
+	 * @param saleIds
+	 * @return
+	 */
 	public List<SaleVO> getSaleOrdernoInfoByIds(String groupId, String saleIds) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -812,6 +916,12 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code group_id}，撈取{@code tb_group}
+	 * 
+	 * @param groupId
+	 * @return
+	 */
 	public GroupVO getGroupInvoiceInfo(String groupId) {
 		GroupVO groupVO = null;
 
@@ -845,6 +955,14 @@ public class SaleDao {
 		return groupVO;
 	}
 
+	/**
+	 * <p>以{@code group_id}、{@code invoice_num_date}，撈取{@code tb_invoice_track}。
+	 * 取得目前發票資訊
+	 * 
+	 * @param group_id
+	 * @param invoice_num_date
+	 * @return
+	 */
 	public InvoiceTrackVO getInvoiceTrack(String group_id, Date invoice_num_date) {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -889,6 +1007,12 @@ public class SaleDao {
 		return invoiceTrackVO;
 	}
 	
+	/**
+	 * <p>累加發票字軌
+	 * 
+	 * @param invoiceTrackVO
+	 * @return
+	 */
 	public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO){
 		PreparedStatement pstmt = null;
 		try {
@@ -911,6 +1035,15 @@ public class SaleDao {
 		return true;
 	}
 
+	/**
+	 * <p>發票開立成功，把發票資訊寫入{@code tb_sale}、{@code tb_invoice_use}
+	 * 
+	 * @param SaleVOs
+	 * @param invoiceTrackVO
+	 * @param invoice_num_date
+	 * @param invoice_time
+	 * @param invoice_vcode
+	 */
 	public void updateSaleInvoice(List<SaleVO> SaleVOs, InvoiceTrackVO invoiceTrackVO, Date invoice_num_date,
 			String invoice_time, String invoice_vcode) {
 		PreparedStatement pstmt = null;
@@ -944,6 +1077,13 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>作廢發票成功，把發票資訊寫入{@code tb_sale}、{@code tb_invoice_use}。
+	 * 
+	 * @param group_id
+	 * @param sale_ids
+	 * @param invoice_reason
+	 */
 	public void invoiceCancel(String group_id, String sale_ids, String invoice_reason) {
 		PreparedStatement pstmt = null;
 		try {
@@ -966,6 +1106,13 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>發票開立成功，將發票驗證碼及開立時間，填入{@code tb_sale}
+	 * 
+	 * @param SaleVOs
+	 * @param InvoiceVcode
+	 * @param Invoice_time
+	 */
 	public void updateSaleInvoiceVcodeAndInvoice_time(List<SaleVO> SaleVOs, String InvoiceVcode, String Invoice_time) {
 		PreparedStatement pstmt = null;
 		Time timeValue = null;
@@ -1001,6 +1148,13 @@ public class SaleDao {
 		}
 	}
 
+	/**
+	 * <p>開立發票資訊列表。
+	 * 
+	 * @param groupId
+	 * @param orderNo
+	 * @return
+	 */
 	public SaleVO getSaleInvoiceInfoByOrderNo(String groupId, String orderNo) {
 		SaleVO saleVO = null;
 
@@ -1044,6 +1198,14 @@ public class SaleDao {
 		return saleVO;
 	}
 
+	/**
+	 * <p>以{@code upload_date}區間，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param upload_date_start
+	 * @param upload_date_end
+	 * @return
+	 */
 	public List<SaleVO> getSaleByUploadDate(String group_id, String upload_date_start, String upload_date_end) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -1091,6 +1253,14 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code trans_list_date}區間，撈取{@code tb_sale}
+	 * 
+	 * @param group_id
+	 * @param upload_date_start
+	 * @param upload_date_end
+	 * @return
+	 */
 	public List<SaleVO> getSaleByTransDate(String group_id, String upload_date_start, String upload_date_end) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -1138,6 +1308,13 @@ public class SaleDao {
 		return list;
 	}
 
+	/**
+	 * <p>以{@code order_no}，撈取{@code tb_sale}
+	 * 
+	 * @param groupId
+	 * @param order_nos
+	 * @return
+	 */
 	public List<SaleVO> getSaleOrdernoInfoByOrdernos(String groupId, String order_nos) {
 		List<SaleVO> list = new ArrayList<SaleVO>();
 		SaleVO saleVO = null;
@@ -1191,6 +1368,12 @@ public class SaleDao {
 		return list;
 	}
 	
+	/**
+	 * <p>更新訂單是否可轉銷貨註記
+	 * 
+	 * @param saleVO
+	 * @return
+	 */
 	public int updateTurnFlag(SaleVO saleVO) {
 		PreparedStatement pstmt = null;
 		int matchRow = 0;

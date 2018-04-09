@@ -185,6 +185,13 @@ public class ShippingProcess extends HttpServlet {
 		}
 	}
 		
+	/**
+	 * <p>資料檢查
+	 * 
+	 * @param jsonObject
+	 * @param type
+	 * @return
+	 */
 	public boolean checkData(JSONObject jsonObject, int type) {
 		try {
 
@@ -218,23 +225,66 @@ public class ShippingProcess extends HttpServlet {
 		private ShippingProcess_interface dao = new ShippingProcessDAO();
 
 
+		/**
+		 * <p>轉入銷貨作業。依轉單日期{@code trans_list_date}區間
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @param trans_list_date_begin
+		 * @param trans_list_date_end
+		 * @return
+		 */
 		public JSONObject importRealSale(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end) {
 			return dao.importDB(group_id,user_id,trans_list_date_begin,trans_list_date_end);
 		}
+		
 		public List<RealSaleVO> getSearchAllDB(String group_id) {
 			return dao.searchAllDB(group_id);
 		}
 
+		/**
+		 * <p>配庫作業。
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @param warehouse_id
+		 * @return
+		 */
 		public JSONObject statisticsAlloc(String group_id, String user_id, String warehouse_id) {
 			return dao.statisticsAlloc(group_id, user_id, warehouse_id);
 		}
+		
+		/**
+		 * <p>轉入揀貨作業
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @param order_count
+		 * @param warehouse_id
+		 * @return
+		 */
 		public JSONObject importPicking(String group_id, String user_id, String order_count, String warehouse_id) {
 			return dao.importPicking(group_id, user_id, order_count, warehouse_id);
 		}
 		
+		/**
+		 * <p>轉入出貨作業
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @return
+		 */
 		public JSONObject importShip(String group_id, String user_id) {
 			return dao.importShip(group_id, user_id);
 		}
+		
+		/**
+		 * <p>轉入待出庫作業
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @return
+		 */
 		public JSONObject importAllocInv(String group_id,String user_id) {
 			return dao.importAllocInvDB(group_id,user_id);
 		}
@@ -566,16 +616,57 @@ public class ShippingProcess extends HttpServlet {
 	}
 
 	interface ShippingProcess_interface {
+		
+		/**
+		 * <p>執行訂單轉銷貨
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @param trans_list_date_begin
+		 * @param trans_list_date_end
+		 * @return
+		 */
 		public JSONObject importDB(String group_id,String user_id,String trans_list_date_begin,String trans_list_date_end);
 
 		public List<RealSaleVO> searchAllDB(String group_id);
 
+		/**
+		 * <p>執行配庫作業
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @param warehouse_id
+		 * @return
+		 */
 		public JSONObject statisticsAlloc(String group_id, String user_id, String warehouse_id);
 		
+		/**
+		 * <p>執行待出庫轉揀貨
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @param order_count
+		 * @param warehouse_id
+		 * @return
+		 */
 		public JSONObject importPicking(String group_id, String user_id, String order_count, String warehouse_id);
 		
+		/**
+		 * <p>執行揀貨轉出貨
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @return
+		 */
 		public JSONObject importShip(String group_id, String user_id);
 		
+		/**
+		 * <p>執行銷貨轉待出庫
+		 * 
+		 * @param group_id
+		 * @param user_id
+		 * @return
+		 */
 		public JSONObject importAllocInvDB(String group_id,String user_id);
 	}
 

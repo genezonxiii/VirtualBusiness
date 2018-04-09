@@ -14,6 +14,12 @@ public class Database {
 	private static final String USER_NAME = "root";
 	private static final Logger logger = LogManager.getLogger(Database.class);
 	
+	/**
+	 * <p>以{@code MYSQL_DRIVER}、{@code URL}、{@code USER_NAME}、{@code PASSWORD}
+	 * 建立mysql連線
+	 * 
+	 * @return Connection
+	 */
 	public static Connection getConnection() {
 		try {
 			Class.forName(MYSQL_DRIVER);
@@ -25,6 +31,11 @@ public class Database {
 		}
 	}
 
+	/**
+	 * <p>關閉mysql連線
+	 * 
+	 * @param connection
+	 */
 	public static void close(Connection connection) {
 		try {
 			connection.close();
