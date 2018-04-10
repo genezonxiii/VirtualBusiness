@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptSfSale" language="groovy" pageWidth="2520" pageHeight="555" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="2520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="f68732a1-6863-452d-bd26-f5e9b47ef327">
 	<property name="ireport.zoom" value="3.4522712143931193"/>
-	<property name="ireport.x" value="6311"/>
+	<property name="ireport.x" value="3886"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -22,9 +22,6 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="deliver_to" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="total_amt" class="java.lang.Float">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="deliver_phone" class="java.lang.String">
@@ -52,6 +49,10 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="sf_warehouse_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="is_receivable" class="java.lang.String"/>
+	<field name="total_amt" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<pageHeader>
@@ -1153,7 +1154,7 @@
 				<textElement>
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 				</textElement>
-				<textFieldExpression><![CDATA["N"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{is_receivable}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1290" y="0" width="80" height="20"/>
@@ -1163,9 +1164,10 @@
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="標楷體" pdfFontName="標楷體" pdfEncoding="Identity-H"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amt}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement uuid="772b5a1c-be86-4def-9b70-56376a511edd" stretchType="RelativeToBandHeight" x="1370" y="0" width="60" height="20"/>
