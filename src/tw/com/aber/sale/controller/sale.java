@@ -501,7 +501,7 @@ public class sale extends HttpServlet {
 						/* 20171219 將列印明細包成單一"商品"的mask*/
 						List<SaleVO> sameOrderNoSaleVOListAfterMask = saleService.maskOverviewByExt(group_id, sameOrderNoSaleVOList);
 						
-						String reqXml = api.genRequestForC0401(invoiceNum, sameOrderNoSaleVOListAfterMask, groupVO);
+						String reqXml = api.genRequestForC0401(invoiceNum, invoice_date, sameOrderNoSaleVOListAfterMask, groupVO);
 						String resXml = api.sendXML(reqXml);
 						Index index = api.getIndexResponse(resXml);
 
@@ -695,7 +695,7 @@ public class sale extends HttpServlet {
 						
 						List<SaleVO> sameOrderNoSaleVOListAfterMask = saleService.maskOverviewByExt(group_id, sameOrderNoSaleVOList);
 						
-						String reqXml = api.genRequestForC0401(invoiceNum, sameOrderNoSaleVOListAfterMask, groupVO);
+						String reqXml = api.genRequestForC0401(invoiceNum, invoice_date, sameOrderNoSaleVOListAfterMask, groupVO);
 						String resXml = api.sendXML(reqXml);
 						Index index = api.getIndexResponse(resXml);
 

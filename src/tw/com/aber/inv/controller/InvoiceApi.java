@@ -508,7 +508,7 @@ public class InvoiceApi {
 			String invoice_vcode = saleVO.getInvoice_vcode();
 			Time invoice_time =saleVO.getInvoice_time();
 			
-			String xmlStr = genRequestForC0401(invoiceNum, saleVOs, groupVO);
+			String xmlStr = genRequestForC0401(invoiceNum, invoice_date, saleVOs, groupVO);
 
 			xmlStr=this.getInvoicePrintXml(xmlStr, invoice_date, invoice_time, invoice_vcode);
 			
@@ -527,7 +527,7 @@ public class InvoiceApi {
 	 * C0401開立發票訊息規格 [Request]
 	 * 
 	 **********************/
-	public String genRequestForC0401(String invoiceNum, List<SaleVO> saleVOs, GroupVO groupVO) {
+	public String genRequestForC0401(String invoiceNum, Date invoiceDate, List<SaleVO> saleVOs, GroupVO groupVO) {
 		String result = null;
 		Invoice invoice = new Invoice();
 
@@ -536,7 +536,7 @@ public class InvoiceApi {
 		SimpleDateFormat dt3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		Date date = new Date();
-		String ymd = dt1.format(date);
+		String ymd = dt1.format(invoiceDate);
 		String hms = dt2.format(date);
 		String ymdhms = dt3.format(date);
 
