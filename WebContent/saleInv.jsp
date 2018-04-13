@@ -575,6 +575,10 @@
 	                        }
 	                        
 	                        $.each(json_obj.list, function(i, item) {
+	                        	if (item.indexOf("EM0015")) {
+		                        	dialogMsg('提示', "持載具索取統一發票之一般消費者時，不得列出紙本電子發票！");
+		                        	return false;
+		                        }
 	                        	$.ajax({
 	                                url: "http://127.0.0.1:55180/receiver.php",
 	                                data: item,
