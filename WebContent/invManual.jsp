@@ -563,12 +563,12 @@
 				buttons : [{
 					text : "修改",
 					click : function() {
-
-		            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
-		            		return false;
-		            	}
-
 						if($('#dialog-invoice-detail').find('form').valid()){
+							if ( checkInvalid( $description.val() ) ) {
+			            		dialogMsg('提示', '輸入資料含有特殊字元，請重新輸入');
+			            		return;
+			            	}
+							
 							$.ajax({
 								url: 'InvManual.do',
 								async : false,
@@ -1626,11 +1626,10 @@
 		    				buttons : [{
 		    							text : "儲存",
 		    							click : function() {
-
 		    								if($('#dialog-invoice-detail').find('form').valid()){
-
-			    				            	if( $subtotal.val() == '資料錯誤，請檢查欄位' ){
-			    				            		return false;
+												if ( checkInvalid( $description.val() ) ) {
+			    				            		dialogMsg('提示', '輸入資料含有特殊字元，請重新輸入');
+			    				            		return;
 			    				            	}
 			    				            	
 			    								$.ajax({
@@ -1912,6 +1911,10 @@
        			$("#dialog-invoice input[name=amount_plustax]").val(parseInt(amount) + parseInt(tax));
     		}
 		});
+	    
+	    function checkInvalid( value ) {
+	    	return /\x08/.test( value );
+	    }
     </script>	
 </body>
 </html>
