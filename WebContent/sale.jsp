@@ -663,6 +663,7 @@ input.error[type=radio] + label {
 	        scrollCollapse: true,
 	        scrollX: true,
 			destroy: true,
+			stateSave: true,
 	        language: {
 	            "url": "js/dataTables_zh-tw.txt",
 	            "emptyTable": "查無資料"

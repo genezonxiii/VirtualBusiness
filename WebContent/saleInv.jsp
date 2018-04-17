@@ -212,6 +212,7 @@
 		    width: 'auto',
 		    scrollCollapse: true,
 		    destroy: true,
+		    stateSave: true,
 		    language: {
 		        "url": "js/dataTables_zh-tw.txt",
 		        "emptyTable": "查無資料",
