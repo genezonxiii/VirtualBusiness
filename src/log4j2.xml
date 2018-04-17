@@ -12,8 +12,8 @@
         <charset>UTF-8</charset>
       </PatternLayout>
     </File>
-    <RollingFile name="vbRFLog" append="true" fileName="/data/log/VirtualBusiness/VirtualBusiness.log"
-    	filePattern="/data/log/VirtualBusiness/$${date:yyyy-MM}/VirtualBusiness-%d{yyyy-MM-dd}-%i.log.gz">>
+    <RollingFile name="vbRFLog" append="true" fileName="/data/logs/VirtualBusiness/VirtualBusiness.log"
+    	filePattern="/data/logs/VirtualBusiness/$${date:yyyy-MM}/VirtualBusiness-%d{yyyy-MM-dd}-%i.log.gz">>
       <PatternLayout>
         <Pattern>%d %p %c [%t] %m%n</Pattern>
         <charset>UTF-8</charset>
@@ -26,7 +26,7 @@
   </Appenders>
   <Loggers>
     <Root level="debug">
-      <AppenderRef ref="vbLog"/>
+      <AppenderRef ref="vbRFLog"/>
       <AppenderRef ref="STDOUT"/>
     </Root>
   </Loggers>
