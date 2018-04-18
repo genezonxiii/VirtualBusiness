@@ -1,0 +1,19 @@
+@startuml
+actor 用戶 
+participant 發票服務
+participant 電子發票加值中心
+
+用戶 -> 發票服務: 開立發票
+
+activate 發票服務
+
+發票服務 -> 電子發票加值中心: 發送XML
+activate 電子發票加值中心
+
+電子發票加值中心 -> 發票服務: 回覆
+deactivate 電子發票加值中心
+
+發票服務 -> 用戶: 提示結果
+deactivate 發票服務
+
+@enduml

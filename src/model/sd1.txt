@@ -1,0 +1,17 @@
+@startuml
+actor 用戶 
+participant 上傳服務
+participant 解析服務
+database 資料庫
+
+用戶 -> 上傳服務: 上傳檔案
+activate 上傳服務
+
+上傳服務 -> 解析服務: 解析檔案
+
+解析服務 -> 資料庫
+
+上傳服務 -> 用戶: 完成
+deactivate 上傳服務
+
+@enduml

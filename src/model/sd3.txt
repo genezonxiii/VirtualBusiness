@@ -1,0 +1,19 @@
+@startuml
+actor 用戶 
+participant 物流服務
+participant 順豐倉儲
+
+用戶 -> 物流服務: 順豐出庫
+
+activate 物流服務
+
+物流服務 -> 順豐倉儲: 發送XML
+activate 順豐倉儲
+
+順豐倉儲 -> 物流服務: 回覆
+deactivate 順豐倉儲
+
+物流服務 -> 用戶: 提示結果
+deactivate 物流服務
+
+@enduml

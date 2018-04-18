@@ -1,0 +1,14 @@
+@startuml
+actor 用戶 
+participant 出貨服務
+
+用戶 -> 出貨服務: 轉銷貨
+activate 用戶
+
+用戶 -> 出貨服務: 轉待出庫
+用戶 -> 出貨服務: 配庫
+用戶 -> 出貨服務: 轉揀貨
+用戶 -> 出貨服務: 轉出貨
+deactivate 用戶
+
+@enduml
