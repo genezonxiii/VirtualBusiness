@@ -19,7 +19,7 @@
         <charset>UTF-8</charset>
       </PatternLayout>
       <Policies>
-        <TimeBasedTriggeringPolicy interval="1"/>
+        <TimeBasedTriggeringPolicy interval="7"/>
         <SizeBasedTriggeringPolicy size="20 MB"/>
       </Policies> 
     </RollingFile>
