@@ -4,18 +4,18 @@
 	<Appenders>
 	<Console name="STDOUT" target="SYSTEM_OUT">
 <!--       <PatternLayout pattern="%d %p %c [%t] %m%n"/> -->
-      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %r [%t] %-5p %c:%L %x - %m%n" charset="UTF-8"/>
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %p %c:%M:%L %t %m%n" charset="UTF-8"/>
     </Console>
     <File name="vbLog" append="true" fileName="/data/log/VirtualBusiness/VirtualBusiness.log">
       <PatternLayout>
-        <Pattern>%d %p %c [%t] %m%n</Pattern>
+        <Pattern>%d %p %c:%L [%t] %m%n</Pattern>
         <charset>UTF-8</charset>
       </PatternLayout>
     </File>
     <RollingFile name="vbRFLog" append="true" fileName="/data/logs/VirtualBusiness/VirtualBusiness.log"
     	filePattern="/data/logs/VirtualBusiness/$${date:yyyy-MM}/VirtualBusiness-%d{yyyy-MM-dd}-%i.log.gz">>
       <PatternLayout>
-        <Pattern>%d %p %c [%t] %m%n</Pattern>
+        <Pattern>%d %p %c:%L %t %m%n</Pattern>
         <charset>UTF-8</charset>
       </PatternLayout>
       <Policies>
