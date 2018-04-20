@@ -78,10 +78,14 @@ public class SfApi {
 	private static final String productction = "http://bsp.sf-express.com/bsp-wms/OmsCommons";
 	private static final String testing = "http://bsp.sit.sf-express.com:8080/bsp-wms/OmsCommons";
 	
-	/******************
-	 * 商品接口
+
+	/**
+	 * <p>商品接口
 	 * 
-	 * ***************/
+	 * @param productList
+	 * @param valueService
+	 * @return
+	 */
 	public String genItemService(List<ProductBean> productList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
@@ -154,10 +158,13 @@ public class SfApi {
 		return result;
 	}
 	
-	/******************
-	 * 商品接口(組合包)
+	/**
+	 * <p>商品接口(組合包)
 	 * 
-	 ******************/
+	 * @param packageVOList
+	 * @param valueService
+	 * @return
+	 */
 	public String genItemServiceForPackage(List<tw.com.aber.vo.PackageVO> packageVOList, ValueService valueService) {
 		List<SfItem> itemList = new ArrayList<SfItem>();
 
@@ -229,10 +236,13 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 商品查詢接口
+	/**
+	 * <p>商品查詢接口
 	 * 
-	 **********************/
+	 * @param productList
+	 * @param valueService
+	 * @return
+	 */
 	public String genItemQueryService(List<ProductBean> productList, ValueService valueService) {
 		String result;
 
@@ -276,10 +286,13 @@ public class SfApi {
 		return result;
 	}
 	
-	/**********************
-	 * 商品查詢接口(組合包)
+	/**
+	 * <p>商品查詢接口(組合包)
 	 * 
-	 **********************/
+	 * @param arr_C_product_id
+	 * @param valueService
+	 * @return
+	 */
 	public String genItemQueryService(String [] arr_C_product_id, ValueService valueService) {
 		String result;
 
@@ -323,10 +336,13 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 入庫單接口
+	/**
+	 * <p>入庫單接口
 	 * 
-	 **********************/	
+	 * @param purchaseList
+	 * @param valueService
+	 * @return
+	 */
 	public String genPurchaseOrderService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -406,10 +422,13 @@ public class SfApi {
 		return result;
 	}
 	
-	/**********************
-	 * 入庫單明細查詢接口
+	/**
+	 * <p>入庫單明細查詢接口
 	 * 
-	 **********************/	
+	 * @param purchaseList
+	 * @param valueService
+	 * @return
+	 */
 	public String genPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -458,10 +477,13 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 入庫取消接口
+	/**
+	 * <p>入庫取消接口
 	 * 
-	 **********************/	
+	 * @param purchaseList
+	 * @param valueService
+	 * @return
+	 */
 	public String genCancelPurchaseOrderInboundQueryService(List<PurchaseVO> purchaseList, ValueService valueService) {
 		String result;
 
@@ -511,10 +533,13 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 出庫單接口
+	/**
+	 * <p>出庫單接口
 	 * 
-	 **********************/	
+	 * @param shipList
+	 * @param valueService
+	 * @return
+	 */
 	public String genSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
@@ -694,10 +719,13 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 出庫單取消接口
+	/**
+	 * <p>出庫單取消接口
 	 * 
-	 **********************/
+	 * @param shipList
+	 * @param valueService
+	 * @return
+	 */
 	public String genCancelSaleOrderService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 
@@ -746,10 +774,13 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 出庫單明細查詢接口
+	/**
+	 * <p>出庫單明細查詢接口
 	 * 
-	 **********************/	
+	 * @param shipList
+	 * @param valueService
+	 * @return
+	 */
 	public String genSaleOrderOutboundDetailQueryService(List<ShipVO> shipList, ValueService valueService) {
 		String result;
 		WarehouseVO warehouseVO = valueService.getWarehouseVO();
@@ -795,10 +826,13 @@ public class SfApi {
 
 	}
 
-	/**********************
-	 * 組合商品接口
+	/**
+	 * <p>組合商品接口
 	 * 
-	 **********************/
+	 * @param packageVOList
+	 * @param valueService
+	 * @return
+	 */
 	public String genBomService(List<PackageVO> packageVOList, ValueService valueService) {
 		String result = "";
 		SfBomItem item = null;
@@ -866,10 +900,14 @@ public class SfApi {
 		return result;
 	}
 
-	/**********************
-	 * 實時庫存查詢接口
+	/**
+	 * <p>實時庫存查詢接口
 	 * 
-	 **********************/
+	 * @param stockNewVOList
+	 * @param valueService
+	 * @param InventoryStatus
+	 * @return
+	 */
 	public String genRtInventoryQueryService(List<StockNewVO> stockNewVOList, ValueService valueService,
 			String InventoryStatus) {
 		String result;
@@ -918,8 +956,12 @@ public class SfApi {
 		return result;
 	}
 
-	/* 
-	 * 電文加密前置作業
+	/**
+	 * <p>電文加密前置作業
+	 * 
+	 * @param env
+	 * @param reqXml
+	 * @return
 	 */
 	public String sendXML(String env, String reqXml) {		
 		String urlParameters = "";
@@ -948,8 +990,12 @@ public class SfApi {
 		return returnValue;
 	}
 
-	/*
-	 * 透過HTTP POST發送電文
+	/**
+	 * <p>透過HTTP POST發送電文
+	 * 
+	 * @param targetURL
+	 * @param urlParameters
+	 * @return
 	 */
 	public static String executePost(String targetURL, String urlParameters) {
 		HttpURLConnection connection = null;
@@ -997,9 +1043,10 @@ public class SfApi {
 	}
 
 	/**
-	 * @param responseUtil
+	 * <p>判斷是否為回覆電文
 	 * 
-	 * @return whether the return is successful
+	 * @param responseUtil
+	 * @return
 	 */
 	public boolean isTelegraph(ResponseUtil responseUtil) {
 		
@@ -1012,9 +1059,10 @@ public class SfApi {
 	}
 
 	/**
-	 * @param xmlString
-	 *            The string to be processed
-	 * @return returns a responseUtil object
+	 * <p>回覆電文解析成物件
+	 * 
+	 * @param resXml
+	 * @return
 	 */
 	public ResponseUtil getResponseUtilObj(String resXml) {
 		ResponseUtil responseUtil = null;
@@ -1041,9 +1089,10 @@ public class SfApi {
 	}
 
 	/**
-	 * @param xmlString
-	 *            The string to be processed
-	 * @return returns a response object
+	 * <p>回覆電文解析成物件
+	 * 
+	 * @param resXml
+	 * @return
 	 */
 	public Response getResponseObj(String resXml) {
 		Response response = null;
@@ -1061,9 +1110,10 @@ public class SfApi {
 	}
 
 	/**
-	 * @param xmlString
-	 *            The string to be processed
-	 * @return returns a responseFail object
+	 * <p>回覆電文解析為物件
+	 * 
+	 * @param resXml
+	 * @return
 	 */
 	public ResponseFail getErrResponseObj(String resXml) {
 		ResponseFail responseFail = null;

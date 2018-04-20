@@ -35,10 +35,11 @@ import tw.com.aber.vo.SaleVO;
 public class InvoiceApi {
 	private static final Logger logger = LogManager.getLogger(InvoiceApi.class);
 
-	/**********************
-	 * A01發票號碼取號 [Request]
+	/**
+	 * <p>A01發票號碼取號 [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForA01() {
 		String result = null;
 		Index index = new Index();
@@ -59,10 +60,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * A01發票號碼取號 [Response]
+	/**
+	 * <p>A01發票號碼取號 [Response]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genResponseForA01() {
 		String result = null;
 		Index index = new Index();
@@ -86,10 +88,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * A02發票字軌取號訊息規格(查詢當期全部發票號碼) [Request]
+	/**
+	 * <p>A02發票字軌取號訊息規格(查詢當期全部發票號碼) [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForA02() {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -110,10 +113,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * A02發票字軌取號訊息規格(查詢當期全部發票號碼) [Response]
+	/**
+	 * <p>A02發票字軌取號訊息規格(查詢當期全部發票號碼) [Response]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genResponseForA02() {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -152,10 +156,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * A03上傳當期發票字軌資料 [Request]
+	/**
+	 * <p>A03上傳當期發票字軌資料 [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForA03() {
 		String result = null;
 		Index index = new Index();
@@ -200,10 +205,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * A03上傳當期發票字軌資料 [Response]
+	/**
+	 * <p>A03上傳當期發票字軌資料 [Response]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genResponseForA03() {
 		String result = null;
 		Index index = new Index();
@@ -222,10 +228,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * A04發票字軌取號訊息規格(查詢總公司其廈門市當期全部字軌資料) [Request]
+	/**
+	 * <p>A04發票字軌取號訊息規格(查詢總公司其下門市當期全部字軌資料) [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForA04() {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -246,10 +253,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * B01發票號碼更新 [Request]
+	/**
+	 * <p>B01發票號碼更新 [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForB01() {
 		String result = null;
 		Index index = new Index();
@@ -276,10 +284,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * C01發票號碼取號(取下一期發票號碼) [Request]
+	/**
+	 * <p>C01發票號碼取號(取下一期發票號碼) [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForC01() {
 		String result = null;
 		Index index = new Index();
@@ -306,10 +315,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * C02發票字軌取號訊息規格(查詢下一期全部發票號碼) [Request]
+	/**
+	 * <p>C02發票字軌取號訊息規格(查詢下一期全部發票號碼) [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForC02() {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -330,10 +340,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * C03上傳下一期發票字軌資料 [Request]
+	/**
+	 * <p>C03上傳下一期發票字軌資料 [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForC03() {
 		String result = null;
 		Index index = new Index();
@@ -378,10 +389,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * C04發票字軌取號訊息規格(查詢總公司旗下門市下一期全部字軌資料) [Request]
+	/**
+	 * <p>C04發票字軌取號訊息規格(查詢總公司旗下門市下一期全部字軌資料) [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForC04() {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -402,10 +414,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * Y01取系統時間 [Request]
+	/**
+	 * <p>Y01取系統時間 [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForY01() {
 		String result = null;
 		Index index = new Index();
@@ -426,10 +439,11 @@ public class InvoiceApi {
 		return result;
 	}
 
-	/**********************
-	 * D01總分支機構抓取旗下門市通道金鑰 [Request]
+	/**
+	 * <p>D01總分支機構抓取旗下門市通道金鑰 [Request]
 	 * 
-	 **********************/
+	 * @return
+	 */
 	public String genRequestForD01() {
 		String result = null;
 		Index index = new Index();
@@ -450,10 +464,12 @@ public class InvoiceApi {
 		return result;
 	}
 	
-	/**********************
-	 * 依order_no來分類SaleVO
+	/**
+	 * <p>依order_no來分類SaleVO
 	 * 
-	 **********************/
+	 * @param saleVOsAll
+	 * @return
+	 */
 	public List<List<SaleVO>> classification(List<SaleVO> saleVOsAll) {
 		List<List<SaleVO>> saleVOsAll_classification =new ArrayList<List<SaleVO>>();
 		String order_no_record = "";
@@ -488,10 +504,13 @@ public class InvoiceApi {
 		return saleVOsAll_classification;
 	}
 	
-	/**********************
-	 * 取得列印發票字串
+	/**
+	 * <p>取得列印發票字串
 	 * 
-	 **********************/
+	 * @param saleVOsAll
+	 * @param groupVO
+	 * @return
+	 */
 	public List<String> getPrintStr(List<SaleVO> saleVOsAll, GroupVO groupVO) {
 		List<String> printStrList = new ArrayList<String>();
 		List<List<SaleVO>> saleVOsAll_classification = classification(saleVOsAll);
@@ -523,10 +542,14 @@ public class InvoiceApi {
 	
 	
 
-	/**********************
-	 * C0401開立發票訊息規格 [Request]
+	/**
+	 * <p>C0401開立發票訊息規格 [Request]
 	 * 
-	 **********************/
+	 * @param invoiceNum
+	 * @param saleVOs
+	 * @param groupVO
+	 * @return
+	 */
 	public String genRequestForC0401(String invoiceNum, List<SaleVO> saleVOs, GroupVO groupVO) {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -627,10 +650,14 @@ public class InvoiceApi {
 		return result;
 	}
 	
-	/**********************
-	 * C0501開立發票訊息規格 [Request]
+	/**
+	 * <p>C0501開立發票訊息規格 [Request]
 	 * 
-	 **********************/
+	 * @param reason
+	 * @param saleVOs
+	 * @param groupVO
+	 * @return
+	 */
 	public String genRequestForC0501(String reason, List<SaleVO> saleVOs, GroupVO groupVO) {
 		String result = null;
 		Invoice invoice = new Invoice();
@@ -666,10 +693,15 @@ public class InvoiceApi {
 	}
 	
 
-	/**********************
-	 * 取得列印發票xml號碼
+	/**
+	 * <p>取得列印發票xml號碼
 	 * 
-	 **********************/
+	 * @param invoiceXml
+	 * @param invoice_date
+	 * @param invoice_time
+	 * @param invoice_vcode
+	 * @return
+	 */
 	public String getInvoicePrintXml(String invoiceXml,Date invoice_date,Time invoice_time,String invoice_vcode) {
 		
 		Invoice invoice=JAXB.unmarshal(new StringReader(invoiceXml), Invoice.class);
@@ -691,27 +723,33 @@ public class InvoiceApi {
 		return sw.toString();
 	}
 	
-	/**********************
-	 * 取得C0401發票驗證碼
+	/**
+	 * <p>取得C0401發票驗證碼
 	 * 
-	 **********************/
+	 * @param invoiceXml
+	 * @return
+	 */
 	public String getInvoiceInvoiceVcode(String invoiceXml) {
 		Invoice invoice=JAXB.unmarshal(new StringReader(invoiceXml), Invoice.class);
 		return invoice.getA30();
 	}
 	
-	/**********************
-	 * 取得C0401發票開立時間
+	/**
+	 * <p>取得C0401發票開立時間
 	 * 
-	 **********************/
+	 * @param invoiceXml
+	 * @return
+	 */
 	public String getInvoiceInvoice_time(String invoiceXml) {
 		Invoice invoice=JAXB.unmarshal(new StringReader(invoiceXml), Invoice.class);
 		return invoice.getA4();
 	}
 	
-	
-	/*
-	 * 電文加密前置作業
+	/**
+	 * <p>電文加密前置作業
+	 * 
+	 * @param reqXml
+	 * @return
 	 */
 	public String sendXML(String reqXml) {
 		String targetURL = "http://xmltest.551.com.tw";
@@ -724,8 +762,12 @@ public class InvoiceApi {
 		return returnValue;
 	}
 
-	/*
-	 * 透過HTTP POST發送電文
+	/**
+	 * <p>透過HTTP POST發送電文
+	 * 
+	 * @param targetURL
+	 * @param urlParameters
+	 * @return
 	 */
 	public static String executePost(String targetURL, String urlParameters) {
 		HttpURLConnection connection = null;
@@ -771,6 +813,12 @@ public class InvoiceApi {
 		return response.toString();
 	}
 
+	/**
+	 * <p>回覆電文解析為物件
+	 * 
+	 * @param resXml
+	 * @return
+	 */
 	public Index getIndexResponse(String resXml) {
 		Index index = null;
 		StringReader reader = null;
@@ -795,6 +843,12 @@ public class InvoiceApi {
 		return index;
 	}
 
+	/**
+	 * <p>回覆電文解析為物件
+	 * 
+	 * @param resXml
+	 * @return
+	 */
 	public Invoice getInvoiceResponse(String resXml) {
 		Invoice invoice = null;
 		StringReader reader = null;
