@@ -576,7 +576,7 @@
 	                        }
 	                        
 	                        $.each(json_obj.list, function(i, item) {
-	                        	if (item.indexOf("EM0015")) {
+	                        	if (item.indexOf("EM0015") > 0) {
 		                        	dialogMsg('提示', "持載具索取統一發票之一般消費者時，不得列出紙本電子發票！");
 		                        	return false;
 		                        }
@@ -585,9 +585,10 @@
 	                                data: item,
 	                                type: 'POST',
 	                                crossDomain: true,
-	                                success: function(a, b, c) {
+	                                success: function(data, textStatus, jqXHR ) {
 	                                },
-	                                error: function(xhr, ajaxOptions, thrownError) {
+	                                error: function(xhr, textStatus, errorThrown) {
+	                                	dialogMsg('錯誤', '連線失敗，請洽系統人員。');
 	                                }
 	                            });
 	                        });
