@@ -13,7 +13,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "skuNo", "itemName", "description", "qty", 
 		"barCode", "containers", "qtymin", "serialNumTrackInbound", 
 		"serialNumTrackOutbound","serialNumTrackInventory", "bomAction", "result", "note",
-		"planQty", "actualQty", "inventoryStatus", "lot", "expirationDate", "serialNumbers"})
+		"planQty", "actualQty", "inventoryStatus", "lot", "expirationDate", "serialNumbers",
+		"height", "width", "length", "weight"
+		})
 public class SfItem {
 	private static final long serialVersionUID = 1L;
 
@@ -41,6 +43,14 @@ public class SfItem {
 	private String bomAction;
 	@XmlElement(name = "InventoryStatus")
 	private String inventoryStatus;
+	@XmlElement(name = "Height")
+	private String height;
+	@XmlElement(name = "Width")
+	private String width;
+	@XmlElement(name = "Length")
+	private String length;
+	@XmlElement(name = "Weight")
+	private String weight;
 	
 	//response use (商品查詢)
 	@XmlElement(name = "Result")
@@ -169,6 +179,30 @@ public class SfItem {
 	}
 	public void setExpirationDate(String expirationDate) {
 		this.expirationDate = expirationDate;
+	}
+	public String getHeight() {
+		return height;
+	}
+	public void setHeight(String height) {
+		this.height = height;
+	}
+	public String getWidth() {
+		return width;
+	}
+	public void setWidth(String width) {
+		this.width = width;
+	}
+	public String getLength() {
+		return length;
+	}
+	public void setLength(String length) {
+		this.length = length;
+	}
+	public String getWeight() {
+		return weight;
+	}
+	public void setWeight(String weight) {
+		this.weight = weight;
 	}
 
 	

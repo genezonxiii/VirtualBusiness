@@ -108,6 +108,10 @@ public class SfApi {
 			item.setBarCode(barCode);
 			item.setQtymin(String.valueOf( product.getKeep_stock() )); 
 			item.setContainers(containers);
+			item.setHeight(String.valueOf(product.getHeight()));
+			item.setWidth(String.valueOf(product.getWidth()));
+			item.setLength(String.valueOf(product.getLength()));
+			item.setWeight(String.valueOf(product.getWeight()));
 			//要求掃描序列號
 			item.setSerialNumTrackInbound("Y");
 			item.setSerialNumTrackInventory("Y");

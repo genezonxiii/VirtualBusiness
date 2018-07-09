@@ -684,7 +684,11 @@
 										description : $("#dialog-form-insert input[name='description']").val(),
 										barcode : $("#dialog-form-insert input[name='barcode']").val(),
 										ispackage : "0",
-										userdef1 : $("#dialog-form-insert input[name='userdef1']").val()
+										userdef1 : $("#dialog-form-insert input[name='userdef1']").val(),
+										height: $("#dialog-form-insert input[name='height']").val(),
+										width: $("#dialog-form-insert input[name='width']").val(),
+										length: $("#dialog-form-insert input[name='length']").val(),
+										weight: $("#dialog-form-insert input[name='weight']").val(),
 									};
 								draw_product(information);
 								
@@ -812,7 +816,11 @@
 							description : $("#dialog-form-update input[name='description']").val(),
 							barcode : $("#dialog-form-update input[name='barcode']").val(),
 							ispackage : "0",
-							userdef1 : $("#dialog-form-update input[name='userdef1']").val()
+							userdef1 : $("#dialog-form-update input[name='userdef1']").val(),
+							height: $("#dialog-form-update input[name='height']").val(),
+							width: $("#dialog-form-update input[name='width']").val(),
+							length: $("#dialog-form-update input[name='length']").val(),
+							weight: $("#dialog-form-update input[name='weight']").val(),
 						};
 						draw_product(information);
 						$("#update-dialog-form-post").trigger("reset");
@@ -899,6 +907,10 @@
 			$("#dialog-form-update input[name='tmp_cost']").val(data.cost);
 			$("#dialog-form-update input[name='cost']").val(data.cost);
 			$("#dialog-form-update input[name='userdef1']").val(data.userdef1);
+			$("#dialog-form-update input[name='height']").val(data.height);
+			$("#dialog-form-update input[name='width']").val(data.width);
+			$("#dialog-form-update input[name='length']").val(data.length);
+			$("#dialog-form-update input[name='weight']").val(data.weight);
 			
 			$("#update_exchange_cost").html(
 					currency_unit($("#update_currency").find("option:selected").text())+
@@ -1762,6 +1774,14 @@
 									<td>自定義：</td>
 									<td><input type="text" name="userdef1" /></td>
 								</tr>
+								<tr>
+									<td>重量：</td><td><input type="text" name="weight" /></td>
+									<td>高度：</td><td><input type="text" name="height" /></td>
+								</tr>
+								<tr>
+									<td>寬度：</td><td><input type="text" name="width" /></td>
+									<td>長度：</td><td><input type="text" name="length" /></td>
+								</tr>
 							</tbody>
 						</table>
 					</fieldset>
@@ -1830,6 +1850,14 @@
 								</tr><tr>
 									<td>庫存量：</td><td><input type="text" name="current_stock" /></td>
 									<td>安全庫存：</td><td><input type="text" name="keep_stock" /></td>
+								</tr>
+								<tr>
+									<td>重量：</td><td><input type="text" name="weight" /></td>
+									<td>高度：</td><td><input type="text" name="height" /></td>
+								</tr>
+								<tr>
+									<td>寬度：</td><td><input type="text" name="width" /></td>
+									<td>長度：</td><td><input type="text" name="length" /></td>
 								</tr>
 								<tr>
 									<td>自定義：</td>

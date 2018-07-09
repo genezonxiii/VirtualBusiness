@@ -268,6 +268,14 @@ public class product extends HttpServlet {
 				String barcode = request.getParameter("barcode");
 				String ispackage = request.getParameter("ispackage");
 				String userdef1 = request.getParameter("userdef1");
+				float height = Float.valueOf((request.getParameter("height") + "").equals("") ? "0"
+						: request.getParameter("height"));
+				float width = Float.valueOf((request.getParameter("width") + "").equals("") ? "0"
+						: request.getParameter("width"));
+				float length = Float.valueOf((request.getParameter("length") + "").equals("") ? "0"
+						: request.getParameter("length"));
+				float weight = Float.valueOf((request.getParameter("weight") + "").equals("") ? "0"
+						: request.getParameter("weight"));
 				
 				logger.debug("c_product_id:" + c_product_id);
 				logger.debug("supply_id:" + supply_id);
@@ -278,7 +286,7 @@ public class product extends HttpServlet {
 				productService = new ProductService();
 				String result = productService.addProduct(group_id, c_product_id, product_name, supply_id, supply_name, type_id,
 						unit_id, cost, price, current_stock, keep_stock, photo, photo1, description, barcode, ispackage,
-						userdef1, user_id);
+						userdef1, height, width, length, weight, user_id);
 				/***************************
 				 * 3.新增完成,準備轉交(Send the Success view)
 				 ***********/
@@ -345,13 +353,17 @@ public class product extends HttpServlet {
 				String barcode = request.getParameter("barcode");
 				String ispackage = request.getParameter("ispackage");
 				String userdef1 = request.getParameter("userdef1");
+				float height = Float.valueOf(request.getParameter("height"));
+				float width = Float.valueOf(request.getParameter("width"));
+				float length = Float.valueOf(request.getParameter("length"));
+				float weight = Float.valueOf(request.getParameter("weight"));
 				/***************************
 				 * 2.開始修改資料
 				 ***************************************/
 				productService = new ProductService();
 				String result = productService.updateProduct(product_id, group_id, c_product_id, product_name, supply_id, supply_name,
 						type_id, unit_id, cost, price, keep_stock, photo, photo1, description, barcode, ispackage,
-						userdef1, user_id);
+						userdef1, height, width, length, weight, user_id);
 				/***************************
 				 * 3.修改完成,準備轉alert(json_obj)交(Send the Success view)
 				 ***********/
@@ -503,6 +515,10 @@ public class product extends HttpServlet {
 		private String message;
 		private String ispackage;
 		private String userdef1;
+		private float height;
+		private float width;
+		private float length;
+		private float weight;
 
 		public String getProduct_id() {
 			return product_id;
@@ -664,6 +680,38 @@ public class product extends HttpServlet {
 			this.userdef1 = userdef1;
 		}
 
+		public float getHeight() {
+			return height;
+		}
+
+		public void setHeight(float height) {
+			this.height = height;
+		}
+
+		public float getWidth() {
+			return width;
+		}
+
+		public void setWidth(float width) {
+			this.width = width;
+		}
+
+		public float getLength() {
+			return length;
+		}
+
+		public void setLength(float length) {
+			this.length = length;
+		}
+
+		public float getWeight() {
+			return weight;
+		}
+
+		public void setWeight(float weight) {
+			this.weight = weight;
+		}
+
 	}
 
 	/*************************** 制定規章方法 ****************************************/
@@ -715,7 +763,7 @@ public class product extends HttpServlet {
 		public String addProduct(String group_id, String c_product_id, String product_name, String supply_id,
 				String supply_name, String type_id, String unit_id, Float cost, Float price, int current_stock,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
-				String userdef1, String user_id) {
+				String userdef1, Float height, Float width, Float length, Float weight, String user_id) {
 			ProductBean productBean = new ProductBean();
 			productBean.setGroup_id(group_id);
 			productBean.setC_product_id(c_product_id);
@@ -735,6 +783,10 @@ public class product extends HttpServlet {
 			productBean.setUser_id(user_id);
 			productBean.setIspackage(ispackage);
 			productBean.setUserdef1(userdef1);
+			productBean.setHeight(height);
+			productBean.setWidth(width);
+			productBean.setLength(length);
+			productBean.setWeight(weight);
 			
 			return dao.insertDB(productBean);
 		}
@@ -742,7 +794,7 @@ public class product extends HttpServlet {
 		public String updateProduct(String product_id, String group_id, String c_product_id, String product_name,
 				String supply_id, String supply_name, String type_id, String unit_id, Float cost, Float price,
 				int keep_stock, String photo, String photo1, String description, String barcode, String ispackage,
-				String userdef1, String user_id) {
+				String userdef1, Float height, Float width, Float length, Float weight, String user_id) {
 			ProductBean productBean = new ProductBean();
 
 			productBean.setProduct_id(product_id);
@@ -763,6 +815,10 @@ public class product extends HttpServlet {
 			productBean.setUser_id(user_id);
 			productBean.setIspackage(ispackage);
 			productBean.setUserdef1(userdef1);
+			productBean.setHeight(height);
+			productBean.setWidth(width);
+			productBean.setLength(length);
+			productBean.setWeight(weight);
 			
 			return dao.updateDB(productBean);
 		}
@@ -814,9 +870,9 @@ public class product extends HttpServlet {
 		// 會使用到的Stored procedure
 		private static final String sp_get_product_bybarcode = "call sp_get_product_bybarcode(?,?)";
 		private static final String sp_selectall_product = "call sp_selectall_product (?)";
-		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)";
+		private static final String sp_insert_product = "call sp_insert_product(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?)";
 		private static final String sp_del_product = "call sp_del_product (?,?,?)";
-		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
+		private static final String sp_update_product = "call sp_update_product (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)";
 		private static final String sp_get_product_bysupplyname = "call sp_get_product_bysupplyname (?,?)";
 		private static final String sp_get_product_byproductname = "call sp_get_product_byproductname (?,?)";
 		private static final String sp_get_supplyname = "call sp_get_supplyname (?,?)";
@@ -863,10 +919,14 @@ public class product extends HttpServlet {
 				cs.setInt(16, productBean.getCurrent_stock());
 				cs.setString(17, productBean.getIspackage());
 				cs.setString(18, productBean.getUserdef1());
-				cs.registerOutParameter(19, Types.VARCHAR);
+				cs.setFloat(19, productBean.getWeight());
+				cs.setFloat(20, productBean.getHeight());
+				cs.setFloat(21, productBean.getWidth());
+				cs.setFloat(22, productBean.getLength());
+				cs.registerOutParameter(23, Types.VARCHAR);
 				cs.execute();
 				
-				result = cs.getString(19);
+				result = cs.getString(23);
 				
 				// Handle any SQL errors
 			} catch (SQLException se) {
@@ -922,10 +982,14 @@ public class product extends HttpServlet {
 				cs.setString(16, productBean.getUser_id());
 				cs.setString(17, productBean.getIspackage());
 				cs.setString(18, productBean.getUserdef1());
-				cs.registerOutParameter(19, Types.VARCHAR);
+				cs.setFloat(19, productBean.getWeight());
+				cs.setFloat(20, productBean.getHeight());
+				cs.setFloat(21, productBean.getWidth());
+				cs.setFloat(22, productBean.getLength());
+				cs.registerOutParameter(23, Types.VARCHAR);
 				cs.execute();
 				
-				result = cs.getString(19);
+				result = cs.getString(23);
 
 				// Handle any SQL errors
 			} catch (SQLException se) {
@@ -1030,6 +1094,10 @@ public class product extends HttpServlet {
 					productBean.setBarcode(rs.getString("barcode"));
 					productBean.setIspackage(rs.getString("package"));
 					productBean.setUserdef1(rs.getString("userdef1"));
+					productBean.setHeight(rs.getFloat("height"));
+					productBean.setWidth(rs.getFloat("width"));
+					productBean.setLength(rs.getFloat("length"));
+					productBean.setWeight(rs.getFloat("weight"));
 					
 					list.add(productBean); // Store the row in the list
 				}
@@ -1265,6 +1333,10 @@ public class product extends HttpServlet {
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
 					productBean.setUserdef1(rs.getString("userdef1"));
+					productBean.setHeight(rs.getFloat("height"));
+					productBean.setWidth(rs.getFloat("width"));
+					productBean.setLength(rs.getFloat("length"));
+					productBean.setWeight(rs.getFloat("weight"));					
 					list.add(productBean);
 				}
 				// Handle any driver errors
@@ -1333,6 +1405,10 @@ public class product extends HttpServlet {
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
 					productBean.setUserdef1(rs.getString("userdef1"));
+					productBean.setHeight(rs.getFloat("height"));
+					productBean.setWidth(rs.getFloat("width"));
+					productBean.setLength(rs.getFloat("length"));
+					productBean.setWeight(rs.getFloat("weight"));
 					list.add(productBean);
 				}
 				// Handle any driver errors
@@ -1485,6 +1561,10 @@ public class product extends HttpServlet {
 					productBean.setPhoto1(rs.getString("photo1"));
 					productBean.setDescription(rs.getString("description"));
 					productBean.setBarcode(rs.getString("barcode"));
+					productBean.setWeight(rs.getFloat("weight"));
+					productBean.setHeight(rs.getFloat("height"));
+					productBean.setWidth(rs.getFloat("width"));
+					productBean.setLength(rs.getFloat("length"));
 					list.add(productBean);
 				}
 				// Handle any driver errors
