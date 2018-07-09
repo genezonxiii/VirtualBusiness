@@ -66,7 +66,7 @@
 			$("#username").after("<span class='error-msg'>請輸入帳號</span>");
 			wrong = 1;
 		}
-		if ($("#password").val().length < 1) {
+		if (! /^[a-zA-Z0-9-,]+$/.test($("#password").val()) ) {
 			$("#password").addClass("error");
 			$("#password").after("<span class='error-msg'>請輸入密碼</span>");
 			wrong = 1;
@@ -77,11 +77,6 @@
 		if ($("#verify").val().length < 1) {
 			$("#verify").addClass("error");
 			$("#verify").after("<span class='error-msg'>請輸入驗證碼</span>");
-			wrong = 1;
-		}
-		if ($("#password").val().length > 10) {
-			$("#password").addClass("error");
-			$("#password").after("<span class='error-msg'>長度不可超過十個字</span>");
 			wrong = 1;
 		}
 

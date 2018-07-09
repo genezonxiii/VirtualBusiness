@@ -43,15 +43,12 @@ public class changepassword extends HttpServlet {
 		if ("update".equals(action)) {
 			try {
 				/*************************** 1.接收請求參數 ***************************************/
-				String password = request.getParameter("password");
+				String passwordOld = request.getParameter("password_old");
+				String passwordNew = request.getParameter("password_new");
 				
-				
-				/*************************** 2.開始修改資料 ***************************************/
-				passwordVOService = new PasswordVOService();
-				passwordVOService.updatePassword(user_id,password);
 				/*************************** 3.修改完成,準備轉交(Send the Success view) ***********/
 				passwordVOService = new PasswordVOService();
-			    PasswordVO list = passwordVOService.updatePassword(user_id,password);
+			    PasswordVO list = passwordVOService.updatePassword(user_id, passwordOld, passwordNew);
 				Gson gson = new Gson();
 				String jsonStrList = gson.toJson(list);
 				response.getWriter().write(jsonStrList);
@@ -79,10 +76,11 @@ public class changepassword extends HttpServlet {
 		}
 
 
-		public PasswordVO updatePassword(String user_id, String password) {
+		public PasswordVO updatePassword(String user_id, String passwordOld, String passwordNew) {
 			PasswordVO passwordVO = new PasswordVO();
-			passwordVO.setUser_id(user_id);;
-			passwordVO.setPassword(password);
+			passwordVO.setUser_id(user_id);
+			passwordVO.setPasswordOld(passwordOld);
+			passwordVO.setPasswordNew(passwordNew);
 		
 			dao.updateDB(passwordVO);
 			return passwordVO;
@@ -93,7 +91,7 @@ public class changepassword extends HttpServlet {
 	/*************************** 操作資料庫 ****************************************/
 	class PasswordVODAO implements PasswordVO_interface {
 		// 會使用到的Stored procedure
-		private static final String sp_update_password = "call sp_update_password (?,?)";
+		private static final String sp_update_password = "call sp_update_password (?,?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -111,7 +109,8 @@ public class changepassword extends HttpServlet {
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
 				pstmt = con.prepareStatement(sp_update_password);
 				pstmt.setString(1, passwordVO.getUser_id());
-				pstmt.setString(2, passwordVO.getPassword());
+				pstmt.setString(2, passwordVO.getPasswordOld());
+				pstmt.setString(3, passwordVO.getPasswordNew());
 				pstmt.executeUpdate();
 
 				// Handle any SQL errors

@@ -5,7 +5,8 @@ public class PasswordVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String user_id;
-	private String password;
+	private String passwordOld;
+	private String passwordNew;
 
 	public String getUser_id() {
 		return user_id;
@@ -15,11 +16,19 @@ public class PasswordVO implements java.io.Serializable {
 		this.user_id = user_id;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getPasswordOld() {
+		return passwordOld;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPasswordOld(String passwordOld) {
+		this.passwordOld = passwordOld;
+	}
+
+	public String getPasswordNew() {
+		return passwordNew;
+	}
+
+	public void setPasswordNew(String passwordNew) {
+		this.passwordNew = passwordNew;
 	}
 }

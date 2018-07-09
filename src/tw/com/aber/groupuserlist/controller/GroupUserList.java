@@ -85,10 +85,9 @@ public class GroupUserList extends HttpServlet {
 			userVO.setEmail(null2str(email));
 			userVO.setPassword(null2str(password));
 
-			String format = "\n" + "group_id : {}\n" + "user_name : {}\n" + "role : {}\n" + "email : {}\n"
-					+ "password : {}\n";
+			String format = "\n" + "group_id : {}\n" + "user_name : {}\n" + "role : {}\n" + "email : {}\n";
 
-			logger.debug(format, group_id, user_name, role, email, password);
+			logger.debug(format, group_id, user_name, role, email);
 
 			service = new GroupUserListService();
 			service.insert(userVO);
@@ -112,7 +111,7 @@ public class GroupUserList extends HttpServlet {
 			userVO.setPassword(null2str(password));
 
 			String format = "\n" + "group_id : {}\n" + "user_id : {}\n" + "user_name : {}\n" + "role : {}\n"
-					+ "email : {}\n" + "password : {}\n";
+					+ "email : {}\n";
 
 			logger.debug(format, group_id, user_id, user_name, role, email, password);
 
@@ -175,7 +174,7 @@ public class GroupUserList extends HttpServlet {
 		private static final String sp_del_user = "call sp_del_user(?,?)";
 		private static final String sp_update_user = "call sp_update_user(?,?,?,?,?)";
 		private static final String sp_check_email = "call sp_check_email(?,?,?)";
-		private static final String sp_update_password = "call sp_update_password (?,?)";
+		private static final String sp_reset_password = "call sp_reset_password (?,?)";
 
 		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
 				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
@@ -403,7 +402,7 @@ public class GroupUserList extends HttpServlet {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_update_password);
+				pstmt = con.prepareStatement(sp_reset_password);
 				pstmt.setString(1, userVO.getUser_id());
 				pstmt.setString(2, userVO.getPassword());
 				pstmt.executeUpdate();
