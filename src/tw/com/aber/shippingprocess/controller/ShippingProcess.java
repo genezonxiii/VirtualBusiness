@@ -43,7 +43,7 @@ public class ShippingProcess extends HttpServlet {
 		String action = request.getParameter("action");
 		
 		logger.debug("group_id: "+group_id);
-		logger.debug("user_id: "+group_id);
+		logger.debug("user_id: "+user_id);
 		logger.debug("action: "+action);
 		
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
