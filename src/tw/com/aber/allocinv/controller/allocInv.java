@@ -55,7 +55,7 @@ public class allocInv extends HttpServlet {
 			service = new AllocInvService();
 			list = service.getAllData(groupId);
 
-			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 			jsonStr = gson.toJson(list);
 			logger.debug("jsonStr: "+jsonStr);
 

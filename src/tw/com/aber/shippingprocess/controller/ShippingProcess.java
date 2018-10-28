@@ -8,9 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -24,9 +22,9 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
-import tw.com.aber.vo.CustomerVO;
+import tw.com.aber.service.AllocInvService;
+import tw.com.aber.vo.AllocInvVo;
 import tw.com.aber.vo.RealSaleVO;
 
 public class ShippingProcess extends HttpServlet {
@@ -51,6 +49,13 @@ public class ShippingProcess extends HttpServlet {
 		try {
 			if ("statisticsAllocinvData".equals(action)) {
 				// 配庫
+				AllocInvService allocInvService = new AllocInvService();
+				List<AllocInvVo> allocInvList = allocInvService.getAllData(group_id);
+
+				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+				String jsonStr = gson.toJson(allocInvList);
+				logger.debug("AllocInv BEFORE: "+jsonStr);
+				
 				String warehouse_id = request.getParameter("import_warehouse_id");
 				
 				logger.debug("warehouse_id: " + warehouse_id);
@@ -58,9 +63,12 @@ public class ShippingProcess extends HttpServlet {
 				JSONObject jsonObject = service.statisticsAlloc(group_id, user_id,warehouse_id);
 
 				response.getWriter().write(jsonObject.toString());
-				
 				logger.debug("jsonObject: " + jsonObject.toString());
-
+				
+				allocInvList = allocInvService.getAllData(group_id);
+				gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+				jsonStr = gson.toJson(allocInvList);
+				logger.debug("AllocInv AFTER: "+jsonStr);
 			} else if ("importData".equals(action)) { // 銷貨
 				String c_import_trans_list_date_begin = request.getParameter("import_trans_list_date_begin");
 				String c_import_trans_list_date_end = request.getParameter("import_trans_list_date_end");

@@ -58,8 +58,8 @@ public class AllocInvDao {
 				allocInvVo.setPrice(rs.getFloat("price"));
 				allocInvVo.setLocation_id(rs.getString("location_id"));
 				allocInvVo.setAlloc_qty(rs.getInt("alloc_qty"));
-				allocInvVo.setAlloc_time(rs.getDate("alloc_time"));
-				allocInvVo.setCheckin_time(rs.getDate("checkin_time"));
+				allocInvVo.setAlloc_time(rs.getTimestamp("alloc_time"));
+				allocInvVo.setCheckin_time(rs.getTimestamp("checkin_time"));
 				allocInvVo.setProduct_name(rs.getString("product_name"));
 				allocInvVo.setSupply_id(rs.getString("supply_id"));
 				allocInvVo.setSupply_name(rs.getString("supply_name"));

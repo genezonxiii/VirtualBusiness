@@ -1,7 +1,7 @@
 package tw.com.aber.vo;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 public class AllocInvVo implements Serializable {
 
