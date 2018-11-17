@@ -159,4 +159,19 @@ public class SaleService {
 		return dao.updateTurnFlag(saleVO);
 	}
 	
+	public List<SaleVO> forAfterInsertOrUpdate(String groupId, String type, String startDate, String endDate, String uploadStartDate, String uploadEndDate) {
+		List<SaleVO> saleList = null;
+		if (startDate.trim().length() == 0 && endDate.trim().length() == 0
+				&& uploadStartDate.trim().length() == 0 && uploadEndDate.trim().length() == 0) {
+			saleList = dao.searchAllDB(groupId);
+		} else if ((type.equals("search-upload-date") || type.equals("invoice")) 
+				&& uploadStartDate.trim().length() > 0 && uploadEndDate.trim().length() > 0) {
+			saleList = dao.searchUploadDateDB(groupId, uploadStartDate, uploadEndDate);
+		} else if ((type.equals("searh-trans-list-date") || type.equals("invoice")) 
+				&& startDate.trim().length() > 0 && endDate.trim().length() > 0) {
+			saleList = dao.searchTransListDateDB(groupId, startDate, endDate);
+		}
+		return saleList;
+	}
+	
 }

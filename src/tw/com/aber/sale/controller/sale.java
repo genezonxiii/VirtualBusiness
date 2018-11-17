@@ -182,6 +182,12 @@ public class sale extends HttpServlet {
 				String invTo = request.getParameter("inv_to");
 				String email = request.getParameter("email");
 				String creditCard = request.getParameter("credit_card");
+				
+				String qType = request.getParameter("query_type");
+				String qTransListStartDate = request.getParameter("trans_list_start_date");
+				String qTransListEndDate = request.getParameter("trans_list_end_date");
+				String qUploadStartDate = request.getParameter("upload_start_date");
+				String qUploadEndDate = request.getParameter("upload_end_date");
 
 				SaleVO saleVO = new SaleVO();
 
@@ -243,7 +249,8 @@ public class sale extends HttpServlet {
 
 				saleService.addSale(saleVO);
 
-				saleList = saleService.getSearchAllDB(group_id);
+				saleList = saleService.forAfterInsertOrUpdate(group_id, 
+						qType, qTransListStartDate, qTransListEndDate, qUploadStartDate, qUploadEndDate);
 
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
@@ -292,6 +299,12 @@ public class sale extends HttpServlet {
 				String invTo = request.getParameter("inv_to");
 				String email = request.getParameter("email");
 				String creditCard = request.getParameter("credit_card");
+				
+				String qType = request.getParameter("query_type");
+				String qTransListStartDate = request.getParameter("trans_list_start_date");
+				String qTransListEndDate = request.getParameter("trans_list_end_date");
+				String qUploadStartDate = request.getParameter("upload_start_date");
+				String qUploadEndDate = request.getParameter("upload_end_date");
 				
 				SaleVO saleVO = new SaleVO();
 
@@ -356,8 +369,9 @@ public class sale extends HttpServlet {
 				logger.debug("SaleExtVO:".concat(saleExtVO.toString()));
 				
 				saleService.updateSale(saleVO);
-
-				saleList = saleService.getSearchAllDB(group_id);
+				
+				saleList = saleService.forAfterInsertOrUpdate(group_id, 
+						qType, qTransListStartDate, qTransListEndDate, qUploadStartDate, qUploadEndDate);
 
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
