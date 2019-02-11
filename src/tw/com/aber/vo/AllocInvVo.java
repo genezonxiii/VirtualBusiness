@@ -3,6 +3,8 @@ package tw.com.aber.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class AllocInvVo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -16,7 +18,9 @@ public class AllocInvVo implements Serializable {
 	private Float price;
 	private String location_id;
 	private Integer alloc_qty;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date alloc_time;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
 	private Date checkin_time;
 	// tb_product
 	private String product_name;

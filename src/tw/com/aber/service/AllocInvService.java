@@ -2,9 +2,16 @@ package tw.com.aber.service;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import tw.com.aber.dao.AllocInvDao;
 import tw.com.aber.vo.AllocInvVo;
@@ -13,9 +20,11 @@ import tw.com.aber.vo.PurchaseVO;
 
 public class AllocInvService {
 	private AllocInvDao dao;
+	private ObjectMapper objectMapper;
 
 	public AllocInvService() {
 		dao = new AllocInvDao();
+		objectMapper = new ObjectMapper();
 	}
 
 	public List<AllocInvVo> getAllData(String groupId) {
@@ -38,6 +47,23 @@ public class AllocInvService {
 	}
 	public void addPurchaseDetail(List<PurchaseDetailVO> purchaseDetailVOs) {
 		dao.doPurchaseDetail(purchaseDetailVOs);
+	}
+
+	public List<AllocInvVo> getAllocInvByGroupAndOrderNo(String group_id, String order_no) {
+		return dao.getAllocInvByGroupAndOrderNo(group_id, order_no);
+	}
+
+	public String deleteAllocInvByGroupAndOrderNo(String group_id, String order_no, String user_id) {
+		return dao.deleteAllocInvByGroupAndOrderNo(group_id, order_no, user_id);
+	}
+	
+	public String insertAllocInv(String json) throws JsonParseException, JsonMappingException, IOException {
+		List<String> result = new ArrayList<String>();
+		List<AllocInvVo> list = objectMapper.readValue(json, new TypeReference<List<AllocInvVo>>(){});
+		for(int i = 0; i < list.size(); i++) {
+			result.add( dao.insertAllocInv(list.get(i)) );
+		}
+		return result.toString();
 	}
 	
 	@Test

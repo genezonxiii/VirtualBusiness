@@ -18,6 +18,11 @@
 	href="./images/Rockettheme-Ecommerce-Shop.ico" />
 <jsp:include page="template/common_css.jsp" flush="true" />
 <link rel="stylesheet" href="css/buttons.dataTables.min.css">
+<style>
+.hidden_button {
+	display: none !important;
+}
+</style>
 </head>
 <body>
 	<input type="hidden" id="glb_menu" value='<%=menu%>' />
@@ -56,6 +61,12 @@
 			</div>
 			<div id="message" align="center">
 				<div id="text"></div>
+			</div>
+			<div id="removeAllocInv" align="center" style="display:none">
+				<form name="dialog_remove_alloc_inv" id="dialog_remove_alloc_inv">
+					<label style="float: left;">訂單編號</label>
+					<input type="text" name="remove_order_no" style="display: block">
+				</form>
 			</div>
 		</div>
 	</div>
@@ -295,6 +306,78 @@
 						}]});
 					
 					info_dialog.dialog('open');
+				}
+			}, {
+				text : '刪除待出庫',
+				enabled: false,
+				className: 'hidden_button',
+				action : function(e, dt, node, config) {
+					$('#removeAllocInv').dialog({
+						modal: true,
+						width: "400px",
+						open: function(event, ui) {
+					        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+					    },
+					    buttons : [{
+					    	text: '確認刪除',
+					    	click: function() {
+					    		$.ajax({
+					    			type : "POST",
+					    			url : "allocInv.do",
+					    			data : {
+					    				action: 'removeAllocInv',
+					    				order_no: $('input[type=text][name=remove_order_no]').val().trim()
+					    			},
+					    			success : function(result) {
+					    				document.location.reload();
+					    				$('#removeAllocInv').dialog('close');
+					    			}
+					    		})
+					    	}
+					    }, {
+					    	text: '取消',
+					    	click: function() {
+					    		$('#removeAllocInv').dialog('close'); 
+					    	}
+					    }]
+					})
+					.dialog("open");
+				}
+			}, {
+				text : '還原待出庫',
+				enabled: false,
+				className: 'hidden_button',
+				action : function(e, dt, node, config) {
+					$('#removeAllocInv').dialog({
+						modal: true,
+						width: "400px",
+						open: function(event, ui) {
+					        $(this).parent().children().children('.ui-dialog-titlebar-close').hide();
+					    },
+					    buttons : [{
+					    	text: '確認還原',
+					    	click: function() {
+					    		$.ajax({
+					    			type : "POST",
+					    			url : "allocInv.do",
+					    			data : {
+					    				action: 'insertAllocInv',
+					    				data: $('input[type=text][name=remove_order_no]').val().trim()
+					    			},
+					    			success : function(result) {
+					    				document.location.reload();
+					    				$('#removeAllocInv').dialog('close');
+					    			}
+					    		})
+					    	}
+					    }, {
+					    	text: '取消',
+					    	click: function() {
+					    		$('#removeAllocInv').dialog('close'); 
+					    	}
+					    }]
+					})
+					.dialog("open");
 				}
 			}]
 		});		

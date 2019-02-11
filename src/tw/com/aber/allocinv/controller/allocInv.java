@@ -125,6 +125,25 @@ public class allocInv extends HttpServlet {
 			} catch (Exception e) {
 				response.getWriter().write("失敗");
 			}
+		} else if ("removeAllocInv".equals(action)) {
+			service = new AllocInvService();
+			String order_no = request.getParameter("order_no");
+			logger.debug("Order No: " + order_no);
+			list = service.getAllocInvByGroupAndOrderNo(groupId, order_no);
+
+			gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+			jsonStr = gson.toJson(list);
+			logger.debug("REMOVE ALLOC INV: " + jsonStr);
+			
+			String result = service.deleteAllocInvByGroupAndOrderNo(groupId, order_no, userId);
+
+			response.getWriter().write("{\"result\": \"刪除完成\"");
+		} else if ("insertAllocInv".equals(action)) {
+			service = new AllocInvService();
+			String data = request.getParameter("data");
+			logger.debug("Insert JSON: " + data);
+			String result = service.insertAllocInv(data);
+			response.getWriter().write("{\"result\": \"新增完成\"");
 		}
 	}
 	
