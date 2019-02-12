@@ -1273,7 +1273,6 @@
 	    		},
 	    		success : function(result) {
 	    			let sale = JSON.parse(result);
-	    			console.log(sale);
 	    			if (sale.length == 0) { return; }
 	    			
 	    			var $insert = $("#dialog-form-insert");
