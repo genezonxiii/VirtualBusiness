@@ -174,4 +174,7 @@ public class SaleService {
 		return saleList;
 	}
 	
+	public List<SaleVO> getSaleByOrderNo(String groupId, String order_no) {
+		return dao.getSaleByOrderNo(groupId, order_no);
+	}
 }

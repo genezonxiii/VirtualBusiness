@@ -634,6 +634,7 @@
 	                            order_source: $insert.find("input[name='order_source']").val(),
 	                            contrast_type: $("input[name='radio-group-type']:checked").val(),
 	                            deliveryway: '1',
+	                            upload_date: $insert.find("input[name='upload_date']").val(),
 	                            total_amt: $insert.find("input[name='total_amt']").val(),
 	                            deliver_name: $insert.find("input[name='deliver_name']").val(),
 	                            deliver_to: $insert.find("input[name='deliver_to']").val(),
@@ -689,8 +690,14 @@
 	                var tmp = {
 	                    action: "delete",
 	                    sale_id: uuid,
-	                    c_product_id: c_product_id
+	                    c_product_id: c_product_id,
 	                    //c_product_id是為了刪除後，回傳指定的結果，所需參數
+	                    
+	                    query_type: queryType,
+    	                trans_list_start_date: $("#trans_list_start_date").val(),
+    	                trans_list_end_date: $("#trans_list_end_date").val(),
+    	                upload_start_date: $("#upload_start_date").val(),
+    	                upload_end_date: $("#upload_end_date").val()
 	                };
 	                draw_sale(tmp);
 	                $(this).dialog("close");
@@ -1255,6 +1262,47 @@
 	        });
 	    }
 
+	    $(':text[name="order_no"]').change(function(){
+	    	if (new_or_edit != 1) { return; }
+	    	$.ajax({
+	    		type : "POST",
+	    		url : "sale.do",
+	    		data : {
+	    			action: 'getSaleByOrderNo',
+	    			order_no: $(this).val()
+	    		},
+	    		success : function(result) {
+	    			let sale = JSON.parse(result);
+	    			console.log(sale);
+	    			if (sale.length == 0) { return; }
+	    			
+	    			var $insert = $("#dialog-form-insert");
+	    			$insert.find("input[name='name']").val(sale[0].saleExtVO.deliverName);
+	    			$insert.find("input[name='trans_list_date']").val(sale[0].trans_list_date);
+	    			$insert.find("input[name='dis_date']").val(sale[0].dis_date);
+	    			$insert.find("input[name='memo']").val(sale[0].memo);
+	    			$insert.find("input[name='sale_date']").val(sale[0].sale_date);
+	    			$insert.find("input[name='order_source']").val(sale[0].order_source);
+	    			$insert.find("input[name='upload_date']").val(sale[0].upload_date);
+	    			$insert.find("input[name='total_amt']").val(sale[0].saleExtVO.totalAmt);
+	    			$insert.find("input[name='deliver_name']").val(sale[0].saleExtVO.deliverName);
+	    			$insert.find("input[name='deliver_to']").val(sale[0].saleExtVO.deliverTo);
+	    			$insert.find("input[name='deliver_store']").val(sale[0].saleExtVO.deliverStore);
+	    			$insert.find("input[name='deliver_note']").val(sale[0].saleExtVO.deliverNote);
+	    			$insert.find("input[name='deliver_phone']").val(sale[0].saleExtVO.deliverPhone);
+	    			$insert.find("input[name='deliver_mobile']").val(sale[0].saleExtVO.deliverMobile);
+	    			$insert.find("input[name='pay_kind']").val(sale[0].saleExtVO.payKind);
+	    			$insert.find("input[name='pay_status']").val(sale[0].saleExtVO.payStatus);
+	    			$insert.find("input[name='inv_name']").val(sale[0].saleExtVO.invName);
+	    			$insert.find("input[name='inv_to']").val(sale[0].saleExtVO.invTo);
+	    			$insert.find("input[name='email']").val(sale[0].saleExtVO.email);
+	    			$insert.find("input[name='credit_card']").val(sale[0].saleExtVO.creditCard);
+
+	    			cus_id = sale.customer_id;
+	    			
+	    		}
+	    	})
+	    })
 	});
 
 // part 2

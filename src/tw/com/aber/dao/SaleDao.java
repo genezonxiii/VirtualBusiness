@@ -37,7 +37,7 @@ public class SaleDao {
 	private static final String sp_select_sale_by_upload_date = "call sp_select_sale_by_upload_date(?,?,?)";
 	private static final String sp_select_sale_bydisdate = "call sp_select_sale_bydisdate(?,?,?)";
 	private static final String sp_get_sale_newseqno = "call sp_get_sale_seqno(?)";
-	private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String sp_insert_sale = "call sp_insert_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String sp_del_sale = "call sp_del_sale (?,?)";
 	private static final String sp_update_sale = "call sp_update_sale (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String sp_get_product_byid = "call sp_get_product_byid (?,?)";
@@ -57,6 +57,7 @@ public class SaleDao {
 	private static final String sp_getSaleByTransDate_GroupByOrderNo = "call sp_getSaleByTransDate_GroupByOrderNo(?,?,?)";
 	private static final String sp_get_sale_orderno_info_by_orderno = "call sp_get_sale_orderno_info_by_orderno(?,?)";
 	private static final String sp_update_sale_turn_flag = "call sp_update_sale_turn_flag(?,?,?)";
+	private static final String sp_get_sale_by_order_no = "call sp_get_sale_by_order_no(?,?)";
 	
 	
 	private Connection connection;
@@ -103,6 +104,7 @@ public class SaleDao {
 			pstmt.setString(31, saleVO.getSaleExtVO().getInvTo());
 			pstmt.setString(32, saleVO.getSaleExtVO().getEmail());
 			pstmt.setString(33, saleVO.getSaleExtVO().getCreditCard());
+			pstmt.setDate(34, saleVO.getUpload_date());
 			
 			pstmt.executeUpdate();
 		} catch (SQLException se) {
@@ -1215,6 +1217,88 @@ public class SaleDao {
 			}
 		}
 		return matchRow;
+	}
+	
+	public List<SaleVO> getSaleByOrderNo(String group_id, String order_no) {
+		List<SaleVO> list = new ArrayList<SaleVO>();
+		SaleVO saleVO = null;
+
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = connection.prepareStatement(sp_get_sale_by_order_no);
+
+			pstmt.setString(1, group_id);
+			pstmt.setString(2, order_no);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				saleVO = new SaleVO();
+				saleVO.setSale_id(rs.getString("sale__sale_id"));
+				saleVO.setSeq_no(rs.getString("sale__seq_no"));
+				saleVO.setGroup_id(rs.getString("sale__group_id"));
+				saleVO.setOrder_no(rs.getString("sale__order_no"));
+				saleVO.setContrast_type(rs.getString("sale__contrast_type"));
+				saleVO.setProduct_id(rs.getString("sale__product_id"));
+				saleVO.setProduct_name(rs.getString("sale__product_name"));
+				saleVO.setC_product_id(rs.getString("sale__c_product_id"));
+				saleVO.setCustomer_id(rs.getString("sale__customer_id"));
+				saleVO.setName(rs.getString("sale__name"));
+				saleVO.setQuantity(rs.getInt("sale__quantity"));
+				saleVO.setPrice(rs.getFloat("sale__price"));
+				saleVO.setInvoice(rs.getString("sale__invoice"));
+				saleVO.setInvoice_date(rs.getDate("sale__invoice_date"));
+				saleVO.setInvoice_time(rs.getTime("sale__invoice_time"));
+				saleVO.setInvoice_vcode(rs.getString("sale__invoice_vcode"));
+				saleVO.setInvoice_reason(rs.getString("sale__invoice_reason"));
+				saleVO.setTrans_list_date(rs.getDate("sale__trans_list_date"));
+				saleVO.setDis_date(rs.getDate("sale__dis_date"));
+				saleVO.setMemo(rs.getString("sale__memo"));
+				saleVO.setSale_date(rs.getDate("sale__sale_date"));
+				saleVO.setOrder_source(rs.getString("sale__order_source"));
+				saleVO.setOrder_source(rs.getString("sale__order_source"));
+				saleVO.setReturn_date(rs.getDate("sale__return_date"));
+				saleVO.setIsreturn(rs.getBoolean("sale__isreturn"));
+				saleVO.setDeliveryway(rs.getString("sale__deliveryway"));
+				saleVO.setTurnFlag(rs.getBoolean("sale__turn_flag"));
+				saleVO.setUpload_date(rs.getDate("sale__upload_date"));
+				
+				SaleExtVO saleExtVO = new SaleExtVO();
+				saleExtVO.setSale_id(rs.getString("ext__sale_id"));
+				saleExtVO.setTotalAmt(rs.getFloat("ext__total_amt"));
+				saleExtVO.setOrderStatus(rs.getString("ext__order_status"));
+				saleExtVO.setDeliverName(rs.getString("ext__deliver_name"));
+				saleExtVO.setDeliverTo(rs.getString("ext__deliver_to"));
+				saleExtVO.setDeliverStore(rs.getString("ext__deliver_store"));
+				saleExtVO.setDeliverNote(rs.getString("ext__deliver_note"));
+				saleExtVO.setDeliverPhone(rs.getString("ext__deliver_phone"));
+				saleExtVO.setDeliverMobile(rs.getString("ext__deliver_mobile"));
+				saleExtVO.setInvName(rs.getString("ext__inv_name"));
+				saleExtVO.setInvTo(rs.getString("ext__inv_to"));
+				saleExtVO.setPayKind(rs.getString("ext__pay_kind"));
+				saleExtVO.setPayStatus(rs.getString("ext__pay_status"));
+				saleExtVO.setEmail(rs.getString("ext__email"));
+				saleExtVO.setCreditCard(rs.getString("ext__credit_card"));
+				
+				saleVO.setSaleExtVO(saleExtVO);
+				
+				list.add(saleVO);
+			}
+		} catch (SQLException se) {
+			throw new RuntimeException("A database error occured. " + se.getMessage());
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+			} catch (SQLException se) {
+				logger.error("SQLException:".concat(se.getMessage()));
+			}
+		}
+		return list;
 	}
 	
 	@Test

@@ -151,6 +151,8 @@ public class sale extends HttpServlet {
 				Date sale_date = request.getParameter("sale_date") == null
 						|| request.getParameter("sale_date").equals("") ? null
 								: new Date(sdf.parse(request.getParameter("sale_date")).getTime());
+				Date upload_date = request.getParameter("upload_date") == null || request.getParameter("upload_date").equals("")
+						? null : new Date(sdf.parse(request.getParameter("upload_date")).getTime());
 
 				String memo = request.getParameter("memo");
 				String order_source = request.getParameter("order_source");
@@ -211,6 +213,7 @@ public class sale extends HttpServlet {
 				saleVO.setOrder_source(order_source);
 				saleVO.setContrast_type(contrast_type);
 				saleVO.setDeliveryway(deliveryway);
+				saleVO.setUpload_date(upload_date);
 				
 				SaleExtVO saleExtVO = new SaleExtVO();
 				
@@ -245,6 +248,7 @@ public class sale extends HttpServlet {
 				logger.debug("order_source:".concat(order_source));
 				logger.debug("contrast_type:".concat(contrast_type));
 				logger.debug("deliveryway:".concat(deliveryway));
+				logger.debug("upload_date:".concat(upload_date == null ? "" : upload_date.toString()));
 				logger.debug("SaleExtVO:".concat(saleExtVO.toString()));
 
 				saleService.addSale(saleVO);
@@ -378,13 +382,20 @@ public class sale extends HttpServlet {
 			} else if ("delete".equals(action)) {
 				String sale_id = request.getParameter("sale_id");
 				String c_product_id = request.getParameter("c_product_id");
+				
+				String qType = request.getParameter("query_type");
+				String qTransListStartDate = request.getParameter("trans_list_start_date");
+				String qTransListEndDate = request.getParameter("trans_list_end_date");
+				String qUploadStartDate = request.getParameter("upload_start_date");
+				String qUploadEndDate = request.getParameter("upload_end_date");
 
 				logger.debug("sale_id:".concat(sale_id));
 				logger.debug("c_product_id:".concat(c_product_id));
 
 				saleService.deleteSale(sale_id, user_id);
 
-				saleList = saleService.getSearchAllDB(group_id);
+				saleList = saleService.forAfterInsertOrUpdate(group_id, 
+						qType, qTransListStartDate, qTransListEndDate, qUploadStartDate, qUploadEndDate);
 
 				String jsonStrList = gson.toJson(saleList);
 				response.getWriter().write(jsonStrList);
@@ -849,6 +860,11 @@ public class sale extends HttpServlet {
 				int matchRows = saleService.updateTurnFlag(saleVO);
 				
 				response.getWriter().write("[{\"matchRows\":\""+matchRows+"\"}]");
+			} else if ("getSaleByOrderNo".equals(action)) {
+				String orderNo = (String) request.getParameter("order_no");
+				List<SaleVO> list = saleService.getSaleByOrderNo(group_id, orderNo);
+				String jsonResponse = gson.toJson(list);
+				response.getWriter().write(jsonResponse);
 			}
 		} catch (Exception e) {
 			logger.error("Exception:".concat(e.getMessage()));

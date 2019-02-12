@@ -284,6 +284,9 @@ input.error[type=radio] + label {
 											<td style="display: none"><input type="text"
 												name="dis_date" placeholder="輸入配送日" class="input-date"
 												value=""></td>
+											<td style="display: none"><input type="text"
+												name="upload_date" placeholder="上傳日期" class="input-date"
+												value=""></td>
 										</tr>
 										<tr>
 											<td colspan="4">
