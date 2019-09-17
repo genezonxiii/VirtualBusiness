@@ -592,869 +592,173 @@ public class InvManual extends HttpServlet {
 				logger.error(e.getMessage());
 			}
 			resp.getWriter().write(result);
+		} else if ("transferInvoice".equals(action)) {
+			String ids = req.getParameter("ids");
+			String[] idsArr = ids.split(",");
+
+			InvManualVO invManualVO = null;
+
+			List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+			try {
+				GroupVO groupVO = service.getGroupInvoiceInfo(groupId);
+
+				for (String inv_manual_id : idsArr) {
+					invManualVO = service.selectInvManualByInvManualId(groupId, inv_manual_id);
+
+					InvManualDetailVO invManualDetailVO = new InvManualDetailVO();
+					invManualDetailVO.setGroup_id(groupId);
+					invManualDetailVO.setInv_manual_id(inv_manual_id);
+					List<InvManualDetailVO> detailVOs = service.searchInvManualDetailByInvManualId(invManualDetailVO);
+
+					List<ProductItem> productItems = new ArrayList<ProductItem>();
+					
+					if (detailVOs == null || detailVOs.size() == 0) {
+						Map<String, String> map = new HashMap<String, String>();
+						map.put("invoice_no", "");
+						map.put("message", "請新增明細。");
+						list.add(map);
+						resp.getWriter().write(new Gson().toJson(list));
+						return;
+					}
+
+					for (int i = 0; i < detailVOs.size(); i++) {
+						ProductItem productItem = new ProductItem();
+						
+						productItem.setDescription(detailVOs.get(i).getDescription());
+						productItem.setQuantity(util.null2str(detailVOs.get(i).getQuantity()));
+						productItem.setUnitPrice(util.null2str(detailVOs.get(i).getPrice()));
+						productItem.setAmount(util.null2str(detailVOs.get(i).getSubtotal()));
+						productItem.setSequenceNumber(util.null2str(i + 1));
+						productItem.setRemark(util.null2str(detailVOs.get(i).getMemo()));
+
+						productItems.add(productItem);
+					}
+					Details details = new Details();
+					details.setProductItem(productItems);
+
+					Amount amount = new Amount();
+					Integer amountVal = invManualVO.getAmount();
+					amount.setSalesAmount(util.null2str(amountVal));
+
+					Integer taxType = invManualVO.getTax_type();
+					Float taxRate = 0F;
+					if (taxType == 1) {
+						taxRate = 0.05F;
+					}
+					Integer taxAmount = 0;
+					taxAmount = invManualVO.getTax();
+
+					amount.setTaxType(util.null2str(taxType));
+					amount.setTaxRate(util.null2str(taxRate));
+					amount.setTaxAmount(util.null2str(taxAmount));
+					amount.setTotalAmount(String.valueOf(invManualVO.getAmount_plustax()));
+
+					String sellerId = null, sellerName = null, buyerId = null, buyName = null;
+					// 二聯式
+					if ("1".equals(invManualVO.getInvoice_type())) {
+						sellerId = "";
+						sellerName = "";
+						buyerId = "";
+						buyName = "";
+					}
+					// 三聯式
+					if ("2".equals(invManualVO.getInvoice_type())) {
+						sellerId = groupVO.getGroup_unicode();
+						sellerName = groupVO.getGroup_name();
+						buyerId = invManualVO.getUnicode();
+						buyName = invManualVO.getTitle();
+					}
+					Seller seller = new Seller();
+					seller.setIdentifier(sellerId);
+					seller.setName(sellerName);
+
+					Buyer buyer = new Buyer();
+					buyer.setIdentifier(buyerId);
+					buyer.setName(buyName);
+					buyer.setAddress(invManualVO.getAddress());
+
+					// 發票號碼
+//					InvoiceTrackVO invoiceTrackVO = service.getInvoiceTrack(groupId, invManualVO.getInvoice_date());
+//					String invoiceNum = invoiceTrackVO.getInvoiceNum();
+//					logger.debug("invoiceNum: " + invoiceNum);
+//
+//					if (invoiceNum == null || "".equals(invoiceNum)) {
+//						Map<String, String> map = new HashMap<String, String>();
+//						map.put("invoice_no", "");
+//						map.put("message", "發票字軌用罄，請洽系統管理員");
+//						list.add(map);
+//						break;
+//					}
+
+					Main main = new Main();
+					main.setInvoiceNumber(invManualVO.getInvoice_no());
+					main.setInvoiceDate(util.null2str(invManualVO.getInvoice_date()));
+					main.setInvoiceTime("00:00:00");
+
+					if (taxType == 2) {
+						main.setCustomsClearanceMark("1");
+					}
+
+					String voiceType = "07";
+
+					main.setInvoiceType(voiceType);
+					main.setDonateMark("0");
+					main.setPrintMark("Y");
+
+					main.setSeller(seller);
+					main.setBuyer(buyer);
+					main.setMainRemark(invManualVO.getMemo());
+
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					java.util.Date date = new java.util.Date();
+					String ymdhms = sdf.format(date);
+
+					Invoice invoice = new Invoice();
+					invoice.setInvoiceCode("A0401");
+					invoice.setPosSn(groupVO.getInvoice_key());
+					invoice.setPosId(groupVO.getInvoice_posno());
+					invoice.setSysTime(ymdhms);
+
+					invoice.setMain(main);
+					invoice.setDetails(details);
+					invoice.setAmount(amount);
+
+					StringWriter sw = new StringWriter();
+					JAXB.marshal(invoice, sw);
+					logger.debug(sw.toString());
+					String reqXml = sw.toString();
+					InvoiceApi api = new InvoiceApi();
+
+					String resXml = api.sendXML(reqXml);
+					Index index = api.getIndexResponse(resXml);
+					
+					Map<String, String> map = new HashMap<String, String>();
+//					map.put("invoice_no", invoiceNum);
+					map.put("invoice_no", invManualVO.getInvoice_no());
+					map.put("message", index.getMessage());
+					map.put("reply", index.getReply());
+					list.add(map);
+					
+					if (index != null && index.getReply().equals("1")) {
+						InvManualVO tempVO = new InvManualVO();
+						tempVO.setGroup_id(groupId);
+//						tempVO.setInvoice_no(invoiceNum);
+						tempVO.setInv_manual_id(inv_manual_id);
+						service.updateInvManualInvFlagPershing(tempVO);
+//						service.increaseInvoiceTrack(invoiceTrackVO);
+					} else {
+						break;
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("invoice_no", "");
+				map.put("message", "非預期錯誤");
+				list.add(map);
+			}
+			resp.getWriter().write(new Gson().toJson(list));
 		}
 	}
-
-	class InvManualService {
-		private InvManual_interface dao;
-
-		public InvManualService() {
-			dao = new InvManualDao();
-		}
-
-		public List<InvManualDetailVO> searchInvManualDetailByInvManualId(InvManualDetailVO invManualDetailVO) {
-			return dao.searchInvManualDetailByInvManualId(invManualDetailVO);
-		}
-
-		public List<InvManualVO> searchAllInvManual(String groupId) {
-			return dao.searchAllInvManual(groupId);
-		}
-
-		public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate) {
-			return dao.searchInvManualByInvoiceDate(groupId, startDate, endDate);
-		}
-
-		public void insertInvManual(InvManualVO invManualVO) {
-			dao.insertInvManual(invManualVO);
-		}
-
-		public void insertInvManualDetail(InvManualDetailVO invManualDetailVO) {
-			dao.insertInvManualDetail(invManualDetailVO);
-		}
-
-		public void delInvManualDetail(InvManualDetailVO invManualDetailVO) {
-			dao.delInvManualDetail(invManualDetailVO);
-		}
-
-		public void delInvManual(InvManualVO invManualVO) {
-			dao.delInvManual(invManualVO);
-		}
-
-		public void updateInvManual(InvManualVO invManualVO) {
-			dao.updateInvManual(invManualVO);
-		}
-
-		public void updateInvManualDetail(InvManualDetailVO invManualDetailVO) {
-			dao.updateInvManualDetail(invManualDetailVO);
-		}
-
-		public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id) {
-			return dao.selectInvManualByInvManualId(groupId, inv_manual_id);
-		}
-
-		public GroupVO getGroupInvoiceInfo(String groupId) {
-			return dao.getGroupInvoiceInfo(groupId);
-		}
-
-		public InvoiceTrackVO getInvoiceTrack(String groupId, Date invoice_date) {
-			return dao.getInvoiceTrack(groupId, invoice_date);
-		}
-		
-		public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO) {
-			return dao.increaseInvoiceTrack(invoiceTrackVO);
-		}
-
-		public void updateInvManualInvFlag(InvManualVO invManualVO, InvoiceTrackVO invoiceTrackVO, Invoice invoice) {
-			dao.updateInvManualInvFlag(invManualVO, invoiceTrackVO, invoice);
-		}
-		
-		public void updateInvManualForCancelInvoice(InvManualVO invManualVO) {
-			dao.updateInvManualForCancelInvoice(invManualVO);
-		}
-
-		public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO) {
-			return dao.getInvBuyerData(invBuyerVO);
-		}
-	}
-
-	class InvManualDao implements InvManual_interface {
-		private final String jdbcDriver = getServletConfig().getServletContext().getInitParameter("jdbcDriver");
-		private final String dbURL = getServletConfig().getServletContext().getInitParameter("dbURL")
-				+ "?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-		private final String dbUserName = getServletConfig().getServletContext().getInitParameter("dbUserName");
-		private final String dbPassword = getServletConfig().getServletContext().getInitParameter("dbPassword");
-
-		private static final String sp_select_all_inv_manual = "call sp_select_all_inv_manual (?)";
-		private static final String sp_select_inv_manual_by_invoice_date = "call sp_select_inv_manual_by_invoice_date (?,?,?)";
-		private static final String sp_insert_inv_manual = "call sp_insert_inv_manual(?,?,?,?,?,?,?,?,?)";
-		private static final String sp_select_inv_manual_detail_by_inv_manual_id = "call sp_select_inv_manual_detail_by_inv_manual_id(?,?)";
-		private static final String sp_insert_inv_manual_detail = "call sp_insert_inv_manual_detail(?,?,?,?,?,?,?)";
-		private static final String sp_del_inv_manual_detail = "call sp_del_inv_manual_detail(?,?,?)";
-		private static final String sp_del_inv_manual = "call sp_del_inv_manual(?,?)";
-		private static final String sp_update_inv_manual = "call sp_update_inv_manual(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		private static final String sp_update_inv_manual_detail = "call sp_update_inv_manual_detail(?,?,?,?,?,?,?,?)";
-		private static final String sp_get_invoiceNum = "call sp_get_invoiceNum(?,?)";
-		private static final String sp_inc_invoice_track = "call sp_inc_invoice_track(?,?,?)";
-		private static final String sp_select_inv_manual_by_inv_manual_id = "call sp_select_inv_manual_by_inv_manual_id(?,?)";
-		private static final String sp_get_group_invoice_info = "call sp_get_group_invoice_info(?)";
-		private static final String sp_update_inv_manual_inv_flag = "call sp_update_inv_manual_inv_flag(?,?,?,?,?,?,?)";
-		private static final String sp_update_inv_manual_canel_invoice = "call sp_update_inv_manual_canel_invoice(?,?,?,?)";
-		private static final String sp_select_inv_buyer_by_unicode_or_title = "call sp_select_inv_buyer_by_unicode_or_title (?,?,?)";
-
-		@Override
-		public List<InvManualVO> searchAllInvManual(String groupId) {
-			List<InvManualVO> rows = new ArrayList<InvManualVO>();
-			InvManualVO row = null;
-
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_all_inv_manual);
-
-				pstmt.setString(1, groupId);
-
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					row = new InvManualVO();
-					row.setInv_manual_id(rs.getString("inv_manual_id"));
-					row.setGroup_id(rs.getString("group_id"));
-					row.setInvoice_type(rs.getString("invoice_type"));
-					row.setYear_month(rs.getString("year_month"));
-					row.setInvoice_no(rs.getString("invoice_no"));
-					row.setInvoice_date(rs.getDate("invoice_date"));
-					row.setInvoice_reason(rs.getString("invoice_reason"));
-					row.setTitle(rs.getString("title"));
-					row.setUnicode(rs.getString("unicode"));
-					row.setAddress(rs.getString("address"));
-					row.setMemo(rs.getString("memo"));
-					row.setAmount(rs.getInt("amount"));
-					row.setTax_type(rs.getInt("tax_type"));
-					row.setInv_flag(rs.getInt("inv_flag"));
-					row.setAmount_plustax(rs.getInt("amount_plustax"));
-					row.setTax(rs.getInt("tax"));
-					rows.add(row);
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return rows;
-		}
-
-		@Override
-		public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate) {
-			List<InvManualVO> rows = new ArrayList<InvManualVO>();
-			InvManualVO row = null;
-
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_inv_manual_by_invoice_date);
-
-				pstmt.setString(1, groupId);
-				pstmt.setString(2, startDate);
-				pstmt.setString(3, endDate);
-
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					row = new InvManualVO();
-					row.setInv_manual_id(rs.getString("inv_manual_id"));
-					row.setGroup_id(rs.getString("group_id"));
-					row.setInvoice_type(rs.getString("invoice_type"));
-					row.setYear_month(rs.getString("year_month"));
-					row.setInvoice_no(rs.getString("invoice_no"));
-					row.setInvoice_date(rs.getDate("invoice_date"));
-					row.setInvoice_reason(rs.getString("invoice_reason"));
-					row.setTitle(rs.getString("title"));
-					row.setUnicode(rs.getString("unicode"));
-					row.setAddress(rs.getString("address"));
-					row.setMemo(rs.getString("memo"));
-					row.setAmount(rs.getInt("amount"));
-					row.setTax_type(rs.getInt("tax_type"));
-					row.setInv_flag(rs.getInt("inv_flag"));
-					row.setAmount_plustax(rs.getInt("amount_plustax"));
-					row.setTax(rs.getInt("tax"));
-					rows.add(row);
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return rows;
-		}
-
-		@Override
-		public void insertInvManual(InvManualVO invManualVO) {
-			Connection con = null;
-			CallableStatement cs = null;
-
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				cs = con.prepareCall(sp_insert_inv_manual);
-
-				cs.setString(1, invManualVO.getGroup_id());
-				cs.setString(2, invManualVO.getInvoice_type());
-				cs.setString(3, invManualVO.getYear_month());
-				cs.setDate(4, invManualVO.getInvoice_date());
-				cs.setString(5, invManualVO.getTitle());
-				cs.setString(6, invManualVO.getUnicode());
-				cs.setString(7, invManualVO.getAddress());
-				cs.setString(8, invManualVO.getMemo());
-				cs.setInt(9, invManualVO.getTax_type());
-
-				cs.execute();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				if (cs != null) {
-					try {
-						cs.close();
-					} catch (SQLException se) {
-						se.printStackTrace(System.err);
-					}
-				}
-				if (con != null) {
-					try {
-						con.close();
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
-				}
-			}
-		}
-
-		@Override
-		public List<InvManualDetailVO> searchInvManualDetailByInvManualId(InvManualDetailVO invManualDetailVO) {
-			List<InvManualDetailVO> rows = new ArrayList<InvManualDetailVO>();
-			InvManualDetailVO row = null;
-
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_inv_manual_detail_by_inv_manual_id);
-
-				pstmt.setString(1, invManualDetailVO.getGroup_id());
-				pstmt.setString(2, invManualDetailVO.getInv_manual_id());
-
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					row = new InvManualDetailVO();
-					row.setInv_manual_detail_id(rs.getString("inv_manual_detail_id"));
-					row.setInv_manual_id(rs.getString("inv_manual_id"));
-					row.setDescription(rs.getString("description"));
-					row.setQuantity(rs.getInt("quantity"));
-					row.setPrice(rs.getInt("price"));
-					row.setSubtotal(rs.getInt("subtotal"));
-					row.setInv_flag(rs.getInt("inv_flag"));
-					row.setMemo(rs.getString("memo"));
-					rows.add(row);
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return rows;
-		}
-
-		@Override
-		public void insertInvManualDetail(InvManualDetailVO invManualDetailVO) {
-			Connection con = null;
-			CallableStatement cs = null;
-
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				cs = con.prepareCall(sp_insert_inv_manual_detail);
-
-				cs.setString(1, invManualDetailVO.getInv_manual_id());
-				cs.setString(2, invManualDetailVO.getGroup_id());
-				cs.setString(3, invManualDetailVO.getDescription());
-				cs.setInt(4, invManualDetailVO.getPrice());
-				cs.setInt(5, invManualDetailVO.getQuantity());
-				cs.setInt(6, invManualDetailVO.getSubtotal());
-				cs.setString(7, invManualDetailVO.getMemo());
-
-				cs.execute();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				if (cs != null) {
-					try {
-						cs.close();
-					} catch (SQLException se) {
-						se.printStackTrace(System.err);
-					}
-				}
-				if (con != null) {
-					try {
-						con.close();
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
-				}
-			}
-		}
-
-		@Override
-		public void delInvManualDetail(InvManualDetailVO invManualDetailVO) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_del_inv_manual_detail);
-				pstmt.setString(1, invManualDetailVO.getInv_manual_detail_id());
-				pstmt.setString(2, invManualDetailVO.getInv_manual_id());
-				pstmt.setString(3, invManualDetailVO.getGroup_id());
-
-				pstmt.executeUpdate();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-		}
-
-		@Override
-		public void delInvManual(InvManualVO invManualVO) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_del_inv_manual);
-				pstmt.setString(1, invManualVO.getInv_manual_id());
-				pstmt.setString(2, invManualVO.getGroup_id());
-
-				pstmt.executeUpdate();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-		}
-
-		@Override
-		public void updateInvManual(InvManualVO invManualVO) {
-			Connection con = null;
-			CallableStatement cs = null;
-
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				cs = con.prepareCall(sp_update_inv_manual);
-
-				cs.setString(1, invManualVO.getInv_manual_id());
-				cs.setString(2, invManualVO.getGroup_id());
-				cs.setString(3, invManualVO.getInvoice_type());
-				cs.setString(4, invManualVO.getYear_month());
-				cs.setString(5, invManualVO.getInvoice_no());
-				cs.setDate(6, invManualVO.getInvoice_date());
-				cs.setString(7, invManualVO.getTitle());
-				cs.setString(8, invManualVO.getUnicode());
-				cs.setString(9, invManualVO.getAddress());
-				cs.setString(10, invManualVO.getMemo());
-				cs.setInt(11, invManualVO.getTax_type());
-				cs.setInt(12, invManualVO.getAmount());
-				cs.setInt(13, invManualVO.getAmount_plustax());
-				cs.setInt(14, invManualVO.getTax());
-
-				cs.execute();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				if (cs != null) {
-					try {
-						cs.close();
-					} catch (SQLException se) {
-						se.printStackTrace(System.err);
-					}
-				}
-				if (con != null) {
-					try {
-						con.close();
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
-				}
-			}
-		}
-
-		@Override
-		public void updateInvManualDetail(InvManualDetailVO invManualDetailVO) {
-			Connection con = null;
-			CallableStatement cs = null;
-
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				cs = con.prepareCall(sp_update_inv_manual_detail);
-
-				cs.setString(1, invManualDetailVO.getInv_manual_detail_id());
-				cs.setString(2, invManualDetailVO.getInv_manual_id());
-				cs.setString(3, invManualDetailVO.getGroup_id());
-				cs.setString(4, invManualDetailVO.getDescription());
-				cs.setInt(5, invManualDetailVO.getPrice());
-				cs.setInt(6, invManualDetailVO.getQuantity());
-				cs.setInt(7, invManualDetailVO.getSubtotal());
-				cs.setString(8, invManualDetailVO.getMemo());
-
-				cs.execute();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				if (cs != null) {
-					try {
-						cs.close();
-					} catch (SQLException se) {
-						se.printStackTrace(System.err);
-					}
-				}
-				if (con != null) {
-					try {
-						con.close();
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
-				}
-			}
-		}
-
-		@Override
-		public InvoiceTrackVO getInvoiceTrack(String groupId, Date invoice_date) {
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			String InvoiceNum = null;
-			InvoiceTrackVO invoiceTrackVO = new InvoiceTrackVO();
-
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_invoiceNum);
-				pstmt.setString(1, groupId);
-				pstmt.setDate(2, invoice_date);
-				pstmt.execute();
-				rs = pstmt.getResultSet();
-
-				if (rs.next()) {
-
-					InvoiceNum = rs.getString("invoiceNum");
-
-					if (InvoiceNum != null) {
-						invoiceTrackVO.setGroup_id(groupId);
-						invoiceTrackVO.setInvoice_beginno(rs.getString("invoice_beginno"));
-						invoiceTrackVO.setInvoice_endno(rs.getString("invoice_endno"));
-						invoiceTrackVO.setInvoice_id(rs.getString("invoice_id"));
-						invoiceTrackVO.setInvoice_track(rs.getString("invoice_track"));
-						invoiceTrackVO.setInvoice_type(rs.getString("invoice_type"));
-						invoiceTrackVO.setInvoiceNum(InvoiceNum);
-						invoiceTrackVO.setSeq(rs.getString("seq"));
-						invoiceTrackVO.setYear_month(rs.getString("year_month"));
-					}
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return invoiceTrackVO;
-		}
-		
-		@Override
-		public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO){
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_inc_invoice_track);
-				pstmt.setString(1, invoiceTrackVO.getGroup_id());
-				pstmt.setString(2, invoiceTrackVO.getInvoice_id());
-				pstmt.setString(3, invoiceTrackVO.getSeq());
-				pstmt.executeUpdate();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (pstmt != null) {
-						pstmt.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				}
-			}
-			return true;
-		}
-		
-		@Override
-		public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id) {
-			InvManualVO row = null;
-
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_inv_manual_by_inv_manual_id);
-
-				pstmt.setString(1, groupId);
-				pstmt.setString(2, inv_manual_id);
-
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					row = new InvManualVO();
-					row.setInv_manual_id(rs.getString("inv_manual_id"));
-					row.setGroup_id(rs.getString("group_id"));
-					row.setInvoice_type(rs.getString("invoice_type"));
-					row.setYear_month(rs.getString("year_month"));
-					row.setInvoice_no(rs.getString("invoice_no"));
-					row.setInvoice_date(rs.getDate("invoice_date"));
-					row.setTitle(rs.getString("title"));
-					row.setUnicode(rs.getString("unicode"));
-					row.setAmount(rs.getInt("amount"));
-					row.setInv_flag(rs.getInt("inv_flag"));
-					row.setTax_type(rs.getInt("tax_type"));
-					row.setAddress(rs.getString("address"));
-					row.setMemo(rs.getString("memo"));
-					row.setTax(rs.getInt("tax"));
-					row.setAmount_plustax(rs.getInt("amount_plustax"));
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return row;
-		}
-
-		@Override
-		public GroupVO getGroupInvoiceInfo(String groupId) {
-			GroupVO groupVO = null;
-
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_get_group_invoice_info);
-				pstmt.setString(1, groupId);
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					groupVO = new GroupVO();
-					groupVO.setGroup_unicode(rs.getString("group_unicode"));
-					groupVO.setInvoice_key(rs.getString("invoice_key"));
-					groupVO.setInvoice_posno(rs.getString("invoice_posno"));
-					groupVO.setGroup_name(rs.getString("group_name"));
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return groupVO;
-		}
-
-		@Override
-		public void updateInvManualInvFlag(InvManualVO invManualVO, InvoiceTrackVO invoiceTrackVO, Invoice invoice) {
-			Connection con = null;
-			CallableStatement cs = null;
-
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				cs = con.prepareCall(sp_update_inv_manual_inv_flag);
-
-				cs.setString(1, invManualVO.getGroup_id());
-				cs.setString(2, invManualVO.getInvoice_no());
-				cs.setString(3, invManualVO.getInv_manual_id());
-				cs.setString(4, invoiceTrackVO.getInvoice_type());
-				cs.setString(5, invoiceTrackVO.getYear_month());
-				cs.setString(6, invoice.getMain().getInvoiceDate());
-				cs.setString(7, invoice.getMain().getInvoiceTime());
-				cs.execute();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				if (cs != null) {
-					try {
-						cs.close();
-					} catch (SQLException se) {
-						se.printStackTrace(System.err);
-					}
-				}
-				if (con != null) {
-					try {
-						con.close();
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
-				}
-			}
-		}
-		
-		@Override
-		public void updateInvManualForCancelInvoice(InvManualVO invManualVO){
-			Connection con = null;
-			CallableStatement cs = null;
-	
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				cs = con.prepareCall(sp_update_inv_manual_canel_invoice);
-	
-				cs.setString(1, invManualVO.getGroup_id());
-				cs.setString(2, invManualVO.getInvoice_no());
-				cs.setString(3, invManualVO.getInv_manual_id());
-				cs.setString(4, invManualVO.getInvoice_reason());
-				cs.execute();
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				if (cs != null) {
-					try {
-						cs.close();
-					} catch (SQLException se) {
-						se.printStackTrace(System.err);
-					}
-				}
-				if (con != null) {
-					try {
-						con.close();
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
-				}
-			}
-		}
-	
-		@Override
-		public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO) {
-			List<InvBuyerVO> rows = new ArrayList<InvBuyerVO>();
-			InvBuyerVO row = null;
-
-			Connection con = null;
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			try {
-				Class.forName(jdbcDriver);
-				con = DriverManager.getConnection(dbURL, dbUserName, dbPassword);
-				pstmt = con.prepareStatement(sp_select_inv_buyer_by_unicode_or_title);
-
-				pstmt.setString(1, invBuyerVO.getGroup_id());
-				pstmt.setString(2, invBuyerVO.getUnicode());
-				pstmt.setString(3, invBuyerVO.getTitle());
-
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					row = new InvBuyerVO();
-					row.setInv_buyer_id(rs.getString("inv_buyer_id"));
-					row.setGroup_id(rs.getString("group_id"));
-					row.setTitle(rs.getString("title"));
-					row.setUnicode(rs.getString("unicode"));
-					row.setAddress(rs.getString("address"));
-					row.setMemo(rs.getString("memo"));
-					row.setCreate_time(rs.getDate("create_time"));
-					rows.add(row);
-				}
-			} catch (SQLException se) {
-				throw new RuntimeException("A database error occured. " + se.getMessage());
-			} catch (ClassNotFoundException cnfe) {
-				throw new RuntimeException("A database error occured. " + cnfe.getMessage());
-			} finally {
-				try {
-					if (rs != null) {
-						rs.close();
-					}
-					if (pstmt != null) {
-						pstmt.close();
-					}
-					if (con != null) {
-						con.close();
-					}
-				} catch (SQLException se) {
-					logger.error("SQLException:".concat(se.getMessage()));
-				} catch (Exception e) {
-					logger.error("Exception:".concat(e.getMessage()));
-				}
-			}
-			return rows;
-		}
-
-	}
-}
-
-interface InvManual_interface {
-	public List<InvManualVO> searchAllInvManual(String groupId);
-
-	public List<InvManualDetailVO> searchInvManualDetailByInvManualId(InvManualDetailVO invManualDetailVO);
-
-	public List<InvManualVO> searchInvManualByInvoiceDate(String groupId, String startDate, String endDate);
-
-	public void insertInvManual(InvManualVO invManualVO);
-
-	public void insertInvManualDetail(InvManualDetailVO invManualDetailVO);
-
-	public void delInvManualDetail(InvManualDetailVO invManualDetailVO);
-
-	public void delInvManual(InvManualVO invManualVO);
-
-	public void updateInvManual(InvManualVO invManualVO);
-
-	public void updateInvManualDetail(InvManualDetailVO invManualDetailVO);
-
-	public InvoiceTrackVO getInvoiceTrack(String groupId, Date invoice_date);
-	
-	public Boolean increaseInvoiceTrack(InvoiceTrackVO invoiceTrackVO);
-
-	public InvManualVO selectInvManualByInvManualId(String groupId, String inv_manual_id);
-
-	public GroupVO getGroupInvoiceInfo(String groupId);
-
-	public void updateInvManualInvFlag(InvManualVO invManualVO, InvoiceTrackVO invoiceTrackVO, Invoice invoice);
-	
-	public void updateInvManualForCancelInvoice(InvManualVO invManualVO);
-
-	public List<InvBuyerVO> getInvBuyerData(InvBuyerVO invBuyerVO);
 }

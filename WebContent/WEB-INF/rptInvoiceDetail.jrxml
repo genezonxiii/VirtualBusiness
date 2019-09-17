@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rptInvoiceDetail" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="7d558491-c0a9-403b-8226-a5ce5ff588d5">
-	<property name="ireport.zoom" value="3.636363636363642"/>
+	<property name="ireport.zoom" value="4.4000000000000075"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="p_group_id" class="java.lang.String">
@@ -131,9 +131,9 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="0" y="0" width="172" height="20"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="0" y="0" width="172" height="40"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -148,7 +148,7 @@
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="172" y="0" width="70" height="20"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="172" y="0" width="70" height="40"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -163,7 +163,7 @@
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="242" y="0" width="70" height="20"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="242" y="0" width="70" height="40"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -178,7 +178,7 @@
 				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="##,#00" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="312" y="0" width="71" height="20"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="312" y="0" width="71" height="40"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>
@@ -193,7 +193,7 @@
 				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="383" y="0" width="141" height="20"/>
+				<reportElement uuid="9f1927d1-a044-4c37-8f1c-300361086b8e" x="383" y="0" width="141" height="40"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.0"/>

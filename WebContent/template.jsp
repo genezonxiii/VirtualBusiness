@@ -226,6 +226,10 @@ function who(){
 		$(".sidenav > ul > li:nth-child(1)").addClass("active");
 		return "基本資料匯入作業";
 		break;
+	case "invoiceImport.jsp":
+		$(".sidenav > ul > li:nth-child(1)").addClass("active");
+		return "發票匯入作業";
+		break;
 //####報表管理############################
 	case "salereport.jsp":
 		side3.addClass("active");
